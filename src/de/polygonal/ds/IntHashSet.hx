@@ -32,7 +32,6 @@ package de.polygonal.ds;
 import de.polygonal.core.fmt.Sprintf;
 import de.polygonal.core.math.Limits;
 import de.polygonal.core.math.Mathematics;
-import de.polygonal.core.util.Instance;
 
 #if flash10
 #if alchemy
@@ -873,7 +872,7 @@ class IntHashSet implements Set<Int>
 	 */
 	public function clone(assign:Bool = true, copier:Int->Int = null):Collection<Int>
 	{
-		var c:IntHashSet = Instance.createEmpty(IntHashSet);
+		var c:IntHashSet = Type.createEmptyInstance(IntHashSet);
 		c.key = HashKey.next();
 		c.maxSize = maxSize;
 		

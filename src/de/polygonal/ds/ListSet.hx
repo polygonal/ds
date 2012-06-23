@@ -31,7 +31,6 @@ package de.polygonal.ds;
 
 import de.polygonal.core.fmt.Sprintf;
 import de.polygonal.core.macro.Assert;
-import de.polygonal.core.util.Instance;
 
 /**
  * <p>A simple set using an array.</p>
@@ -261,7 +260,7 @@ class ListSet<T> implements Set<T>
 	 */
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{
-		var copy = Instance.createEmpty(ListSet);
+		var copy = Type.createEmptyInstance(ListSet);
 		copy.key = HashKey.next();
 		copy._a = cast _a.clone(assign, copier);
 		return copy;

@@ -33,7 +33,6 @@ import de.polygonal.core.fmt.Sprintf;
 import de.polygonal.core.math.Limits;
 import de.polygonal.core.math.Mathematics;
 import de.polygonal.core.macro.Assert;
-import de.polygonal.core.util.Instance;
 
 private typedef LinkedDequeFriend<T> =
 {
@@ -306,14 +305,14 @@ class LinkedDeque<T> implements Deque<T>
 		var node = _head;
 		for (i in 0...k)
 		{
-			node.val = Instance.create(C, args);
+			node.val = Type.createInstance(C, args);
 			node = node.next;
 		}
 		
 		n -= k;
 		for (i in 0...n)
 		{
-			node = _getNode(Instance.create(C, args));
+			node = _getNode(Type.createInstance(C, args));
 			node.prev = _tail;
 			if (_tail != null) _tail.next = node;
 			_tail = node;

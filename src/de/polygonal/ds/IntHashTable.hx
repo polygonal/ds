@@ -41,7 +41,6 @@ import flash.Vector;
 import de.polygonal.core.fmt.Sprintf;
 import de.polygonal.core.math.Limits;
 import de.polygonal.core.math.Mathematics;
-import de.polygonal.core.util.Instance;
 
 private typedef IntHashTableFriend<T> = 
 {
@@ -733,7 +732,7 @@ class IntHashTable<T> implements Map<Int, T>
 	 */
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{
-		var c:IntHashTable<T> = Instance.createEmpty(IntHashTable);
+		var c:IntHashTable<T> = Type.createEmptyInstance(IntHashTable);
 		c.key = HashKey.next();
 		c.maxSize = maxSize;
 		c._h = cast _h.clone(false);

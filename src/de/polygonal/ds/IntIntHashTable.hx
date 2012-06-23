@@ -32,7 +32,6 @@ package de.polygonal.ds;
 import de.polygonal.core.fmt.Sprintf;
 import de.polygonal.core.math.Limits;
 import de.polygonal.core.math.Mathematics;
-import de.polygonal.core.util.Instance;
 
 #if flash10
 #if alchemy
@@ -1397,7 +1396,7 @@ class IntIntHashTable implements Map<Int, Int>
 	 */
 	public function clone(assign:Bool = true, copier:Int->Int = null):Collection<Int>
 	{
-		var c:IntIntHashTable = Instance.createEmpty(IntIntHashTable);
+		var c:IntIntHashTable = Type.createEmptyInstance(IntIntHashTable);
 		c.key = HashKey.next();
 		c.maxSize = maxSize;
 		

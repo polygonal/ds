@@ -31,7 +31,6 @@ package de.polygonal.ds.pooling;
 
 import de.polygonal.core.fmt.Sprintf;
 import de.polygonal.core.macro.Assert;
-import de.polygonal.core.util.Instance;
 import de.polygonal.ds.Hashable;
 import de.polygonal.ds.HashKey;
 import de.polygonal.ds.Itr;
@@ -253,7 +252,7 @@ class ObjectPool<T> implements Hashable
 		if (_lazy)
 		{
 			if (C != null)
-				_lazyConstructor = function() return Instance.create(C, []);
+				_lazyConstructor = function() return Type.createInstance(C, []);
 			else
 			if (fabricate != null)
 				_lazyConstructor = function() return fabricate();
@@ -264,7 +263,7 @@ class ObjectPool<T> implements Hashable
 		else
 		{
 			if (C != null)
-				for (i in 0..._size) _pool[i] = Instance.create(C, []);
+				for (i in 0..._size) _pool[i] = Type.createInstance(C, []);
 			else
 			if (fabricate != null)
 				for (i in 0..._size) _pool[i] = fabricate();

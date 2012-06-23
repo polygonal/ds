@@ -33,7 +33,6 @@ import de.polygonal.core.fmt.Sprintf;
 import de.polygonal.core.math.Limits;
 import de.polygonal.core.math.Mathematics;
 import de.polygonal.core.macro.Assert;
-import de.polygonal.core.util.Instance;
 import de.polygonal.ds.HashKey;
 import de.polygonal.ds.Itr;
 
@@ -311,7 +310,7 @@ class DynamicObjectPool<T>
 		
 		switch (_allocType)
 		{
-			case Bits.BIT_01: x = Instance.create(_class, _args);
+			case Bits.BIT_01: x = Type.createInstance(_class, _args);
 			case Bits.BIT_02: x = _fabricate();
 			case Bits.BIT_03: x = _factory.create();
 		}

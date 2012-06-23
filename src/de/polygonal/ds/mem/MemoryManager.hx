@@ -32,7 +32,6 @@ package de.polygonal.ds.mem;
 import de.polygonal.core.fmt.Sprintf;
 import de.polygonal.core.math.Mathematics;
 import de.polygonal.core.macro.Assert;
-import de.polygonal.core.util.Instance;
 import de.polygonal.ds.Bits;
 
 private typedef MemoryAccessFriend = 
@@ -1066,7 +1065,7 @@ private class MemorySegment
 		monitor.removeEventListener(flash.events.TimerEvent.TIMER, _checkPointer);
 		_weakPointer = null;
 		
-		var fakeAccess:MemoryAccess = Instance.createEmpty(MemoryAccess);
+		var fakeAccess:MemoryAccess = Type.createEmptyInstance(MemoryAccess);
 		var friend:MemoryAccessFriend = fakeAccess;
 		friend._memory = this;
 		MemoryManager.dealloc(fakeAccess);

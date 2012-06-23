@@ -40,7 +40,6 @@ import flash.Vector;
 import de.polygonal.core.fmt.Sprintf;
 import de.polygonal.core.math.Limits;
 import de.polygonal.core.macro.Assert;
-import de.polygonal.core.util.Instance;
 
 private typedef HashSetFriend<T> = 
 {
@@ -507,7 +506,7 @@ class HashSet<T:Hashable> implements Set<T>
 	 */
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{
-		var c:HashSet<T> = Instance.createEmpty(HashSet);
+		var c:HashSet<T> = Type.createEmptyInstance(HashSet);
 		
 		c._isResizable = _isResizable;
 		c.maxSize = maxSize;

@@ -32,7 +32,6 @@ package de.polygonal.ds;
 import de.polygonal.core.fmt.Sprintf;
 import de.polygonal.core.math.Limits;
 import de.polygonal.core.macro.Assert;
-import de.polygonal.core.util.Instance;
 
 private typedef ArrayedQueueFriend<T> =
 {
@@ -356,7 +355,7 @@ class ArrayedQueue<T> implements Queue<T>
 		#end
 		
 		for (i in 0...k)
-			__set((i + _front) % _capacity, Instance.create(C, args));
+			__set((i + _front) % _capacity, Type.createInstance(C, args));
 		
 		_size = k;
 	}

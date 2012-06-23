@@ -40,7 +40,6 @@ import flash.Vector;
 import de.polygonal.core.fmt.Sprintf;
 import de.polygonal.core.math.Mathematics;
 import de.polygonal.core.macro.Assert;
-import de.polygonal.core.util.Instance;
 
 private typedef HashTableFriend<K, T> = 
 {
@@ -701,7 +700,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	 */
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{
-		var c:HashTable<K, T> = Instance.createEmpty(HashTable);
+		var c:HashTable<K, T> = Type.createEmptyInstance(HashTable);
 		
 		c.key = HashKey.next();
 		c._h = cast _h.clone(false);

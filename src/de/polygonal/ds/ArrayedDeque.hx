@@ -33,7 +33,6 @@ import de.polygonal.core.fmt.Sprintf;
 import de.polygonal.core.math.Limits;
 import de.polygonal.core.math.Mathematics;
 import de.polygonal.core.macro.Assert;
-import de.polygonal.core.util.Instance;
 
 private typedef ArrayedDequeFriend<T> =
 {
@@ -339,23 +338,23 @@ class ArrayedDeque<T> implements Deque<T>
 			
 			var i = _head + 1;
 			while (i < _blockSize)
-				_headBlock[i++] = Instance.create(C, args);
+				_headBlock[i++] = Type.createInstance(C, args);
 			
 			var fullBlocks = _tailBlockIndex - 1;
 			for (i in 1...1 + fullBlocks)
 			{
 				var block = _blocks[i];
 				for (j in 0..._blockSize)
-					block[j] = Instance.create(C, args);
+					block[j] = Type.createInstance(C, args);
 			}
 			
 			i = 0;
 			while (i < _tail)
-				_tailBlock[i++] = Instance.create(C, args);
+				_tailBlock[i++] = Type.createInstance(C, args);
 			
 			for (i in 0...n - size())
 			{
-				_tailBlock[_tail++] = Instance.create(C, args);
+				_tailBlock[_tail++] = Type.createInstance(C, args);
 				if (_tail == _blockSize)
 					_pushBlock();
 			}
@@ -365,7 +364,7 @@ class ArrayedDeque<T> implements Deque<T>
 			var c = M.min(n, _blockSize - (_head + 1));
 			var i = _head + 1;
 			for (j in i...i + c)
-				_headBlock[j] = Instance.create(C, args);
+				_headBlock[j] = Type.createInstance(C, args);
 			n -= c;
 			
 			if (n == 0) return;
@@ -376,13 +375,13 @@ class ArrayedDeque<T> implements Deque<T>
 			{
 				var block = _blocks[i + 1];
 				for (j in 0..._blockSize)
-					block[j] = Instance.create(C, args);
+					block[j] = Type.createInstance(C, args);
 				b++;
 			}
 			n -= c << _blockSizeShift;
 			
 			var block = _blocks[b];
-			for (i in 0...n) block[i] = Instance.create(C, args);
+			for (i in 0...n) block[i] = Type.createInstance(C, args);
 		}
 	}
 	
@@ -952,7 +951,7 @@ class ArrayedDeque<T> implements Deque<T>
 	 */
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{
-		var copy = Instance.createEmpty(ArrayedDeque);
+		var copy = Type.createEmptyInstance(ArrayedDeque);
 		copy._blockSize         = _blockSize;
 		copy._blockSizeMinusOne = _blockSizeMinusOne;
 		copy._head              = _head;

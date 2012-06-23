@@ -30,7 +30,6 @@
 package de.polygonal.ds;
 
 import de.polygonal.core.macro.Assert;
-import de.polygonal.core.util.Instance;
 
 /**
  * <p>Various utility functions for working with arrays.</p>
@@ -114,7 +113,7 @@ class ArrayUtil
 	inline public static function assign<T>(dst:Array<T>, C:Class<T>, args:Array<Dynamic> = null, k = -1):Void
 	{
 		if (k == -1) k = dst.length;
-		for (i in 0...k) dst[i] = Instance.create(C, args);
+		for (i in 0...k) dst[i] = Type.createInstance(C, args);
 	}
 	
 	/**

@@ -32,7 +32,6 @@ package de.polygonal.ds;
 import de.polygonal.core.fmt.Sprintf;
 import de.polygonal.core.math.Limits;
 import de.polygonal.core.macro.Assert;
-import de.polygonal.core.util.Instance;
 
 private typedef ArrayedStackFriend<T> =
 {
@@ -415,7 +414,7 @@ class ArrayedStack<T> implements Stack<T>
 		else
 			n = size();
 		
-		for (i in 0...n) __set(i, Instance.create(C, args));
+		for (i in 0...n) __set(i, Type.createInstance(C, args));
 		
 		_top = n;
 	}

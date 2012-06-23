@@ -32,7 +32,6 @@ package de.polygonal.ds;
 import de.polygonal.core.fmt.Sprintf;
 import de.polygonal.core.math.Limits;
 import de.polygonal.core.macro.Assert;
-import de.polygonal.core.util.Instance;
 
 private typedef DLLNodeFriend<T> =
 {
@@ -882,7 +881,7 @@ class DLL<T> implements Collection<T>
 		var node = head;
 		for (i in 0...n)
 		{
-			node.val = Instance.create(C, args);
+			node.val = Type.createInstance(C, args);
 			node = node.next;
 		}
 	}

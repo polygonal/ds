@@ -31,7 +31,6 @@ package de.polygonal.ds;
 
 import de.polygonal.core.fmt.Sprintf;
 import de.polygonal.core.macro.Assert;
-import de.polygonal.core.util.Instance;
 
 private typedef Array3Friend<T> = 
 {
@@ -441,7 +440,7 @@ class Array3<T> implements Collection<T>
 	 */
 	public function assign(C:Class<T>, args:Array<Dynamic> = null):Void
 	{
-		for (i in 0...size()) __set(i, Instance.create(C, args));
+		for (i in 0...size()) __set(i, Type.createInstance(C, args));
 	}
 	
 	/**
