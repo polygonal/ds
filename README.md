@@ -1,4 +1,6 @@
-###Package `de.polygonal.ds.*`
+##ds - Data Structures For Game Developers
+
+####Package `de.polygonal.ds.*`
 Formerly known as "_AS3 Data Structures For Game Developers (AS3DS)_", the package contains parametrized classes that allow programmers to easily implement standard data structures like linked lists, queues, stacks or multi-dimensional arrays. The result is somewhere in between the C++ STL (Standard Template Library) and the Java Collection framework. The library is highly optimized and uses advanced Haxe features like inlining or code generation for parametrized classes through the haxe.rtti.Generics interface.
 
 ##Documentation
@@ -36,7 +38,7 @@ http://groups.google.com/group/polygonal-ds
 
 ##Changelog
 
-###ds 1.xx (dev branch)
+###1.xx (dev branch)
 
  * added: TreeNode#isAncestor()
  * added: TreeNode#isDescendant()
@@ -61,9 +63,9 @@ http://groups.google.com/group/polygonal-ds
  * added: XmlConvert.toTreeNode(): xml => TreeNode conversion
  * added: Array2#copyCol(), Array2#swapCol()
  * added: Array2#copyRow(), Array2#swapRow()
- * fixed: some adjustments for Haxe 2.10
+ * fixed: support Haxe 2.10
 
-###ds 1.35 (released 2011-12-22)
+###1.35 (released 2011-12-22)
 
  * modified: Collection.clone(): make assign parameter optional so clone() does a shallow copy per default
  * added: Array2#setNestedArray()
@@ -74,12 +76,12 @@ http://groups.google.com/group/polygonal-ds
  * fixed: Collection#toVector()
  * modified: Heap#remove(), PriorityQueue#remove() is now O(1)
 
-###ds 1.34 (released 2011-10-26)
+###1.34 (released 2011-10-26)
 
  * added: all: Collection#toVector() for FP10+
  * modified: too many issues with -D swf-protected so revert back to prefixing private members with underscore
 
-###ds 1.33 (released 2011-10-21)
+###1.33 (released 2011-10-21)
 
  * modified: disabled haxe.rtti.Generic optimization by default, enable with -D 'generic' (replaces 'no_rtti' flag)
  * fixed: DynamicObjectPool: 'object x was returned twice to the pool' assert
@@ -105,7 +107,7 @@ http://groups.google.com/group/polygonal-ds
  * modified: swc: compiled with Haxe 2.08
  * modified: swc: only show public API (all private fields marked with an underscore are now protected)
 
-###ds 1.32 (released 2011-07-17)
+###1.32 (released 2011-07-17)
 
  * fixed: LinkedObjectPool#get()
  * added: Array2#getAtIndex()
@@ -152,7 +154,7 @@ http://groups.google.com/group/polygonal-ds
  * modified: document complexity
  * fixed: ArrayQueue#fill(), assign() for js target
 
-###ds 1.31 (released 2011-04-11)
+###1.31 (released 2011-04-11)
 
  * modified: better AS3/SWC support: removed some redundant classes, haxe.init(mc) is no longer required
  * added: TreeNode#sort() - sort children
@@ -172,7 +174,7 @@ http://groups.google.com/group/polygonal-ds
  * modified: ArrayUtil#bsearchInt/bsearchFloat/bsearchComparator: now returns insertion point instead of just -1
  * added: Bits#next(): macro based bit flag generation
 
-###ds 1.30 (released 2011-03-03)
+###1.30 (released 2011-03-03)
 
  * modified: GraphNode and GraphArc now implement Hashable
  * fixed: DA#reverse()
@@ -193,7 +195,7 @@ http://groups.google.com/group/polygonal-ds
  * added: LinkedDeque\<T\>: linked deque implementation
  * added: ArrayedDeque\<T\>: arrayed deque implementation
 
-###ds 1.23 (released 2011-01-30)
+###1.23 (released 2011-01-30)
 
  * added: DynamicObjectPool
  * modified: moved Factory to de.polygonal.ds
@@ -210,7 +212,7 @@ http://groups.google.com/group/polygonal-ds
  * modified: ArrayedQueue is now dynamic
  * modified: SWC files compiled with Haxe 2.07
 
-###ds 1.22 (released 2011-01-11)
+###1.22 (released 2011-01-11)
 
  * added: TreeNode levelorder traversal
  * added: MemoryManager: automatically reclaim memory when MemoryAccess object is GCed
@@ -236,7 +238,7 @@ http://groups.google.com/group/polygonal-ds
  * modified: updated documentation
  * modified: simplified ArrayConvert class
 
-###ds 1.21 (released 2010-12-12)
+###1.21 (released 2010-12-12)
 
  * added: HashTable#dispose()
  * fixed: don't skip constructor call in assign() methods
@@ -251,7 +253,7 @@ http://groups.google.com/group/polygonal-ds
  * modified: IntIntHashTable/IntHashTable/HashTable/IntHashSet/HashSet: added resizable parameter to constructor (enforce fixed size)
  * added: BitFlags helper class
 
-###ds 1.20 (released 2010-11-01)
+###1.20 (released 2010-11-01)
 
  * fixed: C++ and JavaScript compatibility
  * added: IntIntHashTable: an array hash table implementation using 32-bit integers for keys and values
@@ -269,7 +271,7 @@ http://groups.google.com/group/polygonal-ds
  * modified: Collection#toDA(?output:DA\<T\>):Array\<T\> changed to Collection#toDA():DA\<T\> (c++ compatibility)
  * modified: HashMap refactoring; HashMap\<K, V\> now  implements Map\<K, T\> instead of Collection\<K\>
 
-###ds 1.12 (released 2010-10-18)
+###1.12 (released 2010-10-18)
 
  * fixed: ArrayedQueue#remove(),dispose()
  * fixed: LinkedObjectPool#put()
@@ -291,7 +293,7 @@ http://groups.google.com/group/polygonal-ds
  * added: ArrayTools class
  * fixed: several cross-platform issues for de.polygonal.ds.mem when compiled with -D no_alchemy
 
-###ds 1.11 (released 2010-07-22)
+###1.11 (released 2010-07-22)
 
  * added: ObjectPool.isEmpty()
  * added: Array2&3: getIndex(), cellToIndex(), indexToCell(), indexOf(), cellOf()
@@ -316,7 +318,7 @@ http://groups.google.com/group/polygonal-ds
  * modified: improved Collection#toArray()/Collection#toDA()
  * modified: swc files only: Collection#iterator():Object now typed to Collection#iterator():Itr
 
-###ds 1.1 (released 2010-03-15)
+###1.1 (released 2010-03-15)
 
  * added: TreeNode#getChildIndex()
  * fixed: LinkedStack#clear()
@@ -331,7 +333,7 @@ http://groups.google.com/group/polygonal-ds
  * added: ShortMemory for storing 16bit integers.
  * fixed: BitVector.ofBytes
 
-###ds 1.06 (released 2010-01-31)
+###1.06 (released 2010-01-31)
 
  * added: ArrayConvert helper class
  * added: ArrayedQueue, ArrayedStack, Vector: swp() and cpy() methods
@@ -355,7 +357,7 @@ http://groups.google.com/group/polygonal-ds
  * code style: different 'friend' syntax that ensures strict typing for improved performance (http://www.weblob.net/2010/01/friend-types-are-slow-really)
  * modified: Graph: added maxSize() constraint() for debugging
 
-###ds 1.05 (released 2009-12-24)
+###1.05 (released 2009-12-24)
 
  * all: interfaces can be accessed in swc files
  * all: parameter names are now available in swc files
@@ -385,7 +387,7 @@ http://groups.google.com/group/polygonal-ds
  * fixed: BST#height()
  * fixed: BST#toString()
 
-###ds 1.0 (released 2009-12-09)
+###1.0 (released 2009-12-09)
 
  * Significant performance improvements compared to as3ds thanks to the Haxe compiler :)
  * Fixed most issues posted on the old as3ds google code projects page
