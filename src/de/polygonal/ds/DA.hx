@@ -780,20 +780,20 @@ class DA<T> implements Collection<T>
 	 * @param useInsertionSort if true, the dense array is sorted using the insertion sort algorithm. This is faster for nearly sorted lists.
 	 * @param first sort start index. The default value is 0.
 	 * @param count the number of elements to sort (range: <arg>&#091;<code>first</code>, <code>first</code> + <code>count</code>&#093;</arg>).<br/>
-	 * If omitted, <code>count</code> is set to <code>size()</code>.
+	 * If omitted, <code>count</code> is set to the remaining elements (<code>size()</code> - <code>first</code>).
 	 * @throws de.polygonal.core.macro.AssertError element does not implement <em>Comparable</em> (debug only).
 	 * @throws de.polygonal.core.macro.AssertError <code>first</code> or <code>count</code> out of bound (debug only).
 	 */
-	public function sort(compare:T->T->Int, useInsertionSort = false, first = 0, count = 0):Void
+	public function sort(compare:T->T->Int, useInsertionSort = false, first = 0, count = -1):Void
 	{
 		if (size() > 1)
 		{
+			if (count == -1) count = size() - first;
+			
 			#if debug
-			D.assert(first >= 0 && first <= size() - 1 && first + count <= size(), 'first out of bound');
+			D.assert(first >= 0 && first <= size() - 1 && first + count <= size(), 'first index out of bound');
 			D.assert(count >= 0 && count <= size(), 'count out of bound');
 			#end
-			
-			if (count == 0) count = size();
 			
 			if (compare == null)
 				useInsertionSort ? _insertionSortComparable(first, count) : _quickSortComparable(first, count);

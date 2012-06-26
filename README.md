@@ -70,6 +70,8 @@ http://groups.google.com/group/polygonal-ds
  * added: Array2#copyCol(), Array2#swapCol()
  * added: Array2#copyRow(), Array2#swapRow()
  * fixed: support Haxe 2.10
+ * modified: also dump state with toString() in release mode
+ * fixed: DA.sort() out of bound access
 
 ###1.35 (released 2011-12-22)
 
