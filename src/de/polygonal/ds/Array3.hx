@@ -440,6 +440,7 @@ class Array3<T> implements Collection<T>
 	 */
 	public function assign(C:Class<T>, args:Array<Dynamic> = null):Void
 	{
+		if (args == null) args = [];
 		for (i in 0...size()) __set(i, Type.createInstance(C, args));
 	}
 	

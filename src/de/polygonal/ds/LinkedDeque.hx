@@ -301,6 +301,7 @@ class LinkedDeque<T> implements Deque<T>
 		if (n == 0) n = size();
 		if (n == 0) return;
 		
+		if (args == null) args = [];
 		var k = M.min(_size, n);
 		var node = _head;
 		for (i in 0...k)

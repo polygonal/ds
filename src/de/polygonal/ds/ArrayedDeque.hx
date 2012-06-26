@@ -329,6 +329,7 @@ class ArrayedDeque<T> implements Deque<T>
 	{
 		if (n == 0) n = size();
 		if (n == 0) return;
+		if (args == null) args = [];
 		if (n >= size())
 		{
 			#if debug

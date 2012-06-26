@@ -231,6 +231,7 @@ class LinkedQueue<T> implements Queue<T>
 		else
 			n = size();
 		
+		if (args == null) args = [];
 		var node = _head;
 		for (i in 0...n)
 		{

@@ -113,6 +113,7 @@ class ArrayUtil
 	inline public static function assign<T>(dst:Array<T>, C:Class<T>, args:Array<Dynamic> = null, k = -1):Void
 	{
 		if (k == -1) k = dst.length;
+		if (args == null) args = [];
 		for (i in 0...k) dst[i] = Type.createInstance(C, args);
 	}
 	

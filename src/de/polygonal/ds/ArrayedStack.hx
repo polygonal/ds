@@ -414,6 +414,7 @@ class ArrayedStack<T> implements Stack<T>
 		else
 			n = size();
 		
+		if (args == null) args = [];
 		for (i in 0...n) __set(i, Type.createInstance(C, args));
 		
 		_top = n;

@@ -878,6 +878,7 @@ class DLL<T> implements Collection<T>
 		else
 			n = size();
 		
+		if (args == null) args = [];
 		var node = head;
 		for (i in 0...n)
 		{

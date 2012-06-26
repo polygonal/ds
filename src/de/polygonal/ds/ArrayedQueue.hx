@@ -354,6 +354,7 @@ class ArrayedQueue<T> implements Queue<T>
 		D.assert(k <= _capacity, Sprintf.format('n out of range (%d)', [n]));
 		#end
 		
+		if (args == null) args = [];
 		for (i in 0...k)
 			__set((i + _front) % _capacity, Type.createInstance(C, args));
 		
