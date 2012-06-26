@@ -87,7 +87,7 @@ class LinkedDeque<T> implements Deque<T>
 	 * Prevents frequent node allocation and thus increases performance at the cost of using more memory.
 	 * @param maxSize the maximum allowed size of this queue.<br/>
 	 * The default value of -1 indicates that there is no upper limit.
-	 * @throws de.polygonal.core.macro.AssertError reserved size is greater than allowed size (debug only).
+	 * @throws de.polygonal.AssertError reserved size is greater than allowed size (debug only).
 	 */
 	public function new(reservedSize = 0, maxSize = -1) 
 	{
@@ -116,7 +116,7 @@ class LinkedDeque<T> implements Deque<T>
 	/**
 	 * Returns the first element of this deque.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.macro.AssertError deque is empty (debug only).
+	 * @throws de.polygonal.AssertError deque is empty (debug only).
 	 */
 	inline public function front():T
 	{
@@ -130,7 +130,7 @@ class LinkedDeque<T> implements Deque<T>
 	/**
 	 * Inserts the element <code>x</code> at the front of this deque.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.macro.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
+	 * @throws de.polygonal.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
 	 */
 	inline public function pushFront(x:T):Void
 	{
@@ -150,7 +150,7 @@ class LinkedDeque<T> implements Deque<T>
 	/**
 	 * Removes and returns the element at the beginning of this deque.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.macro.AssertError deque is empty (debug only).
+	 * @throws de.polygonal.AssertError deque is empty (debug only).
 	 */
 	inline public function popFront():T
 	{
@@ -170,7 +170,7 @@ class LinkedDeque<T> implements Deque<T>
 	/**
 	 * Returns the last element of the deque.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.macro.AssertError deque is empty (debug only).
+	 * @throws de.polygonal.AssertError deque is empty (debug only).
 	 */
 	inline public function back():T
 	{
@@ -184,7 +184,7 @@ class LinkedDeque<T> implements Deque<T>
 	/**
 	 * Inserts the element <code>x</code> at the back of the deque.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.macro.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
+	 * @throws de.polygonal.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
 	 */
 	inline public function pushBack(x:T):Void
 	{
@@ -204,7 +204,7 @@ class LinkedDeque<T> implements Deque<T>
 	/**
 	 * Deletes the element at the end of the deque.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.macro.AssertError deque is empty (debug only).
+	 * @throws de.polygonal.AssertError deque is empty (debug only).
 	 */
 	inline public function popBack():T
 	{
@@ -225,8 +225,8 @@ class LinkedDeque<T> implements Deque<T>
 	 * Returns the element at index <code>i</code> relative to the front of this deque.<br/>
 	 * The front element is at index [0], the back element is at index <b>&#091;<em>size()</em> - 1&#093;</b>.
 	 * <o>n</o>
-	 * @throws de.polygonal.core.macro.AssertError deque is empty (debug only).
-	 * @throws de.polygonal.core.macro.AssertError index out of range (debug only).
+	 * @throws de.polygonal.AssertError deque is empty (debug only).
+	 * @throws de.polygonal.AssertError index out of range (debug only).
 	 */
 	public function getFront(i:Int):T
 	{
@@ -259,8 +259,8 @@ class LinkedDeque<T> implements Deque<T>
 	 * Returns the element at index <code>i</code> relative to the back of this deque.<br/>
 	 * The back element is at index [0], the front element is at index &#091;<em>size()</em> - 1&#093;.
 	 * <o>n</o>
-	 * @throws de.polygonal.core.macro.AssertError deque is empty (debug only).
-	 * @throws de.polygonal.core.macro.AssertError index out of range (debug only).
+	 * @throws de.polygonal.AssertError deque is empty (debug only).
+	 * @throws de.polygonal.AssertError index out of range (debug only).
 	 */
 	public function getBack(i:Int):T
 	{
@@ -599,7 +599,7 @@ class LinkedDeque<T> implements Deque<T>
 	 * @param assign if true, the <code>copier</code> parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.<br/>
 	 * If false, the <em>clone()</em> method is called on each element. <warn>In this case all elements have to implement <em>Cloneable</em>.</warn>
 	 * @param copier a custom function for copying elements. Replaces element.<em>clone()</em> if <code>assign</code> is false.
-	 * @throws de.polygonal.core.macro.AssertError element is not of type <em>Cloneable</em> (debug only).
+	 * @throws de.polygonal.AssertError element is not of type <em>Cloneable</em> (debug only).
 	 */
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{

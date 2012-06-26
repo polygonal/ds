@@ -142,7 +142,7 @@ class DynamicObjectPool<T>
 	 * @param factory allocates objects by using a <em>Factory</em> object (calling <code>factory</code>.<em>create()</em>).
 	 * @param capacity the maximum number of objects that are stored in this pool.<br/>
 	 * The default value of Limits.INT32_MAX indicates that the size is unbound.
-	 * @throws de.polygonal.core.macro.AssertError invalid arguments.
+	 * @throws de.polygonal.AssertError invalid arguments.
 	 */
 	public function new(C:Class<T> = null, fabricate:Void->T = null, factory:Factory<T> = null, capacity = Limits.INT32_MAX)
 	{
@@ -252,7 +252,7 @@ class DynamicObjectPool<T>
 	/**
 	 * Returns the object <code>x</code> to the pool.<br/>
 	 * Objects are pushed onto a stack, so <em>get()</em> returns <code>x</code> if called immediately after <em>put()</em>.<br/>
-	 * @throws de.polygonal.core.macro.AssertError <code>x</code> was returned twice to the pool (debug only).
+	 * @throws de.polygonal.AssertError <code>x</code> was returned twice to the pool (debug only).
 	 */
 	inline public function put(x:T):Void
 	{

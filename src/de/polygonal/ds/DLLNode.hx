@@ -86,7 +86,7 @@ implements haxe.rtti.Generic
 	/**
 	 * Returns true if this node is the head of a list.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.macro.AssertError node is not managed by a list (debug only).
+	 * @throws de.polygonal.AssertError node is not managed by a list (debug only).
 	 */
 	inline public function isHead():Bool
 	{
@@ -100,7 +100,7 @@ implements haxe.rtti.Generic
 	/**
 	 * Returns true if this node is the tail of a list.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.macro.AssertError node is not managed by a list (debug only).
+	 * @throws de.polygonal.AssertError node is not managed by a list (debug only).
 	 */
 	inline public function isTail():Bool
 	{
@@ -132,7 +132,7 @@ implements haxe.rtti.Generic
 	/**
 	 * Returns the element of the next node.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.macro.AssertError next node is null (debug only).
+	 * @throws de.polygonal.AssertError next node is null (debug only).
 	 */
 	inline public function nextVal():T
 	{
@@ -146,7 +146,7 @@ implements haxe.rtti.Generic
 	/**
 	 * Returns the element of the previous node.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.macro.AssertError previous node is null (debug only).
+	 * @throws de.polygonal.AssertError previous node is null (debug only).
 	 */
 	inline public function prevVal():T
 	{
@@ -169,7 +169,7 @@ implements haxe.rtti.Generic
 	/**
 	 * Unlinks this node from its list and returns node.<em>next</em>.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.macro.AssertError list is null (debug only).
+	 * @throws de.polygonal.AssertError list is null (debug only).
 	 */
 	inline public function unlink():DLLNode<T>
 	{
@@ -192,8 +192,8 @@ implements haxe.rtti.Generic
 	 * trace(head.nextVal()); //1</pre>
 	 * <o>1</o>
 	 * @return the list's new head node.
-	 * @throws de.polygonal.core.macro.AssertError <code>node</code> is null or managed by a list.
-	 * @throws de.polygonal.core.macro.AssertError <code>node</code>.<em>prev</em> exists (debug only).
+	 * @throws de.polygonal.AssertError <code>node</code> is null or managed by a list.
+	 * @throws de.polygonal.AssertError <code>node</code>.<em>prev</em> exists (debug only).
 	 */
 	inline public function prepend(node:DLLNode<T>):DLLNode<T>
 	{
@@ -220,8 +220,8 @@ implements haxe.rtti.Generic
 	 * trace(tail.prevVal()); //0</pre>
 	 * <o>1</o>
 	 * @return the list's new tail node.
-	 * @throws de.polygonal.core.macro.AssertError <code>node</code> is null or managed by a list.
-	 * @throws de.polygonal.core.macro.AssertError <code>node</code>.<em>next</em> exists (debug only).
+	 * @throws de.polygonal.AssertError <code>node</code> is null or managed by a list.
+	 * @throws de.polygonal.AssertError <code>node</code>.<em>next</em> exists (debug only).
 	 */
 	inline public function append(node:DLLNode<T>):DLLNode<T>
 	{
@@ -248,8 +248,8 @@ implements haxe.rtti.Generic
 	 * trace(head.nextVal()); //1</pre>
 	 * <o>1</o>
 	 * @return the list's new head node.
-	 * @throws de.polygonal.core.macro.AssertError <code>node</code> is null or managed by a list (debug only).
-	 * @throws de.polygonal.core.macro.AssertError <code>node</code>.<em>prev</em> exists (debug only).
+	 * @throws de.polygonal.AssertError <code>node</code> is null or managed by a list (debug only).
+	 * @throws de.polygonal.AssertError <code>node</code>.<em>prev</em> exists (debug only).
 	 */
 	inline public function prependTo(node:DLLNode<T>):DLLNode<T>
 	{
@@ -276,8 +276,8 @@ implements haxe.rtti.Generic
 	 * trace(tail.prevVal()); //0</pre>
 	 * <o>1</o>
 	 * @return the list's new tail node.
-	 * @throws de.polygonal.core.macro.AssertError <code>node</code> is null or managed by a list (debug only).
-	 * @throws de.polygonal.core.macro.AssertError <code>node</code>.<em>next</em> exists (debug only).
+	 * @throws de.polygonal.AssertError <code>node</code> is null or managed by a list (debug only).
+	 * @throws de.polygonal.AssertError <code>node</code>.<em>next</em> exists (debug only).
 	 */
 	inline public function appendTo(node:DLLNode<T>):DLLNode<T>
 	{

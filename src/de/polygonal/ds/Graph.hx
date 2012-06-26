@@ -153,7 +153,7 @@ class Graph<T> implements Collection<T>
 	/**
 	 * Adds the node <code>x</code> to this graph.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.macro.AssertError size() equals maxSize (debug only).
+	 * @throws de.polygonal.AssertError size() equals maxSize (debug only).
 	 */
 	public function addNode(x:GraphNode<T>):GraphNode<T>
 	{
@@ -176,7 +176,7 @@ class Graph<T> implements Collection<T>
 	 * Removes the node <code>x</code> from this graph.<br/>
 	 * This clears all outgoing and incoming arcs and removes <code>x</code> from the node list.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.macro.AssertError graph is empty (debug only).
+	 * @throws de.polygonal.AssertError graph is empty (debug only).
 	 */
 	public function removeNode(x:GraphNode<T>):Void
 	{
@@ -196,8 +196,8 @@ class Graph<T> implements Collection<T>
 	 * Creates an uni-directional link between two nodes with a weight of <code>cost</code> (default is 1.0).<br/>
 	 * This creates an arc pointing from the <code>source</code> node to the <code>target</code> node.
 	 * <o>n</o>
-	 * @throws de.polygonal.core.macro.AssertError <code>source</code> or <code>target</code> is null (debug only).
-	 * @throws de.polygonal.core.macro.AssertError <code>source</code> equals <code>target</code> (debug only).
+	 * @throws de.polygonal.AssertError <code>source</code> or <code>target</code> is null (debug only).
+	 * @throws de.polygonal.AssertError <code>source</code> equals <code>target</code> (debug only).
 	 */
 	public function addSingleArc(source:GraphNode<T>, target:GraphNode<T>, cost = 1.):Void
 	{
@@ -233,8 +233,8 @@ class Graph<T> implements Collection<T>
 	 * Creates a bi-directional link between two nodes with a weight of <code>cost</code> (default is 1.0).<br/>
 	 * This creates two arcs - an arc that points from the <code>source</code> node to the <code>target</code> node and vice versa.
 	 * <o>n</o>
-	 * @throws de.polygonal.core.macro.AssertError <code>source</code> or <code>target</code> is null (debug only).
-	 * @throws de.polygonal.core.macro.AssertError <code>source</code> equals <code>target</code> (debug only).
+	 * @throws de.polygonal.AssertError <code>source</code> or <code>target</code> is null (debug only).
+	 * @throws de.polygonal.AssertError <code>source</code> equals <code>target</code> (debug only).
 	 */
 	public function addMutualArc(source:GraphNode<T>, target:GraphNode<T>, cost = 1.):Void
 	{
@@ -275,9 +275,9 @@ class Graph<T> implements Collection<T>
 	 * The size remains unchanged as the node is not removed from the graph.
 	 * <o>(n&sup2; - n) / 2</o>
 	 * @return the disconnected graph node.
-	 * @throws de.polygonal.core.macro.AssertError <code>node</code> is null (debug only).
-	 * @throws de.polygonal.core.macro.AssertError graph is empty (debug only).
-	 * @throws de.polygonal.core.macro.AssertError <code>node</code> does not belong to this graph (debug only).
+	 * @throws de.polygonal.AssertError <code>node</code> is null (debug only).
+	 * @throws de.polygonal.AssertError graph is empty (debug only).
+	 * @throws de.polygonal.AssertError <code>node</code> does not belong to this graph (debug only).
 	 */
 	public function unlink(node:GraphNode<T>):GraphNode<T>
 	{
@@ -1243,7 +1243,7 @@ class Graph<T> implements Collection<T>
 	 * @param assign if true, the <code>copier</code> parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.<br/>
 	 * If false, the <em>clone()</em> method is called on each element. <warn>In this case all elements have to implement <em>Cloneable</em>.</warn>
 	 * @param copier a custom function for copying elements. Replaces element.<em>clone()</em> if <code>assign</code> is false.
-	 * @throws de.polygonal.core.macro.AssertError element is not of type <em>Cloneable</em> (debug only).
+	 * @throws de.polygonal.AssertError element is not of type <em>Cloneable</em> (debug only).
 	 */
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{

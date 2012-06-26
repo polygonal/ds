@@ -48,7 +48,7 @@ class DoubleMemory extends MemoryAccess
 	 * <warn>The bytes are written in little endian format.</warn>
 	 * @param min index pointing to the first double.
 	 * @param max index pointing to the last double.
-	 * @throws de.polygonal.core.macro.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
+	 * @throws de.polygonal.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
 	 */
 	#if (flash9 || cpp)
 	public static function toByteArray(input:DoubleMemory, min = -1, max = -1):flash.utils.ByteArray
@@ -91,7 +91,7 @@ class DoubleMemory extends MemoryAccess
 	 * If no range is specified, all <code>input</code> bytes are copied.
 	 * @param min index pointing to the byte storing the first double.
 	 * @param min index pointing to the byte storing the last double.
-	 * @throws de.polygonal.core.macro.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
+	 * @throws de.polygonal.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
 	 */
 	#if (flash9 || cpp)
 	public static function ofByteArray(input:flash.utils.ByteArray, min = -1, max = -1):DoubleMemory
@@ -122,7 +122,7 @@ class DoubleMemory extends MemoryAccess
 	 * If no range is specified, all <code>input</code> bytes are copied.<br/>
 	 * @param min index pointing to the first double.
 	 * @param max index pointing to the last double.
-	 * @throws de.polygonal.core.macro.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
+	 * @throws de.polygonal.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
 	 */
 	public static function toBytesData(input:DoubleMemory, min = -1, max = -1):haxe.io.BytesData
 	{
@@ -150,7 +150,7 @@ class DoubleMemory extends MemoryAccess
 	 * If no range is specified, all <code>input</code> bytes are copied.
 	 * @param min index pointing to the byte storing the first float.
 	 * @param min index pointing to the byte storing the last float.
-	 * @throws de.polygonal.core.macro.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
+	 * @throws de.polygonal.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
 	 */
 	public static function ofBytesData(input:haxe.io.BytesData, min = -1, max = -1):DoubleMemory
 	{
@@ -189,7 +189,7 @@ class DoubleMemory extends MemoryAccess
 	 * If no range is specified, all <code>input</code> bytes are copied.
 	 * @param min index pointing to the first double.
 	 * @param max index pointing to the last double.
-	 * @throws de.polygonal.core.macro.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
+	 * @throws de.polygonal.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
 	 */
 	public static function toArray(input:DoubleMemory, min = -1, max = -1):Array<Float>
 	{
@@ -227,7 +227,7 @@ class DoubleMemory extends MemoryAccess
 	 * If no range is specified, all <code>input</code> values are copied.
 	 * @param min index pointing to the first double.
 	 * @param max index pointing to the last double.
-	 * @throws de.polygonal.core.macro.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
+	 * @throws de.polygonal.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
 	 */
 	public static function ofArray(input:Array<Float>, min = -1, max = -1):DoubleMemory
 	{
@@ -255,7 +255,7 @@ class DoubleMemory extends MemoryAccess
 	 * @param min index pointing to the first double.
 	 * @param max index pointing to the last double.
 	 * @param output the <code>Vector</code> object to write into. If null, a new Vector object is created on-the-fly.
-	 * @throws de.polygonal.core.macro.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
+	 * @throws de.polygonal.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
 	 */
 	#if flash10
 	public static function toVector(input:DoubleMemory, min = -1, max = -1, output:flash.Vector<Float> = null):flash.Vector<Float>
@@ -299,7 +299,7 @@ class DoubleMemory extends MemoryAccess
 	 * If no range is specified, all <code>input</code> values are copied.
 	 * @param min index pointing to the first double.
 	 * @param max index pointing to the last double.
-	 * @throws de.polygonal.core.macro.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
+	 * @throws de.polygonal.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
 	 */
 	#if flash10
 	public static function ofVector(input:flash.Vector<Float>, min = -1, max = -1):DoubleMemory
@@ -394,8 +394,8 @@ class DoubleMemory extends MemoryAccess
 	
 	/**
 	 * Adjusts the size of this object so it's capable of storing <code>newSize</code> doubles.
-	 * @throws de.polygonal.core.macro.AssertError invalid size (debug only).
-	 * @throws de.polygonal.core.macro.AssertError memory was already deallocated (debug only).
+	 * @throws de.polygonal.AssertError invalid size (debug only).
+	 * @throws de.polygonal.AssertError memory was already deallocated (debug only).
 	 */
 	override public function resize(newSize:Int):Void
 	{
@@ -421,8 +421,8 @@ class DoubleMemory extends MemoryAccess
 	
 	/**
 	 * Returns the double at index <code>i</code>.
-	 * @throws de.polygonal.core.macro.AssertError index out of range (debug only).
-	 * @throws de.polygonal.core.macro.AssertError memory deallocated (debug only).
+	 * @throws de.polygonal.AssertError index out of range (debug only).
+	 * @throws de.polygonal.AssertError memory deallocated (debug only).
 	 */
 	inline public function get(i:Int):Float
 	{
@@ -435,8 +435,8 @@ class DoubleMemory extends MemoryAccess
 	
 	/**
 	 * Replaces the double at the index <code>i</code> with the double <code>x</code>.
-	 * @throws de.polygonal.core.macro.AssertError index out of range (debug only).
-	 * @throws de.polygonal.core.macro.AssertError memory deallocated (debug only).
+	 * @throws de.polygonal.AssertError index out of range (debug only).
+	 * @throws de.polygonal.AssertError memory deallocated (debug only).
 	 */
 	inline public function set(i:Int, x:Float):Void
 	{
@@ -449,8 +449,8 @@ class DoubleMemory extends MemoryAccess
 	
 	/**
 	 * Swaps the double at index <code>i</code> with the double at index <code>j</code>.
-	 * @throws de.polygonal.core.macro.AssertError index out of range (debug only).
-	 * @throws de.polygonal.core.macro.AssertError <code>i</code> equals <code>j</code> (debug only).
+	 * @throws de.polygonal.AssertError index out of range (debug only).
+	 * @throws de.polygonal.AssertError <code>i</code> equals <code>j</code> (debug only).
 	 */
 	inline public function swp(i:Int, j:Int):Void
 	{
@@ -471,8 +471,8 @@ class DoubleMemory extends MemoryAccess
 	
 	/**
 	 * Returns the memory byte offset of the first byte storing the double at index <code>i</code>.
-	 * @throws de.polygonal.core.macro.AssertError index out of range (debug only).
-	 * @throws de.polygonal.core.macro.AssertError memory deallocated (debug only).
+	 * @throws de.polygonal.AssertError index out of range (debug only).
+	 * @throws de.polygonal.AssertError memory deallocated (debug only).
 	 */
 	inline public function getAddr(i:Int):Int
 	{

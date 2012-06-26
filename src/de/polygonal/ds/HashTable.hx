@@ -111,9 +111,9 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	 * @param maxSize the maximum allowed size of this hash table.
 	 * The default value of -1 indicates that there is no upper limit.
 	 * 
-	 * @throws de.polygonal.core.macro.AssertError <code>slotCount</code> is not a power of two (debug only).
-	 * @throws de.polygonal.core.macro.AssertError <code>capacity</code> is not a power of two (debug only).
-	 * @throws de.polygonal.core.macro.AssertError <code>capacity</code> is &lt; 2 (debug only).
+	 * @throws de.polygonal.AssertError <code>slotCount</code> is not a power of two (debug only).
+	 * @throws de.polygonal.AssertError <code>capacity</code> is not a power of two (debug only).
+	 * @throws de.polygonal.AssertError <code>capacity</code> is &lt; 2 (debug only).
 	 */
 	public function new(slotCount:Int, capacity = -1, isResizable = true, maxSize = -1)
 	{
@@ -186,7 +186,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	 * Returns the value that is mapped to <code>key</code> or null if <code>key</code> does not exist.<br/>
 	 * Uses move-to-front-on-access which reduces access time when similar keys are frequently queried.
 	 * <o>n</o>
-	 * @throws de.polygonal.core.macro.AssertError <code>key</code> is null (debug only).
+	 * @throws de.polygonal.AssertError <code>key</code> is null (debug only).
 	 */
 	inline public function getFront(key:K):T
 	{
@@ -201,9 +201,9 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	 * Maps <code>val</code> to <code>key</code> in this map, but only if <code>key</code> does not exist yet.<br/>
 	 * <o>n</o>
 	 * @return true if <code>key</code> was mapped to <code>val</code> for the first time.
-	 * @throws de.polygonal.core.macro.AssertError out of space - hash table is full but not resizable.
-	 * @throws de.polygonal.core.macro.AssertError <code>key</code> is null (debug only).
-	 * @throws de.polygonal.core.macro.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
+	 * @throws de.polygonal.AssertError out of space - hash table is full but not resizable.
+	 * @throws de.polygonal.AssertError <code>key</code> is null (debug only).
+	 * @throws de.polygonal.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
 	 */
 	inline public function setIfAbsent(key:K, val:T):Bool
 	{
@@ -239,7 +239,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	 * Redistributes all keys over <code>slotCount</code>.<br/>
 	 * This is an expensive operations as the hash table is rebuild from scratch.
 	 * <o>n</o>
-	 * @throws de.polygonal.core.macro.AssertError <code>slotCount</code> is not a power of two (debug only).
+	 * @throws de.polygonal.AssertError <code>slotCount</code> is not a power of two (debug only).
 	 */
 	public function rehash(slotCount:Int):Void
 	{
@@ -250,7 +250,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	 * Remaps the first occurrence of <code>key</code> to a new value <code>val</code>.
 	 * <o>n</o>
 	 * @return true if <code>val</code> was successfully remapped to <code>key</code>.
-	 * @throws de.polygonal.core.macro.AssertError <code>key</code> is null (debug only).
+	 * @throws de.polygonal.AssertError <code>key</code> is null (debug only).
 	 */
 	inline public function remap(key:K, val:T):Bool
 	{
@@ -386,7 +386,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	/**
 	 * Returns true if this map contains <code>key</code>.
 	 * <o>n</o>
-	 * @throws de.polygonal.core.macro.AssertError <code>key</code> is null (debug only).
+	 * @throws de.polygonal.AssertError <code>key</code> is null (debug only).
 	 */
 	inline public function hasKey(key:K):Bool
 	{
@@ -396,7 +396,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	/**
 	 * Returns the value that is mapped to <code>key</code> or null if <code>key</code> does not exist.
 	 * <o>n</o>
-	 * @throws de.polygonal.core.macro.AssertError <code>key</code> is null (debug only).
+	 * @throws de.polygonal.AssertError <code>key</code> is null (debug only).
 	 */
 	inline public function get(key:K):T
 	{
@@ -417,9 +417,9 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	 * <warn>To ensure unique keys either use <em>hasKey()</em> before <em>set()</em> or <em>setIfAbsent()</em></warn>
 	 * <o>n</o>
 	 * @return true if <code>key</code> was added for the first time, false if another instance of <code>key</code> was inserted.
-	 * @throws de.polygonal.core.macro.AssertError out of space - hash table is full but not resizable.
-	 * @throws de.polygonal.core.macro.AssertError <code>key</code> is null (debug only).
-	 * @throws de.polygonal.core.macro.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
+	 * @throws de.polygonal.AssertError out of space - hash table is full but not resizable.
+	 * @throws de.polygonal.AssertError <code>key</code> is null (debug only).
+	 * @throws de.polygonal.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
 	 */
 	inline public function set(key:K, val:T):Bool
 	{
@@ -441,7 +441,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	 * Only the key is nullified, to nullifiy the value call <em>pack()</em>.
 	 * <o>n</o>
 	 * @return true if <code>key</code> is successfully removed.
-	 * @throws de.polygonal.core.macro.AssertError <code>key</code> is null (debug only).
+	 * @throws de.polygonal.AssertError <code>key</code> is null (debug only).
 	 */
 	inline public function clr(key:K):Bool
 	{
@@ -696,7 +696,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	 * @param assign if true, the <code>copier</code> parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.<br/>
 	 * If false, the <em>clone()</em> method is called on each element. <warn>In this case all elements have to implement <em>Cloneable</em>.</warn>
 	 * @param copier a custom function for copying elements. Replaces element.<em>clone()</em> if <code>assign</code> is false.
-	 * @throws de.polygonal.core.macro.AssertError element is not of type <em>Cloneable</em> (debug only).
+	 * @throws de.polygonal.AssertError element is not of type <em>Cloneable</em> (debug only).
 	 */
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{

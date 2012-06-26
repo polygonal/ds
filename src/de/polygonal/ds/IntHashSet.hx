@@ -149,9 +149,9 @@ class IntHashSet implements Set<Int>
 	 * @param maxSize the maximum allowed size of this hash set.
 	 * The default value of -1 indicates that there is no upper limit.
 	 * 
-	 * @throws de.polygonal.core.macro.AssertError <code>slotCount</code> is not a power of two (debug only).
-	 * @throws de.polygonal.core.macro.AssertError <code>capacity</code> is not a power of two (debug only).
-	 * @throws de.polygonal.core.macro.AssertError <code>capacity</code> is &lt; 2 (debug only).
+	 * @throws de.polygonal.AssertError <code>slotCount</code> is not a power of two (debug only).
+	 * @throws de.polygonal.AssertError <code>capacity</code> is not a power of two (debug only).
+	 * @throws de.polygonal.AssertError <code>capacity</code> is &lt; 2 (debug only).
 	 */
 	public function new(slotCount:Int, capacity = -1, isResizable = true, maxSize = -1)
 	{
@@ -273,7 +273,7 @@ class IntHashSet implements Set<Int>
 	 * Returns true if this set contains the element <code>x</code>.<br/>
 	 * Uses move-to-front-on-access which reduces access time when similar elements are frequently queried.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.macro.AssertError value 0x80000000 is reserved (debug only).
+	 * @throws de.polygonal.AssertError value 0x80000000 is reserved (debug only).
 	 */
 	inline public function hasFront(x:Int):Bool
 	{
@@ -341,7 +341,7 @@ class IntHashSet implements Set<Int>
 	 * Redistributes all elements over <code>slotCount</code>.<br/>
 	 * This is an expensive operations as the set is rebuild from scratch.
 	 * <o>n</o>
-	 * @throws de.polygonal.core.macro.AssertError <code>slotCount</code> is not a power of two (debug only).
+	 * @throws de.polygonal.AssertError <code>slotCount</code> is not a power of two (debug only).
 	 */
 	public function rehash(slotCount:Int):Void
 	{
@@ -421,7 +421,7 @@ class IntHashSet implements Set<Int>
 	/**
 	 * Returns true if this set contains the element <code>x</code>.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.macro.AssertError value 0x80000000 is reserved (debug only).
+	 * @throws de.polygonal.AssertError value 0x80000000 is reserved (debug only).
 	 */
 	inline public function has(x:Int):Bool
 	{
@@ -478,9 +478,9 @@ class IntHashSet implements Set<Int>
 	 * Adds the element <code>x</code> to this set if possible.
 	 * <o>1</o>
 	 * @return true if <code>x</code> was added to this set, false if <code>x</code> already exists.
-	 * @throws de.polygonal.core.macro.AssertError value 0x80000000 is reserved (debug only).
-	 * @throws de.polygonal.core.macro.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
-	 * @throws de.polygonal.core.macro.AssertError hash set is full (if not resizable).
+	 * @throws de.polygonal.AssertError value 0x80000000 is reserved (debug only).
+	 * @throws de.polygonal.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
+	 * @throws de.polygonal.AssertError hash set is full (if not resizable).
 	 */
 	inline public function set(x:Int):Bool
 	{

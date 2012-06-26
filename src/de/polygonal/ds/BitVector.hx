@@ -115,7 +115,7 @@ class BitVector implements Hashable
 	/**
 	 * Returns true if the bit at index <code>i</code> is 1.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.macro.AssertError index out of range (debug only).
+	 * @throws de.polygonal.AssertError index out of range (debug only).
 	 */
 	inline public function has(i:Int):Bool
 	{
@@ -135,7 +135,7 @@ class BitVector implements Hashable
 	/**
 	 * Sets the bit at index <code>i</code> to 1.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.macro.AssertError index out of range (debug only).
+	 * @throws de.polygonal.AssertError index out of range (debug only).
 	 */
 	inline public function set(i:Int):Void
 	{
@@ -155,7 +155,7 @@ class BitVector implements Hashable
 	/**
 	 * Sets the bit at index <code>i</code> to 0.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.macro.AssertError index out of range (debug only).
+	 * @throws de.polygonal.AssertError index out of range (debug only).
 	 */
 	inline public function clr(i:Int):Void
 	{
@@ -193,8 +193,8 @@ class BitVector implements Hashable
 	/**
 	 * Clears all bits in the range <arg>&#091;min, max)</arg>.
 	 * This is faster than clearing individual bits by using the <code>clr</code> method.
-	 * @throws de.polygonal.core.macro.AssertError min out of range (debug only).
-	 * @throws de.polygonal.core.macro.AssertError max out of range (debug only).
+	 * @throws de.polygonal.AssertError min out of range (debug only).
+	 * @throws de.polygonal.AssertError max out of range (debug only).
 	 * <o>n</o>
 	 */
 	inline public function clrRange(min:Int, max:Int):Void
@@ -229,8 +229,8 @@ class BitVector implements Hashable
 	/**
 	 * Sets all bits in the range <arg>&#091;min, max)</arg>.
 	 * This is faster than setting individual bits by using the <code>set</code> method.
-	 * @throws de.polygonal.core.macro.AssertError min out of range (debug only).
-	 * @throws de.polygonal.core.macro.AssertError max out of range (debug only).
+	 * @throws de.polygonal.AssertError min out of range (debug only).
+	 * @throws de.polygonal.AssertError max out of range (debug only).
 	 * <o>n</o>
 	 */
 	inline public function setRange(min:Int, max:Int):Void
@@ -265,7 +265,7 @@ class BitVector implements Hashable
 	/**
 	 * Sets the bit at index <code>i</code> to 1 if <code>cond</code> is true or clears the bit at index <code>i</code> if <code>cond</code> is false.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.macro.AssertError index out of range (debug only) (debug only).
+	 * @throws de.polygonal.AssertError index out of range (debug only) (debug only).
 	 */
 	inline public function ofBool(i:Int, cond:Bool):Void
 	{
@@ -358,7 +358,7 @@ class BitVector implements Hashable
 	 * The bit-vector is resized to the size of <code>bytes</code>.
 	 * <o>n</o>
 	 * @param bigEndian the input byte order (default is little endian)
-	 * @throws de.polygonal.core.macro.AssertError <code>input</code> is null (debug only).
+	 * @throws de.polygonal.AssertError <code>input</code> is null (debug only).
 	 */
 	public function ofBytes(bytes:haxe.io.BytesData, bigEndian = false):Void
 	{

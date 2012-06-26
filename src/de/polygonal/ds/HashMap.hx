@@ -105,7 +105,7 @@ class HashMap<K, T> implements Map<K, T>
 	 * Remaps an existing <code>key</code> to a new <code>val</code>.
 	 * <o>1</o>
 	 * @return true if <code>key</code> was successfully remapped to <code>val</code>.
-	 * @throws de.polygonal.core.macro.AssertError <code>key</code>/<code>val</code> is null (debug only).
+	 * @throws de.polygonal.AssertError <code>key</code>/<code>val</code> is null (debug only).
 	 */
 	inline public function remap(key:K, val:T):Bool
 	{
@@ -180,7 +180,7 @@ class HashMap<K, T> implements Map<K, T>
 	/**
 	 * Returns true if this map contains a mapping for <code>val</code>.
 	 * <o>n</o>
-	 * @throws de.polygonal.core.macro.AssertError <code>val</code> is null (debug only).
+	 * @throws de.polygonal.AssertError <code>val</code> is null (debug only).
 	 */
 	inline public function has(val:T):Bool
 	{
@@ -205,7 +205,7 @@ class HashMap<K, T> implements Map<K, T>
 	/**
 	 * Returns true if this map contains the key <code>key</code>.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.macro.AssertError <code>key</code> is null (debug only).
+	 * @throws de.polygonal.AssertError <code>key</code> is null (debug only).
 	 */
 	inline public function hasKey(key:K):Bool
 	{
@@ -221,7 +221,7 @@ class HashMap<K, T> implements Map<K, T>
 	/**
 	 * Returns the value that is mapped to <code>key</code> or null if <code>key</code> does not exist.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.macro.AssertError <code>key</code> is null (debug only).
+	 * @throws de.polygonal.AssertError <code>key</code> is null (debug only).
 	 */
 	inline public function get(key:K):T
 	{
@@ -237,8 +237,8 @@ class HashMap<K, T> implements Map<K, T>
 	 * Maps <code>val</code> to <code>key</code>.
 	 * <o>1</o>
 	 * @return true if <code>key</code> was added, false if <code>key</code> already exists.
-	 * @throws de.polygonal.core.macro.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
-	 * @throws de.polygonal.core.macro.AssertError <code>key</code>/<code>val</code> is null (debug only).
+	 * @throws de.polygonal.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
+	 * @throws de.polygonal.AssertError <code>key</code>/<code>val</code> is null (debug only).
 	 */
 	inline public function set(key:K, val:T):Bool
 	{
@@ -267,7 +267,7 @@ class HashMap<K, T> implements Map<K, T>
 	 * Removes <code>key</code> and the value that is mapped to it.
 	 * <o>1</o>
 	 * @return true if <code>key</code> is successfully removed, false if <code>key</code> does not exist.
-	 * @throws de.polygonal.core.macro.AssertError <code>key</code> is null (debug only).
+	 * @throws de.polygonal.AssertError <code>key</code> is null (debug only).
 	 */
 	inline public function clr(key:K):Bool
 	{
@@ -341,7 +341,7 @@ class HashMap<K, T> implements Map<K, T>
 	/**
 	 * Same as <em>has()</em>.
 	 * <o>n</o>
-	 * @throws de.polygonal.core.macro.AssertError <code>x</code> is null (debug only).
+	 * @throws de.polygonal.AssertError <code>x</code> is null (debug only).
 	 */
 	inline public function contains(x:T):Bool
 	{
@@ -352,7 +352,7 @@ class HashMap<K, T> implements Map<K, T>
 	 * Removes all keys that map the value <code>x</code>.
 	 * <o>n</o>
 	 * @return true if at least one value was removed, otherwise false.
-	 * @throws de.polygonal.core.macro.AssertError <code>x</code> is null (debug only).
+	 * @throws de.polygonal.AssertError <code>x</code> is null (debug only).
 	 */
 	public function remove(x:T):Bool
 	{
@@ -463,7 +463,7 @@ class HashMap<K, T> implements Map<K, T>
 	 * If false, element.<em>clone()</em> is used for duplicating elements.<br/>
 	 * <warn>In this case all elements have to implement <em>Cloneable</em>.</warn>
 	 * @param copier uses a custom function instead of element.<em>clone()</em> for copying elements if the <code>assign</code> parameter is false.
-	 * @throws de.polygonal.core.macro.AssertError element is not of type <em>Cloneable</em> (debug only).
+	 * @throws de.polygonal.AssertError element is not of type <em>Cloneable</em> (debug only).
 	 */
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{

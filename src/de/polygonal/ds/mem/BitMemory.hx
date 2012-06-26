@@ -50,7 +50,7 @@ class BitMemory extends MemoryAccess
 	/**
 	 * Converts <code>input</code> to a <code>ByteArray</code> object.
 	 * <warn>The bytes are written in little endian format.</warn>
-	 * @throws de.polygonal.core.macro.AssertError memory deallocated (debug only).
+	 * @throws de.polygonal.AssertError memory deallocated (debug only).
 	 */
 	#if (flash9 || cpp)
 	public static function toByteArray(input:BitMemory):flash.utils.ByteArray
@@ -81,7 +81,7 @@ class BitMemory extends MemoryAccess
 	/**
 	 * Converts <code>input</code> in the range &#091;<code>min</code>, <code>max</code>&#093; to a <em>ByteMemory</em> object.<br/>
 	 * If no range is specified, all <code>input</code> bytes are copied.
-	 * @throws de.polygonal.core.macro.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
+	 * @throws de.polygonal.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
 	 */
 	#if (flash9 || cpp)
 	public static function ofByteArray(input:flash.utils.ByteArray, min = -1, max = -1):BitMemory
@@ -123,7 +123,7 @@ class BitMemory extends MemoryAccess
 	/**
 	 * Converts <code>input</code> to a <code>BytesData</code> object.
 	 * <warn>The bytes are written in little endian format.</warn>
-	 * @throws de.polygonal.core.macro.AssertError memory deallocated (debug only).
+	 * @throws de.polygonal.AssertError memory deallocated (debug only).
 	 */
 	public static function toBytesData(input:BitMemory):haxe.io.BytesData
 	{
@@ -151,7 +151,7 @@ class BitMemory extends MemoryAccess
 	/**
 	 * Converts <code>input</code> in the range &#091;<code>min</code>, <code>max</code>&#093; to a <em>ByteMemory</em> object.<br/>
 	 * If no range is specified, all <code>input</code> bytes are copied.
-	 * @throws de.polygonal.core.macro.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
+	 * @throws de.polygonal.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
 	 */
 	public static function ofBytesData(input:haxe.io.BytesData, min = -1, max = -1):BitMemory
 	{
@@ -219,7 +219,7 @@ class BitMemory extends MemoryAccess
 	
 	/**
 	 * Converts <code>input</code> to a <em>BitVector</em> object.
-	 * @throws de.polygonal.core.macro.AssertError memory deallocated (debug only).
+	 * @throws de.polygonal.AssertError memory deallocated (debug only).
 	 */
 	public static function toBitVector(input:BitMemory):BitVector
 	{
@@ -293,7 +293,7 @@ class BitMemory extends MemoryAccess
 	
 	/**
 	 * Sets all bits to the value <code>x</code>.
-	 * @throws de.polygonal.core.macro.AssertError <code>x</code> is not 0 or 1 (debug only).
+	 * @throws de.polygonal.AssertError <code>x</code> is not 0 or 1 (debug only).
 	 */
 	public function fill(x:Int):Void
 	{
@@ -322,8 +322,8 @@ class BitMemory extends MemoryAccess
 	
 	/**
 	 * Adjusts the size of this object so it's capable of storing <code>newSize</code> bits.
-	 * @throws de.polygonal.core.macro.AssertError invalid size (debug only).
-	 * @throws de.polygonal.core.macro.AssertError memory was already deallocated (debug only).
+	 * @throws de.polygonal.AssertError invalid size (debug only).
+	 * @throws de.polygonal.AssertError memory was already deallocated (debug only).
 	 */
 	override public function resize(newSize:Int):Void
 	{
@@ -351,8 +351,8 @@ class BitMemory extends MemoryAccess
 	
 	/**
 	 * Returns true if the bit at index <code>i</code> is 1.
-	 * @throws de.polygonal.core.macro.AssertError index out of range (debug only).
-	 * @throws de.polygonal.core.macro.AssertError memory deallocated (debug only).
+	 * @throws de.polygonal.AssertError index out of range (debug only).
+	 * @throws de.polygonal.AssertError memory deallocated (debug only).
 	 */
 	inline public function has(i:Int):Bool
 	{
@@ -369,8 +369,8 @@ class BitMemory extends MemoryAccess
 	
 	/**
 	 * Returns 1 if the bit at index <code>i</code> is set, otherwise zero.
-	 * @throws de.polygonal.core.macro.AssertError index out of range (debug only).
-	 * @throws de.polygonal.core.macro.AssertError memory deallocated (debug only).
+	 * @throws de.polygonal.AssertError index out of range (debug only).
+	 * @throws de.polygonal.AssertError memory deallocated (debug only).
 	 */
 	inline public function get(i:Int):Int
 	{
@@ -387,8 +387,8 @@ class BitMemory extends MemoryAccess
 	
 	/**
 	 * Sets the bit at index <code>i</code> to 1.
-	 * @throws de.polygonal.core.macro.AssertError index out of range (debug only).
-	 * @throws de.polygonal.core.macro.AssertError memory deallocated (debug only).
+	 * @throws de.polygonal.AssertError index out of range (debug only).
+	 * @throws de.polygonal.AssertError memory deallocated (debug only).
 	 */
 	inline public function set(i:Int):Void
 	{
@@ -406,8 +406,8 @@ class BitMemory extends MemoryAccess
 	
 	/**
 	 * Sets the bit at index <code>i</code> to 0.
-	 * @throws de.polygonal.core.macro.AssertError index out of range (debug only).
-	 * @throws de.polygonal.core.macro.AssertError memory deallocated (debug only).
+	 * @throws de.polygonal.AssertError index out of range (debug only).
+	 * @throws de.polygonal.AssertError memory deallocated (debug only).
 	 */
 	inline public function clr(i:Int):Void
 	{
@@ -425,7 +425,7 @@ class BitMemory extends MemoryAccess
 	
 	/**
 	 * Sets all bits to 0.
-	 * @throws de.polygonal.core.macro.AssertError memory deallocated (debug only).
+	 * @throws de.polygonal.AssertError memory deallocated (debug only).
 	 */
 	inline public function clrAll():Void
 	{
@@ -438,7 +438,7 @@ class BitMemory extends MemoryAccess
 	
 	/**
 	 * Sets all bits to 1.
-	 * @throws de.polygonal.core.macro.AssertError memory deallocated (debug only).
+	 * @throws de.polygonal.AssertError memory deallocated (debug only).
 	 */
 	inline public function setAll():Void
 	{
@@ -451,8 +451,8 @@ class BitMemory extends MemoryAccess
 	
 	/**
 	 * Sets the bit at index <code>i</code> to 1 if <code>cond</code> is true or clears the bit at index <code>i</code> if <code>cond</code> is false.
-	 * @throws de.polygonal.core.macro.AssertError index out of range (debug only).
-	 * @throws de.polygonal.core.macro.AssertError memory deallocated (debug only).
+	 * @throws de.polygonal.AssertError index out of range (debug only).
+	 * @throws de.polygonal.AssertError memory deallocated (debug only).
 	 */
 	inline public function ofBool(i:Int, cond:Bool):Void
 	{
@@ -461,8 +461,8 @@ class BitMemory extends MemoryAccess
 	
 	/**
 	 * Returns the memory byte offset for the byte storing the bit at index <code>i</code>.
-	 * @throws de.polygonal.core.macro.AssertError segmentation fault (debug only).
-	 * @throws de.polygonal.core.macro.AssertError memory deallocated (debug only).
+	 * @throws de.polygonal.AssertError segmentation fault (debug only).
+	 * @throws de.polygonal.AssertError memory deallocated (debug only).
 	 */
 	inline public function getAddr(i:Int):Int
 	{
