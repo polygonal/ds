@@ -1,10 +1,5 @@
-# Data Structures For Game Developers (ds)
+# Data Structures For Games (ds)
 Formerly known as "_AS3 Data Structures For Game Developers (AS3DS)_", the package contains parametrized classes that allow programmers to easily implement standard data structures like linked lists, queues, stacks or multi-dimensional arrays. The result is somewhere in between the C++ STL (Standard Template Library) and the Java Collection framework. The library is highly optimized and uses advanced Haxe features like inlining or code generation for parametrized classes through the haxe.rtti.Generics interface.
-
-## Installation
-Install [Haxe](http://haxe.org/download) and run `$ haxelib install polygonal-ds` from the console.
-This installs the polygonal-ds library hosted on [lib.haxe.org](http://lib.haxe.org/p/polygonal-ds), which always mirrors the git master branch. From now on just compile with `$ haxe ... -lib polygonal-ds`.
-If you want to test the latest beta build, you should pull the dev branch and add the src folder to the classpath via `$ haxe ... -cp src`.
 
 ## Documentation
 -    Slides [Introduction to ds - Data Structures For Games](http://lab.polygonal.de/wp-content/assets/120111/introduction_to_ds.pdf)
@@ -38,10 +33,15 @@ Prevents less important inner classes from being documented.
 ## Questions, Comments, Feature Requests...
 
 http://groups.google.com/group/polygonal-ds
+	
+## Installation
+Install [Haxe](http://haxe.org/download) and run `$ haxelib install polygonal-ds` from the console.
+This installs the polygonal-ds library hosted on [lib.haxe.org](http://lib.haxe.org/p/polygonal-ds), which always mirrors the git master branch. From now on just compile with `$ haxe ... -lib polygonal-ds`.
+If you want to test the latest beta build, you should pull the dev branch and add the src folder to the classpath via `$ haxe ... -cp src`.
 
 ## Changelog
 
-### 1.36 (released 2012-06-27)
+### 1.36 (released 2012-07-01)
 
  * added: TreeNode#isAncestor()
  * added: TreeNode#isDescendant()
