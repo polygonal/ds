@@ -41,7 +41,7 @@ If you want to test the latest beta build, you should pull the dev branch and ad
 
 ## Changelog
 
-### 1.36 (released 2012-07-01)
+### 1.xx (dev branch)
 
  * added: TreeNode#isAncestor()
  * added: TreeNode#isDescendant()
@@ -69,6 +69,7 @@ If you want to test the latest beta build, you should pull the dev branch and ad
  * fixed: support Haxe 2.10
  * modified: also dump state with toString() in release mode
  * fixed: DA.sort() out of bound access
+ * fixed: BitVector.ofBytes for neko
 
 ### 1.35 (released 2011-12-22)
 

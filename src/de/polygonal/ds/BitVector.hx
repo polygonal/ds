@@ -373,15 +373,29 @@ class BitVector implements Hashable
 		
 		#if neko
 		var k = neko.NativeString.length(bytes);
+		_arrSize = Math.ceil(k / 3);
+		_bitSize = _arrSize * 31;
+		_bits = #if flash10 new flash.Vector<Int>(_arrSize, true); #else new Array<Int>(); #end
+		for (i in 0..._arrSize) _bits[i] = 0;
+		var index = 0;
+		var shift = 0, t = 0;
+		for (i in 0...k)
+		{
+			var byte = input.readByte();
+			for (j in 0...8)
+			{
+				if ((byte & 1) == 1) set(index);
+				byte >>= 1;
+				index++;
+			}
+		}
 		#else
 		var k = bytes.length;
-		#end
-		
 		var numBytes = k & 3;
 		var numIntegers = (k - numBytes) >> 2;
 		_arrSize = numIntegers + (numBytes > 0 ? 1 : 0);
 		_bitSize = _arrSize << 5;
-		_bits    = #if flash10 new flash.Vector<Int>(_arrSize, true); #else new Array<Int>(); #end
+		_bits = #if flash10 new flash.Vector<Int>(_arrSize, true); #else new Array<Int>(); #end
 		for (i in 0..._arrSize) _bits[i] = 0;
 		for (i in 0...numIntegers)
 		{
@@ -405,6 +419,7 @@ class BitVector implements Hashable
 				index++;
 			}
 		}
+		#end
 	}
 	
 	/**
