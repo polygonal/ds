@@ -33,7 +33,7 @@ Prevents less important inner classes from being documented.
 ## Questions, Comments, Feature Requests...
 
 http://groups.google.com/group/polygonal-ds
-	
+
 ## Installation
 Install [Haxe](http://haxe.org/download) and run `$ haxelib install polygonal-ds` from the console.
 This installs the polygonal-ds library hosted on [lib.haxe.org](http://lib.haxe.org/p/polygonal-ds), which always mirrors the git master branch. From now on just compile with `$ haxe ... -lib polygonal-ds`.
