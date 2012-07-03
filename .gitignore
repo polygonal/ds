@@ -1,5 +1,6 @@
 bin/*
 build/*
+deploy/*
 obj/*
 tmp/*
 test/*
