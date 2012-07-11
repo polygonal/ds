@@ -864,7 +864,7 @@ class Array3Iterator<T> implements de.polygonal.ds.Itr<T>
 }
 
 /**
- * Stores the x,y,z position of a three-dimensional cell. 
+ * <p>Stores the x,y,z position of a three-dimensional cell.</p>
  */
 class Array3Cell
 {

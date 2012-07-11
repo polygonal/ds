@@ -1158,7 +1158,7 @@ class Array2Iterator<T> implements de.polygonal.ds.Itr<T>
 }
 
 /**
- * Stores the x,y position of a two-dimensional cell.
+ * <p>Stores the x,y position of a two-dimensional cell.</p>
  */
 class Array2Cell
 {

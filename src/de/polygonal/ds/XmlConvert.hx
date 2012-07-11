@@ -33,8 +33,14 @@ import de.polygonal.core.fmt.Sprintf;
 import de.polygonal.core.fmt.StringUtil;
 import de.polygonal.ds.TreeNode;
 
+/**
+ * <p>Helper class for converting xml data to various trees.</p>
+ */
 class XmlConvert
 {
+	/**
+	 * Converts <code>xmlData</code> to a <code>TreeNode<code> structure.
+	 */
 	public static function toTreeNode(xmlData:String):TreeNode<XmlNodeData>
 	{
 		var stack = new Array<Dynamic>();
@@ -109,6 +115,9 @@ class XmlConvert
 	}
 }
 
+/**
+ * An object containing the data of an xml node.
+ */
 class XmlNodeData
 {
 	public var treeNode:TreeNode<XmlNodeData>;
