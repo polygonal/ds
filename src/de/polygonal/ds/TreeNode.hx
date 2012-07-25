@@ -273,8 +273,8 @@ class TreeNode<T> implements Collection<T>
 	
 	/**
 	 * Swaps the child <code>a</code> with child <code>b</code> by swapping their values.
-	 * @throws de.polygonal.core.util.AssertionError <code>a</code> and <code>b</code> are not siblings (debug only).
-	 * @throws de.polygonal.core.util.AssertionError <code>a</code> equals <code>b</code> (debug only).
+	 * @throws de.polygonal.AssertError <code>a</code> and <code>b</code> are not siblings (debug only).
+	 * @throws de.polygonal.AssertError <code>a</code> equals <code>b</code> (debug only).
 	 * <o>1</o>
 	 */
 	public function swapChildren(a:TreeNode<T>, b:TreeNode<T>):Void
@@ -289,9 +289,9 @@ class TreeNode<T> implements Collection<T>
 	
 	/**
 	 * Swaps the child at index <code>i</code> with the child at index <code>j</code> by swapping their values.
-	 * @throws de.polygonal.core.util.AssertionError index <code>i</code> out of range (debug only).
-	 * @throws de.polygonal.core.util.AssertionError index <code>j</code> out of range (debug only).
-	 * @throws de.polygonal.core.util.AssertionError <code>i</code> equals <code>j</code> (debug only).
+	 * @throws de.polygonal.AssertError index <code>i</code> out of range (debug only).
+	 * @throws de.polygonal.AssertError index <code>j</code> out of range (debug only).
+	 * @throws de.polygonal.AssertError <code>i</code> equals <code>j</code> (debug only).
 	 * <o>1</o>
 	 */
 	public function swapChildrenAt(i:Int, j:Int):Void
@@ -333,7 +333,7 @@ class TreeNode<T> implements Collection<T>
 	
 	/**
 	 * Removes the child at index <code>i</code>.
-	 * @throws de.polygonal.core.util.AssertionError index <code>i</code> is out of range (debug only).
+	 * @throws de.polygonal.AssertError index <code>i</code> is out of range (debug only).
 	 * <o>n</o>
 	 */
 	public function removeChildAt(i:Int):Void
@@ -387,7 +387,7 @@ class TreeNode<T> implements Collection<T>
 	
 	/**
 	 * Changes the index of the child <code>x</code> to <code>i</code>.
-	 * @throws de.polygonal.core.util.AssertionError index <code>i</code> is out of range (debug only).
+	 * @throws de.polygonal.AssertError index <code>i</code> is out of range (debug only).
 	 * <o>n</o>
 	 */
 	public function setChildIndex(x:TreeNode<T>, i:Int):Void
@@ -626,7 +626,7 @@ class TreeNode<T> implements Collection<T>
 	
 	/**
 	 * Unlinks <code>x</code> and appends <code>x</code> as a child to this node.
-	 * @throws de.polygonal.core.util.AssertionError <code>x</code> is null (debug only).
+	 * @throws de.polygonal.AssertError <code>x</code> is null (debug only).
 	 * <o>1</o>
 	 */
 	public function appendNode(x:TreeNode<T>):Void
@@ -743,7 +743,7 @@ class TreeNode<T> implements Collection<T>
 	
 	/**
 	 * Unlinks <code>x</code> and inserts <code>x</code> at the index position <code>i</code>.
-	 * @throws de.polygonal.core.util.AssertionError index <code>i</code> out of range (debug only).
+	 * @throws de.polygonal.AssertError index <code>i</code> out of range (debug only).
 	 * <o>1</o>
 	 */
 	public function insertChildAt(x:TreeNode<T>, i:Int):Void
