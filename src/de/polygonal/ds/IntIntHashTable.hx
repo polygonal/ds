@@ -750,7 +750,7 @@ class IntIntHashTable implements Map<Int, Int>
 	
 	/**
 	 * Returns a string representing the current object.<br/>
-	 * Example:<br/><br/>
+	 * Example:<br/>
 	 * <pre class="prettyprint">
 	 * var hash = new de.polygonal.ds.IntIntHashTable(16);
 	 * for (i in 0...4) {

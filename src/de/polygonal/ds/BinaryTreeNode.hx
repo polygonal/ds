@@ -514,7 +514,7 @@ class BinaryTreeNode<T> implements Collection<T>
 	
 	/**
 	 * Returns a string representing the current object.<br/>
-	 * Example:<br/><br/>
+	 * Example:<br/>
 	 * <pre class="prettyprint">
 	 * var root = new de.polygonal.ds.BinaryTreeNode&lt;Int&gt;(0);
 	 * root.setL(1);

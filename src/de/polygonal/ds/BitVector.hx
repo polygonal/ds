@@ -424,7 +424,7 @@ class BitVector implements Hashable
 	
 	/**
 	 * Returns a string representing the current object.<br/>
-	 * Example:<br/><br/>
+	 * Example:<br/>
 	 * <pre class="prettyprint">
 	 * var bv = new de.polygonal.ds.BitVector(40);
 	 * for (i in 0...bv.capacity()) {

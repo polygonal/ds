@@ -1351,7 +1351,7 @@ class TreeNode<T> implements Collection<T>
 	
 	/**
 	 * Returns a string representing the current object.<br/>
-	 * Example:<br/><br/>
+	 * Example:<br/>
 	 * <pre class="prettyprint">
 	 * var root = new de.polygonal.ds.TreeNode&lt;Int&gt;(0); //create the root of the tree
 	 * var builder = new de.polygonal.ds.TreeBuilder&lt;Int&gt;(root);

@@ -973,7 +973,7 @@ class Graph<T> implements Collection<T>
 	
 	/**
 	 * Returns a string representing the current object.<br/>
-	 * Example:<br/><br/>
+	 * Example:<br/>
 	 * <pre class="prettyprint">
 	 * var graph = new de.polygonal.ds.Graph&lt;String&gt;();
 	 * var a = graph.addNode("a");

@@ -283,7 +283,7 @@ class BST<T:Comparable<T>> implements Collection<T>
 	
 	/**
 	 * Returns a string representing the current object.<br/>
-	 * Example:<br/><br/>
+	 * Example:<br/>
 	 * <pre class="prettyprint">
 	 * class Foo implements de.polygonal.ds.Comparable&lt;Foo&gt;
 	 * {

@@ -49,7 +49,7 @@ interface Itr<T>
 	
 	/**
 	 * Removes the last element returned by the iterator from the collection.
-	 * Example:<br/><br/>
+	 * Example:<br/>
 	 * <pre class="prettyprint">
 	 * var c:Collection&lt;String&gt; = new *&lt;String&gt;(...);
 	 * var itr = c.iterator();
@@ -65,7 +65,7 @@ interface Itr<T>
 	/**
 	 * Resets this iteration so the iterator points to the first element in the collection.<br/>
 	 * Improves performance if an iterator is frequently used.<br/>
-	 * Example:<br/><br/>
+	 * Example:<br/>
 	 * <pre class="prettyprint">
 	 * var c:Collection&lt;String&gt; = new *&lt;String&gt;(...);
 	 * var itr = c.iterator();

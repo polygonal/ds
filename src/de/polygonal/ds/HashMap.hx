@@ -149,7 +149,7 @@ class HashMap<K, T> implements Map<K, T>
 	
 	/**
 	 * Returns a string representing the current object.<br/>
-	 * Example:<br/><br/>
+	 * Example:<br/>
 	 * <pre class="prettyprint">
 	 * var hm = new de.polygonal.ds.HashMap&lt;String, String&gt;();
 	 * hm.set("key1", "val1");

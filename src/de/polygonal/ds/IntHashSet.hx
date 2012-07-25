@@ -385,7 +385,7 @@ class IntHashSet implements Set<Int>
 	
 	/**
 	 * Returns a string representing the current object.<br/>
-	 * Example:<br/><br/>
+	 * Example:<br/>
 	 * <pre class="prettyprint">
 	 * var set = new de.polygonal.ds.IntHashSet(16);
 	 * for (i in 0...4) {

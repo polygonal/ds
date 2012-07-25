@@ -309,7 +309,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	
 	/**
 	 * Returns a string representing the current object.<br/>
-	 * Example:<br/><br/>
+	 * Example:<br/>
 	 * <pre class="prettyprint">
 	 * class Foo extends de.polygonal.ds.HashableItem
 	 * {

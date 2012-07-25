@@ -63,7 +63,7 @@ class ListSet<T> implements Set<T>
 	
 	/**
 	 * Returns a string representing the current object.<br/>
-	 * Example:<br/><br/>
+	 * Example:<br/>
 	 * <pre class="prettyprint">
 	 * var set = new de.polygonal.ds.ListSet&lt;String&gt;();
 	 * set.set("val1");

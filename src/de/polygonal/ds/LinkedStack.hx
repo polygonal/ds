@@ -512,7 +512,7 @@ class LinkedStack<T> implements Stack<T>
 	
 	/**
 	 * Returns a string representing the current object.<br/>
-	 * Example:<br/><br/>
+	 * Example:<br/>
 	 * <pre class="prettyprint">
 	 * var ls = new de.polygonal.ds.LinkedStack&lt;Int&gt;();
 	 * ls.push(0);

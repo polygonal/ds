@@ -1072,7 +1072,7 @@ class DA<T> implements Collection<T>
 	
 	/**
 	 * Returns a string representing the current object.<br/>
-	 * Example:<br/><br/>
+	 * Example:<br/>
 	 * <pre class="prettyprint">
 	 * var da = new de.polygonal.ds.DA&lt;Int&gt;(10);
 	 * for (i in 0...3) {

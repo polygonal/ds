@@ -106,7 +106,7 @@ class Array2<T> implements Collection<T>
 	}
 	
 	/**
-	 * Returns the element that is stored in column <code>cell.x</code> and row <code>cell.y</code>.
+	 * Returns the element that is stored in column <code>cell</code>.x and row <code>cell</code>.y.
 	 * <o>1</o>
 	 * @throws de.polygonal.AssertError <code>cell</code> is null (debug only).
 	 * @throws de.polygonal.AssertError <code>x</code>/<code>y</code> out of range (debug only).
@@ -855,7 +855,7 @@ class Array2<T> implements Collection<T>
 	
 	/**
 	 * Returns a string representing the current object.<br/>
-	 * Example:<br/><br/>
+	 * Example:<br/>
 	 * <pre class="prettyprint">
 	 * var array2 = new de.polygonal.ds.Array2&lt;String&gt;(4, 4);
 	 * array2.walk(function(val:String, x:Int, y:Int):String { return Std.string(x) + "." + Std.string(y); });

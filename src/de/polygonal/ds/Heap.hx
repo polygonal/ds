@@ -401,7 +401,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	/**
 	 * Returns a string representing the current object.<br/>
 	 * Prints out all elements in a sorted order.<br/>
-	 * Example:<br/><br/>
+	 * Example:<br/>
 	 * <pre class="prettyprint">
 	 * class Foo implements de.polygonal.ds.Heapable&lt;Foo&gt;
 	 * {

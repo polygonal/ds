@@ -183,7 +183,7 @@ implements haxe.rtti.Generic
 	/**
 	 * Prepends <code>node</code> to this node assuming this is the <warn>head</warn> node of a list.<br/>
 	 * Useful for updating a list which is not managed by a <em>DLL</em> object.<br/>
-	 * Example:<br/><br/>
+	 * Example:<br/>
 	 * <pre class="prettyprint">
 	 * var a = new DLLNode&lt;Int&gt;(0, null);
 	 * var b = new DLLNode&lt;Int&gt;(1, null);
@@ -211,7 +211,7 @@ implements haxe.rtti.Generic
 	/**
 	 * Appends <code>node</code> to this node assuming this is the <warn>tail</warn> node of a list.<br/>
 	 * Useful for updating a list which is not managed by a <em>DLL</em> object.<br/>
-	 * Example:<br/><br/>
+	 * Example:<br/>
 	 * <pre class="prettyprint">
 	 * var a = new DLLNode&lt;Int&gt;(0, null);
 	 * var b = new DLLNode&lt;Int&gt;(1, null);
@@ -239,7 +239,7 @@ implements haxe.rtti.Generic
 	/**
 	 * Prepends this node to <code>node</code> assuming <code>node</code> is the <warn>head</warn> node of a list.<br/>
 	 * Useful for updating a list which is not managed by a <em>DLL</em> object.
-	 * Example:<br/><br/>
+	 * Example:<br/>
 	 * <pre class="prettyprint">
 	 * var a = new DLLNode&lt;Int&gt;(0, null);
 	 * var b = new DLLNode&lt;Int&gt;(1, null);
@@ -267,7 +267,7 @@ implements haxe.rtti.Generic
 	/**
 	 * Appends this node to <code>node</code> assuming <code>node</code> is the <warn>tail</warn> node of a list.<br/>
 	 * Useful for updating a list which is not managed by a <em>DLL</em> object.<br/>
-	 * Example:<br/><br/>
+	 * Example:<br/>
 	 * <pre class="prettyprint">
 	 * var a = new DLLNode&lt;Int&gt;(0, null);
 	 * var b = new DLLNode&lt;Int&gt;(1, null);

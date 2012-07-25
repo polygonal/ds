@@ -61,7 +61,7 @@ interface Collection<T> implements Hashable
 	
 	/**
 	 * Iterates over all elements in this collection.<br/>
-	 * Example:<br/><br/>
+	 * Example:<br/>
 	 * <pre class="prettyprint">
 	 * //Haxe
 	 * var c:Collection&lt;String&gt; = new *&lt;String&gt;(...);
@@ -109,7 +109,7 @@ interface Collection<T> implements Hashable
 	
 	/**
 	 * Duplicates this collection. Supports shallow (structure only) and deep copies (structure & elements).<br/>
-	 * Example:<br/><br/>
+	 * Example:<br/>
 	 * <pre class="prettyprint">
 	 * class Foo implements de.polygonal.ds.Cloneable&lt;Foo&gt;
 	 * {

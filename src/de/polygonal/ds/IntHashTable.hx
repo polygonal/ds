@@ -339,7 +339,7 @@ class IntHashTable<T> implements Map<Int, T>
 	
 	/**
 	 * Returns a string representing the current object.<br/>
-	 * Example:<br/><br/>
+	 * Example:<br/>
 	 * <pre class="prettyprint">
 	 * class Foo extends de.polygonal.ds.HashableItem {
 	 *     var value:Int;

@@ -819,7 +819,7 @@ class SLL<T> implements Collection<T>
 	
 	/**
 	 * Returns a string representing the current object.<br/>
-	 * Example:<br/><br/>
+	 * Example:<br/>
 	 * <pre class="prettyprint">
 	 * var list = new de.polygonal.ds.SLL&lt;Int&gt;();
 	 * for (i in 0...4) {

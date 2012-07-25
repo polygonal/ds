@@ -356,7 +356,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	
 	/**
 	 * Returns a string representing the current object.<br/>
-	 * Example:<br/><br/>
+	 * Example:<br/>
 	 * <pre class="prettyprint">
 	 * class Foo implements de.polygonal.ds.Prioritizable
 	 * {

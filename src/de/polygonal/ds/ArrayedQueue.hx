@@ -440,7 +440,7 @@ class ArrayedQueue<T> implements Queue<T>
 	
 	/**
 	 * Returns a string representing the current object.<br/>
-	 * Example:<br/><br/>
+	 * Example:<br/>
 	 * <pre class="prettyprint">
 	 * var queue = new de.polygonal.ds.ArrayedQueue&lt;Int&gt;(4);
 	 * for (i in 0...queue.capacity) {

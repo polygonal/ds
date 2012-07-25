@@ -454,7 +454,7 @@ class ArrayedDeque<T> implements Deque<T>
 	
 	/**
 	 * Returns a string representing the current object.<br/>
-	 * Example:<br/><br/>
+	 * Example:<br/>
 	 * <pre class="prettyprint">
 	 * var deque = new de.polygonal.ds.ArrayedDeque&lt;Int&gt;();
 	 * for (i in 0...4) {

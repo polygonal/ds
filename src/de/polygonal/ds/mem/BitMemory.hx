@@ -492,7 +492,7 @@ class BitMemory extends MemoryAccess
 	/**
 	 * Returns a string representing the current object.<br/>
 	 * Prints out all elements if compiled with the <em>-debug</em> directive.<br/>
-	 * Example:<br/><br/>
+	 * Example:<br/>
 	 * <pre class="prettyprint">
 	 * var mem = new de.polygonal.ds.mem.BitMemory(32);
 	 * for (i in 0...16) {

@@ -326,7 +326,7 @@ class LinkedQueue<T> implements Queue<T>
 	
 	/**
 	 * Returns a string representing the current object.<br/>
-	 * Example:<br/><br/>
+	 * Example:<br/>
 	 * <pre class="prettyprint">
 	 * var lq = new de.polygonal.ds.LinkedQueue&lt;Int&gt;();
 	 * lq.enqueue(0);

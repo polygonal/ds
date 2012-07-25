@@ -499,7 +499,7 @@ class ArrayedStack<T> implements Stack<T>
 	
 	/**
 	 * Returns a string representing the current object.<br/>
-	 * Example:<br/><br/>
+	 * Example:<br/>
 	 * <pre class="prettyprint">
 	 * var stack = new de.polygonal.ds.ArrayedStack&lt;Int&gt;(4);
 	 * for (i in 0...4) {
