@@ -1,6 +1,7 @@
 # Data Structures For Games (ds)
 
 ![ds logo](http://polygonal.github.com/ds/images/ds-small.png)
+	
 Formerly known as "_AS3 Data Structures For Game Developers (AS3DS)_", the package contains parametrized classes that allow programmers to easily implement standard data structures like linked lists, queues, stacks or multi-dimensional arrays. The result is somewhere in between the C++ STL (Standard Template Library) and the Java Collection framework. The library is highly optimized and uses advanced Haxe features like inlining or code generation for parametrized classes through the haxe.rtti.Generics interface.
 
 ## Documentation
