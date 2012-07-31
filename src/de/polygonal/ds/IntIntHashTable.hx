@@ -1608,8 +1608,8 @@ class IntIntHashTable implements Map<Int, Int>
 	{
 		#if (flash10 && alchemy)
 		return _hash.get(i);
-		#elseif cpp
-		return untyped _hash.__unsafe_get(i);
+		//#elseif cpp
+		//return untyped _hash.__unsafe_get(i);
 		#else
 		return _hash[i];
 		#end
@@ -1618,8 +1618,8 @@ class IntIntHashTable implements Map<Int, Int>
 	{
 		#if (flash10 && alchemy)
 		_hash.set(i, x);
-		#elseif cpp
-		untyped _hash.__unsafe_set(i, x);
+		//#elseif cpp
+		//untyped _hash.__unsafe_set(i, x);
 		#else
 		_hash[i] = x;
 		#end
@@ -1629,8 +1629,8 @@ class IntIntHashTable implements Map<Int, Int>
 	{
 		#if (flash10 && alchemy)
 		return _next.get(i);
-		#elseif cpp
-		return untyped _next.__unsafe_get(i);
+		//#elseif cpp
+		//return untyped _next.__unsafe_get(i);
 		#else
 		return _next[i];
 		#end
@@ -1639,8 +1639,8 @@ class IntIntHashTable implements Map<Int, Int>
 	{
 		#if (flash10 && alchemy)
 		_next.set(i, x);
-		#elseif cpp
-		untyped _next.__unsafe_set(i, x);
+		//#elseif cpp
+		//untyped _next.__unsafe_set(i, x);
 		#else
 		_next[i] = x;
 		#end
@@ -1650,8 +1650,8 @@ class IntIntHashTable implements Map<Int, Int>
 	{
 		#if (flash10 && alchemy)
 		return _data.get(i);
-		#elseif cpp
-		return untyped _data.__unsafe_get(i);
+		//#elseif cpp
+		//return untyped _data.__unsafe_get(i);
 		#else
 		return _data[i];
 		#end
@@ -1660,8 +1660,8 @@ class IntIntHashTable implements Map<Int, Int>
 	{
 		#if (flash10 && alchemy)
 		_data.set(i, x);
-		#elseif cpp
-		untyped _data.__unsafe_set(i, x);
+		//#elseif cpp
+		//untyped _data.__unsafe_set(i, x);
 		#else
 		_data[i] = x;
 		#end
@@ -1731,8 +1731,8 @@ class IntIntHashTableValIterator implements de.polygonal.ds.Itr<Int>
 	{
 		#if (flash10 && alchemy)
 		return _data.get(i);
-		#elseif cpp
-		return untyped _data.__unsafe_get(i);
+		//#elseif cpp
+		//return untyped _data.__unsafe_get(i);
 		#else
 		return _data[i];
 		#end
@@ -1802,8 +1802,8 @@ class IntIntHashTableKeyIterator implements de.polygonal.ds.Itr<Int>
 	{
 		#if (flash10 && alchemy)
 		return _data.get(i);
-		#elseif cpp
-		return untyped _data.__unsafe_get(i);
+		//#elseif cpp
+		//return untyped _data.__unsafe_get(i);
 		#else
 		return _data[i];
 		#end
