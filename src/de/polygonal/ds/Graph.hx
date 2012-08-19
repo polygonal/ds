@@ -72,6 +72,20 @@ class Graph<T> implements Collection<T>
 	 */
 	public var reuseIterator:Bool;
 	
+	/**
+	 * If specified, <code>borrowArc()</code> is called in order to create <em>GraphArc</em> objects.<br/>
+	 * Useful for pooling <em>GraphArc</em> objects.
+	 * Default is null.
+	 */
+	public var borrowArc:GraphNode<T>->Float->GraphArc<T>;
+	
+	/**
+	 * A function pointer responsible for returning <em>GraphArc</em> objects.<br/>
+	 * Required if <code>borrowArc</code> is specified.
+	 * Default is null.
+	 */
+	public var returnArc:GraphArc<T>->Void;
+	
 	var _nodeList:GraphNode<T>;
 	var _size:Int;
 	
@@ -147,7 +161,7 @@ class Graph<T> implements Collection<T>
 	 */
 	public function createNode(x:T):GraphNode<T>
 	{
-		return new GraphNode<T>(x);
+		return new GraphNode<T>(this, x);
 	}
 	
 	/**
@@ -302,6 +316,8 @@ class Graph<T> implements Collection<T>
 					if (hook != null) hook.prev = arc1.prev;
 					if (node1.arcList == arc1) node1.arcList = hook;
 					arc1.free();
+					if (returnArc != null)
+						returnArc(arc1);
 				}
 				
 				arc1 = hook;
@@ -313,6 +329,8 @@ class Graph<T> implements Collection<T>
 			if (hook != null) hook.prev = arc0.prev;
 			if (node.arcList == arc0) node.arcList = hook;
 			arc0.free();
+			if (returnArc != null)
+				returnArc(arc0);
 			
 			arc0 = hook;
 		}
@@ -1032,9 +1050,7 @@ class Graph<T> implements Collection<T>
 				arc = nextArc;
 			}
 			
-			node.val = NULL;
-			node.next = node.prev = null;
-			node.arcList = null;
+			node.free();
 			node = nextNode;
 		}
 		

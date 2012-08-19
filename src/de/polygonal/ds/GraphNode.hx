@@ -88,15 +88,18 @@ class GraphNode<T> implements Hashable
 	 */
 	public var marked:Bool;
 	
+	var _graph:Graph<T>;
+	
 	/**
 	 * Creates a graph node storing the element <code>x</code>. 
 	 */
-	public function new(x:T)
+	public function new(graph:Graph<T>, x:T)
 	{
-		val      = x;
-		arcList  = null;
-		marked   = false;
-		key      = HashKey.next();
+		val = x;
+		arcList = null;
+		marked = false;
+		key = HashKey.next();
+		_graph = graph;
 	}
 	
 	/**
@@ -110,6 +113,7 @@ class GraphNode<T> implements Hashable
 		val = NULL;
 		next = prev = null;
 		arcList = null;
+		_graph = null;
 	}
 	
 	/**
@@ -193,7 +197,11 @@ class GraphNode<T> implements Hashable
 		D.assert(getArc(target) == null, 'arc to target already exists');
 		#end
 		
-		var arc = new GraphArc<T>(target, cost);
+		var arc =
+		if (_graph.borrowArc != null)
+			_graph.borrowArc(target, cost);
+		else
+			new GraphArc<T>(target, cost);
 		arc.next = arcList;
 		if (arcList != null) arcList.prev = arc;
 		arcList = arc;
@@ -218,6 +226,10 @@ class GraphNode<T> implements Hashable
 			if (arc.prev != null) arc.prev.next = arc.next;
 			if (arc.next != null) arc.next.prev = arc.prev;
 			if (arcList == arc) arcList = arc.next;
+			arc.next = null;
+			arc.prev = null;
+			arc.node = null;
+			if (_graph.returnArc != null) _graph.returnArc(arc);
 			return true;
 		}
 		return false;
@@ -270,7 +282,7 @@ class GraphNode<T> implements Hashable
 	}
 	
 	/**
-	 * Returns a string representing the current object.<br/>
+	 * Returns a string representing the current object.
 	 */
 	public function toString():String
 	{
