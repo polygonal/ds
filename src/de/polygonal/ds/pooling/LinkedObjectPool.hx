@@ -184,7 +184,7 @@ class LinkedObjectPool<T> implements Hashable
 		if (C != null)
 		{
 			for (i in 0..._initSize)
-				buffer.push(untyped __new__(C));
+				buffer.push(Type.createInstance(C, []));
 		}
 		else
 		if (fabricate != null)
@@ -319,7 +319,7 @@ class LinkedObjectPool<T> implements Hashable
 			for (i in 0..._initSize)
 			{
 				var node = new ObjNode<T>();
-				node.val = untyped __new__(_C);
+				node.val = Type.createInstance(_C, []);
 				t.next = node;
 				t = node;
 			}
