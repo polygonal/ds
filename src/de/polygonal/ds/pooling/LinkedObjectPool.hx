@@ -319,7 +319,7 @@ class LinkedObjectPool<T> implements Hashable
 			for (i in 0..._initSize)
 			{
 				var node = new ObjNode<T>();
-				node.val = Type.createInstance(_C, [])
+				node.val = Type.createInstance(_C, []);
 				t.next = node;
 				t = node;
 			}
