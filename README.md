@@ -48,6 +48,7 @@ If you want to test the latest beta build, you should pull the dev branch and ad
 
  * modified: Graph: added Graph.borrowArc() and Graph.returnArc() to allow optional arc pooling
  * fixed: TreeNode#isAncestor(), TreeNode#isDescendant()
+ * fixed: LinkedObjectPool: object instantiation for non-flash targets
 
 ### 1.36 (released 2012-07-25)
 
