@@ -160,26 +160,25 @@ class TreeNode<T> implements Collection<T>
 	}
 	
 	/**
-	 * Returns true if <code>x</code> is an ancestor of this node.
+	 * Returns true if this node is an ancestor of <code>x</code>.
 	 */
 	public function isAncestor(x:TreeNode<T>):Bool
 	{
-		var n = children;
+		var n = x.parent;
 		while (n != null)
 		{
-			if (n == x) return true;
-			if (n.isAncestor(x)) return true;
-			n = n.next;
+			if (this == n) return true;
+			n = n.parent;
 		}
 		return false;
 	}
 	
 	/**
-	 * Returns true if <code>x</code> is a descendant of this node.
+	 * Returns true if this node is an descendant of <code>x</code>.
 	 */
 	public function isDescendant(x:TreeNode<T>):Bool
 	{
-		var n = this;
+		var n = parent;
 		while (n != null)
 		{
 			if (n == x) return true;
