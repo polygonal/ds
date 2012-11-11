@@ -33,14 +33,14 @@ import de.polygonal.core.fmt.Sprintf;
 import de.polygonal.core.math.Limits;
 import de.polygonal.core.macro.Assert;
 
-#if neko
-import haxe.Int32;
-using haxe.Int32;
-#end
-
 #if macro
 import haxe.macro.Expr;
 import haxe.macro.Context;
+#end
+
+#if (!haxe3 && neko)
+import haxe.Int32;
+using haxe.Int32;
 #end
 
 /**
@@ -217,7 +217,7 @@ class Bits
 	 */
 	inline public static function clrBits(x:Int, mask:Int):Int
 	{
-		#if neko
+		#if (!haxe3 && neko)
 		return x & mask.ofInt().complement().toInt();
 		#else
 		return x & ~mask;
@@ -234,7 +234,7 @@ class Bits
 	 * or clears all <code>mask</code> bits in <code>x</code> if <code>expr</code> is false. */
 	inline public static function setBitsIf(x:Int, mask:Int, expr:Bool):Int
 	{
-		#if neko
+		#if (!haxe3 && neko)
 		return expr ? (x | mask) : (x & mask.ofInt().complement().toInt());
 		#else
 		return expr ? (x | mask) : (x & ~mask);
@@ -277,10 +277,8 @@ class Bits
 		D.assert(i >= 0 && i < Limits.INT_BITS, Sprintf.format('index out of range (%d)', [i]));
 		#end
 		
-		#if neko
-		var t = (1 << i).ofInt();
-		return 0;
-		//return x.ofInt().and(1 << i).ofInt().complement().toInt();
+		#if (!haxe3 && neko)
+		return x.ofInt().and((1 << i).ofInt().complement()).toInt();
 		#else
 		return x & ~(1 << i);
 		#end
