@@ -313,7 +313,7 @@ class ArrayUtil
 	}
 	
 	/**
-	 * Sorts the elements of the array <code>a</code> by using the quick sort algorithm.<br/>
+	 * Sorts the elements of the array <code>a</code> by using the quick sort algorithm.
 	 * @param compare a comparison function.
 	 * @param useInsertionSort if true, the array is sorted using the insertion sort algorithm. This is faster for nearly sorted lists.
 	 * @param first sort start index. The default value is 0.
@@ -336,6 +336,51 @@ class ArrayUtil
 			else
 				_quickSort(a, first, count, compare);
 		}
+	}
+	
+	/**
+	 * A counting quick permutation algorithm.
+	 * @see <a href="http://www.freewebs.com/permute/quickperm.html" target="_blank">http://www.freewebs.com/permute/quickperm.html</a>
+	 * @param n number of elements to permute.
+	 */
+	public static function quickPerm(n:Int):Array<Array<Int>>
+	{
+		var results = [];
+		
+		var a:Array<Int> = [];
+		var p:Array<Int> = [];
+		
+		var i:Int, j:Int, tmp:Int;
+		
+		for (i in 0...n)
+		{
+			a[i] = i + 1;
+			p[i] = 0;
+		}
+		
+		results.push(a.copy());
+		
+		i = 1;
+		while(i < n)
+		{
+			if (p[i] < i)
+			{
+				j = i % 2 * p[i];
+				tmp = a[j];
+				a[j] = a[i];
+				a[i] = tmp;
+				results.push(a.copy());
+				p[i]++;
+				i = 1;
+			}
+			else
+			{
+				p[i] = 0;
+				i++;
+			}
+		}
+		
+		return results;
 	}
 	
 	static function _insertionSort(a:Array<Float>, first:Int, k:Int, cmp:Float->Float->Int):Void
