@@ -95,7 +95,7 @@ class XmlConvert
 						{
 							case Xml.CData, Xml.PCData:
 								if (~/\S/.match(firstChild.nodeValue))
-									info.nodeData = firstChild.nodeValue;
+									info.value = firstChild.nodeValue;
 							default:
 						}
 					}
@@ -121,21 +121,21 @@ class XmlConvert
 class XmlNodeData
 {
 	public var treeNode:TreeNode<XmlNodeData>;
-	public var nodeName:String;
-	public var nodeData:String;
+	public var name:String;
+	public var value:String;
 	public var attributes:Hash<String>;
 	
-	public function new(nodeName:String)
+	public function new(name:String)
 	{
-		this.nodeName = nodeName;
-		this.nodeData = null;
+		this.name = name;
+		this.value = null;
 		attributes = null;
 	}
 	
 	public function toString():String
 	{
-		if (nodeData != null)
-			return nodeName + ':' + nodeData;
-		return nodeName;
+		if (value != null)
+			return name + ':' + value;
+		return name;
 	}
 }
