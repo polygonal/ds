@@ -3,6 +3,5 @@ build/*
 deploy/*
 obj/*
 tmp/*
-test/*
 sandbox/*
 *.hxproj
