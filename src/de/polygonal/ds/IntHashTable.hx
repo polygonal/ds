@@ -41,6 +41,7 @@ import flash.Vector;
 import de.polygonal.core.fmt.Sprintf;
 import de.polygonal.core.math.Limits;
 import de.polygonal.core.math.Mathematics;
+import de.polygonal.core.macro.Assert;
 
 private typedef IntHashTableFriend<T> = 
 {
@@ -58,8 +59,6 @@ private typedef IntHashTableFriend<T> =
 	private var _keys:Array<Int>;
 	#end
 }
-
-import de.polygonal.core.macro.Assert;
 
 /**
  * <p>An array hash table for mapping integer keys to generic elements.</p>

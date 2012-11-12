@@ -145,7 +145,14 @@ class IntMemory extends MemoryAccess
 		max = input.getAddr(max - 1);
 		
 		var output = new haxe.io.BytesOutput();
-		for (i in 0...(max - min) + 1) output.writeInt32(haxe.Int32.ofInt(input.get(min + i)));
+		
+		for (i in 0...(max - min) + 1)
+		#if haxe3
+		output.writeInt32(input.get(min + i));
+		#else
+		output.writeInt32(haxe.Int32.ofInt(input.get(min + i)));
+		#end
+		
 		return output.getBytes().getData();
 	}
 	
@@ -183,7 +190,12 @@ class IntMemory extends MemoryAccess
 		min >>= 2;
 		max >>= 2;
 		var output = new IntMemory(max - min, 'ofBytesData');
-		for (i in min...max) output.set(i - min, haxe.Int32.toInt(bytesInput.readInt32()));
+		for (i in min...max)
+		#if haxe3
+		output.set(i - min, bytesInput.readInt32());
+		#else
+		output.set(i - min, haxe.Int32.toInt(bytesInput.readInt32()));
+		#end
 		
 		return output;
 	}

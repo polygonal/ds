@@ -32,6 +32,7 @@ package de.polygonal.ds;
 import de.polygonal.core.fmt.Sprintf;
 import de.polygonal.core.math.Limits;
 import de.polygonal.core.math.Mathematics;
+import de.polygonal.core.macro.Assert;
 
 #if flash10
 #if alchemy
@@ -62,8 +63,6 @@ private typedef IntIntHashTableFriend =
 	private var _mask:Int;
 	private var _capacity:Int;
 }
-
-import de.polygonal.core.macro.Assert;
 
 /**
  * <p>An array hash table for storing integer key/value pairs.</p>
