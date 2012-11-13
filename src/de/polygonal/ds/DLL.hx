@@ -192,7 +192,7 @@ class DLL<T> implements Collection<T>
 	{
 		#if debug
 		if (maxSize != -1)
-			D.assert(size() < maxSize, Sprintf.format('size equals max size', [maxSize]));
+			D.assert(size() < maxSize, Sprintf.format('size equals max size (%d)', [maxSize]));
 		#end
 		
 		var node = _getNode(x);

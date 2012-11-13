@@ -332,7 +332,7 @@ class MemoryManager
 		#if debug
 		//check upper limit
 		D.assert(_bytesUsed + numBytes < MEMORY_LIMIT_BYTES,
-			Sprintf.format('OOM (failed to allocate %d bytes, %d out of %d bytes used)', [numBytes, MemoryManager.bytesUsed, MemoryManager.bytesTotal]));
+			Sprintf.format('OOM (failed to allocate %d bytes, %d out of %d bytes used)', [numBytes, MemoryManager.bytesUsed(), MemoryManager.bytesTotal()]));
 		D.assert(numBytes > 0, 'invalid numBytes');
 		D.assert(access != null, 'invalid access');
 		D.assert(__getMem(access) == null, 'access already allocated');
