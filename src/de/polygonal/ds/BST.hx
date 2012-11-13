@@ -30,7 +30,7 @@
 package de.polygonal.ds;
 
 import de.polygonal.core.fmt.Sprintf;
-import de.polygonal.core.macro.Assert;
+import de.polygonal.core.util.Assert;
 
 #if doc
 private
@@ -137,7 +137,7 @@ class BST<T:Comparable<T>> implements Collection<T>
 	 * Inserts the element <code>x</code> into the binary search tree.
 	 * <o>n</o>
 	 * @return the inserted node storing the element <code>x</code>.
-	 * @throws de.polygonal.AssertError <code>x</code> is null (debug only).
+	 * @throws de.polygonal.core.util.AssertError <code>x</code> is null (debug only).
 	 */
 	public function insert(x:T):BinaryTreeNode<T>
 	{
@@ -188,8 +188,8 @@ class BST<T:Comparable<T>> implements Collection<T>
 	 * Finds the node that stores the element <code>x</code>.
 	 * <o>n</o>
 	 * @return the node storing <code>x</code> or null if <code>x</code> does not exist.
-	 * @throws de.polygonal.AssertError tree is empty (debug only).
-	 * @throws de.polygonal.AssertError <code>x</code> is null (debug only).
+	 * @throws de.polygonal.core.util.AssertError tree is empty (debug only).
+	 * @throws de.polygonal.core.util.AssertError <code>x</code> is null (debug only).
 	 */
 	public function find(x:T):BinaryTreeNode<T>
 	{
@@ -212,7 +212,7 @@ class BST<T:Comparable<T>> implements Collection<T>
 	 * Removes the node storing the element <code>x</code>.
 	 * <o>n</o>
 	 * @return true if <code>x</code> was successfully removed.
-	 * @throws de.polygonal.AssertError <code>x</code> is invalid (debug only).
+	 * @throws de.polygonal.core.util.AssertError <code>x</code> is invalid (debug only).
 	 */
 	public function removeNode(x:BinaryTreeNode<T>):Bool
 	{
@@ -367,7 +367,7 @@ class BST<T:Comparable<T>> implements Collection<T>
 	 * Removes all nodes containing the element <code>x</code>.
 	 * <o>n</o>
 	 * @return true if at least one occurrence of <code>x</code> is nullified.
-	 * @throws de.polygonal.AssertError <code>x</code> is invalid (debug only).
+	 * @throws de.polygonal.core.util.AssertError <code>x</code> is invalid (debug only).
 	 */
 	public function remove(x:T):Bool
 	{
@@ -486,7 +486,7 @@ class BST<T:Comparable<T>> implements Collection<T>
 	 * @param assign if true, the <code>copier</code> parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.<br/>
 	 * If false, the <em>clone()</em> method is called on each element. <warn>In this case all elements have to implement <em>Cloneable</em>.</warn>
 	 * @param copier a custom function for copying elements. Replaces element.<em>clone()</em> if <code>assign</code> is false.
-	 * @throws de.polygonal.AssertError element is not of type <em>Cloneable</em> (debug only).
+	 * @throws de.polygonal.core.util.AssertError element is not of type <em>Cloneable</em> (debug only).
 	 */
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{

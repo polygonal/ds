@@ -30,7 +30,7 @@
 package de.polygonal.ds;
 
 import de.polygonal.core.fmt.Sprintf;
-import de.polygonal.core.macro.Assert;
+import de.polygonal.core.util.Assert;
 
 /**
  * <p>A singly linked list node.</p>
@@ -80,7 +80,7 @@ implements haxe.rtti.Generic
 	/**
 	 * Returns true if this node is the head of a list.
 	 * <o>1</o>
-	 * @throws de.polygonal.AssertError node is not managed by a list (debug only).
+	 * @throws de.polygonal.core.util.AssertError node is not managed by a list (debug only).
 	 */
 	inline public function isHead():Bool
 	{
@@ -94,7 +94,7 @@ implements haxe.rtti.Generic
 	/**
 	 * Returns true if this node is the tail of a list.
 	 * <o>1</o>
-	 * @throws de.polygonal.AssertError node is not managed by a list (debug only).
+	 * @throws de.polygonal.core.util.AssertError node is not managed by a list (debug only).
 	 */
 	inline public function isTail():Bool
 	{
@@ -117,7 +117,7 @@ implements haxe.rtti.Generic
 	/**
 	 * Returns the element of the next node.
 	 * <o>1</o>
-	 * @throws de.polygonal.AssertError next node is null (debug only).
+	 * @throws de.polygonal.core.util.AssertError next node is null (debug only).
 	 */
 	inline public function nextVal():T
 	{
@@ -140,7 +140,7 @@ implements haxe.rtti.Generic
 	/**
 	 * Unlinks this node from its list and returns node.<em>next</em>.
 	 * <o>n</o>
-	 * @throws de.polygonal.AssertError list is null (debug only).
+	 * @throws de.polygonal.core.util.AssertError list is null (debug only).
 	 */
 	inline public function unlink():SLLNode<T>
 	{

@@ -31,7 +31,7 @@ package de.polygonal.ds;
 
 import de.polygonal.core.fmt.Sprintf;
 import de.polygonal.core.math.Limits;
-import de.polygonal.core.macro.Assert;
+import de.polygonal.core.util.Assert;
 
 private typedef LinkedStackFriend<T> =
 {
@@ -85,7 +85,7 @@ class LinkedStack<T> implements Stack<T>
 	 * Prevents frequent node allocation and thus increases performance at the cost of using more memory.
 	 * @param maxSize the maximum allowed size of the stack.<br/>
 	 * The default value of -1 indicates that there is no upper limit.
-	 * @throws de.polygonal.AssertError reserved size is greater than allowed size (debug only).
+	 * @throws de.polygonal.core.util.AssertError reserved size is greater than allowed size (debug only).
 	 */
 	public function new(reservedSize = 0, maxSize = -1)
 	{
@@ -125,7 +125,7 @@ class LinkedStack<T> implements Stack<T>
 	 * Returns the top element of this stack.<br/>
 	 * This is the "newest" element.
 	 * <o>1</o>
-	 * @throws de.polygonal.AssertError stack is empty (debug only).
+	 * @throws de.polygonal.core.util.AssertError stack is empty (debug only).
 	 */
 	inline public function top():T
 	{
@@ -138,7 +138,7 @@ class LinkedStack<T> implements Stack<T>
 	/**
 	 * Pushes the element <code>x</code> onto the stack.
 	 * <o>1</o>
-	 * @throws de.polygonal.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
+	 * @throws de.polygonal.core.util.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
 	 */
 	inline public function push(x:T):Void
 	{
@@ -157,7 +157,7 @@ class LinkedStack<T> implements Stack<T>
 	 * Pops data off the stack.
 	 * <o>1</o>
 	 * @return the top element.
-	 * @throws de.polygonal.AssertError stack is empty (debug only).
+	 * @throws de.polygonal.core.util.AssertError stack is empty (debug only).
 	 */
 	inline public function pop():T
 	{
@@ -175,8 +175,8 @@ class LinkedStack<T> implements Stack<T>
 	/**
 	 * Pops the top element of the stack, and pushes it back twice, so that an additional copy of the former top item is now on top, with the original below it.
 	 * <o>1</o>
-	 * @throws de.polygonal.AssertError stack is empty (debug only).
-	 * @throws de.polygonal.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
+	 * @throws de.polygonal.core.util.AssertError stack is empty (debug only).
+	 * @throws de.polygonal.core.util.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
 	 */
 	inline public function dup():Void
 	{
@@ -195,7 +195,7 @@ class LinkedStack<T> implements Stack<T>
 	/**
 	 * Swaps the two topmost items on the stack.
 	 * <o>1</o>
-	 * @throws de.polygonal.AssertError <em>size()</em> < 2 (debug only).
+	 * @throws de.polygonal.core.util.AssertError <em>size()</em> < 2 (debug only).
 	 */
 	inline public function exchange():Void
 	{
@@ -218,7 +218,7 @@ class LinkedStack<T> implements Stack<T>
 	 * |1|      -->      |2|
 	 * |0|               |1|</pre>
 	 * <o>n</o>
-	 * @throws de.polygonal.AssertError <em>size()</em> >= <code>n</code> (debug only).
+	 * @throws de.polygonal.core.util.AssertError <em>size()</em> >= <code>n</code> (debug only).
 	 */
 	inline public function rotRight(n:Int):Void
 	{
@@ -247,7 +247,7 @@ class LinkedStack<T> implements Stack<T>
 	 * |1|      -->     |0|
 	 * |0|              |3|</pre>
 	 * <o>n</o>
-	 * @throws de.polygonal.AssertError <em>size()</em> >= <code>n</code> (debug only).
+	 * @throws de.polygonal.core.util.AssertError <em>size()</em> >= <code>n</code> (debug only).
 	 */
 	inline public function rotLeft(n:Int):Void
 	{
@@ -271,7 +271,7 @@ class LinkedStack<T> implements Stack<T>
 	 * An index of 0 indicates the bottommost element.<br/>
 	 * An index of <em>size()</em> - 1 indicates the topmost element.
 	 * <o>n</o>
-	 * @throws de.polygonal.AssertError stack is empty or index out of range (debug only).
+	 * @throws de.polygonal.core.util.AssertError stack is empty or index out of range (debug only).
 	 */
 	inline public function get(i:Int):T
 	{
@@ -291,7 +291,7 @@ class LinkedStack<T> implements Stack<T>
 	 * An index of 0 indicates the bottommost element.<br/>
 	 * An index of <em>size()</em> - 1 indicates the topmost element.
 	 * <o>n</o>
-	 * @throws de.polygonal.AssertError stack is empty or index out of range (debug only).
+	 * @throws de.polygonal.core.util.AssertError stack is empty or index out of range (debug only).
 	 */
 	inline public function set(i:Int, x:T):Void
 	{
@@ -311,9 +311,9 @@ class LinkedStack<T> implements Stack<T>
 	 * An index of 0 indicates the bottommost element.<br/>
 	 * An index of <em>size()</em> - 1 indicates the topmost element.
 	 * <o>n</o>
-	 * @throws de.polygonal.AssertError stack is empty. (debug only).
-	 * @throws de.polygonal.AssertError index out of range (debug only).
-	 * @throws de.polygonal.AssertError <code>i</code> equals <code>j</code> (debug only).
+	 * @throws de.polygonal.core.util.AssertError stack is empty. (debug only).
+	 * @throws de.polygonal.core.util.AssertError index out of range (debug only).
+	 * @throws de.polygonal.core.util.AssertError <code>i</code> equals <code>j</code> (debug only).
 	 */
 	inline public function swp(i:Int, j:Int):Void
 	{
@@ -355,9 +355,9 @@ class LinkedStack<T> implements Stack<T>
 	 * An index of 0 indicates the bottommost element.<br/>
 	 * An index of <em>size()</em> - 1 indicates the topmost element.
 	 * <o>n</o>
-	 * @throws de.polygonal.AssertError stack is empty. (debug only).
-	 * @throws de.polygonal.AssertError index out of range (debug only).
-	 * @throws de.polygonal.AssertError <code>i</code> equals <code>j</code> (debug only).
+	 * @throws de.polygonal.core.util.AssertError stack is empty. (debug only).
+	 * @throws de.polygonal.core.util.AssertError index out of range (debug only).
+	 * @throws de.polygonal.core.util.AssertError <code>i</code> equals <code>j</code> (debug only).
 	 */
 	inline public function cpy(i:Int, j:Int):Void
 	{
@@ -398,7 +398,7 @@ class LinkedStack<T> implements Stack<T>
 	 * @param C the class to instantiate for each element.
 	 * @param args passes additional constructor arguments to the class <code>C</code>.
 	 * @param n the number of elements to replace. If 0, <code>n</code> is set to <em>size()</em>.
-	 * @throws de.polygonal.AssertError <code>n</code> out of range (debug only).
+	 * @throws de.polygonal.core.util.AssertError <code>n</code> out of range (debug only).
 	 */
 	public function assign(C:Class<T>, args:Array<Dynamic> = null, n = 0):Void
 	{
@@ -429,7 +429,7 @@ class LinkedStack<T> implements Stack<T>
 	 * Replaces up to <code>n</code> existing elements with the instance of <code>x</code>.
 	 * <o>n</o>
 	 * @param n the number of elements to replace. If 0, <code>n</code> is set to <em>size()</em>.
-	 * @throws de.polygonal.AssertError <code>n</code> out of range (debug only).
+	 * @throws de.polygonal.core.util.AssertError <code>n</code> out of range (debug only).
 	 */
 	public function fill(x:T, n = 0):Void
 	{
@@ -460,7 +460,7 @@ class LinkedStack<T> implements Stack<T>
 	 * <o>n</o>
 	 * @param rval a list of random double values in the range between 0 (inclusive) to 1 (exclusive) defining the new positions of the elements.
 	 * If omitted, random values are generated on-the-fly by calling <em>Math.random()</em>.
-	 * @throws de.polygonal.AssertError insufficient random values (debug only).
+	 * @throws de.polygonal.core.util.AssertError insufficient random values (debug only).
 	 */
 	public function shuffle(rval:DA<Float> = null):Void
 	{
@@ -761,7 +761,7 @@ class LinkedStack<T> implements Stack<T>
 	 * @param assign if true, the <code>copier</code> parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.<br/>
 	 * If false, the <em>clone()</em> method is called on each element. <warn>In this case all elements have to implement <em>Cloneable</em>.</warn>
 	 * @param copier a custom function for copying elements. Replaces element.<em>clone()</em> if <code>assign</code> is false.
-	 * @throws de.polygonal.AssertError element is not of type <em>Cloneable</em> (debug only).
+	 * @throws de.polygonal.core.util.AssertError element is not of type <em>Cloneable</em> (debug only).
 	 */
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{

@@ -31,7 +31,7 @@ package de.polygonal.ds.mem;
 
 import de.polygonal.core.fmt.Sprintf;
 import de.polygonal.core.math.Mathematics;
-import de.polygonal.core.macro.Assert;
+import de.polygonal.core.util.Assert;
 import de.polygonal.ds.Bits;
 
 private typedef MemoryAccessFriend = 
@@ -186,7 +186,7 @@ class MemoryManager
 	/**
 	 * Copies <code>n</code> bytes from the location pointed by the index <code>source</code> to the location pointed by the index <code>destination</code>.<br/>
 	 * Copying takes place as if an intermediate buffer was used, allowing the destination and source to overlap.
-	 * @throws de.polygonal.AssertError invalid <code>destination</code>, <code>source</code> or <code>n</code> value (debug only).
+	 * @throws de.polygonal.core.util.AssertError invalid <code>destination</code>, <code>source</code> or <code>n</code> value (debug only).
 	 * @see <a href="http://www.cplusplus.com/reference/clibrary/cstring/memmove/" target="_blank">http://www.cplusplus.com/reference/clibrary/cstring/memmove/</a>
 	 */
 	#if (flash10 && alchemy)

@@ -30,7 +30,7 @@
 package de.polygonal.ds.pooling;
 
 import de.polygonal.core.fmt.Sprintf;
-import de.polygonal.core.macro.Assert;
+import de.polygonal.core.util.Assert;
 import de.polygonal.ds.Hashable;
 import de.polygonal.ds.HashKey;
 
@@ -127,7 +127,7 @@ class LinkedObjectPool<T> implements Hashable
 	
 	/**
 	 * Retrieves the next available object from the pool.
-	 * @throws de.polygonal.AssertError object pool exhausted (debug only).
+	 * @throws de.polygonal.core.util.AssertError object pool exhausted (debug only).
 	 */
 	inline public function get():T
 	{
@@ -152,7 +152,7 @@ class LinkedObjectPool<T> implements Hashable
 	
 	/**
 	 * Recycles the object <code>o</code> so it can be reused by calling <em>get()</em>.
-	 * @throws de.polygonal.AssertError object pool is full (debug only).
+	 * @throws de.polygonal.core.util.AssertError object pool is full (debug only).
 	 */
 	inline public function put(o:T):Void
 	{
@@ -170,7 +170,7 @@ class LinkedObjectPool<T> implements Hashable
 	 * @param C allocates objects by instantiating the class <code>C</code>.
 	 * @param fabricate allocates objects by calling <code>fabricate()</code>.
 	 * @param factory allocates objects by calling <code>factory</code>.<em>create()</em>.
-	 * @throws de.polygonal.AssertError invalid arguments.
+	 * @throws de.polygonal.core.util.AssertError invalid arguments.
 	 */
 	public function allocate(C:Class<T> = null, fabricate:Void->T = null, factory:Factory<T> = null):Void
 	{

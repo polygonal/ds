@@ -30,7 +30,7 @@
 package de.polygonal.ds.mem;
 
 import de.polygonal.core.fmt.Sprintf;
-import de.polygonal.core.macro.Assert;
+import de.polygonal.core.util.Assert;
 
 #if !alchemy
 import de.polygonal.core.math.Mathematics;
@@ -48,7 +48,7 @@ class IntMemory extends MemoryAccess
 	 * <warn>The bytes are written in little endian format.</warn>
  	 * @param min index pointing to the first integer.
 	 * @param max index pointing to the last integer.
-	 * @throws de.polygonal.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
+	 * @throws de.polygonal.core.util.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
 	 */
 	#if (flash9 || cpp)
 	public static function toByteArray(input:IntMemory, min = -1, max = -1):flash.utils.ByteArray
@@ -91,7 +91,7 @@ class IntMemory extends MemoryAccess
 	 * If no range is specified, all <code>input</code> bytes are copied.
 	 * @param min index pointing to the byte storing the first integer.
 	 * @param min index pointing to the byte storing the last integer.
-	 * @throws de.polygonal.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
+	 * @throws de.polygonal.core.util.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
 	 */
 	#if (flash9 || cpp)
 	public static function ofByteArray(input:flash.utils.ByteArray, min = -1, max = -1):IntMemory
@@ -123,7 +123,7 @@ class IntMemory extends MemoryAccess
 	 * <warn>The bytes are written in little endian format.</warn>
  	 * @param min index pointing to the first integer.
 	 * @param max index pointing to the last integer.
-	 * @throws de.polygonal.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
+	 * @throws de.polygonal.core.util.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
 	 */
 	public static function toBytesData(input:IntMemory, min = -1, max = -1):haxe.io.BytesData
 	{
@@ -161,7 +161,7 @@ class IntMemory extends MemoryAccess
 	 * If no range is specified, all <code>input</code> bytes are copied.
 	 * @param min index pointing to the byte storing the first integer.
 	 * @param min index pointing to the byte storing the last integer.
-	 * @throws de.polygonal.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
+	 * @throws de.polygonal.core.util.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
 	 */
 	public static function ofBytesData(input:haxe.io.BytesData, min = -1, max = -1):IntMemory
 	{
@@ -205,7 +205,7 @@ class IntMemory extends MemoryAccess
 	 * If no range is specified, all <code>input</code> bytes are copied.
  	 * @param min index pointing to the first integer.
 	 * @param max index pointing to the last integer.
-	 * @throws de.polygonal.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
+	 * @throws de.polygonal.core.util.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
 	 */
 	public static function toArray(input:IntMemory, min = -1, max = -1):Array<Int>
 	{
@@ -244,7 +244,7 @@ class IntMemory extends MemoryAccess
 	 * If no range is specified, all <code>input</code> values are copied.
  	 * @param min index pointing to the first integer.
 	 * @param max index pointing to the last integer.
-	 * @throws de.polygonal.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
+	 * @throws de.polygonal.core.util.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
 	 */
 	public static function ofArray(input:Array<Int>, min = -1, max = -1):IntMemory
 	{
@@ -271,7 +271,7 @@ class IntMemory extends MemoryAccess
  	 * @param min index pointing to the first integer.
 	 * @param max index pointing to the last integer.
 	 * @param output the <code>Vector</code> object to write into. If null, a new Vector object is created on-the-fly.
-	 * @throws de.polygonal.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
+	 * @throws de.polygonal.core.util.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
 	 */
 	#if flash10
 	public static function toVector(input:IntMemory, min = -1, max = -1, output:flash.Vector<Int> = null):flash.Vector<Int>
@@ -319,7 +319,7 @@ class IntMemory extends MemoryAccess
 	 * If no range is specified, all <code>input</code> bytes are copied.
  	 * @param min index pointing to the first integer.
 	 * @param max index pointing to the last integer.
-	 * @throws de.polygonal.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
+	 * @throws de.polygonal.core.util.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
 	 */
 	#if flash10
 	public static function toUnsignedVector(input:IntMemory, min = -1, max = -1):flash.Vector<UInt>
@@ -361,7 +361,7 @@ class IntMemory extends MemoryAccess
 	 * If no range is specified, all <code>input</code> values are copied.
  	 * @param min index pointing to the first integer.
 	 * @param max index pointing to the last integer.
-	 * @throws de.polygonal.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
+	 * @throws de.polygonal.core.util.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
 	 */
 	#if flash10
 	public static function ofVector(input:flash.Vector<Int>, min = -1, max = -1):IntMemory
@@ -462,8 +462,8 @@ class IntMemory extends MemoryAccess
 	
 	/**
 	 * Adjusts the size of this object so it's capable of storing <code>newSize</code> integers.
-	 * @throws de.polygonal.AssertError invalid size (debug only).
-	 * @throws de.polygonal.AssertError memory was already deallocated (debug only).
+	 * @throws de.polygonal.core.util.AssertError invalid size (debug only).
+	 * @throws de.polygonal.core.util.AssertError memory was already deallocated (debug only).
 	 */
 	override public function resize(newSize:Int):Void
 	{
@@ -489,8 +489,8 @@ class IntMemory extends MemoryAccess
 	
 	/**
 	 * Returns the integer at index <code>i</code>.
-	 * @throws de.polygonal.AssertError index out of range (debug only).
-	 * @throws de.polygonal.AssertError memory deallocated (debug only).
+	 * @throws de.polygonal.core.util.AssertError index out of range (debug only).
+	 * @throws de.polygonal.core.util.AssertError memory deallocated (debug only).
 	 */
 	inline public function get(i:Int):Int
 	{
@@ -503,8 +503,8 @@ class IntMemory extends MemoryAccess
 	
 	/**
 	 * Replaces the integer at the index <code>i</code> with the integer <code>x</code>.
-	 * @throws de.polygonal.AssertError index out of range (debug only).
-	 * @throws de.polygonal.AssertError memory deallocated (debug only).
+	 * @throws de.polygonal.core.util.AssertError index out of range (debug only).
+	 * @throws de.polygonal.core.util.AssertError memory deallocated (debug only).
 	 */
 	inline public function set(i:Int, x:Int):Void
 	{
@@ -517,8 +517,8 @@ class IntMemory extends MemoryAccess
 	
 	/**
 	 * Swaps the integer at index <code>i</code> with the integer at index <code>j</code>.
-	 * @throws de.polygonal.AssertError index out of range (debug only).
-	 * @throws de.polygonal.AssertError <code>i</code> equals <code>j</code> (debug only).
+	 * @throws de.polygonal.core.util.AssertError index out of range (debug only).
+	 * @throws de.polygonal.core.util.AssertError <code>i</code> equals <code>j</code> (debug only).
 	 */
 	inline public function swp(i:Int, j:Int):Void
 	{
@@ -539,8 +539,8 @@ class IntMemory extends MemoryAccess
 	
 	/**
 	 * Returns the memory byte offset of the first byte storing the integer at index <code>i</code>.
-	 * @throws de.polygonal.AssertError index out of range (debug only).
-	 * @throws de.polygonal.AssertError memory deallocated (debug only).
+	 * @throws de.polygonal.core.util.AssertError index out of range (debug only).
+	 * @throws de.polygonal.core.util.AssertError memory deallocated (debug only).
 	 */
 	inline public function getAddr(i:Int):Int
 	{

@@ -30,7 +30,7 @@
 package de.polygonal.ds;
 
 import de.polygonal.core.fmt.Sprintf;
-import de.polygonal.core.macro.Assert;
+import de.polygonal.core.util.Assert;
 
 private typedef Array2Friend<T> =
 {
@@ -70,7 +70,7 @@ class Array2<T> implements Collection<T>
 	/**
 	 * Creates a two-dimensional array with dimensions <code>width</code> and <code>height</code>.<br/>
 	 * The minimum size is 2x2.
-	 * @throws de.polygonal.AssertError invalid <code>width</code> or <code>height</code> (debug only).
+	 * @throws de.polygonal.core.util.AssertError invalid <code>width</code> or <code>height</code> (debug only).
 	 */
 	public function new(width:Int, height:Int)
 	{
@@ -93,7 +93,7 @@ class Array2<T> implements Collection<T>
 	/**
 	 * Returns the element that is stored in column <code>x</code> and row <code>y</code>.
 	 * <o>1</o>
-	 * @throws de.polygonal.AssertError <code>x</code>/<code>y</code> out of range (debug only).
+	 * @throws de.polygonal.core.util.AssertError <code>x</code>/<code>y</code> out of range (debug only).
 	 */
 	inline public function get(x:Int, y:Int):T
 	{
@@ -108,8 +108,8 @@ class Array2<T> implements Collection<T>
 	/**
 	 * Returns the element that is stored in column <code>cell</code>.x and row <code>cell</code>.y.
 	 * <o>1</o>
-	 * @throws de.polygonal.AssertError <code>cell</code> is null (debug only).
-	 * @throws de.polygonal.AssertError <code>x</code>/<code>y</code> out of range (debug only).
+	 * @throws de.polygonal.core.util.AssertError <code>cell</code> is null (debug only).
+	 * @throws de.polygonal.core.util.AssertError <code>x</code>/<code>y</code> out of range (debug only).
 	 */
 	inline public function getAt(cell:Array2Cell):T
 	{
@@ -123,7 +123,7 @@ class Array2<T> implements Collection<T>
 	/**
 	 * Replaces the element at column <code>x</code> and row <code>y</code> with <code>val</code>.
 	 * <o>1</o>
-	 * @throws de.polygonal.AssertError <code>x</code>/<code>y</code> out of range (debug only).
+	 * @throws de.polygonal.core.util.AssertError <code>x</code>/<code>y</code> out of range (debug only).
 	 */
 	inline public function set(x:Int, y:Int, val:T):Void
 	{
@@ -138,7 +138,7 @@ class Array2<T> implements Collection<T>
 	/**
 	 * Returns the element at index <code>i</code>.
 	 * <o>1</o>
-	 * @throws de.polygonal.AssertError index out of range (debug only).
+	 * @throws de.polygonal.core.util.AssertError index out of range (debug only).
 	 */
 	inline public function getAtIndex(i:Int):T
 	{
@@ -152,7 +152,7 @@ class Array2<T> implements Collection<T>
 	/**
 	 * Replaces the element at index <code>i</code> with the <code>x</code>.
 	 * <o>1</o>
-	 * @throws de.polygonal.AssertError index out of range (debug only).
+	 * @throws de.polygonal.core.util.AssertError index out of range (debug only).
 	 */
 	inline public function setAtIndex(i:Int, x:T):Void
 	{
@@ -176,7 +176,7 @@ class Array2<T> implements Collection<T>
 	 * Sets the width to <code>x</code>.<br/>
 	 * The minimum value is 2.
 	 * <o>1</o>
-	 * @throws de.polygonal.AssertError invalid width (debug only).
+	 * @throws de.polygonal.core.util.AssertError invalid width (debug only).
 	 */
 	inline public function setW(x:Int):Void
 	{
@@ -196,7 +196,7 @@ class Array2<T> implements Collection<T>
 	 * Sets the height to <code>x</code>.<br/>
 	 * The minimum value is 2.
 	 * <o>1</o>
-	 * @throws de.polygonal.AssertError invalid height (debug only).
+	 * @throws de.polygonal.core.util.AssertError invalid height (debug only).
 	 */
 	inline public function setH(x:Int):Void
 	{
@@ -243,7 +243,7 @@ class Array2<T> implements Collection<T>
 	 * <o>n</o>
 	 * @param cell stores the result.
 	 * @return a reference to <code>cell</code>.
-	 * @throws de.polygonal.AssertError <code>cell</code> is null (debug only).
+	 * @throws de.polygonal.core.util.AssertError <code>cell</code> is null (debug only).
 	 */
 	inline public function cellOf(x:T, cell:Array2Cell):Array2Cell
 	{
@@ -263,8 +263,8 @@ class Array2<T> implements Collection<T>
 	 * <o>1</o>
 	 * @param cell stores the result.
 	 * @return a reference to <code>cell</code>.
-	 * @throws de.polygonal.AssertError index out of range (debug only).
-	 * @throws de.polygonal.AssertError <code>cell</code> is null (debug only).
+	 * @throws de.polygonal.core.util.AssertError index out of range (debug only).
+	 * @throws de.polygonal.core.util.AssertError <code>cell</code> is null (debug only).
 	 */
 	inline public function indexToCell(i:Int, cell:Array2Cell):Array2Cell
 	{
@@ -281,8 +281,8 @@ class Array2<T> implements Collection<T>
 	/**
 	 * Computes an array index into the linear array from the <code>cell</code> coordinates.
 	 * <o>1</o>
-	 * @throws de.polygonal.AssertError <code>cell</code> index out of range (debug only).
-	 * @throws de.polygonal.AssertError <code>cell</code> is null (debug only).
+	 * @throws de.polygonal.core.util.AssertError <code>cell</code> index out of range (debug only).
+	 * @throws de.polygonal.core.util.AssertError <code>cell</code> is null (debug only).
 	 */
 	inline public function cellToIndex(cell:Array2Cell):Int
 	{
@@ -299,8 +299,8 @@ class Array2<T> implements Collection<T>
 	 * Copies all elements stored in row <code>y</code> by reference into the <code>output</code> array.
 	 * <o>n</o>
 	 * @return a reference to the <code>output</code> array.
-	 * @throws de.polygonal.AssertError <code>y</code> out of range (debug only).
-	 * @throws de.polygonal.AssertError <code>output</code> is null (debug only).
+	 * @throws de.polygonal.core.util.AssertError <code>y</code> out of range (debug only).
+	 * @throws de.polygonal.core.util.AssertError <code>output</code> is null (debug only).
 	 */
 	inline public function getRow(y:Int, output:Array<T>):Array<T>
 	{
@@ -318,7 +318,7 @@ class Array2<T> implements Collection<T>
 	/**
 	 * Overwrites all elements in row <code>y</code> with the elements stored in the <code>input</code> array.
 	 * <o>n</o>
-	 * @throws de.polygonal.AssertError <code>y</code> out of range or <code>input</code> is null or insufficient input values (debug only).
+	 * @throws de.polygonal.core.util.AssertError <code>y</code> out of range or <code>input</code> is null or insufficient input values (debug only).
 	 */
 	public function setRow(y:Int, input:Array<T>):Void
 	{
@@ -337,8 +337,8 @@ class Array2<T> implements Collection<T>
 	 * Copies all elements stored in column <code>x</code> by reference into the <code>output</code> array.
 	 * <o>n</o>
 	 * @return a reference to the <code>output</code> array.
-	 * @throws de.polygonal.AssertError <code>x</code> out of range (debug only).
-	 * @throws de.polygonal.AssertError <code>output</code> is null (debug only).
+	 * @throws de.polygonal.core.util.AssertError <code>x</code> out of range (debug only).
+	 * @throws de.polygonal.core.util.AssertError <code>output</code> is null (debug only).
 	 */
 	public function getCol(x:Int, output:Array<T>):Array<T>
 	{
@@ -355,8 +355,8 @@ class Array2<T> implements Collection<T>
 	/**
 	 * Overwrites all elements in column <code>x</code> with the elements stored in the <code>input</code> array.
 	 * <o>n</o>
-	 * @throws de.polygonal.AssertError <code>x</code> out of range (debug only).
-	 * @throws de.polygonal.AssertError <code>input</code> is null or insufficient input values (debug only).
+	 * @throws de.polygonal.core.util.AssertError <code>x</code> out of range (debug only).
+	 * @throws de.polygonal.core.util.AssertError <code>input</code> is null or insufficient input values (debug only).
 	 */
 	public function setCol(x:Int, input:Array<T>):Void
 	{
@@ -413,7 +413,7 @@ class Array2<T> implements Collection<T>
 	 * <o>n</o>
 	 * @param width the new width (minimum is 2).
 	 * @param height the new height (minimum is 2).
-	 * @throws de.polygonal.AssertError invalid dimensions (debug only).
+	 * @throws de.polygonal.core.util.AssertError invalid dimensions (debug only).
 	 */
 	public function resize(width:Int, height:Int):Void
 	{
@@ -522,8 +522,8 @@ class Array2<T> implements Collection<T>
 	/**
 	 * Swaps the element at column/row <code>x0</code>, <code>y0</code> with the element at column/row <code>x1</code>, <code>y1</code>.
 	 * <o>1</o>
-	 * @throws de.polygonal.AssertError <code>x0</code>/<code>y0</code> or <code>x1</code>/<code>y1</code> out of range (debug only).
-	 * @throws de.polygonal.AssertError <code>x0</code>, <code>y0</code> equals <code>x1</code>, <code>y1</code> (debug only).
+	 * @throws de.polygonal.core.util.AssertError <code>x0</code>/<code>y0</code> or <code>x1</code>/<code>y1</code> out of range (debug only).
+	 * @throws de.polygonal.core.util.AssertError <code>x0</code>, <code>y0</code> equals <code>x1</code>, <code>y1</code> (debug only).
 	 */
 	inline public function swap(x0:Int, y0:Int, x1:Int, y1:Int):Void
 	{
@@ -545,7 +545,7 @@ class Array2<T> implements Collection<T>
 	/**
 	 * Appends the elements of the <code>input</code> array in the range &#091;0, <em>getW()</em>&#093; by adding a new row.
 	 * <o>n</o>
-	 * @throws de.polygonal.AssertError <code>input</code> is null or too short (debug only).
+	 * @throws de.polygonal.core.util.AssertError <code>input</code> is null or too short (debug only).
 	 */
 	public function appendRow(input:Array<T>):Void
 	{
@@ -566,7 +566,7 @@ class Array2<T> implements Collection<T>
 	/**
 	 * Appends the elements of the <code>input</code> array in the range &#091;0, <em>getH()</em>&#093; by adding a new column.
 	 * <o>n</o>
-	 * @throws de.polygonal.AssertError <code>input</code> is null or too short (debug only).
+	 * @throws de.polygonal.core.util.AssertError <code>input</code> is null or too short (debug only).
 	 */
 	public function appendCol(input:Array<T>):Void
 	{
@@ -603,7 +603,7 @@ class Array2<T> implements Collection<T>
 	/**
 	 * Prepends the elements of the <code>input</code> array in the range &#091;0, <em>getW()</em>&#093; by adding a new row.
 	 * <o>n</o>
-	 * @throws de.polygonal.AssertError <code>input</code> is null or too short (debug only).
+	 * @throws de.polygonal.core.util.AssertError <code>input</code> is null or too short (debug only).
 	 */
 	public function prependRow(input:Array<T>):Void
 	{
@@ -632,7 +632,7 @@ class Array2<T> implements Collection<T>
 	/**
 	 * Prepends the elements of the <code>input</code> array in the range &#091;0, <em>getH()</em>&#093; by adding a new column.
 	 * <o>n</o>
-	 * @throws de.polygonal.AssertError <code>input</code> is null or too short (debug only).
+	 * @throws de.polygonal.core.util.AssertError <code>input</code> is null or too short (debug only).
 	 */
 	public function prependCol(input:Array<T>):Void
 	{
@@ -669,7 +669,7 @@ class Array2<T> implements Collection<T>
 	/**
 	 * Copies row elements from row <code>i</code> to row <code>j</code>.
 	 * <o>n</o>
-	 * @throws de.polygonal.AssertError <code>i</code>/<code>j</code> out of range (debug only).
+	 * @throws de.polygonal.core.util.AssertError <code>i</code>/<code>j</code> out of range (debug only).
 	 */
 	public function copyRow(i:Int, j:Int):Void
 	{
@@ -689,7 +689,7 @@ class Array2<T> implements Collection<T>
 	/**
 	 * Swaps row elements at row <code>i</code> with row elements at row <code>j</code>.
 	 * <o>n</o>
-	 * @throws de.polygonal.AssertError <code>i</code>/<code>j</code> out of range (debug only).
+	 * @throws de.polygonal.core.util.AssertError <code>i</code>/<code>j</code> out of range (debug only).
 	 */
 	public function swapRow(i:Int, j:Int):Void
 	{
@@ -716,7 +716,7 @@ class Array2<T> implements Collection<T>
 	/**
 	 * Copies column elements from column <code>i</code> to column <code>j</code>.
 	 * <o>n</o>
-	 * @throws de.polygonal.AssertError <code>i</code>/<code>j</code> out of range (debug only).
+	 * @throws de.polygonal.core.util.AssertError <code>i</code>/<code>j</code> out of range (debug only).
 	 */
 	public function copyCol(i:Int, j:Int):Void
 	{
@@ -738,7 +738,7 @@ class Array2<T> implements Collection<T>
 	/**
 	 * Swaps column elements at column <code>i</code> with column elements at row <code>j</code>.
 	 * <o>n</o>
-	 * @throws de.polygonal.AssertError <code>i</code>/<code>j</code> out of range (debug only).
+	 * @throws de.polygonal.core.util.AssertError <code>i</code>/<code>j</code> out of range (debug only).
 	 */
 	public function swapCol(i:Int, j:Int):Void
 	{
@@ -798,7 +798,7 @@ class Array2<T> implements Collection<T>
 	
 	/**
 	 * Copies all elements from the given nested two-dimensional array <code>a</code> into this two-dimensional array.
-	 * @throws de.polygonal.AssertError invalid dimensions of <code>a</code> (debug only).
+	 * @throws de.polygonal.core.util.AssertError invalid dimensions of <code>a</code> (debug only).
 	 */
 	public function setNestedArray(a:Array<Array<T>>):Void
 	{
@@ -820,7 +820,7 @@ class Array2<T> implements Collection<T>
 	 * <o>n</o>
 	 * @param rval a list of random double values in the range between 0 (inclusive) to 1 (exclusive) defining the new positions of the elements.
 	 * If omitted, random values are generated on-the-fly by calling <em>Math.random()</em>.
-	 * @throws de.polygonal.AssertError insufficient random values (debug only).
+	 * @throws de.polygonal.core.util.AssertError insufficient random values (debug only).
 	 */
 	public function shuffle(rval:DA<Float> = null):Void
 	{
@@ -1047,7 +1047,7 @@ class Array2<T> implements Collection<T>
 	 * @param assign if true, the <code>copier</code> parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.<br/>
 	 * If false, the <em>clone()</em> method is called on each element. <warn>In this case all elements have to implement <em>Cloneable</em>.</warn>
 	 * @param copier a custom function for copying elements. Replaces element.<em>clone()</em> if <code>assign</code> is false.
-	 * @throws de.polygonal.AssertError element is not of type <em>Cloneable</em> (debug only).
+	 * @throws de.polygonal.core.util.AssertError element is not of type <em>Cloneable</em> (debug only).
 	 */
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{

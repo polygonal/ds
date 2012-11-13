@@ -31,7 +31,7 @@ package de.polygonal.ds;
 
 import de.polygonal.core.fmt.Sprintf;
 import de.polygonal.core.math.Limits;
-import de.polygonal.core.macro.Assert;
+import de.polygonal.core.util.Assert;
 
 private typedef PriorityQueueFriend<T> = 
 {
@@ -216,7 +216,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	 * Returns the front element.<br/>
 	 * This is the element with the highest priority.
 	 * <o>1</o>
-	 * @throws de.polygonal.AssertError priority queue is empty (debug only).
+	 * @throws de.polygonal.core.util.AssertError priority queue is empty (debug only).
 	 */
 	inline public function peek():T
 	{
@@ -231,7 +231,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	 * Returns the rear element.<br/>
 	 * This is the element with the lowest priority.
 	 * <o>n</o>
-	 * @throws de.polygonal.AssertError priority queue is empty (debug only).
+	 * @throws de.polygonal.core.util.AssertError priority queue is empty (debug only).
 	 */
 	public function back():T
 	{
@@ -263,8 +263,8 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	/**
 	 * Enqueues the element <code>x</code>.
 	 * <o>log n</o>
-	 * @throws de.polygonal.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
-	 * @throws de.polygonal.AssertError <code>x</code> is null or <code>x</code> already exists (debug only).
+	 * @throws de.polygonal.core.util.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
+	 * @throws de.polygonal.core.util.AssertError <code>x</code> is null or <code>x</code> already exists (debug only).
 	 */
 	inline public function enqueue(x:T):Void
 	{
@@ -287,7 +287,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	/**
 	 * Dequeues the front element.
 	 * <o>log n</o>
-	 * @throws de.polygonal.AssertError priority queue is empty (debug only).
+	 * @throws de.polygonal.core.util.AssertError priority queue is empty (debug only).
 	 */
 	inline public function dequeue():T
 	{
@@ -313,7 +313,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	 * <o>log n</o>
 	 * @param x the element to re-prioritize.
 	 * @param priority the new priority.
-	 * @throws de.polygonal.AssertError priority queue is empty or <code>x</code> does not exist (debug only).
+	 * @throws de.polygonal.core.util.AssertError priority queue is empty or <code>x</code> does not exist (debug only).
 	 */
 	public function reprioritize(x:T, priority:Float):Void
 	{
@@ -440,7 +440,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	
 	/**
 	 * Returns true if this priority queue contains the element <code>x</code>.
-	 * @throws de.polygonal.AssertError <code>x</code> is invalid.
+	 * @throws de.polygonal.core.util.AssertError <code>x</code> is invalid.
 	 * <o>1</o>
 	 */
 	inline public function contains(x:T):Bool
@@ -457,7 +457,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	 * Removes the element <code>x</code>.
 	 * <o>n</o>
 	 * @return true if <code>x</code> was removed.
-	 * @throws de.polygonal.AssertError <code>x</code> is invalid or does not exist (debug only).
+	 * @throws de.polygonal.core.util.AssertError <code>x</code> is invalid or does not exist (debug only).
 	 */
 	public function remove(x:T):Bool
 	{
@@ -582,7 +582,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	 * @param assign if true, the <code>copier</code> parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.<br/>
 	 * If false, the <em>clone()</em> method is called on each element. <warn>In this case all elements have to implement <em>Cloneable</em>.</warn>
 	 * @param copier a custom function for copying elements. Replaces element.<em>clone()</em> if <code>assign</code> is false.
-	 * @throws de.polygonal.AssertError element is not of type <em>Cloneable</em> (debug only).
+	 * @throws de.polygonal.core.util.AssertError element is not of type <em>Cloneable</em> (debug only).
 	 * <warn>If <code>assign</code> is true, only the copied version should be used from now on.</warn>
 	 */
 	public function clone(assign = true, copier:T->T = null):Collection<T>

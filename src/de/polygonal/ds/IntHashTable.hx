@@ -41,7 +41,7 @@ import flash.Vector;
 import de.polygonal.core.fmt.Sprintf;
 import de.polygonal.core.math.Limits;
 import de.polygonal.core.math.Mathematics;
-import de.polygonal.core.macro.Assert;
+import de.polygonal.core.util.Assert;
 
 private typedef IntHashTableFriend<T> = 
 {
@@ -136,9 +136,9 @@ class IntHashTable<T> implements Map<Int, T>
 	 * @param maxSize the maximum allowed size of the stack.
 	 * The default value of -1 indicates that there is no upper limit.
 	 * 
-	 * @throws de.polygonal.AssertError <code>slotCount</code> is not a power of two (debug only).
-	 * @throws de.polygonal.AssertError <code>capacity</code> is not a power of two (debug only).
-	 * @throws de.polygonal.AssertError <code>capacity</code> is &lt; 2 (debug only).
+	 * @throws de.polygonal.core.util.AssertError <code>slotCount</code> is not a power of two (debug only).
+	 * @throws de.polygonal.core.util.AssertError <code>capacity</code> is not a power of two (debug only).
+	 * @throws de.polygonal.core.util.AssertError <code>capacity</code> is &lt; 2 (debug only).
 	 */
 	public function new(slotCount:Int, capacity = -1, isResizable = true, maxSize = -1)
 	{
@@ -247,8 +247,8 @@ class IntHashTable<T> implements Map<Int, T>
 	 * Maps <code>val</code> to <code>key</code> in this map, but only if <code>key</code> does not exist yet.<br/>
 	 * <o>1</o>
 	 * @return true if <code>key</code> was mapped to <code>val</code> for the first time.
-	 * @throws de.polygonal.AssertError out of space - hash table is full but not resizable.
-	 * @throws de.polygonal.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
+	 * @throws de.polygonal.core.util.AssertError out of space - hash table is full but not resizable.
+	 * @throws de.polygonal.core.util.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
 	 */
 	inline public function setIfAbsent(key:Int, val:T):Bool
 	{
@@ -294,7 +294,7 @@ class IntHashTable<T> implements Map<Int, T>
 	 * Redistributes all keys over <code>slotCount</code>.<br/>
 	 * This is an expensive operations as the hash table is rebuild from scratch.
 	 * <o>n</o>
-	 * @throws de.polygonal.AssertError <code>slotCount</code> is not a power of two (debug only).
+	 * @throws de.polygonal.core.util.AssertError <code>slotCount</code> is not a power of two (debug only).
 	 */
 	public function rehash(slotCount:Int):Void
 	{
@@ -453,9 +453,9 @@ class IntHashTable<T> implements Map<Int, T>
 	 * <warn>To ensure unique keys either use <em>hasKey()</em> before <em>set()</em> or <em>setIfAbsent()</em></warn>
 	 * <o>1</o>
 	 * @return true if <code>key</code> was added for the first time, false if another instance of <code>key</code> was inserted.
-	 * @throws de.polygonal.AssertError out of space - hash table is full but not resizable.
-	 * @throws de.polygonal.AssertError key 0x80000000 is reserved (debug only).
-	 * @throws de.polygonal.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
+	 * @throws de.polygonal.core.util.AssertError out of space - hash table is full but not resizable.
+	 * @throws de.polygonal.core.util.AssertError key 0x80000000 is reserved (debug only).
+	 * @throws de.polygonal.core.util.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
 	 */
 	inline public function set(key:Int, val:T):Bool
 	{
@@ -727,7 +727,7 @@ class IntHashTable<T> implements Map<Int, T>
 	 * @param assign if true, the <code>copier</code> parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.<br/>
 	 * If false, the <em>clone()</em> method is called on each element. <warn>In this case all elements have to implement <em>Cloneable</em>.</warn>
 	 * @param copier a custom function for copying elements. Replaces element.<em>clone()</em> if <code>assign</code> is false.
-	 * @throws de.polygonal.AssertError element is not of type <em>Cloneable</em> (debug only).
+	 * @throws de.polygonal.core.util.AssertError element is not of type <em>Cloneable</em> (debug only).
 	 */
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{

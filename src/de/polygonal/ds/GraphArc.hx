@@ -29,7 +29,7 @@
  */
 package de.polygonal.ds;
 
-import de.polygonal.core.macro.Assert;
+import de.polygonal.core.util.Assert;
 
 /**
  * <p>A graph arc represents an uni-directional link between two <em>GraphNode</em> objects.</p>

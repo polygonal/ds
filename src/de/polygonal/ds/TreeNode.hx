@@ -30,7 +30,7 @@
 package de.polygonal.ds;
 
 import de.polygonal.core.fmt.Sprintf;
-import de.polygonal.core.macro.Assert;
+import de.polygonal.core.util.Assert;
 
 using de.polygonal.core.math.Mathematics;
 
@@ -272,8 +272,8 @@ class TreeNode<T> implements Collection<T>
 	
 	/**
 	 * Swaps the child <code>a</code> with child <code>b</code> by swapping their values.
-	 * @throws de.polygonal.AssertError <code>a</code> and <code>b</code> are not siblings (debug only).
-	 * @throws de.polygonal.AssertError <code>a</code> equals <code>b</code> (debug only).
+	 * @throws de.polygonal.core.util.AssertError <code>a</code> and <code>b</code> are not siblings (debug only).
+	 * @throws de.polygonal.core.util.AssertError <code>a</code> equals <code>b</code> (debug only).
 	 * <o>1</o>
 	 */
 	public function swapChildren(a:TreeNode<T>, b:TreeNode<T>):Void
@@ -288,9 +288,9 @@ class TreeNode<T> implements Collection<T>
 	
 	/**
 	 * Swaps the child at index <code>i</code> with the child at index <code>j</code> by swapping their values.
-	 * @throws de.polygonal.AssertError index <code>i</code> out of range (debug only).
-	 * @throws de.polygonal.AssertError index <code>j</code> out of range (debug only).
-	 * @throws de.polygonal.AssertError <code>i</code> equals <code>j</code> (debug only).
+	 * @throws de.polygonal.core.util.AssertError index <code>i</code> out of range (debug only).
+	 * @throws de.polygonal.core.util.AssertError index <code>j</code> out of range (debug only).
+	 * @throws de.polygonal.core.util.AssertError <code>i</code> equals <code>j</code> (debug only).
 	 * <o>1</o>
 	 */
 	public function swapChildrenAt(i:Int, j:Int):Void
@@ -332,7 +332,7 @@ class TreeNode<T> implements Collection<T>
 	
 	/**
 	 * Removes the child at index <code>i</code>.
-	 * @throws de.polygonal.AssertError index <code>i</code> is out of range (debug only).
+	 * @throws de.polygonal.core.util.AssertError index <code>i</code> is out of range (debug only).
 	 * <o>n</o>
 	 */
 	public function removeChildAt(i:Int):Void
@@ -355,7 +355,7 @@ class TreeNode<T> implements Collection<T>
 	/**
 	 * Removes <code>n</code> children starting at the specified index <code>i</code> in the range &#091;<code>i</code>, <code>i</code> + <code>n</code>&#093;.<br/>
 	 * If <code>n</code> is -1, <code>n</code> is set to <code>numChildren()</code> - <code>i</code>.
-	 * @throws de.polygonal.AssertError <code>i</code> or <code>n</code> out of range (debug only).
+	 * @throws de.polygonal.core.util.AssertError <code>i</code> or <code>n</code> out of range (debug only).
 	 * <o>n</o>
 	 */
 	public function removeChildren(i = 0, n = -1):Void
@@ -386,7 +386,7 @@ class TreeNode<T> implements Collection<T>
 	
 	/**
 	 * Changes the index of the child <code>x</code> to <code>i</code>.
-	 * @throws de.polygonal.AssertError index <code>i</code> is out of range (debug only).
+	 * @throws de.polygonal.core.util.AssertError index <code>i</code> is out of range (debug only).
 	 * <o>n</o>
 	 */
 	public function setChildIndex(x:TreeNode<T>, i:Int):Void
@@ -567,7 +567,7 @@ class TreeNode<T> implements Collection<T>
 	
 	/**
 	 * Returns the child at index <code>i</code> or null if the node has no children.
-	 * @throws de.polygonal.AssertError child index out of range (debug only).
+	 * @throws de.polygonal.core.util.AssertError child index out of range (debug only).
 	 * <o>n</o>
 	 */
 	inline public function getChildAt(i:Int):TreeNode<T>
@@ -625,7 +625,7 @@ class TreeNode<T> implements Collection<T>
 	
 	/**
 	 * Unlinks <code>x</code> and appends <code>x</code> as a child to this node.
-	 * @throws de.polygonal.AssertError <code>x</code> is null (debug only).
+	 * @throws de.polygonal.core.util.AssertError <code>x</code> is null (debug only).
 	 * <o>1</o>
 	 */
 	public function appendNode(x:TreeNode<T>):Void
@@ -678,7 +678,7 @@ class TreeNode<T> implements Collection<T>
 	/**
 	 * Unlinks <code>x</code> and appends <code>x</code> to the specified code>child</code> node.
 	 * <o>1</o>
-	 * @throws de.polygonal.AssertError <code>child</code> node is not a child of this node (debug only).
+	 * @throws de.polygonal.core.util.AssertError <code>child</code> node is not a child of this node (debug only).
 	 */
 	public function insertAfterChild(child:TreeNode<T>, x:TreeNode<T>):Void
 	{
@@ -711,7 +711,7 @@ class TreeNode<T> implements Collection<T>
 	/**
 	 * Unlinks <code>x</code> and prepends <code>x</code> to the specified child <code>node</code>.
 	 * <o>1</o>
-	 * @throws de.polygonal.AssertError <code>child</code> node is not a child of this node (debug only).
+	 * @throws de.polygonal.core.util.AssertError <code>child</code> node is not a child of this node (debug only).
 	 */
 	public function insertBeforeChild(child:TreeNode<T>, x:TreeNode<T>):Void
 	{
@@ -742,7 +742,7 @@ class TreeNode<T> implements Collection<T>
 	
 	/**
 	 * Unlinks <code>x</code> and inserts <code>x</code> at the index position <code>i</code>.
-	 * @throws de.polygonal.AssertError index <code>i</code> out of range (debug only).
+	 * @throws de.polygonal.core.util.AssertError index <code>i</code> out of range (debug only).
 	 * <o>1</o>
 	 */
 	public function insertChildAt(x:TreeNode<T>, i:Int):Void
@@ -1335,7 +1335,7 @@ class TreeNode<T> implements Collection<T>
 	 * <warn>In this case all elements have to implement <em>Comparable</em>.</warn>
 	 * @param useInsertionSort if true, the dense array is sorted using the insertion sort algorithm.
 	 * This is faster for nearly sorted lists.
-	 * @throws de.polygonal.AssertError element does not implement <em>Comparable</em> (debug only).
+	 * @throws de.polygonal.core.util.AssertError element does not implement <em>Comparable</em> (debug only).
 	 */
 	public function sort(compare:T->T->Int, useInsertionSort = false):Void
 	{
@@ -2021,7 +2021,7 @@ class TreeNode<T> implements Collection<T>
 	 * @param assign if true, the <code>copier</code> parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.<br/>
 	 * If false, the <em>clone()</em> method is called on each element. <warn>In this case all elements have to implement <em>Cloneable</em>.</warn>
 	 * @param copier a custom function for copying elements. Replaces element.<em>clone()</em> if <code>assign</code> is false.
-	 * @throws de.polygonal.AssertError element is not of type <em>Cloneable</em> (debug only).
+	 * @throws de.polygonal.core.util.AssertError element is not of type <em>Cloneable</em> (debug only).
 	 */
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{

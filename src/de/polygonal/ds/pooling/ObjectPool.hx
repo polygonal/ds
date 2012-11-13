@@ -30,7 +30,7 @@
 package de.polygonal.ds.pooling;
 
 import de.polygonal.core.fmt.Sprintf;
-import de.polygonal.core.macro.Assert;
+import de.polygonal.core.util.Assert;
 import de.polygonal.ds.Hashable;
 import de.polygonal.ds.HashKey;
 import de.polygonal.ds.Itr;
@@ -162,7 +162,7 @@ class ObjectPool<T> implements Hashable
 	/** 
 	 * Returns the id to the next free object.<br/>
 	 * After an id has been obtained, the corresponding object can be retrieved using <em>get(id)</em>.
-	 * @throws de.polygonal.AssertError pool exhausted (debug only).
+	 * @throws de.polygonal.core.util.AssertError pool exhausted (debug only).
 	 */
 	inline public function next():Int
 	{
@@ -184,7 +184,7 @@ class ObjectPool<T> implements Hashable
 	/**
 	 * Returns the object that is mapped to <code>id</code>.<br/>
 	 * Call <em>next()</em> to request an <code>id</code> first.
-	 * @throws de.polygonal.AssertError invalid <code>id</code> or object linked to <code>id</code> is not used.
+	 * @throws de.polygonal.core.util.AssertError invalid <code>id</code> or object linked to <code>id</code> is not used.
 	 */
 	inline public function get(id:Int):T
 	{
@@ -203,7 +203,7 @@ class ObjectPool<T> implements Hashable
 	
 	/**
 	 * Puts the object mapped to <code>id</code> back into the pool.
-	 * @throws de.polygonal.AssertError pool is full or object linked to <code>id</code> is not used (debug only).
+	 * @throws de.polygonal.core.util.AssertError pool is full or object linked to <code>id</code> is not used (debug only).
 	 */
 	inline public function put(id:Int):Void
 	{
@@ -224,7 +224,7 @@ class ObjectPool<T> implements Hashable
 	 * @param C allocates objects by instantiating the class <code>C</code>.
 	 * @param fabricate allocates objects by calling <code>fabricate()</code>.
 	 * @param factory allocates objects by using a <em>Factory</em> object (calling <code>factory</code>.<em>create()</em>).
-	 * @throws de.polygonal.AssertError invalid arguments.
+	 * @throws de.polygonal.core.util.AssertError invalid arguments.
 	 */
 	public function allocate(lazy:Bool, C:Class<T> = null, fabricate:Void->T = null, factory:Factory<T> = null):Void
 	{

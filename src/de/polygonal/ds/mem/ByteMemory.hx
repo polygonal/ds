@@ -30,7 +30,7 @@
 package de.polygonal.ds.mem;
 
 import de.polygonal.core.fmt.Sprintf;
-import de.polygonal.core.macro.Assert;
+import de.polygonal.core.util.Assert;
 
 #if !alchemy
 import de.polygonal.core.math.Mathematics;
@@ -45,7 +45,7 @@ class ByteMemory extends MemoryAccess
 	 * Converts <code>input</code> in the range &#091;<code>min</code>, <code>max</code>&#093; to a byte array.<br/>
 	 * If no range is specified, all <code>input</code> bytes are copied.</i><br/>
 	 * <warn>The bytes are written in little endian format.</warn>
-	 * @throws de.polygonal.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
+	 * @throws de.polygonal.core.util.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
 	 */
 	#if (flash9 || cpp)
 	public static function toByteArray(input:ByteMemory, min = -1, max = -1):flash.utils.ByteArray
@@ -83,7 +83,7 @@ class ByteMemory extends MemoryAccess
 	/**
 	 * Converts <code>input</code> in the range &#091;<code>min</code>, <code>max</code>&#093; to a <em>ByteMemory</em> object.<br/>
 	 * If no range is specified, all <code>input</code> bytes are copied.
-	 * @throws de.polygonal.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
+	 * @throws de.polygonal.core.util.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
 	 */
 	#if (flash9 || cpp)
 	public static function ofByteArray(input:flash.utils.ByteArray, min = -1, max = -1):ByteMemory
@@ -112,7 +112,7 @@ class ByteMemory extends MemoryAccess
 	 * Converts <code>input</code> in the range &#091;<code>min</code>, <code>max</code>&#093; to a <code>BytesData</code> object.<br/>
 	 * If no range is specified, all <code>input</code> bytes are copied.</i><br/>
 	 * <warn>The bytes are written in little endian format.</warn>
-	 * @throws de.polygonal.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
+	 * @throws de.polygonal.core.util.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
 	 */
 	public static function toBytesData(input:ByteMemory, min = -1, max = -1):haxe.io.BytesData
 	{
@@ -137,7 +137,7 @@ class ByteMemory extends MemoryAccess
 	/**
 	 * Converts <code>input</code> in the range &#091;<code>min</code>, <code>max</code>&#093; to a <em>ByteMemory</em> object.<br/>
 	 * If no range is specified, all <code>input</code> bytes are copied.
-	 * @throws de.polygonal.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
+	 * @throws de.polygonal.core.util.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
 	 */
 	public static function ofBytesData(input:haxe.io.BytesData, min = -1, max = -1):ByteMemory
 	{
@@ -163,7 +163,7 @@ class ByteMemory extends MemoryAccess
 	/**
 	 * Converts <code>input</code> in the range &#091;<code>min</code>, <code>max</code>&#093; to an array.<br/>
 	 * If no range is specified, all <code>input</code> bytes are copied.
-	 * @throws de.polygonal.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
+	 * @throws de.polygonal.core.util.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
 	 */
 	public static function toArray(input:ByteMemory, min = -1, max = -1):Array<Int>
 	{
@@ -200,7 +200,7 @@ class ByteMemory extends MemoryAccess
 	/**
 	 * Converts <code>input</code> in the range &#091;<code>min</code>, <code>max</code>&#093; to a <em>ByteMemory</em> object.<br/>
 	 * If no range is specified, all <code>input</code> bytes are copied.
-	 * @throws de.polygonal.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
+	 * @throws de.polygonal.core.util.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
 	 */
 	public static function ofArray(input:Array<Int>, min = -1, max = -1):ByteMemory
 	{
@@ -227,7 +227,7 @@ class ByteMemory extends MemoryAccess
 	 * Converts <code>input</code> in the range &#091;<code>min</code>, <code>max</code>&#093; to a Vector object.<br/>
 	 * If no range is specified, all <code>input</code> bytes are copied.
 	 * @param output the <code>Vector</code> object to write into. If null, a new Vector object is created on-the-fly.
-	 * @throws de.polygonal.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
+	 * @throws de.polygonal.core.util.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
 	 */
 	public static function toVector(input:ByteMemory, min = -1, max = -1, output:flash.Vector<Int> = null):flash.Vector<Int>
 	{
@@ -271,7 +271,7 @@ class ByteMemory extends MemoryAccess
 	/**
 	 * Converts <code>input</code> in the range &#091;<code>min</code>, <code>max</code>&#093; to a <em>ByteMemory</em> object.<br/>
 	 * If no range is specified, all <code>input</code> bytes are copied.
-	 * @throws de.polygonal.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
+	 * @throws de.polygonal.core.util.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
 	 */
 	public static function ofVector(input:flash.Vector<Int>, min = -1, max = -1):ByteMemory
 	{
@@ -392,8 +392,8 @@ class ByteMemory extends MemoryAccess
 	
 	/**
 	 * Adjusts the size of this object so it's capable of storing <code>newSize</code> bytes.
-	 * @throws de.polygonal.AssertError invalid size (debug only).
-	 * @throws de.polygonal.AssertError memory was already deallocated (debug only).
+	 * @throws de.polygonal.core.util.AssertError invalid size (debug only).
+	 * @throws de.polygonal.core.util.AssertError memory was already deallocated (debug only).
 	 */
 	override public function resize(newSize:Int):Void
 	{
@@ -420,8 +420,8 @@ class ByteMemory extends MemoryAccess
 	
 	/**
 	 * Returns the byte at index <code>i</code>.
-	 * @throws de.polygonal.AssertError segmentation Fault (debug only).
-	 * @throws de.polygonal.AssertError memory deallocated (debug only).
+	 * @throws de.polygonal.core.util.AssertError segmentation Fault (debug only).
+	 * @throws de.polygonal.core.util.AssertError memory deallocated (debug only).
 	 */
 	inline public function get(i:Int):Int
 	{
@@ -438,8 +438,8 @@ class ByteMemory extends MemoryAccess
 	
 	/**
 	 * Replaces the byte at the index <code>i</code> with the byte <code>x</code>.
-	 * @throws de.polygonal.AssertError segmentation Fault (debug only).
-	 * @throws de.polygonal.AssertError memory deallocated (debug only).
+	 * @throws de.polygonal.core.util.AssertError segmentation Fault (debug only).
+	 * @throws de.polygonal.core.util.AssertError memory deallocated (debug only).
 	 */
 	inline public function set(i:Int, x:Int):Void
 	{
@@ -456,9 +456,9 @@ class ByteMemory extends MemoryAccess
 	
 	/**
 	 * Swaps the byte at the index <code>i</code> with the byte at the index <code>j</code>.
-	 * @throws de.polygonal.AssertError <code>i</code> equals <code>j</code> (debug only).
-	 * @throws de.polygonal.AssertError segmentation Fault (debug only).
-	 * @throws de.polygonal.AssertError memory deallocated (debug only).
+	 * @throws de.polygonal.core.util.AssertError <code>i</code> equals <code>j</code> (debug only).
+	 * @throws de.polygonal.core.util.AssertError segmentation Fault (debug only).
+	 * @throws de.polygonal.core.util.AssertError memory deallocated (debug only).
 	 */
 	inline public function swp(i:Int, j:Int):Void
 	{
@@ -479,8 +479,8 @@ class ByteMemory extends MemoryAccess
 	
 	/**
 	 * Returns the memory byte offset for the byte at index <code>i</code>.
-	 * @throws de.polygonal.AssertError segmentation fault (debug only).
-	 * @throws de.polygonal.AssertError memory deallocated (debug only).
+	 * @throws de.polygonal.core.util.AssertError segmentation fault (debug only).
+	 * @throws de.polygonal.core.util.AssertError memory deallocated (debug only).
 	 */
 	inline public function getAddr(i:Int):Int
 	{

@@ -29,7 +29,7 @@
  */
 package de.polygonal.ds.mem;
 
-import de.polygonal.core.macro.Assert;
+import de.polygonal.core.util.Assert;
 import de.polygonal.ds.Hashable;
 import de.polygonal.ds.HashKey;
 
@@ -81,7 +81,7 @@ class MemoryAccess implements Hashable
 	 * Destroys this object by explicitly nullifying all pointers and instantly releases any memory that was allocated by this accessor.<br/>
 	 * <warn>Invoke this method when the life cycle of this object ends to prevent a memory leak.</warn><br/>
 	 * This is not optional if <em>MemoryManager.AUTO_RECLAIM_MEMORY</em> is true.
-	 * @throws de.polygonal.AssertError memory was already deallocated (debug only).
+	 * @throws de.polygonal.core.util.AssertError memory was already deallocated (debug only).
 	 */
 	public function free():Void
 	{
@@ -98,7 +98,7 @@ class MemoryAccess implements Hashable
 	
 	/**
 	 * Sets all bytes to 0.
-	 * @throws de.polygonal.AssertError memory was already deallocated (debug only).
+	 * @throws de.polygonal.core.util.AssertError memory was already deallocated (debug only).
 	 */
 	public function clear():Void
 	{
@@ -110,8 +110,8 @@ class MemoryAccess implements Hashable
 	
 	/**
 	 * Resizes the memory to <code>byteSize</code> bytes.
-	 * @throws de.polygonal.AssertError bytes <= 0 (debug only).
-	 * @throws de.polygonal.AssertError memory was already deallocated (debug only).
+	 * @throws de.polygonal.core.util.AssertError bytes <= 0 (debug only).
+	 * @throws de.polygonal.core.util.AssertError memory was already deallocated (debug only).
 	 */
 	public function resize(byteSize:Int):Void
 	{

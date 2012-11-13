@@ -39,7 +39,7 @@ import flash.Vector;
 
 import de.polygonal.core.fmt.Sprintf;
 import de.polygonal.core.math.Limits;
-import de.polygonal.core.macro.Assert;
+import de.polygonal.core.util.Assert;
 
 private typedef HashSetFriend<T> = 
 {
@@ -117,9 +117,9 @@ class HashSet<T:Hashable> implements Set<T>
 	 * @param maxSize the maximum allowed size of this hash set.
 	 * The default value of -1 indicates that there is no upper limit.
 	 * 
-	 * @throws de.polygonal.AssertError <code>slotCount</code> is not a power of two (debug only).
-	 * @throws de.polygonal.AssertError <code>capacity</code> is not a power of two (debug only).
-	 * @throws de.polygonal.AssertError <code>capacity</code> is &lt; 2 (debug only).
+	 * @throws de.polygonal.core.util.AssertError <code>slotCount</code> is not a power of two (debug only).
+	 * @throws de.polygonal.core.util.AssertError <code>capacity</code> is not a power of two (debug only).
+	 * @throws de.polygonal.core.util.AssertError <code>capacity</code> is &lt; 2 (debug only).
 	 */
 	public function new(slotCount:Int, capacity = -1, isResizable = true, maxSize = -1)
 	{
@@ -198,7 +198,7 @@ class HashSet<T:Hashable> implements Set<T>
 	 * Returns true if this set contains the element <code>x</code>.<br/>
 	 * Uses move-to-front-on-access which reduces access time when similar elements are frequently queried.
 	 * <o>n</o>
-	 * @throws de.polygonal.AssertError <code>x</code> is null (debug only).
+	 * @throws de.polygonal.core.util.AssertError <code>x</code> is null (debug only).
 	 */
 	inline public function hasFront(x:T):Bool
 	{
@@ -210,7 +210,7 @@ class HashSet<T:Hashable> implements Set<T>
 	 * Redistributes all elements over <code>slotCount</code>.<br/>
 	 * This is an expensive operations as the set is rebuild from scratch.
 	 * <o>n</o>
-	 * @throws de.polygonal.AssertError <code>slotCount</code> is not a power of two (debug only).
+	 * @throws de.polygonal.core.util.AssertError <code>slotCount</code> is not a power of two (debug only).
 	 */
 	public function rehash(slotCount:Int):Void
 	{
@@ -272,7 +272,7 @@ class HashSet<T:Hashable> implements Set<T>
 	/**
 	 * Returns true if this set contains the element <code>x</code> or null if <code>x</code> does not exist.
 	 * <o>n</o>
-	 * @throws de.polygonal.AssertError <code>x</code> is null (debug only).
+	 * @throws de.polygonal.core.util.AssertError <code>x</code> is null (debug only).
 	 */
 	inline public function has(x:T):Bool
 	{
@@ -283,9 +283,9 @@ class HashSet<T:Hashable> implements Set<T>
 	 * Adds the element <code>x</code> to this set if possible.
 	 * <o>n</o>
 	 * @return true if <code>x</code> was added to this set, false if <code>x</code> already exists.
-	 * @throws de.polygonal.AssertError <code>x</code> is null (debug only).
-	 * @throws de.polygonal.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
-	 * @throws de.polygonal.AssertError hash set is full (if not resizable).
+	 * @throws de.polygonal.core.util.AssertError <code>x</code> is null (debug only).
+	 * @throws de.polygonal.core.util.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
+	 * @throws de.polygonal.core.util.AssertError hash set is full (if not resizable).
 	 */
 	inline public function set(x:T):Bool
 	{
@@ -351,7 +351,7 @@ class HashSet<T:Hashable> implements Set<T>
 	/**
 	 * Same as <em>has()</em>. 
 	 * <o>n</o>
-	 * @throws de.polygonal.AssertError <code>x</code> is null (debug only).
+	 * @throws de.polygonal.core.util.AssertError <code>x</code> is null (debug only).
 	 */
 	public function contains(x:T):Bool
 	{
@@ -362,7 +362,7 @@ class HashSet<T:Hashable> implements Set<T>
 	 * Removes the element <code>x</code>.
 	 * <o>n</o>
 	 * @return true if <code>x</code> was successfully removed, false if <code>x</code> does not exist.
-	 * @throws de.polygonal.AssertError <code>x</code> is null (debug only).
+	 * @throws de.polygonal.core.util.AssertError <code>x</code> is null (debug only).
 	 */
 	inline public function remove(x:T):Bool
 	{
@@ -502,7 +502,7 @@ class HashSet<T:Hashable> implements Set<T>
 	 * @param assign if true, the <code>copier</code> parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.<br/>
 	 * If false, the <em>clone()</em> method is called on each element. <warn>In this case all elements have to implement <em>Cloneable</em>.</warn>
 	 * @param copier a custom function for copying elements. Replaces element.<em>clone()</em> if <code>assign</code> is false.
-	 * @throws de.polygonal.AssertError element is not of type <em>Cloneable</em> (debug only).
+	 * @throws de.polygonal.core.util.AssertError element is not of type <em>Cloneable</em> (debug only).
 	 */
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{

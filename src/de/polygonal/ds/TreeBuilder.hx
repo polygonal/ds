@@ -29,7 +29,7 @@
  */
 package de.polygonal.ds;
 
-import de.polygonal.core.macro.Assert;
+import de.polygonal.core.util.Assert;
 
 /**
  * <p>A helper class for building tree structures.</p>
@@ -47,7 +47,7 @@ implements haxe.rtti.Generic
 	
 	/**
 	 * Creates a <em>TreeBuilder</em> object pointing to <code>node</code>.
-	 * @throws de.polygonal.AssertError node is null (debug only).
+	 * @throws de.polygonal.core.util.AssertError node is null (debug only).
 	 */
 	public function new(node:TreeNode<T>)
 	{
@@ -72,7 +72,7 @@ implements haxe.rtti.Generic
 	/**
 	 * Returns the data stored in the node that the tree builder is currently pointing at.
 	 * <o>1</o>
-	 * @throws de.polygonal.AssertError vertical pointer is null (debug only).
+	 * @throws de.polygonal.core.util.AssertError vertical pointer is null (debug only).
 	 */
 	inline public function getVal():T
 	{
@@ -86,7 +86,7 @@ implements haxe.rtti.Generic
 	/**
 	 * Stores the element <code>x</code> in the node that the tree builder is currently pointing at.
 	 * <o>1</o>
-	 * @throws de.polygonal.AssertError vertical pointer is null (debug only).
+	 * @throws de.polygonal.core.util.AssertError vertical pointer is null (debug only).
 	 */
 	inline public function setVal(x:T):Void
 	{
@@ -118,7 +118,7 @@ implements haxe.rtti.Generic
 	/**
 	 * Returns the data of the child pointer.
 	 * <o>1</o>
-	 * @throws de.polygonal.AssertError invalid child pointer (debug only).
+	 * @throws de.polygonal.core.util.AssertError invalid child pointer (debug only).
 	 */
 	inline public function getChildVal():T
 	{
@@ -141,7 +141,7 @@ implements haxe.rtti.Generic
 	/**
 	 * Moves the vertical pointer to the root of the tree.
 	 * <o>n</o>
-	 * @throws de.polygonal.AssertError invalid pointer (debug only).
+	 * @throws de.polygonal.core.util.AssertError invalid pointer (debug only).
 	 */
 	inline public function root():Void
 	{
@@ -289,7 +289,7 @@ implements haxe.rtti.Generic
 	/**
 	 * Appends a child node storing <code>x</code> to the children of the vertical pointer.
 	 * <o>1</o>
-	 * @throws de.polygonal.AssertError invalid vertical pointer (debug only).
+	 * @throws de.polygonal.core.util.AssertError invalid vertical pointer (debug only).
 	 */
 	inline public function appendChild(x:T):TreeNode<T>
 	{
@@ -304,7 +304,7 @@ implements haxe.rtti.Generic
 	/**
 	 * Prepends a child node storing <code>x</code> to the children of the vertical pointer.
 	 * <o>1</o>
-	 * @throws de.polygonal.AssertError invalid vertical pointer (debug only).
+	 * @throws de.polygonal.core.util.AssertError invalid vertical pointer (debug only).
 	 */
 	inline public function prependChild(x:T):TreeNode<T>
 	{
@@ -328,7 +328,7 @@ implements haxe.rtti.Generic
 	/**
 	 * Prepends a child node storing <code>x</code> to the child node referenced by the horizontal pointer.
 	 * <o>1</o>
-	 * @throws de.polygonal.AssertError invalid vertical pointer (debug only).
+	 * @throws de.polygonal.core.util.AssertError invalid vertical pointer (debug only).
 	 */
 	inline public function insertBeforeChild(x:T):TreeNode<T>
 	{
@@ -358,7 +358,7 @@ implements haxe.rtti.Generic
 	/**
 	 * Appends a child node storing <code>x</code> to the node referenced by the vertical pointer.
 	 * <o>1</o>
-	 * @throws de.polygonal.AssertError invalid vertical pointer (debug only).
+	 * @throws de.polygonal.core.util.AssertError invalid vertical pointer (debug only).
 	 */
 	inline public function insertAfterChild(x:T):TreeNode<T>
 	{

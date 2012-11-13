@@ -31,7 +31,7 @@ package de.polygonal.ds;
 
 import de.polygonal.core.fmt.Sprintf;
 import de.polygonal.core.math.Limits;
-import de.polygonal.core.macro.Assert;
+import de.polygonal.core.util.Assert;
 
 #if macro
 import haxe.macro.Expr;
@@ -243,7 +243,7 @@ class Bits
 	
 	/**
 	 * Returns true if the bit in <code>x</code> at index <code>i</code> (LSB 0) is 1.
-	 * @throws de.polygonal.AssertError index out of range (debug only).
+	 * @throws de.polygonal.core.util.AssertError index out of range (debug only).
 	 */
 	inline public static function hasBitAt(x:Int, i:Int):Bool
 	{
@@ -256,7 +256,7 @@ class Bits
 	
 	/**
 	 * Sets the bit in <code>x</code> at index <code>i</code> (LSB 0) to 1.
-	 * @throws de.polygonal.AssertError index out of range (debug only).
+	 * @throws de.polygonal.core.util.AssertError index out of range (debug only).
 	 */
 	inline public static function setBitAt(x:Int, i:Int):Int
 	{
@@ -269,7 +269,7 @@ class Bits
 	
 	/**
 	 * Sets the bit in <code>x</code> at index <code>i</code> (LSB 0) to 0.
-	 * @throws de.polygonal.AssertError index out of range (debug only).
+	 * @throws de.polygonal.core.util.AssertError index out of range (debug only).
 	 */
 	inline public static function clrBitAt(x:Int, i:Int):Int
 	{
@@ -286,7 +286,7 @@ class Bits
 	
 	/**
 	 * Flips the bit in <code>x</code> at index <code>i</code> (LSB 0).
-	 * @throws de.polygonal.AssertError index out of range (debug only).
+	 * @throws de.polygonal.core.util.AssertError index out of range (debug only).
 	 */
 	inline public static function invBitAt(x:Int, i:Int):Int
 	{
@@ -299,7 +299,7 @@ class Bits
 	
 	/**
 	 * Sets all bits in <code>x</code> in the range &#091;0, 31&#093;.
-	 * @throws de.polygonal.AssertError invalid range (debug only).
+	 * @throws de.polygonal.core.util.AssertError invalid range (debug only).
 	 */
 	inline public static function setBitsRange(x:Int, min:Int, max:Int):Int
 	{
