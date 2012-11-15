@@ -230,7 +230,7 @@ class MemoryManager
 	public static function dump():String
 	{
 		#if alchemy
-		var s = Sprintf.format('{MemoryManager, %d bytes total, %d bytes free (%d)}', [MemoryManager.bytesTotal, MemoryManager.bytesFree, get()._bytes.length - get()._blockSizeBytes]);
+		var s = Sprintf.format('{MemoryManager, %d bytes total, %d bytes free (%d)}', [MemoryManager.bytesTotal(), MemoryManager.bytesFree(), get()._bytes.length - get()._blockSizeBytes]);
 		s += '\n|< front\n';
 		var i = get()._segmentList;
 		var j = 0;
