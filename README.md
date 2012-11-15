@@ -44,7 +44,7 @@ If you want to test the latest beta build, you should pull the dev branch and ad
 
 ## Changelog
 
-### 1.37 (dev)
+### 1.37 (released 2012-11-15)
 
  * modified: Graph: added Graph#borrowArc() and Graph#returnArc() to allow optional arc pooling
  * fixed: TreeNode#isAncestor(), TreeNode#isDescendant()
