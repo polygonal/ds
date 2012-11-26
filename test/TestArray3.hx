@@ -8,7 +8,7 @@ class TestArray3 extends haxe.unit.TestCase
 	var _h:Int;
 	var _d:Int;
 	
-	public function new(w:Int, h:Int, d:Int)
+	function new(w:Int, h:Int, d:Int)
 	{
 		_w = w;
 		_h = h;
@@ -16,7 +16,7 @@ class TestArray3 extends haxe.unit.TestCase
 		super();
 	}
 	
-	public function testRemove()
+	function testRemove()
 	{
 		var a = new Array3<Int>(10, 10, 10);
 		a.set(0, 0, 0, 1);
@@ -24,12 +24,12 @@ class TestArray3 extends haxe.unit.TestCase
 		a.set(2, 2, 2, 1);
 		var k = a.remove(1);
 		assertEquals(k, true);
-		assertEquals(0, a.get(0, 0));
-		assertEquals(0, a.get(1, 1));
-		assertEquals(0, a.get(2, 2));
+		assertEquals(0, a.get(0, 0, 0));
+		assertEquals(0, a.get(1, 1, 1));
+		assertEquals(0, a.get(2, 2, 2));
 	}
 	
-	public function testIndexOf()
+	function testIndexOf()
 	{
 		var a = new Array3<Int>(10, 10, 10);
 		assertEquals(-1, a.indexOf(1));
@@ -37,7 +37,7 @@ class TestArray3 extends haxe.unit.TestCase
 		assertEquals(1000 - 100, a.indexOf(1));
 	}
 	
-	public function testIndexToCell()
+	function testIndexToCell()
 	{
 		var a = new Array3<Int>(5, 5, 5);
 		var c = new Array3Cell();
@@ -57,7 +57,7 @@ class TestArray3 extends haxe.unit.TestCase
 		}
 	}
 	
-	public function testCellOf()
+	function testCellOf()
 	{
 		var c = new Array3Cell();
 		var a = new Array3<Int>(9, 9, 9);
@@ -70,7 +70,7 @@ class TestArray3 extends haxe.unit.TestCase
 		assertEquals(3, c.z);
 	}
 	
-	public function testAssign()
+	function testAssign()
 	{
 		var a = new Array3<Int>(_w, _h, _d);
 		a.fill(99);
@@ -80,7 +80,7 @@ class TestArray3 extends haxe.unit.TestCase
 					assertEquals(99, a.get(x, y, z));
 	}
 	
-	public function testIterator()
+	function testIterator()
 	{
 		var a = new Array3<Int>(_w, _h, _d);
 		a.fill(99);
@@ -134,7 +134,7 @@ class TestArray3 extends haxe.unit.TestCase
 		assertTrue(s2.isEmpty());
 	}
 	
-	public function testIteratorRemove()
+	function testIteratorRemove()
 	{
 		var a = new Array3<String>(_w, _h, _d);
 		a.fill('?');
