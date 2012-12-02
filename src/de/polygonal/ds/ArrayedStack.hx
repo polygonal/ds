@@ -523,7 +523,7 @@ class ArrayedStack<T> implements Stack<T>
 		var i = _top - 1;
 		var j = _top - 1;
 		while (i >= 0)
-			s += Sprintf.format('  %4d -> %s\n', [j--, __get(i--)]);
+			s += Sprintf.format('  %4d -> %s\n', [j--, Std.string(__get(i--))]);
 			
 		s += '>|';
 		return s;

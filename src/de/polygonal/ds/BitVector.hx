@@ -348,7 +348,13 @@ class BitVector implements Hashable
 		var output = new haxe.io.BytesOutput();
 		output.bigEndian = bigEndian;
 		for (i in 0..._arrSize)
+		{
+			#if haxe3
+			output.writeInt32(_bits[i]);
+			#else
 			output.writeInt32(haxe.Int32.ofInt(_bits[i]));
+			#end
+		}
 		return output.getBytes().getData();
 		#end
 	}
