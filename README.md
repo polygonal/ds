@@ -44,6 +44,11 @@ If you want to test the latest beta build, you should pull the dev branch and ad
 
 ## Changelog
 
+### 1.xx (dev-branch)
+
+ * modified: swc: moved haxe classes to hx package
+ * added: serialization of TreeNode structures (de.polygonal.ds.Serialization)
+
 ### 1.37 (released 2012-11-15)
 
  * modified: Graph: added Graph#borrowArc() and Graph#returnArc() to allow optional arc pooling
