@@ -553,43 +553,4 @@ class Bits
 	{
 		return x >>> 16;
 	}
-	
-	#if macro
-	static var _counter:Hash<Int>;
-	#end
-	@:macro public static function next(e:haxe.macro.Expr)
-	{
-		if (haxe.macro.Context.defined('display'))
-			return {expr: EConst(CInt(Std.string(0))), pos: Context.currentPos()};
-		
-		var name = '?';
-		switch (e.expr)
-		{
-			case EConst(a):
-			switch (a)
-			{
-				case CIdent(b), CString(b), CInt(b):
-					name = b;
-				
-				default:
-					Context.error('unsupported declaration', Context.currentPos());
-			}
-			
-			default:
-				Context.error('unsupported declaration', Context.currentPos());
-		}
-		
-		if (_counter == null) _counter = new Hash();
-		if (!_counter.exists(name))
-			_counter.set(name, 0);
-		else
-		{
-			var i = _counter.get(name);
-			if (i == (Limits.INT_BITS - 1))
-				Context.error('overflow', Context.currentPos());
-			_counter.set(name, i + 1);
-		}
-		
-		return {expr: EConst(CInt(Std.string(1 << _counter.get(name)))), pos: Context.currentPos()};
-	}
 }
