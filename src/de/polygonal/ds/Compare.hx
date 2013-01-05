@@ -124,7 +124,7 @@ class Compare
 		{
 			var ca = StringTools.fastCodeAt(a, i);
 			var cb = StringTools.fastCodeAt(b, i);
-			if (StringTools.isEOF(ca) || StringTools.isEOF(cb)) break;
+			if (StringTools.isEof(ca) || StringTools.isEof(cb)) break;
 			
 			d = ca - cb;
 			if (d != 0) return d;
