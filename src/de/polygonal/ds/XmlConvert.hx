@@ -100,7 +100,7 @@ class XmlConvert
 						}
 					}
 					
-					var node = new TreeNode(info);
+					var node = new TreeNode<XmlNodeData>(info);
 					info.treeNode = node;
 					t.appendNode(node);
 					
