@@ -48,6 +48,9 @@ If you want to test the latest beta build, you should pull the dev branch and ad
 
  * modified: swc: moved haxe classes to hx package
  * added: serialization of TreeNode structures (de.polygonal.ds.Serialization)
+ * minor fixes for -D haxe3
+ * add ArrayUtil.equals()
+ * add IntIntHashTable, IntHashTable, HashTable.getAll()
 
 ### 1.37 (released 2012-11-15)
 
