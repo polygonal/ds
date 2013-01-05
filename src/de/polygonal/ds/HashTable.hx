@@ -89,6 +89,8 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	var _isResizable:Bool;
 	var _iterator:HashTableValIterator<K, T>;
 	
+	var _tmpArr:Array<Int>;
+	
 	/**
 	 * @param slotCount the total number of slots into which the hashed keys are distributed.
 	 * This defines the space-time trade off of the hash table.
@@ -140,6 +142,8 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		_free = 0;
 		_sizeLevel = 0;
 		_iterator = null;
+		_tmpArr = [];
+		
 		key = HashKey.next();
 		reuseIterator = false;
 	}
@@ -412,6 +416,23 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	}
 	
 	/**
+	 * Stores all values that are mapped to <code>key</code> in <code>values</code> or returns 0 if <code>key</code> does not exist.
+	 * @return the total number of values mapped to <code>key</code>.
+	 */
+	public function getAll(key:K, values:Array<T>):Int
+	{
+		var i = _h.get(__key(key));
+		if (i == IntIntHashTable.KEY_ABSENT)
+			return 0;
+		else
+		{
+			var c = _h.getAll(__key(key), _tmpArr);
+			for (i in 0...c) values[i] = _vals[_tmpArr[i]];
+			return c;
+		}
+	}
+	
+	/**
 	 * Maps the value <code>val</code> to <code>key</code>.<br/>
 	 * The method allows duplicate keys.<br/>
 	 * <warn>To ensure unique keys either use <em>hasKey()</em> before <em>set()</em> or <em>setIfAbsent()</em></warn>
@@ -540,6 +561,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		_h.free();
 		_h = null;
 		_iterator = null;
+		_tmpArr = null;
 	}
 	
 	/**
