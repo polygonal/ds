@@ -704,6 +704,12 @@ class IntIntHashTable implements Map<Int, Int>
 		}
 	}
 	
+	public function removePair(key:Int, val:Int):Bool
+	{
+		//TODO implement removePair()
+		return false;
+	}
+	
 	/**
 	 * Creates and returns an unordered array of all keys. 
 	 */
@@ -1078,11 +1084,12 @@ class IntIntHashTable implements Map<Int, Int>
 	}
 	
 	/**
-	 * Removes the first occurrence of <code>key</code>.
+	 * Removes the first occurrence of <code>key</code> and 
 	 * @return true if <code>key</code> is successfully removed.
 	 */
 	inline public function clr(key:Int):Bool
 	{
+		//TODO make sure all values are removed from key
 		var b = _hashCode(key);
 		var i = __getHash(b);
 		if (i == EMPTY_SLOT)
@@ -1279,13 +1286,13 @@ class IntIntHashTable implements Map<Int, Int>
 		for (i in 0..._capacity)
 		{
 			#if (flash10 && alchemy)
-			var o = _data.getAddr((i * 3));
+			var o = _data.getAddr(i * 3);
 			if (Memory.getI32(o + 4) == val)
 				keys[c++] = Memory.getI32(o);
 			#else
-			var v = __getData((i * 3));
-			if (v == val)
-				keys[c++] = __getData(i * 3);
+			var j = i * 3;
+			if (__getData(j + 1) == val)
+				keys[c++] = __getData(j);
 			#end
 		}
 		
