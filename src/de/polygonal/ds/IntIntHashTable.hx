@@ -894,7 +894,7 @@ class IntIntHashTable implements Map<Int, Int>
 	}
 	
 	/**
-	 * Returns the value that is mapped to <code>key</code> or <em>IntIntHashTable.KEY_ABSENT</em> if <code>key</code> does not exist.
+	 * Returns the first value that is mapped to <code>key</code> or <em>IntIntHashTable.KEY_ABSENT</em> if <code>key</code> does not exist.
 	 */
 	inline public function get(key:Int):Int
 	{
@@ -940,6 +940,43 @@ class IntIntHashTable implements Map<Int, Int>
 				#end
 				return v;
 			}
+		}
+	}
+	
+	/**
+	 * Stores all values that are mapped to <code>key</code> in <code>values</code> or returns 0 if <code>key</code> does not exist.
+	 * @return the total number of values mapped to <code>key</code>.
+	 */
+	public function getAll(key:Int, values:Array<Int>):Int
+	{
+		var i = __getHash(_hashCode(key));
+		if (i == EMPTY_SLOT)
+			return 0;
+		else
+		{
+			var c = 0;
+			#if (flash10 && alchemy)
+			var o = _data.getAddr(i);
+			if (Memory.getI32(o) == key)
+				values[c++] = Memory.getI32(o + 4);
+			i = Memory.getI32(o + 8);
+			while (i != NULL_POINTER)
+			{
+				o = _data.getAddr(i);
+				values[c++] = Memory.getI32(o + 4);
+				i = Memory.getI32(o + 8);
+			}
+			#else
+			if (__getData(i) == key)
+				values[c++] = __getData(i + 1);
+			i = __getData(i + 2);
+			while (i != NULL_POINTER)
+			{
+				values[c++] = __getData(i + 1);
+				i = __getData(i + 2);
+			}
+			#end
+			return c;
 		}
 	}
 	
