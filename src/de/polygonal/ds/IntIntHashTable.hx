@@ -963,7 +963,8 @@ class IntIntHashTable implements Map<Int, Int>
 			while (i != NULL_POINTER)
 			{
 				o = _data.getAddr(i);
-				values[c++] = Memory.getI32(o + 4);
+				if (Memory.getI32(o) == key)
+					values[c++] = Memory.getI32(o + 4);
 				i = Memory.getI32(o + 8);
 			}
 			#else
@@ -972,7 +973,8 @@ class IntIntHashTable implements Map<Int, Int>
 			i = __getData(i + 2);
 			while (i != NULL_POINTER)
 			{
-				values[c++] = __getData(i + 1);
+				if (__getData(i) == key)
+					values[c++] = __getData(i + 1);
 				i = __getData(i + 2);
 			}
 			#end
