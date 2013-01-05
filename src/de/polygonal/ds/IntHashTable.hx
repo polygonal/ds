@@ -114,6 +114,8 @@ class IntHashTable<T> implements Map<Int, T>
 	var _isResizable:Bool;
 	var _iterator:IntHashTableIterator<T>;
 	
+	var _tmpArr:Array<Int>;
+	
 	/**
 	 * @param slotCount the total number of slots into which the hashed keys are distributed.
 	 * This defines the space-time trade off of the hash table.
@@ -177,7 +179,8 @@ class IntHashTable<T> implements Map<Int, T>
 		_key0      = 0;
 		_i0        = 0;
 		_sizeLevel = 0;
-		_iterator  = null; 
+		_iterator  = null;
+		_tmpArr = [];
 		
 		key = HashKey.next();
 		reuseIterator = false;
@@ -435,7 +438,7 @@ class IntHashTable<T> implements Map<Int, T>
 	}
 	
 	/**
-	 * Returns the value that is mapped to <code>key</code> or null if <code>key</code> does not exist.
+	 * Returns the first value that is mapped to <code>key</code> or null if <code>key</code> does not exist.
 	 * <o>1</o>
 	 */
 	inline public function get(key:Int):T
@@ -445,6 +448,23 @@ class IntHashTable<T> implements Map<Int, T>
 			return null;
 		else
 			return _vals[i];
+	}
+	
+	/**
+	 * Stores all values that are mapped to <code>key</code> in <code>values</code> or returns 0 if <code>key</code> does not exist.
+	 * @return the total number of values mapped to <code>key</code>.
+	 */
+	public function getAll(key:Int, values:Array<T>):Int
+	{
+		var i = _h.get(key);
+		if (i == IntIntHashTable.KEY_ABSENT)
+			return 0;
+		else
+		{
+			var c = _h.getAll(key, _tmpArr);
+			for (i in 0...c) values[i] = _vals[_tmpArr[i]];
+			return c;
+		}
 	}
 	
 	/**
@@ -572,6 +592,7 @@ class IntHashTable<T> implements Map<Int, T>
 		_h.free();
 		_h = null;
 		_iterator = null;
+		_tmpArr = null;
 	}
 	
 	/**
