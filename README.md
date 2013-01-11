@@ -52,6 +52,8 @@ If you want to test the latest beta build, you should pull the dev branch and ad
  * added: ArrayUtil.equals()
  * added: IntIntHashTable, IntHashTable, HashTable.getAll()
  * fixed: IntIntHashTable.remove()
+ * added: BitVector.getBucketAt(), getBuckets()
+
 
 ### 1.37 (released 2012-11-15)
 
