@@ -273,6 +273,32 @@ class BitVector implements Hashable
 	}
 	
 	/**
+	 * Returns the bucket at index <code>i</code>.<br/>
+	 * A bucket is a 32-bit integer for storing the bit flags.
+	 * @throws de.polygonal.core.util.AssertError <code>i</code> out of range (debug only).
+	 */
+	inline public function getBucketAt(i:Int):Int
+	{
+		#if debug
+		D.assert(i >= 0 && i < _arrSize, Sprintf.format('i index out of range (%d)', [i]));
+		#end
+		
+		return _bits[i];
+	}
+	
+	/**
+	 * Writes all buckets to <code>output</code>.
+	 * A bucket is a 32-bit integer for storing the bit flags.
+	 * @return the total number of buckets.
+	 */
+	inline public function getBuckets(output:Array<Int>):Int
+	{
+		var t = _bits;
+		for (i in 0..._arrSize) output[i] = t[i];
+		return _arrSize;
+	}
+	
+	/**
 	 * Resizes the bit-vector to <code>x</code> bits.<br/>
 	 * Preserves existing values if the new size &gt; old size.
 	 * <o>n</o>
