@@ -648,7 +648,7 @@ class IntHashSet implements Set<Int>
 				else
 					__setHash(b, __getData(i + 1));
 				
-				var j = Std.int(i >> 1);
+				var j = i >> 1;
 				__setNext(j, _free);
 				_free = j;
 				
@@ -705,7 +705,7 @@ class IntHashSet implements Set<Int>
 				{
 					__setData(i0 + 1, __getData(i + 1));
 					
-					var j = Std.int(i >> 1);
+					var j = i >> 1;
 					__setNext(j, _free);
 					_free = j;
 					

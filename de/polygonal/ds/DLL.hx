@@ -32,6 +32,7 @@ package de.polygonal.ds;
 import de.polygonal.core.fmt.Sprintf;
 import de.polygonal.core.math.Limits;
 import de.polygonal.core.util.Assert;
+import de.polygonal.core.math.Mathematics;
 
 private typedef DLLNodeFriend<T> =
 {
@@ -47,8 +48,11 @@ private typedef DLLNodeFriend<T> =
  * <p>See <a href="http://lab.polygonal.de/?p=206" target="_blank">http://lab.polygonal.de/?p=206</a></p>
  * <p><o>Worst-case running time in Big O notation</o></p>
  */
+#if (generic && haxe3)
+@:generic
+#end
 class DLL<T> implements Collection<T>
-#if generic
+#if (generic && !haxe3)
 , implements haxe.rtti.Generic
 #end
 {
@@ -933,7 +937,7 @@ class DLL<T> implements Collection<T>
 			while (s > 1)
 			{
 				s--;
-				var i = Std.int(m.random() * s);
+				var i = M.int(m.random() * s);
 				var node1 = head;
 				for (j in 0...s) node1 = node1.next;
 				
@@ -956,7 +960,7 @@ class DLL<T> implements Collection<T>
 			while (s > 1)
 			{
 				s--;
-				var i = Std.int(rval.get(j++) * s);
+				var i = M.int(rval.get(j++) * s);
 				var node1 = head;
 				for (j in 0...s) node1 = node1.next;
 				
@@ -1674,11 +1678,14 @@ class DLL<T> implements Collection<T>
 	inline function __list(f:DLLNodeFriend<T>, x:DLL<T>) f._list = x
 }
 
+#if (generic && haxe3)
+@:generic
+#end
 #if doc
 private
 #end
 class DLLIterator<T> implements de.polygonal.ds.Itr<T>
-#if generic
+#if (generic && !haxe3)
 , implements haxe.rtti.Generic
 #end
 {
@@ -1722,11 +1729,14 @@ class DLLIterator<T> implements de.polygonal.ds.Itr<T>
 	}
 }
 
+#if (generic && haxe3)
+@:generic
+#end
 #if doc
 private
 #end
 class CircularDLLIterator<T> implements de.polygonal.ds.Itr<T>
-#if generic
+#if (generic && !haxe3)
 , implements haxe.rtti.Generic
 #end
 {

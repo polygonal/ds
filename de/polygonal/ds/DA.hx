@@ -31,6 +31,7 @@ package de.polygonal.ds;
 
 import de.polygonal.core.fmt.Sprintf;
 import de.polygonal.core.math.Limits;
+import de.polygonal.core.math.Mathematics;
 import de.polygonal.core.util.Assert;
 
 private typedef DAFriend<T> = 
@@ -43,10 +44,13 @@ private typedef DAFriend<T> =
  * <p>A dense, dynamic array.</p>
  * <p><o>Worst-case running time in Big O notation</o></p>
  */
+#if (generic && cpp && haxe3)
+@:generic
+#end
 class DA<T> implements Collection<T>
-//#if (cpp && generic)
-//, implements haxe.rtti.Generic
-//#end
+#if (generic && cpp && !haxe3)
+, implements haxe.rtti.Generic
+#end
 {
 	/**
 	 * A unique identifier for this object.<br/>
@@ -1047,7 +1051,7 @@ class DA<T> implements Collection<T>
 			var m = Math;
 			while (--s > 1)
 			{
-				var i = Std.int(m.random() * s);
+				var i = M.int(m.random() * s);
 				var t = __get(s);
 				__cpy(s, i);
 				__set(i, t);
@@ -1062,7 +1066,7 @@ class DA<T> implements Collection<T>
 			var j = 0;
 			while (--s > 1)
 			{
-				var i = Std.int(rval.get(j++) * s);
+				var i = M.int(rval.get(j++) * s);
 				var t = __get(s);
 				__cpy(s, i);
 				__set(i, t);
@@ -1292,13 +1296,16 @@ class DA<T> implements Collection<T>
 	}
 }
 
+#if (generic && cpp && haxe3)
+@:generic
+#end
 #if doc
 private
 #end
 class DAIterator<T> implements de.polygonal.ds.Itr<T>
-//#if (cpp && generic)
-//, implements haxe.rtti.Generic
-//#end
+#if (generic && cpp && !haxe3)
+, implements haxe.rtti.Generic
+#end
 {
 	var _f:DA<T>;
 	var _a:Array<T>;

@@ -32,11 +32,14 @@ package de.polygonal.ds;
 import de.polygonal.core.fmt.Sprintf;
 import de.polygonal.core.util.Assert;
 
+#if (generic && haxe3)
+@:generic
+#end
 #if doc
 private
 #end
 class BSTIterator<T> implements de.polygonal.ds.Itr<T>
-#if generic
+#if (generic && !haxe3)
 , implements haxe.rtti.Generic
 #end
 {
@@ -92,8 +95,11 @@ class BSTIterator<T> implements de.polygonal.ds.Itr<T>
  * <p>A BST automatically arranges <em>BinaryTreeNode</em> objects so the resulting tree is a valid BST.</p>
  * <p><o>Worst-case running time in Big O notation</o></p>
  */
+#if (generic && haxe3)
+@:generic
+#end
 class BST<T:Comparable<T>> implements Collection<T>
-#if generic
+#if (generic && !haxe3)
 , implements haxe.rtti.Generic
 #end
 {

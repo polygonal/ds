@@ -37,8 +37,11 @@ import de.polygonal.core.util.Assert;
  * The vertical pointer moves up and down the tree using the node's <em>parent</em> field, while the horizontal pointer moves left/right over the children using the <em>prev</em> and <em>next</em> fields.</p>
  * <p><o>Worst-case running time in Big O notation</o></p>
  */
+#if (generic && haxe3)
+@:generic
+#end
 class TreeBuilder<T>
-#if generic
+#if (generic && !haxe3)
 implements haxe.rtti.Generic
 #end
 {
@@ -416,7 +419,7 @@ implements haxe.rtti.Generic
 	 */
 	public function toString():String
 	{
-		return '{TreeBuilder, V: ' + (valid() ? _node.val : null) + ', H: ' + (childValid() ? _child.val : null) + '}';
+		return '{TreeBuilder, V: ' + (valid() ? _node.val : cast null) + ', H: ' + (childValid() ? _child.val : cast null) + '}';
 	}
 	
 	inline function _reset():Void

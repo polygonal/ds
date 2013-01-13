@@ -30,6 +30,7 @@
 package de.polygonal.ds;
 
 import de.polygonal.core.fmt.Sprintf;
+import de.polygonal.core.math.Mathematics;
 import de.polygonal.core.util.Assert;
 
 private typedef Array2Friend<T> =
@@ -43,10 +44,11 @@ private typedef Array2Friend<T> =
  * <p>A two-dimensional array based on a rectangular sequential array.</p>
  * <p><o>Worst-case running time in Big O notation</o></p>
  */
-class Array2<T> implements Collection<T>
+
 #if (cpp && generic)
-, implements haxe.rtti.Generic
+@:generic
 #end
+class Array2<T> implements Collection<T>
 {
 	/**
 	 * A unique identifier for this object.<br/>
@@ -86,7 +88,7 @@ class Array2<T> implements Collection<T>
 		reuseIterator = false;
 		
 		#if (cpp && generic)
-		ArrayUtil.fill(_a, null, size());
+		ArrayUtil.fill(_a, cast null, size());
 		#end
 	}
 	
@@ -146,7 +148,7 @@ class Array2<T> implements Collection<T>
 		D.assert(i >= 0 && i < size(), Sprintf.format('index out of range (%d)', [i]));
 		#end
 		
-		return __get(getIndex(i % _w, Std.int(i / _w)));
+		return __get(getIndex(i % _w, M.int(i / _w)));
 	}
 	
 	/**
@@ -160,7 +162,7 @@ class Array2<T> implements Collection<T>
 		D.assert(i >= 0 && i < size(), Sprintf.format('index out of range (%d)', [i]));
 		#end
 		
-		__set(getIndex(i % _w, Std.int(i / _w)), x);
+		__set(getIndex(i % _w, M.int(i / _w)), x);
 	}
 	
 	/**
@@ -273,7 +275,7 @@ class Array2<T> implements Collection<T>
 		D.assert(cell != null, 'cell is null');
 		#end
 		
-		cell.y = Std.int(i / _w);
+		cell.y = M.int(i / _w);
 		cell.x = i % _w;
 		return cell;
 	}
@@ -426,7 +428,7 @@ class Array2<T> implements Collection<T>
 		_a = ArrayUtil.alloc(width * height);
 		
 		#if (cpp && generic)
-		ArrayUtil.fill(_a, null, width * height);
+		ArrayUtil.fill(_a, cast null, width * height);
 		#end
 		
 		var minX = width  < _w ? width  : _w;
@@ -557,7 +559,7 @@ class Array2<T> implements Collection<T>
 		var t = _w * _h++;
 		
 		#if (cpp && generic)
-		for (i in 0..._w) _a[t + i] = null;
+		for (i in 0..._w) _a[t + i] = cast null;
 		#end
 		
 		for (i in 0..._w) __set(t + i, input[i]);
@@ -578,7 +580,7 @@ class Array2<T> implements Collection<T>
 		var t = size();
 		
 		#if (cpp && generic)
-		for (i in 0..._h) _a[t + i] = null;
+		for (i in 0..._h) _a[t + i] = cast null;
 		#end
 		
 		var l = t + _h;
@@ -614,7 +616,7 @@ class Array2<T> implements Collection<T>
 		
 		#if (cpp && generic)
 		var t = _w * _h++;
-		for (i in 0..._w) _a[t + i] = null;
+		for (i in 0..._w) _a[t + i] = cast null;
 		#else
 		_h++;
 		#end
@@ -644,7 +646,7 @@ class Array2<T> implements Collection<T>
 		var t = size();
 		
 		#if (cpp && generic)
-		for (i in 0..._h) _a[t + i] = null;
+		for (i in 0..._h) _a[t + i] = cast null;
 		#end
 		
 		var l = t + _h;
@@ -830,7 +832,7 @@ class Array2<T> implements Collection<T>
 			var m = Math;
 			while (--s > 1)
 			{
-				var i = Std.int(m.random() * s);
+				var i = M.int(m.random() * s);
 				var t = __get(s);
 				__set(s, __get(i));
 				__set(i, t);
@@ -845,7 +847,7 @@ class Array2<T> implements Collection<T>
 			var j = 0;
 			while (--s > 1)
 			{
-				var i = Std.int(rval.get(j++) * s);
+				var i = M.int(rval.get(j++) * s);
 				var t = __get(s);
 				__set(s, __get(i));
 				__set(i, t);
@@ -932,7 +934,7 @@ class Array2<T> implements Collection<T>
 	 */
 	public function remove(x:T):Bool
 	{
-		var NULL:Null<T> = null;
+		var NULL:Null<T> = cast null;
 		var found = false;
 		for (i in 0...size())
 		{
@@ -1004,7 +1006,7 @@ class Array2<T> implements Collection<T>
 		var a:Array<T> = ArrayUtil.alloc(size());
 		
 		#if (cpp && generic)
-		ArrayUtil.fill(a, null, size());
+		ArrayUtil.fill(a, cast null, size());
 		#end
 		
 		for (i in 0...size())
@@ -1097,11 +1099,14 @@ class Array2<T> implements Collection<T>
 	}
 }
 
+#if (generic && cpp && haxe3)
+@:generic
+#end
 #if doc
 private
 #end
 class Array2Iterator<T> implements de.polygonal.ds.Itr<T>
-#if (cpp && generic)
+#if (generic && cpp && !haxe3)
 , implements haxe.rtti.Generic
 #end
 {

@@ -30,6 +30,7 @@
 package de.polygonal.ds;
 
 import de.polygonal.core.fmt.Sprintf;
+import de.polygonal.core.math.Mathematics;
 import de.polygonal.core.util.Assert;
 
 private typedef Array3Friend<T> = 
@@ -44,8 +45,11 @@ private typedef Array3Friend<T> =
  * <p>A three-dimensional array based on a rectangular sequential array.</p>
  * <p><o>Worst-case running time in Big O notation</o></p>
  */
+#if (generic && cpp && haxe3)
+@:generic
+#end
 class Array3<T> implements Collection<T>
-#if (cpp && generic)
+#if (generic && cpp && !haxe3)
 , implements haxe.rtti.Generic
 #end
 {
@@ -89,7 +93,7 @@ class Array3<T> implements Collection<T>
 		reuseIterator = false;
 		
 		#if (cpp && generic)
-		ArrayUtil.fill(_a, null, size());
+		ArrayUtil.fill(_a, cast null, size());
 		#end
 	}
 	
@@ -267,8 +271,8 @@ class Array3<T> implements Collection<T>
 		
 		var s = _w * _h;
 		var t = i % s;
-		cell.z = Std.int(i / s);
-		cell.y = Std.int(t / _w);
+		cell.z = M.int(i / s);
+		cell.y = M.int(t / _w);
 		cell.x = t % _w;
 		return cell;
 	}
@@ -492,7 +496,7 @@ class Array3<T> implements Collection<T>
 		_a = ArrayUtil.alloc(width * height * depth);
 		
 		#if (cpp && generic)
-		ArrayUtil.fill(_a, null, width * height * depth);
+		ArrayUtil.fill(_a, cast null, width * height * depth);
 		#end
 		
 		var minX = width  < _w ? width  : _w;
@@ -661,8 +665,7 @@ class Array3<T> implements Collection<T>
 	 */
 	inline public function clear(purge = false):Void
 	{
-		var NULL:Null<T> = null;
-		for (i in 0...size()) __set(i, null);
+		for (i in 0...size()) __set(i, cast null);
 	}
 	
 	/**
@@ -711,7 +714,7 @@ class Array3<T> implements Collection<T>
 		var a:Array<T> = ArrayUtil.alloc(size());
 		
 		#if (cpp && generic)
-		ArrayUtil.fill(a, null, size());
+		ArrayUtil.fill(a, cast null, size());
 		#end
 		
 		for (i in 0...size())
@@ -803,11 +806,14 @@ class Array3<T> implements Collection<T>
 	}
 }
 
+#if (generic && cpp && haxe3)
+@:generic
+#end
 #if doc
 private
 #end
 class Array3Iterator<T> implements de.polygonal.ds.Itr<T>
-#if (cpp && generic)
+#if (generic && cpp && !haxe3)
 , implements haxe.rtti.Generic
 #end
 {

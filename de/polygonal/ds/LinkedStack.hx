@@ -31,6 +31,7 @@ package de.polygonal.ds;
 
 import de.polygonal.core.fmt.Sprintf;
 import de.polygonal.core.math.Limits;
+import de.polygonal.core.math.Mathematics;
 import de.polygonal.core.util.Assert;
 
 private typedef LinkedStackFriend<T> =
@@ -45,7 +46,13 @@ private typedef LinkedStackFriend<T> =
  * <p>This is called a FIFO structure (First In, First Out).</p>
  * <p><o>Worst-case running time in Big O notation</o></p>
  */
+#if (generic && haxe3)
+@:generic
+#end
 class LinkedStack<T> implements Stack<T>
+#if (generic && !haxe3)
+, implements haxe.rtti.Generic
+#end
 {
 	/**
 	 * A unique identifier for this object.<br/>
@@ -472,7 +479,7 @@ class LinkedStack<T> implements Stack<T>
 			while (s > 1)
 			{
 				s--;
-				var i = Std.int(m.random() * s);
+				var i = M.int(m.random() * s);
 				var node1 = _head;
 				for (j in 0...s) node1 = node1.next;
 				
@@ -495,7 +502,7 @@ class LinkedStack<T> implements Stack<T>
 			while (s > 1)
 			{
 				s--;
-				var i = Std.int(rval.get(k++) * s);
+				var i = M.int(rval.get(k++) * s);
 				var node1 = _head;
 				for (j in 0...s) node1 = node1.next;
 				
@@ -661,7 +668,7 @@ class LinkedStack<T> implements Stack<T>
 		}
 		
 		_head.next = null;
-		_head.val = null;
+		_head.val = cast null;
 		_top = 0;
 	}
 	
@@ -709,7 +716,7 @@ class LinkedStack<T> implements Stack<T>
 	public function toArray():Array<T>
 	{
 		var a:Array<T> = ArrayUtil.alloc(size());
-		ArrayUtil.fill(a, null, size());
+		ArrayUtil.fill(a, cast null, size());
 		var node = _head;
 		for (i in 0..._top)
 		{
@@ -744,7 +751,7 @@ class LinkedStack<T> implements Stack<T>
 	public function toDA():DA<T>
 	{
 		var a = new DA<T>(size());
-		a.fill(null, size());
+		a.fill(cast null, size());
 		
 		var tmp = new Array<T>();
 		var node = _head;
@@ -873,8 +880,11 @@ class LinkedStack<T> implements Stack<T>
 #if doc
 private
 #end
+#if (generic && haxe3)
+@:generic
+#end
 class LinkedStackNode<T>
-#if generic
+#if (generic && !haxe3)
 implements haxe.rtti.Generic
 #end
 {
@@ -895,8 +905,11 @@ implements haxe.rtti.Generic
 #if doc
 private
 #end
+#if (generic && haxe3)
+@:generic
+#end
 class LinkedStackIterator<T> implements de.polygonal.ds.Itr<T>
-#if generic
+#if (generic && !haxe3)
 , implements haxe.rtti.Generic
 #end
 {

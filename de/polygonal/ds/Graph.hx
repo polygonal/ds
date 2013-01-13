@@ -39,8 +39,11 @@ import de.polygonal.core.util.Assert;
  * <p>See <a href="http://lab.polygonal.de/?p=185" target="_blank">http://lab.polygonal.de/?p=185/</a></p>
  * <p><o>Worst-case running time in Big O notation</o></p>
  */
+#if (generic && haxe3)
+@:generic
+#end
 class Graph<T> implements Collection<T>
-#if generic
+#if (generic && !haxe3)
 , implements haxe.rtti.Generic
 #end
 {
@@ -1405,11 +1408,14 @@ private typedef GraphFriend<T> =
 	private var _nodeList:GraphNode<T>;
 }
 
+#if (generic && haxe3)
+@:generic
+#end
 #if doc
 private
 #end
 class GraphIterator<T> implements de.polygonal.ds.Itr<T>
-#if generic
+#if (generic && !haxe3)
 , implements haxe.rtti.Generic
 #end
 {
@@ -1448,11 +1454,14 @@ class GraphIterator<T> implements de.polygonal.ds.Itr<T>
 	inline function __nodeList(f:GraphFriend<T>) return f._nodeList
 }
 
+#if (generic && haxe3)
+@:generic
+#end
 #if doc
 private
 #end
 class GraphNodeIterator<T> implements de.polygonal.ds.Itr<GraphNode<T>>
-#if generic
+#if (generic && !haxe3)
 , implements haxe.rtti.Generic
 #end
 {
@@ -1491,11 +1500,14 @@ class GraphNodeIterator<T> implements de.polygonal.ds.Itr<GraphNode<T>>
 	inline function __nodeList(f:GraphFriend<T>) return f._nodeList
 }
 
+#if (generic && haxe3)
+@:generic
+#end
 #if doc
 private
 #end
 class GraphArcIterator<T> implements de.polygonal.ds.Itr<GraphArc<T>>
-#if generic
+#if (generic && !haxe3)
 , implements haxe.rtti.Generic
 #end
 {

@@ -39,8 +39,11 @@ using de.polygonal.core.math.Mathematics;
  * <p>A tree data structure in which each node has at most two child nodes.</p>
  * <p><o>Worst-case running time in Big O notation</o></p>
  */
+#if (generic && haxe3)
+@:generic
+#end
 class BinaryTreeNode<T> implements Collection<T>
-#if generic
+#if (generic && !haxe3)
 , implements haxe.rtti.Generic
 #end
 {
@@ -880,11 +883,14 @@ class BinaryTreeNode<T> implements Collection<T>
 	}
 }
 
+#if (generic && haxe3)
+@:generic
+#end
 #if doc
 private
 #end
 class BinaryTreeNodeIterator<T> implements de.polygonal.ds.Itr<T>
-#if generic
+#if (generic && !haxe3)
 , implements haxe.rtti.Generic
 #end
 {

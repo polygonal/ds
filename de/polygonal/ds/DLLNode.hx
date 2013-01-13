@@ -38,8 +38,11 @@ import de.polygonal.core.util.Assert;
  * <p><em>DLLNode</em> objects are created and managed by the <em>DLL</em> class.</p>
  * <p><o>Worst-case running time in Big O notation</o></p>
  */
+#if (generic && haxe3)
+@:generic
+#end
 class DLLNode<T>
-#if generic
+#if (generic && !haxe3)
 implements haxe.rtti.Generic
 #end
 {

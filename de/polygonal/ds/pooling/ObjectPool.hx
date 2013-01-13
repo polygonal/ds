@@ -330,8 +330,11 @@ class ObjectPool<T> implements Hashable
 #if doc
 private
 #end
+#if (generic && haxe3)
+@:generic
+#end
 class ObjectPoolIterator<T> implements de.polygonal.ds.Itr<T>
-#if generic
+#if (generic && !haxe3)
 , implements haxe.rtti.Generic
 #end
 {

@@ -41,7 +41,7 @@ class Compare
 	 */
 	public static function compareNumberFall<T>(a:Float, b:Float):Int
 	{
-		return Std.int(b - a);
+		return M.int(b - a);
 	}
 	
 	/**
@@ -49,7 +49,7 @@ class Compare
 	 */
 	public static function compareNumberRise<T>(a:Float, b:Float):Int
 	{
-		return Std.int(a - b);
+		return M.int(a - b);
 	}
 	
 	/**

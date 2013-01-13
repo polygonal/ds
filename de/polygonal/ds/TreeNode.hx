@@ -39,8 +39,11 @@ using de.polygonal.core.math.Mathematics;
  * <p>See <a href="http://lab.polygonal.de/?p=184" target="_blank">http://lab.polygonal.de/?p=184</a></p>
  * <p><o>Worst-case running time in Big O notation</o></p>
  */
+#if (generic && haxe3)
+@:generic
+#end
 class TreeNode<T> implements Collection<T>
-#if generic
+#if (generic && !haxe3)
 , implements haxe.rtti.Generic
 #end
 {
@@ -2092,11 +2095,14 @@ class TreeNode<T> implements Collection<T>
 	}
 }
 
+#if (generic && haxe3)
+@:generic
+#end
 #if doc
 private
 #end
 class TreeIterator<T> implements de.polygonal.ds.Itr<T>
-#if generic
+#if (generic && !haxe3)
 , implements haxe.rtti.Generic
 #end
 {
@@ -2145,11 +2151,14 @@ class TreeIterator<T> implements de.polygonal.ds.Itr<T>
 	}
 }
 
+#if (generic && haxe3)
+@:generic
+#end
 #if doc
 private
 #end
 class ChildTreeIterator<T> implements de.polygonal.ds.Itr<T>
-#if generic
+#if (generic && !haxe3)
 , implements haxe.rtti.Generic
 #end
 {

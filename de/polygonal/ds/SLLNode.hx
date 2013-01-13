@@ -38,8 +38,11 @@ import de.polygonal.core.util.Assert;
  * <p><em>SLLNode</em> objects are created and managed by the <em>SLL</em> class.</p>
  * <p><o>Worst-case running time in Big O notation</o></p>
  */
+#if (generic && haxe3)
+@:generic
+#end
 class SLLNode<T>
-#if generic
+#if (generic && !haxe3)
 implements haxe.rtti.Generic
 #end
 {

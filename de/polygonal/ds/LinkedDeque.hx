@@ -44,8 +44,11 @@ private typedef LinkedDequeFriend<T> =
  * <p>A deque ("double-ended queue") is a linear list for which all insertions and deletions (and usually all accesses) are made at the ends of the list.</p>
  * <p><o>Worst-case running time in Big O notation</o></p>
  */
+#if (generic && haxe3)
+@:generic
+#end
 class LinkedDeque<T> implements Deque<T>
-#if generic
+#if (generic && !haxe3)
 , implements haxe.rtti.Generic
 #end
 {
@@ -767,11 +770,14 @@ class LinkedDeque<T> implements Deque<T>
 	}
 }
 
+#if (generic && haxe3)
+@:generic
+#end
 #if doc
 private
 #end
 class LinkedDequeNode<T>
-#if generic
+#if (generic && !haxe3)
 implements haxe.rtti.Generic
 #end
 {
@@ -792,11 +798,14 @@ implements haxe.rtti.Generic
 	}
 }
 
+#if (generic && haxe3)
+@:generic
+#end
 #if doc
 private
 #end
 class LinkedDequeIterator<T> implements de.polygonal.ds.Itr<T>
-#if generic
+#if (generic && !haxe3)
 , implements haxe.rtti.Generic
 #end
 {

@@ -31,6 +31,7 @@ package de.polygonal.ds;
 
 import de.polygonal.core.fmt.Sprintf;
 import de.polygonal.core.math.Limits;
+import de.polygonal.core.math.Mathematics;
 import de.polygonal.core.util.Assert;
 
 private typedef ArrayedQueueFriend<T> =
@@ -48,8 +49,11 @@ private typedef ArrayedQueueFriend<T> =
  * <p><o>Worst-case running time in Big O notation</o></p>
  * See <a href="http://lab.polygonal.de/?p=189" target="_blank">http://lab.polygonal.de/?p=189</a></p>
  */
+#if (generic && cpp && haxe3)
+@:generic
+#end
 class ArrayedQueue<T> implements Queue<T>
-#if (cpp && generic)
+#if (generic && cpp && !haxe3)
 , implements haxe.rtti.Generic
 #end
 {
@@ -131,7 +135,7 @@ class ArrayedQueue<T> implements Queue<T>
 		reuseIterator = false;
 		
 		#if (cpp && generic)
-		ArrayUtil.fill(_a, null, _capacity);
+		ArrayUtil.fill(_a, cast null, _capacity);
 		#end
 	}
 	
@@ -256,7 +260,7 @@ class ArrayedQueue<T> implements Queue<T>
 	{
 		var i = _front + _size;
 		for (j in 0..._capacity - _size)
-			__set((j + i) % _capacity, null);
+			__set((j + i) % _capacity, cast null);
 	}
 	
 	/**
@@ -414,7 +418,7 @@ class ArrayedQueue<T> implements Queue<T>
 			while (s > 1)
 			{
 				s--;
-				var i = (Std.int(m.random() * s) + _front) % _capacity;
+				var i = (M.int(m.random() * s) + _front) % _capacity;
 				var t = __get(s);
 				__set(s, __get(i));
 				__set(i, t);
@@ -430,7 +434,7 @@ class ArrayedQueue<T> implements Queue<T>
 			while (s > 1)
 			{
 				s--;
-				var i = (Std.int(rval.get(j++) * s) + _front) % _capacity;
+				var i = (M.int(rval.get(j++) * s) + _front) % _capacity;
 				var t = __get(s);
 				__set(s, __get(i));
 				__set(i, t);
@@ -498,7 +502,7 @@ class ArrayedQueue<T> implements Queue<T>
 	 */
 	public function free():Void
 	{
-		for (i in 0..._capacity) _a[i] = null;
+		for (i in 0..._capacity) _a[i] = cast null;
 		_a = null;
 		_iterator = null;
 	}
@@ -768,11 +772,14 @@ class ArrayedQueue<T> implements Queue<T>
 	}
 }
 
+#if (generic && cpp && haxe3)
+@:generic
+#end
 #if doc
 private
 #end
 class ArrayedQueueIterator<T> implements de.polygonal.ds.Itr<T>
-#if (cpp && generic)
+#if (generic && cpp && !haxe3)
 , implements haxe.rtti.Generic
 #end
 {
