@@ -1,14 +1,11 @@
-﻿import de.polygonal.ds.BitVector;
+﻿package test;
+
+import de.polygonal.ds.BitVector;
 import haxe.io.Bytes;
 import haxe.io.BytesInput;
 
 class TestBitVector extends haxe.unit.TestCase
 {
-	function new()
-	{
-		super();
-	}
-	
 	function test()
 	{
 		var bv = new BitVector(100);
@@ -287,4 +284,26 @@ class TestBitVector extends haxe.unit.TestCase
 		for (i in 0...10)
 			assertFalse(b.has(i));
     }
+	
+	function testGetBuckets()
+	{
+		var b = new BitVector(64);
+		b.setAll();
+		
+		var buckets = [];
+		var c = b.getBuckets(buckets);
+		
+		assertEquals(2, c);
+		assertEquals(-1, buckets[0]);
+		assertEquals(-1, buckets[1]);
+	}
+	
+	function testGetBucketAt()
+	{
+		var b = new BitVector(64);
+		b.setAll();
+		
+		var buckets = [];
+		assertEquals(-1, b.getBucketAt(0));
+	}
 }

@@ -1,11 +1,15 @@
-﻿import de.polygonal.ds.DA;
+﻿package test;
+
+import de.polygonal.ds.DA;
 import de.polygonal.ds.Heap;
 
 class TestHeap extends haxe.unit.TestCase
 {
+	inline static var DEFAULT_SIZE = 100;
+	
 	var _size:Int;
 	
-	public function new(size:Int)
+	public function new(size = DEFAULT_SIZE)
 	{
 		super();
 		_size = size;
@@ -291,26 +295,14 @@ class TestHeap extends haxe.unit.TestCase
 		var ids = uniqueRandomArray();
 		var foo = new Array<E1>();
 		
-		for (i in 0...ids.length)
-			foo[i] = new E1(ids[i]);
-		
-		for (i in 0...ids.length)
-		{
-			h.add(foo[i]);
-		}
-		
-		for (i in 0...ids.length)
-		{
-			h.remove(foo[i]);
-		}
+		for (i in 0...ids.length) foo[i] = new E1(ids[i]);
+		for (i in 0...ids.length) h.add(foo[i]);
+		for (i in 0...ids.length) h.remove(foo[i]);
 		
 		assertTrue(h.isEmpty());
 		assertTrue(h.size() == 0);
 		
-		for (i in 0...ids.length)
-		{
-			h.add(foo[i]);
-		}
+		for (i in 0...ids.length) h.add(foo[i]);
 		
 		assertEquals(h.size(), _size);
 	}
@@ -406,9 +398,7 @@ class TestHeap extends haxe.unit.TestCase
 		
 		var data = new Array<Int>();
 		for (i in 0...10) data[i] = i;
-		
-		for (i in 0...10)
-			h.add(new E1(data[i]));
+		for (i in 0...10) h.add(new E1(data[i]));
 		
 		for (i in 0...10)
 		{
@@ -562,7 +552,7 @@ private class E1 implements de.polygonal.ds.Heapable<E1>, implements de.polygona
 		return new E1(ID);
 	}
 	
-	public function _toString():String
+	public function toString():String
 	{
 		return '' + ID;
 	}
@@ -579,7 +569,7 @@ private class E2 implements de.polygonal.ds.Heapable<E2>
 		this.y = y;
 	}
 	
-	public function toString()
+	public function toString():String
 	{
 		return '' + y;
 	}

@@ -1,20 +1,15 @@
-﻿import de.polygonal.core.fmt.NumberFormat;
+﻿package test;
+
+import de.polygonal.core.fmt.NumberFormat;
 import de.polygonal.core.fmt.Sprintf;
 import de.polygonal.ds.Bits;
 import haxe.Int32;
-import haxe.unit.TestCase;
 
 using de.polygonal.ds.Bits;
 
-
-class TestBits extends TestCase
+class TestBits extends haxe.unit.TestCase
 {
-	public function new()
-	{
-		super();
-	}
-	
-	public function testReverse():Void
+	function testReverse()
 	{
 		#if neko
 		var x = 0;
@@ -47,7 +42,7 @@ class TestBits extends TestCase
 		#end
 	}
 	
-	public function testMsb():Void
+	function testMsb()
 	{
 		var k = #if neko 31 #else 32 #end;
 		var x = 0;
@@ -64,7 +59,7 @@ class TestBits extends TestCase
 		}
 	}
 	
-	public function testNTZ():Void
+	function testNTZ()
 	{
 		var k = #if neko 31 #else 32 #end;
 		for (i in 0...k)
@@ -79,7 +74,7 @@ class TestBits extends TestCase
 		}
 	}
 	
-	public function testNLZ():Void
+	function testNLZ()
 	{
 		var k = #if neko 31 #else 32 #end;
 		var n = #if neko 30 #else 31 #end;
@@ -91,7 +86,7 @@ class TestBits extends TestCase
 		}
 	}
 	
-	public function testOnes():Void
+	function testOnes()
 	{
 		var k = #if neko 31 #else 32 #end;
 		var x = 0;
@@ -102,7 +97,7 @@ class TestBits extends TestCase
 		}
 	}
 	
-	public function testBitMask():Void
+	function testBitMask()
 	{
 		var k = #if neko 30 #else 31 #end;
 		for (i in 0...31)
@@ -116,7 +111,7 @@ class TestBits extends TestCase
 		}
 	}
 
-	public function testSetIf():Void
+	function testSetIf()
 	{
 		var x = 0;
 		x = x.setBitsIf(0x02, true);
@@ -125,7 +120,7 @@ class TestBits extends TestCase
 		assertTrue(!x.hasBits(0x04));
 	}
 	
-	public function testSetAll():Void
+	function testSetAll()
 	{
 		var x = 0;
 		for (i in 0...#if neko 31 #else 32 #end)
@@ -135,7 +130,7 @@ class TestBits extends TestCase
 		}
 	}
 	
-	public function testGet():Void
+	function testGet()
 	{
 		var b = Bits.BIT_01 | Bits.BIT_03;
 		assertTrue(b.incBits(Bits.BIT_01 | Bits.BIT_03));
@@ -144,7 +139,7 @@ class TestBits extends TestCase
 		assertFalse(b.incBits(Bits.BIT_01 | Bits.BIT_05));
 	}
 	
-	public function testRange():Void
+	function testRange()
 	{
 		var b = 0;
 		assertEquals(0, b.ones());
@@ -156,7 +151,7 @@ class TestBits extends TestCase
 		}
 	}
 	
-	public function testGetBitAt():Void
+	function testGetBitAt()
 	{
 		var b = Bits.BIT_01 | Bits.BIT_03;
 		
@@ -164,7 +159,7 @@ class TestBits extends TestCase
 		assertTrue(b.hasBitAt(2));
 	}
 	
-	public function testSet():Void
+	function testSet()
 	{
 		var b = Bits.BIT_01 | Bits.BIT_03;
 		
@@ -173,7 +168,7 @@ class TestBits extends TestCase
 		assertTrue(b.hasBits(Bits.BIT_04));
 	}
 	
-	public function testSetAt():Void
+	function testSetAt()
 	{
 		var b = 0;
 		
@@ -183,7 +178,7 @@ class TestBits extends TestCase
 		assertTrue(b.hasBits(Bits.BIT_01 | Bits.BIT_04));
 	}
 	
-	public function testClrBitAt():Void
+	function testClrBitAt()
 	{
 		var b = 0;
 		
@@ -196,7 +191,7 @@ class TestBits extends TestCase
 		assertTrue(!b.hasBits(Bits.BIT_04));
 	}
 	
-	public function testIf():Void
+	function testIf()
 	{
 		var b = Bits.BIT_01 | Bits.BIT_03;
 		
@@ -207,7 +202,7 @@ class TestBits extends TestCase
 		assertFalse(b.hasBits(Bits.BIT_04));
 	}
 	
-	public function testClr():Void
+	function testClr()
 	{
 		var b = Bits.BIT_01 | Bits.BIT_03;
 		b = b.setBits(Bits.BIT_04);
@@ -223,7 +218,7 @@ class TestBits extends TestCase
 		}
 	}
 	
-	public function testFlip():Void
+	function testFlip()
 	{
 		var b = Bits.BIT_01 | Bits.BIT_03;
 		b = b.invBits(Bits.BIT_04);
@@ -234,7 +229,7 @@ class TestBits extends TestCase
 		assertFalse(b.hasBits(Bits.BIT_04));
 	}
 	
-	public function testFlipAt():Void
+	function testFlipAt()
 	{
 		var b = Bits.BIT_01 | Bits.BIT_03;
 		
@@ -248,7 +243,7 @@ class TestBits extends TestCase
 		assertTrue(!b.hasBitAt(2));
 	}
 	
-	public function testHas():Void
+	function testHas()
 	{
 		var b = Bits.BIT_01 | Bits.BIT_03;
 		
@@ -257,7 +252,7 @@ class TestBits extends TestCase
 		assertTrue(b.hasBits(Bits.BIT_01 | Bits.BIT_05));
 	}
 	
-	public function testSetRange():Void
+	function testSetRange()
 	{
 		var b = 0;
 		b = b.setBitsRange(0, 3);

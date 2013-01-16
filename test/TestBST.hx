@@ -1,11 +1,13 @@
-﻿import de.polygonal.core.math.random.Random;
+﻿package test;
+
+import de.polygonal.core.math.random.Random;
 import de.polygonal.ds.BinaryTreeNode;
 import de.polygonal.ds.BST;
 import de.polygonal.ds.Collection;
 import de.polygonal.ds.ListSet;
 import de.polygonal.ds.Set;
 
-class TestBST extends  haxe.unit.TestCase
+class TestBST extends haxe.unit.TestCase
 {
 	function testPreorder()
 	{
@@ -76,13 +78,9 @@ class TestBST extends  haxe.unit.TestCase
 	function testInOrder()
 	{
 		var bst = new BST<E>();
-		
 		var data = [5, 1, -20, 100, 23, 67, 13];
 		var order = [-20, 1, 5, 13, 23, 67, 100];
-		
-		for (i in 0...data.length)
-			bst.insert(new E(data[i]));
-		
+		for (i in 0...data.length) bst.insert(new E(data[i]));
 		var c = 0;
 		var scope = this;
 		var f = function(node:BinaryTreeNode<E>, userData:Dynamic):Bool
@@ -142,13 +140,9 @@ class TestBST extends  haxe.unit.TestCase
 	function testPostOrder()
 	{
 		var bst = new BST<E>();
-		
 		var data = [5, 1, -20, 100, 23, 67, 13];
 		var order = [-20, 1, 13, 67, 23, 100, 5];
-		
-		for (i in 0...data.length)
-			bst.insert(new E(data[i]));
-		
+		for (i in 0...data.length) bst.insert(new E(data[i]));
 		var c = 0;
 		var scope = this;
 		var f = function(node:BinaryTreeNode<E>, userData:Dynamic):Bool
@@ -156,7 +150,6 @@ class TestBST extends  haxe.unit.TestCase
 			scope.assertEquals(order[c++], node.val.id);
 			return true;
 		};
-		
 		bst.root().postorder(f);
 		c = 0;
 		bst.root().postorder(f, true);
@@ -211,7 +204,6 @@ class TestBST extends  haxe.unit.TestCase
 	function testDepth()
 	{
 		var bst = new BST<E>();
-		
 		var data = [5, 1, -20, 100, 23, 67, 13];
 		var order = [5, 1, -20, 100, 23, 13, 67];
 		var nodes = new Array<BinaryTreeNode<E>>();
@@ -229,7 +221,6 @@ class TestBST extends  haxe.unit.TestCase
 	function testHeight()
 	{
 		var bst = new BST<E>();
-		
 		var data = [4,2,6,5,1,3,7];
 		var height = [3, 2, 2, 1, 1, 1, 1];
 		var nodes = new Array<BinaryTreeNode<E>>();
@@ -242,13 +233,11 @@ class TestBST extends  haxe.unit.TestCase
 	function testContains()
 	{
 		var bst = new BST<E>();
-		
 		var data = [5, 1, -20, 100, 23, 67, 13];
 		var order = [5, 1, -20, 100, 23, 13, 67];
 		var nodes = new Array<BinaryTreeNode<E>>();
 		for (i in 0...data.length)
 			nodes[i] = bst.insert(new E(data[i]));
-		
 		for (i in 0...nodes.length)
 			assertTrue(bst.root().contains(nodes[i].val));
 	}
@@ -256,7 +245,6 @@ class TestBST extends  haxe.unit.TestCase
 	function testRemove()
 	{
 		var num = new Array<E>();
-		
 		var bst = new BST<E>();
 		var k = 10;
 		for (i in 0...k)
@@ -265,18 +253,15 @@ class TestBST extends  haxe.unit.TestCase
 			num.unshift(new E(i));
 			bst.insert(num[0]);
 		}
-		
 		var found = 0;
 		for (i in 0...k)
 			bst.remove(num.pop());
-		
 		assertEquals(0, bst.size());
 	}
 	
 	function testIterator()
 	{
 		var bst = new BST<E>();
-		
 		var data = [5, 1, -20, 100, 23, 67, 13];
 		var s = new ListSet<Int>();
 		for (i in 0...data.length)
@@ -284,17 +269,14 @@ class TestBST extends  haxe.unit.TestCase
 			bst.insert(new E(data[i]));
 			s.set(data[i]);
 		}
-		
 		for (i in bst)
 			assertEquals(true, s.remove(i.id));
-		
 		assertTrue(s.isEmpty());
 	}
 	
 	function testClone()
 	{
 		var bst = new BST<E>();
-		
 		var data = [5, 1, -20, 100, 23, 67, 13];
 		var s:Set<Int> = new ListSet<Int>();
 		for (i in 0...data.length)
@@ -304,7 +286,6 @@ class TestBST extends  haxe.unit.TestCase
 		}
 		
 		var clone = bst.clone(true);
-		
 		for (i in clone)
 			assertEquals(true, s.remove(i.id));
 	}
@@ -312,27 +293,21 @@ class TestBST extends  haxe.unit.TestCase
 	function testToArray()
 	{
 		var bst = new BST<E>();
-		
 		var data = [5, 1, -20, 100, 23, 67, 13];
-		for (i in 0...data.length)
-			bst.insert(new E(data[i]));
+		for (i in 0...data.length) bst.insert(new E(data[i]));
 		
 		var set = new ListSet<E>();
 		for (i in bst) set.set(i);
-		
 		var arr = bst.toArray();
-		
 		assertEquals(bst.size(), arr.length);
 		
-		for (i in arr)
-			assertEquals(true, set.remove(i));
+		for (i in arr) assertEquals(true, set.remove(i));
 		assertTrue(set.isEmpty());
 	}
 	
 	function testToDenseArray()
 	{
 		var bst = new BST<E>();
-		
 		var data = [5, 1, -20, 100, 23, 67, 13];
 		for (i in 0...data.length)
 			bst.insert(new E(data[i]));
@@ -341,11 +316,8 @@ class TestBST extends  haxe.unit.TestCase
 		for (i in bst) set.set(i);
 		
 		var arr = bst.toDA();
-		
 		assertEquals(bst.size(), arr.size());
-		
-		for (i in arr)
-			assertEquals(true, set.remove(i));
+		for (i in arr) assertEquals(true, set.remove(i));
 		assertTrue(set.isEmpty());
 	}
 	
@@ -360,7 +332,6 @@ class TestBST extends  haxe.unit.TestCase
 			num.unshift(new E(i));
 			bst.insert(num[0]);
 		}
-		
 		var found = 0;
 		for (i in 0...k)
 		{
@@ -380,14 +351,10 @@ class TestBST extends  haxe.unit.TestCase
 	function testEmptyAndRefill()
 	{
 		var bst = new BST<E>();
-		
 		var data = [1, 2, 3];
 		var nodes = new Array();
-		for (i in 0...data.length)
-			nodes.push(bst.insert(new E(data[i])));
-		
-		while (nodes.length > 0)
-			bst.removeNode(nodes.pop());
+		for (i in 0...data.length) nodes.push(bst.insert(new E(data[i])));
+		while (nodes.length > 0) bst.removeNode(nodes.pop());
 		
 		assertTrue(bst.isEmpty());
 		assertEquals(null, untyped bst._root);

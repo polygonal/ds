@@ -1,41 +1,25 @@
-﻿import de.polygonal.ds.ArrayedStack;
+﻿package test;
+
+import de.polygonal.ds.ArrayedStack;
 import de.polygonal.ds.LinkedStack;
 import de.polygonal.ds.ListSet;
 import de.polygonal.ds.Stack;
 
 class TestLinkedStack extends haxe.unit.TestCase
 {
-	function new() 
-	{
-		super();
-	}
-	
 	function testPool()
 	{
 		var l = new LinkedStack<Int>(20);
 		
-		for (i in 0...10)
-		{
-			l.push(i);
-		}
-		
-		for (i in 0...10)
-		{
-			l.pop();
-		}
+		for (i in 0...10) l.push(i);
+		for (i in 0...10) l.pop();
 		
 		assertEquals(10, untyped l._poolSize);
 		
-		for (i in 0...10)
-		{
-			l.push(i);
-		}
+		for (i in 0...10) l.push(i);
 		assertEquals(0, untyped l._poolSize);
 		
-		for (i in 0...10)
-		{
-			l.pop();
-		}
+		for (i in 0...10) l.pop();
 		assertEquals(10, untyped l._poolSize);
 	}
 	
@@ -140,27 +124,15 @@ class TestLinkedStack extends haxe.unit.TestCase
 	function testGetSet()
 	{
 		var l = new LinkedStack<Int>(20);
-		for (i in 0...10)
-		{
-			l.push(i);
-		}
-		
-		for (i in 0...10)
-			assertEquals(i, l.get(i));
-		
-		for (i in 0...10)
-		{
-			l.set(i, l.get(i) + 10);
-		}
-		
-		for (i in 0...10)
-			assertEquals(i+10, l.get(i));
+		for (i in 0...10) l.push(i);
+		for (i in 0...10) assertEquals(i, l.get(i));
+		for (i in 0...10) l.set(i, l.get(i) + 10);
+		for (i in 0...10) assertEquals(i+10, l.get(i));
 	}
 	
 	function test()
 	{
 		var l = new LinkedStack<Int>();
-		
 		for (i in 0...10)
 		{
 			l.push(1);
@@ -362,19 +334,13 @@ class TestLinkedStack extends haxe.unit.TestCase
 	function testRemove()
 	{
 		var l = new LinkedStack<Int>();
-		for (i in 0...5)
-		{
-			l.push(i);
-		}
+		for (i in 0...5) l.push(i);
 		
 		var k = l.remove(0);
 		assertEquals(true, k);
 		
 		var l = new LinkedStack<Int>();
-		for (i in 0...5)
-		{
-			l.push(1);
-		}
+		for (i in 0...5) l.push(1);
 		
 		assertTrue(l.remove(1));
 		assertTrue(l.isEmpty());
@@ -383,13 +349,8 @@ class TestLinkedStack extends haxe.unit.TestCase
 	function testFree()
 	{
 		var l = new LinkedStack<Int>();
-		for (i in 0...5)
-		{
-			l.push(i);
-		}
-		
+		for (i in 0...5) l.push(i);
 		l.free();
-		
 		assertTrue(true);
 	}
 	
@@ -403,32 +364,19 @@ class TestLinkedStack extends haxe.unit.TestCase
 	{
 		var l = new LinkedStack<Int>();
 		
-		for (i in 0...5)
-		{
-			l.push(i);
-		}
+		for (i in 0...5) l.push(i);
 		
 		var a = l.toArray();
 		
-		for (i in 0...a.length)
-		{
-			assertEquals(i, a[i]);
-		}
+		for (i in 0...a.length) assertEquals(i, a[i]);
 		
 		var l = new LinkedStack<Int>();
 		
-		for (i in 0...5)
-		{
-			l.push(i);
-		}
+		for (i in 0...5) l.push(i);
 		
 		#if flash10
 		var a = l.toVector();
-		
-		for (i in 0...a.length)
-		{
-			assertEquals(i, a[i]);
-		}
+		for (i in 0...a.length) assertEquals(i, a[i]);
 		#end
 	}
 	
@@ -436,26 +384,17 @@ class TestLinkedStack extends haxe.unit.TestCase
 	{
 		var l = new LinkedStack<Int>();
 		
-		for (i in 0...5)
-		{
-			l.push(i);
-		}
+		for (i in 0...5) l.push(i);
 		
 		var a = l.toDA();
-		for (i in 0...a.size())
-		{
-			assertEquals(i, a.get(i));
-		}
+		for (i in 0...a.size()) assertEquals(i, a.get(i));
 	}
 	
 	function testClear()
 	{
 		var l = new LinkedStack<Int>();
 		
-		for (i in 0...3)
-		{
-			l.push(i);
-		}
+		for (i in 0...3) l.push(i);
 		
 		assertEquals(3, l.size());
 		
@@ -473,7 +412,7 @@ class TestLinkedStack extends haxe.unit.TestCase
 	#if debug
 	function testMaxSize()
 	{
-		var stack = new LinkedStack(0, 3);
+		var stack = new LinkedStack<Int>(0, 3);
 		stack.push(0);
 		stack.push(1);
 		stack.push(2);
@@ -491,7 +430,7 @@ class TestLinkedStack extends haxe.unit.TestCase
 		
 		assertTrue(failed);
 		
-		var stack = new ArrayedStack(0, 3);
+		var stack = new ArrayedStack<Int>(0, 3);
 		for (i in 0...3) stack.push(i);
 		
 		var failed = false;
@@ -536,7 +475,6 @@ class TestLinkedStack extends haxe.unit.TestCase
 		assertTrue(c.isEmpty());
 		
 		l.push(6);
-		
 		s.set(6);
 		
 		var c:de.polygonal.ds.Set<Int> = cast s.clone(true);
@@ -567,12 +505,8 @@ class TestLinkedStack extends haxe.unit.TestCase
 				if (val == i) itr.remove();
 			}
 			
-			while (!l.isEmpty())
-			{
-				assertTrue(set.remove(l.pop()));
-			}
+			while (!l.isEmpty()) assertTrue(set.remove(l.pop()));
 			assertTrue(set.isEmpty());
-			
 			assertEquals(null, untyped l._head);
 		}
 		
@@ -607,7 +541,6 @@ class TestLinkedStack extends haxe.unit.TestCase
 		while (node1 != null)
 		{
 			assertEquals(node1.val, node2.val);
-			
 			node1 = node1.next;
 			node2 = node2.next;
 		}
@@ -635,7 +568,6 @@ class TestLinkedStack extends haxe.unit.TestCase
 		while (node1 != null)
 		{
 			assertEquals(node1.val, node2.val);
-			
 			node1 = node1.next;
 			node2 = node2.next;
 		}
@@ -666,7 +598,6 @@ class TestLinkedStack extends haxe.unit.TestCase
 		while (node1 != null)
 		{
 			assertEquals(node1.val, node2.val);
-			
 			node1 = node1.next;
 			node2 = node2.next;
 		}

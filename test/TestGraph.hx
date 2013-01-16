@@ -1,4 +1,6 @@
-﻿import de.polygonal.ds.Graph;
+﻿package test;
+
+import de.polygonal.ds.Graph;
 import de.polygonal.ds.GraphArc;
 import de.polygonal.ds.GraphNode;
 
@@ -6,13 +8,6 @@ class TestGraph extends haxe.unit.TestCase
 {
 	var c:Int;
 	var d:Int;
-	
-	function new()
-	{
-		super();
-		
-		var graph = new Graph<E>();
-	}
 	
 	function testParentAndDepth()
 	{
@@ -184,11 +179,8 @@ class TestGraph extends haxe.unit.TestCase
 	function testLargeBFS()
 	{
 		var graph = new Graph<E>();
-		
 		var size = 200;
-		
 		var nodes = new Array<E>();
-		
 		for (i in 0...size)
 		{
 			var n = new E(this, i);
@@ -231,18 +223,15 @@ class TestGraph extends haxe.unit.TestCase
 				node.addArc(graph.findNode(nodes[j]), 1);
 			}
 		}
-		
 		assertEquals(10, graph.size());
 		var k = graph.remove(0);
 		assertEquals(true, k);
 		assertEquals(9, graph.size());
-		
 		for (i in 1...10)
 		{
 			var k = graph.remove(i);
 			assertEquals(true, k);
 		}
-		
 		assertTrue(graph.isEmpty());
 	}
 	
@@ -250,15 +239,12 @@ class TestGraph extends haxe.unit.TestCase
 	{
 		var graph = new Graph<Int>();
 		graph.autoClearMarks = true;
-		
 		var node1 = graph.addNode(graph.createNode(1));
 		var node2 = graph.addNode(graph.createNode(2));
 		var node3 = graph.addNode(graph.createNode(3));
 		graph.addMutualArc(node1, node2);
 		graph.addMutualArc(node2, node3);
-		
 		var result:Array<Int> = [];
-		
 		var process = function(node, preflight, userData)
 		{
 			if (preflight) return true;
@@ -363,9 +349,7 @@ class TestGraph extends haxe.unit.TestCase
 	function testBFS_DFS_Visitable()
 	{
 		var graph = new Graph<E>();
-		
 		var elements = new Array<E>();
-		
 		for (i in 0...4)
 		{
 			elements[i] = new E(this, i);
@@ -426,8 +410,7 @@ class TestGraph extends haxe.unit.TestCase
 	
 	function testIterator()
 	{
-		var graph:Graph<E> = new Graph<E>();
-		
+		var graph = new Graph<E>();
 		var nodes = new Array<GraphNode<E>>();
 		for (i in 0...10)
 		{
@@ -437,25 +420,19 @@ class TestGraph extends haxe.unit.TestCase
 		
 		var s = new de.polygonal.ds.HashSet<E>(1024);
 		var c = 0;
-		for (i in graph)
-		{
-			assertEquals(true, s.set(i));
-		}
+		for (i in graph) assertEquals(true, s.set(i));
 		assertEquals(10, s.size());
 		
 		var c:de.polygonal.ds.Set<E> = cast s.clone(true);
 		var itr = graph.iterator();
-		
 		var itr:de.polygonal.ds.ResettableIterator<E> = cast graph.iterator();
 		
-		for (i in itr)
-			assertEquals(true, c.remove(i));
+		for (i in itr) assertEquals(true, c.remove(i));
 		assertTrue(c.isEmpty());
 		
 		var c:de.polygonal.ds.Set<E> = cast s.clone(true);
 		itr.reset();
-		for (i in itr)
-			assertEquals(true, c.remove(i));
+		for (i in itr) assertEquals(true, c.remove(i));
 		assertTrue(c.isEmpty());
 		
 		var node:de.polygonal.ds.GraphNode<E> = graph.getNodeList();
@@ -468,7 +445,6 @@ class TestGraph extends haxe.unit.TestCase
 					node.addArc(node1, 1);
 				node1 = node1.next;
 			}
-			
 			node = node.next;
 		}
 		
@@ -477,17 +453,12 @@ class TestGraph extends haxe.unit.TestCase
 		{
 			var s = new de.polygonal.ds.HashSet<E>(1024);
 			var c = 0;
-			for (i in node)
-			{
-				assertEquals(true, s.set(i));
-			}
+			for (i in node) assertEquals(true, s.set(i));
 			assertEquals(9, s.size());
-			
 			node = node.next;
 		}
 		
-		var graph:Graph<Int> = new Graph<Int>();
-		
+		var graph = new Graph<Int>();
 		var nodes = new Array<GraphNode<Int>>();
 		for (i in 0...10)
 		{
@@ -497,10 +468,7 @@ class TestGraph extends haxe.unit.TestCase
 		
 		var s = new de.polygonal.ds.IntHashSet(1024);
 		var c = 0;
-		for (i in graph)
-		{
-			assertEquals(true, s.set(i));
-		}
+		for (i in graph) assertEquals(true, s.set(i));
 		assertEquals(10, s.size());
 		
 		var node:de.polygonal.ds.GraphNode<Int> = graph.getNodeList();
@@ -513,7 +481,6 @@ class TestGraph extends haxe.unit.TestCase
 					node.addArc(node1, 1);
 				node1 = node1.next;
 			}
-			
 			node = node.next;
 		}
 		
@@ -522,12 +489,8 @@ class TestGraph extends haxe.unit.TestCase
 		{
 			var s = new de.polygonal.ds.IntHashSet(1024);
 			var c = 0;
-			for (i in node)
-			{
-				assertEquals(true, s.set(i));
-			}
+			for (i in node) assertEquals(true, s.set(i));
 			assertEquals(9, s.size());
-			
 			node = node.next;
 		}
 	}
@@ -535,7 +498,6 @@ class TestGraph extends haxe.unit.TestCase
 	function test()
 	{
 		var graph = new Graph<E>();
-		
 		var nodes = new Array<GraphNode<E>>();
 		for (i in 0...10)
 		{
@@ -544,11 +506,9 @@ class TestGraph extends haxe.unit.TestCase
 		}
 		
 		var c = 0;
-		
 		for (i in 0...10)
 		{
 			var a:GraphNode<E> = nodes[i];
-			
 			for (j in 0...10)
 			{
 				if (i != j)
@@ -565,8 +525,7 @@ class TestGraph extends haxe.unit.TestCase
 		for (i in 0...10)
 		{
 			var node:GraphNode<E> = nodes[i];
-			
-			var c:Int = 0;
+			var c = 0;
 			var a:GraphArc<E> = node.arcList;
 			while (a != null)
 			{
@@ -593,13 +552,9 @@ class TestGraph extends haxe.unit.TestCase
 	
 	function testCustomGraph()
 	{
-		var f = function(node:GraphNode<String>, preflight:Bool, userData:Dynamic):Bool
-		{	
-			return true;
-		}	
+		var f = function(node:GraphNode<String>, preflight:Bool, userData:Dynamic):Bool return true;
 		
 		var graph = new Graph<String>();
-		
 		var node1 = new CustomGraphNode<String>(graph, 'a');
 		var node2 = new CustomGraphNode<String>(graph, 'b');
 		
@@ -607,9 +562,7 @@ class TestGraph extends haxe.unit.TestCase
 		graph.addNode(node2);
 		
 		graph.addMutualArc(node1, node2);
-		
 		graph.BFS(true, node1, f);
-		
 		
 		var graph = new Graph<E>();
 		var node1 = new CustomGraphNode<E>(graph, new E(this, 2));
@@ -620,15 +573,9 @@ class TestGraph extends haxe.unit.TestCase
 		graph.BFS(true, node1);
 		
 		assertTrue(true);
-		
 	}
 	
 	function process(node:GraphNode<E>, preflight:Bool, userData:Dynamic):Bool
-	{
-		return true;
-	}
-	
-	function process1(node:GraphNode<String>, preflight:Bool, userData:Dynamic):Bool
 	{
 		return true;
 	}
@@ -639,7 +586,6 @@ private class E extends de.polygonal.ds.HashableItem, implements de.polygonal.ds
 	public var f:Int->Bool->Void;
 	public var id:Int;
 	public var t:TestGraph;
-	
 	public var onVisit:E->Bool->Dynamic->Bool;
 	
 	public function new(t:TestGraph, id:Int)
@@ -678,7 +624,9 @@ private class E extends de.polygonal.ds.HashableItem, implements de.polygonal.ds
 
 #if haxe3 @:generic #end
 private class CustomGraphNode<T> extends GraphNode<T>
-#if !haxe3 , implements haxe.rtti.Generic #end
+#if !haxe3
+, implements haxe.rtti.Generic
+#end
 {
 	public function new(graph:Graph<T>, value:T)
 	{

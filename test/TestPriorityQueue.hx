@@ -1,21 +1,19 @@
-﻿import de.polygonal.ds.PriorityQueue;
+﻿package test;
+
+import de.polygonal.ds.PriorityQueue;
 
 class TestPriorityQueue extends haxe.unit.TestCase
 {
 	function test()
 	{
 		var pq = new PriorityQueue<E>(false, 3);
-		
 		pq.enqueue(new E(1));
 		pq.enqueue(new E(2));
 		pq.enqueue(new E(3));
-		
 		assertEquals(3, pq.size());
-		
 		assertEquals(3., pq.dequeue().priority);
 		assertEquals(2., pq.dequeue().priority);
 		assertEquals(1., pq.dequeue().priority);
-		
 		assertTrue(pq.isEmpty());
 	}
 	
@@ -24,9 +22,7 @@ class TestPriorityQueue extends haxe.unit.TestCase
 		var a = new E(1);
 		var b = new E(2);
 		var c = new E(3);
-		
 		var pq = new PriorityQueue<E>(true, 0, 20);
-		
 		pq.enqueue(a);
 		pq.enqueue(b);
 		pq.enqueue(c);
@@ -59,20 +55,16 @@ class TestPriorityQueue extends haxe.unit.TestCase
 		pq.enqueue(new E(0));
 		pq.enqueue(new E(1));
 		pq.enqueue(new E(2));
-		
 		pq.clear();
 		
 		var a:Array<E> = untyped pq._a;
-		
 		assertEquals(null, a[0]);
 		assertEquals(2.  , a[1].priority);
 		assertEquals(0.  , a[2].priority);
 		assertEquals(1.  , a[3].priority);
-		
 		pq.pack();
 		
 		var a:Array<E> = untyped pq._a;
-		
 		assertEquals(null, a[0]);
 		assertEquals(null, a[1]);
 		assertEquals(null, a[2]);
@@ -82,17 +74,13 @@ class TestPriorityQueue extends haxe.unit.TestCase
 	function testInverse()
 	{
 		var pq = new PriorityQueue<E>(true, 3);
-		
 		pq.enqueue(new E(1));
 		pq.enqueue(new E(2));
 		pq.enqueue(new E(3));
-		
 		assertEquals(3, pq.size());
-		
 		assertEquals(1., pq.dequeue().priority);
 		assertEquals(2., pq.dequeue().priority);
 		assertEquals(3., pq.dequeue().priority);
-		
 		assertTrue(pq.isEmpty());
 	}
 	
@@ -106,7 +94,6 @@ class TestPriorityQueue extends haxe.unit.TestCase
 		pq.clear(true);
 		pq.enqueue(item);
 		pq.clear(true);
-		
 		assertTrue(true);
 	}
 	
@@ -117,14 +104,12 @@ class TestPriorityQueue extends haxe.unit.TestCase
 		pq.enqueue(item);
 		pq.dequeue();
 		pq.enqueue(item);
-		
 		assertTrue(true);
 	}
 	
 	function testClone()
 	{
 		var pq = new PriorityQueue<E>(false, 3);
-		
 		pq.enqueue(new E(1));
 		pq.enqueue(new E(2));
 		pq.enqueue(new E(3));
@@ -133,7 +118,6 @@ class TestPriorityQueue extends haxe.unit.TestCase
 		assertEquals(3., copy.dequeue().priority);
 		assertEquals(2., copy.dequeue().priority);
 		assertEquals(1., copy.dequeue().priority);
-		
 		assertTrue(copy.isEmpty());
 	}
 	
@@ -142,10 +126,9 @@ class TestPriorityQueue extends haxe.unit.TestCase
 		var priorities = [3, 54, 35, 11];
 		
 		var pq = new PriorityQueue<E>(false);
-		
 		for (i in 0...priorities.length)
 			pq.enqueue(new E(priorities.shift()));
-			
+		
 		assertEquals(3., pq.back().priority);
 		pq.dequeue();
 		assertEquals(3., pq.back().priority);
@@ -189,7 +172,6 @@ class TestPriorityQueue extends haxe.unit.TestCase
 		pq.enqueue(a = new E(1));
 		pq.enqueue(new E(2));
 		pq.enqueue(new E(3));
-		
 		pq.remove(a);
 		
 		assertEquals(3., pq.dequeue().priority);
@@ -200,7 +182,6 @@ class TestPriorityQueue extends haxe.unit.TestCase
 		pq.enqueue(new E(1));
 		pq.enqueue(a = new E(2));
 		pq.enqueue(new E(3));
-		
 		pq.remove(a);
 		
 		assertEquals(3., pq.dequeue().priority);
@@ -211,7 +192,6 @@ class TestPriorityQueue extends haxe.unit.TestCase
 		pq.enqueue(new E(1));
 		pq.enqueue(new E(2));
 		pq.enqueue(a = new E(3));
-		
 		pq.remove(a);
 		
 		assertEquals(2., pq.dequeue().priority);
@@ -228,14 +208,12 @@ class TestPriorityQueue extends haxe.unit.TestCase
 	function testReprioritize()
 	{
 		var a = new E(1);
-		
 		var pq = new PriorityQueue<E>(false, 3);
 		pq.enqueue(a);
 		pq.enqueue(new E(2));
 		pq.enqueue(new E(3));
 		
 		pq.reprioritize(a, 100);
-		
 		assertEquals(100., pq.dequeue().priority);
 		assertEquals(3., pq.dequeue().priority);
 		assertEquals(2., pq.dequeue().priority);
@@ -247,7 +225,6 @@ class TestPriorityQueue extends haxe.unit.TestCase
 		pq.enqueue(new E(1));
 		pq.enqueue(new E(2));
 		pq.enqueue(new E(3));
-		
 		pq.toString();
 		
 		assertEquals(3., pq.dequeue().priority);
@@ -257,7 +234,6 @@ class TestPriorityQueue extends haxe.unit.TestCase
 		pq.enqueue(new E(1));
 		pq.enqueue(new E(2));
 		pq.enqueue(new E(3));
-		
 		pq.toString();
 		
 		assertEquals(3., pq.dequeue().priority);
@@ -271,10 +247,8 @@ class TestPriorityQueue extends haxe.unit.TestCase
 		pq.enqueue(new E(1));
 		pq.enqueue(new E(2));
 		pq.enqueue(new E(3));
-		
 		var c = 0;
 		for (x in pq) c++;
-		
 		assertEquals(3, c);
 	}
 	

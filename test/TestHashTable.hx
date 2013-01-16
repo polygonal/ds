@@ -1,14 +1,14 @@
-﻿import de.polygonal.core.math.random.ParkMiller;
+﻿package test;
+
+import de.polygonal.core.math.random.ParkMiller;
+import de.polygonal.ds.ArrayUtil;
 import de.polygonal.ds.DA;
 import de.polygonal.ds.DLL;
 import de.polygonal.ds.HashableItem;
 import de.polygonal.ds.HashTable;
 import de.polygonal.ds.IntIntHashTable;
-import de.polygonal.ds.HashTable;
-import haxe.unit.TestCase;
 
-
-class TestHashTable extends TestCase
+class TestHashTable extends haxe.unit.TestCase
 {
 	function new()
 	{
@@ -20,10 +20,10 @@ class TestHashTable extends TestCase
 	
 	function testGetFront()
 	{
-		var h = new HashTable<HTItem, Null<Int>>(16, 16, true);
+		var h = new HashTable<E, Null<Int>>(16, 16, true);
 		
-		var items = new Array<HTItem>();
-		for (i in 0...5) items.push(new HTItem(i));
+		var items = new Array<E>();
+		for (i in 0...5) items.push(new E(i));
 		
 		for (i in 0...4)
 		{
@@ -34,28 +34,26 @@ class TestHashTable extends TestCase
 		for (i in 0...4)
 			assertEquals(i, h.getFront(items[i]));
 		
-		items.push(new HTItem(5));
+		items.push(new E(5));
 		assertEquals(null, h.getFront(items[5]));
 	}
 	
 	function testRehash()
 	{
-		var items = new Array<HTItem>();
-		for (i in 0...16) items.push(new HTItem(i));
+		var items = new Array<E>();
+		for (i in 0...16) items.push(new E(i));
 		
-		
-		var h = new HashTable<HTItem, Null<Int>>(4);
+		var h = new HashTable<E, Null<Int>>(4);
 		for (i in 0...16) h.set(items[i], i);
 		
 		h.rehash(32);
 		
 		for (i in 0...16) assertEquals(i, h.get(items[i]));
 		
-		var h = new HashTable<HTItem, Null<Int>>(4, 4);
+		var h = new HashTable<E, Null<Int>>(4, 4);
 		for (i in 0...8) h.set(items[i], i);
 		
 		h.rehash(512);
-		
 		assertEquals(8, h.size());
 		assertEquals(8, h.getCapacity());
 		
@@ -64,10 +62,10 @@ class TestHashTable extends TestCase
 	
 	function testRemap()
 	{
-		var items = new Array<HTItem>();
-		for (i in 0...4) items.push(new HTItem(i));
+		var items = new Array<E>();
+		for (i in 0...4) items.push(new E(i));
 		
-		var h = new HashTable<HTItem, Null<Int>>(4, 4);
+		var h = new HashTable<E, Null<Int>>(4, 4);
 		h.set(items[0], 0);
 		h.set(items[1], 1);
 		h.set(items[2], 2);
@@ -96,61 +94,40 @@ class TestHashTable extends TestCase
 	
 	function testSetFirst()
 	{
-		var items = new Array<HTItem>();
-		for (i in 0...32) items.push(new HTItem(i));
+		var items = new Array<E>();
+		for (i in 0...32) items.push(new E(i));
 		
-		var h = new HashTable<HTItem, Null<Int>>(4);
-		
+		var h = new HashTable<E, Null<Int>>(4);
 		for (i in 0...32)
 		{
 			assertTrue(h.setIfAbsent(items[i], i));
 			assertFalse(h.setIfAbsent(items[i], i));
 		}
 		
-		for (i in 0...32)
-			assertFalse(h.setIfAbsent(items[i], i));
+		for (i in 0...32) assertFalse(h.setIfAbsent(items[i], i));
 		
 		assertEquals(32, h.size());
 	}
 	
 	function test()
 	{
-		var items = new Array<HTItem>();
-		for (i in 0...32) items.push(new HTItem(i));
+		var items = new Array<E>();
+		for (i in 0...32) items.push(new E(i));
 		
-		var h = new HashTable<HTItem, Null<Int>>(16);
-		
-		for (i in 0...32)
-		{
-			h.set(items[i], i);
-		}
-		
-		for (i in 0...32)
-		{
-			assertEquals(i, h.get(items[i]));
-		}
-		
-		for (i in 0...24)
-		{
-			assertTrue(h.clr(items.pop()));
-		}
-		for (i in 0...8)
-		{
-			assertTrue(h.hasKey(items[i]));
-		}
-		
-		for (i in 0...32 - 24)
-		{
-			assertTrue(h.clr(items.pop()));
-		}
+		var h = new HashTable<E, Null<Int>>(16);
+		for (i in 0...32) h.set(items[i], i);
+		for (i in 0...32) assertEquals(i, h.get(items[i]));
+		for (i in 0...24) assertTrue(h.clr(items.pop()));
+		for (i in 0...8) assertTrue(h.hasKey(items[i]));
+		for (i in 0...32 - 24) assertTrue(h.clr(items.pop()));
 	}
 	
 	function testToKeySet()
 	{
-		var items = new Array<HTItem>();
-		for (i in 0...32) items.push(new HTItem(i));
+		var items = new Array<E>();
+		for (i in 0...32) items.push(new E(i));
 		
-		var h = new HashTable<HTItem, Null<Int>>(16);
+		var h = new HashTable<E, Null<Int>>(16);
 		h.set(items[0], 10);
 		h.set(items[1], 20);
 		h.set(items[2], 30);
@@ -166,10 +143,10 @@ class TestHashTable extends TestCase
 	
 	function testToValSet()
 	{
-		var items = new Array<HTItem>();
-		for (i in 0...16) items.push(new HTItem(i));
+		var items = new Array<E>();
+		for (i in 0...16) items.push(new E(i));
 		
-		var h = new HashTable<HTItem, Null<Int>>(16, 16);
+		var h = new HashTable<E, Null<Int>>(16, 16);
 		h.set(items[0], 10);
 		h.set(items[1], 20);
 		h.set(items[2], 30);
@@ -186,10 +163,10 @@ class TestHashTable extends TestCase
 	
 	function testHas()
 	{
-		var items = new Array<HTItem>();
-		for (i in 0...16) items.push(new HTItem(i));
+		var items = new Array<E>();
+		for (i in 0...16) items.push(new E(i));
 		
-		var h = new HashTable<HTItem, Null<Int>>(16, 16);
+		var h = new HashTable<E, Null<Int>>(16, 16);
 		h.set(items[0], 0);
 		h.set(items[1], 1);
 		h.set(items[2], 2);
@@ -227,12 +204,39 @@ class TestHashTable extends TestCase
 		assertFalse(h.has(3));
 	}
 	
+	function testGetAll()
+	{
+		var h = new HashTable<E, Int>(16, 16);
+		var key = new E(1);
+		
+		var a = [];
+		assertEquals(0, h.getAll(key, a));
+		
+		h.set(key, 1);
+		
+		var a = [];
+		assertEquals(1, h.getAll(key, a));
+		assertTrue(ArrayUtil.equals(a, [1]));
+		
+		h.set(key, 2);
+		
+		var a = [];
+		assertEquals(2, h.getAll(key, a));
+		assertTrue(ArrayUtil.equals(a, [1, 2]));
+		
+		h.set(key, 3);
+		
+		var a = [];
+		assertEquals(3, h.getAll(key, a));
+		assertTrue(ArrayUtil.equals(a, [1, 2, 3]));
+	}
+	
 	function testSize2()
 	{
-		var items = new Array<HTItem>();
-		for (i in 0...16) items.push(new HTItem(i));
+		var items = new Array<E>();
+		for (i in 0...16) items.push(new E(i));
 		
-		var h = new HashTable<HTItem, Null<Int>>(4, 2);
+		var h = new HashTable<E, Null<Int>>(4, 2);
 		
 		for (i in 0...3)
 		{
@@ -259,10 +263,10 @@ class TestHashTable extends TestCase
 	
 	function testSize3()
 	{
-		var items = new Array<HTItem>();
-		for (i in 0...16) items.push(new HTItem(i));
+		var items = new Array<E>();
+		for (i in 0...16) items.push(new E(i));
 		
-		var h = new HashTable<HTItem, Null<Int>>(4, 3);
+		var h = new HashTable<E, Null<Int>>(4, 3);
 		
 		for (i in 0...3)
 		{
@@ -300,17 +304,17 @@ class TestHashTable extends TestCase
 	
 	function testResizeSmall()
 	{
-		var h = new HashTable<HTItem, HTItem>(16, 2);
+		var h = new HashTable<E, E>(16, 2);
 		
-		var items = new Array<HTItem>();
+		var items = new Array<E>();
 		
 		for (i in 0...2)
 		{
-			var item = new HTItem(0);
+			var item = new E(0);
 			items.push(item);
 			h.set(item, item);
 			
-			var item = new HTItem(0);
+			var item = new E(0);
 			items.push(item);
 			h.set(item, item);
 			
@@ -318,7 +322,7 @@ class TestHashTable extends TestCase
 			assertEquals(2, h.getCapacity());
 			for (i in items) assertEquals(i, h.get(i));
 			
-			var item = new HTItem(0);
+			var item = new E(0);
 			items.push(item);
 			h.set(item, item);
 			for (i in items) assertEquals(i, h.get(i));
@@ -326,7 +330,7 @@ class TestHashTable extends TestCase
 			assertEquals(3, h.size());
 			assertEquals(4, h.getCapacity());
 			
-			var item = new HTItem(0);
+			var item = new E(0);
 			items.push(item);
 			h.set(item, item);
 			for (i in items) assertEquals(i, h.get(i));
@@ -336,7 +340,7 @@ class TestHashTable extends TestCase
 			
 			for (i in 0...4)
 			{
-				var item = new HTItem(0);
+				var item = new E(0);
 				items.push(item);
 				h.set(item, item);
 			}
@@ -346,7 +350,7 @@ class TestHashTable extends TestCase
 			
 			for (i in 0...8)
 			{
-				var item = new HTItem(0);
+				var item = new E(0);
 				items.push(item);
 				h.set(item, item);
 			}
@@ -377,10 +381,10 @@ class TestHashTable extends TestCase
 	
 	function testDuplicateKeys()
 	{
-		var h = new HashTable<HTItem, Null<Int>>(16, 32);
+		var h = new HashTable<E, Null<Int>>(16, 32);
 		
-		var items = new Array<HTItem>();
-		for (i in 0...16) items.push(new HTItem(i));
+		var items = new Array<E>();
+		for (i in 0...16) items.push(new E(i));
 		
 		for (i in 0...2)
 		{
@@ -414,17 +418,15 @@ class TestHashTable extends TestCase
 	
 	function testRemove()
 	{
-		var items = new Array<HTItem>();
-		for (i in 0...16) items.push(new HTItem(i));
+		var items = new Array<E>();
+		for (i in 0...16) items.push(new E(i));
 		
-		var h = new HashTable<HTItem, Null<Int>>(16, 32);
+		var h = new HashTable<E, Null<Int>>(16, 32);
 		
 		for (j in 0...2)
 		{
 			for (i in 0...10)
-			{
 				h.set(items[0], i);
-			}
 			
 			assertTrue(h.hasKey(items[0]));
 			
@@ -439,15 +441,15 @@ class TestHashTable extends TestCase
 	
 	function testInsertRemoveFind()
 	{
-		var h = new HashTable<HTItem, Null<Int>>(16);
+		var h = new HashTable<E, Null<Int>>(16);
 		
-		var a = new HTItem(1);
+		var a = new E(1);
 		untyped a.key = 34;
 		
-		var b = new HTItem(2);
+		var b = new E(2);
 		untyped a.key = 50;
 		
-		var c = new HTItem(3);
+		var c = new E(3);
 		untyped a.key = 66;
 		
 		//everything to key #2
@@ -470,43 +472,39 @@ class TestHashTable extends TestCase
 	
 	function testInsertRemoveRandom1()
 	{
-		var h = new HashTable<HTItem, Null<Int>>(16);
+		var h = new HashTable<E, Null<Int>>(16);
 		
 		var K = [17, 25, 10, 2, 8, 24, 30, 3];
 		
-		var items = new DA<HTItem>();
+		var items = new DA<E>();
 		var keys = new DA<Int>();
 		for (i in 0...K.length)
 		{
 			keys.pushBack(K[i]);
 			
-			var item = new HTItem(i);
+			var item = new E(i);
 			untyped item.key = K[i];
 			items.pushBack(item);
 		}
 		
 		for (i in 0...items.size())
-		{
 			h.set(items.get(i), i);
-		}
 		
 		items.shuffle();
 		
 		for (i in 0...items.size())
-		{
 			assertTrue(h.clr(items.get(i)));
-		}
 	}
 	
 	function testInsertRemoveRandom2()
 	{
-		var h = new HashTable<HTItem, Null<Int>>(16);
+		var h = new HashTable<E, Null<Int>>(16);
 		
 		var seed = new ParkMiller(1);
 		
 		for (i in 0...100)
 		{
-			var items = new DA<HTItem>();
+			var items = new DA<E>();
 			var keys = new DA<Int>();
 			for (i in 0...8)
 			{
@@ -514,23 +512,19 @@ class TestHashTable extends TestCase
 				while (keys.contains(x)) x = Std.int(seed.random()) % 64;
 				keys.pushBack(x);
 				
-				var item = new HTItem(i);
+				var item = new E(i);
 				untyped item.key = x;
 				
 				items.pushBack(item);
 			}
 			
 			for (i in 0...keys.size())
-			{
 				h.set(items.get(i), i);
-			}
 			
 			items.shuffle();
 			
 			for (i in 0...keys.size())
-			{
 				assertTrue(h.clr(items.get(i)));
-			}
 			
 			items.shuffle();
 		}
@@ -538,7 +532,7 @@ class TestHashTable extends TestCase
 	
 	function testInsertRemoveRandom3()
 	{
-		var h = new HashTable<HTItem, Null<Int>>(16);
+		var h = new HashTable<E, Null<Int>>(16);
 		
 		var seed = new ParkMiller(1);
 		
@@ -546,7 +540,7 @@ class TestHashTable extends TestCase
 		for (i in 0...100)
 		{
 			j++;
-			var items = new DA<HTItem>();
+			var items = new DA<E>();
 			var keys = new DA<Int>();
 			for (i in 0...8)
 			{
@@ -554,30 +548,24 @@ class TestHashTable extends TestCase
 				while (keys.contains(x)) x = Std.int(seed.random()) % 64;
 				keys.pushBack(x);
 				
-				var item = new HTItem(i);
+				var item = new E(i);
 				untyped item.key = x;
 				
 				items.pushBack(item);
 			}
 			
 			for (i in 0...keys.size())
-			{
 				h.set(items.get(i), i);
-			}
 			
 			items.shuffle();
 			
 			for (i in 0...keys.size())
-			{
 				assertTrue(h.get(items.get(i)) != IntIntHashTable.KEY_ABSENT);
-			}
 			
 			items.shuffle();
 			
 			for (i in 0...keys.size())
-			{
 				assertTrue(h.clr(items.get(i)));
-			}
 		}
 		
 		assertEquals(100, j);
@@ -585,78 +573,62 @@ class TestHashTable extends TestCase
 	
 	function testCollision()
 	{
-		var items = new Array<HTItem>();
-		for (i in 0...128) items.push(new HTItem(i));
+		var items = new Array<E>();
+		for (i in 0...128) items.push(new E(i));
 		
 		var s = 128;
-		var h = new HashTable<HTItem, Null<Int>>(s);
+		var h = new HashTable<E, Null<Int>>(s);
 		for (i in 0...s)
 		{
 			var item = items[i];
 			untyped item.key = i * 2;
-			
 			h.set(item, i);
 		}
 		
 		assertEquals(s, h.size());
 		
 		for (i in 0...s)
-		{
 			assertTrue(h.clr(items[i]));
-		}
 		
 		assertEquals(0, h.size());
 		
 		for (i in 0...s)
-		{
 			h.set(items[i], i);
-		}
 		
 		assertEquals(s, h.size());
 		
 		for (i in 0...s)
-		{
 			assertTrue(h.clr(items[i]));
-		}
 		
 		assertEquals(0, h.size());
 	}
 	
 	function testFind()
 	{
-		var h = new HashTable<HTItem, Null<Int>>(16);
-		
-		var items = new Array<HTItem>();
-		for (i in 0...16) items.push(new HTItem(i));
+		var h = new HashTable<E, Null<Int>>(16);
+		var items = new Array<E>();
+		for (i in 0...16) items.push(new E(i));
 		
 		var seed = new ParkMiller(1);
-		
 		for (i in 0...100)
 		{
-			for (i in 0...16)
-				h.setIfAbsent(items[i], i);
-			
-			for (i in 0...16)
-				assertEquals(i, h.get(items[i]));
-			
-			for (i in 0...16)
-				assertTrue(h.clr(items[i]));
+			for (i in 0...16) h.setIfAbsent(items[i], i);
+			for (i in 0...16) assertEquals(i, h.get(items[i]));
+			for (i in 0...16) assertTrue(h.clr(items[i]));
 		}
 	}
 	
 	function testFindToFront()
 	{
-		var items = new Array<HTItem>();
-		for (i in 0...32) items.push(new HTItem(i));
+		var items = new Array<E>();
+		for (i in 0...32) items.push(new E(i));
 		
-		var h = new HashTable<HTItem, Null<Int>>(16);
-		
+		var h = new HashTable<E, Null<Int>>(16);
 		var seed = new ParkMiller(1);
 		
 		for (i in 0...100)
 		{
-			for (i in 0...16)
-				h.set(items[i], i);
+			for (i in 0...16) h.set(items[i], i);
 			
 			for (i in 0...16) assertEquals(i, h.getFront(items[i]));
 			for (i in 0...16) assertEquals(i, h.getFront(items[i]));
@@ -669,10 +641,10 @@ class TestHashTable extends TestCase
 	
 	function testResize1()
 	{
-		var items = new Array<HTItem>();
-		for (i in 0...32) items.push(new HTItem(i));
+		var items = new Array<E>();
+		for (i in 0...32) items.push(new E(i));
 		
-		var h = new HashTable<HTItem, Null<Int>>(8);
+		var h = new HashTable<E, Null<Int>>(8);
 		
 		for (i in 0...8) h.set(items[i], i);
 		assertTrue(h.size() == h.getCapacity());
@@ -681,30 +653,17 @@ class TestHashTable extends TestCase
 		
 		assertEquals(9, h.size());
 		
-		for (i in 0...8 + 1)
-		{
-			assertEquals(i, h.get(items[i]));
-		}
+		for (i in 0...8 + 1) assertEquals(i, h.get(items[i]));
 		
-		for (i in 9...16)
-		{
-			h.set(items[i], i);
-		}
+		for (i in 9...16) h.set(items[i], i);
 		
 		assertTrue(h.size() == h.getCapacity());
 		
-		for (i in 0...16)
-		{
-			assertEquals(i, h.get(items[i]));
-		}
+		for (i in 0...16) assertEquals(i, h.get(items[i]));
 		var i = 16;
 		while (i-- > 0)
 		{
-			if (h.size() == 4)
-			{
-				return;
-			}
-			
+			if (h.size() == 4) return;
 			assertTrue(h.remove(i));
 		}
 		
@@ -717,13 +676,13 @@ class TestHashTable extends TestCase
 	
 	function testClone()
 	{
-		var items = new Array<HTItem>();
-		for (i in 0...8) items.push(new HTItem(i));
+		var items = new Array<E>();
+		for (i in 0...8) items.push(new E(i));
 		
-		var h = new HashTable<HTItem, Null<Int>>(8);
+		var h = new HashTable<E, Null<Int>>(8);
 		for (i in 0...8) h.set(items[i], i);
 		
-		var c:HashTable<HTItem, Int> = cast h.clone(true);
+		var c:HashTable<E, Int> = cast h.clone(true);
 		
 		var i = 0;
 		var l = new DLL<Int>();
@@ -736,23 +695,17 @@ class TestHashTable extends TestCase
 		l.sort(function(a, b) { return a - b; } );
 		
 		var a:DA<Int> = l.toDA();
-		
 		assertEquals(8, a.size());
-		
-		for (i in 0...a.size())
-		{
-			assertEquals(i, a.get(i));
-		}
-		
+		for (i in 0...a.size()) assertEquals(i, a.get(i));
 		assertEquals(8, i);
 	}
 	
 	function testToArrayToDA()
 	{
-		var items = new DA<HTItem>();
-		for (i in 0...8) items.pushBack(new HTItem(i));
+		var items = new DA<E>();
+		for (i in 0...8) items.pushBack(new E(i));
 		
-		var h = new HashTable<HTItem, Null<Int>>(8);
+		var h = new HashTable<E, Null<Int>>(8);
 		for (i in 0...8) h.set(items.get(i), i);
 		
 		var a = h.toArray();
@@ -837,12 +790,12 @@ class TestHashTable extends TestCase
 	
 	function testToKeyArrayToDA()
 	{
-		var items = new DA<HTItem>();
-		for (i in 0...8) items.pushBack(new HTItem(i));
+		var items = new DA<E>();
+		for (i in 0...8) items.pushBack(new E(i));
 		
-		var tmp:DA<HTItem> = cast items.clone(true);
+		var tmp:DA<E> = cast items.clone(true);
 		
-		var h = new HashTable<HTItem, Null<Int>>(8);
+		var h = new HashTable<E, Null<Int>>(8);
 		for (i in 0...8) h.set(items.get(i), i * 10);
 		
 		var a = h.toKeyArray();
@@ -860,11 +813,8 @@ class TestHashTable extends TestCase
 		}
 		
 		assertEquals(0, items.size());
-		
 		items = tmp;
-		
 		var a = h.toKeyDA();
-		
 		for (i in a)
 		{
 			for (j in 0...8)
@@ -882,10 +832,10 @@ class TestHashTable extends TestCase
 	
 	function testClear()
 	{
-		var items = new Array<HTItem>();
-		for (i in 0...16) items.push(new HTItem(i));
+		var items = new Array<E>();
+		for (i in 0...16) items.push(new E(i));
 		
-		var h = new HashTable<HTItem, Null<Int>>(8);
+		var h = new HashTable<E, Null<Int>>(8);
 		for (i in 0...8) h.set(items[i], i);
 		h.clear();
 		var c = 0;
@@ -897,7 +847,7 @@ class TestHashTable extends TestCase
 		for (i in h) c++;
 		assertEquals(8, c);
 		
-		var h = new HashTable<HTItem, Null<Int>>(8);
+		var h = new HashTable<E, Null<Int>>(8);
 		for (i in 0...8) h.set(items[i], i);
 		assertEquals(8, h.getCapacity());
 		for (i in 8...16) h.set(items[i], i);
@@ -917,10 +867,10 @@ class TestHashTable extends TestCase
 			assertEquals(i, h.get(items[i]));
 			
 		//test with purge
-		var items = new Array<HTItem>();
-		for (i in 0...16) items.push(new HTItem(i));
+		var items = new Array<E>();
+		for (i in 0...16) items.push(new E(i));
 		
-		var h = new HashTable<HTItem, Null<Int>>(8);
+		var h = new HashTable<E, Null<Int>>(8);
 		for (i in 0...16) h.set(items[i], i);
 		h.clear(true);
 		
@@ -940,10 +890,10 @@ class TestHashTable extends TestCase
 	
 	function testValIterator()
 	{
-		var items = new Array<HTItem>();
-		for (i in 0...16) items.push(new HTItem(i));
+		var items = new Array<E>();
+		for (i in 0...16) items.push(new E(i));
 		
-		var h = new HashTable<HTItem, Null<Int>>(8);
+		var h = new HashTable<E, Null<Int>>(8);
 		
 		for (i in 0...8) h.set(items[i], i * 10);
 		
@@ -957,31 +907,25 @@ class TestHashTable extends TestCase
 		
 		assertEquals(8, set.size());
 		
-		for (i in 0...8)
-		{
-			assertTrue(set.contains(i * 10));
-		}
+		for (i in 0...8) assertTrue(set.contains(i * 10));
 		
-		var h = new HashTable<HTItem, Null<Int>>(8);
+		var h = new HashTable<E, Null<Int>>(8);
 		var c = 0;
-		for (val in h)
-		{
-			c++;
-		}
+		for (val in h) c++;
 		
 		assertEquals(0, c);
 	}
 	
 	function testKeyIterator()
 	{
-		var items = new Array<HTItem>();
-		for (i in 0...16) items.push(new HTItem(i));
+		var items = new Array<E>();
+		for (i in 0...16) items.push(new E(i));
 		
-		var h = new HashTable<HTItem, Null<Int>>(8);
+		var h = new HashTable<E, Null<Int>>(8);
 		
 		for (i in 0...8) h.set(items[i], i * 10);
 		
-		var set = new DA<HTItem>();
+		var set = new DA<E>();
 		var i = 0;
 		for (key in h.keys())
 		{
@@ -991,35 +935,27 @@ class TestHashTable extends TestCase
 		
 		assertEquals(8, set.size());
 		
-		for (i in 0...8)
-		{
-			assertTrue(set.contains(items[i]));
-		}
+		for (i in 0...8) assertTrue(set.contains(items[i]));
 		
-		var h = new HashTable<HTItem, Null<Int>>(8);
+		var h = new HashTable<E, Null<Int>>(8);
 		var c = 0;
-		for (key in h.keys())
-		{
-			c++;
-		}
-		
+		for (key in h.keys()) c++;
 		assertEquals(0, c);
 	}
 }
 
-
-class HTItem extends HashableItem
+private class E extends HashableItem
 {
-	var value:Int;
+	public var value:Int;
 	
-	function new(value:Int)
+	public function new(value:Int)
 	{
 		super();
 		
 		this.value = value;
 	}
 	
-	function _toString():String
+	public function toString():String
 	{
 		return 'item_' + value;
 	}

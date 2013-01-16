@@ -1,34 +1,13 @@
-﻿import de.polygonal.core.fmt.Sprintf;
+﻿package test;
+
 import de.polygonal.ds.ArrayedDeque;
 import de.polygonal.ds.Cloneable;
 import de.polygonal.ds.Deque;
 import de.polygonal.ds.LinkedDeque;
-import haxe.unit.TestCase;
 
-
-private class Foo implements Cloneable<Foo>
-{
-	var x:Int;
-	function new(x:Int)
-	{
-		this.x = x;
-	}
-	
-	function clone():Foo
-	{
-		return new Foo(x);
-	}
-}
-
-
-class TestLinkedDeque extends TestCase
+class TestLinkedDeque extends haxe.unit.TestCase
 {
 	inline static var BLOCK_SIZE = 4;
-	
-	function new()
-	{
-		super();
-	}
 	
 	function createDequeInt(size = BLOCK_SIZE)
 	{
@@ -37,7 +16,7 @@ class TestLinkedDeque extends TestCase
 	
 	function createDequeFoo(size = BLOCK_SIZE)
 	{
-		return new ArrayedDeque<Foo>(size);
+		return new ArrayedDeque<E>(size);
 	}
 	
 	function testAdjacent()
@@ -200,10 +179,7 @@ class TestLinkedDeque extends TestCase
 		{
 			var d = createDequeInt();
 			var i = 0;
-			for (k in 0...s)
-			{
-				d.pushBack(i++);
-			}
+			for (k in 0...s) d.pushBack(i++);
 			
 			var c:Deque<Int> = cast d.clone(true);
 			assertEquals(d.size(), c.size());
@@ -223,27 +199,24 @@ class TestLinkedDeque extends TestCase
 		{
 			var d = createDequeFoo();
 			var i = 0;
-			for (k in 0...s)
-			{
-				d.pushBack(new Foo(i++));
-			}
+			for (k in 0...s) d.pushBack(new E(i++));
 			
-			var c:Deque<Foo> = cast d.clone(false);
+			var c:Deque<E> = cast d.clone(false);
 			assertEquals(d.size(), c.size());
 			i = 0;
 			var z = 0;
 			for (x in c)
 			{
-				assertEquals(x.x, i++);
+				assertEquals(x.id, i++);
 				z++;
 			}
 			assertEquals(s, z);
 			s++;
 		}
 		
-		var copier = function(x:Foo)
+		var copier = function(x:E)
 		{
-			return new Foo(x.x);
+			return new E(x.id);
 		}
 		
 		var s = 1;
@@ -251,18 +224,15 @@ class TestLinkedDeque extends TestCase
 		{
 			var d = createDequeFoo();
 			var i = 0;
-			for (k in 0...s)
-			{
-				d.pushBack(new Foo(i++));
-			}
+			for (k in 0...s) d.pushBack(new E(i++));
 			
-			var c:Deque<Foo> = cast d.clone(false, copier);
+			var c:Deque<E> = cast d.clone(false, copier);
 			assertEquals(d.size(), c.size());
 			i = 0;
 			var z = 0;
 			for (x in c)
 			{
-				assertEquals(x.x, i++);
+				assertEquals(x.id, i++);
 				z++;
 			}
 			assertEquals(s, z);
@@ -277,10 +247,7 @@ class TestLinkedDeque extends TestCase
 		{
 			var d = createDequeInt();
 			var i = 0;
-			for (k in 0...s)
-			{
-				d.pushBack(i++);
-			}
+			for (k in 0...s) d.pushBack(i++);
 			
 			i = 0;
 			var z = 0;
@@ -343,16 +310,10 @@ class TestLinkedDeque extends TestCase
 		{
 			var d = createDequeInt();
 			var i = 0;
-			for (k in 0...s)
-			{
-				d.pushBack(i++);
-			}
+			for (k in 0...s) d.pushBack(i++);
 			
 			i = 0;
-			for (x in d)
-			{
-				assertTrue(d.contains(i++));
-			}
+			for (x in d)assertTrue(d.contains(i++));
 			s++;
 		}
 	}
@@ -364,9 +325,7 @@ class TestLinkedDeque extends TestCase
 		for (i in 0...2) d.pushBack(i);
 		var a = d.toArray();
 		for (i in 0...a.length)
-		{
 			assertEquals(a[i], d.popFront());
-		}
 		assertEquals(2, a.length);
 		
 		//4
@@ -374,9 +333,7 @@ class TestLinkedDeque extends TestCase
 		for (i in 0...4) d.pushBack(i);
 		var a = d.toArray();
 		for (i in 0...a.length)
-		{
 			assertEquals(a[i], d.popFront());
-		}
 		assertEquals(4, a.length);
 		
 		//16
@@ -384,9 +341,7 @@ class TestLinkedDeque extends TestCase
 		for (i in 0...16) d.pushBack(i);
 		var a = d.toArray();
 		for (i in 0...a.length)
-		{
 			assertEquals(a[i], d.popFront());
-		}
 		assertEquals(16, a.length);
 	}
 	
@@ -397,9 +352,7 @@ class TestLinkedDeque extends TestCase
 		for (i in 0...2) d.pushBack(i);
 		var a = d.toDA();
 		for (i in 0...a.size())
-		{
 			assertEquals(a.get(i), d.popFront());
-		}
 		assertEquals(2, a.size());
 		
 		//4
@@ -407,9 +360,7 @@ class TestLinkedDeque extends TestCase
 		for (i in 0...4) d.pushBack(i);
 		var a = d.toDA();
 		for (i in 0...a.size())
-		{
 			assertEquals(a.get(i), d.popFront());
-		}
 		assertEquals(4, a.size());
 		
 		//16
@@ -417,9 +368,7 @@ class TestLinkedDeque extends TestCase
 		for (i in 0...16) d.pushBack(i);
 		var a = d.toDA();
 		for (i in 0...a.size())
-		{
 			assertEquals(a.get(i), d.popFront());
-		}
 		assertEquals(16, a.size());
 	}
 	
@@ -570,10 +519,7 @@ class TestLinkedDeque extends TestCase
 	{
 		//work to head
 		var d = createDequeInt();
-		for (i in 0...20)
-		{
-			d.pushBack(i);
-		}
+		for (i in 0...20) d.pushBack(i);
 		
 		d.remove(16);
 		
@@ -588,10 +534,7 @@ class TestLinkedDeque extends TestCase
 		
 		//work to tail
 		var d = createDequeInt();
-		for (i in 0...20)
-		{
-			d.pushBack(i);
-		}
+		for (i in 0...20) d.pushBack(i);
 		
 		d.remove(8);
 		
@@ -821,13 +764,13 @@ class TestLinkedDeque extends TestCase
 	
 	function testClone2()
 	{
-		var d = new LinkedDeque<LDItem>(10);
+		var d = new LinkedDeque<E>(10);
 		for (i in 0...10)
 		{
-			d.pushFront(new LDItem(i));
+			d.pushFront(new E(i));
 		}
 		
-		var clone:LinkedDeque<LDItem> = cast d.clone(false);
+		var clone:LinkedDeque<E> = cast d.clone(false);
 		assertEquals(d.size(), clone.size());
 		
 		untyped 
@@ -844,9 +787,9 @@ class TestLinkedDeque extends TestCase
 			assertEquals(0, clone._tail.val.id);
 		}
 		
-		var d = new LinkedDeque<LDItem>();
-		d.pushFront(new LDItem(0));
-		var clone:LinkedDeque<LDItem> = cast d.clone(false);
+		var d = new LinkedDeque<E>();
+		d.pushFront(new E(0));
+		var clone:LinkedDeque<E> = cast d.clone(false);
 		assertEquals(d.size(), clone.size());
 		untyped 
 		{
@@ -854,10 +797,10 @@ class TestLinkedDeque extends TestCase
 			assertEquals(clone._tail.val.id, 0);
 		}
 		
-		var d = new LinkedDeque<LDItem>();
-		d.pushFront(new LDItem(0));
-		d.pushFront(new LDItem(1));
-		var clone:LinkedDeque<LDItem> = cast d.clone(false);
+		var d = new LinkedDeque<E>();
+		d.pushFront(new E(0));
+		d.pushFront(new E(1));
+		var clone:LinkedDeque<E> = cast d.clone(false);
 		assertEquals(d.size(), clone.size());
 		untyped 
 		{
@@ -868,13 +811,13 @@ class TestLinkedDeque extends TestCase
 	
 	function testClone3()
 	{
-		var d = new LinkedDeque<LDItem>(10);
+		var d = new LinkedDeque<E>(10);
 		for (i in 0...10)
 		{
-			d.pushFront(new LDItem(i));
+			d.pushFront(new E(i));
 		}
 		
-		var clone:LinkedDeque<LDItem> = cast d.clone(false, function(x:LDItem):LDItem { return new LDItem(x.id); } );
+		var clone:LinkedDeque<E> = cast d.clone(false, function(x:E):E { return new E(x.id); } );
 		assertEquals(d.size(), clone.size());
 		
 		untyped 
@@ -891,9 +834,9 @@ class TestLinkedDeque extends TestCase
 			assertEquals(0, clone._tail.val.id);
 		}
 		
-		var d = new LinkedDeque<LDItem>();
-		d.pushFront(new LDItem(0));
-		var clone:LinkedDeque<LDItem> = cast d.clone(false, function(x:LDItem):LDItem { return new LDItem(x.id); } );
+		var d = new LinkedDeque<E>();
+		d.pushFront(new E(0));
+		var clone:LinkedDeque<E> = cast d.clone(false, function(x:E):E { return new E(x.id); } );
 		assertEquals(d.size(), clone.size());
 		untyped 
 		{
@@ -901,10 +844,10 @@ class TestLinkedDeque extends TestCase
 			assertEquals(clone._tail.val.id, 0);
 		}
 		
-		var d = new LinkedDeque<LDItem>();
-		d.pushFront(new LDItem(0));
-		d.pushFront(new LDItem(1));
-		var clone:LinkedDeque<LDItem> = cast d.clone(false, function(x:LDItem):LDItem { return new LDItem(x.id); } );
+		var d = new LinkedDeque<E>();
+		d.pushFront(new E(0));
+		d.pushFront(new E(1));
+		var clone:LinkedDeque<E> = cast d.clone(false, function(x:E):E { return new E(x.id); } );
 		assertEquals(d.size(), clone.size());
 		untyped 
 		{
@@ -978,9 +921,8 @@ class TestLinkedDeque extends TestCase
 			d.popFront();
 		for (i in 0...5)
 			d.pushFront(i);
-			
-		d.clear(true);
 		
+		d.clear(true);
 		assertTrue(d.isEmpty());
 	}
 	
@@ -1005,19 +947,13 @@ class TestLinkedDeque extends TestCase
 		
 		var d = new LinkedDeque<Int>(10);
 		for (i in 0...20)
-		{
 			d.pushFront(i);
-		}
 		
 		for (i in 0...20)
-		{
 			d.popFront();
-		}
 		
 		for (i in 0...20)
-		{
 			d.pushFront(i);
-		}
 	}
 	
 	function testFront()
@@ -1103,18 +1039,17 @@ class TestLinkedDeque extends TestCase
 	}
 }
 
-
-private class LDItem implements Cloneable<LDItem>
+private class E implements Cloneable<E>
 {
-	var id:Int;
+	public var id:Int;
 	
-	function new(id:Int)
+	public function new(id:Int)
 	{
 		this.id = id;
 	}
 	
-	function clone():LDItem
+	public function clone():E
 	{
-		return new LDItem(id);
+		return new E(id);
 	}
 }

@@ -1,38 +1,36 @@
-﻿import de.polygonal.ds.BinaryTreeNode;
+﻿package test;
+
+import de.polygonal.ds.BinaryTreeNode;
 
 class TestBinaryTree extends haxe.unit.TestCase
 {
 	function testFree()
 	{
 		var node = new BinaryTreeNode<E>(new E());
-		
-		node.setL( new E() );
-		node.setR( new E() );
-		
-		node.l.setL( new E() );
-		node.l.l.setR( new E() );
-		
+		node.setL(new E());
+		node.setR(new E());
+		node.l.setL(new E());
+		node.l.l.setR(new E());
 		node.free();
-		
 		assertTrue(true);
 	}
 	
 	function testClear()
 	{
 		var node = new BinaryTreeNode<String>('root');
-		node.setL( 'e1' );
-		node.setR( 'e2' );
-		node.l.setL( 'e1' );
-		node.l.l.setR( 'e2' );
+		node.setL('e1');
+		node.setR('e2');
+		node.l.setL('e1');
+		node.l.l.setR('e2');
 		
 		node.clear(false);
 		assertEquals(1, node.size());
 		
 		var node = new BinaryTreeNode<String>('root');
-		node.setL( 'e1' );
-		node.setR( 'e2' );
-		node.l.setL( 'e1' );
-		node.l.l.setR( 'e2' );
+		node.setL('e1');
+		node.setR('e2');
+		node.l.setL('e1');
+		node.l.l.setR('e2');
 		
 		node.clear(true);
 		assertEquals(1, node.size());
@@ -42,10 +40,10 @@ class TestBinaryTree extends haxe.unit.TestCase
 	{
 		var node = new BinaryTreeNode<String>('root');
 		
-		node.setL( 'e1' );
-		node.setR( 'e2' );
-		node.l.setL( 'e1' );
-		node.l.l.setR( 'e2' );
+		node.setL('e1');
+		node.setR('e2');
+		node.l.setL('e1');
+		node.l.l.setR('e2');
 		
 		assertTrue(node.hasL());
 		assertTrue(node.hasR());

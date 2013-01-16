@@ -1,14 +1,11 @@
-﻿import de.polygonal.ds.Collection;
+﻿package test;
+
+import de.polygonal.ds.Collection;
 import de.polygonal.ds.ListSet;
 import de.polygonal.ds.Set;
 
-class TestSet extends haxe.unit.TestCase
+class TestListSet extends haxe.unit.TestCase
 {
-	public function new()
-	{
-		super();
-	}
-	
 	function test()
 	{
 		var s1 = new ListSet<String>();
@@ -69,18 +66,12 @@ class TestSet extends haxe.unit.TestCase
 		
 		var itr:de.polygonal.ds.ResettableIterator<Int> = cast S.iterator();
 		
-		for (i in itr)
-		{
-			assertEquals(true, c.remove(i));
-		}
+		for (i in itr) assertEquals(true, c.remove(i));
 		
 		itr.reset();
 		
 		var c:de.polygonal.ds.Set<Int> = cast s.clone(true);
-		for (i in itr)
-		{
-			assertEquals(true, c.remove(i));
-		}
+		for (i in itr) assertEquals(true, c.remove(i));
 	}
 	
 	function testCollection()

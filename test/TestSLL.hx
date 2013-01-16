@@ -1,4 +1,6 @@
-﻿import de.polygonal.ds.ArrayConvert;
+﻿package test;
+
+import de.polygonal.ds.ArrayConvert;
 import de.polygonal.ds.Compare;
 import de.polygonal.ds.DA;
 import de.polygonal.ds.ListSet;
@@ -7,11 +9,6 @@ import de.polygonal.ds.SLLNode;
 
 class TestSLL extends haxe.unit.TestCase
 {
-	function new()
-	{
-		super();
-	}
-	
 	function testCircular()
 	{
 		var l = new SLL<Int>();
@@ -669,7 +666,6 @@ class TestSLL extends haxe.unit.TestCase
 		assertEquals(10, list1.size());
 		for (i in list1) assertEquals(c++, i);
 		
-		
 		var list1 = new SLL<Int>();
 		list1.close();
 		var data:Array<Int> = [0, 1, 2, 3, 4];
@@ -728,7 +724,7 @@ class TestSLL extends haxe.unit.TestCase
 		for (i in list1) assertEquals(c++, i);
 	}
 	
-	function _testSortTail()
+	function testSortTail()
 	{
 		//insertion sort
 		var list = new SLL<Int>();
@@ -787,7 +783,7 @@ class TestSLL extends haxe.unit.TestCase
 		assertFalse(list.tail.hasNext());
 	}
 	
-	function _testSort()
+	function testSort()
 	{
 		var list = new SLL<Int>();
 		
@@ -813,31 +809,23 @@ class TestSLL extends haxe.unit.TestCase
 		var list:SLL<ESortable> = new SLL<ESortable>();
 		var data:Array<Int> = [2, 3, 4, 9, 5, 1, 7, 6, 8, 0];
 		for (i in 0...10)
-		{
 			list.append(new ESortable(data[i]));
-		}
 		list.sort(null);
 		var c = 10;
 		for (i in list)
-		{
 			assertEquals(--c, i.id);
-		}
 		
 		var list:SLL<ESortable> = new SLL<ESortable>();
 		var data:Array<Int> = [2, 3, 4, 9, 5, 1, 7, 6, 8, 0];
 		for (i in 0...10)
-		{
 			list.append(new ESortable(data[i]));
-		}
 		list.sort(null, true);
 		var c = 10;
 		for (i in list)
-		{
 			assertEquals(--c, i.id);
-		}
 	}
 	
-	function _testSortComparable()
+	function testSortComparable()
 	{
 		var list = new SLL<Int>();
 		
@@ -920,9 +908,7 @@ class TestSLL extends haxe.unit.TestCase
 			}
 			
 			while (!list.isEmpty())
-			{
 				assertTrue(set.remove(list.removeHead()));
-			}
 			assertTrue(set.isEmpty());
 		}
 		
@@ -968,9 +954,7 @@ class TestSLL extends haxe.unit.TestCase
 			}
 			
 			while (!list.isEmpty())
-			{
 				assertTrue(set.remove(list.removeHead()));
-			}
 			assertTrue(set.isEmpty());
 		}
 		
@@ -1042,7 +1026,6 @@ class TestSLL extends haxe.unit.TestCase
 		for (i in 0...10) list.append(i);
 		
 		var copy:SLL<Int> = cast list.clone(true);
-		
 		assertEquals(10, copy.size());
 		
 		var j = 0;
@@ -1157,17 +1140,12 @@ class TestSLL extends haxe.unit.TestCase
 	function testAppend()
 	{
 		var list = new SLL<Int>();
-		
 		assertEquals(list.size(), 0);
-		
 		list.append(0);
-		
 		assertEquals(1, list.size());
-		
 		assertEquals(list.head, list.tail);
 		
-		for (i in 1...10)
-			list.append(i);
+		for (i in 1...10) list.append(i);
 		
 		var i = 0;
 		var walker:SLLNode<Int> = list.head;
@@ -1184,12 +1162,8 @@ class TestSLL extends haxe.unit.TestCase
 	function testPrepend()
 	{
 		var list = new SLL<Int>();
-		
 		assertEquals(list.size(), 0);
-		
-		for (i in 0...10)
-			list.prepend(i);
-		
+		for (i in 0...10) list.prepend(i);
 		var i = 10;
 		var walker:SLLNode<Int> = list.head;
 		while (walker != null)
@@ -1197,7 +1171,6 @@ class TestSLL extends haxe.unit.TestCase
 			assertEquals(walker.val, --i);
 			walker = walker.next;
 		}
-		
 		assertEquals(list.head.val, 9);
 		assertEquals(list.tail.val, 0);
 	}
@@ -1207,9 +1180,7 @@ class TestSLL extends haxe.unit.TestCase
 		var list = new SLL<Int>();
 		
 		assertEquals(list.size(), 0);
-		
-		for (i in 0...10)
-			list.append(i);
+		for (i in 0...10) list.append(i);
 		
 		var i = 10;
 		var walker:SLLNode<Int> = list.head;
@@ -1229,11 +1200,8 @@ class TestSLL extends haxe.unit.TestCase
 	function testPop()
 	{
 		var list = new SLL<Int>();
-		
 		assertEquals(list.size(), 0);
-		
-		for (i in 0...10)
-			list.append(i);
+		for (i in 0...10) list.append(i);
 		
 		var i = 10;
 		while (list.size() > 0)
@@ -1250,19 +1218,14 @@ class TestSLL extends haxe.unit.TestCase
 	function testShift()
 	{
 		var list = new SLL<Int>();
-		
 		assertEquals(list.size(), 0);
-		
-		for (i in 0...10)
-			list.append(i);
-			
+		for (i in 0...10) list.append(i);
 		var i = 0;
 		while (list.size() > 0)
 		{
 			var val:Int = list.removeHead();
 			assertEquals(val, i++);
 		}
-		
 		assertEquals(list.size(), 0);
 		assertEquals(list.head, null);
 		assertEquals(list.tail, null);
@@ -1271,42 +1234,33 @@ class TestSLL extends haxe.unit.TestCase
 	function testShiftUp()
 	{
 		var list = new SLL<Int>();
-		
 		assertEquals(list.size(), 0);
-		
-		for (i in 0...10)
-			list.append(i);
-		
+		for (i in 0...10) list.append(i);
 		list.shiftUp();
-		
 		assertEquals(list.tail.val, 0);
 	}
 	
 	function testPopDown()
 	{
 		var list = new SLL<Int>();
-		
 		assertEquals(list.size(), 0);
-		
-		for (i in 0...10)
-			list.append(i);
-			
+		for (i in 0...10) list.append(i);
 		list.popDown();
-			
 		assertEquals(list.head.val, 9);
 	}
 }
 
-class E
+private class E
 {
 	public var x:Int;
+	
 	public function new(x:Int)
 	{
 		this.x = x;
 	}
 }
 
-class ESortable implements de.polygonal.ds.Comparable<ESortable>
+private class ESortable implements de.polygonal.ds.Comparable<ESortable>
 {
 	public var id:Int;
 	public function new(id:Int)

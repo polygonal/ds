@@ -1,16 +1,17 @@
+package test;
+
 import de.polygonal.core.math.random.ParkMiller;
 import de.polygonal.ds.DA;
 import de.polygonal.ds.DLL;
-import de.polygonal.ds.HashSet;
-import haxe.unit.TestCase;
 import de.polygonal.ds.HashableItem;
+import de.polygonal.ds.HashSet;
 
-
-class TestHashSet extends TestCase
+class TestHashSet extends haxe.unit.TestCase
 {
 	function new()
 	{
 		super();
+		
 		#if (flash10 && alchemy)
 		de.polygonal.ds.mem.MemoryManager.free();
 		#end
@@ -18,28 +19,25 @@ class TestHashSet extends TestCase
 	
 	function testDuplicate()
 	{
-		var values = new Array<HSItem>();
-		for (i in 0...10) values.push(new HSItem(i));
+		var values = new Array<E>();
+		for (i in 0...10) values.push(new E(i));
 		
-		var s = new HashSet<HSItem>(32);
-		
+		var s = new HashSet<E>(32);
 		for (i in 0...10)
 		{
 			assertTrue(s.set(values[i]));
 			assertFalse(s.set(values[i]));
 		}
 		for (i in 0...10)
-		{
 			assertFalse(s.set(values[i]));
-		}
 	}
 	
 	function test()
 	{
-		var values = new Array<HSItem>();
-		for (i in 0...32) values.push(new HSItem(i));
+		var values = new Array<E>();
+		for (i in 0...32) values.push(new E(i));
 		
-		var h = new HashSet<HSItem>(16);
+		var h = new HashSet<E>(16);
 		
 		for (i in 0...32) h.set(values[i]);
 		for (i in 0...32) assertTrue(h.has(values[i]));
@@ -47,20 +45,16 @@ class TestHashSet extends TestCase
 		assertEquals(32, h.getCapacity());
 		
 		for (i in 0...24) assertTrue(h.remove(values[i]));
-		
-		for (i in 24...32)
-			assertTrue(h.has(values[i]));
-		
-		for (i in 0...24 - 32)
-			assertTrue(h.remove(values[i]));
+		for (i in 24...32) assertTrue(h.has(values[i]));
+		for (i in 0...24 - 32) assertTrue(h.remove(values[i]));
 	}
 	
 	function testHas()
 	{
-		var values = new Array<HSItem>();
-		for (i in 0...32) values.push(new HSItem(i));
+		var values = new Array<E>();
+		for (i in 0...32) values.push(new E(i));
 		
-		var h = new HashSet<HSItem>(16, 16);
+		var h = new HashSet<E>(16, 16);
 		h.set(values[0]);
 		h.set(values[1]);
 		h.set(values[2]);
@@ -87,10 +81,10 @@ class TestHashSet extends TestCase
 	
 	function testRehash()
 	{
-		var values = new Array<HSItem>();
-		for (i in 0...32) values.push(new HSItem(i));
+		var values = new Array<E>();
+		for (i in 0...32) values.push(new E(i));
 		
-		var h = new HashSet<HSItem>(4);
+		var h = new HashSet<E>(4);
 		for (i in 0...8) h.set(values[i]);
 		
 		h.rehash(512);
@@ -103,11 +97,10 @@ class TestHashSet extends TestCase
 	
 	function testSize2()
 	{
-		var values = new Array<HSItem>();
-		for (i in 0...32) values.push(new HSItem(i));
+		var values = new Array<E>();
+		for (i in 0...32) values.push(new E(i));
 		
-		var h = new HashSet<HSItem>(4, 2);
-		
+		var h = new HashSet<E>(4, 2);
 		for (i in 0...3)
 		{
 			h.set(values[0]);
@@ -133,11 +126,10 @@ class TestHashSet extends TestCase
 	
 	function testSize3()
 	{
-		var values = new Array<HSItem>();
-		for (i in 0...32) values.push(new HSItem(i));
+		var values = new Array<E>();
+		for (i in 0...32) values.push(new E(i));
 		
-		var h = new HashSet<HSItem>(4, 3);
-		
+		var h = new HashSet<E>(4, 3);
 		for (i in 0...3)
 		{
 			h.set(values[0]);
@@ -172,21 +164,20 @@ class TestHashSet extends TestCase
 		}
 	}
 	
-	function _testResizeSmall()
+	function testResizeSmall()
 	{
-		var h = new HashSet<HSItem>(16, 2);
+		var h = new HashSet<E>(16, 2);
 		var keys = new Array<Int>();
 		var key = 0;
 		
-		var values = new Array<HSItem>();
-		
+		var values = new Array<E>();
 		for (i in 0...2)
 		{
-			var item = new HSItem(0);
+			var item = new E(0);
 			values.push(item);
 			h.set(item);
 			
-			var item = new HSItem(1);
+			var item = new E(1);
 			values.push(item);
 			h.set(item);
 			
@@ -195,14 +186,14 @@ class TestHashSet extends TestCase
 			
 			for (i in values) assertTrue(h.has(i));
 			
-			var item = new HSItem(1);
+			var item = new E(1);
 			values.push(item);
 			h.set(item);
 			
 			assertEquals(3, h.size());
 			assertEquals(4, h.getCapacity());
 			
-			var item = new HSItem(1);
+			var item = new E(1);
 			values.push(item);
 			h.set(item);
 			for (i in values) assertTrue(h.has(i));
@@ -211,7 +202,7 @@ class TestHashSet extends TestCase
 			
 			for (i in 0...4)
 			{
-				var item = new HSItem(1);
+				var item = new E(1);
 				values.push(item);
 				h.set(item);
 			}
@@ -222,7 +213,7 @@ class TestHashSet extends TestCase
 			
 			for (i in 0...8)
 			{
-				var item = new HSItem(1);
+				var item = new E(1);
 				values.push(item);
 				h.set(item);
 			}
@@ -253,17 +244,13 @@ class TestHashSet extends TestCase
 	
 	function testRemove()
 	{
-		var values = new Array<HSItem>();
-		for (i in 0...32) values.push(new HSItem(i));
+		var values = new Array<E>();
+		for (i in 0...32) values.push(new E(i));
 		
-		var h = new HashSet<HSItem>(16, 32);
-		
+		var h = new HashSet<E>(16, 32);
 		for (j in 0...2)
 		{
-			for (i in 0...10)
-			{
-				h.set(values[i]);
-			}
+			for (i in 0...10) h.set(values[i]);
 			
 			assertTrue(h.has(values[0]));
 			h.remove(values[0]);
@@ -274,15 +261,14 @@ class TestHashSet extends TestCase
 	
 	function testInsertRemoveFind()
 	{
-		var values = new Array<HSItem>();
+		var values = new Array<E>();
 		
-		var h = new HashSet<HSItem>(16);
-		
-		var a = new HSItem(0);
+		var h = new HashSet<E>(16);
+		var a = new E(0);
 		a.key = 34;
-		var b = new HSItem(1);
+		var b = new E(1);
 		b.key = 50;
-		var c = new HSItem(2);
+		var c = new E(2);
 		c.key = 66;
 		
 		//everything to key #2
@@ -305,42 +291,32 @@ class TestHashSet extends TestCase
 	
 	function testInsertRemoveRandom1()
 	{
-		var values = new Array<HSItem>();
-		for (i in 0...32) values.push(new HSItem(i));
+		var values = new Array<E>();
+		for (i in 0...32) values.push(new E(i));
 		
-		var h = new HashSet<HSItem>(16);
+		var h = new HashSet<E>(16);
 		
 		var K = [17, 25, 10, 2, 8, 24, 30, 3];
 		
 		var keys = new DA<Int>();
-		for (i in 0...K.length)
-		{
-			keys.pushBack(K[i]);
-		}
-		
-		for (i in 0...keys.size())
-		{
-			h.set(values[keys.get(i)]);
-		}
+		for (i in 0...K.length) keys.pushBack(K[i]);
+		for (i in 0...keys.size()) h.set(values[keys.get(i)]);
 		
 		keys.shuffle();
 		
-		for (i in 0...keys.size())
-		{
-			assertTrue(h.remove(values[keys.get(i)]));
-		}
+		for (i in 0...keys.size()) assertTrue(h.remove(values[keys.get(i)]));
 	}
 	
 	function testInsertRemoveRandom2()
 	{
-		var h = new HashSet<HSItem>(16);
+		var h = new HashSet<E>(16);
 		
 		var seed = new ParkMiller(1);
 		
 		for (i in 0...100)
 		{
-			var values = new Array<HSItem>();
-			for (i in 0...64) values.push(new HSItem(i));
+			var values = new Array<E>();
+			for (i in 0...64) values.push(new E(i));
 		
 			var keys = new DA<Int>();
 			for (i in 0...8)
@@ -349,35 +325,25 @@ class TestHashSet extends TestCase
 				while (keys.contains(x)) x = Std.int(seed.random() % 64);
 				keys.pushBack(x);
 			}
-			for (i in 0...keys.size())
-			{
-				h.set(values[keys.get(i)]);
-			}
-			for (i in 0...keys.size())
-			{
-				assertTrue(h.has(values[keys.get(i)]));
-			}
+			for (i in 0...keys.size()) h.set(values[keys.get(i)]);
+			for (i in 0...keys.size()) assertTrue(h.has(values[keys.get(i)]));
 			
 			keys.shuffle();
 			
-			for (i in 0...keys.size())
-			{
-				assertTrue(h.remove(values[keys.get(i)]));
-			}
+			for (i in 0...keys.size()) assertTrue(h.remove(values[keys.get(i)]));
 		}
 	}
 	
 	function testInsertRemoveRandom3()
 	{
-		var h = new HashSet<HSItem>(16);
-		
+		var h = new HashSet<E>(16);
 		var seed = new ParkMiller(1);
 		
 		var j = 0;
 		for (i in 0...100)
 		{
-			var values = new Array<HSItem>();
-			for (i in 0...64) values.push(new HSItem(i));
+			var values = new Array<E>();
+			for (i in 0...64) values.push(new E(i));
 			
 			j++;
 			var keys = new DA<Int>();
@@ -385,28 +351,18 @@ class TestHashSet extends TestCase
 			{
 				var x = Std.int(seed.random() % 64);
 				while (keys.contains(x)) x = Std.int(seed.random() % 64);
-				
 				keys.pushBack(x);
 			}
 			
-			for (i in 0...keys.size())
-			{
-				h.set(values[keys.get(i)]);
-			}
+			for (i in 0...keys.size()) h.set(values[keys.get(i)]);
 			
 			keys.shuffle();
 			
-			for (i in 0...keys.size())
-			{
-				assertTrue(h.has(values[keys.get(i)]));
-			}
+			for (i in 0...keys.size()) assertTrue(h.has(values[keys.get(i)]));
 			
 			keys.shuffle();
 			
-			for (i in 0...keys.size())
-			{
-				assertTrue(h.remove(values[keys.get(i)]));
-			}
+			for (i in 0...keys.size()) assertTrue(h.remove(values[keys.get(i)]));
 		}
 		
 		assertEquals(100, j);
@@ -416,72 +372,53 @@ class TestHashSet extends TestCase
 	{
 		var s = 128;
 		
-		var values = new Array<HSItem>();
+		var values = new Array<E>();
 		for (i in 0...s)
 		{
-			var item = new HSItem(i);
+			var item = new E(i);
 			untyped item.key = i * s;
 			values.push(item);
 		}
 		
-		var h = new HashSet<HSItem>(s);
-		for (i in 0...s)
-		{
-			h.set(values[i]);
-		}
+		var h = new HashSet<E>(s);
+		for (i in 0...s) h.set(values[i]);
 		
 		assertEquals(s, h.size());
 		
-		for (i in 0...s)
-		{
-			assertTrue(h.remove(values[i]));
-		}
+		for (i in 0...s) assertTrue(h.remove(values[i]));
 		
 		assertEquals(0, h.size());
 		
-		for (i in 0...s)
-		{
-			h.set(values[i]);
-		}
+		for (i in 0...s) h.set(values[i]);
 		
 		assertEquals(s, h.size());
 		
-		for (i in 0...s)
-		{
-			assertTrue(h.remove(values[i]));
-		}
+		for (i in 0...s) assertTrue(h.remove(values[i]));
 		
 		assertEquals(0, h.size());
 	}
 	
 	function testFind()
 	{
-		var values = new Array<HSItem>();
-		for (i in 0...16) values.push(new HSItem(i));
+		var values = new Array<E>();
+		for (i in 0...16) values.push(new E(i));
 		
-		var h = new HashSet<HSItem>(16);
-		
+		var h = new HashSet<E>(16);
 		var seed = new ParkMiller(1);
-		
 		for (i in 0...100)
 		{
-			for (i in 0...16)
-				h.set(values[i]);
-			
-			for (i in 0...16)
-				assertTrue(h.has(values[i]));
-			
-			for (i in 0...16)
-				assertTrue(h.remove(values[i]));
+			for (i in 0...16) h.set(values[i]);
+			for (i in 0...16) assertTrue(h.has(values[i]));
+			for (i in 0...16) assertTrue(h.remove(values[i]));
 		}
 	}
 	
 	function testResize1()
 	{
-		var values = new Array<HSItem>();
-		for (i in 0...16) values.push(new HSItem(i));
+		var values = new Array<E>();
+		for (i in 0...16) values.push(new E(i));
 		
-		var h = new HashSet<HSItem>(8);
+		var h = new HashSet<E>(8);
 		
 		for (i in 0...8) h.set(values[i]);
 		assertTrue(h.size() == h.getCapacity());
@@ -490,29 +427,16 @@ class TestHashSet extends TestCase
 		
 		assertEquals(9, h.size());
 		
-		for (i in 0...8 + 1)
-		{
-			assertTrue(h.has(values[i]));
-		}
-		for (i in 9...16)
-		{
-			h.set(values[i]);
-		}
+		for (i in 0...8 + 1) assertTrue(h.has(values[i]));
+		for (i in 9...16) h.set(values[i]);
 		
 		assertTrue(h.size() == h.getCapacity());
 		
-		for (i in 0...16)
-		{
-			assertTrue(h.has(values[i]));
-		}
+		for (i in 0...16) assertTrue(h.has(values[i]));
 		var i = 16;
 		while (i-- > 0)
 		{
-			if (h.size() == 4)
-			{
-				return;
-			}
-			
+			if (h.size() == 4) return;
 			assertTrue(h.remove(values[i]));
 		}
 		
@@ -525,16 +449,16 @@ class TestHashSet extends TestCase
 	
 	function testClone()
 	{
-		var values = new Array<HSItem>();
-		for (i in 0...16) values.push(new HSItem(i));
+		var values = new Array<E>();
+		for (i in 0...16) values.push(new E(i));
 		
-		var h = new HashSet<HSItem>(8);
+		var h = new HashSet<E>(8);
 		for (i in 0...8) h.set(values[i]);
 		
-		var c:HashSet<HSItem> = cast h.clone(true);
+		var c:HashSet<E> = cast h.clone(true);
 		
 		var i = 0;
-		var l = new DLL<HSItem>();
+		var l = new DLL<E>();
 		for (val in c)
 		{
 			l.append(val);
@@ -543,7 +467,7 @@ class TestHashSet extends TestCase
 		
 		l.sort(function(a, b) { return a.value - b.value; } );
 		
-		var a:DA<HSItem> = l.toDA();
+		var a:DA<E> = l.toDA();
 		for (i in 0...a.size())
 		{
 			assertEquals(i, a.get(i).value);
@@ -554,10 +478,10 @@ class TestHashSet extends TestCase
 	
 	function testToArrayToDA()
 	{
-		var values = new Array<HSItem>();
-		for (i in 0...16) values.push(new HSItem(i));
+		var values = new Array<E>();
+		for (i in 0...16) values.push(new E(i));
 		
-		var h = new HashSet<HSItem>(8);
+		var h = new HashSet<E>(8);
 		for (i in 0...8) h.set(values[i]);
 		
 		var a = h.toArray();
@@ -614,7 +538,6 @@ class TestHashSet extends TestCase
 			
 			assertTrue(found);
 		}
-		
 		
 		assertEquals(0, keys.length);
 		var a = h.toDA();
@@ -640,17 +563,17 @@ class TestHashSet extends TestCase
 	
 	function testClear()
 	{
-		var values = new Array<HSItem>();
-		for (i in 0...16) values.push(new HSItem(i));
+		var values = new Array<E>();
+		for (i in 0...16) values.push(new E(i));
 		
-		var h = new HashSet<HSItem>(8);
+		var h = new HashSet<E>(8);
 		for (i in 0...8) h.set(values[i]);
 		h.clear();
 		var c = 0;
 		for (i in h) c++;
 		assertEquals(0, c);
 		
-		var h = new HashSet<HSItem>(8);
+		var h = new HashSet<E>(8);
 		for (i in 0...8) h.set(values[i]);
 		assertEquals(8, h.getCapacity());
 		for (i in 8...16) h.set(values[i]);
@@ -668,10 +591,10 @@ class TestHashSet extends TestCase
 		for (i in 0...16) assertTrue(h.has(values[i]));
 		
 		//test with purge
-		var values = new Array<HSItem>();
-		for (i in 0...16) values.push(new HSItem(i));
+		var values = new Array<E>();
+		for (i in 0...16) values.push(new E(i));
 		
-		var h = new HashSet<HSItem>(8);
+		var h = new HashSet<E>(8);
 		for (i in 0...16) h.set(values[i]);
 		
 		h.clear(true);
@@ -692,49 +615,38 @@ class TestHashSet extends TestCase
 	
 	function testIterator()
 	{
-		var values = new Array<HSItem>();
-		for (i in 0...16) values.push(new HSItem(i));
+		var values = new Array<E>();
+		for (i in 0...16) values.push(new E(i));
 		
-		var h = new HashSet<HSItem>(8);
+		var h = new HashSet<E>(8);
 		for (i in 0...8) h.set(values[i]);
 		
-		var a = new DA<HSItem>();
+		var a = new DA<E>();
 		
-		for (val in h)
-		{
-			a.pushBack(val);
-		}
+		for (val in h) a.pushBack(val);
 		
 		assertEquals(8, a.size());
 		
-		for (i in 0...8)
-		{
-			a.contains(values[i]);
-		}
+		for (i in 0...8) a.contains(values[i]);
 		
-		var h = new HashSet<HSItem>(8);
+		var h = new HashSet<E>(8);
 		var c = 0;
-		for (key in h)
-		{
-			c++;
-		}
+		for (key in h) c++;
 		
 		assertEquals(0, c);
 	}
 }
 
-
-class HSItem extends HashableItem
+private class E extends HashableItem
 {
-	var value:Int;
-	function new(v:Int)
+	public var value:Int;
+	public function new(v:Int)
 	{
 		super();
 		this.value = v;
 	}
 	
-	/** Returns the string form of the value that the object represents. */
-	function toString():String
+	public function toString():String
 	{
 		return 'HSItem_' + value;
 	}

@@ -1,15 +1,15 @@
-﻿import de.polygonal.ds.Compare;
+﻿package test;
+
+import de.polygonal.ds.Compare;
+import de.polygonal.ds.Serialization;
 import de.polygonal.ds.TreeBuilder;
 import de.polygonal.ds.TreeNode;
 import de.polygonal.ds.XmlConvert;
+import haxe.Serializer;
+import haxe.Unserializer;
 
 class TestTree extends haxe.unit.TestCase
 {
-	public function new()
-	{
-		super();
-	}
-	
 	function testRemove()
 	{
 		var root = new TreeNode<String>('root');
@@ -30,16 +30,13 @@ class TestTree extends haxe.unit.TestCase
 	function testXmlToTreeNode()
 	{
 		var xml = '<root rootAttr=\'rootAttrValue\'><node1 node1Attr1=\'a\' node1Attr2=\'b\'><node2 node2Attr=\'c\'/></node1></root>';
-		
 		var root = XmlConvert.toTreeNode(xml);
 		
 		assertEquals(root.val.name, 'root');
 		assertEquals('rootAttrValue', root.val.attributes.get('rootAttr'));
-		
 		assertEquals('a', root.children.val.attributes.get('node1Attr1'));
 		assertEquals('b', root.children.val.attributes.get('node1Attr2'));
 		assertEquals('node1', root.children.val.name);
-		
 		assertEquals('c', root.children.children.val.attributes.get('node2Attr'));
 		assertEquals('node2', root.children.children.val.name);
 	}
@@ -60,7 +57,6 @@ class TestTree extends haxe.unit.TestCase
 		assertTrue(lastChild != null);
 		
 		var node = lastChild.unlink();
-		
 		assertEquals(node.parent, null);
 		assertEquals(root.numChildren(), 1);
 		
@@ -85,7 +81,6 @@ class TestTree extends haxe.unit.TestCase
 		itr.appendChild('new.a3');
 		
 		root.appendNode(node);
-		
 		assertEquals(8, root.size());
 	}
 	
@@ -104,7 +99,6 @@ class TestTree extends haxe.unit.TestCase
 		itr.appendChild('new.a3');
 		
 		root.prependNode(node);
-		
 		assertEquals(8, root.size());
 	}
 	
@@ -122,7 +116,6 @@ class TestTree extends haxe.unit.TestCase
 		itr.appendChild('new.a3');
 		
 		root.insertAfterChild(root.children, node);
-		
 		assertEquals(3, root.numChildren());
 		assertEquals(7, root.size());
 	}
@@ -141,7 +134,6 @@ class TestTree extends haxe.unit.TestCase
 		itr.appendChild('new.a3');
 		
 		root.insertBeforeChild(root.children, node);
-		
 		assertEquals(3, root.numChildren());
 		assertEquals(7, root.size());
 	}
@@ -215,7 +207,6 @@ class TestTree extends haxe.unit.TestCase
 		root.levelorder(visit);
 		
 		//visitable
-		
 		var root = new TreeNode<Visitor>(new Visitor('root'));
 		var itr = root.getBuilder();
 		
@@ -233,7 +224,6 @@ class TestTree extends haxe.unit.TestCase
 		Visitor.order = order;
 		
 		root.levelorder(null, false);
-		
 		assertEquals(root.size(), Visitor.c);
 	}
 	
@@ -346,11 +336,9 @@ class TestTree extends haxe.unit.TestCase
 		
 		var root = new TreeNode<Visitor>(new Visitor('root'));
 		var itr = root.getBuilder();
-		
 		itr.appendChild(new Visitor('root.a1'));
 		itr.appendChild(new Visitor('root.a2'));
 		itr.appendChild(new Visitor('root.a3'));
-		
 		itr.childStart();
 		itr.down();
 		itr.appendChild(new Visitor('root.a1.b1'));
@@ -413,7 +401,6 @@ class TestTree extends haxe.unit.TestCase
 		Visitor.order = order;
 		
 		root.postorder(null, false);
-		
 		assertEquals(root.size(), Visitor.c);
 	}
 	
@@ -453,7 +440,6 @@ class TestTree extends haxe.unit.TestCase
 		assertEquals('root.a1', root.find('root.a1').val);
 		assertEquals('root.a2', root.find('root.a2').val);
 		assertEquals('root.a3', root.find('root.a3').val);
-		
 		assertEquals('root.a1.b1', root.find('root.a1.b1').val);
 		assertEquals('root.a1.b2', root.find('root.a1.b2').val);
 	}
@@ -625,7 +611,6 @@ class TestTree extends haxe.unit.TestCase
 		}
 		assertEquals(0, c);
 		
-		
 		var root = new TreeNode<SortableNode>(null);
 		var data:Array<Int> = [2, 3, 4, 9, 5, 1, 7, 6, 8, 0];
 		var builder = root.getBuilder();
@@ -643,10 +628,7 @@ class TestTree extends haxe.unit.TestCase
 		
 		var root = new TreeNode<Int>(100);
 		var builder = root.getBuilder();
-		for (i in 0...10)
-		{
-			builder.appendChild(i);
-		}
+		for (i in 0...10) builder.appendChild(i);
 		
 		root.sort(function(a, b) { return b - a; });
 		var i = 9;
@@ -684,7 +666,6 @@ class TestTree extends haxe.unit.TestCase
 		}
 		
 		for (i in 0...9) root.remove(i);
-		
 		root.sort(function(a, b) { return b - a; });
 	}
 	
@@ -721,12 +702,9 @@ class TestTree extends haxe.unit.TestCase
 			itr.nextChild();
 		}
 		
-		
 		itr.childStart();
 		while (itr.getChildVal() != 2)
-		{
 			itr.nextChild();
-		}
 	}
 	
 	function testClone()
@@ -745,7 +723,6 @@ class TestTree extends haxe.unit.TestCase
 		
 		itr.appendChild(4);
 		itr.appendChild(5);
-		
 		
 		assertEquals(0, rootNode.children.val);
 		assertEquals(1, rootNode.children.next.val);
@@ -1043,6 +1020,53 @@ class TestTree extends haxe.unit.TestCase
 	{
 		var c:de.polygonal.ds.Collection<Int> = new TreeNode<Int>(0);
 		assertEquals(true, true);
+	}
+	
+	function testSerialization()
+	{
+		var a = new TreeNode<String>('a');
+		var b = new TreeNode<String>('b');
+		var c = new TreeNode<String>('c');
+		var d = new TreeNode<String>('d');
+		var e = new TreeNode<String>('e');
+		var f = new TreeNode<String>('f');
+		var g = new TreeNode<String>('g');
+		var x = new TreeNode<String>('x');
+		var y = new TreeNode<String>('y');
+		
+		a.appendNode(b);
+		a.appendNode(c);
+		a.appendNode(d);
+		
+		b.appendNode(e);
+		b.appendNode(f);
+		f.appendNode(g);
+		
+		d.appendNode(x);
+		d.appendNode(y);
+		
+		var list = Serialization.serializeTree(a);
+		
+		var s = new Serializer();
+		s.serialize(list);
+		
+		var serialized = s.toString();
+		
+		var s2 = new Unserializer(serialized);
+		var list = s2.unserialize();
+		
+		var output = Serialization.unserializeTree(list);
+		
+		assertEquals('a', output.val);
+		assertEquals('b', output.getChildAt(0).val);
+		assertEquals('c', output.getChildAt(1).val);
+		assertEquals('d', output.getChildAt(2).val);
+		assertEquals('e', output.getChildAt(0).getChildAt(0).val);
+		assertEquals('f', output.getChildAt(0).getChildAt(1).val);
+		assertEquals('g', output.getChildAt(0).getChildAt(1).getChildAt(0).val);
+		assertEquals('x', output.getChildAt(2).getChildAt(0).val);
+		assertEquals('y', output.getChildAt(2).getChildAt(1).val);
+		assertEquals(9, output.size());
 	}
 }
 

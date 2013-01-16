@@ -1,47 +1,29 @@
-﻿import de.polygonal.ds.LinkedQueue;
+﻿package test;
+
+import de.polygonal.ds.LinkedQueue;
 import de.polygonal.ds.ListSet;
 import de.polygonal.ds.Queue;
 
 class TestLinkedQueue extends haxe.unit.TestCase
 {
-	function new() 
-	{
-		super();
-	}
-	
 	function testPool()
 	{
 		var l = new LinkedQueue<Int>(20);
 		
-		for (i in 0...10)
-		{
-			l.enqueue(i);
-		}
-		
-		for (i in 0...10)
-		{
-			l.dequeue();
-		}
-		
+		for (i in 0...10) l.enqueue(i);
+		for (i in 0...10) l.dequeue();
 		assertEquals(10, untyped l._poolSize);
 		
-		for (i in 0...10)
-		{
-			l.enqueue(i);
-		}
+		for (i in 0...10) l.enqueue(i);
 		assertEquals(0, untyped l._poolSize);
 		
-		for (i in 0...10)
-		{
-			l.dequeue();
-		}
+		for (i in 0...10) l.dequeue();
 		assertEquals(10, untyped l._poolSize);
 	}
 	
 	function test()
 	{
 		var l = new LinkedQueue<Int>();
-		
 		for (i in 0...10)
 		{
 			l.enqueue(1);
@@ -70,9 +52,7 @@ class TestLinkedQueue extends haxe.unit.TestCase
 	{
 		var l = new LinkedQueue<Int>();
 		for (i in 0...5) l.enqueue(i);
-		
 		l.free();
-		
 		assertTrue(true);
 	}
 	
@@ -120,10 +100,7 @@ class TestLinkedQueue extends haxe.unit.TestCase
 		var itr:de.polygonal.ds.ResettableIterator<Int> = cast l.iterator();
 		
 		var c:de.polygonal.ds.Set<Int> = cast s.clone(true);
-		for (i in itr)
-		{
-			assertEquals(true, c.remove(i));
-		}
+		for (i in itr) assertEquals(true, c.remove(i));
 		assertTrue(c.isEmpty());
 		
 		s.set(6);
@@ -131,10 +108,7 @@ class TestLinkedQueue extends haxe.unit.TestCase
 		
 		var c:de.polygonal.ds.Set<Int> = cast s.clone(true);
 		itr.reset();
-		for (i in itr)
-		{
-			assertEquals(true, c.remove(i));
-		}
+		for (i in itr) assertEquals(true, c.remove(i));
 		assertTrue(c.isEmpty());
 	}
 	
@@ -157,10 +131,7 @@ class TestLinkedQueue extends haxe.unit.TestCase
 				if (val == i) itr.remove();
 			}
 			
-			while (!l.isEmpty())
-			{
-				assertTrue(set.remove(l.dequeue()));
-			}
+			while (!l.isEmpty()) assertTrue(set.remove(l.dequeue()));
 			assertTrue(set.isEmpty());
 			assertEquals(null, untyped l._head);
 			assertEquals(null, untyped l._tail);

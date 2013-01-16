@@ -1,13 +1,10 @@
-﻿import de.polygonal.ds.DLL;
+﻿package test;
+
+import de.polygonal.ds.DLL;
 import de.polygonal.ds.ListSet;
 
 class TestDLLCircular extends haxe.unit.TestCase
 {
-	function new()
-	{
-		super();
-	}
-
 	function testClose()
 	{
 		var list = new DLL<Int>();
@@ -48,8 +45,7 @@ class TestDLLCircular extends haxe.unit.TestCase
 		assertEquals(list.tail.next, list.head);
 		assertEquals(list.head.prev, list.tail);
 		var s:ListSet<Int> = new ListSet<Int>();
-		for (i in list)
-			assertTrue(s.set(i));
+		for (i in list) assertTrue(s.set(i));
 		assertEquals(10, s.size());
 	}
 	
@@ -110,7 +106,6 @@ class TestDLLCircular extends haxe.unit.TestCase
 		
 		assertEquals(list.tail.next, list.head);
 		assertEquals(list.head.prev, list.tail);
-		
 		
 		var list = new DLL<Int>();
 		list.close();
@@ -473,15 +468,10 @@ class TestDLLCircular extends haxe.unit.TestCase
 		var list = new DLL<Int>();
 		list.close();
 		list.append(0);
-		
 		assertEquals('0',list.join('|'));
-		
 		list.append(1);
-		
 		assertEquals('0|1',list.join('|'));
-		
 		list.append(2);
-		
 		assertEquals('0|1|2',list.join('|'));
 	}
 	

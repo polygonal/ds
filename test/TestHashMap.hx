@@ -1,17 +1,10 @@
-﻿import de.polygonal.ds.BitVector;
+﻿package test;
+
 import de.polygonal.ds.HashMap;
 import de.polygonal.ds.Set;
-import haxe.unit.TestCase;
-import de.polygonal.ds.HashMap;
 
-
-class TestHashMap extends TestCase
+class TestHashMap extends haxe.unit.TestCase
 {
-	function new()
-	{
-		super();
-	}
-	
 	function testRemove()
 	{
 		var h = new de.polygonal.ds.HashMap<String, Null<Int>>();
@@ -20,14 +13,11 @@ class TestHashMap extends TestCase
 			h.set('a', 1);
 			h.set('b', 1);
 			h.set('c', 1);
-			
 			h.remove(1);
-			
 			assertFalse(h.has(1));
 			assertFalse(h.hasKey('a'));
 			assertFalse(h.hasKey('b'));
 			assertFalse(h.hasKey('c'));
-			
 			assertEquals(0, h.size());
 		}
 		
@@ -196,7 +186,6 @@ class TestHashMap extends TestCase
 		h.set('a', 1);
 		h.set('b', 2);
 		h.set('c', 3);
-		
 		var s:Set<String> = h.toKeySet();
 		assertEquals(3, s.size());
 		assertTrue(s.contains('a'));
@@ -229,14 +218,12 @@ class TestHashMap extends TestCase
 	function testClone()
 	{
 		var h:HashMap<String, String> = new HashMap<String, String>(true);
-		
 		h.set('key1a', 'val1');
 		h.set('key1b', 'val1');
 		h.set('key2', 'val2');
 		h.set('key3', 'val3');
-			
-		var clone:de.polygonal.ds.HashMap<String, String> = untyped h.clone(true);
 		
+		var clone:de.polygonal.ds.HashMap<String, String> = untyped h.clone(true);
 		assertEquals(clone.get('key1a'), 'val1');
 		assertEquals(clone.get('key1b'), 'val1');
 		assertEquals(clone.get('key2') , 'val2');
@@ -256,18 +243,11 @@ class TestHashMap extends TestCase
 		var c:de.polygonal.ds.Set<Int> = cast s.clone(true);
 		var itr:de.polygonal.ds.ResettableIterator<Int> = cast h.iterator();
 		
-		for (i in itr)
-		{
-			assertEquals(true, c.remove(i));
-		}
+		for (i in itr) assertEquals(true, c.remove(i));
 		
 		itr.reset();
-		
 		var c:de.polygonal.ds.Set<Int> = cast s.clone(true);
-		for (i in itr)
-		{
-			assertEquals(true, c.remove(i));
-		}
+		for (i in itr) assertEquals(true, c.remove(i));
 		
 		var h:HashMap<Int, Int> = new HashMap<Int, Int>(true);
 		var s = new de.polygonal.ds.ListSet<Int>();
@@ -277,22 +257,14 @@ class TestHashMap extends TestCase
 			h.set(key * 10, key);
 		}
 		
-		
 		var c:de.polygonal.ds.Set<Int> = cast s.clone(true);
 		var itr:de.polygonal.ds.ResettableIterator<Int> = cast h.keys();
 		
-		for (key in itr)
-		{
-			assertEquals(true, c.remove(key));
-		}
+		for (key in itr) assertEquals(true, c.remove(key));
 		
 		itr.reset();
-		
 		var c:de.polygonal.ds.Set<Int> = cast s.clone(true);
-		for (i in itr)
-		{
-			assertEquals(true, c.remove(i));
-		}
+		for (i in itr) assertEquals(true, c.remove(i));
 	}
 	
 	function testRemoveIterator()
@@ -306,7 +278,6 @@ class TestHashMap extends TestCase
 			itr.remove();
 		}
 		assertEquals(0, h.size());
-		
 		var h:HashMap<Int, Int> = new HashMap<Int, Int>(true);
 		for (i in 0...10) h.set(i, i);
 		var itr = h.keys();
@@ -317,22 +288,4 @@ class TestHashMap extends TestCase
 		}
 		assertEquals(0, h.size());
 	}
-	
-	/*function testSetAll()
-	{
-		var h1:HashMap<String, String> = new HashMap<String, String>(true);
-		h1.set('key1', 'val1');
-		h1.set('key2', 'val2');
-		
-		var h2:HashMap<String, String> = new HashMap<String, String>(true);
-		h2.set('key3', 'val3');
-		h2.set('key4', 'val4');
-		
-		h1.setAll(h2, true, true);
-		
-		assertEquals(h1.get('key1'), 'val1');
-		assertEquals(h1.get('key2'), 'val2');
-		assertEquals(h1.get('key3'), 'val3');
-		assertEquals(h1.get('key4'), 'val4');
-	}*/
 }
