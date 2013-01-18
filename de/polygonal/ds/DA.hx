@@ -445,24 +445,17 @@ class DA<T> implements Collection<T>
 	}
 	
 	/**
-	 * Swaps the element at the index <code>i</code> with the last element.<br/>
-	 * If followed by <em>popBack()</em>, this allows fast removal if the order of the elements doesn't matter.
+	 * Fast removal of the element at index <code>i</code> if the order of the elements doesn't matter.
 	 * <o>1</o>
 	 * @throws de.polygonal.core.util.AssertError index out of range (debug only).
 	 */
-	inline public function swapWithBack(i:Int):Void
+	inline public function swapPop(i:Int):Void
 	{
 		#if debug
 		D.assert(i >= 0 && i < size(), Sprintf.format('the index %d is out of range %d', [i, size()]));
 		#end
 		
-		var s = size() - 1;
-		if (i < s)
-		{
-			var tmp = back();
-			__set(s, __get(i));
-			__set(i, tmp);
-		}
+		__set(i, __get(--_size));
 	}
 	
 	/**

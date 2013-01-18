@@ -890,23 +890,29 @@ class TestDA extends haxe.unit.TestCase
 		assertTrue(da.isEmpty());
 	}
 	
-	function testSwapWithBack()
+	function testSwapPop()
 	{
 		var da = new DA<Int>();
 		da.pushBack(0);
-		da.pushBack(1);
-		da.swapWithBack(0);
-		assertEquals(da.get(0), 1);
-		assertEquals(da.get(1), 0);
+		da.swapPop(0);
+		assertEquals(0, da.size());
 		
 		var da = new DA<Int>();
-		for (i in 0...4) da.pushBack(i);
+		da.pushBack(0);
+		da.pushBack(1);
+		da.swapPop(0);
+		assertEquals(1, da.size());
+		assertEquals(da.get(0), 1);
 		
-		da.swapWithBack(0);
-		assertEquals(da.get(0), 3);
-		assertEquals(da.get(1), 1);
-		assertEquals(da.get(2), 2);
-		assertEquals(da.get(3), 0);
+		var da = new DA<Int>();
+		da.pushBack(0);
+		da.pushBack(1);
+		da.pushBack(2);
+		da.swapPop(1);
+		
+		assertEquals(2, da.size());
+		assertEquals(da.get(0), 0);
+		assertEquals(da.get(1), 2);
 	}
 }
 
