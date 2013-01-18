@@ -393,6 +393,27 @@ class ArrayUtil
 		return true;
 	}
 	
+	/**
+	 * Splits the input array <code>a</code> storing <code>n</code> elements into smaller chunks, each containing k elements.
+	 * @throws de.polygonal.AssertError <code>n</code> is not a multiple of <code>k</code> (debug only).
+	 */
+	public static function split<T>(a:Array<T>, n:Int, k:Int):Array<Array<T>>
+	{
+		#if debug
+		D.assert(n % k == 0, 'n is not a multiple of k');
+		#end
+		
+		var output = new Array<Array<T>>();
+		var b:Array<T> = null;
+		for (i in 0...n)
+		{
+			if (i % k == 0)
+				output[Std.int(i / k)] = b = [];
+			b.push(a[i]);
+		}
+		return output;
+	}
+	
 	static function _insertionSort(a:Array<Float>, first:Int, k:Int, cmp:Float->Float->Int):Void
 	{
 		for (i in first + 1...first + k)
