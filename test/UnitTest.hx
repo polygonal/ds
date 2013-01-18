@@ -11,6 +11,17 @@ class UnitTest extends haxe.unit.TestRunner
 	{
 		super();
 		
+		#if alchemy
+			#if (flash10 || cpp)
+			add(new test.mem.TestMemoryManager());
+			run();
+			this.cases = new List<haxe.unit.TestCase>();
+			de.polygonal.ds.mem.MemoryManager.free();
+			de.polygonal.ds.mem.MemoryManager.RESERVE_BYTES = 1024 * 1024 * 20;
+			de.polygonal.ds.mem.MemoryManager.BLOCK_SIZE_BYTES = 1024 * 512;
+			#end
+		#end
+		
 		add(new TestArray2());
 		add(new TestArray3());
 		add(new TestArrayedDeque());
@@ -42,16 +53,6 @@ class UnitTest extends haxe.unit.TestRunner
 		add(new TestSLL());
 		add(new TestTree());
 		
-		#if alchemy
-			#if (flash10 || cpp)
-			add(new test.mem.TestMemoryManager());
-			run();
-			this.cases = new List<haxe.unit.TestCase>();
-			de.polygonal.ds.mem.MemoryManager.free();
-			de.polygonal.ds.mem.MemoryManager.RESERVE_BYTES = 1024 * 1024 * 20;
-			de.polygonal.ds.mem.MemoryManager.BLOCK_SIZE_BYTES = 1024 * 512;
-			#end
-		#end
 		add(new test.mem.TestByteMemory());
 		add(new test.mem.TestBitMemory());
 		add(new test.mem.TestShortMemory());
