@@ -49,10 +49,12 @@ If you want to test the latest beta build, you should pull the dev branch and ad
  * modified: swc: moved haxe classes to hx package
  * added: serialization of TreeNode structures (de.polygonal.ds.Serialization)
  * fixed: minor fixes for -D haxe3
- * added: ArrayUtil.equals()
- * added: IntIntHashTable, IntHashTable, HashTable.getAll()
- * fixed: IntIntHashTable.remove()
- * added: BitVector.getBucketAt(), getBuckets()
+ * added: ArrayUtil#equals()
+ * added: IntIntHashTable, IntHashTable, HashTable#getAll()
+ * fixed: IntIntHashTable#remove()
+ * added: BitVector#getBucketAt(), getBuckets()
+ * modified: replaced DA#swapWithBack() with DA#swapPop()
+ * added: ArrayUtil#split()
 
 
 ### 1.37 (released 2012-11-15)
