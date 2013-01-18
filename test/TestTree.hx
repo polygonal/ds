@@ -1,7 +1,6 @@
 ﻿package test;
 
 import de.polygonal.ds.Compare;
-import de.polygonal.ds.Serialization;
 import de.polygonal.ds.TreeBuilder;
 import de.polygonal.ds.TreeNode;
 import de.polygonal.ds.XmlConvert;
@@ -1045,7 +1044,7 @@ class TestTree extends haxe.unit.TestCase
 		d.appendNode(x);
 		d.appendNode(y);
 		
-		var list = Serialization.serializeTree(a);
+		var list = a.serialize();
 		
 		var s = new Serializer();
 		s.serialize(list);
@@ -1055,7 +1054,8 @@ class TestTree extends haxe.unit.TestCase
 		var s2 = new Unserializer(serialized);
 		var list = s2.unserialize();
 		
-		var output = Serialization.unserializeTree(list);
+		var output = new TreeNode<String>(null);
+		output.unserialize(list);
 		
 		assertEquals('a', output.val);
 		assertEquals('b', output.getChildAt(0).val);

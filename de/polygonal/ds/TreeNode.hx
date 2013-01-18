@@ -1841,6 +1841,69 @@ class TreeNode<T> implements Collection<T>
 		}
 	}
 	
+	/**
+	 * Serializes this tree.
+	 * The tree can be rebuild by calling <em>unserialize()</em>.
+	 * @see <a href="http://eli.thegreenplace.net/2011/09/29/an-interesting-tree-serialization-algorithm-from-dwarf/" target="_blank">An interesting tree serialization algorithm from DWARF</a>
+	 * @param node the root of the tree.
+	 * @return a flattened tree.
+	 */
+	public function serialize(node:TreeNode<T> = null, list:Array<{v: T, c:Bool}> = null):Array<{v: T, c:Bool}>
+	{
+		if (node == null) node = this;
+		if (list == null) list = new Array<{v: T, c:Bool}>();
+		
+		if (node.children != null)
+		{
+			list.push({v: node.val, c: true});
+			var c = node.children;
+			while (c != null)
+			{
+				serialize(c, list);
+				c = c.next;
+			}
+            list.push(null);
+		}
+		else
+			list.push({v: node.val, c: false});
+		
+		return list;
+	}
+	
+	/**
+	 * Unserializes a given <code>list</code> into a TreeNode structure.<br/>
+	 * First create a dummy node which will be the root of the unserialized tree, then call <code>unserialize()</code>.
+	 * Example:<br/>
+	 * <pre class="prettyprint">
+	 * var root = new de.polygonal.ds.TreeNode&lt;String&gt;(null);
+	 * root.unserialize(mySerializedTree);
+	 * </pre>
+	 * @param list the flattened tree
+	 * @return the root of the tree.
+	 */
+	public function unserialize(list:Array<{v: T, c:Bool}>):TreeNode<T>
+	{
+		var root = this;
+		root.val = list[0].v;
+		var parentStack:Array<TreeNode<T>> = [root];
+		var s = 1;
+		
+		for (i in 1...list.length)
+		{
+			var item = list[i];
+			if (item != null)
+			{
+				var node = new TreeNode<T>(item.v);
+				parentStack[s - 1].appendNode(node);
+				if (item.c) parentStack[s++] = node;
+			}
+			else
+				s--;
+		}
+		
+		return root;
+	}
+	
 	/*///////////////////////////////////////////////////////
 	// collection
 	///////////////////////////////////////////////////////*/
