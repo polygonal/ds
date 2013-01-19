@@ -102,7 +102,7 @@ class ListSet<T> implements Set<T>
 	
 	/**
 	 * Adds the element <code>x</code> to this set if possible.
-	 * <o>1</o>
+	 * <o>n</o>
 	 * @return true if <code>x</code> was added to this set, false if <code>x</code> already exists.
 	 */
 	public function set(x:T):Bool
