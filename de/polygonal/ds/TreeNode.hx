@@ -365,6 +365,8 @@ class TreeNode<T> implements Collection<T>
 	{
 		if (n == -1) n = _numChildren - i;
 		
+		if (n == 0) return;
+		
 		#if debug
 		D.assert(i >= 0 && i <= _numChildren, Sprintf.format('i index out of range (%d)', [i]));
 		D.assert(n > 0 && n <= _numChildren && (i + n <= _numChildren), Sprintf.format('n out of range (%d)', [n]));
