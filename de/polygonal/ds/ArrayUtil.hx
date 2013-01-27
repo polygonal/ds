@@ -190,7 +190,7 @@ class ArrayUtil
 			return l;
 		else
 		{
-			#if neko
+			#if (neko && !haxe3)
 			return haxe.Int32.toInt(haxe.Int32.complement(haxe.Int32.ofInt(l)));
 			#else
 			return ~l;
@@ -227,7 +227,7 @@ class ArrayUtil
 			return l;
 		else
 		{
-			#if neko
+			#if (neko && !haxe3)
 			return haxe.Int32.toInt(haxe.Int32.complement(haxe.Int32.ofInt(l)));
 			#else
 			return ~l;
@@ -264,7 +264,7 @@ class ArrayUtil
 			return l;
 		else
 		{
-			#if neko
+			#if (neko && !haxe3)
 			return haxe.Int32.toInt(haxe.Int32.complement(haxe.Int32.ofInt(l)));
 			#else
 			return ~l;

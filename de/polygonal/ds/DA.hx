@@ -130,7 +130,7 @@ class DA<T> implements Collection<T>
 		var tmp = _a;
 		_a = ArrayUtil.alloc(size());
 		for (i in 0...size()) __set(i, tmp[i]);
-		for (i in size()...tmp.length) tmp[i] = null;
+		for (i in size()...tmp.length) tmp[i] = cast null;
 	}
 	
 	/**
@@ -261,11 +261,8 @@ class DA<T> implements Collection<T>
 			var newSize = oldSize << 1;
 			_capacity = newSize;
 			
-			//TODO optimize
 			for (i in 0...newSize)
-			{
-				_a[i] = null;
-			}
+				_a[i] = cast null;
 			
 			trace('expanding ' + oldSize + ' => ' + newSize);
 		}

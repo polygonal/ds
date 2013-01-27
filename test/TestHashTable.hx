@@ -767,7 +767,7 @@ class TestHashTable extends haxe.unit.TestCase
 		
 		assertEquals(0, values.length);
 		
-		var a:DA<Int> = h.toDA();
+		var a = h.toDA();
 		
 		var values = [0, 1, 2, 3, 4, 5, 6, 7];
 		for (i in a)

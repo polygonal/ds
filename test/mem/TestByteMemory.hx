@@ -11,7 +11,7 @@ import de.polygonal.ds.mem.MemoryManager;
 
 class TestByteMemory extends haxe.unit.TestCase
 {
-	public function new()
+	function new()
 	{
 		super();
 		

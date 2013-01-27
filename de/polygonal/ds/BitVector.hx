@@ -165,7 +165,11 @@ class BitVector implements Hashable
 		
 		#if neko
 		var p = Std.int(i / 31);
-		_bits[p] = (_bits[p] & ((1 << (i % 31)).ofInt().complement().toInt()));
+			#if haxe3
+			_bits[p] = _bits[p] & (~(1 << (i % 31)));
+			#else
+			_bits[p] = (_bits[p] & ((1 << (i % 31)).ofInt().complement().toInt()));
+			#end
 		#else
 		var p = i >> 5;
 		_bits[p] = _bits[p] & (~(1 << (i & 31)));

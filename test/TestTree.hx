@@ -3,7 +3,6 @@
 import de.polygonal.ds.Compare;
 import de.polygonal.ds.TreeBuilder;
 import de.polygonal.ds.TreeNode;
-import de.polygonal.ds.XmlConvert;
 import haxe.Serializer;
 import haxe.Unserializer;
 
@@ -29,7 +28,7 @@ class TestTree extends haxe.unit.TestCase
 	function testXmlToTreeNode()
 	{
 		var xml = '<root rootAttr=\'rootAttrValue\'><node1 node1Attr1=\'a\' node1Attr2=\'b\'><node2 node2Attr=\'c\'/></node1></root>';
-		var root = XmlConvert.toTreeNode(xml);
+		var root = de.polygonal.ds.XmlConvert.toTreeNode(xml);
 		
 		assertEquals(root.val.name, 'root');
 		assertEquals('rootAttrValue', root.val.attributes.get('rootAttr'));

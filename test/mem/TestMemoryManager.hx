@@ -5,12 +5,10 @@ import de.polygonal.core.math.random.Random;
 import de.polygonal.ds.mem.ByteMemory;
 import de.polygonal.ds.mem.MemoryAccess;
 import de.polygonal.ds.mem.MemoryManager;
-import flash.geom.Rectangle;
-import flash.Lib;
 
 class TestMemoryManager extends haxe.unit.TestCase
 {
-	public function new() 
+	function new()
 	{
 		super();
 		MemoryManager.BLOCK_SIZE_BYTES = 1024;

@@ -103,14 +103,14 @@ class TestIntHashTable extends haxe.unit.TestCase
 	
 	function test()
 	{
-		var h = new IntHashTable<IntHashTableItem>(16);
+		var h = new IntHashTable<E>(16);
 		var key = 0;
 		var keys = new Array<Int>();
 		
 		for (i in 0...32)
 		{
 			keys.push(key);
-			h.set(key, new IntHashTableItem(i));
+			h.set(key, new E(i));
 			key++;
 		}
 		
@@ -765,7 +765,7 @@ class TestIntHashTable extends haxe.unit.TestCase
 		
 		assertEquals(0, values.length);
 		
-		var a:DA<Int> = h.toDA();
+		var a = h.toDA();
 		
 		var values = [0, 1, 2, 3, 4, 5, 6, 7];
 		for (i in a)
@@ -911,7 +911,7 @@ class TestIntHashTable extends haxe.unit.TestCase
 	}
 }
 
-class IntHashTableItem extends HashableItem
+private class E extends HashableItem
 {
 	public var value:Int;
 	

@@ -9,7 +9,7 @@ class TestHeap extends haxe.unit.TestCase
 	
 	var _size:Int;
 	
-	public function new(size = DEFAULT_SIZE)
+	function new(size = DEFAULT_SIZE)
 	{
 		super();
 		_size = size;

@@ -20,7 +20,7 @@ using de.polygonal.ds.Bits;
 
 class TestBitMemory extends haxe.unit.TestCase
 {
-	public function new()
+	function new()
 	{
 		super();
 		

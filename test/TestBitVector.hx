@@ -293,7 +293,12 @@ class TestBitVector extends haxe.unit.TestCase
 		var buckets = [];
 		var c = b.getBuckets(buckets);
 		
+		#if neko
+		assertEquals(3, c); //31bit
+		#else
 		assertEquals(2, c);
+		#end
+		
 		assertEquals(-1, buckets[0]);
 		assertEquals(-1, buckets[1]);
 	}

@@ -28,9 +28,10 @@ class TestArray2 extends haxe.unit.TestCase
 		a.set(2, 2, 1);
 		var success = a.remove(1);
 		assertEquals(true, success);
-		assertEquals(cast null, a.get(0, 0));
-		assertEquals(cast null, a.get(1, 1));
-		assertEquals(cast null, a.get(2, 2));
+		
+		assertEquals(#if (js || neko) null #else 0 #end, a.get(0, 0));
+		assertEquals(#if (js || neko) null #else 0 #end, a.get(1, 1));
+		assertEquals(#if (js || neko) null #else 0 #end, a.get(2, 2));
 	}
 	
 	function testIndexOf()
@@ -141,6 +142,7 @@ class TestArray2 extends haxe.unit.TestCase
 		for (i in 0...a.getH()) assertEquals((a.size()) + i, a.get(1, i));
 	}
 	
+	#if !neko
 	function testAssign()
 	{
 		var a = new Array2<E>(_w, _h);
@@ -160,6 +162,7 @@ class TestArray2 extends haxe.unit.TestCase
 			}
 		}
 	}
+	#end
 	
 	function testFill()
 	{
