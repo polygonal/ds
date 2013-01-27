@@ -5,5 +5,5 @@
 	<tag v="utility"/>
 	<depends name="polygonal-core"/>
 	<description>data structures for games</description>
-	<version name="1.37">see CHANGES</version>
+	<version name="1.38">see CHANGES</version>
 </project>

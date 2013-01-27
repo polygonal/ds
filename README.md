@@ -44,7 +44,7 @@ If you want to test the latest beta build, you should pull the dev branch and ad
 
 ## Changelog
 
-### 1.xx (dev-branch)
+### 1.38 (released 2013-01-27)
 
  * modified: swc: moved haxe classes to hx package
  * added: serialization of TreeNode structures (de.polygonal.ds.Serialization)
@@ -58,7 +58,6 @@ If you want to test the latest beta build, you should pull the dev branch and ad
  * fixed: TreeNode.removeChildren()
  * added: unit tests
  * added: support Neko 2.0 RC (compile with -D neko_v2)
-
 
 ### 1.37 (released 2012-11-15)
 
