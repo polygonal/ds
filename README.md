@@ -55,6 +55,8 @@ If you want to test the latest beta build, you should pull the dev branch and ad
  * added: BitVector#getBucketAt(), getBuckets()
  * modified: replaced DA#swapWithBack() with DA#swapPop()
  * added: ArrayUtil#split()
+ * fixed: TreeNode.removeChildren()
+ * added: unit tests
 
 
 ### 1.37 (released 2012-11-15)
