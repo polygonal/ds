@@ -30,11 +30,12 @@
 package de.polygonal.ds;
 
 import de.polygonal.core.fmt.Sprintf;
+import de.polygonal.core.math.Limits;
 import de.polygonal.core.util.Assert;
 
 using de.polygonal.ds.Bits;
 
-#if neko
+#if (neko && !neko_v2)
 using haxe.Int32;
 #end
 
@@ -123,12 +124,12 @@ class BitVector implements Hashable
 		D.assert(i < capacity(), Sprintf.format('i index out of range (%d)', [i]));
 		#end
 		
-		#if neko
-		var p = Std.int(i / 31);
-		var b = i % 31;
+		#if (neko && !neko_v2)
+		var p = Std.int(i / Limits.INT_BITS);
+		var b = i % Limits.INT_BITS;
 		return ((_bits[p] & (1 << b)) >> b) != 0;
 		#else
-		return ((_bits[i >> 5] & (1 << (i & 31))) >> (i & 31)) != 0;
+		return ((_bits[i >> 5] & (1 << (i & (32 - 1)))) >> (i & (32 - 1))) != 0;
 		#end
 	}
 	
@@ -143,12 +144,12 @@ class BitVector implements Hashable
 		D.assert(i < capacity(), Sprintf.format('i index out of range (%d)', [i]));
 		#end
 		
-		#if neko
-		var p = Std.int(i / 31);
-		_bits[p] = _bits[p] | (1 << (i % 31));
+		#if (neko && !neko_v2)
+		var p = Std.int(i / Limits.INT_BITS);
+		_bits[p] = _bits[p] | (1 << (i % Limits.INT_BITS));
 		#else
 		var p = i >> 5;
-		_bits[p] = _bits[p] | (1 << (i & 31));
+		_bits[p] = _bits[p] | (1 << (i & (32 - 1)));
 		#end
 	}
 	
@@ -163,16 +164,16 @@ class BitVector implements Hashable
 		D.assert(i < capacity(), Sprintf.format('i index out of range (%d)', [i]));
 		#end
 		
-		#if neko
-		var p = Std.int(i / 31);
+		#if (neko && !neko_v2)
+		var p = Std.int(i / Limits.INT_BITS);
 			#if haxe3
-			_bits[p] = _bits[p] & (~(1 << (i % 31)));
+			_bits[p] = _bits[p] & (~(1 << (i % Limits.INT_BITS)));
 			#else
-			_bits[p] = (_bits[p] & ((1 << (i % 31)).ofInt().complement().toInt()));
+			_bits[p] = (_bits[p] & ((1 << (i % Limits.INT_BITS)).ofInt().complement().toInt()));
 			#end
 		#else
 		var p = i >> 5;
-		_bits[p] = _bits[p] & (~(1 << (i & 31)));
+		_bits[p] = _bits[p] & (~(1 << (i & (32 - 1))));
 		#end
 	}
 	
@@ -209,13 +210,13 @@ class BitVector implements Hashable
 		
 		var n = max - min;
 		
-		#if neko
-		if (n < 31)
+		#if (neko && !neko_v2)
+		if (n < Limits.INT_BITS)
 			for (i in min...max) clr(i);
 		else
 		{
-			var r = n % 31;
-			for (i in min...Std.int((max - r) / 31)) _bits[i] = 0;
+			var r = n % Limits.INT_BITS;
+			for (i in min...Std.int((max - r) / Limits.INT_BITS)) _bits[i] = 0;
 			for (i in max - r...max) clr(i);
 		}
 		#else
@@ -223,7 +224,7 @@ class BitVector implements Hashable
 			for (i in min...max) clr(i);
 		else
 		{
-			var r = n & 31;
+			var r = n & (32 - 1);
 			for (i in min...(max - r) >> 5) _bits[i] = 0;
 			for (i in max - r...max) clr(i);
 		}
@@ -245,13 +246,13 @@ class BitVector implements Hashable
 		
 		var n = max - min;
 		
-		#if neko
-		if (n < 31)
+		#if (neko && !neko_v2)
+		if (n < Limits.INT_BITS)
 			for (i in min...max) set(i);
 		else
 		{
-			var r = n % 31;
-			for (i in min...Std.int((max - r) / 31)) _bits[i] = -1;
+			var r = n % Limits.INT_BITS;
+			for (i in min...Std.int((max - r) / Limits.INT_BITS)) _bits[i] = -1;
 			for (i in max - r...max) set(i);
 		}
 		#else
@@ -259,7 +260,7 @@ class BitVector implements Hashable
 			for (i in min...max) set(i);
 		else
 		{
-			var r = n & 31;
+			var r = n & (32 - 1);
 			for (i in min...(max - r) >> 5) _bits[i] = -1;
 			for (i in max - r...max) set(i);
 		}
@@ -311,12 +312,12 @@ class BitVector implements Hashable
 	{
 		if (_bitSize == x) return;
 		
-		#if neko
-		var newSize = Std.int(x / 31);
-		if ((x % 31) > 0) newSize++;
+		#if (neko && !neko_v2)
+		var newSize = Std.int(x / Limits.INT_BITS);
+		if ((x % Limits.INT_BITS) > 0) newSize++;
 		#else
 		var newSize = x >> 5;
-		if ((x & 31) > 0) newSize++;
+		if ((x & (32 - 1)) > 0) newSize++;
 		#end
 		
 		if (_bits == null)
@@ -407,10 +408,16 @@ class BitVector implements Hashable
 		input.bigEndian = bigEndian;
 		#end
 		
+		var k =
 		#if neko
-		var k = neko.NativeString.length(bytes);
+		neko.NativeString.length(bytes);
+		#else
+		bytes.length;
+		#end
+		
+		#if (neko && !neko_v2)
 		_arrSize = Math.ceil(k / 3);
-		_bitSize = _arrSize * 31;
+		_bitSize = _arrSize * Limits.INT_BITS;
 		_bits = #if flash10 new flash.Vector<Int>(_arrSize, true); #else new Array<Int>(); #end
 		for (i in 0..._arrSize) _bits[i] = 0;
 		var index = 0;
@@ -426,7 +433,6 @@ class BitVector implements Hashable
 			}
 		}
 		#else
-		var k = bytes.length;
 		var numBytes = k & 3;
 		var numIntegers = (k - numBytes) >> 2;
 		_arrSize = numIntegers + (numBytes > 0 ? 1 : 0);

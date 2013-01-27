@@ -33,7 +33,7 @@ class UnitTest extends haxe.unit.TestRunner
 		
 		add(new TestBinaryTree());
 		
-		add(new TestBits());			//neko & haxe3 fails
+		add(new TestBits());
 		add(new TestBitVector());
 		add(new TestBST());
 		add(new TestDA());
@@ -61,7 +61,7 @@ class UnitTest extends haxe.unit.TestRunner
 		add(new TestTree());
 		
 		add(new test.mem.TestByteMemory());
-		add(new test.mem.TestBitMemory());	//neko & haxe3 fails
+		add(new test.mem.TestBitMemory());
 		add(new test.mem.TestShortMemory());
 		add(new test.mem.TestFloatMemory());
 		add(new test.mem.TestDoubleMemory());

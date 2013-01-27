@@ -17,7 +17,6 @@ import de.polygonal.ds.mem.MemoryManager;
 
 using de.polygonal.ds.Bits;
 
-
 class TestBitMemory extends haxe.unit.TestCase
 {
 	function new()
@@ -212,7 +211,7 @@ class TestBitMemory extends haxe.unit.TestCase
 		
 		var m:BitMemory = BitMemory.ofBytesData(bytesData);
 		assertEquals(m.size, 32);
-		assertEquals(m.bytes, #if neko 8 #else 4 #end);
+		assertEquals(m.bytes, #if (neko && !neko_v2) 8 #else 4 #end);
 		
 		assertTrue(m.has(0));
 		assertTrue(m.has(1));
@@ -277,8 +276,8 @@ class TestBitMemory extends haxe.unit.TestCase
 		
 		var v:BitVector = BitMemory.toBitVector(mem);
 		
-		assertEquals(#if neko 5 #else 4 #end, v.bucketSize());
-		assertEquals(#if neko (5*31) #else (4*32) #end, v.capacity());
+		assertEquals(#if (neko && !neko_v2) 5 #else 4 #end, v.bucketSize());
+		assertEquals(#if (neko && !neko_v2) (5*31) #else (4*32) #end, v.capacity());
 		
 		for (i in 0...100)
 		{
@@ -361,11 +360,10 @@ class TestBitMemory extends haxe.unit.TestCase
 		for (i in 0...100)
 		{
 			if (Mathematics.isEven(i))
-				assertEquals(1, b.get(i))
+				assertTrue(b.get(i) != 0)
 			else
 				assertEquals(0, b.get(i));
 		}
-		
 		b.free();
 		#if alchemy MemoryManager.free(); #end
     }
@@ -379,10 +377,7 @@ class TestBitMemory extends haxe.unit.TestCase
 			b.clr(i);
 		}
 		for (i in 0...100)
-		{
 			assertFalse(b.has(i));
-		}
-		
 		b.free();
 		#if alchemy MemoryManager.free(); #end
     }

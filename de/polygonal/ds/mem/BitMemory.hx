@@ -30,6 +30,7 @@
 package de.polygonal.ds.mem;
 
 import de.polygonal.core.fmt.Sprintf;
+import de.polygonal.core.math.Limits;
 import de.polygonal.core.util.Assert;
 import de.polygonal.ds.BitVector;
 
@@ -38,7 +39,7 @@ import de.polygonal.core.math.Mathematics;
 import de.polygonal.ds.ArrayUtil;
 #end
 
-#if neko
+#if (neko && !neko_v2)
 using haxe.Int32;
 #end
 
@@ -247,10 +248,10 @@ class BitMemory extends MemoryAccess
 	 */
 	public function new(size:Int, name = '?')
 	{
-		#if neko
-		super(((size % 31) > 0 ? (Std.int(size / 31) + 1) : Std.int(size / 31)) << 2, name);
+		#if (neko && !neko_v2)
+		super(((size % Limits.INT_BITS) > 0 ? (Std.int(size / Limits.INT_BITS) + 1) : Std.int(size / Limits.INT_BITS)) << 2, name);
 		#else
-		super(((size & 31) > 0 ? ((size >> 5) + 1) : (size >> 5)) << 2, name);
+		super(((size & (32 - 1)) > 0 ? ((size >> 5) + 1) : (size >> 5)) << 2, name);
 		#end
 		
 		this.size = size;
@@ -331,7 +332,7 @@ class BitMemory extends MemoryAccess
 		D.assert(newSize >= 0, Sprintf.format('invalid size (%d)', [newSize]));
 		#end
 		
-		var newBytes = ((size & 31) > 0 ? ((size >> 5) + 1) : (size >> 5)) << 2;
+		var newBytes = ((size & (32 - 1)) > 0 ? ((size >> 5) + 1) : (size >> 5)) << 2;
 		
 		#if alchemy
 		super.resize(newBytes);	
@@ -357,12 +358,12 @@ class BitMemory extends MemoryAccess
 	inline public function has(i:Int):Bool
 	{
 		#if alchemy
-		return ((flash.Memory.getI32(getAddr(i)) & (1 << (i & 31))) >> (i & 31)) != 0;
+		return ((flash.Memory.getI32(getAddr(i)) & (1 << (i & (32 - 1)))) >> (i & (32 - 1))) != 0;
 		#else
-			#if neko
-			return (_data[getAddr(i)] & (1 << (i % 31))) >> (i % 31) != 0;
+			#if (neko && !neko_v2)
+			return (_data[getAddr(i)] & (1 << (i % Limits.INT_BITS))) >> (i % Limits.INT_BITS) != 0;
 			#else
-			return (_data[getAddr(i)] & (1 << (i & 31))) >> (i & 31) != 0;
+			return (_data[getAddr(i)] & (1 << (i & (32 - 1)))) >> (i & (32 - 1)) != 0;
 			#end
 		#end
 	}
@@ -375,12 +376,12 @@ class BitMemory extends MemoryAccess
 	inline public function get(i:Int):Int
 	{
 		#if alchemy
-			return ((flash.Memory.getI32(getAddr(i)) & (1 << (i & 31))) >> (i & 31));
+			return ((flash.Memory.getI32(getAddr(i)) & (1 << (i & (32 - 1)))) >> (i & (32 - 1)));
 		#else
-			#if neko
-			return (_data[getAddr(i)] & (1 << (i % 31))) >> (i % 31);
+			#if (neko && !neko_v2)
+			return (_data[getAddr(i)] & (1 << (i % Limits.INT_BITS))) >> (i % Limits.INT_BITS);
 			#else
-			return (_data[getAddr(i)] & (1 << (i & 31))) >> (i & 31);
+			return (_data[getAddr(i)] & (1 << (i & (32 - 1)))) >> (i & (32 - 1));
 			#end
 		#end
 	}
@@ -394,12 +395,12 @@ class BitMemory extends MemoryAccess
 	{
 		var idx = getAddr(i);
 		#if alchemy
-		flash.Memory.setI32(idx, flash.Memory.getI32(idx) | (1 << (i & 31)));
+		flash.Memory.setI32(idx, flash.Memory.getI32(idx) | (1 << (i & (32 - 1))));
 		#else
-			#if neko
-			_data[idx] = _data[idx] | (1 << (i % 31));
+			#if (neko && !neko_v2)
+			_data[idx] = _data[idx] | (1 << (i % Limits.INT_BITS));
 			#else
-			_data[idx] = _data[idx] | (1 << (i & 31));
+			_data[idx] = _data[idx] | (1 << (i & (32 - 1)));
 			#end
 		#end
 	}
@@ -413,12 +414,16 @@ class BitMemory extends MemoryAccess
 	{
 		var idx = getAddr(i);
 		#if alchemy
-		flash.Memory.setI32(idx, flash.Memory.getI32(idx) & ~(1 << (i & 31)));
+		flash.Memory.setI32(idx, flash.Memory.getI32(idx) & ~(1 << (i & (32 - 1))));
 		#else
-			#if neko
-			_data[idx] = _data[idx] & (1 << (i % 31)).ofInt().complement().toInt();
+			#if (neko && !neko_v2)
+				#if haxe3
+				_data[idx] = _data[idx] & (~(1 << (i % Limits.INT_BITS)));
+				#else
+				_data[idx] = _data[idx] & (1 << (i % Limits.INT_BITS)).ofInt().complement().toInt();
+				#end
 			#else
-			_data[idx] = _data[idx] & ~(1 << (i & 31));
+			_data[idx] = _data[idx] & ~(1 << (i & (32 - 1)));
 			#end
 		#end
 	}
@@ -474,8 +479,8 @@ class BitMemory extends MemoryAccess
 		#if alchemy
 		return offset + ((i >> 5) << 2);
 		#else
-			#if neko
-			return (Std.int(i / 31) << 2) >> 2;
+			#if (neko && !neko_v2)
+			return (Std.int(i / Limits.INT_BITS) << 2) >> 2;
 			#else
 			return ((i >> 5) << 2) >> 2;
 			#end

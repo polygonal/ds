@@ -376,8 +376,8 @@ class Bits
 			}
 			return flash.Memory.getI32(cast(1020 - ((((x & -x) * 0x077CB531) >>> 27) << 2), UInt));
 		}
-		#elseif neko
-		var n = 31;
+		#elseif (neko && !neko_v2)
+		var n = Limits.INT_BITS;
 		while (x != 0)
 		{
 			n--;
@@ -423,8 +423,8 @@ class Bits
 	 */
 	inline public static function msb(x:Int):Int
 	{
-		#if neko
-		return 1 << (30 - nlz(x));
+		#if (neko && !neko_v2)
+		return 1 << ((Limits.INT_BITS - 1) - nlz(x));
 		#else
 		x |= (x >> 1);
 		x |= (x >> 2);
