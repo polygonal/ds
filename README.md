@@ -57,6 +57,7 @@ If you want to test the latest beta build, you should pull the dev branch and ad
  * added: ArrayUtil#split()
  * fixed: TreeNode.removeChildren()
  * added: unit tests
+ * added: support Neko 2.0 RC (compile with -D neko_v2)
 
 
 ### 1.37 (released 2012-11-15)
