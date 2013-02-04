@@ -32,6 +32,12 @@ package de.polygonal.ds;
 import de.polygonal.core.fmt.Sprintf;
 import de.polygonal.core.fmt.StringUtil;
 import de.polygonal.ds.TreeNode;
+typedef H =
+#if haxe3
+haxe.ds.StringMap<String>
+#else
+Hash<String>
+#end
 
 /**
  * <p>Helper class for converting xml data to various trees.</p>
@@ -57,7 +63,7 @@ class XmlConvert
 			if (attr != null)
 			{
 				if (info.attributes == null)
-					info.attributes = new Hash();
+					info.attributes = new H();
 				info.attributes.set(attr, xml.get(attr));
 			}
 		}
@@ -83,7 +89,7 @@ class XmlConvert
 						if (attr != null)
 						{
 							if (info.attributes == null)
-								info.attributes = new Hash();
+								info.attributes = new H();
 							info.attributes.set(attr, i.get(attr));
 						}
 					}
@@ -123,7 +129,7 @@ class XmlNodeData
 	public var treeNode:TreeNode<XmlNodeData>;
 	public var name:String;
 	public var value:String;
-	public var attributes:Hash<String>;
+	public var attributes:H;
 	
 	public function new(name:String)
 	{
