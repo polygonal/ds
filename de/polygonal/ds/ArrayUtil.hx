@@ -290,7 +290,7 @@ class ArrayUtil
 			var m = Math;
 			while (--s > 1)
 			{
-				var i = M.int(m.random() * s);
+				var i = Std.int(m.random() * s);
 				var t = a[s];
 				a[s] = a[i];
 				a[i] = t;
@@ -305,7 +305,7 @@ class ArrayUtil
 			var j = 0;
 			while (--s > 1)
 			{
-				var i = M.int(rval[j++] * s);
+				var i = Std.int(rval[j++] * s);
 				var t = a[s];
 				a[s] = a[i];
 				a[i] = t;

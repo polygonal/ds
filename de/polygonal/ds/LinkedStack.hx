@@ -479,7 +479,7 @@ class LinkedStack<T> implements Stack<T>
 			while (s > 1)
 			{
 				s--;
-				var i = M.int(m.random() * s);
+				var i = Std.int(m.random() * s);
 				var node1 = _head;
 				for (j in 0...s) node1 = node1.next;
 				
@@ -502,7 +502,7 @@ class LinkedStack<T> implements Stack<T>
 			while (s > 1)
 			{
 				s--;
-				var i = M.int(rval.get(k++) * s);
+				var i = Std.int(rval.get(k++) * s);
 				var node1 = _head;
 				for (j in 0...s) node1 = node1.next;
 				

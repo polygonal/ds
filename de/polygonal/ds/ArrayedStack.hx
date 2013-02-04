@@ -475,7 +475,7 @@ class ArrayedStack<T> implements Stack<T>
 			var m = Math;
 			while (s > 1)
 			{
-				var i = M.int(m.random() * (--s));
+				var i = Std.int(m.random() * (--s));
 				var t = __get(s);
 				__set(s, __get(i));
 				__set(i, t);
@@ -490,7 +490,7 @@ class ArrayedStack<T> implements Stack<T>
 			var j = 0;
 			while (s > 1)
 			{
-				var i = M.int(rval.get(j++) * (--s));
+				var i = Std.int(rval.get(j++) * (--s));
 				var t = __get(s);
 				__set(s, __get(i));
 				__set(i, t);

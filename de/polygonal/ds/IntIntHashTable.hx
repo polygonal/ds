@@ -619,7 +619,7 @@ class IntIntHashTable implements Map<Int, Int>
 				else
 					__setHash(b, __getData(i + 2));
 				
-				var j = M.int(i / 3);
+				var j = Std.int(i / 3);
 				__setNext(j, _free);
 				_free = j;
 				
@@ -676,7 +676,7 @@ class IntIntHashTable implements Map<Int, Int>
 				{
 					__setData(i0 + 2, __getData(i + 2));
 					
-					var j = M.int(i / 3);
+					var j = Std.int(i / 3);
 					__setNext(j, _free);
 					_free = j;
 					
@@ -783,7 +783,7 @@ class IntIntHashTable implements Map<Int, Int>
 		while (max != 0)
 		{
 			i++;
-			max = M.int(max / 10);
+			max = Std.int(max / 10);
 		}
 		
 		for (key in keys())
@@ -1112,7 +1112,7 @@ class IntIntHashTable implements Map<Int, Int>
 				else
 					__setHash(b, __getData(i + 2));
 				
-				var j = M.int(i / 3);
+				var j = Std.int(i / 3);
 				__setNext(j, _free);
 				_free = j;
 				
@@ -1169,7 +1169,7 @@ class IntIntHashTable implements Map<Int, Int>
 				{
 					__setData(i0 + 2, __getData(i + 2));
 					
-					var j = M.int(i / 3);
+					var j = Std.int(i / 3);
 					__setNext(j, _free);
 					_free = j;
 					

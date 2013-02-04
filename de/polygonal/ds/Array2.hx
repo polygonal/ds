@@ -148,7 +148,7 @@ class Array2<T> implements Collection<T>
 		D.assert(i >= 0 && i < size(), Sprintf.format('index out of range (%d)', [i]));
 		#end
 		
-		return __get(getIndex(i % _w, M.int(i / _w)));
+		return __get(getIndex(i % _w, Std.int(i / _w)));
 	}
 	
 	/**
@@ -156,13 +156,13 @@ class Array2<T> implements Collection<T>
 	 * <o>1</o>
 	 * @throws de.polygonal.core.util.AssertError index out of range (debug only).
 	 */
-	inline public function setAtIndex(i:Int, x:T):Void
+	inline public function setAtIndex(i:Int, val:T):Void
 	{
 		#if debug
 		D.assert(i >= 0 && i < size(), Sprintf.format('index out of range (%d)', [i]));
 		#end
 		
-		__set(getIndex(i % _w, M.int(i / _w)), x);
+		__set(getIndex(i % _w, Std.int(i / _w)), val);
 	}
 	
 	/**
@@ -275,7 +275,7 @@ class Array2<T> implements Collection<T>
 		D.assert(cell != null, 'cell is null');
 		#end
 		
-		cell.y = M.int(i / _w);
+		cell.y = Std.int(i / _w);
 		cell.x = i % _w;
 		return cell;
 	}
@@ -832,7 +832,7 @@ class Array2<T> implements Collection<T>
 			var m = Math;
 			while (--s > 1)
 			{
-				var i = M.int(m.random() * s);
+				var i = Std.int(m.random() * s);
 				var t = __get(s);
 				__set(s, __get(i));
 				__set(i, t);
@@ -847,7 +847,7 @@ class Array2<T> implements Collection<T>
 			var j = 0;
 			while (--s > 1)
 			{
-				var i = M.int(rval.get(j++) * s);
+				var i = Std.int(rval.get(j++) * s);
 				var t = __get(s);
 				__set(s, __get(i));
 				__set(i, t);

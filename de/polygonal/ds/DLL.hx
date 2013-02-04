@@ -937,7 +937,7 @@ class DLL<T> implements Collection<T>
 			while (s > 1)
 			{
 				s--;
-				var i = M.int(m.random() * s);
+				var i = Std.int(m.random() * s);
 				var node1 = head;
 				for (j in 0...s) node1 = node1.next;
 				
@@ -960,7 +960,7 @@ class DLL<T> implements Collection<T>
 			while (s > 1)
 			{
 				s--;
-				var i = M.int(rval.get(j++) * s);
+				var i = Std.int(rval.get(j++) * s);
 				var node1 = head;
 				for (j in 0...s) node1 = node1.next;
 				

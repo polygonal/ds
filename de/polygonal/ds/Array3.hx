@@ -271,8 +271,8 @@ class Array3<T> implements Collection<T>
 		
 		var s = _w * _h;
 		var t = i % s;
-		cell.z = M.int(i / s);
-		cell.y = M.int(t / _w);
+		cell.z = Std.int(i / s);
+		cell.y = Std.int(t / _w);
 		cell.x = t % _w;
 		return cell;
 	}

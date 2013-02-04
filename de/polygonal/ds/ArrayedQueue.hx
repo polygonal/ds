@@ -418,7 +418,7 @@ class ArrayedQueue<T> implements Queue<T>
 			while (s > 1)
 			{
 				s--;
-				var i = (M.int(m.random() * s) + _front) % _capacity;
+				var i = (Std.int(m.random() * s) + _front) % _capacity;
 				var t = __get(s);
 				__set(s, __get(i));
 				__set(i, t);
@@ -434,7 +434,7 @@ class ArrayedQueue<T> implements Queue<T>
 			while (s > 1)
 			{
 				s--;
-				var i = (M.int(rval.get(j++) * s) + _front) % _capacity;
+				var i = (Std.int(rval.get(j++) * s) + _front) % _capacity;
 				var t = __get(s);
 				__set(s, __get(i));
 				__set(i, t);

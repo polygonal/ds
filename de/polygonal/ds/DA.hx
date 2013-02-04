@@ -1041,7 +1041,7 @@ class DA<T> implements Collection<T>
 			var m = Math;
 			while (--s > 1)
 			{
-				var i = M.int(m.random() * s);
+				var i = Std.int(m.random() * s);
 				var t = __get(s);
 				__cpy(s, i);
 				__set(i, t);
@@ -1056,7 +1056,7 @@ class DA<T> implements Collection<T>
 			var j = 0;
 			while (--s > 1)
 			{
-				var i = M.int(rval.get(j++) * s);
+				var i = Std.int(rval.get(j++) * s);
 				var t = __get(s);
 				__cpy(s, i);
 				__set(i, t);
