@@ -44,6 +44,10 @@ If you want to test the latest beta build, you should pull the dev branch and ad
 
 ## Changelog
 
+## 1.xx (dev-branch)
+
+ * fixed: swc files: get rid of warnings for Flash Builder 4.7 + falcon compiler
+
 ### 1.38 (released 2013-01-27)
 
  * modified: swc: moved haxe classes to hx package
