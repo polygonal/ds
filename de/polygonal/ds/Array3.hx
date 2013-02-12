@@ -616,8 +616,7 @@ class Array3<T> implements Collection<T>
 	 */
 	public function free():Void
 	{
-		var NULL:Null<T> = null;
-		for (i in 0...size()) __set(i, NULL);
+		for (i in 0...size()) __set(i, null);
 		_a = null;
 		_iterator = null;
 	}
@@ -644,13 +643,12 @@ class Array3<T> implements Collection<T>
 	 */
 	public function remove(x:T):Bool
 	{
-		var NULL:Null<T> = null;
 		var found = false;
 		for (i in 0...size())
 		{
 			if (__get(i) == x)
 			{
-				__set(i, NULL);
+				__set(i, null);
 				found = true;
 			}
 		}

@@ -123,8 +123,7 @@ class SLL<T> implements Collection<T>
 		
 		if (reservedSize > 0)
 		{
-			var NULL:Null<T> = null;
-			_headPool = _tailPool = new SLLNode<T>(NULL, this);
+			_headPool = _tailPool = new SLLNode<T>(cast null, this);
 		}
 		
 		head = tail = null;
@@ -865,13 +864,12 @@ class SLL<T> implements Collection<T>
 	 */
 	public function free():Void
 	{
-		var NULL:Null<T> = null;
 		var node = head;
 		for (i in 0..._size)
 		{
 			var next = node.next;
 			node.next = null;
-			node.val = NULL;
+			node.val = cast null;
 			node = next;
 		}
 		head = tail = null;
@@ -881,7 +879,7 @@ class SLL<T> implements Collection<T>
 		{
 			var next = node.next;
 			node.next = null;
-			node.val = NULL;
+			node.val = cast null;
 			node = next;
 		}
 		
@@ -1451,8 +1449,7 @@ class SLL<T> implements Collection<T>
 			#end
 			
 			_tailPool = _tailPool.next = x;
-			var NULL:Null<T> = null;
-			x.val = NULL;
+			x.val = cast null;
 			x.next = null;
 			_poolSize++;
 		}

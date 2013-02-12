@@ -126,8 +126,7 @@ class DLL<T> implements Collection<T>
 		
 		if (reservedSize > 0)
 		{
-			var NULL:Null<T> = null;
-			_headPool = _tailPool = new DLLNode<T>(NULL, this);
+			_headPool = _tailPool = new DLLNode<T>(cast null, this);
 		}
 		
 		head = tail = null;
@@ -1025,13 +1024,12 @@ class DLL<T> implements Collection<T>
 	 */
 	public function free():Void
 	{
-		var NULL:Null<T> = null;
 		var node = head;
 		for (i in 0..._size)
 		{
 			var next = node.next;
 			node.next = node.prev = null;
-			node.val = NULL;
+			node.val = cast null;
 			node = next;
 		}
 		head = tail = null;
@@ -1041,7 +1039,7 @@ class DLL<T> implements Collection<T>
 		{
 			var next = node.next;
 			node.next = null;
-			node.val = NULL;
+			node.val = cast null;
 			node = next;
 		}
 		
@@ -1656,8 +1654,7 @@ class DLL<T> implements Collection<T>
 		if (_reservedSize > 0 && _poolSize < _reservedSize)
 		{
 			_tailPool = _tailPool.next = x;
-			var NULL:Null<T> = null;
-			x.val = NULL;
+			x.val = cast null;
 			
 			#if debug
 			D.assert(x.next == null, 'x.next == null');

@@ -161,8 +161,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 		else
 			_a = new Array<T>();
 		
-		var NULL:Null<T> = null;
-		__set(0, cast NULL);
+		__set(0, cast null);
 		_size = 0;
 		
 		#if (debug && flash)
@@ -184,8 +183,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 		
 		var tmp = _a;
 		_a = ArrayUtil.alloc(size() + 1);
-		var NULL:Null<T> = null;
-		__set(0, cast NULL);
+		__set(0, cast null);
 		for (i in 1...size() + 1) __set(i, tmp[i]);
 		for (i in size() + 1...tmp.length) tmp[i] = null;
 	}
@@ -203,8 +201,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 		
 		_a = ArrayUtil.alloc(x + 1);
 		
-		var NULL:Null<T> = null;
-		__set(0, cast NULL);
+		__set(0, cast null);
 		if (size() < x)
 		{
 			for (i in 1...size() + 1)
@@ -422,8 +419,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	 */
 	public function free():Void
 	{
-		var NULL:Null<T> = null;
-		for (i in 0..._a.length) __set(i, NULL);
+		for (i in 0..._a.length) __set(i, cast null);
 		_a = null;
 		
 		if (_iterator != null)
@@ -497,8 +493,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	{
 		if (purge)
 		{
-			var NULL:Null<T> = null;
-			for (i in 1..._a.length) __set(i, NULL);
+			for (i in 1..._a.length) __set(i, cast null);
 		}
 		
 		#if (debug && flash)

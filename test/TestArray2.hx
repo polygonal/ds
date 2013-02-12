@@ -29,9 +29,14 @@ class TestArray2 extends haxe.unit.TestCase
 		var success = a.remove(1);
 		assertEquals(true, success);
 		
-		assertEquals(#if (js || neko) null #else 0 #end, a.get(0, 0));
-		assertEquals(#if (js || neko) null #else 0 #end, a.get(1, 1));
-		assertEquals(#if (js || neko) null #else 0 #end, a.get(2, 2));
+		var x = a.get(0, 0);
+		assertEquals(#if (js || neko) null #else 0 #end, x);
+		
+		var x = a.get(1, 1);
+		assertEquals(#if (js || neko) null #else 0 #end, x);
+		
+		var x = a.get(2, 2);
+		assertEquals(#if (js || neko) null #else 0 #end, x);
 	}
 	
 	function testIndexOf()

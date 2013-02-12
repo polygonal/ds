@@ -22,10 +22,8 @@ class UnitTest extends haxe.unit.TestRunner
 		#end
 		#end
 		
-		//cpp crash with dce-no, cpp + generic fails compiling
-		
-		add(new TestArray2());			//cpp and --no-inline: testRemove() fails
-		add(new TestArray3());			//cpp and --no-inline: testRemove() fails
+		add(new TestArray2());
+		add(new TestArray3());
 		add(new TestArrayedDeque());
 		add(new TestArrayedQueue());
 		add(new TestArrayedStack());

@@ -1928,8 +1928,7 @@ class TreeNode<T> implements Collection<T>
 			}
 		}
 		
-		var NULL:Null<T> = null;
-		val      = NULL;
+		val      = cast null;
 		prev     = null;
 		next     = null;
 		children = null;
@@ -2001,11 +2000,10 @@ class TreeNode<T> implements Collection<T>
 				node = hook;
 			}
 			
-			var NULL:Null<T> = null;
-			val              = NULL;
-			parent           = null;
-			children         = null;
-			_tail            = null;
+			val      = cast null;
+			parent   = null;
+			children = null;
+			_tail    = null;
 		}
 		else
 			children = null;

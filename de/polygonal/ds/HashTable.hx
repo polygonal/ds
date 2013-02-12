@@ -306,9 +306,8 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	 */
 	public function pack():Void
 	{
-		var NULL:Null<T> = null;
 		for (i in 0...getCapacity())
-			if (_keys[i] != null) _vals[i] = NULL;
+			if (_keys[i] != null) _vals[i] = cast null;
 	}
 	
 	/**
@@ -544,10 +543,9 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	 */
 	public function free():Void
 	{
-		var NULL:Null<T> = null;
 		for (i in 0...size())
 		{
-			_vals[i] = NULL;
+			_vals[i] = cast null;
 			_keys[i] = null;
 		}
 		_vals = null;
@@ -613,12 +611,11 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		_h.clear(purge);
 		for (i in 0...getCapacity()) _keys[i] = null;
 		
-		var NULL:Null<T> = null;
 		if (purge)
 		{
 			for (i in 0...getCapacity())
 			{
-				_vals[i] = NULL;
+				_vals[i] = cast null;
 				_keys[i] = null;
 			}
 			

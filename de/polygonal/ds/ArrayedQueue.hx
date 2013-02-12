@@ -247,8 +247,7 @@ class ArrayedQueue<T> implements Queue<T>
 		D.assert(_t0 == _t1, 'dispose() is only allowed directly after dequeue()');
 		#end
 		
-		var NULL:Null<T> = null;
-		__set((_front == 0 ? _capacity : _front) - 1, NULL);
+		__set((_front == 0 ? _capacity : _front) - 1, cast null);
 	}
 	
 	/**
@@ -530,7 +529,6 @@ class ArrayedQueue<T> implements Queue<T>
 	{
 		if (isEmpty()) return false;
 		
-		var NULL:Null<T> = null;
 		var s = _size;
 		var found = false;
 		while (_size > 0)
@@ -541,7 +539,7 @@ class ArrayedQueue<T> implements Queue<T>
 				if (__get((i + _front) % _capacity) == x)
 				{
 					found = true;
-					__set((i + _front) % _capacity, NULL);
+					__set((i + _front) % _capacity, cast null);
 					
 					if (i == 0)
 					{
@@ -558,7 +556,7 @@ class ArrayedQueue<T> implements Queue<T>
 						
 						for (j in i0...i1)
 							__set(j % _capacity, __get((j + 1) % _capacity));
-						__set(i1 % _capacity, NULL);
+						__set(i1 % _capacity, cast null);
 						
 						_size--;
 					}
@@ -599,8 +597,7 @@ class ArrayedQueue<T> implements Queue<T>
 		if (purge)
 		{
 			var i = _front;
-			var NULL:Null<T> = null;
-			for (j in 0..._size) __set(i++ % _capacity, NULL);
+			for (j in 0..._size) __set(i++ % _capacity, cast null);
 			
 			if (_isResizable && _sizeLevel > 0)
 			{

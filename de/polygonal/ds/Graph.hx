@@ -1038,7 +1038,6 @@ class Graph<T> implements Collection<T>
 	 */
 	public function free():Void
 	{
-		var NULL:Null<T> = null;
 		var node = _nodeList;
 		while (node != null)
 		{
@@ -1096,7 +1095,6 @@ class Graph<T> implements Collection<T>
 	public function remove(x:T):Bool
 	{
 		var found = false;
-		var NULL:Null<T> = null;
 		var node = _nodeList;
 		while (node != null)
 		{
@@ -1105,7 +1103,7 @@ class Graph<T> implements Collection<T>
 			if (node.val == x)
 			{
 				unlink(node);
-				node.val = NULL;
+				node.val = cast null;
 				node.next = node.prev = null;
 				node.arcList = null;
 				found = true;
@@ -1128,7 +1126,6 @@ class Graph<T> implements Collection<T>
 	{
 		if (purge)
 		{
-			var NULL:Null<T> = null;
 			var node = _nodeList;
 			while (node != null)
 			{

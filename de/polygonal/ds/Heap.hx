@@ -158,8 +158,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 		else
 			_a = new Array<T>();
 		
-		var NULL:Null<T> = null;
-		__set(0, cast NULL);
+		__set(0, cast null);
 		_size = 0;
 		_iterator = null;
 		
@@ -180,10 +179,9 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 		_map.clear();
 		#end
 		
-		var NULL:Null<T> = null;
 		var tmp = _a;
 		_a = ArrayUtil.alloc(size() + 1);
-		__set(0, NULL);
+		__set(0, cast null);
 		for (i in 1...size() + 1)
 		{
 			__set(i, tmp[i]);
@@ -192,7 +190,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 			_map.set(tmp[i], true);
 			#end
 		}
-		for (i in size() + 1...tmp.length) tmp[i] = NULL;
+		for (i in size() + 1...tmp.length) tmp[i] = cast null;
 	}
 	
 	/**
@@ -207,8 +205,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 		var tmp = _a;
 		_a = ArrayUtil.alloc(x + 1);
 		
-		var NULL:Null<T> = null;
-		__set(0, cast NULL);
+		__set(0, cast null);
 		if (size() < x)
 		{
 			for (i in 1...size() + 1)
@@ -485,8 +482,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	 */
 	public function free():Void
 	{
-		var NULL:Null<T> = null;
-		for (i in 0..._a.length) __set(i, NULL);
+		for (i in 0..._a.length) __set(i, cast null);
 		_a = null;
 		
 		if (_iterator != null)
@@ -562,8 +558,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 		
 		if (purge)
 		{
-			var NULL:Null<T> = null;
-			for (i in 1..._a.length) __set(i, NULL);
+			for (i in 1..._a.length) __set(i, cast null);
 		}
 		_size = 0;
 	}

@@ -309,8 +309,7 @@ class ArrayedStack<T> implements Stack<T>
 		D.assert(_t0 == _t1, 'dispose() is only allowed directly after pop()');
 		#end
 		
-		var NULL:Null<T> = null;
-		__set(_top, NULL);
+		__set(_top, cast null);
 	}
 	
 	/**
@@ -541,8 +540,7 @@ class ArrayedStack<T> implements Stack<T>
 	 */
 	public function free():Void
 	{
-		var NULL:Null<T> = null;
-		for (i in 0..._a.length) __set(i, NULL);
+		for (i in 0..._a.length) __set(i, cast null);
 		_a = null;
 		_iterator = null;
 	}
@@ -570,7 +568,6 @@ class ArrayedStack<T> implements Stack<T>
 	{
 		if (isEmpty()) return false;
 		
-		var NULL:Null<T> = null;
 		var found = false;
 		while (_top > 0)
 		{
@@ -589,7 +586,7 @@ class ArrayedStack<T> implements Stack<T>
 						__cpy(p++, p);
 						#end
 					}
-					__set(--_top, NULL);
+					__set(--_top, cast null);
 					found = true;
 					break;
 				}
@@ -610,8 +607,7 @@ class ArrayedStack<T> implements Stack<T>
 	{
 		if (purge)
 		{
-			var NULL:Null<T> = null;
-			for (i in 0..._a.length) __set(i, NULL);
+			for (i in 0..._a.length) __set(i, cast null);
 		}
 		_top = 0;
 	}

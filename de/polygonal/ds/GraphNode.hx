@@ -112,8 +112,7 @@ class GraphNode<T> implements Hashable
 	 */
 	public function free():Void
 	{
-		var NULL:Null<T> = null;
-		val = NULL;
+		val = cast  null;
 		next = prev = null;
 		arcList = null;
 		_graph = null;

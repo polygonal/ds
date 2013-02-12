@@ -111,8 +111,7 @@ class LinkedDeque<T> implements Deque<T>
 		_head         = null;
 		_tail         = null;
 		_iterator     = null;
-		var NULL:Null<T> = null;
-		_headPool = _tailPool = new LinkedDequeNode<T>(NULL);
+		_headPool = _tailPool = new LinkedDequeNode<T>(cast null);
 		reuseIterator = false;
 	}
 	
@@ -399,13 +398,12 @@ class LinkedDeque<T> implements Deque<T>
 	 */
 	public function free():Void
 	{
-		var NULL:Null<T> = null;
 		var node = _head;
 		while (node != null)
 		{
 			var next = node.next;
 			node.next = node.prev = null;
-			node.val = NULL;
+			node.val = cast null;
 			node = next;
 		}
 		
@@ -416,7 +414,7 @@ class LinkedDeque<T> implements Deque<T>
 		{
 			var next = node.next;
 			node.next = node.prev = null;
-			node.val = NULL;
+			node.val = cast null;
 			node = next;
 		}
 		
@@ -485,7 +483,6 @@ class LinkedDeque<T> implements Deque<T>
 	{
 		if (purge)
 		{
-			var NULL:Null<T> = null;
 			var node = _head;
 			while (node != null)
 			{
@@ -501,7 +498,7 @@ class LinkedDeque<T> implements Deque<T>
 				{
 					var next = node.next;
 					node.next = node.prev = null;
-					node.val = NULL;
+					node.val = cast null;
 					node = next;
 				}
 			}
@@ -614,9 +611,8 @@ class LinkedDeque<T> implements Deque<T>
 		copy._size         = _size;
 		copy._reservedSize = _reservedSize;
 		copy._poolSize     = _poolSize;
-		var NULL:Null<T>   = null;
-		copy._headPool     = new LinkedDequeNode<T>(NULL);
-		copy._tailPool     = new LinkedDequeNode<T>(NULL);
+		copy._headPool     = new LinkedDequeNode<T>(cast null);
+		copy._tailPool     = new LinkedDequeNode<T>(cast null);
 		
 		if (assign)
 		{
@@ -750,8 +746,7 @@ class LinkedDeque<T> implements Deque<T>
 				if (nullify)
 				{
 					x.prev = x.next = null;
-					var NULL:Null<T> = null;
-					x.val = NULL;
+					x.val = cast null;
 				}
 			}
 		}

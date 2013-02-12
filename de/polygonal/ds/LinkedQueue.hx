@@ -118,8 +118,7 @@ class LinkedQueue<T> implements Queue<T>
 		
 		if (reservedSize > 0)
 		{
-			var NULL:Null<T> = null;
-			_headPool = _tailPool = new LinkedQueueNode<T>(NULL);
+			_headPool = _tailPool = new LinkedQueueNode<T>(cast null);
 		}
 		else
 		{
@@ -372,13 +371,12 @@ class LinkedQueue<T> implements Queue<T>
 	 */
 	public function free():Void
 	{
-		var NULL:Null<T> = null;
 		var node = _head;
 		while (node != null)
 		{
 			var next = node.next;
 			node.next = null;
-			node.val = NULL;
+			node.val = cast null;
 			node = next;
 		}
 		
@@ -389,7 +387,7 @@ class LinkedQueue<T> implements Queue<T>
 		{
 			var next = node.next;
 			node.next = null;
-			node.val = NULL;
+			node.val = cast null;
 			node = next;
 		}
 		
@@ -690,8 +688,7 @@ class LinkedQueue<T> implements Queue<T>
 		if (_reservedSize > 0 && _poolSize < _reservedSize)
 		{
 			_tailPool = _tailPool.next = x;
-			var NULL:Null<T> = null;
-			x.val = NULL;
+			x.val = cast null;
 			x.next = null;
 			_poolSize++;
 		}

@@ -844,8 +844,7 @@ class DA<T> implements Collection<T>
 	 */
 	public function free():Void
 	{
-		var NULL:Null<T> = null;
-		for (i in 0..._a.length) __set(i, NULL);
+		for (i in 0..._a.length) __set(i, cast null);
 		_a = null;
 		_iterator = null;
 	}
@@ -908,10 +907,8 @@ class DA<T> implements Collection<T>
 	inline public function clear(purge = false):Void
 	{
 		if (purge)
-		{
-			var NULL:Null<T> = null;
-			for (i in 0..._a.length) __set(i, NULL);
-		}
+			for (i in 0..._a.length)
+				__set(i, cast null);
 		_size = 0;
 	}
 	

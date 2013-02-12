@@ -906,7 +906,7 @@ class Array2<T> implements Collection<T>
 	 */
 	public function free():Void
 	{
-		for (i in 0...size()) __set(i, cast null);
+		for (i in 0...size()) __set(i, null);
 		_a = null;
 		_iterator = null;
 	}
@@ -938,7 +938,7 @@ class Array2<T> implements Collection<T>
 		{
 			if (__get(i) == x)
 			{
-				__set(i, cast null);
+				__set(i, null);
 				found = true;
 			}
 		}
@@ -953,7 +953,7 @@ class Array2<T> implements Collection<T>
 	 */
 	public function clear(purge = false):Void
 	{
-		for (i in 0...size()) __set(i, cast null);
+		for (i in 0...size()) __set(i, null);
 	}
 	
 	/**

@@ -80,8 +80,7 @@ implements haxe.rtti.Generic
 	 */
 	public function free():Void
 	{
-		var NULL:Null<T> = null;
-		val = NULL;
+		val = cast null;
 		next = prev = null;
 		_list = null;
 	}

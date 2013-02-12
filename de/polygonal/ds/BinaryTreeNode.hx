@@ -652,8 +652,7 @@ class BinaryTreeNode<T> implements Collection<T>
 		if (hasL()) l.free();
 		if (hasR()) r.free();
 		
-		var NULL:Null<T> = null;
-		val = NULL;
+		val = null;
 		r = l = p = null;
 	}
 	
@@ -715,8 +714,7 @@ class BinaryTreeNode<T> implements Collection<T>
 			if (hasR()) r.clear(purge);
 			
 			l = r = p = null;
-			var NULL:Null<T> = null;
-			val = NULL;
+			val = null;
 		}
 		else
 		{
