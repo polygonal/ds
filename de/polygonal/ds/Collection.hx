@@ -32,7 +32,11 @@ package de.polygonal.ds;
 /**
  * <p>A collection is an object that stores other objects (its elements).</p>
  */
+#if haxe3
+interface Collection<T> extends Hashable
+#else
 interface Collection<T> implements Hashable
+#end
 {
 	/**
 	 * Deconstructs this collection by explicitly nullifying all internal references for GC'ing used resources.<br/>

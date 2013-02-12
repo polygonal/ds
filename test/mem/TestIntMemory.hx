@@ -1,7 +1,6 @@
 ﻿package test.mem;
 
 import de.polygonal.ds.mem.IntMemory;
-import haxe.Int32;
 import haxe.io.Bytes;
 import haxe.io.BytesInput;
 import haxe.io.BytesOutput;
@@ -221,7 +220,7 @@ class TestIntMemory extends haxe.unit.TestCase
 		#if haxe3
 		output.writeInt32(i % 10);
 		#else
-		output.writeInt32(Int32.ofInt(i % 10));
+		output.writeInt32(haxe.Int32.ofInt(i % 10));
 		#end
 		
 		var m = IntMemory.ofBytesData(output.getBytes().getData());

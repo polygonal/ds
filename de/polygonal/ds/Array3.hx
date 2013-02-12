@@ -33,7 +33,7 @@ import de.polygonal.core.fmt.Sprintf;
 import de.polygonal.core.math.Mathematics;
 import de.polygonal.core.util.Assert;
 
-private typedef Array3Friend<T> = 
+private typedef Array3Friend<T> =
 {
 	private var _a:Array<T>;
 	private var _w:Int;

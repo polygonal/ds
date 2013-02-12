@@ -34,7 +34,7 @@ import de.polygonal.core.math.Mathematics;
 import de.polygonal.core.util.Assert;
 import de.polygonal.ds.Bits;
 
-private typedef MemoryAccessFriend = 
+private typedef MemoryAccessFriend =
 {
 	private var _memory:MemorySegment;
 }

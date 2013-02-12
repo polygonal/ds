@@ -581,7 +581,11 @@ class TestGraph extends haxe.unit.TestCase
 	}
 }
 
+#if haxe3
+private class E extends de.polygonal.ds.HashableItem implements de.polygonal.ds.Visitable
+#else
 private class E extends de.polygonal.ds.HashableItem, implements de.polygonal.ds.Visitable
+#end
 {
 	public var f:Int->Bool->Void;
 	public var id:Int;

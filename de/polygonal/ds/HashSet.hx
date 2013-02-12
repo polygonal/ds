@@ -41,7 +41,7 @@ import de.polygonal.core.fmt.Sprintf;
 import de.polygonal.core.math.Limits;
 import de.polygonal.core.util.Assert;
 
-private typedef HashSetFriend<T> = 
+private typedef HashSetFriend<T> =
 {
 	private var _h:IntIntHashTable;
 	private var _vals:Array<T>;

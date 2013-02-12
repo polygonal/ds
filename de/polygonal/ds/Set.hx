@@ -32,7 +32,11 @@ package de.polygonal.ds;
 /**
  * <p>A collection that contains no duplicate elements.</p>
  */
+#if haxe3
+interface Set<T> extends Collection<T>
+#else
 interface Set<T> implements Collection<T>
+#end
 {
 	/**
 	 * Returns true if this set contains the element <code>x</code>. 

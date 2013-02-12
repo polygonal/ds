@@ -41,7 +41,7 @@ import de.polygonal.core.fmt.Sprintf;
 import de.polygonal.core.math.Mathematics;
 import de.polygonal.core.util.Assert;
 
-private typedef HashTableFriend<K, T> = 
+private typedef HashTableFriend<K, T> =
 {
 	private var _h:IntIntHashTable;
 	private var _keys:Array<K>;

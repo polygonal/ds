@@ -2,7 +2,6 @@
 
 import de.polygonal.ds.mem.FloatMemory;
 
-import haxe.Int32;
 import haxe.io.Bytes;
 import haxe.io.BytesData;
 import haxe.io.BytesInput;

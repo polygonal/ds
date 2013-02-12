@@ -43,7 +43,7 @@ import de.polygonal.core.math.Limits;
 import de.polygonal.core.math.Mathematics;
 import de.polygonal.core.util.Assert;
 
-private typedef IntHashTableFriend<T> = 
+private typedef IntHashTableFriend<T> =
 {
 	private var _h:IntIntHashTable;
 	

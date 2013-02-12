@@ -34,7 +34,11 @@ package de.polygonal.ds;
  * <p>The first element added to the queue will be the first one to be removed.</p>
  * <p>The "opposite" of a queue is a stack.</p>
  */
+#if haxe3
+interface Queue<T> extends Collection<T>
+#else
 interface Queue<T> implements Collection<T>
+#end
 {
 	/**
 	 * Inserts the element <code>x</code> at the back of the queue.

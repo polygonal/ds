@@ -33,7 +33,11 @@ package de.polygonal.ds;
  * <p>An object that maps keys to values.</p>
  * <p>This map allows duplicate keys.</p>
  */
+#if haxe3
+interface Map<K, T> extends Collection<T>
+#else
 interface Map<K, T> implements Collection<T>
+#end
 {
 	/**
 	 * Returns true if this map contains a mapping for the element <code>x</code>.

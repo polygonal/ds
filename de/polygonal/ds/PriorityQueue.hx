@@ -33,7 +33,7 @@ import de.polygonal.core.fmt.Sprintf;
 import de.polygonal.core.math.Limits;
 import de.polygonal.core.util.Assert;
 
-private typedef PriorityQueueFriend<T> = 
+private typedef PriorityQueueFriend<T> =
 {
 	private var _a:Array<T>;
 	private var _size:Int;

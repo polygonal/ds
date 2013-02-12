@@ -36,7 +36,7 @@ import de.polygonal.core.util.Assert;
 import de.polygonal.ds.HashKey;
 import de.polygonal.ds.Itr;
 
-private typedef DynamicObjectPoolFriend<T> = 
+private typedef DynamicObjectPoolFriend<T> =
 {
 	private var _pool:Array<T>;
 	private var _size:Int;

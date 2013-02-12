@@ -34,7 +34,7 @@ import de.polygonal.core.math.Limits;
 import de.polygonal.core.math.Mathematics;
 import de.polygonal.core.util.Assert;
 
-private typedef DAFriend<T> = 
+private typedef DAFriend<T> =
 {
 	private var _a:Array<T>;
 	private var _size:Int;

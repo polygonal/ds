@@ -532,7 +532,11 @@ class TestHeap extends haxe.unit.TestCase
 	}
 }
 
+#if haxe3
+private class E1 implements de.polygonal.ds.Heapable<E1> implements de.polygonal.ds.Cloneable<E1>
+#else
 private class E1 implements de.polygonal.ds.Heapable<E1>, implements de.polygonal.ds.Cloneable<E1>
+#end
 {
 	public var position:Int;
 	

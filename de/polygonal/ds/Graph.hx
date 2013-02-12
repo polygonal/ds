@@ -1403,7 +1403,7 @@ class Graph<T> implements Collection<T>
 	}
 }
 
-private typedef GraphFriend<T> = 
+private typedef GraphFriend<T> =
 {
 	private var _nodeList:GraphNode<T>;
 }

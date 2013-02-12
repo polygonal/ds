@@ -37,7 +37,7 @@ import de.polygonal.core.util.Assert;
 'The HashMap class is only available for flash9+'
 #end
 
-private typedef HashMapFriend<K, T> = 
+private typedef HashMapFriend<K, T> =
 {
 	private var _map:flash.utils.Dictionary;
 }

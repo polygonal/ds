@@ -6,7 +6,6 @@ import de.polygonal.core.math.Mathematics;
 import de.polygonal.ds.Bits;
 import de.polygonal.ds.BitVector;
 import de.polygonal.ds.mem.BitMemory;
-import haxe.Int32;
 import haxe.io.Bytes;
 import haxe.io.BytesInput;
 import haxe.io.BytesOutput;
@@ -204,7 +203,7 @@ class TestBitMemory extends haxe.unit.TestCase
 		#if haxe3
 		b.writeInt32(i);
 		#else
-		b.writeInt32(Int32.ofInt(i));
+		b.writeInt32(haxe.Int32.ofInt(i));
 		#end
 		
 		var bytesData = b.getBytes().getData();

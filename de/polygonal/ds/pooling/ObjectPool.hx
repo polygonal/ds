@@ -35,7 +35,7 @@ import de.polygonal.ds.Hashable;
 import de.polygonal.ds.HashKey;
 import de.polygonal.ds.Itr;
 
-private typedef ObjectPoolFriend<T> = 
+private typedef ObjectPoolFriend<T> =
 {
 	private var _pool:Array<T>;
 	private var _size:Int;
