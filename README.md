@@ -45,12 +45,15 @@ If you want to test the latest beta build, you should pull the dev branch and ad
 ## Changelog
 
 ## 1.xx (dev-branch)
+_supports Haxe 2.10 & Haxe 3.00 r6189_
 
  * fixed: swc files: get rid of warnings for Flash Builder 4.7 + falcon compiler
+ * fixed: cpp + blackberry target
+ * fixed: some Haxe3 fixes
 
 ### 1.38 (released 2013-01-27)
 
- * modified: swc: moved haxe classes to hx package
+ * modified: swc: moved Haxe classes to hx package
  * added: serialization of TreeNode structures (de.polygonal.ds.Serialization)
  * fixed: minor fixes for -D haxe3
  * added: ArrayUtil#equals()
