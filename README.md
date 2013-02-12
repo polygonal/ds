@@ -44,7 +44,7 @@ If you want to test the latest beta build, you should pull the dev branch and ad
 
 ## Changelog
 
-## 1.xx (dev-branch)
+### 1.39 (released 2013-02-12)
 _supports Haxe 2.10 & Haxe 3.00 r6189_
 
  * fixed: swc files: get rid of warnings for Flash Builder 4.7 + falcon compiler
