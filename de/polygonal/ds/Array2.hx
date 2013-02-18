@@ -45,10 +45,13 @@ private typedef Array2Friend<T> =
  * <p><o>Worst-case running time in Big O notation</o></p>
  */
 
-#if (cpp && generic)
+#if (generic && cpp && haxe3)
 @:generic
 #end
 class Array2<T> implements Collection<T>
+#if (generic && cpp && !haxe3)
+, implements haxe.rtti.Generic
+#end
 {
 	/**
 	 * A unique identifier for this object.<br/>
@@ -86,10 +89,6 @@ class Array2<T> implements Collection<T>
 		_iterator     = null;
 		key           = HashKey.next();
 		reuseIterator = false;
-		
-		#if (cpp && generic)
-		ArrayUtil.fill(_a, cast null, size());
-		#end
 	}
 	
 	/**
@@ -427,10 +426,6 @@ class Array2<T> implements Collection<T>
 		var t = _a;
 		_a = ArrayUtil.alloc(width * height);
 		
-		#if (cpp && generic)
-		ArrayUtil.fill(_a, cast null, width * height);
-		#end
-		
 		var minX = width  < _w ? width  : _w;
 		var minY = height < _h ? height : _h;
 		
@@ -557,11 +552,6 @@ class Array2<T> implements Collection<T>
 		#end
 		
 		var t = _w * _h++;
-		
-		#if (cpp && generic)
-		for (i in 0..._w) _a[t + i] = cast null;
-		#end
-		
 		for (i in 0..._w) __set(t + i, input[i]);
 	}
 	
@@ -578,11 +568,6 @@ class Array2<T> implements Collection<T>
 		#end
 		
 		var t = size();
-		
-		#if (cpp && generic)
-		for (i in 0..._h) _a[t + i] = cast null;
-		#end
-		
 		var l = t + _h;
 		var i = _h - 1;
 		var j = _h;
@@ -614,12 +599,7 @@ class Array2<T> implements Collection<T>
 		D.assert(input.length >= getW(), 'insufficient input values');
 		#end
 		
-		#if (cpp && generic)
-		var t = _w * _h++;
-		for (i in 0..._w) _a[t + i] = cast null;
-		#else
 		_h++;
-		#end
 		
 		var y = size();
 		while (y-- > _w)
@@ -644,11 +624,6 @@ class Array2<T> implements Collection<T>
 		#end
 		
 		var t = size();
-		
-		#if (cpp && generic)
-		for (i in 0..._h) _a[t + i] = cast null;
-		#end
-		
 		var l = t + _h;
 		var i = _h - 1;
 		var j = _h;
@@ -906,7 +881,7 @@ class Array2<T> implements Collection<T>
 	 */
 	public function free():Void
 	{
-		for (i in 0...size()) __set(i, null);
+		for (i in 0...size()) __set(i, cast null);
 		_a = null;
 		_iterator = null;
 	}
@@ -938,7 +913,7 @@ class Array2<T> implements Collection<T>
 		{
 			if (__get(i) == x)
 			{
-				__set(i, null);
+				__set(i, cast null);
 				found = true;
 			}
 		}
@@ -953,7 +928,7 @@ class Array2<T> implements Collection<T>
 	 */
 	public function clear(purge = false):Void
 	{
-		for (i in 0...size()) __set(i, null);
+		for (i in 0...size()) __set(i, cast null);
 	}
 	
 	/**
@@ -1001,19 +976,8 @@ class Array2<T> implements Collection<T>
 	public function toArray():Array<T>
 	{
 		var a:Array<T> = ArrayUtil.alloc(size());
-		
-		#if (cpp && generic)
-		ArrayUtil.fill(a, cast null, size());
-		#end
-		
 		for (i in 0...size())
-		{
-			#if (cpp && generic)
-			untyped a.__unsafe_set(i, __get(i));
-			#else
 			a[i] = __get(i);
-			#end
-		}
 		return a;
 	}
 	
@@ -1080,19 +1044,11 @@ class Array2<T> implements Collection<T>
 	
 	inline function __get(i:Int)
 	{
-		#if (cpp && generic)
-		return untyped _a.__unsafe_get(i);
-		#else
 		return _a[i];
-		#end
 	}
 	inline function __set(i:Int, x:T)
 	{
-		#if (cpp && generic)
-		untyped _a.__unsafe_set(i, x);
-		#else
 		_a[i] = x;
-		#end
 	}
 }
 
@@ -1108,7 +1064,6 @@ class Array2Iterator<T> implements de.polygonal.ds.Itr<T>
 #end
 {
 	var _f:Array2<T>;
-	
 	var _a:Array<T>;
 	var _i:Int;
 	var _s:Int;
@@ -1134,11 +1089,7 @@ class Array2Iterator<T> implements de.polygonal.ds.Itr<T>
 	
 	inline public function next():T
 	{
-		#if (cpp && generic)
-		return untyped _a.__unsafe_get(_i++);
-		#else
 		return _a[_i++];
-		#end
 	}
 	
 	inline public function remove():Void
@@ -1147,12 +1098,7 @@ class Array2Iterator<T> implements de.polygonal.ds.Itr<T>
 		#if debug
 		D.assert(_i > 0, 'call next() before removing an element');
 		#end
-		
-		#if (cpp && generic)
-		untyped _a.__unsafe_set(_i - 1, null);
-		#else
-		_a[_i - 1] = null;
-		#end
+		_a[_i - 1] = cast null;
 	}
 	
 	inline function __a<T>(f:Array2Friend<T>) return f._a
