@@ -118,7 +118,7 @@ class BinaryTreeNode<T> implements Collection<T>
 		{
 			if (process == null)
 			{
-				var v:Visitable = untyped val;
+				var v:Dynamic = val;
 				var run = v.visit(false, userData);
 				if (run && hasL()) run = _preorderRecursiveVisitable(l, userData);
 				if (run && hasR()) _preorderRecursiveVisitable(r, userData);
@@ -142,7 +142,7 @@ class BinaryTreeNode<T> implements Collection<T>
 				while (top != 0)
 				{
 					var node = stack[--top];
-					var v:Visitable = untyped node.val;
+					var v:Dynamic = node.val;
 					if (!v.visit(false, userData))
 						return;
 					if (node.hasR())
@@ -193,7 +193,7 @@ class BinaryTreeNode<T> implements Collection<T>
 					if (!_inorderRecursiveVisitable(l, userData))
 						return;
 				
-				var v:Visitable = untyped val;
+				var v:Dynamic = val;
 				if (!v.visit(false, userData)) return;
 				if (hasR())
 					_inorderRecursiveVisitable(r, userData);
@@ -230,13 +230,13 @@ class BinaryTreeNode<T> implements Collection<T>
 					node = stack[--top];
 					while (top != 0 && node.r == null)
 					{
-						var v:Visitable = untyped node.val;
+						var v:Dynamic = node.val;
 						if (!v.visit(false, userData))
 							return;
 						node = stack[--top];
 					}
 					
-					var v:Visitable = untyped node.val;
+					var v:Dynamic = node.val;
 					if (!v.visit(false, userData))
 						return;
 					node = (top != 0) ? stack[--top] : null;
@@ -299,7 +299,7 @@ class BinaryTreeNode<T> implements Collection<T>
 					if (!_postorderRecursiveVisitable(r, userData))
 						return;
 				
-				var v:Visitable = untyped val;
+				var v:Dynamic = val;
 				v.visit(false, userData);
 			}
 			else
@@ -328,7 +328,7 @@ class BinaryTreeNode<T> implements Collection<T>
 			
 			if (process == null)
 			{
-				var v:Visitable = null;
+				var v:Dynamic = null;
 				while (top != 0)
 				{
 					var node = stack[top - 1];
@@ -340,7 +340,7 @@ class BinaryTreeNode<T> implements Collection<T>
 							stack[top++] = node.r;
 						else
 						{
-							v = untyped node.val;
+							v = node.val;
 							if (!v.visit(false, userData))
 							{
 								#if debug
@@ -571,8 +571,8 @@ class BinaryTreeNode<T> implements Collection<T>
 	
 	function _preorderRecursiveVisitable(node:BinaryTreeNode<T>, userData:Dynamic):Bool
 	{
-		var v:Visitable = untyped node.val;
-		var run = untyped v.visit(false, userData);
+		var v:Dynamic = node.val;
+		var run = v.visit(false, userData);
 		if (run && node.hasL()) run = _preorderRecursiveVisitable(node.l, userData);
 		if (run && node.hasR()) run = _preorderRecursiveVisitable(node.r, userData);
 		return run;
@@ -595,7 +595,7 @@ class BinaryTreeNode<T> implements Collection<T>
 		if (node.hasL())
 			if (!_inorderRecursiveVisitable(node.l, userData))
 				return false;
-		var v:Visitable = untyped node.val;
+		var v:Dynamic = node.val;
 		if (!v.visit(false, userData))
 			return false;
 		if (node.hasR())
@@ -623,7 +623,7 @@ class BinaryTreeNode<T> implements Collection<T>
 		if (node.hasR())
 			if (!_postorderRecursiveVisitable(node.r, userData))
 				return false;
-		var v:Visitable = untyped node.val;
+		var v:Dynamic = node.val;
 		return v.visit(false, userData);
 	}
 	
@@ -652,7 +652,7 @@ class BinaryTreeNode<T> implements Collection<T>
 		if (hasL()) l.free();
 		if (hasR()) r.free();
 		
-		val = null;
+		val = cast null;
 		r = l = p = null;
 	}
 	
@@ -714,7 +714,7 @@ class BinaryTreeNode<T> implements Collection<T>
 			if (hasR()) r.clear(purge);
 			
 			l = r = p = null;
-			val = null;
+			val = cast null;
 		}
 		else
 		{
@@ -799,7 +799,6 @@ class BinaryTreeNode<T> implements Collection<T>
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{
 		var stack = new Array<BinaryTreeNode<T>>();
-		
 		var copy = new BinaryTreeNode<T>(copier != null ? copier(val) : val);
 		stack[0] = this;
 		stack[1] = copy;
@@ -828,7 +827,7 @@ class BinaryTreeNode<T> implements Collection<T>
 		else
 		if (copier == null)
 		{
-			var t:Cloneable<T> = null;
+			var t:Dynamic = null;
 			while (top > 0)
 			{
 				var c = stack[--top];
@@ -839,7 +838,7 @@ class BinaryTreeNode<T> implements Collection<T>
 					D.assert(Std.is(n.r.val, Cloneable), Sprintf.format('element is not of type Cloneable (%s)', [n.r.val]));
 					#end
 					
-					t = untyped n.r.val;
+					t = cast n.r.val;
 					c.setR(t.clone());
 					stack[top++] = n.r;
 					stack[top++] = c.r;
@@ -850,7 +849,7 @@ class BinaryTreeNode<T> implements Collection<T>
 					D.assert(Std.is(n.l.val, Cloneable), Sprintf.format('element is not of type Cloneable (%s)', [n.l.val]));
 					#end
 					
-					t = untyped n.l.val;
+					t = cast n.l.val;
 					c.setL(t.clone());
 					stack[top++] = n.l;
 					stack[top++] = c.l;
