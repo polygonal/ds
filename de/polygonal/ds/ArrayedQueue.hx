@@ -133,10 +133,6 @@ class ArrayedQueue<T> implements Queue<T>
 		_iterator     = null;
 		key           = HashKey.next();
 		reuseIterator = false;
-		
-		#if (cpp && generic)
-		ArrayUtil.fill(_a, cast null, _capacity);
-		#end
 	}
 	
 	/**
@@ -698,13 +694,7 @@ class ArrayedQueue<T> implements Queue<T>
 		if (assign)
 		{
 			for (i in 0..._size)
-			{
-				#if (cpp && generic)
-				untyped t.__unsafe_set(i, __get(i));
-				#else
 				t[i] = __get(i);
-				#end
-			}
 		}
 		else
 		if (copier == null)
@@ -734,38 +724,21 @@ class ArrayedQueue<T> implements Queue<T>
 	inline function _pack(newSize:Int)
 	{
 		var tmp:Array<T> = ArrayUtil.alloc(newSize);
-		//#if (cpp && generic)
-		//for (i in 0..._size)
-		//{
-			//tmp.__unsafe_set(i, __get(_front++));
-			//if (_front == _capacity) _front = 0;
-		//}
-		//#else
 		for (i in 0..._size)
 		{
 			tmp[i] = __get(_front++);
 			if (_front == _capacity) _front = 0;
 		}
-		//#end
-		
 		_a = tmp;
 	}
 	
 	inline function __get(i:Int)
 	{
-		#if (cpp && generic)
-		return untyped _a.__unsafe_get(i);
-		#else
 		return _a[i];
-		#end
 	}
 	inline function __set(i:Int, x:T)
 	{
-		#if (cpp && generic)
-		untyped _a.__unsafe_set(i, x);
-		#else
 		_a[i] = x;
-		#end
 	}
 }
 
@@ -811,11 +784,7 @@ class ArrayedQueueIterator<T> implements de.polygonal.ds.Itr<T>
 	
 	inline public function next():T
 	{
-		#if (cpp && generic)
-		return untyped _a.__unsafe_get((_i++ + _front) % _capacity);
-		#else
 		return _a[(_i++ + _front) % _capacity];
-		#end
 	}
 	
 	inline public function remove():Void
@@ -823,12 +792,7 @@ class ArrayedQueueIterator<T> implements de.polygonal.ds.Itr<T>
 		#if debug
 		D.assert(_i > 0, 'call next() before removing an element');
 		#end
-		
-		#if (cpp && generic)
-		untyped _f.remove(_a.__unsafe_get(((_i - 1) + _front) % _capacity));
-		#else
 		_f.remove(_a[((_i - 1) + _front) % _capacity]);
-		#end
 	}
 	
 	inline function __a<T>(f:ArrayedQueueFriend<T>) return f._a
