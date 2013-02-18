@@ -58,9 +58,16 @@ class TestDA extends haxe.unit.TestCase
 		assertEquals(1, untyped l.__get(1));
 		assertEquals(2, untyped l.__get(2));
 		l.pack();
+		
+		#if (cpp && generic)
+		assertEquals(0, untyped l.__get(0));
+		assertEquals(0, untyped l.__get(1));
+		assertEquals(0, untyped l.__get(2));
+		#else
 		assertEquals(#if (flash9 || flash10) 0 #else null #end, untyped l.__get(0));
 		assertEquals(#if (flash9 || flash10) 0 #else null #end, untyped l.__get(1));
 		assertEquals(#if (flash9 || flash10) 0 #else null #end, untyped l.__get(2));
+		#end
 	}
 	
 	function testSwap()

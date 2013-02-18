@@ -63,10 +63,6 @@ class DA<T> implements Collection<T>
 	var _size:Int;
 	var _iterator:DAIterator<T>;
 	
-	#if (cpp && generic)
-	var _capacity:Int;
-	#end
-	
 	/**
 	 * The maximum allowed size of this dense array.<br/>
 	 * Once the maximum size is reached, adding an element will fail with an error (debug only).<br/>
@@ -111,11 +107,6 @@ class DA<T> implements Collection<T>
 		
 		key = HashKey.next();
 		reuseIterator = false;
-		
-		//#if (cpp && generic)
-		//_capacity = reservedSize;
-		//ArrayUtil.fill(_a, null, reservedSize);
-		//#end
 	}
 	
 	/**
@@ -225,14 +216,7 @@ class DA<T> implements Collection<T>
 		#end
 		
 		__set(i, x);
-		if (i >= _size)
-		{
-			_size++;
-			
-			//#if (cpp && generic)
-			//_expand();
-			//#end
-		}
+		if (i >= _size) _size++;
 	}
 	
 	/**
@@ -250,40 +234,6 @@ class DA<T> implements Collection<T>
 		cpy(i, j);
 		set(j, tmp);
 	}
-	
-	#if (cpp && generic)
-	inline function _expand():Void
-	{
-		if (_size == _capacity)
-		{
-			//_sizeLevel++;
-			var oldSize = _capacity;
-			var newSize = oldSize << 1;
-			_capacity = newSize;
-			
-			for (i in 0...newSize)
-				_a[i] = cast null;
-			
-			trace('expanding ' + oldSize + ' => ' + newSize);
-		}
-	}
-	
-	inline function _shrink():Void
-	{
-		//if (_sizeLevel > 0)
-		//{
-			if (_size == (_capacity >> 2))
-			{
-				//_sizeLevel--;
-				var oldSize = _capacity;
-				var newSize = oldSize >> 1; 
-				_capacity = newSize;
-				
-				trace('shrink ' + oldSize + ' => ' + newSize, oldSize, newSize);
-			}
-		//}
-	}
-	#end
 	
 	/**
 	 * Replaces the element at index <code>i</code> with the element from index <code>j</code>.
@@ -330,11 +280,6 @@ class DA<T> implements Collection<T>
 	{
 		var x = get(_size - 1);
 		_size--;
-		
-		//#if (cpp && generic)
-		//_shrink();
-		//#end
-		
 		return x;
 	}
 	
@@ -399,14 +344,8 @@ class DA<T> implements Collection<T>
 			#end
 		}
 		
-		#if (cpp && generic)
-		_expand();
 		__set(i, x);
 		_size++;
-		#else
-		__set(i, x);
-		_size++;
-		#end
 	}
 	
 	/**
@@ -433,11 +372,6 @@ class DA<T> implements Collection<T>
 			#end
 		}
 		_size--;
-		
-		#if (cpp && generic)
-		_shrink();
-		#end
-		
 		return x;
 	}
 	
@@ -1155,9 +1089,9 @@ class DA<T> implements Collection<T>
 			D.assert(Std.is(__get(i2), Comparable), Sprintf.format('element is not of type Comparable (%s)', [Std.string(__get(i2))]));
 			#end
 			
-			var t0 = cast(__get(i0), Comparable<Dynamic>);
-			var t1 = cast(__get(i1), Comparable<Dynamic>);
-			var t2 = cast(__get(i2), Comparable<Dynamic>);
+			var t0:Dynamic = cast(__get(i0), Comparable<Dynamic>);
+			var t1:Dynamic = cast(__get(i1), Comparable<Dynamic>);
+			var t2:Dynamic = cast(__get(i2), Comparable<Dynamic>);
 			
 			var mid;
 			var t = t0.compare(t2);
@@ -1175,7 +1109,7 @@ class DA<T> implements Collection<T>
 			D.assert(Std.is(__get(mid), Comparable), Sprintf.format('element is not of type Comparable (%s)', [Std.string(__get(mid))]));
 			#end
 			
-			var pivot = cast(__get(mid), Comparable<Dynamic>);
+			var pivot:Dynamic = cast(__get(mid), Comparable<Dynamic>);
 			
 			__cpy(mid, first);
 			
@@ -1259,27 +1193,17 @@ class DA<T> implements Collection<T>
 	
 	inline function __get(i:Int)
 	{
-		//#if (cpp && generic)
-		//return untyped _a.__unsafe_get(i);
-		//#else
 		return _a[i];
-		//#end
 	}
+	
 	inline function __set(i:Int, x:T)
 	{
-		//#if (cpp && generic)
-		//untyped _a.__unsafe_set(i, x);
-		//#else
 		_a[i] = x;
-		//#end
 	}
+	
 	inline function __cpy(i:Int, j:Int)
 	{
-		//#if (cpp && generic)
-		//untyped _a.__unsafe_set(i, _a.__unsafe_get(j));
-		//#else
 		_a[i] = _a[j];
-		//#end
 	}
 }
 
