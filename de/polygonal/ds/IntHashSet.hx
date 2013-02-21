@@ -853,20 +853,6 @@ class IntHashSet implements Set<Int>
 	#end
 	
 	/**
-	 * Returns an unordered dense array containing all elements in this set.
-	 */
-	public function toDA():DA<Int>
-	{
-		var a = new DA<Int>(size());
-		for (i in 0..._capacity)
-		{
-			var v = __getData(i << 1);
-			if (v != VAL_ABSENT) a.pushBack(v);
-		}
-		return a;
-	}
-	
-	/**
 	 * Duplicates this hash set by creating a deep copy.<br/>
 	 * The <code>assign</code> and <code>copier</code> parameters are ignored.
 	 */

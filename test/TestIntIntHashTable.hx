@@ -739,11 +739,9 @@ class TestIntIntHashTable extends haxe.unit.TestCase
 		
 		l.sort(function(a, b) { return a - b; } );
 		
-		var a:DA<Int> = l.toDA();
-		for (i in 0...a.size())
-		{
-			assertEquals(i, a.get(i));
-		}
+		var a:Array<Int> = l.toArray();
+		for (i in 0...a.length)
+			assertEquals(i, a[i]);
 		
 		assertEquals(8, i);
 	}
@@ -774,46 +772,6 @@ class TestIntIntHashTable extends haxe.unit.TestCase
 		assertEquals(0, values.length);
 		
 		var a = h.toArray();
-		var values = [0, 1, 2, 3, 4, 5, 6, 7];
-		for (i in a)
-		{
-			var found = false;
-			for (j in 0...8)
-			{
-				if (values[j] == i)
-				{
-					values.remove(i);
-					found = true;
-				}
-			}
-			
-			assertTrue(found);
-		}
-		
-		assertEquals(0, values.length);
-		
-		var a = h.toDA();
-		
-		var values = [0, 1, 2, 3, 4, 5, 6, 7];
-		for (i in a)
-		{
-			var found = false;
-			for (j in 0...8)
-			{
-				if (values[j] == i)
-				{
-					values.remove(i);
-					found = true;
-				}
-			}
-			
-			assertTrue(found);
-		}
-		
-		assertEquals(0, values.length);
-		
-		var a = h.toDA();
-		
 		var values = [0, 1, 2, 3, 4, 5, 6, 7];
 		for (i in a)
 		{

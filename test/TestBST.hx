@@ -315,8 +315,8 @@ class TestBST extends haxe.unit.TestCase
 		var set = new ListSet<E>();
 		for (i in bst) set.set(i);
 		
-		var arr = bst.toDA();
-		assertEquals(bst.size(), arr.size());
+		var arr = bst.toArray();
+		assertEquals(bst.size(), arr.length);
 		for (i in arr) assertEquals(true, set.remove(i));
 		assertTrue(set.isEmpty());
 	}

@@ -566,16 +566,6 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	#end
 	
 	/**
-	 * Returns an unordered dense array containing all elements in this priority queue.
-	 */
-	public function toDA():DA<T>
-	{
-		var a = new DA<T>(size());
-		for (i in 1...size() + 1) a.pushBack(__get(i));
-		return a;
-	}
-	
-	/**
 	 * Duplicates this priority queue. Supports shallow (structure only) and deep copies (structure & elements).
 	 * @param assign if true, the <code>copier</code> parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.<br/>
 	 * If false, the <em>clone()</em> method is called on each element. <warn>In this case all elements have to implement <em>Cloneable</em>.</warn>

@@ -915,35 +915,6 @@ class ArrayedDeque<T> implements Deque<T>
 	#end
 	
 	/**
-	 * Returns a dense array containing all elements in this deque in the natural order.
-	 */
-	public function toDA():DA<T>
-	{
-		var a = new DA<T>(size());
-		if (_tailBlockIndex == 0)
-		{
-			for (j in _head + 1..._tail) a.pushBack(_headBlock[j]);
-		}
-		else
-		if (_tailBlockIndex == 1)
-		{
-			for (j in _head + 1..._blockSize) a.pushBack(_headBlock[j]);
-			for (j in 0..._tail) a.pushBack(_tailBlock[j]);
-		}
-		else
-		{
-			for (j in _head + 1..._blockSize) a.pushBack(_headBlock[j]);
-			for (j in 1..._tailBlockIndex)
-			{
-				var block = _blocks[j];
-				for (k in 0..._blockSize) a.pushBack(block[k]);
-			}
-			for (j in 0..._tail) a.pushBack(_tailBlock[j]);
-		}
-		return a;
-	}
-	
-	/**
 	 * Duplicates this deque. Supports shallow (structure only) and deep copies (structure & elements).
 	 * @param assign if true, the <code>copier</code> parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.<br/>
 	 * If false, the <em>clone()</em> method is called on each element. <warn>In this case all elements have to implement <em>Cloneable</em>.</warn>

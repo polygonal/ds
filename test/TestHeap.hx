@@ -500,11 +500,8 @@ class TestHeap extends haxe.unit.TestCase
 		for (i in 0...10) data[i] = i;
 		for (i in 0...10) h.add(new E1(data[i]));
 		
-		var v = h.toDA();
-		assertEquals(v.size(), 10);
-		
 		var a = h.toArray();
-		assertEquals(a.length, 10);
+		assertEquals(10, a.length);
 	}
 	
 	function uniqueRandomArray():Array<Int>

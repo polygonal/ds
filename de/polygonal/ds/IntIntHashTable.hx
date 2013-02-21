@@ -1422,20 +1422,6 @@ class IntIntHashTable implements Map<Int, Int>
 	#end
 	
 	/**
-	 * Returns an unordered dense array containing all values in this hash table. 
-	 */
-	public function toDA():DA<Int>
-	{
-		var a = new DA<Int>(size());
-		for (i in 0..._capacity)
-		{
-			var v = __getData((i * 3) + 1);
-			if (v != VAL_ABSENT) a.pushBack(v);
-		}
-		return a;
-	}
-	
-	/**
 	 * Duplicates this hash table by creating a deep copy.<br/>
 	 * The <code>assign</code> and <code>copier</code> parameters are ignored.
 	 */

@@ -107,11 +107,6 @@ interface Collection<T> implements Hashable
 	#end
 	
 	/**
-	 * Returns a dense array storing all elements in this collection. 
-	 */
-	function toDA():DA<T>;
-	
-	/**
 	 * Duplicates this collection. Supports shallow (structure only) and deep copies (structure & elements).<br/>
 	 * Example:<br/>
 	 * <pre class="prettyprint">

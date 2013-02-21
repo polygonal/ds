@@ -447,16 +447,6 @@ class HashMap<K, T> implements Map<K, T>
 	#end
 	
 	/**
-	 * Returns an unordered dense array containing all values in this hash map.
-	 */
-	public function toDA():DA<T>
-	{
-		var a = new DA<T>(size());
-		for (i in this) a.pushBack(i);
-		return a;
-	}
-	
-	/**
 	 * Duplicates this hash map either by creating a shallow or deep copy.
 	 * @param assign if true, the <code>copier</code> parameter is ignored and
 	 * primitive elements are copied by value whereas objects are copied by reference.<br/>

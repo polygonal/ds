@@ -1101,15 +1101,6 @@ class TestSLL extends haxe.unit.TestCase
 		for (i in a) assertEquals(a[i], i);
 	}
 	
-	function testDenseArray()
-	{
-		var list = new SLL<Int>();
-		for (i in 0...10) list.append(i);
-		var a:DA<Int> = list.toDA();
-		assertEquals(list.size(), a.size());
-		for (i in a) assertEquals(a.get(i), i);
-	}
-	
 	function testClear()
 	{
 		var list = new SLL<Int>();

@@ -345,33 +345,6 @@ class TestLinkedDeque extends haxe.unit.TestCase
 		assertEquals(16, a.length);
 	}
 	
-	function testToDA()
-	{
-		//2
-		var d = createDequeInt();
-		for (i in 0...2) d.pushBack(i);
-		var a = d.toDA();
-		for (i in 0...a.size())
-			assertEquals(a.get(i), d.popFront());
-		assertEquals(2, a.size());
-		
-		//4
-		var d = createDequeInt();
-		for (i in 0...4) d.pushBack(i);
-		var a = d.toDA();
-		for (i in 0...a.size())
-			assertEquals(a.get(i), d.popFront());
-		assertEquals(4, a.size());
-		
-		//16
-		var d = createDequeInt();
-		for (i in 0...16) d.pushBack(i);
-		var a = d.toDA();
-		for (i in 0...a.size())
-			assertEquals(a.get(i), d.popFront());
-		assertEquals(16, a.size());
-	}
-	
 	function testRemoveCase1()
 	{
 		//work to back case2

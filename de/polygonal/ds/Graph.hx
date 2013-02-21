@@ -416,15 +416,15 @@ class Graph<T> implements Collection<T>
 			{
 				if (recursive)
 				{
-					var v:Visitable = untyped seed.val;
+					var v:Dynamic = seed.val;
 					if (v.visit(true, userData))
 						_DFSRecursiveVisit(seed, true, userData);
 				}
 				else
 				{
-					var v:Visitable = null;
+					var v:Dynamic = null;
 					var n = _stack[0];
-					v = untyped n.val;
+					v = n.val;
 					if (!v.visit(true, userData))
 					{
 						#if debug
@@ -439,13 +439,13 @@ class Graph<T> implements Collection<T>
 						if (n.marked) continue;
 						n.marked = true;
 						
-						v = untyped n.val;
+						v = n.val;
 						if (!v.visit(false, userData)) break;
 						
 						var a = n.arcList;
 						while (a != null)
 						{
-							v = untyped n.val;
+							v = n.val;
 							
 							a.node.parent = n;
 							a.node.depth = n.depth + 1;
@@ -506,14 +506,14 @@ class Graph<T> implements Collection<T>
 					_DFSRecursiveVisit(seed, false, userData);
 				else
 				{
-					var v:Visitable = null;
+					var v:Dynamic = null;
 					while (c > 0)
 					{
 						var n = _stack[--c];
 						if (n.marked) continue;
 						n.marked = true;
 						
-						v = untyped n.val;
+						v = n.val;
 						if (!v.visit(false, userData)) break;
 						
 						var a = n.arcList;
@@ -603,10 +603,10 @@ class Graph<T> implements Collection<T>
 		{
 			if (process == null)
 			{
-				var v:Visitable = null;
+				var v:Dynamic = null;
 				
 				var n = _que[front];
-				v = untyped n.val;
+				v = n.val;
 				if (!v.visit(true, userData))
 				{
 					#if debug
@@ -618,7 +618,7 @@ class Graph<T> implements Collection<T>
 				while (c > 0)
 				{
 					n = _que[front];
-					v = untyped n.val;
+					v = n.val;
 					if (!v.visit(false, userData))
 					{
 						#if debug
@@ -639,7 +639,7 @@ class Graph<T> implements Collection<T>
 						m.parent = n;
 						m.depth = n.depth + 1;
 						
-						v = untyped m.val;
+						v = m.val;
 						if (v.visit(true, userData))
 							_que[c++ + front] = m;
 						a = a.next;
@@ -696,11 +696,11 @@ class Graph<T> implements Collection<T>
 		{
 			if (process == null)
 			{
-				var v:Visitable = null;
+				var v:Dynamic = null;
 				while (c > 0)
 				{
 					var n = _que[front];
-					v = untyped n.val;
+					v = n.val;
 					if (!v.visit(false, userData))
 					{
 						#if debug
@@ -818,10 +818,10 @@ class Graph<T> implements Collection<T>
 		{
 			if (process == null)
 			{
-				var v:Visitable = null;
+				var v:Dynamic = null;
 				
 				var n = _que[front];
-				v = untyped n.val;
+				v = n.val;
 				if (!v.visit(true, userData))
 				{
 					#if debug
@@ -833,7 +833,7 @@ class Graph<T> implements Collection<T>
 				while (c > 0)
 				{
 					n = _que[front];
-					v = untyped n.val;
+					v = n.val;
 					if (!v.visit(false, userData))
 					{
 						#if debug
@@ -855,7 +855,7 @@ class Graph<T> implements Collection<T>
 						m.depth = n.depth + 1;
 						if (m.depth <= maxDepth)
 						{
-							v = untyped m.val;
+							v = m.val;
 							if (v.visit(true, userData))
 								_que[c++ + front] = m;
 						}
@@ -915,12 +915,12 @@ class Graph<T> implements Collection<T>
 		{
 			if (process == null)
 			{
-				var v:Visitable = null;
+				var v:Dynamic = null;
 				while (c > 0)
 				{
 					var n = _que[front];
 					
-					v = untyped n.val;
+					v = n.val;
 					if (!v.visit(false, userData))
 					{
 						#if debug
@@ -1240,21 +1240,6 @@ class Graph<T> implements Collection<T>
 	#end
 	
 	/**
-	 * Returns an unordered dense array containing all elements stored in the graph nodes of this graph.
-	 */
-	public function toDA():DA<T>
-	{
-		var a = new DA<T>(size());
-		var node = _nodeList;
-		while (node != null)
-		{
-			a.pushBack(node.val);
-			node = node.next;
-		}
-		return a;
-	}
-	
-	/**
 	 * Duplicates this graph. Supports shallow (structure only) and deep copies (structure & elements).
 	 * @param assign if true, the <code>copier</code> parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.<br/>
 	 * If false, the <em>clone()</em> method is called on each element. <warn>In this case all elements have to implement <em>Cloneable</em>.</warn>
@@ -1282,14 +1267,14 @@ class Graph<T> implements Collection<T>
 		else
 		if (copier == null)
 		{
-			var c:Cloneable<T> = null;
+			var c:Dynamic = null;
 			while (n != null)
 			{
 				#if debug
 				D.assert(Std.is(n.val, Cloneable), Sprintf.format('element is not of type Cloneable (%s)', [n.val]));
 				#end
 				
-				c = untyped n.val;
+				c = n.val;
 				var m = copy.addNode(copy.createNode(c.clone()));
 				t[i++] = m;
 				n = n.next;
@@ -1326,7 +1311,7 @@ class Graph<T> implements Collection<T>
 	{
 		node.marked = true;
 		
-		var v:Visitable = untyped node.val;
+		var v:Dynamic = node.val;
 		if (!v.visit(false, userData)) return false;
 		
 		var a = node.arcList;
@@ -1345,7 +1330,7 @@ class Graph<T> implements Collection<T>
 			
 			if (preflight)
 			{
-				v = untyped m.val;
+				v = m.val;
 				if (v.visit(true, userData))
 					if (!_DFSRecursiveVisit(m, true, userData))
 						return false;
@@ -1448,7 +1433,10 @@ class GraphIterator<T> implements de.polygonal.ds.Itr<T>
 		throw 'unsupported operation';
 	}
 	
-	inline function __nodeList(f:GraphFriend<T>) return f._nodeList
+	inline function __nodeList(f:GraphFriend<T>)
+	{
+		return f._nodeList;
+	}
 }
 
 #if (generic && haxe3)
@@ -1494,7 +1482,10 @@ class GraphNodeIterator<T> implements de.polygonal.ds.Itr<GraphNode<T>>
 		throw 'unsupported operation';
 	}
 	
-	inline function __nodeList(f:GraphFriend<T>) return f._nodeList
+	inline function __nodeList(f:GraphFriend<T>)
+	{
+		return f._nodeList;
+	}
 }
 
 #if (generic && haxe3)
@@ -1549,5 +1540,8 @@ class GraphArcIterator<T> implements de.polygonal.ds.Itr<GraphArc<T>>
 		throw 'unsupported operation';
 	}
 	
-	inline function __nodeList(f:GraphFriend<T>) return f._nodeList
+	inline function __nodeList(f:GraphFriend<T>)
+	{
+		return f._nodeList;
+	}
 }

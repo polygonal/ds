@@ -481,15 +481,6 @@ class TestArrayedQueue extends haxe.unit.TestCase
 		for (i in 0...a.length) assertEquals(i, a[i]);
 	}
 	
-	function testToDA()
-	{
-		var q:ArrayedQueue<Int> = new ArrayedQueue<Int>(_size);
-		for (i in 0...10) q.enqueue(i);
-		var a = q.toDA();
-		assertEquals(10, a.size());
-		for (i in 0...a.size()) assertEquals(i, a.get(i));
-	}
-	
 	function testShuffle()
 	{
 		var q:ArrayedQueue<Int> = new ArrayedQueue<Int>(_size);

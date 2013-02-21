@@ -721,17 +721,6 @@ class Array3<T> implements Collection<T>
 	#end
 	
 	/**
-	 * Returns a dense array containing all elements in this three-dimensional array.<br/>
-	 * Order: Row-major order (layer-by-layer, row-by-row).
-	 */
-	public function toDA():DA<T>
-	{
-		var a = new DA<T>(size());
-		for (i in 0...size()) a.pushBack(__get(i));
-		return a;
-	}
-	
-	/**
 	 * Duplicates this three-dimensional array. Supports shallow (structure only) and deep copies (structure & elements).
 	 * @param assign if true, the <code>copier</code> parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.<br/>
 	 * If false, the <em>clone()</em> method is called on each element. <warn>In this case all elements have to implement <em>Cloneable</em>.</warn>

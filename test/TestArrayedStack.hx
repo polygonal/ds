@@ -451,15 +451,6 @@ class TestArrayedStack extends haxe.unit.TestCase
 		for (i in 0...10) assertEquals(stack.pop(), a[i]);
 	}
 	
-	function testToDenseArray()
-	{
-		var stack = getStack();
-		for (i in 0...10) stack.push(i);
-		var a = stack.toDA();
-		assertEquals(a.size(), 10);
-		for (i in 0...10) assertEquals(stack.pop(), a.get(i));
-	}
-	
 	function testShuffle()
 	{
 		var stack = getStack();

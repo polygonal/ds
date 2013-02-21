@@ -467,10 +467,10 @@ class TestHashSet extends haxe.unit.TestCase
 		
 		l.sort(function(a, b) { return a.value - b.value; } );
 		
-		var a:DA<E> = l.toDA();
-		for (i in 0...a.size())
+		var a:Array<E> = l.toArray();
+		for (i in 0...a.length)
 		{
-			assertEquals(i, a.get(i).value);
+			assertEquals(i, a[i].value);
 		}
 		
 		assertEquals(8, i);
@@ -519,45 +519,6 @@ class TestHashSet extends haxe.unit.TestCase
 			
 			assertTrue(found);
 		}
-		assertEquals(0, keys.length);
-		
-		var a = h.toDA();
-		
-		var keys = [0, 1, 2, 3, 4, 5, 6, 7];
-		for (i in a)
-		{
-			var found = false;
-			for (j in 0...8)
-			{
-				if (keys[j] == i.value)
-				{
-					keys.remove(keys[j]);
-					found = true;
-				}
-			}
-			
-			assertTrue(found);
-		}
-		
-		assertEquals(0, keys.length);
-		var a = h.toDA();
-		
-		var keys = [0, 1, 2, 3, 4, 5, 6, 7];
-		for (i in a)
-		{
-			var found = false;
-			for (j in 0...8)
-			{
-				if (keys[j] == i.value)
-				{
-					keys.remove(keys[j]);
-					found = true;
-				}
-			}
-			
-			assertTrue(found);
-		}
-		
 		assertEquals(0, keys.length);
 	}
 	

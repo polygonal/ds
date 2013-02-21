@@ -1,6 +1,7 @@
 ﻿package test;
 
 import de.polygonal.core.math.random.ParkMiller;
+import de.polygonal.ds.ArrayConvert;
 import de.polygonal.ds.ArrayUtil;
 import de.polygonal.ds.DA;
 import de.polygonal.ds.DLL;
@@ -692,10 +693,10 @@ class TestIntHashTable extends haxe.unit.TestCase
 		
 		l.sort(function(a, b) { return a - b; } );
 		
-		var a:DA<Int> = l.toDA();
-		for (i in 0...a.size())
+		var a:Array<Int> = l.toArray();
+		for (i in 0...a.length)
 		{
-			assertEquals(i, a.get(i));
+			assertEquals(i, a[i]);
 		}
 		
 		assertEquals(8, i);
@@ -745,7 +746,7 @@ class TestIntHashTable extends haxe.unit.TestCase
 		
 		assertEquals(0, values.length);
 		
-		var a = h.toDA();
+		var a = ArrayConvert.toDA(h.toArray());
 		
 		var values = [0, 1, 2, 3, 4, 5, 6, 7];
 		for (i in a)
@@ -765,7 +766,7 @@ class TestIntHashTable extends haxe.unit.TestCase
 		
 		assertEquals(0, values.length);
 		
-		var a = h.toDA();
+		var a = ArrayConvert.toDA(h.toArray());
 		
 		var values = [0, 1, 2, 3, 4, 5, 6, 7];
 		for (i in a)

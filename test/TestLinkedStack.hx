@@ -380,16 +380,6 @@ class TestLinkedStack extends haxe.unit.TestCase
 		#end
 	}
 	
-	function testToDenseArray()
-	{
-		var l = new LinkedStack<Int>();
-		
-		for (i in 0...5) l.push(i);
-		
-		var a = l.toDA();
-		for (i in 0...a.size()) assertEquals(i, a.get(i));
-	}
-	
 	function testClear()
 	{
 		var l = new LinkedStack<Int>();

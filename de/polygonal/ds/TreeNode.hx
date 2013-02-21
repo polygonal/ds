@@ -2072,17 +2072,6 @@ class TreeNode<T> implements Collection<T>
 	#end
 	
 	/**
-	 * Returns a dense array containing all elements in the tree rooted at this node.<br/>
-	 * The elements are collected using a preorder traversal.
-	 */
-	public function toDA():DA<T>
-	{
-		var a = new DA<T>();
-		preorder(function(node:TreeNode<T>, preflight:Bool, userData:Dynamic):Bool { a.pushBack(node.val); return true; });
-		return a;
-	}
-	
-	/**
 	 * Duplicates this subtree. Supports shallow (structure only) and deep copies (structure & elements).
 	 * @param assign if true, the <code>copier</code> parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.<br/>
 	 * If false, the <em>clone()</em> method is called on each element. <warn>In this case all elements have to implement <em>Cloneable</em>.</warn>

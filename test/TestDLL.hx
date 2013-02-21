@@ -801,15 +801,6 @@ class TestDLL extends haxe.unit.TestCase
 		#end
 	}
 	
-	function testDenseArray()
-	{
-		var list = new DLL<Int>();
-		for (i in 0...10) list.append(i);
-		var a = list.toDA();
-		assertEquals(10, a.size());
-		for (i in a) assertEquals(a.get(i), i);
-	}
-	
 	function testClear()
 	{
 		var list = new DLL<Int>();

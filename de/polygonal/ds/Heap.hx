@@ -626,16 +626,6 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	#end
 	
 	/**
-	 * Returns an unordered dense array containing all elements in this heap.
-	 */
-	public function toDA():DA<T>
-	{
-		var a = new DA<T>(size());
-		for (i in 1..._size + 1) a.pushBack(__get(i));
-		return a;
-	}
-	
-	/**
 	 * Duplicates this heap. Supports shallow (structure only) and deep copies (structure & elements).
 	 * @param assign if true, the <code>copier</code> parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.<br/>
 	 * If false, the <em>clone()</em> method is called on each element. <warn>In this case all elements have to implement <em>Cloneable</em>.</warn>
