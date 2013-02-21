@@ -68,6 +68,9 @@ class ArrayUtil
 		if (a.length > x)
 			untyped a.length = x;
 		return a;
+		#elseif cpp
+		untyped a.length = x;
+		return a;
 		#else
 		var b = new Array<T>();
 		for (i in 0...x) b[i] = a[i];
