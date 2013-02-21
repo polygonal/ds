@@ -50,6 +50,9 @@ class ArrayUtil
 		var a:Array<T>;
 		#if (flash || js)
 		a = untyped __new__(Array, x);
+		#elseif cpp
+		a = new Array<T>();
+		a[x - 1] = cast null;
 		#else
 		a = new Array<T>();
 		#end
