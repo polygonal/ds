@@ -1182,8 +1182,20 @@ class ArrayedDequeIterator<T> implements de.polygonal.ds.Itr<T>
 		throw 'unsupported operation';
 	}
 	
-	inline function __head<T>(f:ArrayedDequeFriend<T>) return f._head
-	inline function __blockSize<T>(f:ArrayedDequeFriend<T>) return f._blockSize
-	inline function __blockSizeShift<T>(f:ArrayedDequeFriend<T>) return f._blockSizeShift
-	inline function __blocks<T>(f:ArrayedDequeFriend<T>) return f._blocks
+	inline function __head<T>(f:ArrayedDequeFriend<T>)
+	{
+		return f._head;
+	}
+	inline function __blockSize<T>(f:ArrayedDequeFriend<T>)
+	{
+		return f._blockSize;
+	}
+	inline function __blockSizeShift<T>(f:ArrayedDequeFriend<T>)
+	{
+		return f._blockSizeShift;
+	}
+	inline function __blocks<T>(f:ArrayedDequeFriend<T>)
+	{
+		return f._blocks;
+	}
 }

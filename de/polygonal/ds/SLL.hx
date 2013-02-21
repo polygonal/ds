@@ -1459,8 +1459,14 @@ class SLL<T> implements Collection<T>
 		return val;
 	}
 	
-	inline function __insertAfter(f:SLLNodeFriend<T>, x:SLLNode<T>) f._insertAfter(x)
-	inline function __list(f:SLLNodeFriend<T>, x:SLL<T>) f._list = x
+	inline function __insertAfter(f:SLLNodeFriend<T>, x:SLLNode<T>)
+	{
+		f._insertAfter(x);
+	}
+	inline function __list(f:SLLNodeFriend<T>, x:SLL<T>)
+	{
+		f._list = x;
+	}
 }
 
 #if (generic && haxe3)

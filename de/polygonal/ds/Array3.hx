@@ -828,8 +828,14 @@ class Array3Iterator<T> implements de.polygonal.ds.Itr<T>
 		_a[_i - 1] = cast null;
 	}
 	
-	inline function __a<T>(f:Array3Friend<T>) return f._a
-	inline function __size<T>(f:Array3Friend<T>) return f._w * f._h * f._d
+	inline function __a<T>(f:Array3Friend<T>)
+	{
+		return f._a;
+	}
+	inline function __size<T>(f:Array3Friend<T>)
+	{
+		return f._w * f._h * f._d;
+	}
 }
 
 /**

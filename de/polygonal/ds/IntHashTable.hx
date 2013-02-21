@@ -1019,6 +1019,12 @@ class IntHashTableIterator<T> implements de.polygonal.ds.Itr<T>
 		throw 'unsupported operation';
 	}
 	
-	inline function __vals(f:IntHashTableFriend<T>) return f._vals
-	inline function __keys(f:IntHashTableFriend<T>) return f._keys
+	inline function __vals(f:IntHashTableFriend<T>)
+	{
+		return f._vals;
+	}
+	inline function __keys(f:IntHashTableFriend<T>)
+	{
+		return f._keys;
+	}
 }

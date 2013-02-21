@@ -705,5 +705,8 @@ class HashSetIterator<T> implements de.polygonal.ds.Itr<T>
 		throw 'unsupported operation';
 	}
 	
-	inline function __vals(f:HashSetFriend<T>) return f._vals
+	inline function __vals(f:HashSetFriend<T>)
+	{
+		return f._vals;
+	}
 }

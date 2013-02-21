@@ -1101,8 +1101,14 @@ class Array2Iterator<T> implements de.polygonal.ds.Itr<T>
 		_a[_i - 1] = cast null;
 	}
 	
-	inline function __a<T>(f:Array2Friend<T>) return f._a
-	inline function __size<T>(f:Array2Friend<T>) return f._w * f._h
+	inline function __a<T>(f:Array2Friend<T>)
+	{
+		return f._a;
+	}
+	inline function __size<T>(f:Array2Friend<T>)
+	{
+		return f._w * f._h;
+	}
 }
 
 /**

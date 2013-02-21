@@ -727,9 +727,18 @@ class ArrayedStack<T> implements Stack<T>
 		return copy;
 	}
 	
-	inline function __get(i:Int) return _a[i]
-	inline function __set(i:Int, x:T) _a[i] = x
-	inline function __cpy(i:Int, j:Int) _a[i] = _a[j]
+	inline function __get(i:Int)
+	{
+		return _a[i];
+	}
+	inline function __set(i:Int, x:T)
+	{
+		_a[i] = x;
+	}
+	inline function __cpy(i:Int, j:Int)
+	{
+		_a[i] = _a[j];
+	}
 }
 
 #if doc
@@ -788,7 +797,16 @@ class ArrayedStackIterator<T> implements de.polygonal.ds.Itr<T>
 		}
 	}
 	
-	inline function __a<T>(f:ArrayedStackFriend<T>) return f._a	
-	inline function __getTop<T>(f:ArrayedStackFriend<T>) return f._top
-	inline function __setTop<T>(f:ArrayedStackFriend<T>, x:Int) return f._top = x
+	inline function __a<T>(f:ArrayedStackFriend<T>)
+	{
+		return f._a;
+	}
+	inline function __getTop<T>(f:ArrayedStackFriend<T>)
+	{
+		return f._top;
+	}
+	inline function __setTop<T>(f:ArrayedStackFriend<T>, x:Int)
+	{
+		return f._top = x;
+	}
 }

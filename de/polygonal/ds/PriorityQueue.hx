@@ -90,7 +90,10 @@ class PriorityQueueIterator<T:(Prioritizable)> implements de.polygonal.ds.Itr<T>
 		_f.remove(_a[_i - 1]);
 	}
 	
-	inline function __a(f:PriorityQueueFriend<T>) return f._a
+	inline function __a(f:PriorityQueueFriend<T>)
+	{
+		return f._a;
+	}
 }
 
 /**
@@ -732,8 +735,14 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 		tmp.position = index;
 	}
 	
-	inline function __get(i:Int) return _a[i]
-	inline function __set(i:Int, x:T) _a[i] = x
+	inline function __get(i:Int)
+	{
+		return _a[i];
+	}
+	inline function __set(i:Int, x:T)
+	{
+		_a[i] = x;
+	}
 }
 
 private class PQElementWrapper<T:(Prioritizable)> implements Prioritizable

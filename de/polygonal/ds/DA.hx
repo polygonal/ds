@@ -1257,6 +1257,12 @@ class DAIterator<T> implements de.polygonal.ds.Itr<T>
 		_s--;
 	}
 	
-	inline function __a(f:DAFriend<T>) return f._a
-	inline function __size(f:DAFriend<T>) return f._size
+	inline function __a(f:DAFriend<T>)
+	{
+		return f._a;
+	}
+	inline function __size(f:DAFriend<T>)
+	{
+		return f._size;
+	}
 }

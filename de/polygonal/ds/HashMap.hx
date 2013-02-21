@@ -538,7 +538,10 @@ class HashMapKeyIterator<K, T> implements de.polygonal.ds.Itr<K>
 		_f.clr(_keys[_i - 1]);
 	}
 	
-	inline function __map(f:HashMapFriend<K, T>) return f._map
+	inline function __map(f:HashMapFriend<K, T>)
+	{
+		return f._map;
+	}
 }
 
 #if doc
@@ -586,5 +589,8 @@ class HashMapValIterator<K, T> implements de.polygonal.ds.Itr<T>
 		_f.remove(untyped _map[_keys[_i - 1]]);
 	}
 	
-	inline function __map(f:HashMapFriend<K, T>) return f._map
+	inline function __map(f:HashMapFriend<K, T>)
+	{
+		return f._map;
+	}
 }

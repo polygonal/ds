@@ -952,9 +952,15 @@ class LinkedStackIterator<T> implements de.polygonal.ds.Itr<T>
 		#end
 	}
 	
-	inline function __head(f:LinkedStackFriend<T>) return f._head
+	inline function __head(f:LinkedStackFriend<T>)
+	{
+		return f._head;
+	}
 	
 	#if flash
-	inline function __remove(f:LinkedStackFriend<T>, x:LinkedStackNode<T>) return f._removeNode(x)
+	inline function __remove(f:LinkedStackFriend<T>, x:LinkedStackNode<T>)
+	{
+		return f._removeNode(x);
+	}
 	#end
 }

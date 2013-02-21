@@ -372,6 +372,12 @@ class ObjectPoolIterator<T> implements de.polygonal.ds.Itr<T>
 		throw 'unsupported operation';
 	}
 	
-	inline function __pool<T>(f:ObjectPoolFriend<T>) return _f._pool
-	inline function __size<T>(f:ObjectPoolFriend<T>) return f._size
+	inline function __pool<T>(f:ObjectPoolFriend<T>)
+	{
+		return _f._pool;
+	}
+	inline function __size<T>(f:ObjectPoolFriend<T>)
+	{
+		return f._size;
+	}
 }

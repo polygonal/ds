@@ -795,8 +795,20 @@ class ArrayedQueueIterator<T> implements de.polygonal.ds.Itr<T>
 		_f.remove(_a[((_i - 1) + _front) % _capacity]);
 	}
 	
-	inline function __a<T>(f:ArrayedQueueFriend<T>) return f._a
-	inline function __front<T>(f:ArrayedQueueFriend<T>) return f._front
-	inline function __size<T>(f:ArrayedQueueFriend<T>) return f._capacity
-	inline function __count<T>(f:ArrayedQueueFriend<T>) return f._size
+	inline function __a<T>(f:ArrayedQueueFriend<T>)
+	{
+		return f._a;
+	}
+	inline function __front<T>(f:ArrayedQueueFriend<T>)
+	{
+		return f._front;
+	}
+	inline function __size<T>(f:ArrayedQueueFriend<T>)
+	{
+		return f._capacity;
+	}
+	inline function __count<T>(f:ArrayedQueueFriend<T>)
+	{
+		return f._size;
+	}
 }

@@ -924,8 +924,14 @@ class HashTableKeyIterator<K, T> implements de.polygonal.ds.Itr<K>
 		throw 'unsupported operation';
 	}
 	
-	inline function __vals(f:HashTableFriend<K, T>) return f._vals
-	inline function __keys(f:HashTableFriend<K, T>) return f._keys
+	inline function __vals(f:HashTableFriend<K, T>)
+	{
+		return f._vals;
+	}
+	inline function __keys(f:HashTableFriend<K, T>)
+	{
+		return f._keys;
+	}
 }
 
 #if doc
@@ -976,6 +982,12 @@ class HashTableValIterator<K, T> implements de.polygonal.ds.Itr<T>
 		throw 'unsupported operation';
 	}
 	
-	inline function __vals(f:HashTableFriend<K, T>) return f._vals
-	inline function __keys(f:HashTableFriend<K, T>) return f._keys
+	inline function __vals(f:HashTableFriend<K, T>)
+	{
+		return f._vals;
+	}
+	inline function __keys(f:HashTableFriend<K, T>)
+	{
+		return f._keys;
+	}
 }

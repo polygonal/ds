@@ -865,8 +865,14 @@ class MemoryManager
 		#end
 	}
 	
-	inline function __getMem(f:MemoryAccessFriend) return f._memory
-	inline function __setMem(f:MemoryAccessFriend, x:MemorySegment) f._memory = x
+	inline function __getMem(f:MemoryAccessFriend)
+	{
+		return f._memory;
+	}
+	inline function __setMem(f:MemoryAccessFriend, x:MemorySegment)
+	{
+		f._memory = x;
+	}
 }
 
 private class MemorySegment

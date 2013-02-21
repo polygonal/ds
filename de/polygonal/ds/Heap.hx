@@ -89,7 +89,10 @@ class HeapIterator<T:(Heapable<T>)> implements de.polygonal.ds.Itr<T>
 		_f.remove(_a[_i - 1]);
 	}
 	
-	inline function __a(f:HeapFriend<T>) return f._a
+	inline function __a(f:HeapFriend<T>)
+	{
+		return f._a;
+	}
 }
 
 /**
@@ -764,8 +767,14 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 		}
 	}
 	
-	inline function __get(i:Int) return _a[i]
-	inline function __set(i:Int, x:T) _a[i] = x
+	inline function __get(i:Int)
+	{
+		return _a[i];
+	}
+	inline function __set(i:Int, x:T)
+	{
+		_a[i] = x;
+	}
 }
 
 private class HeapElementWrapper<T:(Heapable<T>)> implements Heapable<HeapElementWrapper<T>>

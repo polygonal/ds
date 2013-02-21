@@ -843,6 +843,12 @@ class LinkedDequeIterator<T> implements de.polygonal.ds.Itr<T>
 		__removeNode(_f, _hook);
 	}
 	
-	inline function __head(f:LinkedDequeFriend<T>) return f._head
-	inline function __removeNode(f:LinkedDequeFriend<T>, x:LinkedDequeNode<T>) f._removeNode(x)
+	inline function __head(f:LinkedDequeFriend<T>)
+	{
+		return f._head;
+	}
+	inline function __removeNode(f:LinkedDequeFriend<T>, x:LinkedDequeNode<T>)
+	{
+		f._removeNode(x);
+	}
 }

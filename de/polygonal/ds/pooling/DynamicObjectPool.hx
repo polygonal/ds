@@ -364,6 +364,12 @@ class DynamicObjectPoolIterator<T> implements de.polygonal.ds.Itr<T>
 		return _a[_i++];
 	}
 	
-	inline function __pool<T>(f:DynamicObjectPoolFriend<T>) return _f._pool
-	inline function __size<T>(f:DynamicObjectPoolFriend<T>) return f._size
+	inline function __pool<T>(f:DynamicObjectPoolFriend<T>)
+	{
+		return _f._pool;
+	}
+	inline function __size<T>(f:DynamicObjectPoolFriend<T>)
+	{
+		return f._size;
+	}
 }

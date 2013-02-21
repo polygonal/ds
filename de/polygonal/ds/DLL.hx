@@ -1669,10 +1669,22 @@ class DLL<T> implements Collection<T>
 		return val;
 	}
 	
-	inline function __insertAfter(f:DLLNodeFriend<T>, x:DLLNode<T>) f._insertAfter(x)
-	inline function __insertBefore(f:DLLNodeFriend<T>, x:DLLNode<T>) f._insertBefore(x)
-	inline function __unlink(f:DLLNodeFriend<T>) f._unlink()
-	inline function __list(f:DLLNodeFriend<T>, x:DLL<T>) f._list = x
+	inline function __insertAfter(f:DLLNodeFriend<T>, x:DLLNode<T>)
+	{
+		f._insertAfter(x);
+	}
+	inline function __insertBefore(f:DLLNodeFriend<T>, x:DLLNode<T>)
+	{
+		f._insertBefore(x);
+	}
+	inline function __unlink(f:DLLNodeFriend<T>)
+	{
+		f._unlink();
+	}
+	inline function __list(f:DLLNodeFriend<T>, x:DLL<T>)
+	{
+		f._list = x;
+	}
 }
 
 #if (generic && haxe3)
