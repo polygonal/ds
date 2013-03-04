@@ -46,10 +46,14 @@ class ArrayUtil
 		#if debug
 		D.assert(x >= 0, 'x >= 0');
 		#end
+
 		
 		var a:Array<T>;
 		#if (flash || js)
 		a = untyped __new__(Array, x);
+		#elseif neko
+		a = new Array();
+		for (i in 0...x) a[i] = null;
 		#else
 		a = new Array<T>();
 		#end
