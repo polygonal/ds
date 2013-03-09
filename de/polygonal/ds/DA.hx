@@ -905,17 +905,6 @@ class DA<T> implements Collection<T>
 	#end
 	
 	/**
-	 * Returns a dense array containing all elements in this queue.<br/>
-	 * Preserves the natural order of this array.
-	 */
-	public function toDA():DA<T>
-	{
-		var a = new DA<T>(size());
-		for (i in 0...size()) a.pushBack(__get(i));
-		return a;
-	}
-	
-	/**
 	 * Duplicates this dense array. Supports shallow (structure only) and deep copies (structure & elements).
 	 * @param assign if true, the <code>copier</code> parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.<br/>
 	 * If false, the <em>clone()</em> method is called on each element. <warn>In this case all elements have to implement <em>Cloneable</em>.</warn>
