@@ -32,11 +32,7 @@ package de.polygonal.ds;
 /**
  * <p>A double-ended queue that supports fast element insertion and removal at both ends.</p>
  */
-#if haxe3
 interface Deque<T> extends Collection<T>
-#else
-interface Deque<T> implements Collection<T>
-#end
 {
 	/**
 	 * Returns the first element of the deque.

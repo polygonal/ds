@@ -49,13 +49,10 @@ private typedef ArrayedQueueFriend<T> =
  * <p><o>Worst-case running time in Big O notation</o></p>
  * See <a href="http://lab.polygonal.de/?p=189" target="_blank">http://lab.polygonal.de/?p=189</a></p>
  */
-#if (generic && cpp && haxe3)
+#if (generic && cpp)
 @:generic
 #end
 class ArrayedQueue<T> implements Queue<T>
-#if (generic && cpp && !haxe3)
-, implements haxe.rtti.Generic
-#end
 {
 	/**
 	 * A unique identifier for this object.<br/>
@@ -731,16 +728,13 @@ class ArrayedQueue<T> implements Queue<T>
 	}
 }
 
-#if (generic && cpp && haxe3)
+#if (generic && cpp)
 @:generic
 #end
 #if doc
 private
 #end
 class ArrayedQueueIterator<T> implements de.polygonal.ds.Itr<T>
-#if (generic && cpp && !haxe3)
-, implements haxe.rtti.Generic
-#end
 {
 	var _f:ArrayedQueue<T>;
 	

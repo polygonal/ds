@@ -125,11 +125,7 @@ class Compare
 			var ca = StringTools.fastCodeAt(a, i);
 			var cb = StringTools.fastCodeAt(b, i);
 			
-			#if haxe3
 			if (StringTools.isEof(ca) || StringTools.isEof(cb)) break;
-			#else
-			if (StringTools.isEOF(ca) || StringTools.isEOF(cb)) break;
-			#end
 			
 			d = ca - cb;
 			if (d != 0) return d;

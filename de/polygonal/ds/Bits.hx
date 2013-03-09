@@ -38,11 +38,6 @@ import haxe.macro.Expr;
 import haxe.macro.Context;
 #end
 
-#if (!haxe3 && neko)
-import haxe.Int32;
-using haxe.Int32;
-#end
-
 /**
  * <p>Helper class for working with bit flags.</p>
  */
@@ -169,7 +164,6 @@ class Bits
 	 */
 	inline public static var BIT_30 = 1 << 29;
 	
-	#if !neko
 	/**
 	 * 1 << 30 (0x40000000) 
 	 */
@@ -179,17 +173,10 @@ class Bits
 	 * 1 << 31 (0x80000000) 
 	 */
 	inline public static var BIT_32 = 1 << 31;
-	#end
 	
-	#if neko
-	/**
-	 * 0x7FFFFFFF 
-	 */
-	#else
 	/**
 	 * 0xFFFFFFFF 
 	 */
-	#end
 	inline public static var ALL = -1;
 	
 	/**
@@ -217,11 +204,7 @@ class Bits
 	 */
 	inline public static function clrBits(x:Int, mask:Int):Int
 	{
-		#if (!haxe3 && neko)
-		return x & mask.ofInt().complement().toInt();
-		#else
 		return x & ~mask;
-		#end
 	}
 	
 	/**
@@ -234,11 +217,7 @@ class Bits
 	 * or clears all <code>mask</code> bits in <code>x</code> if <code>expr</code> is false. */
 	inline public static function setBitsIf(x:Int, mask:Int, expr:Bool):Int
 	{
-		#if (!haxe3 && neko)
-		return expr ? (x | mask) : (x & mask.ofInt().complement().toInt());
-		#else
 		return expr ? (x | mask) : (x & ~mask);
-		#end
 	}
 	
 	/**
@@ -277,11 +256,7 @@ class Bits
 		D.assert(i >= 0 && i < Limits.INT_BITS, Sprintf.format('index out of range (%d)', [i]));
 		#end
 		
-		#if (!haxe3 && neko)
-		return x.ofInt().and((1 << i).ofInt().complement()).toInt();
-		#else
 		return x & ~(1 << i);
-		#end
 	}
 	
 	/**
@@ -336,22 +311,12 @@ class Bits
 	 */
 	inline public static function ones(x:Int)
 	{
-		#if neko
-		var c = 0;
-		while (x != 0)
-		{
-			x &= x - 1;
-			c++;
-		}
-		return c;
-		#else
 		x -= ((x >> 1) & 0x55555555);
 		x = (((x >> 2) & 0x33333333) + (x & 0x33333333));
 		x = (((x >> 4) + x) & 0x0f0f0f0f);
 		x += (x >> 8);
 		x += (x >> 16);
 		return(x & 0x0000003f);
-		#end
 	}
 	
 	/**
@@ -376,14 +341,6 @@ class Bits
 			}
 			return flash.Memory.getI32(cast(1020 - ((((x & -x) * 0x077CB531) >>> 27) << 2), UInt));
 		}
-		#elseif (neko && !neko_v2)
-		var n = Limits.INT_BITS;
-		while (x != 0)
-		{
-			n--;
-			x += x;
-		}
-		return n;
 		#else
 		var n = 0;
 		if (x != 0)
@@ -423,16 +380,12 @@ class Bits
 	 */
 	inline public static function msb(x:Int):Int
 	{
-		#if (neko && !neko_v2)
-		return 1 << ((Limits.INT_BITS - 1) - nlz(x));
-		#else
 		x |= (x >> 1);
 		x |= (x >> 2);
 		x |= (x >> 4);
 		x |= (x >> 8);
 		x |= (x >> 16);
 		return(x & ~(x >>> 1));
-		#end
 	}
 	
 	/**
@@ -451,18 +404,6 @@ class Bits
 	 */
 	inline public static function reverse(x:Int):Int
 	{
-		#if neko
-		var t = x;
-		var r = 0;
-		var i = 29;
-		while (x != 0)
-		{
-			if (x & 1 == 1) r |= (1 << i);
-			i--;
-			x >>= 1;
-		}
-		return r;
-		#else
 		var y = 0x55555555;
 		x = (((x >> 1) & y) | ((x & y) << 1));
 		y = 0x33333333;
@@ -472,7 +413,6 @@ class Bits
 		y = 0x00ff00ff;
 		x = (((x >> 8) & y) | ((x & y) << 8));
 		return((x >> 16) | (x << 16));
-		#end
 	}
 	
 	/**

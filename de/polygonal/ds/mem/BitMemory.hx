@@ -39,10 +39,6 @@ import de.polygonal.core.math.Mathematics;
 import de.polygonal.ds.ArrayUtil;
 #end
 
-#if (neko && !neko_v2)
-using haxe.Int32;
-#end
-
 /**
  * <p>A bit-vector using fast "alchemy-memory" for data storage.</p>
  */
@@ -248,11 +244,7 @@ class BitMemory extends MemoryAccess
 	 */
 	public function new(size:Int, name = '?')
 	{
-		#if (neko && !neko_v2)
-		super(((size % Limits.INT_BITS) > 0 ? (Std.int(size / Limits.INT_BITS) + 1) : Std.int(size / Limits.INT_BITS)) << 2, name);
-		#else
 		super(((size & (32 - 1)) > 0 ? ((size >> 5) + 1) : (size >> 5)) << 2, name);
-		#end
 		
 		this.size = size;
 		
@@ -360,11 +352,7 @@ class BitMemory extends MemoryAccess
 		#if alchemy
 		return ((flash.Memory.getI32(getAddr(i)) & (1 << (i & (32 - 1)))) >> (i & (32 - 1))) != 0;
 		#else
-			#if (neko && !neko_v2)
-			return (_data[getAddr(i)] & (1 << (i % Limits.INT_BITS))) >> (i % Limits.INT_BITS) != 0;
-			#else
-			return (_data[getAddr(i)] & (1 << (i & (32 - 1)))) >> (i & (32 - 1)) != 0;
-			#end
+		return (_data[getAddr(i)] & (1 << (i & (32 - 1)))) >> (i & (32 - 1)) != 0;
 		#end
 	}
 	
@@ -378,11 +366,7 @@ class BitMemory extends MemoryAccess
 		#if alchemy
 			return ((flash.Memory.getI32(getAddr(i)) & (1 << (i & (32 - 1)))) >> (i & (32 - 1)));
 		#else
-			#if (neko && !neko_v2)
-			return (_data[getAddr(i)] & (1 << (i % Limits.INT_BITS))) >> (i % Limits.INT_BITS);
-			#else
-			return (_data[getAddr(i)] & (1 << (i & (32 - 1)))) >> (i & (32 - 1));
-			#end
+		return (_data[getAddr(i)] & (1 << (i & (32 - 1)))) >> (i & (32 - 1));
 		#end
 	}
 	
@@ -397,11 +381,7 @@ class BitMemory extends MemoryAccess
 		#if alchemy
 		flash.Memory.setI32(idx, flash.Memory.getI32(idx) | (1 << (i & (32 - 1))));
 		#else
-			#if (neko && !neko_v2)
-			_data[idx] = _data[idx] | (1 << (i % Limits.INT_BITS));
-			#else
-			_data[idx] = _data[idx] | (1 << (i & (32 - 1)));
-			#end
+		_data[idx] = _data[idx] | (1 << (i & (32 - 1)));
 		#end
 	}
 	
@@ -416,15 +396,7 @@ class BitMemory extends MemoryAccess
 		#if alchemy
 		flash.Memory.setI32(idx, flash.Memory.getI32(idx) & ~(1 << (i & (32 - 1))));
 		#else
-			#if (neko && !neko_v2)
-				#if haxe3
-				_data[idx] = _data[idx] & (~(1 << (i % Limits.INT_BITS)));
-				#else
-				_data[idx] = _data[idx] & (1 << (i % Limits.INT_BITS)).ofInt().complement().toInt();
-				#end
-			#else
-			_data[idx] = _data[idx] & ~(1 << (i & (32 - 1)));
-			#end
+		_data[idx] = _data[idx] & ~(1 << (i & (32 - 1)));
 		#end
 	}
 	
@@ -479,11 +451,7 @@ class BitMemory extends MemoryAccess
 		#if alchemy
 		return offset + ((i >> 5) << 2);
 		#else
-			#if (neko && !neko_v2)
-			return (Std.int(i / Limits.INT_BITS) << 2) >> 2;
-			#else
-			return ((i >> 5) << 2) >> 2;
-			#end
+		return ((i >> 5) << 2) >> 2;
 		#end
 	}
 	

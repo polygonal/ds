@@ -46,13 +46,10 @@ private typedef LinkedStackFriend<T> =
  * <p>This is called a FIFO structure (First In, First Out).</p>
  * <p><o>Worst-case running time in Big O notation</o></p>
  */
-#if (generic && haxe3)
+#if generic
 @:generic
 #end
 class LinkedStack<T> implements Stack<T>
-#if (generic && !haxe3)
-, implements haxe.rtti.Generic
-#end
 {
 	/**
 	 * A unique identifier for this object.<br/>
@@ -856,13 +853,10 @@ class LinkedStack<T> implements Stack<T>
 #if doc
 private
 #end
-#if (generic && haxe3)
+#if generic
 @:generic
 #end
 class LinkedStackNode<T>
-#if (generic && !haxe3)
-implements haxe.rtti.Generic
-#end
 {
 	public var val:T;
 	public var next:LinkedStackNode<T>;
@@ -881,13 +875,10 @@ implements haxe.rtti.Generic
 #if doc
 private
 #end
-#if (generic && haxe3)
+#if generic
 @:generic
 #end
 class LinkedStackIterator<T> implements de.polygonal.ds.Itr<T>
-#if (generic && !haxe3)
-, implements haxe.rtti.Generic
-#end
 {
 	var _f:LinkedStack<T>;
 	var _walker:LinkedStackNode<T>;

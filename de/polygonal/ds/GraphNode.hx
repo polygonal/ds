@@ -37,13 +37,10 @@ import de.polygonal.core.util.Assert;
  * <p><em>GraphNode</em> objects are created and managed by the <em>Graph</em> class.</p>
  * <p><o>Worst-case running time in Big O notation</o></p>
  */
-#if (generic && haxe3)
+#if generic
 @:generic
 #end
 class GraphNode<T> implements Hashable
-#if (generic && !haxe3)
-, implements haxe.rtti.Generic
-#end
 {
 	/**
 	 * A unique identifier for this object.<br/>
@@ -305,16 +302,13 @@ class GraphNode<T> implements Hashable
 	}
 }
 
-#if (generic && haxe3)
+#if generic
 @:generic
 #end
 #if doc
 private
 #end
 class NodeValIterator<T> implements de.polygonal.ds.Itr<T>
-#if (generic && !haxe3)
-, implements haxe.rtti.Generic
-#end
 {
 	var _node:GraphNode<T>;
 	var _arcList:GraphArc<T>;

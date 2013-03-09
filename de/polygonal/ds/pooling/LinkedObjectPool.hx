@@ -38,13 +38,10 @@ import de.polygonal.ds.HashKey;
  * <p>A dynamic object pool based on a doubly linked list.</p>
  * <p>See <a href="http://lab.polygonal.de/2008/06/18/using-object-pools/" target="_blank">http://lab.polygonal.de/2008/06/18/using-object-pools/</a>.</p>
  */
-#if (generic && haxe3)
+#if generic
 @:generic
 #end
 class LinkedObjectPool<T> implements Hashable
-#if (generic && !haxe3)
-, implements haxe.rtti.Generic
-#end
 {
 	/**
 	 * A unique identifier for this object.<br/>
@@ -383,16 +380,13 @@ class LinkedObjectPool<T> implements Hashable
 	}
 }
 
-#if (generic && haxe3)
+#if generic
 @:generic
 #end
 #if doc
 private
 #end
 class ObjNode<T>
-#if (generic && !haxe3)
-implements haxe.rtti.Generic
-#end
 {
 	public var next:ObjNode<T>;
 	public var val:T;

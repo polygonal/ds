@@ -44,13 +44,10 @@ private typedef DAFriend<T> =
  * <p>A dense, dynamic array.</p>
  * <p><o>Worst-case running time in Big O notation</o></p>
  */
-#if (generic && cpp && haxe3)
+#if (generic && cpp)
 @:generic
 #end
 class DA<T> implements Collection<T>
-#if (generic && cpp && !haxe3)
-, implements haxe.rtti.Generic
-#end
 {
 	/**
 	 * A unique identifier for this object.<br/>
@@ -1207,16 +1204,13 @@ class DA<T> implements Collection<T>
 	}
 }
 
-#if (generic && cpp && haxe3)
+#if (generic && cpp)
 @:generic
 #end
 #if doc
 private
 #end
 class DAIterator<T> implements de.polygonal.ds.Itr<T>
-#if (generic && cpp && !haxe3)
-, implements haxe.rtti.Generic
-#end
 {
 	var _f:DA<T>;
 	var _a:Array<T>;

@@ -45,13 +45,10 @@ private typedef Array2Friend<T> =
  * <p><o>Worst-case running time in Big O notation</o></p>
  */
 
-#if (generic && cpp && haxe3)
+#if (generic && cpp)
 @:generic
 #end
 class Array2<T> implements Collection<T>
-#if (generic && cpp && !haxe3)
-, implements haxe.rtti.Generic
-#end
 {
 	/**
 	 * A unique identifier for this object.<br/>
@@ -1041,16 +1038,13 @@ class Array2<T> implements Collection<T>
 	}
 }
 
-#if (generic && cpp && haxe3)
+#if (generic && cpp)
 @:generic
 #end
 #if doc
 private
 #end
 class Array2Iterator<T> implements de.polygonal.ds.Itr<T>
-#if (generic && cpp && !haxe3)
-, implements haxe.rtti.Generic
-#end
 {
 	var _f:Array2<T>;
 	var _a:Array<T>;

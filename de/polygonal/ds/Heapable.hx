@@ -32,11 +32,7 @@ package de.polygonal.ds;
 /**
  * <p>An object that can be inserted into a <em>Heap</em>.</p>
  */
-#if haxe3
 interface Heapable<T> extends Comparable<T>
-#else
-interface Heapable<T> implements Comparable<T>
-#end
 {
 	/**
 	 * Tracks the position inside a binary heap.<br/>

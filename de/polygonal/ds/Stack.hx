@@ -34,11 +34,7 @@ package de.polygonal.ds;
  * <p>The last element added to the stack will be the first one to be removed.</p>
  * <p>The "opposite" of a stack is a queue.</p>
  */
-#if haxe3
 interface Stack<T> extends Collection<T>
-#else
-interface Stack<T> implements Collection<T>
-#end
 {
 	/**
 	 * Adds the element <code>x</code> to the top of the stack.
