@@ -341,7 +341,8 @@ class TestArrayedStack extends haxe.unit.TestCase
 		stack.pop();
 		stack.dispose();
 		var x = untyped stack._a[stack._top];
-		assertEquals(#if (flash && generic) 0 #else null #end, x);
+		var value = #if (flash) 0 #else null #end;
+		assertEquals(value, x);
 	}
 	
 	function testIterator()
