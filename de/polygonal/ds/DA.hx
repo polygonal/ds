@@ -784,7 +784,7 @@ class DA<T> implements Collection<T>
 	 * Returns true if this queue contains the element <code>x</code>. 
 	 * <o>n</o>
 	 */
-	inline public function contains(x:T):Bool
+	public function contains(x:T):Bool
 	{
 		var found = false;
 		for (i in 0...size())
