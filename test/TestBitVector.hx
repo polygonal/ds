@@ -18,9 +18,9 @@ class TestBitVector extends haxe.unit.TestCase
 		for (i in 0...100)
 		{
 			if ((i & 1) == 1)
-				assertEquals(true, bv.has(i));
+				assertTrue(bv.has(i));
 			else
-				assertEquals(false, bv.has(i));
+				assertFalse(bv.has(i));
 		}
 	}
 	
@@ -204,6 +204,12 @@ class TestBitVector extends haxe.unit.TestCase
 	
 	function testClearRange()
 	{
+		// base case clear nothing
+		var b = new BitVector(2);
+		for (i in 0...2) b.set(i);
+		b.clrRange(0, 0);
+		for (i in 0...2) assertTrue(b.has(i));
+		
 		var b = new BitVector(32);
 		for (i in 0...32) b.set(i);
 		b.clrRange(0, 16);
@@ -244,6 +250,48 @@ class TestBitVector extends haxe.unit.TestCase
 		for (i in 0...5) assertTrue(b.has(i));
 		for (i in 5...35) assertFalse(b.has(i));
 		for (i in 35...64) assertTrue(b.has(i));
+	}
+	
+	function testSetRange()
+	{
+		// base case clear nothing
+		var b = new BitVector(2);
+		b.setRange(0, 0);
+		for (i in 0...2) assertFalse(b.has(i));
+		
+		var b = new BitVector(32);
+		b.setRange(0, 16);
+		for (i in 0...16) assertTrue(b.has(i));
+		for (i in 16...32) assertFalse(b.has(i));
+		
+		var b = new BitVector(64);
+		b.setRange(0, 25);
+		for (i in 0...25) assertTrue(b.has(i));
+		for (i in 25...64) assertFalse(b.has(i));
+		
+		var b = new BitVector(64);
+		b.setRange(0, 35);
+		for (i in 0...35) assertTrue(b.has(i));
+		for (i in 35...64) assertFalse(b.has(i));
+		
+		//min > 0
+		var b = new BitVector(32);
+		b.setRange(5, 16);
+		for (i in 0...5) assertFalse(b.has(i));
+		for (i in 5...16) assertTrue(b.has(i));
+		for (i in 16...32) assertFalse(b.has(i));
+		
+		var b = new BitVector(64);
+		b.setRange(5, 25);
+		for (i in 0...5) assertFalse(b.has(i));
+		for (i in 5...25) assertTrue(b.has(i));
+		for (i in 25...64) assertFalse(b.has(i));
+		
+		var b = new BitVector(64);
+		b.setRange(5, 35);
+		for (i in 0...5) assertFalse(b.has(i));
+		for (i in 5...35) assertTrue(b.has(i));
+		for (i in 35...64) assertFalse(b.has(i));
 	}
 	
 	function testSetAll()

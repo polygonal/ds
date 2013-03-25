@@ -185,12 +185,11 @@ class BitVector implements Hashable
 		
 		while ( current < max )
 		{
-			var binIndex = Std.int(current / Limits.INT_BITS);
-			var nextBound = (binIndex + 1) * Limits.INT_BITS;
+			var binIndex = current >> 5;
+			var nextBound = (binIndex + 1) << 5;
 			var mask = -1 << (Limits.INT_BITS - nextBound + current);
-			mask &= (max < nextBound) ? -1 >>> (Limits.INT_BITS - max + nextBound - 1) : -1;
-			mask = ~mask;
-			_bits[binIndex] &= mask;
+			mask &= (max < nextBound) ? -1 >>> (nextBound - max) : -1;
+			_bits[binIndex] &= ~mask;
 			
 			current = nextBound;
 		}
@@ -213,10 +212,10 @@ class BitVector implements Hashable
 		
 		while ( current < max )
 		{
-			var binIndex = Std.int(current / Limits.INT_BITS);
-			var nextBound = (binIndex + 1) * Limits.INT_BITS;
+			var binIndex = current >> 5;
+			var nextBound = (binIndex + 1) << 5;
 			var mask = -1 << (Limits.INT_BITS - nextBound + current);
-			mask &= (max < nextBound) ? -1 >>> (Limits.INT_BITS - max + nextBound - 1) : -1;
+			mask &= (max < nextBound) ? -1 >>> (nextBound - max) : -1;
 			_bits[binIndex] |= mask;
 			
 			current = nextBound;
