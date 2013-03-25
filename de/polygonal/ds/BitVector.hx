@@ -414,8 +414,7 @@ class BitVector implements Hashable
 	{
 		var copy = new BitVector(_bitSize);
 		var t = copy._bits;
-		for (i in 0..._arrSize)
-			t[i] = _bits[i];
+		Vector.blit(_bits, 0, copy._bits, 0, _arrSize);
 		return copy;
 	}
 }

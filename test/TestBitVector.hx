@@ -104,7 +104,7 @@ class TestBitVector extends haxe.unit.TestCase
 		for (i in 0...70)
 		{
 			if ((i & 1) == 0)
-				assertEquals(clone.has(i), true);
+				assertTrue(clone.has(i));
 		}
 	}
 	
