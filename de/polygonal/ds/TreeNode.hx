@@ -608,7 +608,7 @@ class TreeNode<T> implements Collection<T>
 	 * <o>1</o>
 	 * @return a subtree rooted at this node.
 	 */
-	inline public function unlink():TreeNode<T>
+	public function unlink():TreeNode<T>
 	{
 		if (parent != null)
 		{
