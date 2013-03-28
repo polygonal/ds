@@ -185,12 +185,11 @@ class BitVector implements Hashable
 		
 		while ( current < max )
 		{
-			var binIndex = Std.int(current / Limits.INT_BITS);
-			var nextBound = (binIndex + 1) * Limits.INT_BITS;
+			var binIndex = current >> 5;
+			var nextBound = (binIndex + 1) << 5;
 			var mask = -1 << (Limits.INT_BITS - nextBound + current);
-			mask &= (max < nextBound) ? -1 >>> (Limits.INT_BITS - max + nextBound - 1) : -1;
-			mask = ~mask;
-			_bits[binIndex] &= mask;
+			mask &= (max < nextBound) ? -1 >>> (nextBound - max) : -1;
+			_bits[binIndex] &= ~mask;
 			
 			current = nextBound;
 		}
@@ -213,10 +212,10 @@ class BitVector implements Hashable
 		
 		while ( current < max )
 		{
-			var binIndex = Std.int(current / Limits.INT_BITS);
-			var nextBound = (binIndex + 1) * Limits.INT_BITS;
+			var binIndex = current >> 5;
+			var nextBound = (binIndex + 1) << 5;
 			var mask = -1 << (Limits.INT_BITS - nextBound + current);
-			mask &= (max < nextBound) ? -1 >>> (Limits.INT_BITS - max + nextBound - 1) : -1;
+			mask &= (max < nextBound) ? -1 >>> (nextBound - max) : -1;
 			_bits[binIndex] |= mask;
 			
 			current = nextBound;
@@ -280,20 +279,21 @@ class BitVector implements Hashable
 		else
 		if (newSize < _arrSize)
 		{
-			var t = new Vector<Int>(newSize);
-			_bits.blit(0, t, 0, newSize);
-			for (i in 0...newSize) t[i] = _bits[i];
-			_bits = t;
+			_bits = new Vector(newSize);
+			
+			for (i in 0...newSize) _bits[i] = 0;
 		}
 		else
+		if (newSize > _arrSize)
 		{
-			if (_arrSize != newSize)
-			{
-				var t = new Vector<Int>(newSize);
-				for (i in 0..._arrSize) t[i] = _bits[i];
-				for (i in _arrSize...newSize) t[i] = 0;
-				_bits = t;
-			}
+			var t = new Vector<Int>(newSize);
+			Vector.blit(_bits, 0, t, 0, _arrSize);
+			for (i in _arrSize...newSize) t[i] = 0;
+			_bits = t;
+		}
+		else if (x < _bitSize)
+		{
+			for (i in 0...newSize) _bits[i] = 0;
 		}
 		
 		_bitSize = x;
@@ -415,8 +415,7 @@ class BitVector implements Hashable
 	{
 		var copy = new BitVector(_bitSize);
 		var t = copy._bits;
-		for (i in 0..._arrSize)
-			t[i] = _bits[i];
+		Vector.blit(_bits, 0, copy._bits, 0, _arrSize);
 		return copy;
 	}
 }
