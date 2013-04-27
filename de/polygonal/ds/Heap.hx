@@ -260,7 +260,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	 * @throws de.polygonal.core.util.AssertError <code>x</code> is null or <code>x</code> already exists (debug only).
 	 * @throws de.polygonal.core.util.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
 	 */
-	inline public function add(x:T):Void
+	public function add(x:T):Void
 	{
 		#if debug
 		D.assert(x != null, 'x is null');
@@ -285,7 +285,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	 * <o>log n</o>
 	 * @throws de.polygonal.core.util.AssertError heap is empty (debug only).
 	 */
-	inline public function pop():T
+	public function pop():T
 	{
 		#if debug
 		D.assert(size() > 0, 'heap is empty');
@@ -308,7 +308,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	 * <o>log n</o>
 	 * @throws de.polygonal.core.util.AssertError <code>x</code> already exists (debug only).
 	 */
-	inline public function replace(x:T):Void
+	public function replace(x:T):Void
 	{
 		#if (debug && flash)
 		D.assert(!_map.hasKey(x), 'x already exists');
@@ -328,7 +328,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	 * Likewise, a value &lt; 0 indicates that <code>x</code> is now bigger (ascending order) or smaller (descending order) and should be moved towards the leaf nodes of the tree.<br/>
 	 * @throws de.polygonal.core.util.AssertError <code>x</code> does not exist (debug only).
 	 */
-	inline public function change(x:T, hint:Int):Void
+	public function change(x:T, hint:Int):Void
 	{
 		#if (debug && flash)
 		D.assert(_map.hasKey(x), 'x does not exist');

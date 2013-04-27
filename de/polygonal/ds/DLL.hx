@@ -177,7 +177,7 @@ class DLL<T> implements Collection<T>
 	 * Creates and returns a new <code>DLLNode</code> object storing the value <code>x</code> and pointing to this list.
 	 * <o>1</o>
 	 */
-	inline public function createNode(x:T):DLLNode<T>
+	public function createNode(x:T):DLLNode<T>
 	{
 		return new DLLNode<T>(x, this);
 	}
@@ -188,7 +188,7 @@ class DLL<T> implements Collection<T>
 	 * @return the appended node storing <code>x</code>.
 	 * @throws de.polygonal.core.util.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
 	 */
-	inline public function append(x:T):DLLNode<T>
+	public function append(x:T):DLLNode<T>
 	{
 		#if debug
 		if (maxSize != -1)
@@ -219,7 +219,7 @@ class DLL<T> implements Collection<T>
 	 * Appends the node <code>x</code> to this list.
 	 * <o>1</o>
 	 */
-	inline public function appendNode(x:DLLNode<T>):Void
+	public function appendNode(x:DLLNode<T>):Void
 	{
 		#if debug
 		D.assert(x.getList() == this, 'node is not managed by this list');
@@ -249,7 +249,7 @@ class DLL<T> implements Collection<T>
 	 * @return the prepended node storing <code>x</code>.
 	 * @throws de.polygonal.core.util.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
 	 */
-	inline public function prepend(x:T):DLLNode<T>
+	public function prepend(x:T):DLLNode<T>
 	{
 		#if debug
 		if (maxSize != -1)
@@ -306,7 +306,7 @@ class DLL<T> implements Collection<T>
 	 * @return the inserted node storing <code>x</code>.
 	 * @throws de.polygonal.core.util.AssertError <code>node</code> is null or not managed by this list (debug only).
 	 */
-	inline public function insertAfter(node:DLLNode<T>, x:T):DLLNode<T>
+	public function insertAfter(node:DLLNode<T>, x:T):DLLNode<T>
 	{
 		#if debug
 		if (maxSize != -1)
@@ -334,7 +334,7 @@ class DLL<T> implements Collection<T>
 	 * @return the inserted node storing <code>x</code>.
 	 * @throws de.polygonal.core.util.AssertError <code>node</code> is null or not managed by this list (debug only).
 	 */
-	inline public function insertBefore(node:DLLNode<T>, x:T):DLLNode<T>
+	public function insertBefore(node:DLLNode<T>, x:T):DLLNode<T>
 	{
 		#if debug
 		if (maxSize != -1)
@@ -408,7 +408,7 @@ class DLL<T> implements Collection<T>
 	 * @throws de.polygonal.core.util.AssertError list is empty (debug only).
 	 * @throws de.polygonal.core.util.AssertError index out of range (debug only).
 	 */
-	inline public function getNodeAt(i:Int):DLLNode<T>
+	public function getNodeAt(i:Int):DLLNode<T>
 	{
 		#if debug
 		D.assert(_size > 0, 'list is empty');
@@ -425,7 +425,7 @@ class DLL<T> implements Collection<T>
 	 * <o>n</o>
 	 * @throws de.polygonal.core.util.AssertError list is empty (debug only).
 	 */
-	inline public function removeHead():T
+	public function removeHead():T
 	{
 		#if debug
 		D.assert(_size > 0, 'list is empty');
@@ -457,7 +457,7 @@ class DLL<T> implements Collection<T>
 	 * <o>1</o>
 	 * @throws de.polygonal.core.util.AssertError list is empty (debug only).
 	 */
-	inline public function removeTail():T
+	public function removeTail():T
 	{
 		#if debug
 		D.assert(_size > 0, 'list is empty');
@@ -490,7 +490,7 @@ class DLL<T> implements Collection<T>
 	 * <o>1</o>
 	 * @throws de.polygonal.core.util.AssertError list is empty (debug only).
 	 */
-	inline public function shiftUp():Void
+	public function shiftUp():Void
 	{
 		#if debug
 		D.assert(_size > 0, 'list is empty');
@@ -536,7 +536,7 @@ class DLL<T> implements Collection<T>
 	 * <o>1</o>
 	 * @throws de.polygonal.core.util.AssertError list is empty (debug only).
 	 */
-	inline public function popDown():Void
+	public function popDown():Void
 	{
 		#if debug
 		D.assert(_size > 0, 'list is empty');
@@ -1025,8 +1025,7 @@ class DLL<T> implements Collection<T>
 		for (i in 0..._size)
 		{
 			var next = node.next;
-			node.next = node.prev = null;
-			node.val = cast null;
+			node.free();
 			node = next;
 		}
 		head = tail = null;
@@ -1035,8 +1034,7 @@ class DLL<T> implements Collection<T>
 		while (_valid(node))
 		{
 			var next = node.next;
-			node.next = null;
-			node.val = cast null;
+			node.free();
 			node = next;
 		}
 		
@@ -1087,7 +1085,7 @@ class DLL<T> implements Collection<T>
 	 * <o>1 or n if <code>purge</code> is true</o>
 	 * @param purge if true, nodes, pointers and elements are nullified upon removal.
 	 */
-	inline public function clear(purge = false):Void
+	public function clear(purge = false):Void
 	{
 		if (purge || _reservedSize > 0)
 		{

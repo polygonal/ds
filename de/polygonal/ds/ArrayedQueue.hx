@@ -167,7 +167,7 @@ class ArrayedQueue<T> implements Queue<T>
 	 * @throws de.polygonal.core.util.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
 	 * @throws de.polygonal.core.util.AssertError out of space - queue is full but not resizable.
 	 */
-	inline public function enqueue(x:T):Void
+	public function enqueue(x:T):Void
 	{
 		#if debug
 		if (maxSize != -1)
@@ -200,7 +200,7 @@ class ArrayedQueue<T> implements Queue<T>
 	 * <o>1</o>
 	 * @throws de.polygonal.core.util.AssertError queue is empty (debug only).
 	 */
-	inline public function dequeue():T
+	public function dequeue():T
 	{
 		#if debug
 		D.assert(_size > 0, 'queue is empty');

@@ -865,8 +865,7 @@ class SLL<T> implements Collection<T>
 		for (i in 0..._size)
 		{
 			var next = node.next;
-			node.next = null;
-			node.val = cast null;
+			node.free();
 			node = next;
 		}
 		head = tail = null;
@@ -875,8 +874,7 @@ class SLL<T> implements Collection<T>
 		while (_valid(node))
 		{
 			var next = node.next;
-			node.next = null;
-			node.val = cast null;
+			node.free();
 			node = next;
 		}
 		
