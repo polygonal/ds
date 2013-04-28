@@ -78,9 +78,11 @@ class TreeNode<T> implements Collection<T>
 	public var next:TreeNode<T>;
 	
 	var _tail:TreeNode<T>;
+	var _nextInStack:TreeNode<T>;
+	var _prevInStack:TreeNode<T>;
+	
 	var _numChildren:Int;
 	var _timestamp:Int;
-	var _stack:Array<TreeNode<T>>;
 	
 	#if debug
 	var _busy:Bool;
@@ -97,10 +99,11 @@ class TreeNode<T> implements Collection<T>
 		this.parent = parent;
 		
 		children = null;
-		prev     = null;
-		next     = null;
-		_tail    = null;
-		_stack   = null;
+		prev = null;
+		next = null;
+		_tail = null;
+		_nextInStack = null;
+		_prevInStack = null;
 		
 		if (hasParent())
 		{
@@ -435,15 +438,6 @@ class TreeNode<T> implements Collection<T>
 	}
 	
 	/**
-	 * Assigns a reuses a stack for iterative preorder, postorder and levelorder traversals.<br/>
-	 * <o>1</o>
-	 */
-	public function setStack(stack:Array<TreeNode<T>>):Void
-	{
-		_stack = stack;
-	}
-	
-	/**
 	 * The total number of child nodes (non-recursive).
 	 * <o>1</o>
 	 */
@@ -622,6 +616,8 @@ class TreeNode<T> implements Collection<T>
 		if (hasPrevSibling()) prev.next = next;
 		if (hasNextSibling()) next.prev = prev;
 		next = prev = null;
+		_nextInStack = null;
+		_prevInStack = null;
 		return this;
 	}
 	
@@ -797,14 +793,11 @@ class TreeNode<T> implements Collection<T>
 	 */
 	public function find(x:T):TreeNode<T>
 	{
-		var stack = _stack == null ? new Array<TreeNode<T>>() : _stack;
-		var top = 1;
-		var max = 1;
-		stack[0] = this;
-		
-		while (top != 0)
+		var top = this;
+		while (top != null)
 		{
-			var node = stack[--top];
+			var node = top;
+			top = popOffStack(top);
 			if (node.val == x)
 				return node;
 			var n = node.children;
@@ -813,14 +806,11 @@ class TreeNode<T> implements Collection<T>
 				var c = node._tail;
 				while (c != null)
 				{
-					stack[top++] = c;
-					if (top > max) max = top;
+					top = pushOnStack(top, c);
 					c = c.prev;
 				}
 			}
 		}
-		
-		for (i in 0...max) stack[i] = null;
 		return null;
 	}
 	
@@ -845,6 +835,7 @@ class TreeNode<T> implements Collection<T>
 	 * @param iterative if true, an iterative traversal is used (default traversal style is recursive).
 	 * @param userData custom data that is passed to every visited node via <code>process</code> or element.<em>visit()</em>. If omitted, null is used.
 	 */
+	
 	public function preorder(process:TreeNode<T>->Bool->Dynamic->Bool = null, preflight = false, iterative = false, userData:Dynamic = null):Void
 	{
 		if (parent == null && children == null)
@@ -953,18 +944,31 @@ class TreeNode<T> implements Collection<T>
 		}
 		else
 		{
-			var stack = _stack == null ? new Array<TreeNode<T>>() : _stack;
-			var max = 1;
-			var top = 1;
-			stack[0] = this;
+			var top = this;
+			#if debug
+			D.assert(_prevInStack == null, '_prevInStack == null');
+			D.assert(_nextInStack == null, '_nextInStack == null');
+			#end
 			
 			if (process == null)
 			{
 				if (preflight)
 				{
-					while (top != 0)
+					while (top != null)
 					{
-						var node = stack[--top];
+						var node = top;
+						#if debug
+						if (node != null)
+							D.assert(node._nextInStack == null, 'node._nextInStack == null');
+						#end
+						
+						top = popOffStack(top);
+						
+						#if debug
+						if (top != null)
+							D.assert(top._nextInStack == null, 'top._nextInStack == null');
+						#end
+						
 						
 						#if debug
 						D.assert(Std.is(node.val, Visitable), 'element is not of type Visitable');
@@ -973,16 +977,27 @@ class TreeNode<T> implements Collection<T>
 						var v = cast(node.val, Visitable);
 						
 						if (!v.visit(true, userData)) continue;
-						if (!v.visit(false, userData))
-							return;
+						if (!v.visit(false, userData)) return;
+						
 						var n = node.children;
 						if (n != null)
 						{
 							var c = node._tail;
 							while (c != null)
 							{
-								stack[top++] = c;
-								if (top > max) max = top;
+								#if debug
+								if (top != null)
+									D.assert(top._nextInStack == null, 'top._nextInStack == null');
+								#end
+								
+								top = pushOnStack(top, c);
+								
+								#if debug
+								if (top != null)
+									D.assert(top._nextInStack == null, 'top._nextInStack == null');
+								#end
+								
+								
 								c = c.prev;
 							}
 						}
@@ -990,9 +1005,10 @@ class TreeNode<T> implements Collection<T>
 				}
 				else
 				{
-					while (top != 0)
+					while (top != null)
 					{
-						var node = stack[--top];
+						var node = top;
+						top = popOffStack(top);
 						
 						#if debug
 						D.assert(Std.is(node.val, Visitable), 'element is not of type Visitable');
@@ -1000,16 +1016,15 @@ class TreeNode<T> implements Collection<T>
 						
 						var v = cast(node.val, Visitable);
 						
-						if (!v.visit(false, userData))
-							return;
+						if (!v.visit(false, userData)) return;
+						
 						var n = node.children;
 						if (n != null)
 						{
 							var c = node._tail;
 							while (c != null)
 							{
-								stack[top++] = c;
-								if (top > max) max = top;
+								top = pushOnStack(top, c);
 								c = c.prev;
 							}
 						}
@@ -1020,21 +1035,21 @@ class TreeNode<T> implements Collection<T>
 			{
 				if (preflight)
 				{
-					while (top != 0)
+					while (top != null)
 					{
-						var node = stack[--top];
+						var node = top;
+						top = popOffStack(top);
 						
 						if (!process(node, true, userData)) continue;
-						if (!process(node, false, userData))
-							return;
+						if (!process(node, false, userData)) return;
+						
 						var n = node.children;
 						if (n != null)
 						{
 							var c = node._tail;
 							while (c != null)
 							{
-								stack[top++] = c;
-								if (top > max) max = top;
+								top = pushOnStack(top, c);
 								c = c.prev;
 							}
 						}
@@ -1042,27 +1057,25 @@ class TreeNode<T> implements Collection<T>
 				}
 				else
 				{
-					while (top != 0)
+					while (top != null)
 					{
-						var node = stack[--top];
-						if (!process(node, false, userData))
-							return;
+						var node = top;
+						top = popOffStack(top);
+						
+						if (!process(node, false, userData)) return;
 						var n = node.children;
 						if (n != null)
 						{
 							var c = node._tail;
 							while (c != null)
 							{
-								stack[top++] = c;
-								if (top > max) max = top;
+								top = pushOnStack(top, c);
 								c = c.prev;
 							}
 						}
 					}
 				}
 			}
-			
-			for (i in 0...max) stack[i] = null;
 		}
 	}
 	
@@ -1137,16 +1150,13 @@ class TreeNode<T> implements Collection<T>
 			#end
 			
 			var time = _timestamp + 1;
-			var stack = _stack == null ? new Array<TreeNode<T>>() : _stack;
-			var top = 1;
-			var max = 1;
-			stack[0] = this;
+			var top = this;
 			
 			if (process == null)
 			{
-				while (top != 0)
+				while (top != null)
 				{
-					var node = stack[top - 1];
+					var node = top;
 					if (node.hasChildren())
 					{
 						var found = false;
@@ -1156,8 +1166,8 @@ class TreeNode<T> implements Collection<T>
 							if (c._timestamp < time)
 							{
 								c._timestamp++;
-								stack[top++] = c;
-								if (top > max) max = top;
+								top = pushOnStack(top, c);
+								
 								found = true;
 							}
 							c = c.prev;
@@ -1177,7 +1187,7 @@ class TreeNode<T> implements Collection<T>
 								#end
 								return;
 							}
-							top--;
+							top = popOffStack(top);
 						}
 					}
 					else
@@ -1195,15 +1205,17 @@ class TreeNode<T> implements Collection<T>
 							return;
 						}
 						node._timestamp++;
-						top--;
+						top = popOffStack(top);
 					}
 				}
 			}
 			else
 			{
-				while (top != 0)
+				while (top != null)
 				{
-					var node = stack[top - 1];
+					//var node = stack[top - 1];
+					var node = top;
+					
 					if (node.hasChildren())
 					{
 						var found = false;
@@ -1213,8 +1225,7 @@ class TreeNode<T> implements Collection<T>
 							if (c._timestamp < time)
 							{
 								c._timestamp++;
-								stack[top++] = c;
-								if (top > max) max = top;
+								top = pushOnStack(top, c);
 								found = true;
 							}
 							c = c.prev;
@@ -1229,7 +1240,7 @@ class TreeNode<T> implements Collection<T>
 								#end
 								return;
 							}
-							top--;
+							top = popOffStack(top);
 						}
 					}
 					else
@@ -1242,11 +1253,10 @@ class TreeNode<T> implements Collection<T>
 							return;
 						}
 						node._timestamp++;
-						top--;
+						top = popOffStack(top);
 					}
 				}
 			}
-			for (i in 0...max) stack[i] = null;
 			#if debug
 			_busy = false;
 			#end
@@ -1279,7 +1289,7 @@ class TreeNode<T> implements Collection<T>
 			return;
 		}
 		
-		var q = _stack == null ? new Array<TreeNode<T>>() : _stack;
+		var q = new Array<TreeNode<T>>();
 		q[0] = this;
 		var i = 0;
 		var s = 1;
@@ -1925,12 +1935,14 @@ class TreeNode<T> implements Collection<T>
 			}
 		}
 		
-		val      = cast null;
-		prev     = null;
-		next     = null;
+		val = cast null;
+		prev = null;
+		next = null;
 		children = null;
-		parent   = null;
-		_tail    = null;
+		parent = null;
+		_tail = null;
+		_nextInStack = null;
+		_prevInStack = null;
 	}
 	
 	/**
@@ -2050,7 +2062,7 @@ class TreeNode<T> implements Collection<T>
 	{
 		var a:Array<T> = ArrayUtil.alloc(size());
 		var i = 0;
-		preorder(function(node:TreeNode<T>, preflight:Bool, userData:Dynamic):Bool { a[i++] = node.val; return true; });
+		preorder(function(node:TreeNode<T>, _, _):Bool { a[i++] = node.val; return true; });
 		return a;
 	}
 	
@@ -2063,7 +2075,7 @@ class TreeNode<T> implements Collection<T>
 	{
 		var a = new flash.Vector<Dynamic>(size());
 		var i = 0;
-		preorder(function(node:TreeNode<T>, preflight:Bool, userData:Dynamic):Bool { a[i++] = node.val; return true; });
+		preorder(function(node:TreeNode<T>, _, _):Bool { a[i++] = node.val; return true; });
 		return a;
 	}
 	#end
@@ -2077,7 +2089,7 @@ class TreeNode<T> implements Collection<T>
 	 */
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{
-		var stack = _stack == null ? new Array<TreeNode<T>>() : _stack;
+		var stack = new Array<TreeNode<T>>();
 		var copy = new TreeNode<T>(copier != null ? copier(val) : val);
 		
 		stack[0] = this;
@@ -2141,6 +2153,27 @@ class TreeNode<T> implements Collection<T>
 			}
 		}
 		return copy;
+	}
+	
+	inline function popOffStack(top:TreeNode<T>):TreeNode<T>
+	{
+		//pop off stack
+		var tmp = top;
+		top = top._prevInStack;
+		if (top != null) top._nextInStack = null;
+		tmp._prevInStack = null;
+		return top;
+	}
+	
+	inline function pushOnStack(top:TreeNode<T>, x:TreeNode<T>):TreeNode<T>
+	{
+		//push on stack
+		if (top != null)
+		{
+			top._nextInStack = x;
+			x._prevInStack = top;
+		}
+		return x;
 	}
 }
 
