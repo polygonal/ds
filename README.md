@@ -44,12 +44,25 @@ If you want to test the latest beta build, you should pull the dev branch and ad
 
 ## Changelog
 
+### 1.40 (dev-branch)
+_supports Haxe 3.0.0 r6415_
+
+ * modified: support Haxe 3 only (Haxe 2.x and Neko 1.x are no longer supported)
+ * modified: sacrifice Collection.toDA() for proper @:generic support
+ * modified: explicitly allocate elements in ArrayUtil.alloc() when targeting neko
+ * fixed: several fixes when compilin with -D generic 
+ * modified: change BitVector to use the haxe.ds.Vector as data
+ * modified: ArrayUtil.shrink(): trim when targeting cpp
+ * modified: ArrayUtil.alloc(): explicitly allocate elements when targeting cpp
+ * modified: more conservative inlining
+ * modified: don't allocate stack arrays when doing iterative pre/post-order traversals
+
 ### 1.39 (released 2013-02-12)
 _supports Haxe 2.10 & Haxe 3.00 r6189_
 
  * fixed: swc files: get rid of warnings for Flash Builder 4.7 + falcon compiler
  * fixed: cpp + blackberry target
- * fixed: some Haxe3 fixes
+ * fixed: some Haxe 3 fixes
 
 ### 1.38 (released 2013-01-27)
 
