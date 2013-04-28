@@ -80,9 +80,7 @@ class TreeNode<T> implements Collection<T>
 	var _tail:TreeNode<T>;
 	var _nextInStack:TreeNode<T>;
 	var _prevInStack:TreeNode<T>;
-	
-	var _numChildren:Int;
-	var _timestamp:Int;
+	var _extraInfo:Int;
 	
 	#if debug
 	var _busy:Bool;
@@ -107,7 +105,7 @@ class TreeNode<T> implements Collection<T>
 		
 		if (hasParent())
 		{
-			parent._numChildren++;
+			parent._incChildCount();
 			
 			if (parent.hasChildren())
 			{
@@ -122,8 +120,7 @@ class TreeNode<T> implements Collection<T>
 			parent._tail = this;
 		}
 		
-		_numChildren = 0;
-		_timestamp = 0;
+		_extraInfo = 0;
 		
 		#if debug
 		_busy = false;
@@ -363,13 +360,13 @@ class TreeNode<T> implements Collection<T>
 	 */
 	public function removeChildren(i = 0, n = -1):Void
 	{
-		if (n == -1) n = _numChildren - i;
+		if (n == -1) n = numChildren() - i;
 		
 		if (n == 0) return;
 		
 		#if debug
-		D.assert(i >= 0 && i <= _numChildren, Sprintf.format('i index out of range (%d)', [i]));
-		D.assert(n > 0 && n <= _numChildren && (i + n <= _numChildren), Sprintf.format('n out of range (%d)', [n]));
+		D.assert(i >= 0 && i <= numChildren(), Sprintf.format('i index out of range (%d)', [i]));
+		D.assert(n > 0 && n <= numChildren() && (i + n <= numChildren()), Sprintf.format('n out of range (%d)', [n]));
 		#end
 		
 		var j = 0;
@@ -443,7 +440,7 @@ class TreeNode<T> implements Collection<T>
 	 */
 	inline public function numChildren():Int
 	{
-		return _numChildren;
+		return _extraInfo >>> 16;
 	}
 	
 	/**
@@ -453,7 +450,7 @@ class TreeNode<T> implements Collection<T>
 	inline public function numSiblings():Int
 	{
 		if (hasParent())
-			return parent._numChildren - 1;
+			return parent.numChildren() - 1;
 		else
 			return 0;
 	}
@@ -610,7 +607,8 @@ class TreeNode<T> implements Collection<T>
 				parent.children = next;
 			if (parent._tail == this)
 				parent._tail = prev;
-			parent._numChildren--;
+			parent._decChildCount();
+			
 			parent = null;
 		}
 		if (hasPrevSibling()) prev.next = next;
@@ -634,7 +632,7 @@ class TreeNode<T> implements Collection<T>
 		
 		x.unlink();
 		x.parent = this;
-		_numChildren++;
+		_incChildCount();
 		
 		if (hasChildren())
 		{
@@ -658,7 +656,7 @@ class TreeNode<T> implements Collection<T>
 	{
 		x.unlink();
 		x.parent = this;
-		_numChildren++;
+		_incChildCount();
 		
 		if (hasChildren())
 		{
@@ -686,7 +684,7 @@ class TreeNode<T> implements Collection<T>
 		
 		x.unlink();
 		x.parent = this;
-		_numChildren++;
+		_incChildCount();
 		
 		if (children == null)
 		{
@@ -719,7 +717,7 @@ class TreeNode<T> implements Collection<T>
 		
 		x.unlink();
 		x.parent = this;
-		_numChildren++;
+		_incChildCount();
 		
 		if (children == null)
 		{
@@ -752,7 +750,7 @@ class TreeNode<T> implements Collection<T>
 		if (i == 0)
 			prependNode(x);
 		else
-		if (i == _numChildren)
+		if (i == numChildren())
 			appendNode(x);
 		else
 			insertBeforeChild(getChildAt(i), x);
@@ -1149,7 +1147,7 @@ class TreeNode<T> implements Collection<T>
 			_busy = true;
 			#end
 			
-			var time = _timestamp + 1;
+			var time = _getTimeStamp() + 1;
 			var top = this;
 			
 			if (process == null)
@@ -1163,9 +1161,9 @@ class TreeNode<T> implements Collection<T>
 						var c = node._tail;
 						while (c != null)
 						{
-							if (c._timestamp < time)
+							if (c._getTimeStamp() < time)
 							{
-								c._timestamp++;
+								c._incTimeStamp();
 								top = pushOnStack(top, c);
 								
 								found = true;
@@ -1204,7 +1202,7 @@ class TreeNode<T> implements Collection<T>
 							#end
 							return;
 						}
-						node._timestamp++;
+						node._incTimeStamp();
 						top = popOffStack(top);
 					}
 				}
@@ -1222,9 +1220,9 @@ class TreeNode<T> implements Collection<T>
 						var c = node._tail;
 						while (c != null)
 						{
-							if (c._timestamp < time)
+							if (c._getTimeStamp() < time)
 							{
-								c._timestamp++;
+								c._incTimeStamp();
 								top = pushOnStack(top, c);
 								found = true;
 							}
@@ -1252,7 +1250,7 @@ class TreeNode<T> implements Collection<T>
 							#end
 							return;
 						}
-						node._timestamp++;
+						node._incTimeStamp();
 						top = popOffStack(top);
 					}
 				}
@@ -2016,7 +2014,7 @@ class TreeNode<T> implements Collection<T>
 		}
 		else
 			children = null;
-		_numChildren = 0;
+		_setChildCount(0);
 	}
 	
 	/**
@@ -2100,7 +2098,7 @@ class TreeNode<T> implements Collection<T>
 			var c = stack[--i];
 			var n = stack[--i];
 			
-			c._numChildren = n._numChildren;
+			c._setChildCount(n.numChildren());
 			
 			if (n.hasChildren())
 			{
@@ -2157,7 +2155,6 @@ class TreeNode<T> implements Collection<T>
 	
 	inline function popOffStack(top:TreeNode<T>):TreeNode<T>
 	{
-		//pop off stack
 		var tmp = top;
 		top = top._prevInStack;
 		if (top != null) top._nextInStack = null;
@@ -2167,13 +2164,42 @@ class TreeNode<T> implements Collection<T>
 	
 	inline function pushOnStack(top:TreeNode<T>, x:TreeNode<T>):TreeNode<T>
 	{
-		//push on stack
 		if (top != null)
 		{
 			top._nextInStack = x;
 			x._prevInStack = top;
 		}
 		return x;
+	}
+	
+	inline function _incChildCount():Void
+	{
+		_extraInfo = (_extraInfo & 0x0000ffff) | ((numChildren() + 1) << 16);
+	}
+	
+	inline function _decChildCount():Void
+	{
+		_extraInfo = (_extraInfo & 0x0000ffff) | ((numChildren() - 1) << 16);
+	}
+	
+	inline function _setChildCount(x:Int):Void
+	{
+		_extraInfo = (_extraInfo & 0x0000ffff) | (x << 16);
+	}
+	
+	inline function _setTimeStamp(x:Int):Void
+	{
+		_extraInfo = (_extraInfo & 0xffff0000) | x;
+	}
+	
+	inline function _getTimeStamp():Int
+	{
+		return _extraInfo & 0xffff;
+	}
+	
+	inline function _incTimeStamp():Void
+	{
+		_extraInfo = (_extraInfo & 0xffff0000) | (_getTimeStamp() + 1);
 	}
 }
 
