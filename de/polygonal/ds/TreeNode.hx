@@ -1949,17 +1949,25 @@ class TreeNode<T> implements Collection<T>
 	 */
 	public function contains(x:T):Bool
 	{
-		var found = false;
-		preorder(function(node:TreeNode<T>, preflight:Bool, userData:Dynamic):Bool
+		var top = this;
+		while (top != null)
 		{
-			if (node.val == x)
+			var node = top;
+			top = popOffStack(top);
+			if (node.val == x) return true;
+			var n = node.children;
+			if (n != null)
 			{
-				found = true;
-				return false;
+				var c = node._tail;
+				while (c != null)
+				{
+					top = pushOnStack(top, c);
+					c = c.prev;
+				}
 			}
-			return true;
-		});
-		return found;
+		}
+		
+		return false;
 	}
 	
 	/**
