@@ -56,6 +56,7 @@ _supports Haxe 3.0.0 r6415_
  * modified: ArrayUtil.alloc(): explicitly allocate elements when targeting cpp
  * modified: more conservative inlining
  * modified: don't allocate stack arrays when doing iterative pre/post-order traversals
+ * modified: optimized TreeNode.contains()
 
 ### 1.39 (released 2013-02-12)
 _supports Haxe 2.10 & Haxe 3.00 r6189_
