@@ -99,7 +99,7 @@ class BitFlags
 	}
 	
 	/**
-	 * <code>x</code> =  0. 
+	 * <code>x</code> = 0.
 	 */
 	inline public static function nulf(x:BitField):Void
 	{

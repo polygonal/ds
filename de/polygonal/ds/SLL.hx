@@ -732,7 +732,7 @@ class SLL<T> implements Collection<T>
 	 * @param n the number of elements to replace. If 0, <code>n</code> is set to <em>size()</em>.
 	 * @throws de.polygonal.core.util.AssertError <code>n</code> out of range (debug only).
 	 */
-	public function fill(x:T, args:Array<Dynamic> = null, n = 0):Void
+	public function fill(x:T, args:Array<Dynamic> = null, n = 0):SLL<T>
 	{
 		#if debug
 		D.assert(n >= 0, 'n >= 0');
@@ -754,6 +754,8 @@ class SLL<T> implements Collection<T>
 			node.val = x;
 			node = node.next;
 		}
+		
+		return this;
 	}
 	
 	/**

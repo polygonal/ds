@@ -364,7 +364,7 @@ class ByteMemory extends MemoryAccess
 	/**
 	 * Sets all bytes to the value <code>x</code>. 
 	 */
-	public function fill(x:Int):Void
+	public function fill(x:Int):ByteMemory
 	{
 		#if alchemy
 		var offset = getAddr(0);
@@ -388,6 +388,8 @@ class ByteMemory extends MemoryAccess
 		#else
 		for (i in 0...size) set(i, x);
 		#end
+		
+		return this;
 	}
 	
 	/**

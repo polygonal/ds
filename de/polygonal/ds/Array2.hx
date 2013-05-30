@@ -384,9 +384,10 @@ class Array2<T> implements Collection<T>
 	 * Replaces all existing elements with the instance of <code>x</code>.
 	 * <o>n</o>
 	 */
-	public function fill(x:T):Void
+	public function fill(x:T):Array2<T>
 	{
 		for (i in 0...size()) __set(i, x);
+		return this;
 	}
 	
 	/**

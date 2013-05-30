@@ -434,7 +434,7 @@ class IntMemory extends MemoryAccess
 	/**
 	 * Sets all integers to the value <code>x</code>. 
 	 */
-	public function fill(x:Int):Void
+	public function fill(x:Int):IntMemory
 	{
 		#if alchemy
 		flash.Memory.setI32(0, x);
@@ -448,6 +448,8 @@ class IntMemory extends MemoryAccess
 		#else
 		for (i in 0...size) _data[i] = x;
 		#end
+		
+		return this;
 	}
 	
 	/**

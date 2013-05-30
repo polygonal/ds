@@ -370,7 +370,7 @@ class FloatMemory extends MemoryAccess
 	/**
 	 * Sets all floats to the value <code>x</code>. 
 	 */
-	public function fill(x:Float):Void
+	public function fill(x:Float):FloatMemory
 	{
 		#if alchemy
 		flash.Memory.setFloat(0, x);
@@ -384,6 +384,8 @@ class FloatMemory extends MemoryAccess
 		#else
 		for (i in 0...size) _data[i] = x;
 		#end
+		
+		return this;
 	}
 	
 	/**

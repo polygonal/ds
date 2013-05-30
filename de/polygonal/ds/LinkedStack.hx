@@ -434,7 +434,7 @@ class LinkedStack<T> implements Stack<T>
 	 * @param n the number of elements to replace. If 0, <code>n</code> is set to <em>size()</em>.
 	 * @throws de.polygonal.core.util.AssertError <code>n</code> out of range (debug only).
 	 */
-	public function fill(x:T, n = 0):Void
+	public function fill(x:T, n = 0):LinkedStack<T>
 	{
 		#if debug
 		D.assert(n >= 0, 'n >= 0');
@@ -456,6 +456,8 @@ class LinkedStack<T> implements Stack<T>
 			node.val = x;
 			node = node.next;
 		}
+		
+		return this;
 	}
 	
 	/**

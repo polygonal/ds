@@ -288,7 +288,7 @@ class BitMemory extends MemoryAccess
 	 * Sets all bits to the value <code>x</code>.
 	 * @throws de.polygonal.core.util.AssertError <code>x</code> is not 0 or 1 (debug only).
 	 */
-	public function fill(x:Int):Void
+	public function fill(x:Int):BitMemory
 	{
 		#if debug
 		D.assert(x == 0 || x == 1, 'x == 0 || x == 1');
@@ -311,6 +311,8 @@ class BitMemory extends MemoryAccess
 		else
 			for (i in 0...bytes >> 2) _data[i] =-1;
 		#end
+		
+		return this;
 	}
 	
 	/**

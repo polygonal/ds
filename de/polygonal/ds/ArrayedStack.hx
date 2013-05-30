@@ -426,7 +426,7 @@ class ArrayedStack<T> implements Stack<T>
 	 * @param n the number of elements to replace. If 0, <code>n</code> is set to <em>size()</em>.
 	 * @throws de.polygonal.core.util.AssertError <code>n</code> out of range (debug only).
 	 */
-	public function fill(x:T, n = 0):Void
+	public function fill(x:T, n = 0):ArrayedStack<T>
 	{
 		#if debug
 		D.assert(n >= 0, 'n >= 0');
@@ -446,6 +446,7 @@ class ArrayedStack<T> implements Stack<T>
 			__set(i, x);
 		
 		_top = n;
+		return this;
 	}
 	
 	/**

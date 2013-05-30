@@ -326,10 +326,10 @@ class LinkedDeque<T> implements Deque<T>
 	 * <o>n</o>
 	 * @param n the number of elements to replace. If 0, <code>n</code> is set to <em>size()</em>.
 	 */
-	public function fill(x:T, n = 0):Void
+	public function fill(x:T, n = 0):LinkedDeque<T>
 	{
 		if (n == 0) n = size();
-		if (n == 0) return;
+		if (n == 0) return this;
 		
 		var k = M.min(_size, n);
 		var node = _head;
@@ -348,6 +348,8 @@ class LinkedDeque<T> implements Deque<T>
 			_tail = node;
 			if (_size++ == 0) _head = _tail;
 		}
+		
+		return this;
 	}
 	
 	/**

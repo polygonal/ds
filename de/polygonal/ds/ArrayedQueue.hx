@@ -363,7 +363,7 @@ class ArrayedQueue<T> implements Queue<T>
 	 * @param n the number of elements to replace. If 0, <code>n</code> is set to <em>capacity</em>.
 	 * @throws de.polygonal.core.util.AssertError <code>n</code> out of range (debug only).
 	 */
-	public function fill(x:T, n = 0):Void
+	public function fill(x:T, n = 0):ArrayedQueue<T>
 	{
 		#if debug
 		D.assert(n >= 0, 'n >= 0');
@@ -378,6 +378,7 @@ class ArrayedQueue<T> implements Queue<T>
 			__set((i + _front) % _capacity, x);
 		
 		_size = k;
+		return this;
 	}
 	
 	/**

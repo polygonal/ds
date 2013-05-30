@@ -382,7 +382,7 @@ class DoubleMemory extends MemoryAccess
 	/**
 	 * Sets all doubles to the value <code>x</code>. 
 	 */
-	public function fill(x:Float):Void
+	public function fill(x:Float):DoubleMemory
 	{
 		#if alchemy
 		var offset = getAddr(0);
@@ -390,6 +390,8 @@ class DoubleMemory extends MemoryAccess
 		#else
 		for (i in 0...size) _data[i] = x;
 		#end
+		
+		return this;
 	}
 	
 	/**
