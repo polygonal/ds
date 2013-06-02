@@ -1426,6 +1426,9 @@ class TreeNode<T> implements Collection<T>
 	 */
 	public function toString():String
 	{
+		if (children == null)
+			return '{ TreeNode ${_print()} }';
+		
 		var s = '';
 		preorder(function(node:TreeNode<T>, preflight:Bool, userData:Dynamic):Bool
 		{
@@ -1433,11 +1436,11 @@ class TreeNode<T> implements Collection<T>
 			for (i in 0...d)
 			{
 				if (i == d - 1)
-					s += '+---';
+					s += '+--- ';
 				else
-					s += '|   ';
+					s += '|    ';
 			}
-			s += node._describe() + '\n';
+			s += '{ ' + node._print() + ' }\n';
 			return true;
 		});
 		return s;
@@ -1462,20 +1465,13 @@ class TreeNode<T> implements Collection<T>
 		return new ChildTreeIterator<T>(this);
 	}
 	
-	function _describe():String
+	function _print():String
 	{
-		var s = '{TreeNode';
-		var flags = new Array<String>();
-		if (isRoot())  flags.push('root');
-		if (isLeaf())  flags.push('leaf');
-		if (isChild()) flags.push('child');
-		s += ' (' + flags.join('|') + ')';
-		if (numChildren() > 0)
-			s += ', children: ' + numChildren();
-		s += ', depth: ' + depth();
-		s += ', value: ' + val;
-		s += '}';
-		return s;
+		var flags = '';
+		if (isRoot())  flags += ', root';
+		if (isLeaf())  flags += ', leaf';
+		if (isChild()) flags += ', child';
+		return 'val: $val, children: ${numChildren()}, depth: ${depth()}$flags';
 	}
 	
 	function _preOrderInternal(node:TreeNode<T>, process:TreeNode<T>->Bool->Dynamic->Bool, userData:Dynamic):Bool
