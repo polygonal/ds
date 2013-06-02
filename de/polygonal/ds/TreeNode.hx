@@ -1330,54 +1330,55 @@ class TreeNode<T> implements Collection<T>
 			return this;
 		}
 		
-		var q = new Array<TreeNode<T>>();
-		q[0] = this;
 		var i = 0;
 		var s = 1;
-		var max = 0;
-		var node, child;
+		var child;
+		var nodeHead = this;
+		var nodeTail = this;
+		nodeHead._nextInStack = null;
 		
 		if (process == null)
 		{
 			while (i < s)
 			{
-				node = q[i++];
+				i++;
 				
 				#if debug
-				D.assert(Std.is(node.val, Visitable), 'element is not of type Visitable');
+				D.assert(Std.is(nodeHead.val, Visitable), 'element is not of type Visitable');
 				#end
 				
-				if (!cast(node.val, Visitable).visit(false, userData))
+				if (!cast(nodeHead.val, Visitable).visit(false, userData))
 					return this;
-				var child = node.children;
+				
+				child = nodeHead.children;
 				while (child != null)
 				{
-					q[s++] = child;
-					if (s > max) max = s;
+					s++;
+					nodeTail = nodeTail != null ? nodeTail._nextInStack = child : child;
 					child = child.next;
 				}
+				nodeHead = nodeHead._nextInStack;
 			}
 		}
 		else
 		{
 			while (i < s)
 			{
-				node = q[i++];
+				i++;
 				
-				if (!process(node, userData))
+				if (!process(nodeHead, userData))
 					return this;
 				
-				child = node.children;
+				child = nodeHead.children;
 				while (child != null)
 				{
-					q[s++] = child;
-					if (s > max) max = s;
+					s++;
+					nodeTail = nodeTail != null ? nodeTail._nextInStack = child : child;
 					child = child.next;
 				}
+				nodeHead = nodeHead._nextInStack;
 			}
 		}
-		
-		for (i in 0...max) q[i] = null;
 		
 		return this;
 	}
