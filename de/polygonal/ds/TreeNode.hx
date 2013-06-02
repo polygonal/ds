@@ -29,7 +29,6 @@
  */
 package de.polygonal.ds;
 
-import de.polygonal.core.fmt.Sprintf;
 import de.polygonal.core.util.Assert;
 
 using de.polygonal.core.math.Mathematics;
@@ -274,9 +273,10 @@ class TreeNode<T> implements Collection<T>
 	 * Swaps the child <code>a</code> with child <code>b</code> by swapping their values.
 	 * @throws de.polygonal.core.util.AssertError <code>a</code> and <code>b</code> are not siblings (debug only).
 	 * @throws de.polygonal.core.util.AssertError <code>a</code> equals <code>b</code> (debug only).
+	 * @return this node.
 	 * <o>1</o>
 	 */
-	public function swapChildren(a:TreeNode<T>, b:TreeNode<T>):Void
+	public function swapChildren(a:TreeNode<T>, b:TreeNode<T>):TreeNode<T>
 	{
 		#if debug
 		D.assert(a.parent == b.parent, 'a and b are not siblings');
@@ -284,6 +284,8 @@ class TreeNode<T> implements Collection<T>
 		#end
 		
 		var tmp = a.val; a.val = b.val; b.val = tmp;
+		
+		return this;
 	}
 	
 	/**
@@ -291,14 +293,15 @@ class TreeNode<T> implements Collection<T>
 	 * @throws de.polygonal.core.util.AssertError index <code>i</code> out of range (debug only).
 	 * @throws de.polygonal.core.util.AssertError index <code>j</code> out of range (debug only).
 	 * @throws de.polygonal.core.util.AssertError <code>i</code> equals <code>j</code> (debug only).
+	 * @return this node.
 	 * <o>1</o>
 	 */
-	public function swapChildrenAt(i:Int, j:Int):Void
+	public function swapChildrenAt(i:Int, j:Int):TreeNode<T>
 	{
 		#if debug
-		D.assert(i >= 0 && i < numChildren(), Sprintf.format('the index i (%d) is out of range %d', [i, numChildren()]));
-		D.assert(j >= 0 && j < numChildren(), Sprintf.format('the index j (%d) is out of range %d', [j, numChildren()]));
-		D.assert(i != j, 'index i equals index j');
+		D.assert(i >= 0 && i < numChildren(), 'the index i ($i) is out of range ${numChildren()}');
+		D.assert(j >= 0 && j < numChildren(), 'the index j ($j) is out of range ${numChildren()}');
+		D.assert(i != j, 'index i ($i) equals index j');
 		#end
 		
 		var t = null;
@@ -311,7 +314,7 @@ class TreeNode<T> implements Collection<T>
 				if (t != null)
 				{
 					swapChildren(n, t);
-					return;
+					return this;
 				}
 				t = n;
 			}
@@ -321,24 +324,27 @@ class TreeNode<T> implements Collection<T>
 				if (t != null)
 				{
 					swapChildren(n, t);
-					return;
+					return this;
 				}
 				t = n;
 			}
 			c++;
 			n = n.next;
 		}
+		
+		return this;
 	}
 	
 	/**
-	 * Removes the child at index <code>i</code>.
+	 * Removes the child at index <code>i</code> and returns the child.
 	 * @throws de.polygonal.core.util.AssertError index <code>i</code> is out of range (debug only).
+	 * @return this node.
 	 * <o>n</o>
 	 */
-	public function removeChildAt(i:Int):Void
+	public function removeChildAt(i:Int):TreeNode<T>
 	{
 		#if debug
-		D.assert(i >= 0 && i < numChildren(), Sprintf.format('the index %d is out of range %d', [i, numChildren()]));
+		D.assert(i >= 0 && i < numChildren(), 'the index $i is out of range ${numChildren()}');
 		#end
 		
 		var j = 0;
@@ -350,23 +356,26 @@ class TreeNode<T> implements Collection<T>
 		}
 		
 		n.unlink();
+		
+		return n;
 	}
 	
 	/**
 	 * Removes <code>n</code> children starting at the specified index <code>i</code> in the range &#091;<code>i</code>, <code>i</code> + <code>n</code>&#093;.<br/>
 	 * If <code>n</code> is -1, <code>n</code> is set to <code>numChildren()</code> - <code>i</code>.
 	 * @throws de.polygonal.core.util.AssertError <code>i</code> or <code>n</code> out of range (debug only).
+	 * @return this node.
 	 * <o>n</o>
 	 */
-	public function removeChildren(i = 0, n = -1):Void
+	public function removeChildren(i = 0, n = -1):TreeNode<T>
 	{
 		if (n == -1) n = numChildren() - i;
 		
-		if (n == 0) return;
+		if (n == 0) return this;
 		
 		#if debug
-		D.assert(i >= 0 && i <= numChildren(), Sprintf.format('i index out of range (%d)', [i]));
-		D.assert(n > 0 && n <= numChildren() && (i + n <= numChildren()), Sprintf.format('n out of range (%d)', [n]));
+		D.assert(i >= 0 && i <= numChildren(), 'i index out of range ($i)');
+		D.assert(n > 0 && n <= numChildren() && (i + n <= numChildren()), 'n out of range ($n)');
 		#end
 		
 		var j = 0;
@@ -384,17 +393,20 @@ class TreeNode<T> implements Collection<T>
 			c = next;
 			j++;
 		}
+		
+		return this;
 	}
 	
 	/**
 	 * Changes the index of the child <code>x</code> to <code>i</code>.
 	 * @throws de.polygonal.core.util.AssertError index <code>i</code> is out of range (debug only).
+	 * @return this node.
 	 * <o>n</o>
 	 */
-	public function setChildIndex(x:TreeNode<T>, i:Int):Void
+	public function setChildIndex(x:TreeNode<T>, i:Int):TreeNode<T>
 	{
 		#if debug
-		D.assert(i >= 0 && i < numChildren(), Sprintf.format('the index %d is out of range %d', [i, numChildren()]));
+		D.assert(i >= 0 && i < numChildren(), 'the index $i is out of range ${numChildren()}');
 		#end
 		
 		var n = null;
@@ -413,7 +425,7 @@ class TreeNode<T> implements Collection<T>
 					else
 					if (k > i)
 						insertBeforeChild(n, x);
-					return;
+					return this;
 				}
 			}
 			if (x == c)
@@ -426,12 +438,13 @@ class TreeNode<T> implements Collection<T>
 					else
 					if (k > i)
 						insertBeforeChild(n, x);
-					return;
+					return this;
 				}
 			}
 			j++;
 			c = c.next;
 		}
+		return this;
 	}
 	
 	/**
@@ -568,7 +581,7 @@ class TreeNode<T> implements Collection<T>
 		if (hasChildren())
 		{
 			#if debug
-			D.assert(i >= 0 && i < numChildren(), Sprintf.format('index out of range (%d)', [i]));
+			D.assert(i >= 0 && i < numChildren(), 'index i out of range ($i)');
 			#end
 			
 			var child = children;
@@ -616,15 +629,17 @@ class TreeNode<T> implements Collection<T>
 		next = prev = null;
 		_nextInStack = null;
 		_prevInStack = null;
+		
 		return this;
 	}
 	
 	/**
 	 * Unlinks <code>x</code> and appends <code>x</code> as a child to this node.
 	 * @throws de.polygonal.core.util.AssertError <code>x</code> is null (debug only).
+	 * @return this node.
 	 * <o>1</o>
 	 */
-	public function appendNode(x:TreeNode<T>):Void
+	public function appendNode(x:TreeNode<T>):TreeNode<T>
 	{
 		#if debug
 		D.assert(x != null, 'x is null');
@@ -646,13 +661,16 @@ class TreeNode<T> implements Collection<T>
 			_tail = x;
 			children = x;
 		}
+		
+		return this;
 	}
 	
 	/**
 	 * Unlinks <code>x</code> and prepends <code>x</code> as a child of this node.
+	 * @return this node.
 	 * <o>1</o>
 	 */
-	public function prependNode(x:TreeNode<T>):Void
+	public function prependNode(x:TreeNode<T>):TreeNode<T>
 	{
 		x.unlink();
 		x.parent = this;
@@ -669,14 +687,17 @@ class TreeNode<T> implements Collection<T>
 			_tail = x;
 		
 		children = x;
+		
+		return this;
 	}
 	
 	/**
 	 * Unlinks <code>x</code> and appends <code>x</code> to the specified code>child</code> node.
 	 * <o>1</o>
 	 * @throws de.polygonal.core.util.AssertError <code>child</code> node is not a child of this node (debug only).
+	 * @return this node.
 	 */
-	public function insertAfterChild(child:TreeNode<T>, x:TreeNode<T>):Void
+	public function insertAfterChild(child:TreeNode<T>, x:TreeNode<T>):TreeNode<T>
 	{
 		#if debug
 		D.assert(child.parent == this, 'given child node is not a child of this node');
@@ -689,7 +710,7 @@ class TreeNode<T> implements Collection<T>
 		if (children == null)
 		{
 			children = x;
-			return;
+			return this;
 		}
 		
 		if (child.hasNextSibling())
@@ -702,14 +723,17 @@ class TreeNode<T> implements Collection<T>
 		
 		if (child == _tail)
 			_tail = x;
+		
+		return this;
 	}
 	
 	/**
 	 * Unlinks <code>x</code> and prepends <code>x</code> to the specified child <code>node</code>.
 	 * <o>1</o>
 	 * @throws de.polygonal.core.util.AssertError <code>child</code> node is not a child of this node (debug only).
+	 * @return this node.
 	 */
-	public function insertBeforeChild(child:TreeNode<T>, x:TreeNode<T>):Void
+	public function insertBeforeChild(child:TreeNode<T>, x:TreeNode<T>):TreeNode<T>
 	{
 		#if debug
 		D.assert(child.parent == this, 'given child node is not a child of this node');
@@ -722,7 +746,7 @@ class TreeNode<T> implements Collection<T>
 		if (children == null)
 		{
 			children = x;
-			return;
+			return this;
 		}
 		
 		if (child == children) children = x;
@@ -734,17 +758,20 @@ class TreeNode<T> implements Collection<T>
 		
 		x.next = child;
 		child.prev = x;
+		
+		return this;
 	}
 	
 	/**
 	 * Unlinks <code>x</code> and inserts <code>x</code> at the index position <code>i</code>.
 	 * @throws de.polygonal.core.util.AssertError index <code>i</code> out of range (debug only).
+	 * @return this node.
 	 * <o>1</o>
 	 */
-	public function insertChildAt(x:TreeNode<T>, i:Int):Void
+	public function insertChildAt(x:TreeNode<T>, i:Int):TreeNode<T>
 	{
 		#if debug
-		D.assert(i >= 0 && i <= numChildren(), Sprintf.format('index %d out of range', [i]));
+		D.assert(i >= 0 && i <= numChildren(), 'index $i out of range');
 		#end
 		
 		if (i == 0)
@@ -754,13 +781,16 @@ class TreeNode<T> implements Collection<T>
 			appendNode(x);
 		else
 			insertBeforeChild(getChildAt(i), x);
+		
+		return this;
 	}
 	
 	/**
 	 * Successively swaps this node with previous siblings until it reached the head of the sibling list.
+	 * @return this node.
 	 * <o>1</o>
 	 */
-	public function setFirst():Void
+	public function setFirst():TreeNode<T>
 	{
 		if (hasSiblings())
 		{
@@ -768,13 +798,16 @@ class TreeNode<T> implements Collection<T>
 			unlink();
 			p.prependNode(this);
 		}
+		
+		return this;
 	}
 	
 	/**
 	 * Successively swaps this node with next siblings until it reached the tail of the sibling list.
+	 * @return this node.
 	 * <o>1</o>
 	 */
-	public function setLast():Void
+	public function setLast():TreeNode<T>
 	{
 		if (hasSiblings())
 		{
@@ -782,6 +815,8 @@ class TreeNode<T> implements Collection<T>
 			unlink();
 			p.appendNode(this);
 		}
+		
+		return this;
 	}
 	
 	/**
@@ -809,6 +844,7 @@ class TreeNode<T> implements Collection<T>
 				}
 			}
 		}
+		
 		return null;
 	}
 	
@@ -832,9 +868,10 @@ class TreeNode<T> implements Collection<T>
 	 * <warn>In this case all elements have to implement <em>Visitable</em>.</warn>
 	 * @param iterative if true, an iterative traversal is used (default traversal style is recursive).
 	 * @param userData custom data that is passed to every visited node via <code>process</code> or element.<em>visit()</em>. If omitted, null is used.
+	 * @return this node.
 	 */
 	
-	public function preorder(process:TreeNode<T>->Bool->Dynamic->Bool = null, preflight = false, iterative = false, userData:Dynamic = null):Void
+	public function preorder(process:TreeNode<T>->Bool->Dynamic->Bool = null, preflight = false, iterative = false, userData:Dynamic = null):TreeNode<T>
 	{
 		if (parent == null && children == null)
 		{
@@ -863,7 +900,7 @@ class TreeNode<T> implements Collection<T>
 				else
 					process(this, false, userData);
 			}
-			return;
+			return this;
 		}
 		
 		if (iterative == false)
@@ -886,7 +923,7 @@ class TreeNode<T> implements Collection<T>
 							while (child != null)
 							{
 								hook = child.next;
-								if (!_preOrderInternalVisitablePreflight(child, userData)) return;
+								if (!_preOrderInternalVisitablePreflight(child, userData)) return this;
 								child = hook;
 							}
 						}
@@ -901,7 +938,7 @@ class TreeNode<T> implements Collection<T>
 						while (child != null)
 						{
 							hook = child.next;
-							if (!_preOrderInternalVisitable(child, userData)) return;
+							if (!_preOrderInternalVisitable(child, userData)) return this;
 							child = hook;
 						}
 					}
@@ -919,7 +956,7 @@ class TreeNode<T> implements Collection<T>
 							while (child != null)
 							{
 								hook = child.next;
-								if (!_preOrderInternalPreflight(child, process, userData)) return;
+								if (!_preOrderInternalPreflight(child, process, userData)) return this;
 								child = hook;
 							}
 						}
@@ -933,7 +970,7 @@ class TreeNode<T> implements Collection<T>
 						while (child != null)
 						{
 							hook = child.next;
-							if (!_preOrderInternal(child, process, userData)) return;
+							if (!_preOrderInternal(child, process, userData)) return this;
 							child = hook;
 						}
 					}
@@ -975,7 +1012,7 @@ class TreeNode<T> implements Collection<T>
 						var v = cast(node.val, Visitable);
 						
 						if (!v.visit(true, userData)) continue;
-						if (!v.visit(false, userData)) return;
+						if (!v.visit(false, userData)) return this;
 						
 						var n = node.children;
 						if (n != null)
@@ -1014,7 +1051,7 @@ class TreeNode<T> implements Collection<T>
 						
 						var v = cast(node.val, Visitable);
 						
-						if (!v.visit(false, userData)) return;
+						if (!v.visit(false, userData)) return this;
 						
 						var n = node.children;
 						if (n != null)
@@ -1039,7 +1076,7 @@ class TreeNode<T> implements Collection<T>
 						top = popOffStack(top);
 						
 						if (!process(node, true, userData)) continue;
-						if (!process(node, false, userData)) return;
+						if (!process(node, false, userData)) return this;
 						
 						var n = node.children;
 						if (n != null)
@@ -1060,7 +1097,7 @@ class TreeNode<T> implements Collection<T>
 						var node = top;
 						top = popOffStack(top);
 						
-						if (!process(node, false, userData)) return;
+						if (!process(node, false, userData)) return this;
 						var n = node.children;
 						if (n != null)
 						{
@@ -1075,6 +1112,8 @@ class TreeNode<T> implements Collection<T>
 				}
 			}
 		}
+		
+		return this;
 	}
 	
 	/**
@@ -1092,8 +1131,9 @@ class TreeNode<T> implements Collection<T>
 	 * <warn>In this case all elements have to implement <em>Visitable</em>.</warn>
 	 * @param iterative if true, an iterative traversal is used (default traversal style is recursive).
 	 * @param userData custom data that is passed to every visited node via <code>process</code> or element.<em>visit()</em>. If omitted, null is used.
+	 * @return this node.
 	 */
-	public function postorder(process:TreeNode<T>->Dynamic->Bool = null, iterative = false, userData:Dynamic = null):Void
+	public function postorder(process:TreeNode<T>->Dynamic->Bool = null, iterative = false, userData:Dynamic = null):TreeNode<T>
 	{
 		if (parent == null && children == null)
 		{
@@ -1107,7 +1147,7 @@ class TreeNode<T> implements Collection<T>
 			}
 			else
 				process(this, userData);
-			return;
+			return this;
 		}
 		
 		if (iterative == false)
@@ -1118,7 +1158,7 @@ class TreeNode<T> implements Collection<T>
 				while (child != null)
 				{
 					hook = child.next;
-					if (!_postOrderInternalVisitable(child, userData)) return;
+					if (!_postOrderInternalVisitable(child, userData)) return this;
 					child = hook;
 				}
 				
@@ -1134,7 +1174,7 @@ class TreeNode<T> implements Collection<T>
 				while (child != null)
 				{
 					hook = child.next;
-					if (!_postOrderInternal(child, process, userData)) return;
+					if (!_postOrderInternal(child, process, userData)) return this;
 					child = hook;
 				}
 				process(this, userData);
@@ -1183,7 +1223,7 @@ class TreeNode<T> implements Collection<T>
 								#if debug
 								_busy = false;
 								#end
-								return;
+								return this;
 							}
 							top = popOffStack(top);
 						}
@@ -1200,7 +1240,7 @@ class TreeNode<T> implements Collection<T>
 							#if debug
 							_busy = false;
 							#end
-							return;
+							return this;
 						}
 						node._incTimeStamp();
 						top = popOffStack(top);
@@ -1236,7 +1276,7 @@ class TreeNode<T> implements Collection<T>
 								#if debug
 								_busy = false;
 								#end
-								return;
+								return this;
 							}
 							top = popOffStack(top);
 						}
@@ -1248,7 +1288,7 @@ class TreeNode<T> implements Collection<T>
 							#if debug
 							_busy = false;
 							#end
-							return;
+							return this;
 						}
 						node._incTimeStamp();
 						top = popOffStack(top);
@@ -1259,6 +1299,8 @@ class TreeNode<T> implements Collection<T>
 			_busy = false;
 			#end
 		}
+		
+		return this;
 	}
 	
 	/**
@@ -1270,8 +1312,9 @@ class TreeNode<T> implements Collection<T>
 	 * If omitted, element.<em>visit()</em> is used instead.<br/>
 	 * <warn>In this case all elements have to implement <em>Visitable</em>.</warn>
 	 * @param userData custom data that is passed to every visited node via <code>process</code> or element.<em>visit()</em>. If omitted, null is used.
+	 * @return this node.
 	 */
-	public function levelorder(process:TreeNode<T>->Dynamic->Bool = null, userData:Dynamic = null):Void
+	public function levelorder(process:TreeNode<T>->Dynamic->Bool = null, userData:Dynamic = null):TreeNode<T>
 	{
 		if (children == null)
 		{
@@ -1284,7 +1327,7 @@ class TreeNode<T> implements Collection<T>
 			}
 			else
 				process(this, userData);
-			return;
+			return this;
 		}
 		
 		var q = new Array<TreeNode<T>>();
@@ -1305,7 +1348,7 @@ class TreeNode<T> implements Collection<T>
 				#end
 				
 				if (!cast(node.val, Visitable).visit(false, userData))
-					return;
+					return this;
 				var child = node.children;
 				while (child != null)
 				{
@@ -1322,7 +1365,7 @@ class TreeNode<T> implements Collection<T>
 				node = q[i++];
 				
 				if (!process(node, userData))
-					return;
+					return this;
 				
 				child = node.children;
 				while (child != null)
@@ -1335,6 +1378,8 @@ class TreeNode<T> implements Collection<T>
 		}
 		
 		for (i in 0...max) q[i] = null;
+		
+		return this;
 	}
 	
 	/**
@@ -1346,8 +1391,9 @@ class TreeNode<T> implements Collection<T>
 	 * @param useInsertionSort if true, the dense array is sorted using the insertion sort algorithm.
 	 * This is faster for nearly sorted lists.
 	 * @throws de.polygonal.core.util.AssertError element does not implement <em>Comparable</em> (debug only).
+	 * @return this node.
 	 */
-	public function sort(compare:T->T->Int, useInsertionSort = false):Void
+	public function sort(compare:T->T->Int, useInsertionSort = false):TreeNode<T>
 	{
 		if (hasChildren())
 		{
@@ -1356,6 +1402,8 @@ class TreeNode<T> implements Collection<T>
 			else
 				children = useInsertionSort ? _insertionSort(children, compare) : _mergeSort(children, compare);
 		}
+		
+		return this;
 	}
 	
 	/**
@@ -1566,7 +1614,7 @@ class TreeNode<T> implements Collection<T>
 			var v = n.val;
 			
 			#if debug
-			D.assert(Std.is(p.val, Comparable), Sprintf.format('element is not of type Comparable (%s)', [p.val]));
+			D.assert(Std.is(p.val, Comparable), 'element is not of type Comparable (${p.val})');
 			#end
 			
 			if (cast(p.val, Comparable<Dynamic>).compare(v) < 0)
@@ -1576,7 +1624,7 @@ class TreeNode<T> implements Collection<T>
 				while (i.hasPrevSibling())
 				{
 					#if debug
-					D.assert(Std.is(i.prev.val, Comparable), Sprintf.format('element is not of type Comparable (%s)', [i.prev.val]));
+					D.assert(Std.is(i.prev.val, Comparable), 'element is not of type Comparable (${i.prev.val})');
 					#end
 					
 					if (cast(i.prev.val, Comparable<Dynamic>).compare(v) < 0)
@@ -1714,7 +1762,7 @@ class TreeNode<T> implements Collection<T>
 					else
 					{
 						#if debug
-						D.assert(Std.is(p.val, Comparable), Sprintf.format('element is not of type Comparable (%s)', [p.val]));
+						D.assert(Std.is(p.val, Comparable), 'element is not of type Comparable (${p.val})');
 						#end
 						
 						if (cast(p.val, Comparable<Dynamic>).compare(q.val) >= 0)
@@ -2119,7 +2167,7 @@ class TreeNode<T> implements Collection<T>
 				if (copier == null)
 				{
 					#if debug
-					D.assert(Std.is(nchild.val, Cloneable), Sprintf.format('element is not of type Cloneable (%s)', [nchild.val]));
+					D.assert(Std.is(nchild.val, Cloneable), 'element is not of type Cloneable ({nchild.val})');
 					#end
 					
 					x = cast(nchild.val, Cloneable<Dynamic>).clone();
