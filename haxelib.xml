@@ -1,9 +1,0 @@
-<project name="polygonal-ds" url="https://github.com/polygonal/ds" license="MIT">
-	<user name="polygonal"/>
-	<tag v="cross"/>
-	<tag v="game"/>
-	<tag v="utility"/>
-	<depends name="polygonal-core"/>
-	<description>data structures for games</description>
-	<version name="1.38">see CHANGES</version>
-</project>

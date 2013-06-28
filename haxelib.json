@@ -1,0 +1,14 @@
+{
+	"name": "polygonal-ds",
+	"license": "MIT",
+	"description": "data structures for games",
+	"url": "https://github.com/polygonal/ds",
+	"tags": ["cross", "utility", "game"],
+	"contributors" : ["mbaczynski"],
+	"version": "1.4.0",
+	"releasenote": "See README",
+	"dependencies":
+	{
+		"polygonal-core":""
+	}
+}
