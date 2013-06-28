@@ -44,8 +44,8 @@ If you want to test the latest beta build, you should pull the dev branch and ad
 
 ## Changelog
 
-### 1.40 (dev-branch)
-_supports Haxe 3.0.0 r6415_
+### 1.4.0 (released 2013-06-28)
+_support Haxe Compiler 3.0.0_
 
  * modified: support Haxe 3 only (Haxe 2.x and Neko 1.x are no longer supported)
  * modified: sacrifice Collection.toDA() for proper @:generic support
@@ -57,6 +57,8 @@ _supports Haxe 3.0.0 r6415_
  * modified: more conservative inlining
  * modified: don't allocate stack arrays when doing iterative pre/post-order traversals
  * modified: optimized TreeNode.contains()
+ * modified: optimize TreeNode.levelOrder by using an implicit queue
+ * modified: all: fill() method returns this for chaining
 
 ### 1.39 (released 2013-02-12)
 _supports Haxe 2.10 & Haxe 3.00 r6189_
