@@ -5,10 +5,10 @@
 	"url": "https://github.com/polygonal/ds",
 	"tags": ["cross", "utility", "game"],
 	"contributors" : ["mbaczynski"],
-	"version": "1.4.0",
+	"version": "1.4.1",
 	"releasenote": "See README",
 	"dependencies":
 	{
-		"polygonal-core":""
+		"polygonal-sprintf":""
 	}
 }

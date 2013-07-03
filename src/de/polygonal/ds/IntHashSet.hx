@@ -29,8 +29,6 @@
  */
 package de.polygonal.ds;
 
-import de.polygonal.core.fmt.Sprintf;
-
 #if flash10
 #if alchemy
 import de.polygonal.ds.mem.IntMemory;

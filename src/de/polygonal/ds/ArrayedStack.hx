@@ -29,7 +29,6 @@
  */
 package de.polygonal.ds;
 
-import de.polygonal.core.fmt.Sprintf;
 import de.polygonal.ds.error.Assert.assert;
 
 private typedef ArrayedStackFriend<T> =

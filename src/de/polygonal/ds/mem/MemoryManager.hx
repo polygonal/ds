@@ -29,7 +29,6 @@
  */
 package de.polygonal.ds.mem;
 
-import de.polygonal.core.fmt.Sprintf;
 import de.polygonal.ds.error.Assert.assert;
 import de.polygonal.ds.Bits;
 
