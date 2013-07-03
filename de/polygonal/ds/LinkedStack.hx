@@ -29,7 +29,6 @@
  */
 package de.polygonal.ds;
 
-import de.polygonal.core.fmt.Sprintf;
 import de.polygonal.core.math.Limits;
 import de.polygonal.core.math.Mathematics;
 import de.polygonal.core.util.Assert;
@@ -97,7 +96,7 @@ class LinkedStack<T> implements Stack<T>
 		if (reservedSize > 0)
 		{
 			if (maxSize != -1)
-				D.assert(reservedSize <= maxSize, 'reserved size is greater than allowed size');
+				D.assert(reservedSize <= maxSize, "reserved size is greater than allowed size");
 		}
 		this.maxSize = (maxSize == -1) ? Limits.INT32_MAX : maxSize;
 		#else
@@ -133,7 +132,7 @@ class LinkedStack<T> implements Stack<T>
 	inline public function top():T
 	{
 		#if debug
-		D.assert(_top > 0, 'stack is empty');
+		D.assert(_top > 0, "stack is empty");
 		#end
 		return _head.val;
 	}
@@ -147,7 +146,7 @@ class LinkedStack<T> implements Stack<T>
 	{
 		#if debug
 		if (maxSize != -1)
-			D.assert(size() < maxSize, Sprintf.format('size equals max size (%d)', [maxSize]));
+			D.assert(size() < maxSize, 'size equals max size ($maxSize)');
 		#end
 		
 		var node = _getNode(x);
@@ -165,7 +164,7 @@ class LinkedStack<T> implements Stack<T>
 	inline public function pop():T
 	{
 		#if debug
-		D.assert(_top > 0, 'stack is empty');
+		D.assert(_top > 0, "stack is empty");
 		#end
 		
 		_top--;
@@ -184,9 +183,9 @@ class LinkedStack<T> implements Stack<T>
 	inline public function dup():Void
 	{
 		#if debug
-		D.assert(_top > 0, 'stack is empty');
+		D.assert(_top > 0, "stack is empty");
 		if (maxSize != -1)
-			D.assert(size() < maxSize, Sprintf.format('size equals max size (%d)', [maxSize]));
+			D.assert(size() < maxSize, 'size equals max size ($maxSize)');
 		#end
 		
 		var node = _getNode(_head.val);
@@ -203,7 +202,7 @@ class LinkedStack<T> implements Stack<T>
 	inline public function exchange():Void
 	{
 		#if debug
-		D.assert(_top > 1, 'size() < 2');
+		D.assert(_top > 1, "size() < 2");
 		#end
 		
 		var tmp = _head.val;
@@ -226,7 +225,7 @@ class LinkedStack<T> implements Stack<T>
 	inline public function rotRight(n:Int):Void
 	{
 		#if debug
-		D.assert(_top >= n, 'size() < n');
+		D.assert(_top >= n, "size() < n");
 		#end
 		
 		var node = _head;
@@ -255,7 +254,7 @@ class LinkedStack<T> implements Stack<T>
 	inline public function rotLeft(n:Int):Void
 	{
 		#if debug
-		D.assert(_top >= n, 'size() < n');
+		D.assert(_top >= n, "size() < n");
 		#end
 		
 		var top = _head;
@@ -279,8 +278,8 @@ class LinkedStack<T> implements Stack<T>
 	inline public function get(i:Int):T
 	{
 		#if debug
-		D.assert(_top > 0, 'stack is empty');
-		D.assert(i >= 0 && i < _top, Sprintf.format('i index out of range (%d)', [i]));
+		D.assert(_top > 0, "stack is empty");
+		D.assert(i >= 0 && i < _top, 'i index out of range ($i)');
 		#end
 		
 		var node = _head;
@@ -299,8 +298,8 @@ class LinkedStack<T> implements Stack<T>
 	inline public function set(i:Int, x:T):Void
 	{
 		#if debug
-		D.assert(_top > 0, 'stack is empty');
-		D.assert(i >= 0 && i < _top, Sprintf.format('i index out of range (%d)', [i]));
+		D.assert(_top > 0, "stack is empty");
+		D.assert(i >= 0 && i < _top, 'i index out of range ($i)');
 		#end
 		
 		var node = _head;
@@ -321,10 +320,10 @@ class LinkedStack<T> implements Stack<T>
 	inline public function swp(i:Int, j:Int):Void
 	{
 		#if debug
-		D.assert(_top > 0, 'stack is empty');
-		D.assert(i >= 0 && i < _top, Sprintf.format('i index out of range (%d)', [i]));
-		D.assert(j >= 0 && j < _top, Sprintf.format('j index out of range (%d)', [j]));
-		D.assert(i != j, Sprintf.format('i index equals j index (%d)', [i]));
+		D.assert(_top > 0, "stack is empty");
+		D.assert(i >= 0 && i < _top, 'i index out of range ($i)');
+		D.assert(j >= 0 && j < _top, 'j index out of range ($j)');
+		D.assert(i != j, 'i index equals j index ($i)');
 		#end
 		
 		var node = _head;
@@ -365,10 +364,10 @@ class LinkedStack<T> implements Stack<T>
 	inline public function cpy(i:Int, j:Int):Void
 	{
 		#if debug
-		D.assert(_top > 0, 'stack is empty');
-		D.assert(i >= 0 && i < _top, Sprintf.format('i index out of range (%d)', [i]));
-		D.assert(j >= 0 && j < _top, Sprintf.format('j index out of range (%d)', [j]));
-		D.assert(i != j, Sprintf.format('i index equals j index (%d)', [i]));
+		D.assert(_top > 0, "stack is empty");
+		D.assert(i >= 0 && i < _top, 'i index out of range ($i)');
+		D.assert(j >= 0 && j < _top, 'j index out of range ($j)');
+		D.assert(i != j, 'i index equals j index ($i)');
 		#end
 		
 		var node = _head;
@@ -406,14 +405,14 @@ class LinkedStack<T> implements Stack<T>
 	public function assign(C:Class<T>, args:Array<Dynamic> = null, n = 0):Void
 	{
 		#if debug
-		D.assert(n >= 0, 'n >= 0');
+		D.assert(n >= 0, "n >= 0");
 		#end
 		
 		if (n > 0)
 		{
 			#if debug
 			if (maxSize != -1)
-				D.assert(n <= maxSize, Sprintf.format('n out of range (%d)', [n]));
+				D.assert(n <= maxSize, 'n out of range ($n)');
 			#end
 		}
 		else
@@ -437,14 +436,14 @@ class LinkedStack<T> implements Stack<T>
 	public function fill(x:T, n = 0):LinkedStack<T>
 	{
 		#if debug
-		D.assert(n >= 0, 'n >= 0');
+		D.assert(n >= 0, "n >= 0");
 		#end
 		
 		if (n > 0)
 		{
 			#if debug
 			if (maxSize != -1)
-				D.assert(n <= maxSize, Sprintf.format('n out of range (%d)', [n]));
+				D.assert(n <= maxSize, 'n out of range ($n)');
 			#end
 		}
 		else
@@ -493,7 +492,7 @@ class LinkedStack<T> implements Stack<T>
 		else
 		{
 			#if debug
-			D.assert(rval.size() >= size(), 'insufficient random values');
+			D.assert(rval.size() >= size(), "insufficient random values");
 			#end
 			
 			var k = 0;
@@ -534,17 +533,18 @@ class LinkedStack<T> implements Stack<T>
 	 */
 	public function toString():String
 	{
-		var s = Sprintf.format('{LinkedStack size: %d}', [size()]);
+		var s = '{LinkedStack size: ${size()}}';
 		if (isEmpty()) return s;
-		s += '\n|< top\n';
+		s += "\n|< top\n";
 		var node = _head;
 		var i = _top - 1;
 		while (i >= 0)
 		{
-			s += Sprintf.format('  %d -> %s\n', [i--, Std.string(node.val)]);
+			s += '  $i -> ${Std.string(node.val)}\n';
+			i--;
 			node = node.next;
 		}
-		s += '>|';
+		s += ">|";
 		return s;
 	}
 	
@@ -772,7 +772,7 @@ class LinkedStack<T> implements Stack<T>
 			var srcNode = _head;
 			
 			#if debug
-			D.assert(Std.is(srcNode.val, Cloneable), Sprintf.format('element is not of type Cloneable (%s)', [srcNode.val]));
+			D.assert(Std.is(srcNode.val, Cloneable), 'element is not of type Cloneable (${srcNode.val})');
 			#end
 			
 			var c = cast(srcNode.val, Cloneable<Dynamic>);
@@ -782,7 +782,7 @@ class LinkedStack<T> implements Stack<T>
 			while (srcNode != null)
 			{
 				#if debug
-				D.assert(Std.is(srcNode.val, Cloneable), Sprintf.format('element is not of type Cloneable (%s)', [srcNode.val]));
+				D.assert(Std.is(srcNode.val, Cloneable), 'element is not of type Cloneable (${srcNode.val})');
 				#end
 				
 				c = cast(srcNode.val, Cloneable<Dynamic>);
@@ -915,7 +915,7 @@ class LinkedStackIterator<T> implements de.polygonal.ds.Itr<T>
 	inline public function remove():Void
 	{
 		#if debug
-		D.assert(_hook != null, 'call next() before removing an element');
+		D.assert(_hook != null, "call next() before removing an element");
 		#end
 		
 		#if flash

@@ -44,7 +44,7 @@ class ArrayUtil
 	inline public static function alloc<T>(x:Int):Array<T>
 	{
 		#if debug
-		D.assert(x >= 0, 'x >= 0');
+		D.assert(x >= 0, "x >= 0");
 		#end
 		
 		var a:Array<T>;
@@ -90,11 +90,11 @@ class ArrayUtil
 		if (max == -1) max = src.length;
 		
 		#if debug
-		D.assert(src != null, 'src != null');
-		D.assert(dst != null, 'dst != null');
-		D.assert(min >= 0, 'min >= 0');
-		D.assert(max <= src.length, 'max <= src.length');
-		D.assert(min < max, 'min < max');
+		D.assert(src != null, "src != null");
+		D.assert(dst != null, "dst != null");
+		D.assert(min >= 0, "min >= 0");
+		D.assert(max <= src.length, "max <= src.length");
+		D.assert(min < max, "min < max");
 		#end
 		
 		var j = 0;
@@ -134,10 +134,10 @@ class ArrayUtil
 	inline public static function memmove<T>(a:Array<T>, destination:Int, source:Int, n:Int):Void
 	{
 		#if debug
-		D.assert(destination >= 0 && source >= 0 && n >= 0, 'destination >= 0 && source >= 0 && n >= 0');
-		D.assert(source < a.length, 'source < a.length');
-		D.assert(destination + n <= a.length, 'destination + n <= a.length');
-		D.assert(n <= a.length, 'n <= a.length');
+		D.assert(destination >= 0 && source >= 0 && n >= 0, "destination >= 0 && source >= 0 && n >= 0");
+		D.assert(source < a.length, "source < a.length");
+		D.assert(destination + n <= a.length, "destination + n <= a.length");
+		D.assert(n <= a.length, "n <= a.length");
 		#end
 		
 		if (source == destination)
@@ -177,10 +177,10 @@ class ArrayUtil
 	public static function bsearchComparator<T>(a:Array<T>, x:T, min:Int, max:Int, comparator:T->T->Int):Int
 	{
 		#if debug
-		D.assert(a != null, 'a != null');
-		D.assert(comparator != null, 'comparator != null');
-		D.assert(min >= 0 && min < a.length, 'min >= 0 && min < a.length');
-		D.assert(max < a.length, 'max < a.length');
+		D.assert(a != null, "a != null");
+		D.assert(comparator != null, "comparator != null");
+		D.assert(min >= 0 && min < a.length, "min >= 0 && min < a.length");
+		D.assert(max < a.length, "max < a.length");
 		#end
 		
 		var l = min, m, h = max + 1;
@@ -209,9 +209,9 @@ class ArrayUtil
 	inline public static function bsearchInt(a:Array<Int>, x:Int, min:Int, max:Int):Int
 	{
 		#if debug
-		D.assert(a != null, 'a != null');
-		D.assert(min >= 0 && min < a.length, 'min >= 0 && min < a.length');
-		D.assert(max < a.length, 'max < a.length');
+		D.assert(a != null, "a != null");
+		D.assert(min >= 0 && min < a.length, "min >= 0 && min < a.length");
+		D.assert(max < a.length, "max < a.length");
 		#end
 		
 		var l = min, m, h = max + 1;
@@ -240,9 +240,9 @@ class ArrayUtil
 	inline public static function bsearchFloat(a:Array<Float>, x:Float, min:Int, max:Int):Int
 	{
 		#if debug
-		D.assert(a != null, 'a != null');
-		D.assert(min >= 0 && min < a.length, 'min >= 0 && min < a.length');
-		D.assert(max < a.length, 'max < a.length');
+		D.assert(a != null, "a != null");
+		D.assert(min >= 0 && min < a.length, "min >= 0 && min < a.length");
+		D.assert(max < a.length, "max < a.length");
 		#end
 		
 		var l = min, m, h = max + 1;
@@ -270,7 +270,7 @@ class ArrayUtil
 	public static function shuffle<T>(a:Array<T>, rval:Array<Float> = null):Void
 	{
 		#if debug
-		D.assert(a != null, 'a != null');
+		D.assert(a != null, "a != null");
 		#end
 		
 		var s = a.length;
@@ -288,7 +288,7 @@ class ArrayUtil
 		else
 		{
 			#if debug
-			D.assert(rval.length >= a.length, 'insufficient random values');
+			D.assert(rval.length >= a.length, "insufficient random values");
 			#end
 			
 			var j = 0;
@@ -317,8 +317,8 @@ class ArrayUtil
 		if (k > 1)
 		{
 			#if debug
-			D.assert(first >= 0 && first <= k - 1 && first + count <= k, 'first out of bound');
-			D.assert(count >= 0 && count <= k, 'count out of bound');
+			D.assert(first >= 0 && first <= k - 1 && first + count <= k, "first out of bound");
+			D.assert(count >= 0 && count <= k, "count out of bound");
 			#end
 			
 			if (useInsertionSort)
@@ -389,7 +389,7 @@ class ArrayUtil
 	public static function split<T>(a:Array<T>, n:Int, k:Int):Array<Array<T>>
 	{
 		#if debug
-		D.assert(n % k == 0, 'n is not a multiple of k');
+		D.assert(n % k == 0, "n is not a multiple of k");
 		#end
 		
 		var output = new Array<Array<T>>();

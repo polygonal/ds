@@ -167,7 +167,7 @@ class ObjectPool<T> implements Hashable
 	inline public function next():Int
 	{
 		#if debug
-		D.assert(_count < _size && _free != -1, 'pool exhausted');
+		D.assert(_count < _size && _free != -1, "pool exhausted");
 		++_count;
 		#end
 		
@@ -189,7 +189,7 @@ class ObjectPool<T> implements Hashable
 	inline public function get(id:Int):T
 	{
 		#if debug
-		D.assert(_usage.has(id), Sprintf.format('id %d is not used', [id]));
+		D.assert(_usage.has(id), 'id $id is not used');
 		#end
 		
 		if (_lazy)
@@ -208,8 +208,8 @@ class ObjectPool<T> implements Hashable
 	inline public function put(id:Int):Void
 	{
 		#if debug
-		D.assert(_usage.has(id), Sprintf.format('id %d is not used', [id]));
-		D.assert(_count > 0, 'pool is full');
+		D.assert(_usage.has(id), 'id $id is not used');
+		D.assert(_count > 0, "pool is full");
 		_usage.clr(id);
 		--_count;
 		#end
@@ -232,7 +232,7 @@ class ObjectPool<T> implements Hashable
 		
 		#if flash10
 		#if alchemy
-		_next = new de.polygonal.ds.mem.IntMemory(_size, 'ObjectPool._next');
+		_next = new de.polygonal.ds.mem.IntMemory(_size, "ObjectPool._next");
 		#else
 		_next = new flash.Vector<Int>(_size);
 		#end
@@ -246,7 +246,7 @@ class ObjectPool<T> implements Hashable
 		_pool = de.polygonal.ds.ArrayUtil.alloc(_size);
 		
 		#if debug
-		D.assert(C != null || fabricate != null || factory != null, 'invalid arguments');
+		D.assert(C != null || fabricate != null || factory != null, "invalid arguments");
 		#end
 		
 		if (_lazy)
@@ -293,19 +293,19 @@ class ObjectPool<T> implements Hashable
 	public function toString():String
 	{
 		#if debug
-		var s = Sprintf.format('{ObjectPool, used/total: %d/%d}', [_count, _size]);
+		var s = '{ObjectPool, used/total: $_count/$_size}';
 		if (size() == 0) return s;
-		s += '\n|<\n';
+		s += "\n|<\n";
 		
 		for (i in 0...size())
 		{
 			var t = Std.string(_pool[i]);
-			s += Sprintf.format('  %4d -> {%s}\n', [i, t]);
+			s += Sprintf.format("  %4d -> {%s}\n", [i, t]);
 		}
-		s += '>|';
+		s += ">|";
 		return s;
 		#else
-		return Sprintf.format('{ObjectPool, used/total: %d/%d}', [countUsedObjects(), _size]);
+		return '{ObjectPool, used/total: ${countUsedObjects()}/$_size}';
 		#end
 	}
 	
@@ -366,7 +366,7 @@ class ObjectPoolIterator<T> implements de.polygonal.ds.Itr<T>
 	
 	inline public function remove():Void
 	{
-		throw 'unsupported operation';
+		throw "unsupported operation";
 	}
 	
 	inline function __pool<T>(f:ObjectPoolFriend<T>)

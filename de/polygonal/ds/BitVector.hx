@@ -114,7 +114,7 @@ class BitVector implements Hashable
 	inline public function has(i:Int):Bool
 	{
 		#if debug
-		D.assert(i < capacity(), Sprintf.format('i index out of range (%d)', [i]));
+		D.assert(i < capacity(), 'i index out of range ($i)');
 		#end
 		
 		return ((_bits[i >> 5] & (1 << (i & (32 - 1)))) >> (i & (32 - 1))) != 0;
@@ -128,7 +128,7 @@ class BitVector implements Hashable
 	inline public function set(i:Int):Void
 	{
 		#if debug
-		D.assert(i < capacity(), Sprintf.format('i index out of range (%d)', [i]));
+		D.assert(i < capacity(), 'i index out of range ($i)');
 		#end
 		
 		var p = i >> 5;
@@ -143,7 +143,7 @@ class BitVector implements Hashable
 	inline public function clr(i:Int):Void
 	{
 		#if debug
-		D.assert(i < capacity(), Sprintf.format('i index out of range (%d)', [i]));
+		D.assert(i < capacity(), 'i index out of range ($i)');
 		#end
 		
 		var p = i >> 5;
@@ -178,7 +178,7 @@ class BitVector implements Hashable
 	inline public function clrRange(min:Int, max:Int):Void
 	{
 		#if debug
-		D.assert(min >= 0 && min <= max && max < _bitSize, Sprintf.format('min/max out of range (%d/%d)', [min, max]));
+		D.assert(min >= 0 && min <= max && max < _bitSize, 'min/max out of range ($min/$max)');
 		#end
 		
 		var current = min;
@@ -205,7 +205,7 @@ class BitVector implements Hashable
 	inline public function setRange(min:Int, max:Int):Void
 	{
 		#if debug
-		D.assert(min >= 0 && min <= max && max < _bitSize, Sprintf.format('min/max out of range (%d/%d)', [min, max]));
+		D.assert(min >= 0 && min <= max && max < _bitSize, 'min/max out of range ($min/$max)');
 		#end
 		
 		var current = min;
@@ -240,7 +240,7 @@ class BitVector implements Hashable
 	inline public function getBucketAt(i:Int):Int
 	{
 		#if debug
-		D.assert(i >= 0 && i < _arrSize, Sprintf.format('i index out of range (%d)', [i]));
+		D.assert(i >= 0 && i < _arrSize, 'i index out of range ($i)');
 		#end
 		
 		return _bits[i];
@@ -398,12 +398,12 @@ class BitVector implements Hashable
 	 */
 	public function toString():String
 	{
-		var s = Sprintf.format('{BitVector, set/all: %d/%d}', [size(), capacity()]);
+		var s = '{BitVector, set/all: ${size()}/${capacity()}}';
 		if (size() == 0) return s;
-		s += '\n|<\n';
+		s += "\n|<\n";
 		for (i in 0..._arrSize)
-			s += Sprintf.format('  %4d -> %#.32b\n', [i, _bits[i]]);
-		s += '>|';
+			s += Sprintf.format("  %4d -> %#.32b\n", [i, _bits[i]]);
+		s += ">|";
 		return s;
 	}
 	

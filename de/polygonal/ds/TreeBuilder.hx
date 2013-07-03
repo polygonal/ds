@@ -52,7 +52,7 @@ class TreeBuilder<T>
 	public function new(node:TreeNode<T>)
 	{
 		#if debug
-		D.assert(node != null, 'node is null');
+		D.assert(node != null, "node is null");
 		#end
 		
 		_node = node;
@@ -77,7 +77,7 @@ class TreeBuilder<T>
 	inline public function getVal():T
 	{
 		#if debug
-		D.assert(valid(), 'vertical pointer is null');
+		D.assert(valid(), "vertical pointer is null");
 		#end
 		
 		return _node.val;
@@ -91,7 +91,7 @@ class TreeBuilder<T>
 	inline public function setVal(x:T):Void
 	{
 		#if debug
-		D.assert(valid(), 'vertical pointer is null');
+		D.assert(valid(), "vertical pointer is null");
 		#end
 		
 		_node.val = x;
@@ -123,7 +123,7 @@ class TreeBuilder<T>
 	inline public function getChildVal():T
 	{
 		#if debug
-		D.assert(childValid(), 'invalid child node');
+		D.assert(childValid(), "invalid child node");
 		#end
 		
 		return _child.val;
@@ -146,7 +146,7 @@ class TreeBuilder<T>
 	inline public function root():Void
 	{
 		#if debug
-		D.assert(valid(), 'invalid vertical pointer');
+		D.assert(valid(), "invalid vertical pointer");
 		#end
 		
 		while (_node.hasParent()) _node = _node.parent;
@@ -161,7 +161,7 @@ class TreeBuilder<T>
 	inline public function up():Bool
 	{
 		#if debug
-		D.assert(valid(), 'invalid vertical pointer');
+		D.assert(valid(), "invalid vertical pointer");
 		#end
 		
 		if (_node.hasParent())
@@ -182,7 +182,7 @@ class TreeBuilder<T>
 	inline public function down():Bool
 	{
 		#if debug
-		D.assert(childValid(), 'node has no children');
+		D.assert(childValid(), "node has no children");
 		#end
 		
 		if (_child != null)
@@ -294,7 +294,7 @@ class TreeBuilder<T>
 	inline public function appendChild(x:T):TreeNode<T>
 	{
 		#if debug
-		D.assert(valid(), 'invalid vertical pointer');
+		D.assert(valid(), "invalid vertical pointer");
 		#end
 		
 		_child = _createChildNode(x, true);
@@ -309,7 +309,7 @@ class TreeBuilder<T>
 	inline public function prependChild(x:T):TreeNode<T>
 	{
 		#if debug
-		D.assert(valid(), 'invalid vertical pointer');
+		D.assert(valid(), "invalid vertical pointer");
 		#end
 		
 		var childNode = _createChildNode(x, false);
@@ -333,7 +333,7 @@ class TreeBuilder<T>
 	inline public function insertBeforeChild(x:T):TreeNode<T>
 	{
 		#if debug
-		D.assert(valid(), 'invalid vertical pointer');
+		D.assert(valid(), "invalid vertical pointer");
 		#end
 		
 		if (childValid())
@@ -363,7 +363,7 @@ class TreeBuilder<T>
 	inline public function insertAfterChild(x:T):TreeNode<T>
 	{
 		#if debug
-		D.assert(valid(), 'invalid vertical pointer');
+		D.assert(valid(), "invalid vertical pointer");
 		#end
 		
 		if (childValid())
@@ -416,7 +416,7 @@ class TreeBuilder<T>
 	 */
 	public function toString():String
 	{
-		return '{TreeBuilder, V: ' + (valid() ? _node.val : cast null) + ', H: ' + (childValid() ? _child.val : cast null) + '}';
+		return "{TreeBuilder, V: " + (valid() ? _node.val : cast null) + ", H: " + (childValid() ? _child.val : cast null) + "}";
 	}
 	
 	inline function _reset():Void

@@ -51,16 +51,16 @@ class ByteMemory extends MemoryAccess
 	public static function toByteArray(input:ByteMemory, min = -1, max = -1):flash.utils.ByteArray
 	{
 		#if debug
-		D.assert(input != null, 'invalid input');
+		D.assert(input != null, "invalid input");
 		#end
 		
 		if (min == -1) min = 0;
 		if (max == -1) max = input.size;
 		
 		#if debug
-		D.assert(min >= 0, Sprintf.format('min out of range (%d)', [min]));
-		D.assert(max <= input.size, Sprintf.format('max out of range (%d)', [max]));
-		D.assert(max - min > 0, Sprintf.format('min equals max (%d)', [min]));
+		D.assert(min >= 0, 'min out of range ($min)');
+		D.assert(max <= input.size, 'max out of range ($max)');
+		D.assert(max - min > 0, 'min equals max ($min)');
 		#end
 		
 		var t = min;
@@ -89,7 +89,7 @@ class ByteMemory extends MemoryAccess
 	public static function ofByteArray(input:flash.utils.ByteArray, min = -1, max = -1):ByteMemory
 	{
 		#if debug
-		D.assert(input != null, 'invalid input');
+		D.assert(input != null, "invalid input");
 		#end
 		
 		if (min == -1) min = 0;
@@ -98,11 +98,11 @@ class ByteMemory extends MemoryAccess
 		input.position = min;
 		
 		#if debug
-		D.assert(min >= 0, 'min >= 0');
-		D.assert(max <= Std.int(input.length), 'max <= input.length');
+		D.assert(min >= 0, "min >= 0");
+		D.assert(max <= Std.int(input.length), "max <= input.length");
 		#end
 		
-		var output = new ByteMemory(max - min, 'ofByteArray');
+		var output = new ByteMemory(max - min, "ofByteArray");
 		for (i in min...max) output.set(i - min, input.readByte());
 		return output;
 	}
@@ -117,16 +117,16 @@ class ByteMemory extends MemoryAccess
 	public static function toBytesData(input:ByteMemory, min = -1, max = -1):haxe.io.BytesData
 	{
 		#if debug
-		D.assert(input != null, 'invalid input');
+		D.assert(input != null, "invalid input");
 		#end
 		
 		if (min == -1) min = 0;
 		if (max == -1) max = input.size;
 		
 		#if debug
-		D.assert(min >= 0, Sprintf.format('min out of range (%d)', [min]));
-		D.assert(max <= input.size, Sprintf.format('max out of range (%d)', [max]));
-		D.assert(max - min > 0, Sprintf.format('min equals max (%d)', [min]));
+		D.assert(min >= 0, 'min out of range ($min)');
+		D.assert(max <= input.size, 'max out of range ($max)');
+		D.assert(max - min > 0, 'min equals max ($min)');
 		#end
 		
 		var output = new haxe.io.BytesBuffer();
@@ -142,7 +142,7 @@ class ByteMemory extends MemoryAccess
 	public static function ofBytesData(input:haxe.io.BytesData, min = -1, max = -1):ByteMemory
 	{
 		#if debug
-		D.assert(input != null, 'invalid input');
+		D.assert(input != null, "invalid input");
 		#end
 		
 		if (min == -1) min = 0;
@@ -151,11 +151,11 @@ class ByteMemory extends MemoryAccess
 		if (max == -1) max = bytes.length;
 		
 		#if debug
-		D.assert(min >= 0, 'min >= 0');
-		D.assert(max <= Std.int(bytes.length), 'max <= input.length');
+		D.assert(min >= 0, "min >= 0");
+		D.assert(max <= Std.int(bytes.length), "max <= input.length");
 		#end
 		
-		var output = new ByteMemory(max - min, 'ofBytesData');
+		var output = new ByteMemory(max - min, "ofBytesData");
 		for (i in min...max) output.set(i - min, bytes.get(i));
 		return output;
 	}
@@ -168,16 +168,16 @@ class ByteMemory extends MemoryAccess
 	public static function toArray(input:ByteMemory, min = -1, max = -1):Array<Int>
 	{
 		#if debug
-		D.assert(input != null, 'invalid input');
+		D.assert(input != null, "invalid input");
 		#end
 		
 		if (min == -1) min = 0;
 		if (max == -1) max = input.size;
 		
 		#if debug
-		D.assert(min >= 0, Sprintf.format('min out of range (%d)', [min]));
-		D.assert(max <= input.size, Sprintf.format('max out of range (%d)', [max]));
-		D.assert(max - min > 0, Sprintf.format('min equals max (%d)', [min]));
+		D.assert(min >= 0, 'min out of range ($min)');
+		D.assert(max <= input.size, 'max out of range ($max)');
+		D.assert(max - min > 0, 'min equals max ($min)');
 		#end
 		
 		var output = new Array();
@@ -205,18 +205,18 @@ class ByteMemory extends MemoryAccess
 	public static function ofArray(input:Array<Int>, min = -1, max = -1):ByteMemory
 	{
 		#if debug
-		D.assert(input != null, 'invalid input');
+		D.assert(input != null, "invalid input");
 		#end
 		
 		if (min == -1) min = 0;
 		if (max == -1) max = input.length;
 		
 		#if debug
-		D.assert(min >= 0, 'min >= 0');
-		D.assert(max <= Std.int(input.length), 'max <= input.length');
+		D.assert(min >= 0, "min >= 0");
+		D.assert(max <= Std.int(input.length), "max <= input.length");
 		#end
 		
-		var output = new ByteMemory(max - min, 'ofArray');
+		var output = new ByteMemory(max - min, "ofArray");
 		for (i in min...max) output.set(i - min, input[i]);
 		
 		return output;
@@ -232,22 +232,22 @@ class ByteMemory extends MemoryAccess
 	public static function toVector(input:ByteMemory, min = -1, max = -1, output:flash.Vector<Int> = null):flash.Vector<Int>
 	{
 		#if debug
-		D.assert(input != null, 'invalid input');
+		D.assert(input != null, "invalid input");
 		#end
 		
 		if (min == -1) min = 0;
 		if (max == -1) max = input.size;
 		
 		#if debug
-		D.assert(min >= 0, Sprintf.format('min out of range (%d)', [min]));
-		D.assert(max <= input.size, Sprintf.format('max out of range (%d)', [max]));
-		D.assert(max - min > 0, Sprintf.format('min equals max (%d)', [min]));
+		D.assert(min >= 0, 'min out of range ($min)');
+		D.assert(max <= input.size, 'max out of range ($max)');
+		D.assert(max - min > 0, 'min equals max ($min)');
 		#end
 		
 		#if debug
 		if (output != null)
 			if (output.fixed)
-				D.assert(Std.int(output.length) >= max - min, 'output vector is too small');
+				D.assert(Std.int(output.length) >= max - min, "output vector is too small");
 		#end
 		
 		if (output == null) output = new flash.Vector<Int>(max - min, true);
@@ -276,18 +276,18 @@ class ByteMemory extends MemoryAccess
 	public static function ofVector(input:flash.Vector<Int>, min = -1, max = -1):ByteMemory
 	{
 		#if debug
-		D.assert(input != null, 'invalid input');
+		D.assert(input != null, "invalid input");
 		#end
 		
 		if (min == -1) min = 0;
 		if (max == -1) max = input.length;
 		
 		#if debug
-		D.assert(min >= 0, 'min >= 0');
-		D.assert(max <= Std.int(input.length), 'max <= input.length');
+		D.assert(min >= 0, "min >= 0");
+		D.assert(max <= Std.int(input.length), "max <= input.length");
 		#end
 		
-		var output = new ByteMemory(max - min, 'ofVector');
+		var output = new ByteMemory(max - min, "ofVector");
 		for (i in min...max) output.set(i - min, input[i]);
 		
 		return output;
@@ -310,7 +310,7 @@ class ByteMemory extends MemoryAccess
 	/**
 	 * Creates a byte array capable of storing a total of <code>size</code> bytes.
 	 */
-	public function new(size:Int, name = '?')
+	public function new(size:Int, name = "?")
 	{
 		super(this.size = size, name);
 		
@@ -400,7 +400,7 @@ class ByteMemory extends MemoryAccess
 	override public function resize(newSize:Int):Void
 	{
 		#if debug
-		D.assert(newSize >= 0, Sprintf.format('invalid size (%d)', [newSize]));
+		D.assert(newSize >= 0, 'invalid size ($newSize)');
 		#end
 		
 		#if alchemy
@@ -465,7 +465,7 @@ class ByteMemory extends MemoryAccess
 	inline public function swp(i:Int, j:Int):Void
 	{
 		#if debug
-		D.assert(i != j, Sprintf.format('i equals j (%d)', [i]));
+		D.assert(i != j, 'i equals j ($i)');
 		#end
 		
 		#if alchemy
@@ -487,8 +487,8 @@ class ByteMemory extends MemoryAccess
 	inline public function getAddr(i:Int):Int
 	{
 		#if debug
-		D.assert(i >= 0 && i < size, Sprintf.format('segfault, index %d', [i]));
-		D.assert(_memory != null, 'memory deallocated');
+		D.assert(i >= 0 && i < size, 'segfault, index $i');
+		D.assert(_memory != null, "memory deallocated");
 		#end
 		
 		#if alchemy
@@ -527,15 +527,15 @@ class ByteMemory extends MemoryAccess
 	public function toString():String
 	{
 		#if debug
-		if (_memory == null) return '{ByteMemory (unassigned)}';
-		var s = Sprintf.format('{ByteMemory, size: %d, name: %s}', [size, name]);
-		s += '\n|<\n';
+		if (_memory == null) return "{ByteMemory (unassigned)}";
+		var s = '{ByteMemory, size: $size, name: $name}';
+		s += "\n|<\n";
 		for (i in 0...size)
-			s += Sprintf.format('  %3d -> %d\n', [i, get(i)]);
-		s += '\n>|';
+			s += Sprintf.format("  %3d -> %d\n", [i, get(i)]);
+		s += "\n>|";
 		return s;
 		#else
-		return Sprintf.format('{ByteMemory, size: %d, name: %s}', [size, name]);
+		return '{ByteMemory, size: $size, name: $name}';
 		#end
 	}
 }

@@ -29,7 +29,6 @@
  */
 package de.polygonal.ds;
 
-import de.polygonal.core.fmt.Sprintf;
 import de.polygonal.core.math.Limits;
 import de.polygonal.core.math.Mathematics;
 import de.polygonal.core.util.Assert;
@@ -105,7 +104,7 @@ class SLL<T> implements Collection<T>
 		if (reservedSize > 0)
 		{
 			if (maxSize != -1)
-				D.assert(reservedSize <= maxSize, 'reserved size is greater than allowed size');
+				D.assert(reservedSize <= maxSize, "reserved size is greater than allowed size");
 		}
 		this.maxSize = (maxSize == -1) ? Limits.INT32_MAX : maxSize;
 		#else
@@ -184,7 +183,7 @@ class SLL<T> implements Collection<T>
 	{
 		#if debug
 		if (maxSize != -1)
-			D.assert(size() < maxSize, Sprintf.format('size equals max size (%d)', [maxSize]));
+			D.assert(size() < maxSize, 'size equals max size ($maxSize)');
 		#end
 		
 		var node = _getNode(x);
@@ -208,7 +207,7 @@ class SLL<T> implements Collection<T>
 	inline public function appendNode(x:SLLNode<T>):Void
 	{
 		#if debug
-		D.assert(x.getList() == this, 'node is not managed by this list');
+		D.assert(x.getList() == this, "node is not managed by this list");
 		#end
 		
 		if (_valid(tail))
@@ -233,7 +232,7 @@ class SLL<T> implements Collection<T>
 	{
 		#if debug
 		if (maxSize != -1)
-			D.assert(size() < maxSize, Sprintf.format('size equals max size (%d)', [maxSize]));
+			D.assert(size() < maxSize, 'size equals max size ($maxSize)');
 		#end
 		
 		var node = _getNode(x);
@@ -257,7 +256,7 @@ class SLL<T> implements Collection<T>
 	public function prependNode(x:SLLNode<T>):Void
 	{
 		#if debug
-		D.assert(x.getList() == this, 'node is not managed by this list');
+		D.assert(x.getList() == this, "node is not managed by this list");
 		#end
 		
 		if (_valid(tail))
@@ -282,9 +281,9 @@ class SLL<T> implements Collection<T>
 	{
 		#if debug
 		if (maxSize != -1)
-			D.assert(size() < maxSize, Sprintf.format('size equals max size (%d)', [maxSize]));
-		D.assert(_valid(node), 'node is null');
-		D.assert(node.getList() == this, 'node is not managed by this list');
+			D.assert(size() < maxSize, 'size equals max size ($maxSize)');
+		D.assert(_valid(node), "node is null");
+		D.assert(node.getList() == this, "node is not managed by this list");
 		#end
 		
 		var t = _getNode(x);
@@ -310,9 +309,9 @@ class SLL<T> implements Collection<T>
 	{
 		#if debug
 		if (maxSize != -1)
-			D.assert(size() < maxSize, Sprintf.format('size equals max size (%d)', [maxSize]));
-		D.assert(_valid(node), 'node is null');
-		D.assert(node.getList() == this, 'node is not managed by this list');
+			D.assert(size() < maxSize, 'size equals max size ($maxSize)');
+		D.assert(_valid(node), "node is null");
+		D.assert(node.getList() == this, "node is not managed by this list");
 		#end
 		
 		var t = _getNode(x);
@@ -340,9 +339,9 @@ class SLL<T> implements Collection<T>
 	inline public function unlink(node:SLLNode<T>):SLLNode<T>
 	{
 		#if debug
-		D.assert(_valid(node), 'node is null');
-		D.assert(node.getList() == this, 'node is not managed by this list');
-		D.assert(_size > 0, 'list is empty');
+		D.assert(_valid(node), "node is null");
+		D.assert(node.getList() == this, "node is not managed by this list");
+		D.assert(_size > 0, "list is empty");
 		#end
 		
 		var hook = node.next;
@@ -386,8 +385,8 @@ class SLL<T> implements Collection<T>
 	inline public function getNodeAt(i:Int):SLLNode<T>
 	{
 		#if debug
-		D.assert(_size > 0, 'list is empty');
-		D.assert(i >= 0 || i < _size, Sprintf.format('i index out of range (%d)', [i]));
+		D.assert(_size > 0, "list is empty");
+		D.assert(i >= 0 || i < _size, 'i index out of range ($i)');
 		#end
 		
 		var node = head;
@@ -403,7 +402,7 @@ class SLL<T> implements Collection<T>
 	inline public function removeHead():T
 	{
 		#if debug
-		D.assert(_size > 0, 'list is empty');
+		D.assert(_size > 0, "list is empty");
 		#end
 		
 		var node = head;
@@ -431,7 +430,7 @@ class SLL<T> implements Collection<T>
 	inline public function removeTail():T
 	{
 		#if debug
-		D.assert(_size > 0, 'list is empty');
+		D.assert(_size > 0, "list is empty");
 		#end
 		
 		var node = tail;
@@ -464,7 +463,7 @@ class SLL<T> implements Collection<T>
 	inline public function shiftUp():Void
 	{
 		#if debug
-		D.assert(_size > 0, 'list is empty');
+		D.assert(_size > 0, "list is empty");
 		#end
 		
 		if (_size > 1)
@@ -495,7 +494,7 @@ class SLL<T> implements Collection<T>
 	inline public function popDown():Void
 	{
 		#if debug
-		D.assert(_size > 0, 'list is empty');
+		D.assert(_size > 0, "list is empty");
 		#end
 		
 		if (_size > 1)
@@ -532,7 +531,7 @@ class SLL<T> implements Collection<T>
 	{
 		#if debug
 		if (_valid(from))
-			D.assert(from.getList() == this, 'node is not managed by this list');
+			D.assert(from.getList() == this, "node is not managed by this list");
 		#end
 		
 		var node = (from == null) ? head : from;
@@ -583,9 +582,9 @@ class SLL<T> implements Collection<T>
 	{
 		#if debug
 		if (maxSize != -1)
-			D.assert(size() + x.size() <= maxSize, Sprintf.format('size equals max size (%d)', [maxSize]));
-		D.assert(x != this, 'x equals this list');
-		D.assert(x != null, 'x is null');
+			D.assert(size() + x.size() <= maxSize, 'size equals max size ($maxSize)');
+		D.assert(x != this, "x equals this list");
+		D.assert(x != null, "x is null");
 		#end
 		
 		if (_valid(x.head))
@@ -625,8 +624,8 @@ class SLL<T> implements Collection<T>
 	public function concat(x:SLL<T>):SLL<T>
 	{
 		#if debug
-		D.assert(x != null, 'x is null');
-		D.assert(x != this, 'x equals this list');
+		D.assert(x != null, "x is null");
+		D.assert(x != this, "x equals this list");
 		#end
 		
 		var c = new SLL<T>();
@@ -679,7 +678,7 @@ class SLL<T> implements Collection<T>
 	 */
 	public function join(x:String):String
 	{
-		var s = '';
+		var s = "";
 		if (_size > 0)
 		{
 			var node = head;
@@ -704,14 +703,14 @@ class SLL<T> implements Collection<T>
 	public function assign(C:Class<T>, args:Array<Dynamic> = null, n = 0):Void
 	{
 		#if debug
-		D.assert(n >= 0, 'n >= 0');
+		D.assert(n >= 0, "n >= 0");
 		#end
 		
 		if (n > 0)
 		{
 			#if debug
 			if (maxSize != -1)
-				D.assert(n <= size(), Sprintf.format('n out of range (%d)', [n]));
+				D.assert(n <= size(), 'n out of range ($n)');
 			#end
 		}
 		else
@@ -735,14 +734,14 @@ class SLL<T> implements Collection<T>
 	public function fill(x:T, args:Array<Dynamic> = null, n = 0):SLL<T>
 	{
 		#if debug
-		D.assert(n >= 0, 'n >= 0');
+		D.assert(n >= 0, "n >= 0");
 		#end
 		
 		if (n > 0)
 		{
 			#if debug
 			if (maxSize != -1)
-				D.assert(n <= size(), Sprintf.format('n out of range (%d)', [n]));
+				D.assert(n <= size(), 'n out of range ($n)');
 			#end
 		}
 		else
@@ -795,7 +794,7 @@ class SLL<T> implements Collection<T>
 		else
 		{
 			#if debug
-			D.assert(rval.size() >= size(), 'insufficient random values');
+			D.assert(rval.size() >= size(), "insufficient random values");
 			#end
 			
 			var j = 0;
@@ -839,16 +838,16 @@ class SLL<T> implements Collection<T>
 	 */
 	public function toString():String
 	{
-		var s = Sprintf.format('{SLL, size: %d, circular: %s}', [size(), isCircular()]);
+		var s = '{SLL, size: ${size()}, circular: ${isCircular()}}';
 		if (isEmpty()) return s;
-		s += '\n|< head \n';
+		s += "\n|< head \n";
 		var node = head;
 		for (i in 0..._size)
 		{
-			s += Sprintf.format('  %s\n', [Std.string(node.val)]);
+			s += '  ${Std.string(node.val)}\n';
 			node = node.next;
 		}
-		s += 'tail >|';
+		s += "tail >|";
 		return s;
 	}
 	
@@ -1111,7 +1110,7 @@ class SLL<T> implements Collection<T>
 			var srcNode = head;
 			
 			#if debug
-			D.assert(Std.is(head.val, Cloneable), Sprintf.format('element is not of type Cloneable (%s)', [head.val]));
+			D.assert(Std.is(head.val, Cloneable), 'element is not of type Cloneable (${head.val})');
 			#end
 			
 			var c = cast(head.val, Cloneable<Dynamic>);
@@ -1126,7 +1125,7 @@ class SLL<T> implements Collection<T>
 			for (i in 1..._size - 1)
 			{
 				#if debug
-				D.assert(Std.is(srcNode.val, Cloneable), Sprintf.format('element is not of type Cloneable (%s)', [srcNode.val]));
+				D.assert(Std.is(srcNode.val, Cloneable), 'element is not of type Cloneable (${srcNode.val})');
 				#end
 				
 				c = cast(srcNode.val, Cloneable<Dynamic>);
@@ -1136,7 +1135,7 @@ class SLL<T> implements Collection<T>
 			}
 			
 			#if debug
-			D.assert(Std.is(srcNode.val, Cloneable), Sprintf.format('element is not of type Cloneable (%s)', [srcNode.val]));
+			D.assert(Std.is(srcNode.val, Cloneable), 'element is not of type Cloneable (${srcNode.val})');
 			#end
 			
 			c = cast(srcNode.val, Cloneable<Dynamic>);
@@ -1205,7 +1204,7 @@ class SLL<T> implements Collection<T>
 					else
 					{
 						#if debug
-						D.assert(Std.is(p.val, Comparable), Sprintf.format('element is not of type Comparable (%s)', [p.val]));
+						D.assert(Std.is(p.val, Comparable), 'element is not of type Comparable (${p.val})');
 						#end
 						
 						if (cast(p.val, Comparable<Dynamic>).compare(q.val) >= 0)
@@ -1324,7 +1323,7 @@ class SLL<T> implements Collection<T>
 			j = i;
 			
 			#if debug
-			D.assert(Std.is(v[j - 1], Comparable), Sprintf.format('element is not of type Comparable (%s)', [v[j - 1]]));
+			D.assert(Std.is(v[j - 1], Comparable), 'element is not of type Comparable (${v[j - 1]})');
 			#end
 			
 			while ((j > 0) && cast(v[j - 1], Comparable<Dynamic>).compare(val) < 0)
@@ -1334,7 +1333,7 @@ class SLL<T> implements Collection<T>
 				
 				#if debug
 				if (j > 0)
-					D.assert(Std.is(v[j - 1], Comparable), Sprintf.format('element is not of type Comparable (%s)', [v[j - 1]]));
+					D.assert(Std.is(v[j - 1], Comparable), 'element is not of type Comparable (${v[j - 1]})');
 				#end
 				
 			}
@@ -1407,7 +1406,7 @@ class SLL<T> implements Collection<T>
 		else
 		{
 			#if debug
-			D.assert(_valid(_headPool.next), '_headPool.next != null');
+			D.assert(_valid(_headPool.next), "_headPool.next != null");
 			#end
 			
 			var t = _headPool;
@@ -1426,7 +1425,7 @@ class SLL<T> implements Collection<T>
 		if (_reservedSize > 0 && _poolSize < _reservedSize)
 		{
 			#if debug
-			D.assert(x.next == null, 'x.next == null');
+			D.assert(x.next == null, "x.next == null");
 			#end
 			
 			_tailPool = _tailPool.next = x;
@@ -1491,7 +1490,7 @@ class SLLIterator<T> implements de.polygonal.ds.Itr<T>
 	inline public function remove():Void
 	{
 		#if debug
-		D.assert(_hook != null, 'call next() before removing an element');
+		D.assert(_hook != null, "call next() before removing an element");
 		#end
 		
 		_f.unlink(_hook);
@@ -1544,7 +1543,7 @@ class CircularSLLIterator<T> implements de.polygonal.ds.Itr<T>
 	inline public function remove():Void
 	{
 		#if debug
-		D.assert(_i > 0, 'call next() before removing an element');
+		D.assert(_i > 0, "call next() before removing an element");
 		#end
 		
 		_f.unlink(_hook);

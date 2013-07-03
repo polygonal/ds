@@ -29,7 +29,6 @@
  */
 package de.polygonal.ds.pooling;
 
-import de.polygonal.core.fmt.Sprintf;
 import de.polygonal.core.util.Assert;
 import de.polygonal.ds.Hashable;
 import de.polygonal.ds.HashKey;
@@ -141,7 +140,7 @@ class LinkedObjectPool<T> implements Hashable
 			else
 			{
 				#if debug
-				if (!_growable) D.assert(false, 'object pool exhausted');
+				if (!_growable) D.assert(false, "object pool exhausted");
 				#end
 				return null;
 			}
@@ -157,7 +156,7 @@ class LinkedObjectPool<T> implements Hashable
 	inline public function put(o:T):Void
 	{
 		#if debug
-		D.assert(_usageCount != 0, 'object pool is full');
+		D.assert(_usageCount != 0, "object pool is full");
 		#end
 		
 		_usageCount--;
@@ -177,7 +176,7 @@ class LinkedObjectPool<T> implements Hashable
 		free();
 		
 		#if debug
-		D.assert(C != null || fabricate != null || factory != null, 'invalid arguments');
+		D.assert(C != null || fabricate != null || factory != null, "invalid arguments");
 		#end
 		
 		var buffer = new Array<T>();
@@ -289,21 +288,22 @@ class LinkedObjectPool<T> implements Hashable
 	public function toString():String
 	{
 		#if debug
-		var s = Sprintf.format('LinkedObjectPool (%d/%d objects used)', [getUsageCount(), getSize()]);
+		var s = 'LinkedObjectPool (${getUsageCount()}/${getSize()} objects used)';
 		if (getSize() == 0) return s;
-		s += '\n|<\n';
+		s += "\n|<\n";
 		var node = _head;
 		var i = 0;
 		while (true)
 		{
-			s += Sprintf.format('  %d -> %s\n', [i++, node.val]);
+			s += '  ${i} -> ${node.val}\n';
+			i++;
 			node = node.next;
 			if (node == _head) break;
 		}
-		s += '>|';
+		s += ">|";
 		return s;
 		#else
-		return Sprintf.format('LinkedObjectPool (%d/%d objects used)', [getUsageCount(), getSize()]);
+		return 'LinkedObjectPool (${getUsageCount()}/${getSize()} objects used)';
 		#end
 	}
 	

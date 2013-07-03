@@ -29,7 +29,6 @@
  */
 package de.polygonal.ds;
 
-import de.polygonal.core.fmt.Sprintf;
 import de.polygonal.core.math.Limits;
 import de.polygonal.core.util.Assert;
 
@@ -227,7 +226,7 @@ class Bits
 	inline public static function hasBitAt(x:Int, i:Int):Bool
 	{
 		#if debug
-		D.assert(i >= 0 && i < Limits.INT_BITS, Sprintf.format('index out of range (%d)', [i]));
+		D.assert(i >= 0 && i < Limits.INT_BITS, 'index out of range ($i)');
 		#end
 		
 		return (x & (1 << i)) != 0;
@@ -240,7 +239,7 @@ class Bits
 	inline public static function setBitAt(x:Int, i:Int):Int
 	{
 		#if debug
-		D.assert(i >= 0 && i < Limits.INT_BITS, Sprintf.format('index out of range (%d)', [i]));
+		D.assert(i >= 0 && i < Limits.INT_BITS, 'index out of range ($i)');
 		#end
 		
 		return x | (1 << i);
@@ -253,7 +252,7 @@ class Bits
 	inline public static function clrBitAt(x:Int, i:Int):Int
 	{
 		#if debug
-		D.assert(i >= 0 && i < Limits.INT_BITS, Sprintf.format('index out of range (%d)', [i]));
+		D.assert(i >= 0 && i < Limits.INT_BITS, 'index out of range ($i)');
 		#end
 		
 		return x & ~(1 << i);
@@ -266,7 +265,7 @@ class Bits
 	inline public static function invBitAt(x:Int, i:Int):Int
 	{
 		#if debug
-		D.assert(i >= 0 && i < Limits.INT_BITS, Sprintf.format('index out of range (%d)', [i]));
+		D.assert(i >= 0 && i < Limits.INT_BITS, 'index out of range ($i)');
 		#end
 		
 		return x ^ (1 << i);
@@ -285,7 +284,7 @@ class Bits
 			min != max &&
 			min >= 0   &&
 			min < Limits.INT_BITS,
-			Sprintf.format('invalid range (min: %d, max: %d)', [min, max])
+			'invalid range (min: $min, max: $max)'
 		);
 		#end
 		
@@ -299,7 +298,7 @@ class Bits
 	inline public static function mask(n:Int):Int
 	{
 		#if debug
-		D.assert(n >= 1 && n <= Limits.INT_BITS, 'n >= 1 && n <= Limits.INT_BITS');
+		D.assert(n >= 1 && n <= Limits.INT_BITS, "n >= 1 && n <= Limits.INT_BITS");
 		#end
 		
 		return (1 << n) - 1;
@@ -439,8 +438,8 @@ class Bits
 	inline public static function packI16(lo:Int, hi:Int):Int
 	{
 		#if debug
-		D.assert(lo >= Limits.INT16_MIN && lo <= Limits.INT16_MAX, 'lo overflow');
-		D.assert(hi >= Limits.INT16_MIN && hi <= Limits.INT16_MAX, 'hi overflow');
+		D.assert(lo >= Limits.INT16_MIN && lo <= Limits.INT16_MAX, "lo overflow");
+		D.assert(hi >= Limits.INT16_MIN && hi <= Limits.INT16_MAX, "hi overflow");
 		#end
 		
 		return ((hi + 0x8000) << 16) | (lo + 0x8000);
@@ -454,8 +453,8 @@ class Bits
 	inline public static function packUI16(lo:Int, hi:Int):Int
 	{
 		#if debug
-		D.assert(lo >= 0 && lo <= Limits.UINT16_MAX, 'lo overflow');
-		D.assert(hi >= 0 && hi <= Limits.UINT16_MAX, 'hi overflow');
+		D.assert(lo >= 0 && lo <= Limits.UINT16_MAX, "lo overflow");
+		D.assert(hi >= 0 && hi <= Limits.UINT16_MAX, "hi overflow");
 		#end
 		
 		return (hi << 16) | lo;

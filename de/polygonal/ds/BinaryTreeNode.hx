@@ -29,7 +29,6 @@
  */
 package de.polygonal.ds;
 
-import de.polygonal.core.fmt.Sprintf;
 import de.polygonal.core.util.Assert;
 
 using de.polygonal.core.math.Mathematics;
@@ -313,7 +312,7 @@ class BinaryTreeNode<T> implements Collection<T>
 		else
 		{
 			#if debug
-			D.assert(_busy == false, 'recursive call to iterative postorder');
+			D.assert(_busy == false, "recursive call to iterative postorder");
 			_busy = true;
 			#end
 			
@@ -534,9 +533,9 @@ class BinaryTreeNode<T> implements Collection<T>
 	 */
 	public function toString():String
 	{
-		var s = Sprintf.format('{BinaryTreeNode, val: %s size: %d, node depth: %d, tree height: %d}', [Std.string(val), size(), depth(), height()]);
+		var s = '{BinaryTreeNode, val: ${Std.string(val)} size: ${size()}, node depth: ${depth()}, tree height: ${height()}}';
 		if (size() == 1) return s;
-		s += '\n\n|<\n';
+		s += "\n\n|<\n";
 		var f = function(node:BinaryTreeNode<T>, userData:Dynamic):Bool
 		{
 			var d = node.depth();
@@ -544,17 +543,17 @@ class BinaryTreeNode<T> implements Collection<T>
 			for (i in 0...d)
 			{
 				if (i == d - 1)
-					t += (node.isL() ? 'L' : 'R') + '---';
+					t += (node.isL() ? "L" : "R") + "---";
 				else
-					t += '|   ';
+					t += "|   ";
 			}
 			
-			t = '  ' + t;
-			s += t + node.val + '\n';
+			t = "  " + t;
+			s += t + node.val + "\n";
 			return true;
 		}
 		preorder(f);
-		s += '>|\n';
+		s += ">|\n";
 		return s;
 	}
 	
@@ -821,7 +820,7 @@ class BinaryTreeNode<T> implements Collection<T>
 				if (n.hasR())
 				{
 					#if debug
-					D.assert(Std.is(n.r.val, Cloneable), Sprintf.format('element is not of type Cloneable (%s)', [n.r.val]));
+					D.assert(Std.is(n.r.val, Cloneable), 'element is not of type Cloneable (${n.r.val})');
 					#end
 					
 					t = cast n.r.val;
@@ -832,7 +831,7 @@ class BinaryTreeNode<T> implements Collection<T>
 				if (n.hasL())
 				{
 					#if debug
-					D.assert(Std.is(n.l.val, Cloneable), Sprintf.format('element is not of type Cloneable (%s)', [n.l.val]));
+					D.assert(Std.is(n.l.val, Cloneable), 'element is not of type Cloneable (${n.l.val})');
 					#end
 					
 					t = cast n.l.val;

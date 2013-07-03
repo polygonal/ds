@@ -29,7 +29,6 @@
  */
 package de.polygonal.ds.pooling;
 
-import de.polygonal.core.fmt.Sprintf;
 import de.polygonal.core.math.Limits;
 import de.polygonal.core.math.Mathematics;
 import de.polygonal.core.util.Assert;
@@ -164,7 +163,7 @@ class DynamicObjectPool<T>
 		if (factory   != null) _allocType |= Bits.BIT_03;
 		
 		#if debug
-		D.assert(Bits.ones(_allocType) == 1, 'invalid arguments');
+		D.assert(Bits.ones(_allocType) == 1, "invalid arguments");
 		#end
 		
 		key = HashKey.next();
@@ -257,7 +256,7 @@ class DynamicObjectPool<T>
 	inline public function put(x:T):Void
 	{
 		#if debug
-		D.assert(!_set.has(x), Sprintf.format('object %s was returned twice to the pool', [x]));
+		D.assert(!_set.has(x), 'object $x was returned twice to the pool');
 		_set.set(x);
 		#end
 		
@@ -301,7 +300,7 @@ class DynamicObjectPool<T>
 	 */
 	public function toString():String
 	{
-		return Sprintf.format('{DynamicObjectPool, size/capacity: %d/%d}', [size(), capacity()]);
+		return '{DynamicObjectPool, size/capacity: ${size()}/${capacity()}}';
 	}
 	
 	inline function _alloc()
@@ -353,7 +352,7 @@ class DynamicObjectPoolIterator<T> implements de.polygonal.ds.Itr<T>
 	
 	inline public function remove():Void
 	{
-		throw 'unsupported operation';
+		throw "unsupported operation";
 	}
 	
 	inline public function next():T

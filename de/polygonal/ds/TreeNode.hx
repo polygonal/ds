@@ -279,8 +279,8 @@ class TreeNode<T> implements Collection<T>
 	public function swapChildren(a:TreeNode<T>, b:TreeNode<T>):TreeNode<T>
 	{
 		#if debug
-		D.assert(a.parent == b.parent, 'a and b are not siblings');
-		D.assert(a != b, 'a equals b');
+		D.assert(a.parent == b.parent, "a and b are not siblings");
+		D.assert(a != b, "a equals b");
 		#end
 		
 		var tmp = a.val; a.val = b.val; b.val = tmp;
@@ -642,7 +642,7 @@ class TreeNode<T> implements Collection<T>
 	public function appendNode(x:TreeNode<T>):TreeNode<T>
 	{
 		#if debug
-		D.assert(x != null, 'x is null');
+		D.assert(x != null, "x is null");
 		#end
 		
 		x.unlink();
@@ -700,7 +700,7 @@ class TreeNode<T> implements Collection<T>
 	public function insertAfterChild(child:TreeNode<T>, x:TreeNode<T>):TreeNode<T>
 	{
 		#if debug
-		D.assert(child.parent == this, 'given child node is not a child of this node');
+		D.assert(child.parent == this, "given child node is not a child of this node");
 		#end
 		
 		x.unlink();
@@ -736,7 +736,7 @@ class TreeNode<T> implements Collection<T>
 	public function insertBeforeChild(child:TreeNode<T>, x:TreeNode<T>):TreeNode<T>
 	{
 		#if debug
-		D.assert(child.parent == this, 'given child node is not a child of this node');
+		D.assert(child.parent == this, "given child node is not a child of this node");
 		#end
 		
 		x.unlink();
@@ -878,7 +878,7 @@ class TreeNode<T> implements Collection<T>
 			if (process == null)
 			{
 				#if debug
-				D.assert(Std.is(val, Visitable), 'element is not of type Visitable');
+				D.assert(Std.is(val, Visitable), "element is not of type Visitable");
 				#end
 				
 				var v = cast(val, Visitable);
@@ -908,7 +908,7 @@ class TreeNode<T> implements Collection<T>
 			if (process == null)
 			{
 				#if debug
-				D.assert(Std.is(val, Visitable), 'element is not of type Visitable');
+				D.assert(Std.is(val, Visitable), "element is not of type Visitable");
 				#end
 				
 				if (preflight)
@@ -981,8 +981,8 @@ class TreeNode<T> implements Collection<T>
 		{
 			var top = this;
 			#if debug
-			D.assert(_prevInStack == null, '_prevInStack == null');
-			D.assert(_nextInStack == null, '_nextInStack == null');
+			D.assert(_prevInStack == null, "_prevInStack == null");
+			D.assert(_nextInStack == null, "_nextInStack == null");
 			#end
 			
 			if (process == null)
@@ -994,19 +994,19 @@ class TreeNode<T> implements Collection<T>
 						var node = top;
 						#if debug
 						if (node != null)
-							D.assert(node._nextInStack == null, 'node._nextInStack == null');
+							D.assert(node._nextInStack == null, "node._nextInStack == null");
 						#end
 						
 						top = popOffStack(top);
 						
 						#if debug
 						if (top != null)
-							D.assert(top._nextInStack == null, 'top._nextInStack == null');
+							D.assert(top._nextInStack == null, "top._nextInStack == null");
 						#end
 						
 						
 						#if debug
-						D.assert(Std.is(node.val, Visitable), 'element is not of type Visitable');
+						D.assert(Std.is(node.val, Visitable), "element is not of type Visitable");
 						#end
 						
 						var v = cast(node.val, Visitable);
@@ -1022,14 +1022,14 @@ class TreeNode<T> implements Collection<T>
 							{
 								#if debug
 								if (top != null)
-									D.assert(top._nextInStack == null, 'top._nextInStack == null');
+									D.assert(top._nextInStack == null, "top._nextInStack == null");
 								#end
 								
 								top = pushOnStack(top, c);
 								
 								#if debug
 								if (top != null)
-									D.assert(top._nextInStack == null, 'top._nextInStack == null');
+									D.assert(top._nextInStack == null, "top._nextInStack == null");
 								#end
 								
 								
@@ -1046,7 +1046,7 @@ class TreeNode<T> implements Collection<T>
 						top = popOffStack(top);
 						
 						#if debug
-						D.assert(Std.is(node.val, Visitable), 'element is not of type Visitable');
+						D.assert(Std.is(node.val, Visitable), "element is not of type Visitable");
 						#end
 						
 						var v = cast(node.val, Visitable);
@@ -1140,7 +1140,7 @@ class TreeNode<T> implements Collection<T>
 			if (process == null)
 			{
 				#if debug
-				D.assert(Std.is(val, Visitable), 'element is not of type Visitable');
+				D.assert(Std.is(val, Visitable), "element is not of type Visitable");
 				#end
 				
 				cast(val, Visitable).visit(false, userData);
@@ -1163,7 +1163,7 @@ class TreeNode<T> implements Collection<T>
 				}
 				
 				#if debug
-				D.assert(Std.is(val, Visitable), 'element is not of type Visitable');
+				D.assert(Std.is(val, Visitable), "element is not of type Visitable");
 				#end
 				
 				cast(val, Visitable).visit(false, userData);
@@ -1183,7 +1183,7 @@ class TreeNode<T> implements Collection<T>
 		else
 		{
 			#if debug
-			D.assert(_busy == false, 'recursive call to iterative postorder');
+			D.assert(_busy == false, "recursive call to iterative postorder");
 			_busy = true;
 			#end
 			
@@ -1214,7 +1214,7 @@ class TreeNode<T> implements Collection<T>
 						if (!found)
 						{
 							#if debug
-							D.assert(Std.is(node.val, Visitable), 'element is not of type Visitable');
+							D.assert(Std.is(node.val, Visitable), "element is not of type Visitable");
 							#end
 							
 							var v = cast(node.val, Visitable);
@@ -1231,7 +1231,7 @@ class TreeNode<T> implements Collection<T>
 					else
 					{
 						#if debug
-						D.assert(Std.is(node.val, Visitable), 'element is not of type Visitable');
+						D.assert(Std.is(node.val, Visitable), "element is not of type Visitable");
 						#end
 						
 						var v = cast(node.val, Visitable);
@@ -1321,7 +1321,7 @@ class TreeNode<T> implements Collection<T>
 			if (process == null)
 			{
 				#if debug
-				D.assert(Std.is(val, Visitable), 'element is not of type Visitable');
+				D.assert(Std.is(val, Visitable), "element is not of type Visitable");
 				#end
 				cast(val, Visitable).visit(false, userData);
 			}
@@ -1344,7 +1344,7 @@ class TreeNode<T> implements Collection<T>
 				i++;
 				
 				#if debug
-				D.assert(Std.is(nodeHead.val, Visitable), 'element is not of type Visitable');
+				D.assert(Std.is(nodeHead.val, Visitable), "element is not of type Visitable");
 				#end
 				
 				if (!cast(nodeHead.val, Visitable).visit(false, userData))
@@ -1430,18 +1430,18 @@ class TreeNode<T> implements Collection<T>
 		if (children == null)
 			return '{ TreeNode ${_print()} }';
 		
-		var s = '';
+		var s = "";
 		preorder(function(node:TreeNode<T>, preflight:Bool, userData:Dynamic):Bool
 		{
 			var d = node.depth();
 			for (i in 0...d)
 			{
 				if (i == d - 1)
-					s += '+--- ';
+					s += "+--- ";
 				else
-					s += '|    ';
+					s += "|    ";
 			}
-			s += '{ ' + node._print() + ' }\n';
+			s += "{ " + node._print() + " }\n";
 			return true;
 		});
 		return s;
@@ -1468,10 +1468,10 @@ class TreeNode<T> implements Collection<T>
 	
 	function _print():String
 	{
-		var flags = '';
-		if (isRoot())  flags += ', root';
-		if (isLeaf())  flags += ', leaf';
-		if (isChild()) flags += ', child';
+		var flags = "";
+		if (isRoot())  flags += ", root";
+		if (isLeaf())  flags += ", leaf";
+		if (isChild()) flags += ", child";
 		return 'val: $val, children: ${numChildren()}, depth: ${depth()}$flags';
 	}
 	
@@ -1517,7 +1517,7 @@ class TreeNode<T> implements Collection<T>
 	function _preOrderInternalVisitable(node:TreeNode<T>, userData:Dynamic):Bool
 	{
 		#if debug
-		D.assert(Std.is(node.val, Visitable), 'element is not of type Visitable');
+		D.assert(Std.is(node.val, Visitable), "element is not of type Visitable");
 		#end
 		
 		var v = cast(node.val, Visitable);
@@ -1541,7 +1541,7 @@ class TreeNode<T> implements Collection<T>
 	function _preOrderInternalVisitablePreflight(node:TreeNode<T>, userData:Dynamic):Bool
 	{
 		#if debug
-		D.assert(Std.is(node.val, Visitable), 'element is not of type Visitable');
+		D.assert(Std.is(node.val, Visitable), "element is not of type Visitable");
 		#end
 		
 		var v = cast(node.val, Visitable);
@@ -1594,7 +1594,7 @@ class TreeNode<T> implements Collection<T>
 		}
 		
 		#if debug
-		D.assert(Std.is(node.val, Visitable), 'element is not of type Visitable');
+		D.assert(Std.is(node.val, Visitable), "element is not of type Visitable");
 		#end
 		
 		return cast(node.val, Visitable).visit(false, userData);
@@ -2164,7 +2164,7 @@ class TreeNode<T> implements Collection<T>
 				if (copier == null)
 				{
 					#if debug
-					D.assert(Std.is(nchild.val, Cloneable), 'element is not of type Cloneable ({nchild.val})');
+					D.assert(Std.is(nchild.val, Cloneable), "element is not of type Cloneable ({nchild.val})");
 					#end
 					
 					x = cast(nchild.val, Cloneable<Dynamic>).clone();
@@ -2350,7 +2350,7 @@ class ChildTreeIterator<T> implements de.polygonal.ds.Itr<T>
 	inline public function remove():Void
 	{
 		#if debug
-		D.assert(_hook != null, 'call next() before removing an element');
+		D.assert(_hook != null, "call next() before removing an element");
 		#end
 		
 		_hook.unlink();

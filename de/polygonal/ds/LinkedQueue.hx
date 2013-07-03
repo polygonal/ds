@@ -99,7 +99,7 @@ class LinkedQueue<T> implements Queue<T>
 		if (reservedSize > 0)
 		{
 			if (maxSize != -1)
-				D.assert(reservedSize <= maxSize, 'reserved size is greater than allowed size');
+				D.assert(reservedSize <= maxSize, "reserved size is greater than allowed size");
 		}
 		this.maxSize = (maxSize == -1) ? Limits.INT32_MAX : maxSize;
 		#else
@@ -136,7 +136,7 @@ class LinkedQueue<T> implements Queue<T>
 	inline public function peek():T
 	{
 		#if debug
-		D.assert(_head != null, 'queue is empty');
+		D.assert(_head != null, "queue is empty");
 		#end
 		return _head.val;
 	}
@@ -150,7 +150,7 @@ class LinkedQueue<T> implements Queue<T>
 	inline public function back():T
 	{
 		#if debug
-		D.assert(_tail != null, 'queue is empty');
+		D.assert(_tail != null, "queue is empty");
 		#end
 		return _tail.val;
 	}
@@ -164,7 +164,7 @@ class LinkedQueue<T> implements Queue<T>
 	{
 		#if debug
 		if (maxSize != -1)
-			D.assert(size() < maxSize, Sprintf.format('size equals max size (%d)', [maxSize]));
+			D.assert(size() < maxSize, 'size equals max size ($maxSize)');
 		#end
 		
 		_size++;
@@ -190,7 +190,7 @@ class LinkedQueue<T> implements Queue<T>
 	inline public function dequeue():T
 	{
 		#if debug
-		D.assert(_head != null, 'queue is empty');
+		D.assert(_head != null, "queue is empty");
 		#end
 		
 		_size--;
@@ -218,14 +218,14 @@ class LinkedQueue<T> implements Queue<T>
 	public function assign(C:Class<T>, args:Array<Dynamic> = null, n = 0):Void
 	{
 		#if debug
-		D.assert(n >= 0, 'n >= 0');
+		D.assert(n >= 0, "n >= 0");
 		#end
 		
 		if (n > 0)
 		{
 			#if debug
 			if (maxSize != -1)
-				D.assert(n <= maxSize, Sprintf.format('n out of range (%d)', [n]));
+				D.assert(n <= maxSize, 'n out of range ($n)');
 			#end
 		}
 		else
@@ -249,14 +249,14 @@ class LinkedQueue<T> implements Queue<T>
 	public function fill(x:T, n = 0):LinkedQueue<T>
 	{
 		#if debug
-		D.assert(n >= 0, 'n >= 0');
+		D.assert(n >= 0, "n >= 0");
 		#end
 		
 		if (n > 0)
 		{
 			#if debug
 			if (maxSize != -1)
-				D.assert(n <= maxSize, Sprintf.format('n out of range (%d)', [n]));
+				D.assert(n <= maxSize, 'n out of range ($n)');
 			#end
 		}
 		else
@@ -304,7 +304,7 @@ class LinkedQueue<T> implements Queue<T>
 		else
 		{
 			#if debug
-			D.assert(rval.size() >= size(), 'insufficient random values');
+			D.assert(rval.size() >= size(), "insufficient random values");
 			#end
 			
 			var j = 0;
@@ -345,17 +345,17 @@ class LinkedQueue<T> implements Queue<T>
 	 */
 	public function toString():String
 	{
-		var s = Sprintf.format('{LinkedQueue size: %d}', [size()]);
+		var s = '{LinkedQueue size: ${size()}}';
 		if (isEmpty()) return s;
-		s += '\n|<\n';
+		s += "\n|<\n";
 		var node = _head;
 		var i = 0;
 		while (node != null)
 		{
-			s += Sprintf.format('  %4d -> %s\n', [i++, Std.string(node.val)]);
+			s += Sprintf.format("  %4d -> %s\n", [i++, Std.string(node.val)]);
 			node = node.next;
 		}
-		s += '>|';
+		s += ">|";
 		return s;
 	}
 	
@@ -603,7 +603,7 @@ class LinkedQueue<T> implements Queue<T>
 			if (node != null)
 			{
 				#if debug
-				D.assert(Std.is(node.val, Cloneable), Sprintf.format('element is not of type Cloneable (%s)', [node.val]));
+				D.assert(Std.is(node.val, Cloneable), 'element is not of type Cloneable (${node.val})');
 				#end
 				var c = cast(node.val, Cloneable<Dynamic>);
 				copy._head = copy._tail = new LinkedQueueNode<T>(c.clone());
@@ -616,7 +616,7 @@ class LinkedQueue<T> implements Queue<T>
 				while (node != null)
 				{
 					#if debug
-					D.assert(Std.is(node.val, Cloneable), Sprintf.format('element is not of type Cloneable (%s)', [node.val]));
+					D.assert(Std.is(node.val, Cloneable), 'element is not of type Cloneable (${node.val})');
 					#end
 					var c = cast(node.val, Cloneable<Dynamic>);
 					var t = new LinkedQueueNode<T>(c.clone());
@@ -717,7 +717,7 @@ class LinkedQueueNode<T>
 	
 	public function toString():String
 	{
-		return '' + val;
+		return "" + val;
 	}
 }
 
@@ -762,7 +762,7 @@ class LinkedQueueIterator<T> implements de.polygonal.ds.Itr<T>
 	inline public function remove():Void
 	{
 		#if debug
-		D.assert(_hook != null, 'call next() before removing an element');
+		D.assert(_hook != null, "call next() before removing an element");
 		#end
 		
 		#if flash

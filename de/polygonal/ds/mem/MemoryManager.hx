@@ -193,10 +193,10 @@ class MemoryManager
 	inline public static function memmove(destination:Int, source:Int, n:Int):Void
 	{
 		#if debug
-		D.assert(destination >= 0 && source >= 0 && n >= 0, 'destination >= 0 && source >= 0 && n >= 0');
-		D.assert(source < Std.int(bytes().length), 'source < Std.int(bytes.length)');
-		D.assert(destination + n <= Std.int(bytes().length), 'destination + n <= Std.int(bytes.length)');
-		D.assert(n <= Std.int(bytes().length), 'n <= Std.int(bytes.length)');
+		D.assert(destination >= 0 && source >= 0 && n >= 0, "destination >= 0 && source >= 0 && n >= 0");
+		D.assert(source < Std.int(bytes().length), "source < Std.int(bytes.length)");
+		D.assert(destination + n <= Std.int(bytes().length), "destination + n <= Std.int(bytes.length)");
+		D.assert(n <= Std.int(bytes().length), "n <= Std.int(bytes.length)");
 		#end
 		
 		if (source == destination)
@@ -230,20 +230,20 @@ class MemoryManager
 	public static function dump():String
 	{
 		#if alchemy
-		var s = Sprintf.format('{MemoryManager, %d bytes total, %d bytes free (%d)}', [MemoryManager.bytesTotal(), MemoryManager.bytesFree(), get()._bytes.length - get()._blockSizeBytes]);
-		s += '\n|< front\n';
+		var s = '{MemoryManager, ${bytesTotal()} bytes total, ${bytesFree()} bytes free (${get()._bytes.length - get()._blockSizeBytes})}';
+		s += "\n|< front\n";
 		var i = get()._segmentList;
 		var j = 0;
 		while (i != null)
 		{
 			var friend:{private var _access:MemoryAccess;} = i;
-			s += Sprintf.format('  %4d -> %s (%s)\n', [j++, Std.string(i), friend._access]);
+			s += Sprintf.format("  %4d -> %s (%s)\n", [j++, Std.string(i), friend._access]);
 			i = i.next;
 		}
-		s += '>|';
+		s += ">|";
 		return s;
 		#else
-		return '{MemoryManager}';
+		return "{MemoryManager}";
 		#end
 	}
 	
@@ -266,9 +266,9 @@ class MemoryManager
 	function new()
 	{
 		#if debug
-		D.assert(M.isPow2(BLOCK_SIZE_BYTES), 'M.isPow2(BLOCK_SIZE_BYTES)');
-		D.assert(BLOCK_SIZE_BYTES >= 1024, 'BLOCK_SIZE_BYTES >= 1024');
-		D.assert(RAW_BYTES >= 1024, 'RAW_BYTES >= 1024');
+		D.assert(M.isPow2(BLOCK_SIZE_BYTES), "M.isPow2(BLOCK_SIZE_BYTES)");
+		D.assert(BLOCK_SIZE_BYTES >= 1024, "BLOCK_SIZE_BYTES >= 1024");
+		D.assert(RAW_BYTES >= 1024, "RAW_BYTES >= 1024");
 		#end
 		
 		_blockSizeBytes = BLOCK_SIZE_BYTES;
@@ -331,11 +331,10 @@ class MemoryManager
 	{
 		#if debug
 		//check upper limit
-		D.assert(_bytesUsed + numBytes < MEMORY_LIMIT_BYTES,
-			Sprintf.format('OOM (failed to allocate %d bytes, %d out of %d bytes used)', [numBytes, MemoryManager.bytesUsed(), MemoryManager.bytesTotal()]));
-		D.assert(numBytes > 0, 'invalid numBytes');
-		D.assert(access != null, 'invalid access');
-		D.assert(__getMem(access) == null, 'access already allocated');
+		D.assert(_bytesUsed + numBytes < MEMORY_LIMIT_BYTES, 'OOM (failed to allocate $numBytes bytes, ${bytesUsed()} out of ${bytesTotal()} bytes used)');
+		D.assert(numBytes > 0, "invalid numBytes");
+		D.assert(access != null, "invalid access");
+		D.assert(__getMem(access) == null, "access already allocated");
 		#end
 		
 		//allocate more memory?
@@ -365,15 +364,15 @@ class MemoryManager
 	function _dealloc(access:MemoryAccess):Void
 	{
 		#if debug
-		D.assert(access != null, 'invalid access');
-		D.assert(__getMem(access) != null, 'access already deallocated');
+		D.assert(access != null, "invalid access");
+		D.assert(__getMem(access) != null, "access already deallocated");
 		#end
 		
 		//resolve memory from access
 		var memory:MemorySegment = __getMem(access);
 		__setMem(access, null);
 		
-		access.name = '?';
+		access.name = "?";
 		
 		#if flash9
 		memory.stopMonitor();
@@ -403,16 +402,16 @@ class MemoryManager
 	function _realloc(access:MemoryAccess, numBytes:Int):Void
 	{
 		#if debug
-		D.assert(access != null, 'invalid access');
-		D.assert(numBytes > 0, 'invalid numBytes');
-		D.assert(__getMem(access) != null, 'access already deallocated');
+		D.assert(access != null, "invalid access");
+		D.assert(numBytes > 0, "invalid numBytes");
+		D.assert(__getMem(access) != null, "access already deallocated");
 		#end
 		
 		//resolve memory from access
 		var memory = __getMem(access);
 		
 		#if debug
-		D.assert(!memory.isEmpty, 'invalid access');
+		D.assert(!memory.isEmpty, "invalid access");
 		#end
 		
 		//early out; no change in size
@@ -1004,7 +1003,7 @@ private class MemorySegment
 			else
 			{
 				#if debug
-				D.assert(x != null, 'x != null');
+				D.assert(x != null, "x != null");
 				#end
 				if (x == null)
 				{
@@ -1056,9 +1055,9 @@ private class MemorySegment
 	public function toString():String
 	{
 		#if debug
-		return Sprintf.format('{MemorySegment, range: %d...%d, bytes: %d, isEmpty: %s}', [b, e, size, isEmpty]);
+		return '{MemorySegment, range: $b...$e, bytes: $size, isEmpty: $isEmpty}';
 		#else
-		return Sprintf.format('{MemorySegment, bytes: % 10d}', [size]);
+		return '{MemorySegment, bytes: $size}';
 		#end
 	}
 	

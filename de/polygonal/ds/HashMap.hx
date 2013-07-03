@@ -29,12 +29,11 @@
  */
 package de.polygonal.ds;
 
-import de.polygonal.core.fmt.Sprintf;
 import de.polygonal.core.math.Limits;
 import de.polygonal.core.util.Assert;
 
 #if !flash
-'The HashMap class is only available for flash9+'
+"The HashMap class is only available for flash9+"
 #end
 
 private typedef HashMapFriend<K, T> =
@@ -111,7 +110,7 @@ class HashMap<K, T> implements Map<K, T>
 	{
 		#if debug
 		var x:Null<K> = key;
-		D.assert(x != null, 'null keys are not allowed');
+		D.assert(x != null, "null keys are not allowed");
 		#end
 		
 		var x:Null<T> = untyped _map[key];
@@ -119,7 +118,7 @@ class HashMap<K, T> implements Map<K, T>
 		{
 			#if debug
 			x = val;
-			D.assert(x != null, 'null values are not allowed');
+			D.assert(x != null, "null values are not allowed");
 			#end
 			
 			untyped _map[key] = val;
@@ -164,12 +163,12 @@ class HashMap<K, T> implements Map<K, T>
 	 */
 	public function toString():String
 	{
-		var s = Sprintf.format('{HashMap, size: %d}', [size()]);
+		var s = '{HashMap, size: ${size()}}';
 		if (isEmpty()) return s;
-		s += '\n|<\n';
+		s += "\n|<\n";
 		for (key in keys())
-			s += Sprintf.format('  %s -> %s\n', [Std.string(key), Std.string(get(key))]);
-		s += '>|';
+			s += '  ${Std.string(key)} -> ${Std.string(get(key))}\n';
+		s += ">|";
 		return s;
 	}
 	
@@ -186,7 +185,7 @@ class HashMap<K, T> implements Map<K, T>
 	{
 		#if debug
 		var x:Null<T> = val;
-		D.assert(x != null, 'null values are not allowed');
+		D.assert(x != null, "null values are not allowed");
 		#end
 		
 		var exists = false;
@@ -211,7 +210,7 @@ class HashMap<K, T> implements Map<K, T>
 	{
 		#if debug
 		var x:Null<K> = key;
-		D.assert(x != null, 'null keys are not allowed');
+		D.assert(x != null, "null keys are not allowed");
 		#end
 		
 		var x:Null<T> = untyped _map[key];
@@ -227,7 +226,7 @@ class HashMap<K, T> implements Map<K, T>
 	{
 		#if debug
 		var x:Null<K> = key;
-		D.assert(x != null, 'null keys are not allowed');
+		D.assert(x != null, "null keys are not allowed");
 		#end
 		
 		return untyped _map[key];
@@ -244,9 +243,9 @@ class HashMap<K, T> implements Map<K, T>
 	{
 		#if debug
 		var x:Null<K> = key;
-		D.assert(x != null, 'null keys are not allowed');
+		D.assert(x != null, "null keys are not allowed");
 		var x:Null<T> = val;
-		D.assert(x != null, 'null values are not allowed');
+		D.assert(x != null, "null values are not allowed");
 		#end
 		
 		if (hasKey(key))
@@ -254,7 +253,7 @@ class HashMap<K, T> implements Map<K, T>
 		else
 		{
 			#if debug
-			D.assert(size() < maxSize, Sprintf.format('size equals max size (%d)', [maxSize]));
+			D.assert(size() < maxSize, 'size equals max size ($maxSize)');
 			#end
 			
 			untyped _map[key] = val;
@@ -273,7 +272,7 @@ class HashMap<K, T> implements Map<K, T>
 	{
 		#if debug
 		var x:Null<K> = key;
-		D.assert(x != null, 'null keys are not allowed');
+		D.assert(x != null, "null keys are not allowed");
 		#end
 		
 		if (untyped _map[key] != null)
@@ -469,7 +468,7 @@ class HashMap<K, T> implements Map<K, T>
 			for (key in a)
 			{
 				#if debug
-				D.assert(Std.is(get(key), Cloneable), Sprintf.format('key is not of type Cloneable (%s)', [get(key)]));
+				D.assert(Std.is(get(key), Cloneable), 'key is not of type Cloneable (${get(key)})');
 				#end
 				
 				var c:Cloneable<T> = cast get(key);
@@ -522,7 +521,7 @@ class HashMapKeyIterator<K, T> implements de.polygonal.ds.Itr<K>
 	inline public function remove():Void
 	{
 		#if debug
-		D.assert(_i > 0, 'call next() before removing an element');
+		D.assert(_i > 0, "call next() before removing an element");
 		#end
 		
 		_f.clr(_keys[_i - 1]);
@@ -573,7 +572,7 @@ class HashMapValIterator<K, T> implements de.polygonal.ds.Itr<T>
 	inline public function remove():Void
 	{
 		#if debug
-		D.assert(_i > 0, 'call next() before removing an element');
+		D.assert(_i > 0, "call next() before removing an element");
 		#end
 		
 		_f.remove(untyped _map[_keys[_i - 1]]);

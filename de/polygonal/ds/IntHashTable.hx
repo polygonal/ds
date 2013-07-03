@@ -159,8 +159,8 @@ class IntHashTable<T> implements Map<Int, T>
 		
 		#if flash10
 		#if alchemy
-		_next = new IntMemory(capacity, 'IntHashTable._next');
-		_keys = new IntMemory(capacity, 'IntHashTable._keys');
+		_next = new IntMemory(capacity, "IntHashTable._next");
+		_keys = new IntMemory(capacity, "IntHashTable._keys");
 		_keys.fill(IntIntHashTable.KEY_ABSENT);
 		#else
 		_next = new Vector<Int>(capacity);
@@ -256,7 +256,7 @@ class IntHashTable<T> implements Map<Int, T>
 	inline public function setIfAbsent(key:Int, val:T):Bool
 	{
 		#if debug
-		D.assert(key != IntIntHashTable.KEY_ABSENT, 'key 0x80000000 is reserved');
+		D.assert(key != IntIntHashTable.KEY_ABSENT, "key 0x80000000 is reserved");
 		#end
 		
 		if ((size() == getCapacity()))
@@ -375,9 +375,9 @@ class IntHashTable<T> implements Map<Int, T>
 	 */
 	public function toString():String
 	{
-		var s = Sprintf.format('{IntHashTable, size/capacity: %d/%d, load factor: %.2f}', [size(), getCapacity(), getLoadFactor()]);
+		var s = Sprintf.format("{IntHashTable, size/capacity: %d/%d, load factor: %.2f}", [size(), getCapacity(), getLoadFactor()]);
 		if (isEmpty()) return s;
-		s += '\n|<\n';
+		s += "\n|<\n";
 		
 		var max = 0.;
 		for (key in keys()) max = M.fmax(max, key);
@@ -389,8 +389,8 @@ class IntHashTable<T> implements Map<Int, T>
 		}
 		
 		for (key in keys())
-			s += Sprintf.format('  %- ' + i + 'd -> %s\n', [key, Std.string(_vals[_h.getFront(key)])]);
-		s += '>|';
+			s += Sprintf.format("  %- " + i + "d -> %s\n", [key, Std.string(_vals[_h.getFront(key)])]);
+		s += ">|";
 		return s;
 	}
 	
@@ -480,8 +480,8 @@ class IntHashTable<T> implements Map<Int, T>
 	inline public function set(key:Int, val:T):Bool
 	{
 		#if debug
-		D.assert(key != IntIntHashTable.KEY_ABSENT, 'key 0x80000000 is reserved');
-		D.assert(size() < maxSize, Sprintf.format('size equals max size (%d)', [maxSize]));
+		D.assert(key != IntIntHashTable.KEY_ABSENT, "key 0x80000000 is reserved");
+		D.assert(size() < maxSize, 'size equals max size (${maxSize})');
 		#end
 		
 		_invalidate();
@@ -767,7 +767,7 @@ class IntHashTable<T> implements Map<Int, T>
 					if (__hasKey(i))
 					{
 						#if debug
-						D.assert(Std.is(_vals[i], Cloneable), Sprintf.format('element is not of type Cloneable (%s)', [_vals[i]]));
+						D.assert(Std.is(_vals[i], Cloneable), 'element is not of type Cloneable (${_vals[i]})');
 						#end
 						
 						c = untyped _vals[i];
@@ -1002,7 +1002,7 @@ class IntHashTableIterator<T> implements de.polygonal.ds.Itr<T>
 	
 	inline public function remove():Void
 	{
-		throw 'unsupported operation';
+		throw "unsupported operation";
 	}
 	
 	inline function __vals(f:IntHashTableFriend<T>)

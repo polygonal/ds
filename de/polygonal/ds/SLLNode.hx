@@ -29,7 +29,6 @@
  */
 package de.polygonal.ds;
 
-import de.polygonal.core.fmt.Sprintf;
 import de.polygonal.core.util.Assert;
 
 /**
@@ -84,7 +83,7 @@ class SLLNode<T>
 	inline public function isHead():Bool
 	{
 		#if debug
-		D.assert(_list != null, 'node is not managed by a list');
+		D.assert(_list != null, "node is not managed by a list");
 		#end
 		
 		return this == _list.head;
@@ -98,7 +97,7 @@ class SLLNode<T>
 	inline public function isTail():Bool
 	{
 		#if debug
-		D.assert(_list != null, 'node is not managed by a list');
+		D.assert(_list != null, "node is not managed by a list");
 		#end
 		
 		return this == _list.tail;
@@ -121,7 +120,7 @@ class SLLNode<T>
 	inline public function nextVal():T
 	{
 		#if debug
-		D.assert(hasNext(), 'invalid next node');
+		D.assert(hasNext(), "invalid next node");
 		#end
 		
 		return next.val;
@@ -144,7 +143,7 @@ class SLLNode<T>
 	inline public function unlink():SLLNode<T>
 	{
 		#if debug
-		D.assert(_list != null, '_list != null');
+		D.assert(_list != null, "_list != null");
 		#end
 		
 		return _list.unlink(this);
@@ -155,7 +154,7 @@ class SLLNode<T>
 	 */
 	public function toString():String
 	{
-		return Sprintf.format('{SLLNode: %s}', [Std.string(val)]);
+		return '{SLLNode: ${Std.string(val)}}';
 	}
 	
 	inline function _insertAfter(node:SLLNode<T>):Void

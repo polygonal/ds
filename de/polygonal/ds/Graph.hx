@@ -29,7 +29,6 @@
  */
 package de.polygonal.ds;
 
-import de.polygonal.core.fmt.Sprintf;
 import de.polygonal.core.math.Limits;
 import de.polygonal.core.util.Assert;
 
@@ -173,8 +172,8 @@ class Graph<T> implements Collection<T>
 	{
 		#if debug
 		if (maxSize != -1)
-			D.assert(size() < maxSize, Sprintf.format('size equals max size (%d)', [maxSize]));
-		D.assert(_nodeSet.set(x), 'node exists');
+			D.assert(size() < maxSize, 'size equals max size ($maxSize)');
+		D.assert(_nodeSet.set(x), "node exists");
 		#end
 		
 		_size++;
@@ -195,7 +194,7 @@ class Graph<T> implements Collection<T>
 	public function removeNode(x:GraphNode<T>):Void
 	{
 		#if debug
-		D.assert(size() > 0, 'graph is empty');
+		D.assert(size() > 0, "graph is empty");
 		#end
 		
 		unlink(x);
@@ -216,9 +215,9 @@ class Graph<T> implements Collection<T>
 	public function addSingleArc(source:GraphNode<T>, target:GraphNode<T>, cost = 1.):Void
 	{
 		#if debug
-		D.assert(source != null, 'source is null');
-		D.assert(target != null, 'target is null');
-		D.assert(source != target, 'source equals target');
+		D.assert(source != null, "source is null");
+		D.assert(target != null, "target is null");
+		D.assert(source != target, "source equals target");
 		#end
 		
 		var walker = _nodeList;
@@ -253,11 +252,11 @@ class Graph<T> implements Collection<T>
 	public function addMutualArc(source:GraphNode<T>, target:GraphNode<T>, cost = 1.):Void
 	{
 		#if debug
-		D.assert(source != null, 'source is null');
-		D.assert(target != null, 'target is null');
-		D.assert(source != target, 'source equals target');
-		D.assert(source.getArc(target) == null, 'arc from source to target already exists');
-		D.assert(target.getArc(source) == null, 'arc from target to source already exists');
+		D.assert(source != null, "source is null");
+		D.assert(target != null, "target is null");
+		D.assert(source != target, "source equals target");
+		D.assert(source.getArc(target) == null, "arc from source to target already exists");
+		D.assert(target.getArc(source) == null, "arc from target to source already exists");
 		#end
 		
 		var walker = _nodeList;
@@ -296,9 +295,9 @@ class Graph<T> implements Collection<T>
 	public function unlink(node:GraphNode<T>):GraphNode<T>
 	{
 		#if debug
-		D.assert(_nodeList != null, 'graph is empty');
-		D.assert(_nodeSet.has(node), 'unknown node');
-		D.assert(node != null, 'node is null');
+		D.assert(_nodeList != null, "graph is empty");
+		D.assert(_nodeSet.has(node), "unknown node");
+		D.assert(node != null, "node is null");
 		#end
 		
 		var arc0 = node.arcList;
@@ -394,7 +393,7 @@ class Graph<T> implements Collection<T>
 		if (_size == 0) return;
 		
 		#if debug
-		D.assert(_busy == false, 'recursive call to iterative DFS');
+		D.assert(_busy == false, "recursive call to iterative DFS");
 		_busy = true;
 		#end
 		
@@ -580,7 +579,7 @@ class Graph<T> implements Collection<T>
 		if (_size == 0) return;
 		
 		#if debug
-		D.assert(_busy == false, 'recursive call to iterative BFS');
+		D.assert(_busy == false, "recursive call to iterative BFS");
 		_busy = true;
 		#end
 		
@@ -789,7 +788,7 @@ class Graph<T> implements Collection<T>
 		if (_size == 0) return;
 		
 		#if debug
-		D.assert(_busy == false, 'recursive call to iterative BFS');
+		D.assert(_busy == false, "recursive call to iterative BFS");
 		_busy = true;
 		#end
 		
@@ -1011,16 +1010,16 @@ class Graph<T> implements Collection<T>
 	 */
 	public function toString():String
 	{
-		var s = Sprintf.format('{Graph, size: %d}', [size()]);
+		var s = '{Graph, size: ${size()}}';
 		if (isEmpty()) return s;
-		s += '\n|<\n';
+		s += "\n|<\n";
 		var node = _nodeList;
 		while (node != null)
 		{
-			s += Sprintf.format('  %s\n', [node.toString()]);
+			s += '  ${node.toString()}\n';
 			node = node.next;
 		}
-		s += '>|';
+		s += ">|";
 		return s;
 	}
 	
@@ -1268,7 +1267,7 @@ class Graph<T> implements Collection<T>
 			while (n != null)
 			{
 				#if debug
-				D.assert(Std.is(n.val, Cloneable), Sprintf.format('element is not of type Cloneable (%s)', [n.val]));
+				D.assert(Std.is(n.val, Cloneable), 'element is not of type Cloneable (${n.val})');
 				#end
 				
 				c = n.val;
@@ -1424,7 +1423,7 @@ class GraphIterator<T> implements de.polygonal.ds.Itr<T>
 	
 	inline public function remove():Void
 	{
-		throw 'unsupported operation';
+		throw "unsupported operation";
 	}
 	
 	inline function __nodeList(f:GraphFriend<T>)
@@ -1470,7 +1469,7 @@ class GraphNodeIterator<T> implements de.polygonal.ds.Itr<GraphNode<T>>
 	
 	inline public function remove():Void
 	{
-		throw 'unsupported operation';
+		throw "unsupported operation";
 	}
 	
 	inline function __nodeList(f:GraphFriend<T>)
@@ -1525,7 +1524,7 @@ class GraphArcIterator<T> implements de.polygonal.ds.Itr<GraphArc<T>>
 	
 	inline public function remove():Void
 	{
-		throw 'unsupported operation';
+		throw "unsupported operation";
 	}
 	
 	inline function __nodeList(f:GraphFriend<T>)

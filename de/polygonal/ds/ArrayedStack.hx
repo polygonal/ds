@@ -91,7 +91,7 @@ class ArrayedStack<T> implements Stack<T>
 		{
 			#if debug
 			if (maxSize != -1)
-				D.assert(reservedSize <= maxSize, 'reserved size is greater than allowed size');
+				D.assert(reservedSize <= maxSize, "reserved size is greater than allowed size");
 			#end
 			_a = ArrayUtil.alloc(reservedSize);
 		}
@@ -158,7 +158,7 @@ class ArrayedStack<T> implements Stack<T>
 	inline public function top():T
 	{
 		#if debug
-		D.assert(_top > 0, 'stack is empty');
+		D.assert(_top > 0, "stack is empty");
 		#end
 		
 		return __get(_top - 1);
@@ -173,7 +173,7 @@ class ArrayedStack<T> implements Stack<T>
 	{
 		#if debug
 		if (maxSize != -1)
-			D.assert(size() < maxSize, Sprintf.format('size equals max size (%d)', [maxSize]));
+			D.assert(size() < maxSize, 'size equals max size ($maxSize)');
 		++_t1;
 		#end
 		
@@ -189,7 +189,7 @@ class ArrayedStack<T> implements Stack<T>
 	inline public function pop():T
 	{
 		#if debug
-		D.assert(_top > 0, 'stack is empty');
+		D.assert(_top > 0, "stack is empty");
 		#end
 		
 		#if debug
@@ -208,12 +208,12 @@ class ArrayedStack<T> implements Stack<T>
 	inline public function dup():Void
 	{
 		#if debug
-		D.assert(_top > 0, 'stack is empty');
+		D.assert(_top > 0, "stack is empty");
 		#end
 		
 		#if debug
 		if (maxSize != -1)
-			D.assert(size() < maxSize, Sprintf.format('size equals max size (%d)', [maxSize]));
+			D.assert(size() < maxSize, 'size equals max size ($maxSize)');
 		#end
 		
 		__set(_top, __get(_top - 1));
@@ -228,7 +228,7 @@ class ArrayedStack<T> implements Stack<T>
 	inline public function exchange():Void
 	{
 		#if debug
-		D.assert(_top > 1, 'size() < 2');
+		D.assert(_top > 1, "size() < 2");
 		#end
 		
 		var i = _top - 1;
@@ -253,7 +253,7 @@ class ArrayedStack<T> implements Stack<T>
 	inline public function rotRight(n:Int):Void
 	{
 		#if debug
-		D.assert(_top >= n, 'size() < n');
+		D.assert(_top >= n, "size() < n");
 		#end
 		
 		var i = _top - n;
@@ -282,7 +282,7 @@ class ArrayedStack<T> implements Stack<T>
 	inline public function rotLeft(n:Int):Void
 	{
 		#if debug
-		D.assert(_top >= n, 'size() < n');
+		D.assert(_top >= n, "size() < n");
 		#end
 		
 		var i = _top - 1;
@@ -305,8 +305,8 @@ class ArrayedStack<T> implements Stack<T>
 	inline public function dispose():Void
 	{
 		#if debug
-		D.assert(_top > 0, 'stack is empty');
-		D.assert(_t0 == _t1, 'dispose() is only allowed directly after pop()');
+		D.assert(_top > 0, "stack is empty");
+		D.assert(_t0 == _t1, "dispose() is only allowed directly after pop()");
 		#end
 		
 		__set(_top, cast null);
@@ -322,8 +322,8 @@ class ArrayedStack<T> implements Stack<T>
 	inline public function get(i:Int):T
 	{
 		#if debug
-		D.assert(_top > 0, 'stack is empty');
-		D.assert(i >= 0 && i < _top, Sprintf.format('i index out of range (%d)', [i]));
+		D.assert(_top > 0, "stack is empty");
+		D.assert(i >= 0 && i < _top, 'i index out of range ($i)');
 		#end
 		
 		return __get(i);
@@ -339,8 +339,8 @@ class ArrayedStack<T> implements Stack<T>
 	inline public function set(i:Int, x:T):Void
 	{
 		#if debug
-		D.assert(_top > 0, 'stack is empty');
-		D.assert(i >= 0 && i < _top, Sprintf.format('i index out of range (%d)', [i]));
+		D.assert(_top > 0, "stack is empty");
+		D.assert(i >= 0 && i < _top, 'i index out of range ($i)');
 		#end
 		
 		__set(i, x);
@@ -358,10 +358,10 @@ class ArrayedStack<T> implements Stack<T>
 	inline public function swp(i:Int, j:Int):Void
 	{
 		#if debug
-		D.assert(_top > 0, 'stack is empty');
-		D.assert(i >= 0 && i < _top, Sprintf.format('i index out of range (%d)', [i]));
-		D.assert(j >= 0 && j < _top, Sprintf.format('j index out of range (%d)', [j]));
-		D.assert(i != j, Sprintf.format('i index equals j index (%d)', [i]));
+		D.assert(_top > 0, "stack is empty");
+		D.assert(i >= 0 && i < _top, 'i index out of range ($i)');
+		D.assert(j >= 0 && j < _top, 'j index out of range ($j)');
+		D.assert(i != j, 'i index equals j index ($i)');
 		#end
 		
 		var t = __get(i);
@@ -381,10 +381,10 @@ class ArrayedStack<T> implements Stack<T>
 	inline public function cpy(i:Int, j:Int):Void
 	{
 		#if debug
-		D.assert(_top > 0, 'stack is empty');
-		D.assert(i >= 0 && i < _top, Sprintf.format('i index out of range (%d)', [i]));
-		D.assert(j >= 0 && j < _top, Sprintf.format('j index out of range (%d)', [j]));
-		D.assert(i != j, Sprintf.format('i index equals j index (%d)', [i]));
+		D.assert(_top > 0, "stack is empty");
+		D.assert(i >= 0 && i < _top, 'i index out of range ($i)');
+		D.assert(j >= 0 && j < _top, 'j index out of range ($j)');
+		D.assert(i != j, 'i index equals j index ($i)');
 		#end
 		
 		__set(i, __get(j));
@@ -401,14 +401,14 @@ class ArrayedStack<T> implements Stack<T>
 	public function assign(C:Class<T>, args:Array<Dynamic> = null, n = 0):Void
 	{
 		#if debug
-		D.assert(n >= 0, 'n >= 0');
+		D.assert(n >= 0, "n >= 0");
 		#end
 		
 		if (n > 0)
 		{
 			#if debug
 			if (maxSize != -1)
-				D.assert(n <= maxSize, Sprintf.format('n out of range (%d)', [n]));
+				D.assert(n <= maxSize, 'n out of range ($n)');
 			#end
 		}
 		else
@@ -429,14 +429,14 @@ class ArrayedStack<T> implements Stack<T>
 	public function fill(x:T, n = 0):ArrayedStack<T>
 	{
 		#if debug
-		D.assert(n >= 0, 'n >= 0');
+		D.assert(n >= 0, "n >= 0");
 		#end
 		
 		if (n > 0)
 		{
 			#if debug
 			if (maxSize != -1)
-				D.assert(n <= maxSize, Sprintf.format('n out of range (%d)', [n]));
+				D.assert(n <= maxSize, 'n out of range ($n)');
 			#end
 		}
 		else
@@ -484,7 +484,7 @@ class ArrayedStack<T> implements Stack<T>
 		else
 		{
 			#if debug
-			D.assert(rval.size() >= size(), 'insufficient random values');
+			D.assert(rval.size() >= size(), "insufficient random values");
 			#end
 			
 			var j = 0;
@@ -518,15 +518,15 @@ class ArrayedStack<T> implements Stack<T>
 	 */
 	public function toString():String
 	{
-		var s = Sprintf.format('{ArrayedStack, size: %d}', [size()]);
+		var s = '{ArrayedStack, size: ${size()}';
 		if (isEmpty()) return s;
-		s += '\n|< top\n';
+		s += "\n|< top\n";
 		var i = _top - 1;
 		var j = _top - 1;
 		while (i >= 0)
-			s += Sprintf.format('  %4d -> %s\n', [j--, Std.string(__get(i--))]);
+			s += Sprintf.format("  %4d -> %s\n", [j--, Std.string(__get(i--))]);
 			
-		s += '>|';
+		s += ">|";
 		return s;
 	}
 	
@@ -700,7 +700,7 @@ class ArrayedStack<T> implements Stack<T>
 			for (i in 0..._top)
 			{
 				#if debug
-				D.assert(Std.is(__get(i), Cloneable), Sprintf.format('element is not of type Cloneable (%s)', [__get(i)]));
+				D.assert(Std.is(__get(i), Cloneable), 'element is not of type Cloneable (${__get(i)})');
 				#end
 				
 				c = untyped __get(i);
@@ -765,7 +765,7 @@ class ArrayedStackIterator<T> implements de.polygonal.ds.Itr<T>
 	inline public function remove():Void
 	{
 		#if debug
-		D.assert(_i != (__getTop(_f) - 1), 'call next() before removing an element');
+		D.assert(_i != (__getTop(_f) - 1), "call next() before removing an element");
 		#end
 		
 		var i = _i + 1;

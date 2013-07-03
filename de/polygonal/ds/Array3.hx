@@ -29,7 +29,6 @@
  */
 package de.polygonal.ds;
 
-import de.polygonal.core.fmt.Sprintf;
 import de.polygonal.core.math.Mathematics;
 import de.polygonal.core.util.Assert;
 
@@ -78,7 +77,7 @@ class Array3<T> implements Collection<T>
 	public function new(width:Int, height:Int, depth:Int)
 	{
 		#if debug
-		D.assert(width >= 2 && height >= 2 && depth >= 2, Sprintf.format('invalid size (width:%d, height:%d, depth: %d)', [width, height, depth]));
+		D.assert(width >= 2 && height >= 2 && depth >= 2, 'invalid size (width: $width, height: $height, depth: $depth)');
 		#end
 		
 		_w            = width;
@@ -98,9 +97,9 @@ class Array3<T> implements Collection<T>
 	inline public function get(x:Int, y:Int, z:Int):T
 	{
 		#if debug
-		D.assert(x >= 0 && x < getW(), Sprintf.format('x index out of range (%d)', [x]));
-		D.assert(y >= 0 && y < getH(), Sprintf.format('y index out of range (%d)', [y]));
-		D.assert(z >= 0 && z < getD(), Sprintf.format('z index out of range (%d)', [z]));
+		D.assert(x >= 0 && x < getW(), 'x index out of range ($x)');
+		D.assert(y >= 0 && y < getH(), 'y index out of range ($y)');
+		D.assert(z >= 0 && z < getD(), 'z index out of range ($z)');
 		#end
 		
 		return __get(getIndex(x, y, z));
@@ -124,9 +123,9 @@ class Array3<T> implements Collection<T>
 	inline public function set(x:Int, y:Int, z:Int, val:T):Void
 	{
 		#if debug
-		D.assert(x >= 0 && x < getW(), Sprintf.format('x index out of range (%d)', [x]));
-		D.assert(y >= 0 && y < getH(), Sprintf.format('y index out of range (%d)', [y]));
-		D.assert(z >= 0 && z < getD(), Sprintf.format('z index out of range (%d)', [z]));
+		D.assert(x >= 0 && x < getW(), 'x index out of range ($x)');
+		D.assert(y >= 0 && y < getH(), 'y index out of range ($y)');
+		D.assert(z >= 0 && z < getD(), 'z index out of range ($z)');
 		#end
 		
 		__set(getIndex(x, y, z), val);
@@ -237,7 +236,7 @@ class Array3<T> implements Collection<T>
 	inline public function cellOf(x:T, cell:Array3Cell):Array3Cell
 	{
 		#if debug
-		D.assert(cell != null, 'cell != null');
+		D.assert(cell != null, "cell != null");
 		#end
 		
 		var i = indexOf(x);
@@ -258,8 +257,8 @@ class Array3<T> implements Collection<T>
 	inline public function indexToCell(i:Int, cell:Array3Cell):Array3Cell
 	{
 		#if debug
-		D.assert(i >= 0 && i < size(), Sprintf.format('index out of range (%d)', [i]));
-		D.assert(cell != null, 'cell is null');
+		D.assert(i >= 0 && i < size(), 'index out of range ($i)');
+		D.assert(cell != null, "cell is null");
 		#end
 		
 		var s = _w * _h;
@@ -278,10 +277,10 @@ class Array3<T> implements Collection<T>
 	inline public function cellToIndex(cell:Array3Cell):Int
 	{
 		#if debug
-		D.assert(cell != null, 'cell != null');
-		D.assert(cell.x >= 0 && cell.x < getW(), Sprintf.format('x index out of range (%d)', [cell.x]));
-		D.assert(cell.y >= 0 && cell.y < getH(), Sprintf.format('y index out of range (%d)', [cell.y]));
-		D.assert(cell.z >= 0 && cell.z < getD(), Sprintf.format('z index out of range (%d)', [cell.z]));
+		D.assert(cell != null, "cell != null");
+		D.assert(cell.x >= 0 && cell.x < getW(), 'x index out of range (${cell.x})');
+		D.assert(cell.y >= 0 && cell.y < getH(), 'y index out of range (${cell.y})');
+		D.assert(cell.z >= 0 && cell.z < getD(), 'z index out of range (${cell.z})');
 		#end
 		
 		return getIndex(cell.x, cell.y, cell.z);
@@ -298,9 +297,9 @@ class Array3<T> implements Collection<T>
 	public function getLayer(z:Int, output:Array2<T>):Array2<T>
 	{
 		#if debug
-		D.assert(z >= 0 && z < getD(), Sprintf.format('z index out of range (%d)', [z]));
-		D.assert(output != null, 'output != null');
-		D.assert(output.getW() == getW() && output.getH() == getH(), Sprintf.format('output too small (w: %d, d: %d)', [output.getW(), output.getH()]));
+		D.assert(z >= 0 && z < getD(), 'z index out of range ($z)');
+		D.assert(output != null, "output != null");
+		D.assert(output.getW() == getW() && output.getH() == getH(), 'output too small (w: ${output.getW()}, d: ${output.getH()})');
 		#end
 		
 		var offset = z * _w * _h;
@@ -319,9 +318,9 @@ class Array3<T> implements Collection<T>
 	public function getRow(z:Int, y:Int, output:Array<T>):Array<T>
 	{
 		#if debug
-		D.assert(y >= 0 && y < getH(), Sprintf.format('y index out of range (%d)', [y]));
-		D.assert(z >= 0 && z < getD(), Sprintf.format('z index out of range (%d)', [z]));
-		D.assert(output != null, 'output != null');
+		D.assert(y >= 0 && y < getH(), 'y index out of range ($y)');
+		D.assert(z >= 0 && z < getD(), 'z index out of range ($z)');
+		D.assert(output != null, "output != null");
 		#end
 		
 		var offset = (z * _w * _h) + (y * _w);
@@ -338,10 +337,10 @@ class Array3<T> implements Collection<T>
 	public function setRow(z:Int, y:Int, input:Array<T>):Void
 	{
 		#if debug
-		D.assert(y >= 0 && y < getH(), Sprintf.format('y index out of range (%d)', [y]));
-		D.assert(z >= 0 && z < getD(), Sprintf.format('z index out of range (%d)', [z]));
-		D.assert(input != null, 'input is null');
-		D.assert(input.length >= size(), 'insufficient values');
+		D.assert(y >= 0 && y < getH(), 'y index out of range ($y)');
+		D.assert(z >= 0 && z < getD(), 'z index out of range ($z)');
+		D.assert(input != null, "input is null");
+		D.assert(input.length >= size(), "insufficient values");
 		#end
 		
 		var offset = (z * _w * _h) + (y * _w);
@@ -358,9 +357,9 @@ class Array3<T> implements Collection<T>
 	inline public function getCol(z:Int, x:Int, output:Array<T>):Array<T>
 	{
 		#if debug
-		D.assert(x >= 0 && x < getW(), Sprintf.format('x index out of range (%d)', [x]));
-		D.assert(z >= 0 && z < getD(), Sprintf.format('z index out of range (%d)', [z]));
-		D.assert(output != null, 'output != null');
+		D.assert(x >= 0 && x < getW(), 'x index out of range (${x})');
+		D.assert(z >= 0 && z < getD(), 'z index out of range (${z})');
+		D.assert(output != null, "output != null");
 		#end
 		
 		var offset = z * _w * _h;
@@ -377,10 +376,10 @@ class Array3<T> implements Collection<T>
 	public function setCol(z:Int, x:Int, input:Array<T>):Void
 	{
 		#if debug
-		D.assert(x >= 0 && x < getW(), Sprintf.format('x index out of range (%d)', [x]));
-		D.assert(z >= 0 && z < getD(), Sprintf.format('z index out of range (%d)', [z]));
-		D.assert(input != null, 'input is null');
-		D.assert(input.length >= getH(), 'insufficient values');
+		D.assert(x >= 0 && x < getW(), 'x index out of range ($x)');
+		D.assert(z >= 0 && z < getD(), 'z index out of range ($z)');
+		D.assert(input != null, "input is null");
+		D.assert(input.length >= getH(), "insufficient values");
 		#end
 		
 		var offset = z * _w * _h;
@@ -397,9 +396,9 @@ class Array3<T> implements Collection<T>
 	inline public function getPile(x:Int, y:Int, output:Array<T>):Array<T>
 	{
 		#if debug
-		D.assert(x >= 0 && x < getW(), Sprintf.format('x index out of range (%d)', [x]));
-		D.assert(y >= 0 && y < getH(), Sprintf.format('y index out of range (%d)', [y]));
-		D.assert(output != null, 'output != null');
+		D.assert(x >= 0 && x < getW(), 'x index out of range ($x)');
+		D.assert(y >= 0 && y < getH(), 'y index out of range ($y)');
+		D.assert(output != null, "output != null");
 		#end
 		
 		var offset1 = _w * _h;
@@ -417,10 +416,10 @@ class Array3<T> implements Collection<T>
 	public function setPile(x:Int, y:Int, input:Array<T>):Void
 	{
 		#if debug
-		D.assert(x >= 0 && x < getW(), Sprintf.format('x index out of range (%d)', [x]));
-		D.assert(y >= 0 && y < getH(), Sprintf.format('y index out of range (%d)', [y]));
-		D.assert(input != null, 'input is null');
-		D.assert(input.length >= getD(), 'insufficient values');
+		D.assert(x >= 0 && x < getW(), 'x index out of range ($x)');
+		D.assert(y >= 0 && y < getH(), 'y index out of range ($y)');
+		D.assert(input != null, "input is null");
+		D.assert(input.length >= getD(), "insufficient values");
 		#end
 		
 		var offset1 = _w * _h;
@@ -482,7 +481,7 @@ class Array3<T> implements Collection<T>
 	public function resize(width:Int, height:Int, depth:Int):Void
 	{
 		#if debug
-		D.assert(width >= 2 && height >= 2 && depth >= 1, Sprintf.format('invalid size (width:%d, height:%d, depth: %d)', [width, height, depth]));
+		D.assert(width >= 2 && height >= 2 && depth >= 1, 'invalid size (width:$width, height:$height, depth: $depth)');
 		#end
 		
 		if (width == _w && height == _h && depth == _d) return;
@@ -522,13 +521,13 @@ class Array3<T> implements Collection<T>
 	inline public function swap(x0:Int, y0:Int, z0:Int, x1:Int, y1:Int, z1:Int):Void
 	{
 		#if debug
-		D.assert(x0 >= 0 && x0 < getW(), Sprintf.format('x0 index out of range (%d)', [x0]));
-		D.assert(y0 >= 0 && y0 < getH(), Sprintf.format('y0 index out of range (%d)', [y0]));
-		D.assert(z0 >= 0 && z0 < getD(), Sprintf.format('z0 index out of range (%d)', [z0]));
-		D.assert(x1 >= 0 && x1 < getW(), Sprintf.format('x1 index out of range (%d)', [x1]));
-		D.assert(y1 >= 0 && y1 < getH(), Sprintf.format('y1 index out of range (%d)', [y1]));
-		D.assert(z1 >= 0 && z1 < getD(), Sprintf.format('z1 index out of range (%d)', [z1]));
-		D.assert(!(x0 == x1 && y0 == y1 && z0 == z1), Sprintf.format('source indices equal target indices (x: %d, y: %d, z: %d)', [x0, y0, z0]));
+		D.assert(x0 >= 0 && x0 < getW(), 'x0 index out of range ($x0)');
+		D.assert(y0 >= 0 && y0 < getH(), 'y0 index out of range ($y0)');
+		D.assert(z0 >= 0 && z0 < getD(), 'z0 index out of range ($z0)');
+		D.assert(x1 >= 0 && x1 < getW(), 'x1 index out of range ($x1)');
+		D.assert(y1 >= 0 && y1 < getH(), 'y1 index out of range ($y1)');
+		D.assert(z1 >= 0 && z1 < getD(), 'z1 index out of range ($z1)');
+		D.assert(!(x0 == x1 && y0 == y1 && z0 == z1), 'source indices equal target indices (x: $x0, y: $y0, z: $z0)');
 		#end
 		
 		var i = (z0 * _w * _h) + (y0 * _w) + x0;
@@ -572,7 +571,7 @@ class Array3<T> implements Collection<T>
 		else
 		{
 			#if debug
-			D.assert(rval.size() >= size(), 'insufficient random values');
+			D.assert(rval.size() >= size(), "insufficient random values");
 			#end
 			
 			var j = 0;
@@ -592,7 +591,7 @@ class Array3<T> implements Collection<T>
 	 */
 	public function toString():String
 	{
-		return Sprintf.format('{Array3, %dx%dx%d}', [getW(), getH(), getD()]);
+		return '{Array3, ${getW()}x${getH()}x${getD()}}';
 	}
 	
 	/*///////////////////////////////////////////////////////
@@ -740,7 +739,7 @@ class Array3<T> implements Collection<T>
 			for (i in 0...size())
 			{
 				#if debug
-				D.assert(Std.is(__get(i), Cloneable), Sprintf.format('element is not of type Cloneable (%s)', [__get(i)]));
+				D.assert(Std.is(__get(i), Cloneable), 'element is not of type Cloneable (${__get(i)})');
 				#end
 				c = cast(__get(i), Cloneable<Dynamic>);
 				copy.__set(i, c.clone());
@@ -806,7 +805,7 @@ class Array3Iterator<T> implements de.polygonal.ds.Itr<T>
 	{
 		//just nullify value
 		#if debug
-		D.assert(_i > 0, 'call next() before removing an element');
+		D.assert(_i > 0, "call next() before removing an element");
 		#end
 		
 		_a[_i - 1] = cast null;

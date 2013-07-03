@@ -29,7 +29,6 @@
  */
 package de.polygonal.ds;
 
-import de.polygonal.core.fmt.Sprintf;
 import de.polygonal.core.util.Assert;
 
 /**
@@ -132,7 +131,7 @@ class GraphNode<T> implements Hashable
 	inline public function isConnected(target:GraphNode<T>):Bool
 	{
 		#if debug
-		D.assert(target != null, 'target is null');
+		D.assert(target != null, "target is null");
 		#end
 		
 		return getArc(target) != null;
@@ -146,7 +145,7 @@ class GraphNode<T> implements Hashable
 	inline public function isMutuallyConnected(target:GraphNode<T>):Bool
 	{
 		#if debug
-		D.assert(target != null, 'target is null');
+		D.assert(target != null, "target is null");
 		#end
 		
 		return getArc(target) != null && target.getArc(this) != null;
@@ -161,8 +160,8 @@ class GraphNode<T> implements Hashable
 	inline public function getArc(target:GraphNode<T>):GraphArc<T>
 	{
 		#if debug
-		D.assert(target != null, 'target is null');
-		D.assert(target != this, 'target equals this node');
+		D.assert(target != null, "target is null");
+		D.assert(target != this, "target equals this node");
 		#end
 		
 		var found = false;
@@ -192,8 +191,8 @@ class GraphNode<T> implements Hashable
 	public function addArc(target:GraphNode<T>, cost = 1.):Void
 	{
 		#if debug
-		D.assert(target != this, 'target is null');
-		D.assert(getArc(target) == null, 'arc to target already exists');
+		D.assert(target != this, "target is null");
+		D.assert(getArc(target) == null, "arc to target already exists");
 		#end
 		
 		var arc =
@@ -215,8 +214,8 @@ class GraphNode<T> implements Hashable
 	public function removeArc(target:GraphNode<T>):Bool
 	{
 		#if debug
-		D.assert(target != this, 'target is null');
-		D.assert(getArc(target) != null, 'arc to target does not exist');
+		D.assert(target != this, "target is null");
+		D.assert(getArc(target) != null, "arc to target does not exist");
 		#end
 		
 		var arc = getArc(target);
@@ -296,9 +295,9 @@ class GraphNode<T> implements Hashable
 			}
 		}
 		if (t.length > 0)
-			return Sprintf.format('{GraphNode, val: %s, connected to: %s}', [val, t.join(',')]);
+			return '{GraphNode, val: $val, connected to: ${t.join(",")}}';
 		else
-			return Sprintf.format('{GraphNode, val: %s}', [val]);
+			return '{GraphNode, val: $val}';
 	}
 }
 
@@ -339,6 +338,6 @@ class NodeValIterator<T> implements de.polygonal.ds.Itr<T>
 	
 	inline public function remove():Void
 	{
-		throw 'unsupported operation';
+		throw "unsupported operation";
 	}
 }

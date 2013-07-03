@@ -156,7 +156,7 @@ class IntHashSet implements Set<Int>
 	public function new(slotCount:Int, capacity = -1, isResizable = true, maxSize = -1)
 	{
 		#if debug
-		D.assert(M.isPow2(slotCount), 'slotCount is not a power of 2');
+		D.assert(M.isPow2(slotCount), "slotCount is not a power of 2");
 		#end
 		
 		_isResizable = isResizable;
@@ -166,8 +166,8 @@ class IntHashSet implements Set<Int>
 		else
 		{
 			#if debug
-			D.assert(capacity >= 2, 'minimum capacity is 2');
-			D.assert(M.isPow2(slotCount), 'capacity is not a power of 2');
+			D.assert(capacity >= 2, "minimum capacity is 2");
+			D.assert(M.isPow2(slotCount), "capacity is not a power of 2");
 			#end
 		}
 		
@@ -186,10 +186,10 @@ class IntHashSet implements Set<Int>
 		
 		#if flash10
 		#if alchemy
-		_hash = new IntMemory(slotCount, 'IntHashSet._hash');
+		_hash = new IntMemory(slotCount, "IntHashSet._hash");
 		_hash.fill(EMPTY_SLOT);
-		_data = new IntMemory(_capacity << 1, 'IntHashSet._data');
-		_next = new IntMemory(_capacity, 'IntHashSet._next');
+		_data = new IntMemory(_capacity << 1, "IntHashSet._data");
+		_next = new IntMemory(_capacity, "IntHashSet._next");
 		#else
 		_hash = new Vector<Int>(slotCount);
 		for (i in 0...slotCount) _hash[i] = EMPTY_SLOT;
@@ -278,7 +278,7 @@ class IntHashSet implements Set<Int>
 	inline public function hasFront(x:Int):Bool
 	{
 		#if debug
-		D.assert(x != VAL_ABSENT, 'value 0x80000000 is reserved');
+		D.assert(x != VAL_ABSENT, "value 0x80000000 is reserved");
 		#end
 		
 		var b = _hashCode(x);
@@ -346,7 +346,7 @@ class IntHashSet implements Set<Int>
 	public function rehash(slotCount:Int):Void
 	{
 		#if debug
-		D.assert(M.isPow2(slotCount), 'slotCount is not a power of 2');
+		D.assert(M.isPow2(slotCount), "slotCount is not a power of 2");
 		#end
 		
 		if (slotCount == getSlotCount()) return;
@@ -403,14 +403,14 @@ class IntHashSet implements Set<Int>
 	 */
 	public function toString():String
 	{
-		var s = Sprintf.format('{IntHashSet, size/capacity: %d/%d, load factor: %.2f}', [size(), _capacity, getLoadFactor()]);
+		var s = Sprintf.format("{IntHashSet, size/capacity: %d/%d, load factor: %.2f}", [size(), _capacity, getLoadFactor()]);
 		if (isEmpty()) return s;
-		s += '\n|<\n';
+		s += "\n|<\n";
 		for (x in this)
 		{
-			s += Sprintf.format('  %d\n', [x]);
+			s += '  $x\n';
 		}
-		s += '>|';
+		s += ">|";
 		return s;
 	}
 	
@@ -426,7 +426,7 @@ class IntHashSet implements Set<Int>
 	inline public function has(x:Int):Bool
 	{
 		#if debug
-		D.assert(x != VAL_ABSENT, 'value 0x80000000 is reserved');
+		D.assert(x != VAL_ABSENT, "value 0x80000000 is reserved");
 		#end
 		
 		var i = __getHash(_hashCode(x));
@@ -485,8 +485,8 @@ class IntHashSet implements Set<Int>
 	inline public function set(x:Int):Bool
 	{
 		#if debug
-		D.assert(x != VAL_ABSENT, 'value 0x80000000 is reserved');
-		D.assert(size() < maxSize, Sprintf.format('size equals max size (%d)', [maxSize]));
+		D.assert(x != VAL_ABSENT, "value 0x80000000 is reserved");
+		D.assert(size() < maxSize, 'size equals max size ($maxSize)');
 		#end
 		
 		var b = _hashCode(x);
@@ -503,7 +503,7 @@ class IntHashSet implements Set<Int>
 			{
 				#if debug
 				if (!_isResizable)
-					D.assert(false, Sprintf.format('hash set is full (%d)', [_capacity]));
+					D.assert(false, 'hash set is full ($_capacity)');
 				#end
 				
 				_expand();
@@ -571,8 +571,7 @@ class IntHashSet implements Set<Int>
 					if (_size == _capacity)
 					{
 						if (!_isResizable)
-						throw Sprintf.format('hash set is full (%d)', [_capacity]);
-						
+							throw 'hash set is full ($_capacity)';
 						_expand();
 					}
 					var i = _free << 1;
@@ -1159,7 +1158,7 @@ class IntHashSetIterator implements de.polygonal.ds.Itr<Int>
 	
 	inline public function remove():Void
 	{
-		throw 'unsupported operation';
+		throw "unsupported operation";
 	}
 	
 	inline function _scan()

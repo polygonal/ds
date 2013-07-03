@@ -95,7 +95,7 @@ class DA<T> implements Collection<T>
 		if (reservedSize > 0)
 		{
 			#if debug
-			D.assert(reservedSize <= this.maxSize, 'reserved size is greater than allowed size');
+			D.assert(reservedSize <= this.maxSize, "reserved size is greater than allowed size");
 			#end
 			_a = ArrayUtil.alloc(reservedSize);
 		}
@@ -150,7 +150,7 @@ class DA<T> implements Collection<T>
 	inline public function trim(x:Int):Void
 	{
 		#if debug
-		D.assert(x <= size(), Sprintf.format('new size > current size (%d/%d)', [x, size()]));
+		D.assert(x <= size(), 'new size > current size ($x/${size()})');
 		#end
 		
 		_size = x;
@@ -164,7 +164,7 @@ class DA<T> implements Collection<T>
 	inline public function get(i:Int):T
 	{
 		#if debug
-		D.assert(i >= 0 && i < _size, Sprintf.format('the index %d is out of range %d', [i, _size - 1]));
+		D.assert(i >= 0 && i < _size, 'the index $i is out of range ${_size - 1}');
 		#end
 		
 		return __get(i);
@@ -179,7 +179,7 @@ class DA<T> implements Collection<T>
 	inline public function getNext(i:Int):T
 	{
 		#if debug
-		D.assert(i >= 0 && i < _size, Sprintf.format('the index %d is out of range %d', [i, _size - 1]));
+		D.assert(i >= 0 && i < _size, 'the index $i is out of range ${_size - 1}');
 		#end
 		
 		return __get((i + 1) == _size ? 0 : i + 1);
@@ -194,7 +194,7 @@ class DA<T> implements Collection<T>
 	inline public function getPrev(i:Int):T
 	{
 		#if debug
-		D.assert(i >= 0 && i < _size, Sprintf.format('the index %d is out of range %d', [i, _size - 1]));
+		D.assert(i >= 0 && i < _size, 'the index $i is out of range ${_size - 1}');
 		#end
 		
 		return __get(((i - 1) == -1) ? (_size - 1) : (i - 1));
@@ -208,8 +208,8 @@ class DA<T> implements Collection<T>
 	inline public function set(i:Int, x:T):Void
 	{
 		#if debug
-		D.assert(i >= 0 && i <= _size, Sprintf.format('the index %d is out of range %d', [i, _size]));
-		D.assert(i < maxSize, Sprintf.format('size equals max size (%d)', [maxSize]));
+		D.assert(i >= 0 && i <= _size, 'the index $i is out of range $_size');
+		D.assert(i < maxSize, 'size equals max size ($maxSize)');
 		#end
 		
 		__set(i, x);
@@ -224,7 +224,7 @@ class DA<T> implements Collection<T>
 	inline public function swp(i:Int, j:Int):Void
 	{
 		#if debug
-		D.assert(i != j, Sprintf.format('i index equals j index (%d)', [i]));
+		D.assert(i != j, 'i index equals j index ($i)');
 		#end
 		
 		var tmp = get(i);
@@ -240,7 +240,7 @@ class DA<T> implements Collection<T>
 	inline public function cpy(i:Int, j:Int):Void
 	{
 		#if debug
-		D.assert(i != j, Sprintf.format('i index equals j index (%d)', [i]));
+		D.assert(i != j, 'i index equals j index ($i)');
 		#end
 		
 		set(i, get(j));
@@ -311,7 +311,7 @@ class DA<T> implements Collection<T>
 	{
 		#if debug
 		if (maxSize != -1)
-			D.assert(size() < maxSize, Sprintf.format('size equals max size (%d)', [maxSize]));
+			D.assert(size() < maxSize, 'size equals max size ($maxSize)');
 		#end
 		
 		insertAt(0, x);
@@ -327,8 +327,8 @@ class DA<T> implements Collection<T>
 	inline public function insertAt(i:Int, x:T):Void
 	{
 		#if debug
-		D.assert(size() < maxSize, Sprintf.format('size equals max size (%d)', [maxSize]));
-		D.assert(i >= 0 && i <= size(), Sprintf.format('i index out of range (%d)', [i]));
+		D.assert(size() < maxSize, 'size equals max size ($maxSize)');
+		D.assert(i >= 0 && i <= size(), 'i index out of range ($i)');
 		#end
 		
 		var p = _size;
@@ -354,7 +354,7 @@ class DA<T> implements Collection<T>
 	inline public function removeAt(i:Int):T
 	{
 		#if debug
-		D.assert(i >= 0 && i < size(), Sprintf.format('the index %d is out of range %d', [i, size()]));
+		D.assert(i >= 0 && i < size(), 'the index $i is out of range ${size()}');
 		#end
 		
 		var x = __get(i);
@@ -380,7 +380,7 @@ class DA<T> implements Collection<T>
 	inline public function swapPop(i:Int):Void
 	{
 		#if debug
-		D.assert(i >= 0 && i < size(), Sprintf.format('the index %d is out of range %d', [i, size()]));
+		D.assert(i >= 0 && i < size(), 'the index $i is out of range ${size()}');
 		#end
 		
 		__set(i, __get(--_size));
@@ -396,8 +396,8 @@ class DA<T> implements Collection<T>
 	public function removeRange(i:Int, n:Int, output:DA<T> = null):DA<T>
 	{
 		#if debug
-		D.assert(i >= 0 && i <= size(), Sprintf.format('i index out of range (%d)', [i]));
-		D.assert(n > 0 && n <= size() && (i + n <= size()), Sprintf.format('n out of range (%d)', [n]));
+		D.assert(i >= 0 && i <= size(), 'i index out of range ($i)');
+		D.assert(n > 0 && n <= size() && (i + n <= size()), 'n out of range ($n)');
 		#end
 		
 		if (output == null)
@@ -439,7 +439,7 @@ class DA<T> implements Collection<T>
 	public function concat(x:DA<T>, copy = false):DA<T>
 	{
 		#if debug
-		D.assert(x != null, 'x is null');
+		D.assert(x != null, "x is null");
 		#end
 		
 		if (copy)
@@ -453,7 +453,7 @@ class DA<T> implements Collection<T>
 		else
 		{
 			#if debug
-			D.assert(x != this, 'x equals this');
+			D.assert(x != this, "x equals this");
 			#end
 			
 			var j = _size;
@@ -481,7 +481,7 @@ class DA<T> implements Collection<T>
 		else
 		{
 			#if debug
-			D.assert(from >= 0 && from < size(), Sprintf.format('from index out of range (%d)', [from]));
+			D.assert(from >= 0 && from < size(), 'from index out of range ($from)');
 			#end
 			
 			if (binarySearch)
@@ -491,7 +491,7 @@ class DA<T> implements Collection<T>
 				else
 				{
 					#if debug
-					D.assert(Std.is(x, Comparable), Sprintf.format('element is not of type Comparable (%s)', [x]));
+					D.assert(Std.is(x, Comparable), 'element is not of type Comparable ($x)');
 					#end
 					
 					var k = size();
@@ -501,7 +501,7 @@ class DA<T> implements Collection<T>
 						m = l + ((h - l) >> 1);
 						
 						#if debug
-						D.assert(Std.is(_a[m], Comparable), Sprintf.format('element is not of type Comparable (%s)', [_a[m]]));
+						D.assert(Std.is(_a[m], Comparable), 'element is not of type Comparable (${_a[m]})');
 						#end
 						
 						if (cast(_a[m], Comparable<Dynamic>).compare(x) < 0)
@@ -511,7 +511,7 @@ class DA<T> implements Collection<T>
 					}
 					
 					#if debug
-					D.assert(Std.is(_a[l], Comparable), Sprintf.format('element is not of type Comparable (%s)', [_a[l]]));
+					D.assert(Std.is(_a[l], Comparable), 'element is not of type Comparable (${_a[l]})');
 					#end
 					
 					return ((l <= k) && (cast(_a[l], Comparable<Dynamic>).compare(x)) == 0) ? l : -l;
@@ -551,7 +551,7 @@ class DA<T> implements Collection<T>
 			if (from < 0) from = size() + from;
 			
 			#if debug
-			D.assert(from >= 0 && from < size(), Sprintf.format('from index out of range (%d)', [from]));
+			D.assert(from >= 0 && from < size(), 'from index out of range ($from)');
 			#end
 			
 			var j = -1;
@@ -592,13 +592,13 @@ class DA<T> implements Collection<T>
 	public function assign(C:Class<T>, args:Array<Dynamic> = null, n = 0):Void
 	{
 		#if debug
-		D.assert(n >= 0, 'n >= 0');
+		D.assert(n >= 0, "n >= 0");
 		#end
 		
 		if (n > 0)
 		{
 			#if debug
-			D.assert(n <= maxSize, Sprintf.format('n out of range (%d)', [n]));
+			D.assert(n <= maxSize, 'n out of range ($n)');
 			#end
 			
 			_size = n;
@@ -618,13 +618,13 @@ class DA<T> implements Collection<T>
 	public function fill(x:T, n = 0):DA<T>
 	{
 		#if debug
-		D.assert(n >= 0, 'n >= 0');
+		D.assert(n >= 0, "n >= 0");
 		#end
 		
 		if (n > 0)
 		{
 			#if debug
-			D.assert(n <= maxSize, Sprintf.format('n out of range (%d)', [n]));
+			D.assert(n <= maxSize, 'n out of range ($n)');
 			#end
 			
 			_size = n;
@@ -648,10 +648,10 @@ class DA<T> implements Collection<T>
 	inline public function memmove(destination:Int, source:Int, n:Int):Void
 	{
 		#if debug
-		D.assert(destination >= 0 && source >= 0 && n >= 0, 'destination >= 0 && source >= 0 && n >= 0');
-		D.assert(source < size(), 'source < size()');
-		D.assert(destination + n <= size(), 'destination + n <= size()');
-		D.assert(n <= size(), 'n <= size()');
+		D.assert(destination >= 0 && source >= 0 && n >= 0, "destination >= 0 && source >= 0 && n >= 0");
+		D.assert(source < size(), "source < size()");
+		D.assert(destination + n <= size(), "destination + n <= size()");
+		D.assert(n <= size(), "n <= size()");
 		#end
 		
 		if (source == destination)
@@ -687,7 +687,7 @@ class DA<T> implements Collection<T>
 	 */
 	public function join(x:String):String
 	{
-		if (size() == 0) return '';
+		if (size() == 0) return "";
 		if (size() == 1) return Std.string(front());
 		var s = Std.string(front()) + x;
 		for (i in 1...size() - 1)
@@ -718,8 +718,8 @@ class DA<T> implements Collection<T>
 			if (count == -1) count = size() - first;
 			
 			#if debug
-			D.assert(first >= 0 && first <= size() - 1 && first + count <= size(), 'first index out of bound');
-			D.assert(count >= 0 && count <= size(), 'count out of bound');
+			D.assert(first >= 0 && first <= size() - 1 && first + count <= size(), "first index out of bound");
+			D.assert(count >= 0 && count <= size(), "count out of bound");
 			#end
 			
 			if (compare == null)
@@ -929,7 +929,7 @@ class DA<T> implements Collection<T>
 			for (i in 0...size())
 			{
 				#if debug
-				D.assert(Std.is(__get(i), Cloneable), Sprintf.format('element is not of type Cloneable (%s)', [__get(i)]));
+				D.assert(Std.is(__get(i), Cloneable), 'element is not of type Cloneable (${__get(i)})');
 				#end
 				
 				c = cast(__get(i), Cloneable<Dynamic>);
@@ -969,7 +969,7 @@ class DA<T> implements Collection<T>
 		else
 		{
 			#if debug
-			D.assert(rval.size() >= size(), 'insufficient random values');
+			D.assert(rval.size() >= size(), "insufficient random values");
 			#end
 			
 			var j = 0;
@@ -1002,12 +1002,12 @@ class DA<T> implements Collection<T>
 	 */
 	public function toString():String
 	{
-		var s = Sprintf.format('{DA, size: %d}', [size()]);
+		var s = '{DA, size: ${size()}}';
 		if (isEmpty()) return s;
-		s += '\n|<\n';
+		s += "\n|<\n";
 		for (i in 0...size())
-			s += Sprintf.format('  %4d -> %s\n', [i, Std.string(__get(i))]);
-		s += '>|';
+			s += Sprintf.format("  %4d -> %s\n", [i, Std.string(__get(i))]);
+		s += ">|";
 		return s;
 	}
 	
@@ -1072,9 +1072,9 @@ class DA<T> implements Collection<T>
 			var i2 = i0 + k - 1;
 			
 			#if debug
-			D.assert(Std.is(__get(i0), Comparable), Sprintf.format('element is not of type Comparable (%s)', [Std.string(__get(i0))]));
-			D.assert(Std.is(__get(i1), Comparable), Sprintf.format('element is not of type Comparable (%s)', [Std.string(__get(i1))]));
-			D.assert(Std.is(__get(i2), Comparable), Sprintf.format('element is not of type Comparable (%s)', [Std.string(__get(i2))]));
+			D.assert(Std.is(__get(i0), Comparable), 'element is not of type Comparable (${Std.string(__get(i0))})');
+			D.assert(Std.is(__get(i1), Comparable), 'element is not of type Comparable (${Std.string(__get(i1))})');
+			D.assert(Std.is(__get(i2), Comparable), 'element is not of type Comparable (${Std.string(__get(i2))})');
 			#end
 			
 			var t0:Dynamic = cast(__get(i0), Comparable<Dynamic>);
@@ -1094,7 +1094,7 @@ class DA<T> implements Collection<T>
 			}
 			
 			#if debug
-			D.assert(Std.is(__get(mid), Comparable), Sprintf.format('element is not of type Comparable (%s)', [Std.string(__get(mid))]));
+			D.assert(Std.is(__get(mid), Comparable), 'element is not of type Comparable (${Std.string(__get(mid))})');
 			#end
 			
 			var pivot:Dynamic = cast(__get(mid), Comparable<Dynamic>);
@@ -1104,8 +1104,8 @@ class DA<T> implements Collection<T>
 			while (lo < hi)
 			{
 				#if debug
-				D.assert(Std.is(__get(lo), Comparable), Sprintf.format('element is not of type Comparable (%s)', [Std.string(__get(lo))]));
-				D.assert(Std.is(__get(hi), Comparable), Sprintf.format('element is not of type Comparable (%s)', [Std.string(__get(hi))]));
+				D.assert(Std.is(__get(lo), Comparable), 'element is not of type Comparable (${Std.string(__get(lo))})');
+				D.assert(Std.is(__get(hi), Comparable), 'element is not of type Comparable (${Std.string(__get(hi))})');
 				#end
 				
 				while (pivot.compare(cast(__get(hi), Comparable<Dynamic>)) < 0 && lo < hi) hi--;
@@ -1155,7 +1155,7 @@ class DA<T> implements Collection<T>
 			var x = __get(i);
 			
 			#if debug
-			D.assert(Std.is(x, Comparable), 'element is not of type Comparable');
+			D.assert(Std.is(x, Comparable), "element is not of type Comparable");
 			#end
 			
 			var j = i;
@@ -1164,7 +1164,7 @@ class DA<T> implements Collection<T>
 				var y = __get(j - 1);
 				
 				#if debug
-				D.assert(Std.is(y, Comparable), 'element is not of type Comparable');
+				D.assert(Std.is(y, Comparable), "element is not of type Comparable");
 				#end
 				
 				if (cast(y, Comparable<Dynamic>).compare(x) > 0)
@@ -1235,7 +1235,7 @@ class DAIterator<T> implements de.polygonal.ds.Itr<T>
 	inline public function remove():Void
 	{
 		#if debug
-		D.assert(_i > 0, 'call next() before removing an element');
+		D.assert(_i > 0, "call next() before removing an element");
 		#end
 		
 		_f.removeAt(--_i);

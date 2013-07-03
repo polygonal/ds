@@ -129,7 +129,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		
 		#if flash10
 		#if alchemy
-		_next = new IntMemory(capacity, 'HashTable._next');
+		_next = new IntMemory(capacity, "HashTable._next");
 		#else
 		_next = new Vector<Int>(capacity);
 		#end
@@ -347,17 +347,17 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	 */
 	public function toString():String
 	{
-		var s = Sprintf.format('{HashTable, size/capacity: %d/%d, load factor: %.2f}', [size(), getCapacity(), getLoadFactor()]);
+		var s = Sprintf.format("{HashTable, size/capacity: %d/%d, load factor: %.2f}", [size(), getCapacity(), getLoadFactor()]);
 		if (isEmpty()) return s;
-		s += '\n|<\n';
+		s += "\n|<\n";
 		
 		var max = 0;
 		for (key in keys()) max = M.max(max, Std.string(key).length);
 		
 		for (key in keys())
-			s += Sprintf.format('  %- ' + max + 's -> %s\n', [key, Std.string(get(key))]);
+			s += Sprintf.format("  %- " + max + "s -> %s\n", [key, Std.string(get(key))]);
 		
-		s += '>|';
+		s += ">|";
 		return s;
 	}
 	
@@ -404,7 +404,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	inline public function get(key:K):T
 	{
 		#if debug
-		D.assert(key != null, 'key != null');
+		D.assert(key != null, "key != null");
 		#end
 		
 		var i = _h.get(__key(key));
@@ -734,7 +734,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 					if (_keys[i] != null)
 					{
 						#if debug
-						D.assert(Std.is(_vals[i], Cloneable), Sprintf.format('element is not of type Cloneable (%s)', [_vals[i]]));
+						D.assert(Std.is(_vals[i], Cloneable), 'element is not of type Cloneable (${_vals[i]})');
 						#end
 						
 						c = untyped _vals[i];
@@ -857,7 +857,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	inline function __key(x:Hashable)
 	{
 		#if debug
-		D.assert(x != null, 'key is null');
+		D.assert(x != null, "key is null");
 		#end
 		
 		return x.key;
@@ -907,7 +907,7 @@ class HashTableKeyIterator<K, T> implements de.polygonal.ds.Itr<K>
 	
 	inline public function remove():Void
 	{
-		throw 'unsupported operation';
+		throw "unsupported operation";
 	}
 	
 	inline function __vals(f:HashTableFriend<K, T>)
@@ -965,7 +965,7 @@ class HashTableValIterator<K, T> implements de.polygonal.ds.Itr<T>
 	
 	inline public function remove():Void
 	{
-		throw 'unsupported operation';
+		throw "unsupported operation";
 	}
 	
 	inline function __vals(f:HashTableFriend<K, T>)

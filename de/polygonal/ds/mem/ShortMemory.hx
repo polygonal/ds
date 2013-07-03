@@ -38,7 +38,7 @@ import de.polygonal.ds.ArrayUtil;
 #end
 
 /**
- * <p>A chunk of 'alchemy memory' for storing 16-bit signed integers.</p>
+ * <p>A chunk of "alchemy memory" for storing 16-bit signed integers.</p>
  */
 class ShortMemory extends MemoryAccess
 {
@@ -54,16 +54,16 @@ class ShortMemory extends MemoryAccess
 	public static function toByteArray(input:ShortMemory, min = -1, max = -1):flash.utils.ByteArray
 	{
 		#if debug
-		D.assert(input != null, 'invalid input');
+		D.assert(input != null, "invalid input");
 		#end
 		
 		if (min == -1) min = 0;
 		if (max == -1) max = input.size;
 		
 		#if debug
-		D.assert(min >= 0, Sprintf.format('min out of range (%d)', [min]));
-		D.assert(max <= input.size, Sprintf.format('max out of range (%d)', [max]));
-		D.assert(max - min > 0, Sprintf.format('min equals max (%d)', [min]));
+		D.assert(min >= 0, 'min out of range ($min)');
+		D.assert(max <= input.size, 'max out of range ($max)');
+		D.assert(max - min > 0, 'min equals max ($min)');
 		#end
 		
 		var t = min;
@@ -97,21 +97,21 @@ class ShortMemory extends MemoryAccess
 	public static function ofByteArray(input:flash.utils.ByteArray, min = -1, max = -1):ShortMemory
 	{
 		#if debug
-		D.assert(input != null, 'invalid input');
+		D.assert(input != null, "invalid input");
 		#end
 		
 		if (min == -1) min = 0;
 		if (max == -1) max = input.length;
 		
 		#if debug
-		D.assert(min >= 0, 'min >= 0');
-		D.assert(max <= Std.int(input.length), 'max <= input.length');
+		D.assert(min >= 0, "min >= 0");
+		D.assert(max <= Std.int(input.length), "max <= input.length");
 		#end
 		
 		input.position = min;
 		min >>= 1;
 		max >>= 1;
-		var output = new ShortMemory(max - min, 'ofByteArray');
+		var output = new ShortMemory(max - min, "ofByteArray");
 		for (i in min...max) output.set(i - min, input.readShort());
 		return output;
 	}
@@ -128,16 +128,16 @@ class ShortMemory extends MemoryAccess
 	public static function toBytesData(input:ShortMemory, min = -1, max = -1):haxe.io.BytesData
 	{
 		#if debug
-		D.assert(input != null, 'invalid input');
+		D.assert(input != null, "invalid input");
 		#end
 		
 		if (min == -1) min = 0;
 		if (max == -1) max = input.size;
 		
 		#if debug
-		D.assert(min >= 0, Sprintf.format('min out of range (%d)', [min]));
-		D.assert(max <= input.size, Sprintf.format('max out of range (%d)', [max]));
-		D.assert(max - min > 0, Sprintf.format('min equals max (%d)', [min]));
+		D.assert(min >= 0, 'min out of range ($min)');
+		D.assert(max <= input.size, 'max out of range ($max)');
+		D.assert(max - min > 0, 'min equals max ($min)');
 		#end
 		
 		var output = new haxe.io.BytesOutput();
@@ -156,7 +156,7 @@ class ShortMemory extends MemoryAccess
 	public static function ofBytesData(input:haxe.io.BytesData, min = -1, max = -1):ShortMemory
 	{
 		#if debug
-		D.assert(input != null, 'invalid input');
+		D.assert(input != null, "invalid input");
 		#end
 		
 		if (min == -1) min = 0;
@@ -168,18 +168,18 @@ class ShortMemory extends MemoryAccess
 		#end
 		
 		#if debug
-		D.assert(min >= 0, 'min >= 0');
+		D.assert(min >= 0, "min >= 0");
 		#if neko
-		D.assert(max <= neko.NativeString.length(input), 'max <= input.length');
+		D.assert(max <= neko.NativeString.length(input), "max <= input.length");
 		#else
-		D.assert(max <= Std.int(input.length), 'max <= input.length');
+		D.assert(max <= Std.int(input.length), "max <= input.length");
 		#end
 		#end
 		
 		var bytesInput = new haxe.io.BytesInput(haxe.io.Bytes.ofData(input), min);
 		min >>= 1;
 		max >>= 1;
-		var output = new ShortMemory(max - min, 'ofBytesData');
+		var output = new ShortMemory(max - min, "ofBytesData");
 		for (i in min...max) output.set(i - min, bytesInput.readInt16());
 		
 		return output;
@@ -195,16 +195,16 @@ class ShortMemory extends MemoryAccess
 	public static function toArray(input:ShortMemory, min = -1, max = -1):Array<Int>
 	{
 		#if debug
-		D.assert(input != null, 'invalid input');
+		D.assert(input != null, "invalid input");
 		#end
 		
 		if (min == -1) min = 0;
 		if (max == -1) max = input.size;
 		
 		#if debug
-		D.assert(min >= 0, Sprintf.format('min out of range (%d)', [min]));
-		D.assert(max <= input.size, Sprintf.format('max out of range (%d)', [max]));
-		D.assert(max - min > 0, Sprintf.format('min equals max (%d)', [min]));
+		D.assert(min >= 0, 'min out of range ($min)');
+		D.assert(max <= input.size, 'max out of range ($max)');
+		D.assert(max - min > 0, 'min equals max ($min)');
 		#end
 		
 		var output = new Array();
@@ -234,18 +234,18 @@ class ShortMemory extends MemoryAccess
 	public static function ofArray(input:Array<Int>, min = -1, max = -1):ShortMemory
 	{
 		#if debug
-		D.assert(input != null, 'invalid input');
+		D.assert(input != null, "invalid input");
 		#end
 		
 		if (min == -1) min = 0;
 		if (max == -1) max = input.length;
 		
 		#if debug
-		D.assert(min >= 0, 'min >= 0');
-		D.assert(max <= Std.int(input.length), 'max <= input.length');
+		D.assert(min >= 0, "min >= 0");
+		D.assert(max <= Std.int(input.length), "max <= input.length");
 		#end
 		
-		var output = new ShortMemory(max - min, 'ofArray');
+		var output = new ShortMemory(max - min, "ofArray");
 		for (i in min...max) output.set(i - min, input[i]);
 		
 		return output;
@@ -263,22 +263,22 @@ class ShortMemory extends MemoryAccess
 	public static function toVector(input:ShortMemory, min = -1, max = -1, output:flash.Vector<Int> = null):flash.Vector<Int>
 	{
 		#if debug
-		D.assert(input != null, 'invalid input');
+		D.assert(input != null, "invalid input");
 		#end
 		
 		if (min == -1) min = 0;
 		if (max == -1) max = input.size;
 		
 		#if debug
-		D.assert(min >= 0, Sprintf.format('min out of range (%d)', [min]));
-		D.assert(max <= input.size, Sprintf.format('max out of range (%d)', [max]));
-		D.assert(max - min > 0, Sprintf.format('min equals max (%d)', [min]));
+		D.assert(min >= 0, 'min out of range ($min)');
+		D.assert(max <= input.size, 'max out of range ($max)');
+		D.assert(max - min > 0, 'min equals max ($min)');
 		#end
 		
 		#if debug
 		if (output != null)
 			if (output.fixed)
-				D.assert(Std.int(output.length) >= max - min, 'output vector is too small');
+				D.assert(Std.int(output.length) >= max - min, "output vector is too small");
 		#end
 		
 		if (output == null) output = new flash.Vector<Int>(max - min, true);
@@ -309,16 +309,16 @@ class ShortMemory extends MemoryAccess
 	public static function toUnsignedVector(input:ShortMemory, min = -1, max = -1):flash.Vector<UInt>
 	{
 		#if debug
-		D.assert(input != null, 'invalid input');
+		D.assert(input != null, "invalid input");
 		#end
 		
 		if (min == -1) min = 0;
 		if (max == -1) max = input.size;
 		
 		#if debug
-		D.assert(min >= 0, Sprintf.format('min out of range (%d)', [min]));
-		D.assert(max <= input.size, Sprintf.format('max out of range (%d)', [max]));
-		D.assert(max - min > 0, Sprintf.format('min equals max (%d)', [min]));
+		D.assert(min >= 0, 'min out of range ($min)');
+		D.assert(max <= input.size, 'max out of range ($max)');
+		D.assert(max - min > 0, 'min equals max ($min)');
 		#end
 		
 		var output = new flash.Vector<UInt>(max - min, true);
@@ -349,18 +349,18 @@ class ShortMemory extends MemoryAccess
 	public static function ofVector(input:flash.Vector<Int>, min = -1, max = -1):ShortMemory
 	{
 		#if debug
-		D.assert(input != null, 'invalid input');
+		D.assert(input != null, "invalid input");
 		#end
 		
 		if (min == -1) min = 0;
 		if (max == -1) max = input.length;
 		
 		#if debug
-		D.assert(min >= 0, 'min >= 0');
-		D.assert(max <= Std.int(input.length), 'max <= input.length');
+		D.assert(min >= 0, "min >= 0");
+		D.assert(max <= Std.int(input.length), "max <= input.length");
 		#end
 		
-		var output = new ShortMemory(max - min, 'ofVector');
+		var output = new ShortMemory(max - min, "ofVector");
 		for (i in min...max) output.set(i - min, input[i]);
 		
 		return output;
@@ -383,7 +383,7 @@ class ShortMemory extends MemoryAccess
 	/**
 	 * Creates a byte array capable of storing a total of <code>size</code> shorts. 
 	 */
-	public function new(size:Int, name = '?')
+	public function new(size:Int, name = "?")
 	{
 		super(size << 1, name);
 		this.size = size;
@@ -459,7 +459,7 @@ class ShortMemory extends MemoryAccess
 	override public function resize(newSize:Int):Void
 	{
 		#if debug
-		D.assert(newSize >= 0, Sprintf.format('invalid size (%d)', [newSize]));
+		D.assert(newSize >= 0, 'invalid size ($newSize)');
 		#end
 		
 		#if alchemy
@@ -514,7 +514,7 @@ class ShortMemory extends MemoryAccess
 	inline public function swp(i:Int, j:Int):Void
 	{
 		#if debug
-		D.assert(i != j, Sprintf.format('i equals j (%d)', [i]));
+		D.assert(i != j, 'i equals j ($i)');
 		#end
 		
 		#if alchemy
@@ -536,8 +536,8 @@ class ShortMemory extends MemoryAccess
 	inline public function getAddr(i:Int):Int
 	{
 		#if debug
-		D.assert(i >= 0 && i < size, Sprintf.format('segfault, index %d', [i]));
-		D.assert(_memory != null, 'memory deallocated');
+		D.assert(i >= 0 && i < size, 'segfault, index $i');
+		D.assert(_memory != null, "memory deallocated");
 		#end
 		
 		#if alchemy
@@ -576,15 +576,15 @@ class ShortMemory extends MemoryAccess
 	public function toString():String
 	{
 		#if debug
-		if (_memory == null) return '{ShortMemory (unassigned)}';
-		var s = Sprintf.format('{ShortMemory, size: %d, name: %s}', [size, name]);
-		s += '\n|<\n';
+		if (_memory == null) return "{ShortMemory (unassigned)}";
+		var s = '{ShortMemory, size: $size, name: $name}';
+		s += "\n|<\n";
 		for (i in 0...size)
-			s += Sprintf.format('  %3d -> %#.3f\n', [i, get(i)]);
-		s += '\n>|';
+			s += Sprintf.format("  %3d -> %#.3f\n", [i, get(i)]);
+		s += "\n>|";
 		return s;
 		#else
-		return Sprintf.format('{ShortMemory, size: %d, name: %s}', [size, name]);
+		return '{ShortMemory, size: $size, name: $name}';
 		#end
 	}
 }

@@ -59,10 +59,10 @@ class MemoryAccess implements Hashable
 	
 	var _memory:Dynamic;
 	
-	function new(bytes:Int, name = '?')
+	function new(bytes:Int, name = "?")
 	{
 		#if debug
-		D.assert(bytes > 0, 'bytes > 0');
+		D.assert(bytes > 0, "bytes > 0");
 		#end
 		
 		this.bytes = bytes;
@@ -86,7 +86,7 @@ class MemoryAccess implements Hashable
 	public function free():Void
 	{
 		#if debug
-		D.assert(_memory != null, 'memory deallocated');
+		D.assert(_memory != null, "memory deallocated");
 		#end
 		
 		#if alchemy
@@ -116,8 +116,8 @@ class MemoryAccess implements Hashable
 	public function resize(byteSize:Int):Void
 	{
 		#if debug
-		D.assert(byteSize > 0, 'byteSize > 0');
-		D.assert(_memory != null, 'memory deallocated');
+		D.assert(byteSize > 0, "byteSize > 0");
+		D.assert(_memory != null, "memory deallocated");
 		#end
 		
 		bytes = byteSize;

@@ -138,7 +138,7 @@ class HashSet<T:Hashable> implements Set<T>
 		
 		#if flash10
 		#if alchemy
-		_next = new IntMemory(capacity, 'HashSet._next');
+		_next = new IntMemory(capacity, "HashSet._next");
 		#else
 		_next = new Vector<Int>(capacity);
 		#end
@@ -254,14 +254,14 @@ class HashSet<T:Hashable> implements Set<T>
 	 */
 	public function toString():String
 	{
-		var s = Sprintf.format('{HashSet, size/capacity: %d/%d, load factor: %.2f}', [size(), getCapacity(), getLoadFactor()]);
+		var s = Sprintf.format("{HashSet, size/capacity: %d/%d, load factor: %.2f}", [size(), getCapacity(), getLoadFactor()]);
 		if (isEmpty()) return s;
-		s += '\n|<\n';
+		s += "\n|<\n";
 		for (x in this)
 		{
-			s += Sprintf.format('  %s\n', [Std.string(x)]);
+			s += '  ${Std.string(x)}\n';
 		}
-		s += '>|';
+		s += ">|";
 		return s;
 	}
 	
@@ -290,7 +290,7 @@ class HashSet<T:Hashable> implements Set<T>
 	inline public function set(x:T):Bool
 	{
 		#if debug
-		D.assert(size() != maxSize, Sprintf.format('size equals max size (%d)', [maxSize]));
+		D.assert(size() != maxSize, 'size equals max size ($maxSize)');
 		#end
 		
 		if ((size() == getCapacity()))
@@ -299,7 +299,7 @@ class HashSet<T:Hashable> implements Set<T>
 			{
 				#if debug
 				if (!_isResizable)
-					D.assert(false, Sprintf.format('hash set is full (%d)', [getCapacity()]));
+					D.assert(false, 'hash set is full (${getCapacity()})');
 				#end
 				
 				_expand(getCapacity() >> 1);
@@ -524,7 +524,7 @@ class HashSet<T:Hashable> implements Set<T>
 					if (v != null)
 					{
 						#if debug
-						D.assert(Std.is(v, Cloneable), Sprintf.format('element is not of type Cloneable (%s)', [v]));
+						D.assert(Std.is(v, Cloneable), 'element is not of type Cloneable ($v)');
 						#end
 						
 						c = untyped v;
@@ -637,7 +637,7 @@ class HashSet<T:Hashable> implements Set<T>
 	inline function __key(x:Hashable)
 	{
 		#if debug
-		D.assert(x != null, 'element is null');
+		D.assert(x != null, "element is null");
 		#end
 		
 		return x.key;
@@ -687,7 +687,7 @@ class HashSetIterator<T> implements de.polygonal.ds.Itr<T>
 	
 	inline public function remove():Void
 	{
-		throw 'unsupported operation';
+		throw "unsupported operation";
 	}
 	
 	inline function __vals(f:HashSetFriend<T>)

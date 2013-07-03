@@ -29,7 +29,6 @@
  */
 package de.polygonal.ds;
 
-import de.polygonal.core.fmt.Sprintf;
 import de.polygonal.core.util.Assert;
 
 /**
@@ -78,12 +77,12 @@ class ListSet<T> implements Set<T>
 	 */
 	public function toString():String
 	{
-		var s = Sprintf.format('{ListSet, size: %d}', [size()]);
+		var s = '{ListSet, size: ${size()}}';
 		if (isEmpty()) return s;
-		s += '\n|<\n';
+		s += "\n|<\n";
 		for (i in 0...size())
-			s += Sprintf.format('  %s\n', [Std.string(_a.get(i))]);
-		s += '>|';
+			s += '  ${Std.string(_a.get(i))}\n';
+		s += ">|";
 		return s;
 	}
 	
@@ -142,7 +141,7 @@ class ListSet<T> implements Set<T>
 				for (val in x)
 				{
 					#if debug
-					D.assert(Std.is(val, Cloneable), Sprintf.format('element is not of type Cloneable (%s)', [val]));
+					D.assert(Std.is(val, Cloneable), 'element is not of type Cloneable ($val)');
 					#end
 					
 					set(untyped val.clone());

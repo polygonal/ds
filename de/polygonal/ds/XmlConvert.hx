@@ -29,7 +29,6 @@
  */
 package de.polygonal.ds;
 
-import de.polygonal.core.fmt.Sprintf;
 import de.polygonal.core.fmt.StringUtil;
 import de.polygonal.ds.TreeNode;
 import haxe.ds.StringMap;
@@ -136,7 +135,7 @@ class XmlNodeData
 	public function toString():String
 	{
 		if (value != null)
-			return name + ':' + value;
+			return name + ":" + value;
 		return name;
 	}
 }

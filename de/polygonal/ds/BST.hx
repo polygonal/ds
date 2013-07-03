@@ -29,7 +29,6 @@
  */
 package de.polygonal.ds;
 
-import de.polygonal.core.fmt.Sprintf;
 import de.polygonal.core.util.Assert;
 
 #if generic
@@ -142,7 +141,7 @@ class BST<T:Comparable<T>> implements Collection<T>
 	public function insert(x:T):BinaryTreeNode<T>
 	{
 		#if debug
-		D.assert(x != null, 'element is null');
+		D.assert(x != null, "element is null");
 		#end
 		
 		_size++;
@@ -194,8 +193,8 @@ class BST<T:Comparable<T>> implements Collection<T>
 	public function find(x:T):BinaryTreeNode<T>
 	{
 		#if debug
-		D.assert(_root != null, 'tree is empty');
-		D.assert(x != null, 'element is null');
+		D.assert(_root != null, "tree is empty");
+		D.assert(x != null, "element is null");
 		#end
 		
 		var node = _root;
@@ -217,7 +216,7 @@ class BST<T:Comparable<T>> implements Collection<T>
 	public function removeNode(x:BinaryTreeNode<T>):Bool
 	{
 		#if debug
-		D.assert(x != null, 'element is null');
+		D.assert(x != null, "element is null");
 		#end
 		
 		if (x.l == null || x.r == null)
@@ -324,17 +323,17 @@ class BST<T:Comparable<T>> implements Collection<T>
 	 */
 	public function toString():String
 	{
-		var s = Sprintf.format('{BST, size %d}', [size()]);
+		var s = '{BST, size ${size()}}';
 		if (isEmpty()) return s;
-		s += '\n|<\n';
+		s += "\n|<\n";
 		var dumpNode = function(node:BinaryTreeNode<T>, userData:Dynamic):Bool
 		{
-			s += Sprintf.format('  %s\n', [Std.string(node.val)]);
+			s += '  ${Std.string(node.val)}\n';
 			return true;
 		};
 		
 		_root.inorder(dumpNode);
-		s += '>|';
+		s += ">|";
 		return s;
 	}
 	
@@ -372,7 +371,7 @@ class BST<T:Comparable<T>> implements Collection<T>
 	public function remove(x:T):Bool
 	{
 		#if debug
-		D.assert(x != null, 'element is null');
+		D.assert(x != null, "element is null");
 		#end
 		
 		if (size() == 0) return false;

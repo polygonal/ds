@@ -95,7 +95,7 @@ class LinkedDeque<T> implements Deque<T>
 		if (reservedSize > 0)
 		{
 			if (maxSize != -1)
-				D.assert(reservedSize <= maxSize, 'reserved size is greater than allowed size');
+				D.assert(reservedSize <= maxSize, "reserved size is greater than allowed size");
 		}
 		this.maxSize = (maxSize == -1) ? Limits.INT32_MAX : maxSize;
 		#else
@@ -120,7 +120,7 @@ class LinkedDeque<T> implements Deque<T>
 	inline public function front():T
 	{
 		#if debug
-		D.assert(size() > 0, 'deque is empty');
+		D.assert(size() > 0, "deque is empty");
 		#end
 		
 		return _head.val;
@@ -135,7 +135,7 @@ class LinkedDeque<T> implements Deque<T>
 	{
 		#if debug
 		if (maxSize != -1)
-			D.assert(size() < maxSize, Sprintf.format('size equals max size (%d)', [maxSize]));
+			D.assert(size() < maxSize, 'size equals max size ($maxSize)');
 		#end
 		
 		var node = _getNode(x);
@@ -154,7 +154,7 @@ class LinkedDeque<T> implements Deque<T>
 	inline public function popFront():T
 	{
 		#if debug
-		D.assert(size() > 0, 'deque is empty');
+		D.assert(size() > 0, "deque is empty");
 		#end
 		
 		var node = _head;
@@ -174,7 +174,7 @@ class LinkedDeque<T> implements Deque<T>
 	inline public function back():T
 	{
 		#if debug
-		D.assert(size() > 0, 'deque is empty');
+		D.assert(size() > 0, "deque is empty");
 		#end
 		
 		return _tail.val;
@@ -189,7 +189,7 @@ class LinkedDeque<T> implements Deque<T>
 	{
 		#if debug
 		if (maxSize != -1)
-			D.assert(size() < maxSize, Sprintf.format('size equals max size (%d)', [maxSize]));
+			D.assert(size() < maxSize, 'size equals max size ($maxSize)');
 		#end
 		
 		var node = _getNode(x);
@@ -208,7 +208,7 @@ class LinkedDeque<T> implements Deque<T>
 	inline public function popBack():T
 	{
 		#if debug
-		D.assert(size() > 0, 'deque is empty');
+		D.assert(size() > 0, "deque is empty");
 		#end
 		
 		var node = _tail;
@@ -230,7 +230,7 @@ class LinkedDeque<T> implements Deque<T>
 	public function getFront(i:Int):T
 	{
 		#if debug
-		D.assert(i < size(), Sprintf.format('index out of range (%d)', [i]));
+		D.assert(i < size(), 'index out of range ($i)');
 		#end
 		
 		var node = _head;
@@ -264,7 +264,7 @@ class LinkedDeque<T> implements Deque<T>
 	public function getBack(i:Int):T
 	{
 		#if debug
-		D.assert(i < size(), Sprintf.format('index out of range (%d)', [i]));
+		D.assert(i < size(), 'index out of range ($i)');
 		#end
 		
 		var node = _tail;
@@ -372,17 +372,17 @@ class LinkedDeque<T> implements Deque<T>
 	 */
 	public function toString():String
 	{
-		var s = Sprintf.format('{LinkedDeque, size: %d}', [size()]);
+		var s = '{LinkedDeque, size: ${size()}}';
 		if (isEmpty()) return s;
-		s += '\n|< front\n';
+		s += "\n|< front\n";
 		var i = 0;
 		var node = _head;
 		while (node != null)
 		{
-			s += Sprintf.format('  %4d -> %s\n', [i++, Std.string(node.val)]);
+			s += Sprintf.format("  %4d -> %s\n", [i++, Std.string(node.val)]);
 			node = node.next;
 		}
-		s += '>|';
+		s += ">|";
 		return s;
 	}
 	
@@ -633,7 +633,7 @@ class LinkedDeque<T> implements Deque<T>
 			var srcNode = _head;
 			
 			#if debug
-			D.assert(Std.is(_head.val, Cloneable), Sprintf.format('element is not of type Cloneable (%s)', [_head.val]));
+			D.assert(Std.is(_head.val, Cloneable), 'element is not of type Cloneable (${_head.val})');
 			#end
 			
 			var c:Cloneable<T> = untyped _head.val;
@@ -653,7 +653,7 @@ class LinkedDeque<T> implements Deque<T>
 				var srcNode0 = srcNode;
 				
 				#if debug
-				D.assert(Std.is(srcNode.val, Cloneable), Sprintf.format('element is not of type Cloneable (%s)', [srcNode.val]));
+				D.assert(Std.is(srcNode.val, Cloneable), 'element is not of type Cloneable (${srcNode.val})');
 				#end
 				c = untyped srcNode.val;
 				dstNode = dstNode.next = new LinkedDequeNode<T>(c.clone());
@@ -664,7 +664,7 @@ class LinkedDeque<T> implements Deque<T>
 			}
 			
 			#if debug
-			D.assert(Std.is(srcNode.val, Cloneable), Sprintf.format('element is not of type Cloneable (%s)', [srcNode.val]));
+			D.assert(Std.is(srcNode.val, Cloneable), 'element is not of type Cloneable (${srcNode.val})');
 			#end
 			c = untyped srcNode.val;
 			dstNode0 = dstNode;
@@ -770,7 +770,7 @@ class LinkedDequeNode<T>
 	
 	public function toString():String
 	{
-		return Sprintf.format('LinkedDequeNode{%s}', [Std.string(val)]);
+		return 'LinkedDequeNode{${Std.string(val)}}';
 	}
 }
 
@@ -815,7 +815,7 @@ class LinkedDequeIterator<T> implements de.polygonal.ds.Itr<T>
 	inline public function remove():Void
 	{
 		#if debug
-		D.assert(_hook != null, 'call next() before removing an element');
+		D.assert(_hook != null, "call next() before removing an element");
 		#end
 		
 		__removeNode(_f, _hook);

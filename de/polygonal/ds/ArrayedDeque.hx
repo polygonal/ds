@@ -101,8 +101,8 @@ class ArrayedDeque<T> implements Deque<T>
 	public function new(blockSize = 64, blockPoolCapacity = 4, maxSize = -1)
 	{
 		#if debug
-		D.assert(M.isPow2(blockSize), 'blockSize is not a power of 2');
-		D.assert(blockSize >= 4, 'blockSize is too small');
+		D.assert(M.isPow2(blockSize), "blockSize is not a power of 2");
+		D.assert(blockSize >= 4, "blockSize is too small");
 		#end
 		
 		#if debug
@@ -139,7 +139,7 @@ class ArrayedDeque<T> implements Deque<T>
 	inline public function front():T
 	{
 		#if debug
-		D.assert(size() > 0, 'deque is empty');
+		D.assert(size() > 0, "deque is empty");
 		#end
 		
 		return (_head == _blockSizeMinusOne) ? _headBlockNext[0] : _headBlock[_head + 1];
@@ -154,7 +154,7 @@ class ArrayedDeque<T> implements Deque<T>
 	{
 		#if debug
 		if (maxSize != -1)
-			D.assert(size() < maxSize, Sprintf.format('size equals max size (%d)', [maxSize]));
+			D.assert(size() < maxSize, 'size equals max size ($maxSize)');
 		#end
 		
 		_headBlock[_head--] = x;
@@ -169,7 +169,7 @@ class ArrayedDeque<T> implements Deque<T>
 	inline public function popFront():T
 	{
 		#if debug
-		D.assert(size() > 0, 'deque is empty');
+		D.assert(size() > 0, "deque is empty");
 		#end
 		
 		if (_head == _blockSizeMinusOne)
@@ -189,7 +189,7 @@ class ArrayedDeque<T> implements Deque<T>
 	inline public function back():T
 	{
 		#if debug
-		D.assert(size() > 0, 'deque is empty');
+		D.assert(size() > 0, "deque is empty");
 		#end
 		
 		return (_tail == 0) ? (_tailBlockPrev[_blockSizeMinusOne]) : _tailBlock[_tail - 1];
@@ -204,7 +204,7 @@ class ArrayedDeque<T> implements Deque<T>
 	{
 		#if debug
 		if (maxSize != -1)
-			D.assert(size() < maxSize, Sprintf.format('size equals max size (%d)', [maxSize]));
+			D.assert(size() < maxSize, 'size equals max size ($maxSize)');
 		#end
 		
 		_tailBlock[_tail++] = x;
@@ -220,7 +220,7 @@ class ArrayedDeque<T> implements Deque<T>
 	public function popBack():T
 	{
 		#if debug
-		D.assert(size() > 0, 'deque is empty');
+		D.assert(size() > 0, "deque is empty");
 		#end
 		
 		if (_tail == 0)
@@ -242,7 +242,7 @@ class ArrayedDeque<T> implements Deque<T>
 	public function getFront(i:Int):T
 	{
 		#if debug
-		D.assert(i < size(), Sprintf.format('index out of range (%d)', [i]));
+		D.assert(i < size(), 'index out of range ($i)');
 		#end
 		
 		var c = (_head + 1) + i;
@@ -278,7 +278,7 @@ class ArrayedDeque<T> implements Deque<T>
 	public function getBack(i:Int):T
 	{
 		#if debug
-		D.assert(i < size(), Sprintf.format('index out of range (%d)', [i]));
+		D.assert(i < size(), 'index out of range ($i)');
 		#end
 		
 		var c = _tail - 1 - i;
@@ -334,7 +334,7 @@ class ArrayedDeque<T> implements Deque<T>
 		{
 			#if debug
 			if (maxSize != -1)
-				D.assert(n < maxSize, Sprintf.format('n > max size (%d)', [maxSize]));
+				D.assert(n < maxSize, 'n > max size ($maxSize)');
 			#end
 			
 			var i = _head + 1;
@@ -400,7 +400,7 @@ class ArrayedDeque<T> implements Deque<T>
 		{
 			#if debug
 			if (maxSize != -1)
-				D.assert(n < maxSize, Sprintf.format('n > max size (%d)', [maxSize]));
+				D.assert(n < maxSize, 'n > max size ($maxSize)');
 			#end
 			
 			var i = _head + 1;
@@ -474,40 +474,40 @@ class ArrayedDeque<T> implements Deque<T>
 	 */
 	public function toString():String
 	{
-		var s = Sprintf.format('{ArrayedDeque, size: %d}', [size()]);
+		var s = '{ArrayedDeque, size: ${size()}}';
 		if (isEmpty()) return s;
-		s += '\n|< front\n';
+		s += "\n|< front\n";
 		
 		var i = 0;
 		if (_tailBlockIndex == 0)
 		{
 			for (j in _head + 1..._tail)
-				s += Sprintf.format('  %4d -> %s\n', [i++, Std.string(_headBlock[j])]);
+				s += Sprintf.format("  %4d -> %s\n", [i++, Std.string(_headBlock[j])]);
 		}
 		else
 		if (_tailBlockIndex == 1)
 		{
 			for (j in _head + 1..._blockSize)
-				s += Sprintf.format('  %4d -> %s\n', [i++, Std.string(_headBlock[j])]);
+				s += Sprintf.format("  %4d -> %s\n", [i++, Std.string(_headBlock[j])]);
 			for (j in 0..._tail)
-				s += Sprintf.format('  %4d -> %s\n', [i++, Std.string(_tailBlock[j])]);
+				s += Sprintf.format("  %4d -> %s\n", [i++, Std.string(_tailBlock[j])]);
 		}
 		else
 		{
 			for (j in _head + 1..._blockSize)
-				s += Sprintf.format('  %4d -> %s\n', [i++, Std.string(_headBlock[j])]);
+				s += Sprintf.format("  %4d -> %s\n", [i++, Std.string(_headBlock[j])]);
 			
 			for (j in 1..._tailBlockIndex)
 			{
 				var block = _blocks[j];
 				for (k in 0..._blockSize)
-					s += Sprintf.format('  %4d -> %s\n', [i++, Std.string(block[k])]);
+					s += Sprintf.format("  %4d -> %s\n", [i++, Std.string(block[k])]);
 			}
 			
 			for (j in 0..._tail)
-				s += Sprintf.format('  %4d -> %s\n', [i++, Std.string(_tailBlock[j])]);
+				s += Sprintf.format("  %4d -> %s\n", [i++, Std.string(_tailBlock[j])]);
 		}
-		s += '>|';
+		s += ">|";
 		return s;
 	}
 	
@@ -1088,7 +1088,7 @@ class ArrayedDeque<T> implements Deque<T>
 		for (j in min...max)
 		{
 			#if debug
-			D.assert(Std.is(src[j], Cloneable), Sprintf.format('element is not of type Cloneable (%s)', [src[j]]));
+			D.assert(Std.is(src[j], Cloneable), 'element is not of type Cloneable (${src[j]})');
 			#end
 			
 			dst[j] = src[j];
@@ -1152,7 +1152,7 @@ class ArrayedDequeIterator<T> implements de.polygonal.ds.Itr<T>
 	
 	inline public function remove():Void
 	{
-		throw 'unsupported operation';
+		throw "unsupported operation";
 	}
 	
 	inline function __head<T>(f:ArrayedDequeFriend<T>)

@@ -29,7 +29,6 @@
  */
 package de.polygonal.ds;
 
-import de.polygonal.core.fmt.Sprintf;
 import de.polygonal.core.util.Assert;
 
 /**
@@ -90,7 +89,7 @@ class DLLNode<T>
 	inline public function isHead():Bool
 	{
 		#if debug
-		D.assert(_list != null, 'node is not managed by a list');
+		D.assert(_list != null, "node is not managed by a list");
 		#end
 		
 		return this == _list.head;
@@ -104,7 +103,7 @@ class DLLNode<T>
 	inline public function isTail():Bool
 	{
 		#if debug
-		D.assert(_list != null, 'node is not managed by a list');
+		D.assert(_list != null, "node is not managed by a list");
 		#end
 		
 		return this == _list.tail;
@@ -136,7 +135,7 @@ class DLLNode<T>
 	inline public function nextVal():T
 	{
 		#if debug
-		D.assert(hasNext(), 'next node is null');
+		D.assert(hasNext(), "next node is null");
 		#end
 		
 		return next.val;
@@ -150,7 +149,7 @@ class DLLNode<T>
 	inline public function prevVal():T
 	{
 		#if debug
-		D.assert(hasPrev(), 'previous node is null');
+		D.assert(hasPrev(), "previous node is null");
 		#end
 		
 		return prev.val;
@@ -173,7 +172,7 @@ class DLLNode<T>
 	inline public function unlink():DLLNode<T>
 	{
 		#if debug
-		D.assert(_list != null, '_list != null');
+		D.assert(_list != null, "_list != null");
 		#end
 		
 		return _list.unlink(this);
@@ -197,9 +196,9 @@ class DLLNode<T>
 	inline public function prepend(node:DLLNode<T>):DLLNode<T>
 	{
 		#if debug
-		D.assert(node != null, 'node is null');
-		D.assert(prev == null, 'prev is not null');
-		D.assert(_list == null && node._list == null, 'node is managed by a list');
+		D.assert(node != null, "node is null");
+		D.assert(prev == null, "prev is not null");
+		D.assert(_list == null && node._list == null, "node is managed by a list");
 		#end
 		
 		node.next = this;
@@ -225,9 +224,9 @@ class DLLNode<T>
 	inline public function append(node:DLLNode<T>):DLLNode<T>
 	{
 		#if debug
-		D.assert(node != null, 'node is null');
-		D.assert(next == null, 'next is not null');
-		D.assert(_list == null && node._list == null, 'node is managed by a list');
+		D.assert(node != null, "node is null");
+		D.assert(next == null, "next is not null");
+		D.assert(_list == null && node._list == null, "node is managed by a list");
 		#end
 		
 		next = node;
@@ -253,9 +252,9 @@ class DLLNode<T>
 	inline public function prependTo(node:DLLNode<T>):DLLNode<T>
 	{
 		#if debug
-		D.assert(node != null, 'node is null');
-		D.assert(_list == null && node._list == null, 'node is managed by a list');
-		D.assert(node.prev == null, 'node.prev is not null');
+		D.assert(node != null, "node is null");
+		D.assert(_list == null && node._list == null, "node is managed by a list");
+		D.assert(node.prev == null, "node.prev is not null");
 		#end
 		
 		next = node;
@@ -281,9 +280,9 @@ class DLLNode<T>
 	inline public function appendTo(node:DLLNode<T>):DLLNode<T>
 	{
 		#if debug
-		D.assert(node != null, 'node is null');
-		D.assert(_list == null && node._list == null, 'node is managed by a list');
-		D.assert(node.next == null, 'node.next is not null');
+		D.assert(node != null, "node is null");
+		D.assert(_list == null && node._list == null, "node is managed by a list");
+		D.assert(node.next == null, "node.next is not null");
 		#end
 		
 		prev = node;
@@ -296,7 +295,7 @@ class DLLNode<T>
 	 */
 	public function toString():String
 	{
-		return Sprintf.format('{DLLNode %s}', [Std.string(val)]);
+		return '{DLLNode ${Std.string(val)}}';
 	}
 	
 	inline function _unlink():DLLNode<T>

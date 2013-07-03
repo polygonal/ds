@@ -84,7 +84,7 @@ class HeapIterator<T:(Heapable<T>)> implements de.polygonal.ds.Itr<T>
 	inline public function remove():Void
 	{
 		#if debug
-		D.assert(_i > 0, 'call next() before removing an element');
+		D.assert(_i > 0, "call next() before removing an element");
 		#end
 		_f.remove(_a[_i - 1]);
 	}
@@ -154,7 +154,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 		{
 			#if debug
 			if (this.maxSize != -1)
-				D.assert(reservedSize <= this.maxSize, 'reserved size is greater than allowed size');
+				D.assert(reservedSize <= this.maxSize, "reserved size is greater than allowed size");
 			#end
 			_a = ArrayUtil.alloc(reservedSize + 1);
 		}
@@ -225,7 +225,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	inline public function top():T
 	{
 		#if debug
-		D.assert(size() > 0, 'heap is empty');
+		D.assert(size() > 0, "heap is empty");
 		#end
 		return __get(1);
 	}
@@ -239,7 +239,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	public function bottom():T
 	{
 		#if debug
-		D.assert(size() > 0, 'heap is empty');
+		D.assert(size() > 0, "heap is empty");
 		#end
 		
 		if (_size == 1) return __get(1);
@@ -263,15 +263,15 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	public function add(x:T):Void
 	{
 		#if debug
-		D.assert(x != null, 'x is null');
+		D.assert(x != null, "x is null");
 		#end
 		
 		#if (debug && flash)
-		D.assert(!_map.hasKey(x), 'x already exists');
+		D.assert(!_map.hasKey(x), "x already exists");
 		_map.set(x, true);
 		#end
 		#if debug
-		if (maxSize != -1) D.assert(size() <= maxSize, Sprintf.format('size equals max size (%d)', [maxSize]));
+		if (maxSize != -1) D.assert(size() <= maxSize, 'size equals max size ($maxSize)');
 		#end
 		
 		__set(++_size, x);
@@ -288,7 +288,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	public function pop():T
 	{
 		#if debug
-		D.assert(size() > 0, 'heap is empty');
+		D.assert(size() > 0, "heap is empty");
 		#end
 		
 		var x = __get(1);
@@ -311,7 +311,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	public function replace(x:T):Void
 	{
 		#if (debug && flash)
-		D.assert(!_map.hasKey(x), 'x already exists');
+		D.assert(!_map.hasKey(x), "x already exists");
 		_map.clr(__get(1));
 		_map.set(x, true);
 		#end
@@ -331,7 +331,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	public function change(x:T, hint:Int):Void
 	{
 		#if (debug && flash)
-		D.assert(_map.hasKey(x), 'x does not exist');
+		D.assert(_map.hasKey(x), "x does not exist");
 		#end
 		
 		if (hint >= 0)
@@ -443,7 +443,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	 */
 	public function toString():String
 	{
-		var s = Sprintf.format('{Heap, size: %d}', [size()]);
+		var s = '{Heap, size: ${size()}}';
 		if (isEmpty()) return s;
 		var tmp = new Heap<HeapElementWrapper<T>>();
 		for (i in 1..._size + 1)
@@ -452,11 +452,11 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 			tmp.__set(i, w);
 		}
 		tmp._size = _size;
-		s += '\n|< front\n';
+		s += "\n|< front\n";
 		var i = 0;
 		while (tmp.size() > 0)
-			s += Sprintf.format('  %4d -> %s\n', [i++, Std.string(tmp.pop())]);
-		s += '>|';
+			s += Sprintf.format("  %4d -> %s\n", [i++, Std.string(tmp.pop())]);
+		s += ">|";
 		return s;
 	}
 	
@@ -508,7 +508,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	inline public function contains(x:T):Bool
 	{
 		#if debug
-		D.assert(x != null, 'x is null');
+		D.assert(x != null, "x is null");
 		#end
 		var position = x.position;
 		return (position > 0 && position <= _size) && (__get(position) == x);
@@ -527,10 +527,10 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 		else
 		{
 			#if debug
-			D.assert(x != null, 'x is null');
+			D.assert(x != null, "x is null");
 			#end
 			#if (debug && flash)
-			D.assert(_map.hasKey(x), 'x does not exist');
+			D.assert(_map.hasKey(x), "x does not exist");
 			_map.clr(x);
 			#end
 			
@@ -655,7 +655,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 			{
 				var e = __get(i);
 				#if debug
-				D.assert(Std.is(e, Cloneable), Sprintf.format('element is not of type Cloneable (%s)', [__get(i)]));
+				D.assert(Std.is(e, Cloneable), 'element is not of type Cloneable (${__get(i)})');
 				#end
 				
 				var c = untyped e.clone();

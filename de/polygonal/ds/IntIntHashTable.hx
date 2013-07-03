@@ -175,7 +175,7 @@ class IntIntHashTable implements Map<Int, Int>
 	public function new(slotCount:Int, capacity = -1, isResizable = true, maxSize = -1)
 	{
 		#if debug
-		D.assert(M.isPow2(slotCount), 'slotCount is not a power of 2');
+		D.assert(M.isPow2(slotCount), "slotCount is not a power of 2");
 		#end
 		
 		if (capacity == -1)
@@ -183,8 +183,8 @@ class IntIntHashTable implements Map<Int, Int>
 		else
 		{
 			#if debug
-			D.assert(capacity >= 2, 'minimum capacity is 2');
-			D.assert(M.isPow2(slotCount), 'capacity is not a power of 2');
+			D.assert(capacity >= 2, "minimum capacity is 2");
+			D.assert(M.isPow2(slotCount), "capacity is not a power of 2");
 			#end
 		}
 		
@@ -204,10 +204,10 @@ class IntIntHashTable implements Map<Int, Int>
 		
 		#if flash10
 		#if alchemy
-		_hash = new IntMemory(slotCount, 'IntIntHashTable._hash');
+		_hash = new IntMemory(slotCount, "IntIntHashTable._hash");
 		_hash.fill(EMPTY_SLOT);
-		_data = new IntMemory(_capacity * 3, 'IntIntHashTable._data');
-		_next = new IntMemory(_capacity, 'IntIntHashTable._next');
+		_data = new IntMemory(_capacity * 3, "IntIntHashTable._data");
+		_next = new IntMemory(_capacity, "IntIntHashTable._next");
 		#else
 		_hash = new Vector<Int>(slotCount);
 		for (i in 0...slotCount) _hash[i] = EMPTY_SLOT;
@@ -364,7 +364,7 @@ class IntIntHashTable implements Map<Int, Int>
 	inline public function setIfAbsent(key:Int, val:Int):Bool
 	{
 		#if debug
-		D.assert(val != KEY_ABSENT, 'val 0x80000000 is reserved');
+		D.assert(val != KEY_ABSENT, "val 0x80000000 is reserved");
 		#end
 		
 		var b = _hashCode(key);
@@ -378,14 +378,14 @@ class IntIntHashTable implements Map<Int, Int>
 		if (j == EMPTY_SLOT)
 		{
 			#if debug
-			D.assert(size() < maxSize, Sprintf.format('size equals max size (%d)', [maxSize]));
+			D.assert(size() < maxSize, 'size equals max size ($maxSize)');
 			#end
 			
 			if (_size == _capacity)
 			{
 				#if debug
 				if (!_isResizable)
-					D.assert(false, Sprintf.format('out of space (%d)', [getCapacity()]));
+					D.assert(false, 'out of space (${getCapacity()})');
 				#end
 				
 				if (_isResizable)
@@ -456,7 +456,7 @@ class IntIntHashTable implements Map<Int, Int>
 					{
 						#if debug
 						if (!_isResizable)
-							D.assert(false, Sprintf.format('out of space (%d)', [getCapacity()]));
+							D.assert(false, 'out of space (${getCapacity()})');
 						#end
 						
 						if (_isResizable)
@@ -493,7 +493,7 @@ class IntIntHashTable implements Map<Int, Int>
 	public function rehash(slotCount:Int):Void
 	{
 		#if debug
-		D.assert(M.isPow2(slotCount), 'slotCount is not a power of 2');
+		D.assert(M.isPow2(slotCount), "slotCount is not a power of 2");
 		#end
 		
 		if (slotCount == getSlotCount()) return;
@@ -773,9 +773,9 @@ class IntIntHashTable implements Map<Int, Int>
 	 */
 	public function toString():String
 	{
-		var s = Sprintf.format('{IntIntHashTable, size/capacity: %d/%d, load factor: %.2f}', [size(), getCapacity(), getLoadFactor()]);
+		var s = Sprintf.format("{IntIntHashTable, size/capacity: %d/%d, load factor: %.2f}", [size(), getCapacity(), getLoadFactor()]);
 		if (isEmpty()) return s;
-		s += '\n|<\n';
+		s += "\n|<\n";
 		
 		var max = 0.;
 		for (key in keys()) max = M.fmax(max, key);
@@ -787,9 +787,9 @@ class IntIntHashTable implements Map<Int, Int>
 		}
 		
 		for (key in keys())
-			s += Sprintf.format('  %- ' + i + 'd -> %d\n', [key, get(key)]);
+			s += Sprintf.format("  %- " + i + "d -> %d\n", [key, get(key)]);
 		
-		s += '>|';
+		s += ">|";
 		return s;
 	}
 	
@@ -804,7 +804,7 @@ class IntIntHashTable implements Map<Int, Int>
 	inline public function has(val:Int):Bool
 	{
 		#if debug
-		D.assert(val != VAL_ABSENT, 'val 0x80000000 is reserved');
+		D.assert(val != VAL_ABSENT, "val 0x80000000 is reserved");
 		#end
 		
 		var exists = false;
@@ -1000,15 +1000,15 @@ class IntIntHashTable implements Map<Int, Int>
 	inline public function set(key:Int, val:Int):Bool
 	{
 		#if debug
-		D.assert(val != KEY_ABSENT, 'val 0x80000000 is reserved');
-		D.assert(size() < maxSize, Sprintf.format('size equals max size (%d)', [maxSize]));
+		D.assert(val != KEY_ABSENT, "val 0x80000000 is reserved");
+		D.assert(size() < maxSize, 'size equals max size ($maxSize)');
 		#end
 		
 		if (_size == _capacity)
 		{
 			#if debug
 			if (!_isResizable)
-				D.assert(false, Sprintf.format('out of space (%d)', [getCapacity()]));
+				D.assert(false, 'out of space (${getCapacity()})');
 			#end
 			
 			if (_isResizable)
@@ -1278,7 +1278,7 @@ class IntIntHashTable implements Map<Int, Int>
 	inline public function remove(val:Int):Bool
 	{
 		#if debug
-		D.assert(val != KEY_ABSENT, 'val 0x80000000 is reserved');
+		D.assert(val != KEY_ABSENT, "val 0x80000000 is reserved");
 		#end
 		
 		var c = 0;
@@ -1750,7 +1750,7 @@ class IntIntHashTableValIterator implements de.polygonal.ds.Itr<Int>
 	
 	inline public function remove():Void
 	{
-		throw 'unsupported operation';
+		throw "unsupported operation";
 	}
 	
 	inline function _scan()
@@ -1821,7 +1821,7 @@ class IntIntHashTableKeyIterator implements de.polygonal.ds.Itr<Int>
 	
 	inline public function remove():Void
 	{
-		throw 'unsupported operation';
+		throw "unsupported operation";
 	}
 	
 	inline function _scan()

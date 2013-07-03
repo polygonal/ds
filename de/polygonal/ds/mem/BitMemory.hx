@@ -84,18 +84,18 @@ class BitMemory extends MemoryAccess
 	public static function ofByteArray(input:flash.utils.ByteArray, min = -1, max = -1):BitMemory
 	{
 		#if debug
-		D.assert(input != null, 'invalid input');
+		D.assert(input != null, "invalid input");
 		#end
 		
 		if (min == -1) min = 0;
 		if (max == -1) max = input.length;
 		
 		#if debug
-		D.assert(min >= 0, 'min >= 0');
-		D.assert(max <= Std.int(input.length), 'max <= input.length');
+		D.assert(min >= 0, "min >= 0");
+		D.assert(max <= Std.int(input.length), "max <= input.length");
 		#end
 		
-		var output = new BitMemory((max - min) << 3, 'ofByteArray');
+		var output = new BitMemory((max - min) << 3, "ofByteArray");
 		#if alchemy
 		var a = output.getAddr(0);
 		for (i in min...max) flash.Memory.setByte(a++, cast input[i]);
@@ -153,7 +153,7 @@ class BitMemory extends MemoryAccess
 	public static function ofBytesData(input:haxe.io.BytesData, min = -1, max = -1):BitMemory
 	{
 		#if debug
-		D.assert(input != null, 'invalid input');
+		D.assert(input != null, "invalid input");
 		#end
 		
 		if (min == -1) min = 0;
@@ -165,18 +165,18 @@ class BitMemory extends MemoryAccess
 		#end
 		
 		#if debug
-		D.assert(min >= 0, 'min >= 0');
+		D.assert(min >= 0, "min >= 0");
 		#end
 		
 		#if debug
 		#if neko
-		D.assert(max <= neko.NativeString.length(input), 'max <= input.length');
+		D.assert(max <= neko.NativeString.length(input), "max <= input.length");
 		#else
-		D.assert(max <= Std.int(input.length), 'max <= input.length');
+		D.assert(max <= Std.int(input.length), "max <= input.length");
 		#end
 		#end
 		
-		var output = new BitMemory((max - min) << 3, 'ofByteArray');
+		var output = new BitMemory((max - min) << 3, "ofByteArray");
 		#if alchemy
 		var a = output.getAddr(0);
 		for (i in min...max)
@@ -242,7 +242,7 @@ class BitMemory extends MemoryAccess
 	/**
 	 * Creates a bit vector capable of storing a total of <code>size</code> bits. 
 	 */
-	public function new(size:Int, name = '?')
+	public function new(size:Int, name = "?")
 	{
 		super(((size & (32 - 1)) > 0 ? ((size >> 5) + 1) : (size >> 5)) << 2, name);
 		
@@ -291,7 +291,7 @@ class BitMemory extends MemoryAccess
 	public function fill(x:Int):BitMemory
 	{
 		#if debug
-		D.assert(x == 0 || x == 1, 'x == 0 || x == 1');
+		D.assert(x == 0 || x == 1, "x == 0 || x == 1");
 		#end
 		
 		#if alchemy
@@ -323,7 +323,7 @@ class BitMemory extends MemoryAccess
 	override public function resize(newSize:Int):Void
 	{
 		#if debug
-		D.assert(newSize >= 0, Sprintf.format('invalid size (%d)', [newSize]));
+		D.assert(newSize >= 0, 'invalid size ($newSize)');
 		#end
 		
 		var newBytes = ((size & (32 - 1)) > 0 ? ((size >> 5) + 1) : (size >> 5)) << 2;
@@ -446,8 +446,8 @@ class BitMemory extends MemoryAccess
 	inline public function getAddr(i:Int):Int
 	{
 		#if debug
-		D.assert(i >= 0 && i < size, Sprintf.format('segfault, index %d', [i]));
-		D.assert(_memory != null, 'memory deallocated');
+		D.assert(i >= 0 && i < size, 'segfault, index $i');
+		D.assert(_memory != null, "memory deallocated");
 		#end
 		
 		#if alchemy
@@ -486,27 +486,27 @@ class BitMemory extends MemoryAccess
 	public function toString():String
 	{
 		#if debug
-		if (_memory == null) return '{BitMemory (unassigned)}';
-		var s = Sprintf.format('{BitMemory, size: %d, name: %s}', [size, name]);
-		s += '\n|<\n';
+		if (_memory == null) return "{BitMemory (unassigned)}";
+		var s = '{BitMemory, size: $size, name: $name}';
+		s += "\n|<\n";
 		
 		for (i in 0...bytes >> 2)
 		{
-			var t = '';
+			var t = "";
 			for (j in 0...32)
 			{
 				var k = (i << 5) + j;
 				if (k < size)
-					t += has(k) ? '1' : '0';
+					t += has(k) ? "1" : "0";
 				else
-					t += '#';
+					t += "#";
 			}
-			s += Sprintf.format('  %4d -> %s\n', [i, t]);
+			s += Sprintf.format("  %4d -> %s\n", [i, t]);
 		}
-		s += '\n>|';
+		s += "\n>|";
 		return s;
 		#else
-		return Sprintf.format('{BitMemory, size: %d, name: %s}', [size, name]);
+		return '{BitMemory, size: $size, name: $name}';
 		#end
 	}
 }

@@ -141,7 +141,7 @@ class ArrayedQueue<T> implements Queue<T>
 	inline public function peek():T
 	{
 		#if debug
-		D.assert(_size > 0, 'queue is empty');
+		D.assert(_size > 0, "queue is empty");
 		#end
 		return __get(_front);
 	}
@@ -155,7 +155,7 @@ class ArrayedQueue<T> implements Queue<T>
 	inline public function back():T
 	{
 		#if debug
-		D.assert(_size > 0, 'queue is empty');
+		D.assert(_size > 0, "queue is empty");
 		#end
 		
 		return __get((_size - 1 + _front) % _capacity);
@@ -171,7 +171,7 @@ class ArrayedQueue<T> implements Queue<T>
 	{
 		#if debug
 		if (maxSize != -1)
-			D.assert(_size < maxSize, Sprintf.format('size equals max size (%d)', [maxSize]));
+			D.assert(_size < maxSize, 'size equals max size ($maxSize)');
 		++_t1;
 		#end
 		
@@ -179,7 +179,7 @@ class ArrayedQueue<T> implements Queue<T>
 		{
 			#if debug
 			if (!_isResizable)
-				D.assert(false, Sprintf.format('out of space (%d)', [_capacity]));
+				D.assert(false, 'out of space ($_capacity)');
 			#end
 			
 			if (_isResizable)
@@ -203,7 +203,7 @@ class ArrayedQueue<T> implements Queue<T>
 	public function dequeue():T
 	{
 		#if debug
-		D.assert(_size > 0, 'queue is empty');
+		D.assert(_size > 0, "queue is empty");
 		#end
 		
 		#if debug
@@ -237,7 +237,7 @@ class ArrayedQueue<T> implements Queue<T>
 	inline public function dispose():Void
 	{
 		#if debug
-		D.assert(_t0 == _t1, 'dispose() is only allowed directly after dequeue()');
+		D.assert(_t0 == _t1, "dispose() is only allowed directly after dequeue()");
 		#end
 		
 		__set((_front == 0 ? _capacity : _front) - 1, cast null);
@@ -265,8 +265,8 @@ class ArrayedQueue<T> implements Queue<T>
 	inline public function get(i:Int):T
 	{
 		#if debug
-		D.assert(_size > 0, 'queue is empty');
-		D.assert(i < _size, Sprintf.format('i index out of range (%d)', [i]));
+		D.assert(_size > 0, "queue is empty");
+		D.assert(i < _size, 'i index out of range ($i)');
 		#end
 		
 		return __get((i + _front) % _capacity);
@@ -282,8 +282,8 @@ class ArrayedQueue<T> implements Queue<T>
 	inline public function set(i:Int, x:T):Void
 	{
 		#if debug
-		D.assert(_size > 0, 'queue is empty');
-		D.assert(i < _size, Sprintf.format('i index out of range (%d)', [i]));
+		D.assert(_size > 0, "queue is empty");
+		D.assert(i < _size, 'i index out of range ($i)');
 		#end
 		
 		__set((i + _front) % _capacity, x);
@@ -300,10 +300,10 @@ class ArrayedQueue<T> implements Queue<T>
 	inline public function swp(i:Int, j:Int):Void
 	{
 		#if debug
-		D.assert(_size > 0, 'queue is empty');
-		D.assert(i < _size, Sprintf.format('i index out of range (%d)', [i]));
-		D.assert(j < _size, Sprintf.format('j index out of range (%d)', [j]));
-		D.assert(i != j, Sprintf.format('i index equals j index (%d)', [i]));
+		D.assert(_size > 0, "queue is empty");
+		D.assert(i < _size, 'i index out of range ($i)');
+		D.assert(j < _size, 'j index out of range ($j)');
+		D.assert(i != j, 'i index equals j index ($i)');
 		#end
 		
 		var t = get(i);
@@ -322,10 +322,10 @@ class ArrayedQueue<T> implements Queue<T>
 	inline public function cpy(i:Int, j:Int):Void
 	{
 		#if debug
-		D.assert(_size > 0, 'queue is empty');
-		D.assert(i < _size, Sprintf.format('i index out of range (%d)', [i]));
-		D.assert(j < _size, Sprintf.format('j index out of range (%d)', [j]));
-		D.assert(i != j, Sprintf.format('i index equals j index (%d)', [i]));
+		D.assert(_size > 0, "queue is empty");
+		D.assert(i < _size, 'i index out of range ($i)');
+		D.assert(j < _size, 'j index out of range ($j)');
+		D.assert(i != j, 'i index equals j index ($i)');
 		#end
 		
 		set(i, get(j));
@@ -342,12 +342,12 @@ class ArrayedQueue<T> implements Queue<T>
 	public function assign(C:Class<T>, args:Array<Dynamic> = null, n = 0):Void
 	{
 		#if debug
-		D.assert(n >= 0, 'n >= 0');
+		D.assert(n >= 0, "n >= 0");
 		#end
 		
 		var k = n > 0 ? n : _capacity;
 		#if debug
-		D.assert(k <= _capacity, Sprintf.format('n out of range (%d)', [n]));
+		D.assert(k <= _capacity, 'n out of range ($n)');
 		#end
 		
 		if (args == null) args = [];
@@ -366,12 +366,12 @@ class ArrayedQueue<T> implements Queue<T>
 	public function fill(x:T, n = 0):ArrayedQueue<T>
 	{
 		#if debug
-		D.assert(n >= 0, 'n >= 0');
+		D.assert(n >= 0, "n >= 0");
 		#end
 		
 		var k = n > 0 ? n : _capacity;
 		#if debug
-		D.assert(k <= _capacity, Sprintf.format('n out of range (%d)', [n]));
+		D.assert(k <= _capacity, 'n out of range ($n)');
 		#end
 		
 		for (i in 0...k)
@@ -420,7 +420,7 @@ class ArrayedQueue<T> implements Queue<T>
 		else
 		{
 			#if debug
-			D.assert(rval.size() >= _size, 'insufficient random values');
+			D.assert(rval.size() >= _size, "insufficient random values");
 			#end
 			
 			var j = 0;
@@ -455,12 +455,12 @@ class ArrayedQueue<T> implements Queue<T>
 	 */
 	public function toString():String
 	{
-		var s = Sprintf.format('{ArrayedQueue, size/capacity: %d/%d}', [_size, _capacity]);
+		var s = '{ArrayedQueue, size/capacity: $_size/$_capacity}';
 		if (isEmpty()) return s;
-		s += '\n|< front\n';
+		s += "\n|< front\n";
 		for (i in 0..._size)
-			s += Sprintf.format('  %4d -> %s\n', [i, Std.string(get(i))]);
-		s += '>|';
+			s += Sprintf.format("  %4d -> %s\n", [i, Std.string(get(i))]);
+		s += ">|";
 		return s;
 	}
 	
@@ -690,7 +690,7 @@ class ArrayedQueue<T> implements Queue<T>
 			for (i in 0..._size)
 			{
 				#if debug
-				D.assert(Std.is(__get(i), Cloneable), Sprintf.format('element is not of type Cloneable (%s)', [__get(i)]));
+				D.assert(Std.is(__get(i), Cloneable), 'element is not of type Cloneable (${__get(i)})');
 				#end
 				
 				c = cast(__get(i), Cloneable<Dynamic>);
@@ -774,7 +774,7 @@ class ArrayedQueueIterator<T> implements de.polygonal.ds.Itr<T>
 	inline public function remove():Void
 	{
 		#if debug
-		D.assert(_i > 0, 'call next() before removing an element');
+		D.assert(_i > 0, "call next() before removing an element");
 		#end
 		_f.remove(_a[((_i - 1) + _front) % _capacity]);
 	}
