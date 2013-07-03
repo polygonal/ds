@@ -29,7 +29,7 @@
  */
 package de.polygonal.ds;
 
-import de.polygonal.core.util.Assert;
+import de.polygonal.ds.error.Assert.assert;
 
 /**
  * <p>A helper class for building tree structures.</p>
@@ -47,12 +47,12 @@ class TreeBuilder<T>
 	
 	/**
 	 * Creates a <em>TreeBuilder</em> object pointing to <code>node</code>.
-	 * @throws de.polygonal.core.util.AssertError node is null (debug only).
+	 * @throws de.polygonal.ds.error.AssertError node is null (debug only).
 	 */
 	public function new(node:TreeNode<T>)
 	{
 		#if debug
-		D.assert(node != null, "node is null");
+		assert(node != null, "node is null");
 		#end
 		
 		_node = node;
@@ -72,12 +72,12 @@ class TreeBuilder<T>
 	/**
 	 * Returns the data stored in the node that the tree builder is currently pointing at.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.util.AssertError vertical pointer is null (debug only).
+	 * @throws de.polygonal.ds.error.AssertError vertical pointer is null (debug only).
 	 */
 	inline public function getVal():T
 	{
 		#if debug
-		D.assert(valid(), "vertical pointer is null");
+		assert(valid(), "vertical pointer is null");
 		#end
 		
 		return _node.val;
@@ -86,12 +86,12 @@ class TreeBuilder<T>
 	/**
 	 * Stores the element <code>x</code> in the node that the tree builder is currently pointing at.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.util.AssertError vertical pointer is null (debug only).
+	 * @throws de.polygonal.ds.error.AssertError vertical pointer is null (debug only).
 	 */
 	inline public function setVal(x:T):Void
 	{
 		#if debug
-		D.assert(valid(), "vertical pointer is null");
+		assert(valid(), "vertical pointer is null");
 		#end
 		
 		_node.val = x;
@@ -118,12 +118,12 @@ class TreeBuilder<T>
 	/**
 	 * Returns the data of the child pointer.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.util.AssertError invalid child pointer (debug only).
+	 * @throws de.polygonal.ds.error.AssertError invalid child pointer (debug only).
 	 */
 	inline public function getChildVal():T
 	{
 		#if debug
-		D.assert(childValid(), "invalid child node");
+		assert(childValid(), "invalid child node");
 		#end
 		
 		return _child.val;
@@ -141,12 +141,12 @@ class TreeBuilder<T>
 	/**
 	 * Moves the vertical pointer to the root of the tree.
 	 * <o>n</o>
-	 * @throws de.polygonal.core.util.AssertError invalid pointer (debug only).
+	 * @throws de.polygonal.ds.error.AssertError invalid pointer (debug only).
 	 */
 	inline public function root():Void
 	{
 		#if debug
-		D.assert(valid(), "invalid vertical pointer");
+		assert(valid(), "invalid vertical pointer");
 		#end
 		
 		while (_node.hasParent()) _node = _node.parent;
@@ -161,7 +161,7 @@ class TreeBuilder<T>
 	inline public function up():Bool
 	{
 		#if debug
-		D.assert(valid(), "invalid vertical pointer");
+		assert(valid(), "invalid vertical pointer");
 		#end
 		
 		if (_node.hasParent())
@@ -182,7 +182,7 @@ class TreeBuilder<T>
 	inline public function down():Bool
 	{
 		#if debug
-		D.assert(childValid(), "node has no children");
+		assert(childValid(), "node has no children");
 		#end
 		
 		if (_child != null)
@@ -289,12 +289,12 @@ class TreeBuilder<T>
 	/**
 	 * Appends a child node storing <code>x</code> to the children of the vertical pointer.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.util.AssertError invalid vertical pointer (debug only).
+	 * @throws de.polygonal.ds.error.AssertError invalid vertical pointer (debug only).
 	 */
 	inline public function appendChild(x:T):TreeNode<T>
 	{
 		#if debug
-		D.assert(valid(), "invalid vertical pointer");
+		assert(valid(), "invalid vertical pointer");
 		#end
 		
 		_child = _createChildNode(x, true);
@@ -304,12 +304,12 @@ class TreeBuilder<T>
 	/**
 	 * Prepends a child node storing <code>x</code> to the children of the vertical pointer.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.util.AssertError invalid vertical pointer (debug only).
+	 * @throws de.polygonal.ds.error.AssertError invalid vertical pointer (debug only).
 	 */
 	inline public function prependChild(x:T):TreeNode<T>
 	{
 		#if debug
-		D.assert(valid(), "invalid vertical pointer");
+		assert(valid(), "invalid vertical pointer");
 		#end
 		
 		var childNode = _createChildNode(x, false);
@@ -328,12 +328,12 @@ class TreeBuilder<T>
 	/**
 	 * Prepends a child node storing <code>x</code> to the child node referenced by the horizontal pointer.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.util.AssertError invalid vertical pointer (debug only).
+	 * @throws de.polygonal.ds.error.AssertError invalid vertical pointer (debug only).
 	 */
 	inline public function insertBeforeChild(x:T):TreeNode<T>
 	{
 		#if debug
-		D.assert(valid(), "invalid vertical pointer");
+		assert(valid(), "invalid vertical pointer");
 		#end
 		
 		if (childValid())
@@ -358,12 +358,12 @@ class TreeBuilder<T>
 	/**
 	 * Appends a child node storing <code>x</code> to the node referenced by the vertical pointer.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.util.AssertError invalid vertical pointer (debug only).
+	 * @throws de.polygonal.ds.error.AssertError invalid vertical pointer (debug only).
 	 */
 	inline public function insertAfterChild(x:T):TreeNode<T>
 	{
 		#if debug
-		D.assert(valid(), "invalid vertical pointer");
+		assert(valid(), "invalid vertical pointer");
 		#end
 		
 		if (childValid())

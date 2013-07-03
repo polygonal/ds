@@ -30,7 +30,7 @@
 package de.polygonal.ds.mem;
 
 import de.polygonal.core.fmt.Sprintf;
-import de.polygonal.core.util.Assert;
+import de.polygonal.ds.error.Assert.assert;
 import de.polygonal.ds.Bits;
 
 private typedef MemoryAccessFriend =
@@ -185,17 +185,17 @@ class MemoryManager
 	/**
 	 * Copies <code>n</code> bytes from the location pointed by the index <code>source</code> to the location pointed by the index <code>destination</code>.<br/>
 	 * Copying takes place as if an intermediate buffer was used, allowing the destination and source to overlap.
-	 * @throws de.polygonal.core.util.AssertError invalid <code>destination</code>, <code>source</code> or <code>n</code> value (debug only).
+	 * @throws de.polygonal.ds.error.AssertError invalid <code>destination</code>, <code>source</code> or <code>n</code> value (debug only).
 	 * @see <a href="http://www.cplusplus.com/reference/clibrary/cstring/memmove/" target="_blank">http://www.cplusplus.com/reference/clibrary/cstring/memmove/</a>
 	 */
 	#if (flash10 && alchemy)
 	inline public static function memmove(destination:Int, source:Int, n:Int):Void
 	{
 		#if debug
-		D.assert(destination >= 0 && source >= 0 && n >= 0, "destination >= 0 && source >= 0 && n >= 0");
-		D.assert(source < Std.int(bytes().length), "source < Std.int(bytes.length)");
-		D.assert(destination + n <= Std.int(bytes().length), "destination + n <= Std.int(bytes.length)");
-		D.assert(n <= Std.int(bytes().length), "n <= Std.int(bytes.length)");
+		assert(destination >= 0 && source >= 0 && n >= 0, "destination >= 0 && source >= 0 && n >= 0");
+		assert(source < Std.int(bytes().length), "source < Std.int(bytes.length)");
+		assert(destination + n <= Std.int(bytes().length), "destination + n <= Std.int(bytes.length)");
+		assert(n <= Std.int(bytes().length), "n <= Std.int(bytes.length)");
 		#end
 		
 		if (source == destination)
@@ -265,9 +265,9 @@ class MemoryManager
 	function new()
 	{
 		#if debug
-		D.assert(M.isPow2(BLOCK_SIZE_BYTES), "M.isPow2(BLOCK_SIZE_BYTES)");
-		D.assert(BLOCK_SIZE_BYTES >= 1024, "BLOCK_SIZE_BYTES >= 1024");
-		D.assert(RAW_BYTES >= 1024, "RAW_BYTES >= 1024");
+		assert(M.isPow2(BLOCK_SIZE_BYTES), "M.isPow2(BLOCK_SIZE_BYTES)");
+		assert(BLOCK_SIZE_BYTES >= 1024, "BLOCK_SIZE_BYTES >= 1024");
+		assert(RAW_BYTES >= 1024, "RAW_BYTES >= 1024");
 		#end
 		
 		_blockSizeBytes = BLOCK_SIZE_BYTES;
@@ -330,10 +330,10 @@ class MemoryManager
 	{
 		#if debug
 		//check upper limit
-		D.assert(_bytesUsed + numBytes < MEMORY_LIMIT_BYTES, 'OOM (failed to allocate $numBytes bytes, ${bytesUsed()} out of ${bytesTotal()} bytes used)');
-		D.assert(numBytes > 0, "invalid numBytes");
-		D.assert(access != null, "invalid access");
-		D.assert(__getMem(access) == null, "access already allocated");
+		assert(_bytesUsed + numBytes < MEMORY_LIMIT_BYTES, 'OOM (failed to allocate $numBytes bytes, ${bytesUsed()} out of ${bytesTotal()} bytes used)');
+		assert(numBytes > 0, "invalid numBytes");
+		assert(access != null, "invalid access");
+		assert(__getMem(access) == null, "access already allocated");
 		#end
 		
 		//allocate more memory?
@@ -363,8 +363,8 @@ class MemoryManager
 	function _dealloc(access:MemoryAccess):Void
 	{
 		#if debug
-		D.assert(access != null, "invalid access");
-		D.assert(__getMem(access) != null, "access already deallocated");
+		assert(access != null, "invalid access");
+		assert(__getMem(access) != null, "access already deallocated");
 		#end
 		
 		//resolve memory from access
@@ -401,16 +401,16 @@ class MemoryManager
 	function _realloc(access:MemoryAccess, numBytes:Int):Void
 	{
 		#if debug
-		D.assert(access != null, "invalid access");
-		D.assert(numBytes > 0, "invalid numBytes");
-		D.assert(__getMem(access) != null, "access already deallocated");
+		assert(access != null, "invalid access");
+		assert(numBytes > 0, "invalid numBytes");
+		assert(__getMem(access) != null, "access already deallocated");
 		#end
 		
 		//resolve memory from access
 		var memory = __getMem(access);
 		
 		#if debug
-		D.assert(!memory.isEmpty, "invalid access");
+		assert(!memory.isEmpty, "invalid access");
 		#end
 		
 		//early out; no change in size
@@ -1002,7 +1002,7 @@ private class MemorySegment
 			else
 			{
 				#if debug
-				D.assert(x != null, "x != null");
+				assert(x != null, "x != null");
 				#end
 				if (x == null)
 				{

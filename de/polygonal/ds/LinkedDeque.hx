@@ -30,7 +30,7 @@
 package de.polygonal.ds;
 
 import de.polygonal.core.fmt.Sprintf;
-import de.polygonal.core.util.Assert;
+import de.polygonal.ds.error.Assert.assert;
 
 private typedef LinkedDequeFriend<T> =
 {
@@ -85,7 +85,7 @@ class LinkedDeque<T> implements Deque<T>
 	 * Prevents frequent node allocation and thus increases performance at the cost of using more memory.
 	 * @param maxSize the maximum allowed size of this queue.<br/>
 	 * The default value of -1 indicates that there is no upper limit.
-	 * @throws de.polygonal.core.util.AssertError reserved size is greater than allowed size (debug only).
+	 * @throws de.polygonal.ds.error.AssertError reserved size is greater than allowed size (debug only).
 	 */
 	public function new(reservedSize = 0, maxSize = -1) 
 	{
@@ -93,7 +93,7 @@ class LinkedDeque<T> implements Deque<T>
 		if (reservedSize > 0)
 		{
 			if (maxSize != -1)
-				D.assert(reservedSize <= maxSize, "reserved size is greater than allowed size");
+				assert(reservedSize <= maxSize, "reserved size is greater than allowed size");
 		}
 		this.maxSize = (maxSize == -1) ? M.INT32_MAX : maxSize;
 		#else
@@ -113,12 +113,12 @@ class LinkedDeque<T> implements Deque<T>
 	/**
 	 * Returns the first element of this deque.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.util.AssertError deque is empty (debug only).
+	 * @throws de.polygonal.ds.error.AssertError deque is empty (debug only).
 	 */
 	inline public function front():T
 	{
 		#if debug
-		D.assert(size() > 0, "deque is empty");
+		assert(size() > 0, "deque is empty");
 		#end
 		
 		return _head.val;
@@ -127,13 +127,13 @@ class LinkedDeque<T> implements Deque<T>
 	/**
 	 * Inserts the element <code>x</code> at the front of this deque.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.util.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
 	 */
 	inline public function pushFront(x:T):Void
 	{
 		#if debug
 		if (maxSize != -1)
-			D.assert(size() < maxSize, 'size equals max size ($maxSize)');
+			assert(size() < maxSize, 'size equals max size ($maxSize)');
 		#end
 		
 		var node = _getNode(x);
@@ -147,12 +147,12 @@ class LinkedDeque<T> implements Deque<T>
 	/**
 	 * Removes and returns the element at the beginning of this deque.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.util.AssertError deque is empty (debug only).
+	 * @throws de.polygonal.ds.error.AssertError deque is empty (debug only).
 	 */
 	inline public function popFront():T
 	{
 		#if debug
-		D.assert(size() > 0, "deque is empty");
+		assert(size() > 0, "deque is empty");
 		#end
 		
 		var node = _head;
@@ -167,12 +167,12 @@ class LinkedDeque<T> implements Deque<T>
 	/**
 	 * Returns the last element of the deque.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.util.AssertError deque is empty (debug only).
+	 * @throws de.polygonal.ds.error.AssertError deque is empty (debug only).
 	 */
 	inline public function back():T
 	{
 		#if debug
-		D.assert(size() > 0, "deque is empty");
+		assert(size() > 0, "deque is empty");
 		#end
 		
 		return _tail.val;
@@ -181,13 +181,13 @@ class LinkedDeque<T> implements Deque<T>
 	/**
 	 * Inserts the element <code>x</code> at the back of the deque.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.util.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
 	 */
 	inline public function pushBack(x:T):Void
 	{
 		#if debug
 		if (maxSize != -1)
-			D.assert(size() < maxSize, 'size equals max size ($maxSize)');
+			assert(size() < maxSize, 'size equals max size ($maxSize)');
 		#end
 		
 		var node = _getNode(x);
@@ -201,12 +201,12 @@ class LinkedDeque<T> implements Deque<T>
 	/**
 	 * Deletes the element at the end of the deque.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.util.AssertError deque is empty (debug only).
+	 * @throws de.polygonal.ds.error.AssertError deque is empty (debug only).
 	 */
 	inline public function popBack():T
 	{
 		#if debug
-		D.assert(size() > 0, "deque is empty");
+		assert(size() > 0, "deque is empty");
 		#end
 		
 		var node = _tail;
@@ -222,13 +222,13 @@ class LinkedDeque<T> implements Deque<T>
 	 * Returns the element at index <code>i</code> relative to the front of this deque.<br/>
 	 * The front element is at index [0], the back element is at index <b>&#091;<em>size()</em> - 1&#093;</b>.
 	 * <o>n</o>
-	 * @throws de.polygonal.core.util.AssertError deque is empty (debug only).
-	 * @throws de.polygonal.core.util.AssertError index out of range (debug only).
+	 * @throws de.polygonal.ds.error.AssertError deque is empty (debug only).
+	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
 	 */
 	public function getFront(i:Int):T
 	{
 		#if debug
-		D.assert(i < size(), 'index out of range ($i)');
+		assert(i < size(), 'index out of range ($i)');
 		#end
 		
 		var node = _head;
@@ -256,13 +256,13 @@ class LinkedDeque<T> implements Deque<T>
 	 * Returns the element at index <code>i</code> relative to the back of this deque.<br/>
 	 * The back element is at index [0], the front element is at index &#091;<em>size()</em> - 1&#093;.
 	 * <o>n</o>
-	 * @throws de.polygonal.core.util.AssertError deque is empty (debug only).
-	 * @throws de.polygonal.core.util.AssertError index out of range (debug only).
+	 * @throws de.polygonal.ds.error.AssertError deque is empty (debug only).
+	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
 	 */
 	public function getBack(i:Int):T
 	{
 		#if debug
-		D.assert(i < size(), 'index out of range ($i)');
+		assert(i < size(), 'index out of range ($i)');
 		#end
 		
 		var node = _tail;
@@ -581,7 +581,7 @@ class LinkedDeque<T> implements Deque<T>
 	 * @param assign if true, the <code>copier</code> parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.<br/>
 	 * If false, the <em>clone()</em> method is called on each element. <warn>In this case all elements have to implement <em>Cloneable</em>.</warn>
 	 * @param copier a custom function for copying elements. Replaces element.<em>clone()</em> if <code>assign</code> is false.
-	 * @throws de.polygonal.core.util.AssertError element is not of type <em>Cloneable</em> (debug only).
+	 * @throws de.polygonal.ds.error.AssertError element is not of type <em>Cloneable</em> (debug only).
 	 */
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{
@@ -631,7 +631,7 @@ class LinkedDeque<T> implements Deque<T>
 			var srcNode = _head;
 			
 			#if debug
-			D.assert(Std.is(_head.val, Cloneable), 'element is not of type Cloneable (${_head.val})');
+			assert(Std.is(_head.val, Cloneable), 'element is not of type Cloneable (${_head.val})');
 			#end
 			
 			var c:Cloneable<T> = untyped _head.val;
@@ -651,7 +651,7 @@ class LinkedDeque<T> implements Deque<T>
 				var srcNode0 = srcNode;
 				
 				#if debug
-				D.assert(Std.is(srcNode.val, Cloneable), 'element is not of type Cloneable (${srcNode.val})');
+				assert(Std.is(srcNode.val, Cloneable), 'element is not of type Cloneable (${srcNode.val})');
 				#end
 				c = untyped srcNode.val;
 				dstNode = dstNode.next = new LinkedDequeNode<T>(c.clone());
@@ -662,7 +662,7 @@ class LinkedDeque<T> implements Deque<T>
 			}
 			
 			#if debug
-			D.assert(Std.is(srcNode.val, Cloneable), 'element is not of type Cloneable (${srcNode.val})');
+			assert(Std.is(srcNode.val, Cloneable), 'element is not of type Cloneable (${srcNode.val})');
 			#end
 			c = untyped srcNode.val;
 			dstNode0 = dstNode;
@@ -813,7 +813,7 @@ class LinkedDequeIterator<T> implements de.polygonal.ds.Itr<T>
 	inline public function remove():Void
 	{
 		#if debug
-		D.assert(_hook != null, "call next() before removing an element");
+		assert(_hook != null, "call next() before removing an element");
 		#end
 		
 		__removeNode(_f, _hook);

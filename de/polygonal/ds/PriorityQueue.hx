@@ -30,7 +30,7 @@
 package de.polygonal.ds;
 
 import de.polygonal.core.fmt.Sprintf;
-import de.polygonal.core.util.Assert;
+import de.polygonal.ds.error.Assert.assert;
 
 private typedef PriorityQueueFriend<T> =
 {
@@ -83,7 +83,7 @@ class PriorityQueueIterator<T:(Prioritizable)> implements de.polygonal.ds.Itr<T>
 	inline public function remove():Void
 	{
 		#if debug
-		D.assert(_i > 0, "call next() before removing an element");
+		assert(_i > 0, "call next() before removing an element");
 		#end
 		
 		_f.remove(_a[_i - 1]);
@@ -155,7 +155,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 		{
 			#if debug
 			if (this.maxSize != -1)
-				D.assert(reservedSize <= this.maxSize, "reserved size is greater than allowed size");
+				assert(reservedSize <= this.maxSize, "reserved size is greater than allowed size");
 			#end
 			
 			_a = ArrayUtil.alloc(reservedSize + 1);
@@ -215,12 +215,12 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	 * Returns the front element.<br/>
 	 * This is the element with the highest priority.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.util.AssertError priority queue is empty (debug only).
+	 * @throws de.polygonal.ds.error.AssertError priority queue is empty (debug only).
 	 */
 	inline public function peek():T
 	{
 		#if debug
-		D.assert(size() > 0, "priority queue is empty");
+		assert(size() > 0, "priority queue is empty");
 		#end
 		
 		return __get(1);
@@ -230,12 +230,12 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	 * Returns the rear element.<br/>
 	 * This is the element with the lowest priority.
 	 * <o>n</o>
-	 * @throws de.polygonal.core.util.AssertError priority queue is empty (debug only).
+	 * @throws de.polygonal.ds.error.AssertError priority queue is empty (debug only).
 	 */
 	public function back():T
 	{
 		#if debug
-		D.assert(size() > 0, "priority queue is empty");
+		assert(size() > 0, "priority queue is empty");
 		#end
 		
 		if (_size == 1) return __get(1);
@@ -262,19 +262,19 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	/**
 	 * Enqueues the element <code>x</code>.
 	 * <o>log n</o>
-	 * @throws de.polygonal.core.util.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
-	 * @throws de.polygonal.core.util.AssertError <code>x</code> is null or <code>x</code> already exists (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>x</code> is null or <code>x</code> already exists (debug only).
 	 */
 	inline public function enqueue(x:T):Void
 	{
 		#if debug
 		if (maxSize != -1)
-			D.assert(size() <= maxSize, 'size equals max size ($maxSize)');
-		D.assert(x != null, "element is null");
+			assert(size() <= maxSize, 'size equals max size ($maxSize)');
+		assert(x != null, "element is null");
 		#end
 		
 		#if (debug && flash)
-		D.assert(!_map.hasKey(x), "element already exists");
+		assert(!_map.hasKey(x), "element already exists");
 		_map.set(x, true);
 		#end
 		
@@ -286,12 +286,12 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	/**
 	 * Dequeues the front element.
 	 * <o>log n</o>
-	 * @throws de.polygonal.core.util.AssertError priority queue is empty (debug only).
+	 * @throws de.polygonal.ds.error.AssertError priority queue is empty (debug only).
 	 */
 	inline public function dequeue():T
 	{
 		#if debug
-		D.assert(size() > 0, "priority queue is empty");
+		assert(size() > 0, "priority queue is empty");
 		#end
 		
 		var x = __get(1);
@@ -312,16 +312,16 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	 * <o>log n</o>
 	 * @param x the element to re-prioritize.
 	 * @param priority the new priority.
-	 * @throws de.polygonal.core.util.AssertError priority queue is empty or <code>x</code> does not exist (debug only).
+	 * @throws de.polygonal.ds.error.AssertError priority queue is empty or <code>x</code> does not exist (debug only).
 	 */
 	public function reprioritize(x:T, priority:Float):Void
 	{
 		#if debug
-		D.assert(size() > 0, "priority queue is empty");
+		assert(size() > 0, "priority queue is empty");
 		#end
 		
 		#if (debug && flash)
-		D.assert(_map.hasKey(x), "unknown element");
+		assert(_map.hasKey(x), "unknown element");
 		#end
 		
 		var oldPriority = x.priority;
@@ -438,13 +438,13 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	
 	/**
 	 * Returns true if this priority queue contains the element <code>x</code>.
-	 * @throws de.polygonal.core.util.AssertError <code>x</code> is invalid.
+	 * @throws de.polygonal.ds.error.AssertError <code>x</code> is invalid.
 	 * <o>1</o>
 	 */
 	inline public function contains(x:T):Bool
 	{
 		#if debug
-		D.assert(x != null, "x is null");
+		assert(x != null, "x is null");
 		#end
 		
 		var position = x.position;
@@ -455,7 +455,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	 * Removes the element <code>x</code>.
 	 * <o>n</o>
 	 * @return true if <code>x</code> was removed.
-	 * @throws de.polygonal.core.util.AssertError <code>x</code> is invalid or does not exist (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>x</code> is invalid or does not exist (debug only).
 	 */
 	public function remove(x:T):Bool
 	{
@@ -464,11 +464,11 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 		else
 		{
 			#if debug
-			D.assert(x != null, "x is null");
+			assert(x != null, "x is null");
 			#end
 			
 			#if (debug && flash)
-			D.assert(_map.hasKey(x), "x does not exist");
+			assert(_map.hasKey(x), "x does not exist");
 			_map.clr(x);
 			#end
 			
@@ -569,7 +569,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	 * @param assign if true, the <code>copier</code> parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.<br/>
 	 * If false, the <em>clone()</em> method is called on each element. <warn>In this case all elements have to implement <em>Cloneable</em>.</warn>
 	 * @param copier a custom function for copying elements. Replaces element.<em>clone()</em> if <code>assign</code> is false.
-	 * @throws de.polygonal.core.util.AssertError element is not of type <em>Cloneable</em> (debug only).
+	 * @throws de.polygonal.ds.error.AssertError element is not of type <em>Cloneable</em> (debug only).
 	 * <warn>If <code>assign</code> is true, only the copied version should be used from now on.</warn>
 	 */
 	public function clone(assign = true, copier:T->T = null):Collection<T>
@@ -595,7 +595,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 				var e = __get(i);
 				
 				#if debug
-				D.assert(Std.is(e, Cloneable), 'element is not of type Cloneable ($e)');
+				assert(Std.is(e, Cloneable), 'element is not of type Cloneable ($e)');
 				#end
 				
 				var c = untyped e.clone();

@@ -29,7 +29,7 @@
  */
 package de.polygonal.ds;
 
-import de.polygonal.core.util.Assert;
+import de.polygonal.ds.error.Assert.assert;
 
 /**
  * <p>A singly linked list node.</p>
@@ -78,12 +78,12 @@ class SLLNode<T>
 	/**
 	 * Returns true if this node is the head of a list.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.util.AssertError node is not managed by a list (debug only).
+	 * @throws de.polygonal.ds.error.AssertError node is not managed by a list (debug only).
 	 */
 	inline public function isHead():Bool
 	{
 		#if debug
-		D.assert(_list != null, "node is not managed by a list");
+		assert(_list != null, "node is not managed by a list");
 		#end
 		
 		return this == _list.head;
@@ -92,12 +92,12 @@ class SLLNode<T>
 	/**
 	 * Returns true if this node is the tail of a list.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.util.AssertError node is not managed by a list (debug only).
+	 * @throws de.polygonal.ds.error.AssertError node is not managed by a list (debug only).
 	 */
 	inline public function isTail():Bool
 	{
 		#if debug
-		D.assert(_list != null, "node is not managed by a list");
+		assert(_list != null, "node is not managed by a list");
 		#end
 		
 		return this == _list.tail;
@@ -115,12 +115,12 @@ class SLLNode<T>
 	/**
 	 * Returns the element of the next node.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.util.AssertError next node is null (debug only).
+	 * @throws de.polygonal.ds.error.AssertError next node is null (debug only).
 	 */
 	inline public function nextVal():T
 	{
 		#if debug
-		D.assert(hasNext(), "invalid next node");
+		assert(hasNext(), "invalid next node");
 		#end
 		
 		return next.val;
@@ -138,12 +138,12 @@ class SLLNode<T>
 	/**
 	 * Unlinks this node from its list and returns node.<em>next</em>.
 	 * <o>n</o>
-	 * @throws de.polygonal.core.util.AssertError list is null (debug only).
+	 * @throws de.polygonal.ds.error.AssertError list is null (debug only).
 	 */
 	inline public function unlink():SLLNode<T>
 	{
 		#if debug
-		D.assert(_list != null, "_list != null");
+		assert(_list != null, "_list != null");
 		#end
 		
 		return _list.unlink(this);

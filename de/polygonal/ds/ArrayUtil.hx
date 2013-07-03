@@ -29,7 +29,7 @@
  */
 package de.polygonal.ds;
 
-import de.polygonal.core.util.Assert;
+import de.polygonal.ds.error.Assert.assert;
 
 /**
  * <p>Various utility functions for working with arrays.</p>
@@ -38,12 +38,12 @@ class ArrayUtil
 {
 	/**
 	 * Allocates an array with a length of <code>x</code>.
-	 * @throws de.polygonal.core.util.AssertError <code>x</code> &lt; 0 (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>x</code> &lt; 0 (debug only).
 	 */
 	inline public static function alloc<T>(x:Int):Array<T>
 	{
 		#if debug
-		D.assert(x >= 0, "x >= 0");
+		assert(x >= 0, "x >= 0");
 		#end
 		
 		var a:Array<T>;
@@ -80,20 +80,20 @@ class ArrayUtil
 	
 	/**
 	 * Copies elements in the range &#091;<code>min</code>, <code>max</code>&#093; from <code>src</code> to <code>dst</code>.
-	 * @throws de.polygonal.core.util.AssertError <code>src</code> is null (debug only).
-	 * @throws de.polygonal.core.util.AssertError <code>dst</code> is null (debug only).
-	 * @throws de.polygonal.core.util.AssertError index out of range (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>src</code> is null (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>dst</code> is null (debug only).
+	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
 	 */
 	inline public static function copy<T>(src:Array<T>, dst:Array<T>, min = 0, max = -1):Array<T>
 	{
 		if (max == -1) max = src.length;
 		
 		#if debug
-		D.assert(src != null, "src != null");
-		D.assert(dst != null, "dst != null");
-		D.assert(min >= 0, "min >= 0");
-		D.assert(max <= src.length, "max <= src.length");
-		D.assert(min < max, "min < max");
+		assert(src != null, "src != null");
+		assert(dst != null, "dst != null");
+		assert(min >= 0, "min >= 0");
+		assert(max <= src.length, "max <= src.length");
+		assert(min < max, "min < max");
 		#end
 		
 		var j = 0;
@@ -127,16 +127,16 @@ class ArrayUtil
 	/**
 	 * Copies <code>n</code> elements inside <code>a</code> from the location pointed by the index <code>source</code> to the location pointed by the index <code>destination</code>.<br/>
 	 * Copying takes place as if an intermediate buffer is used, allowing the destination and source to overlap.
-	 * @throws de.polygonal.core.util.AssertError invalid <code>destination</code>, <code>source</code> or <code>n</code> value (debug only).
+	 * @throws de.polygonal.ds.error.AssertError invalid <code>destination</code>, <code>source</code> or <code>n</code> value (debug only).
 	 * @see <a href="ttp://www.cplusplus.com/reference/clibrary/cstring/memmove/" target="_blank">ttp://www.cplusplus.com/reference/clibrary/cstring/memmove/</a>
 	 */
 	inline public static function memmove<T>(a:Array<T>, destination:Int, source:Int, n:Int):Void
 	{
 		#if debug
-		D.assert(destination >= 0 && source >= 0 && n >= 0, "destination >= 0 && source >= 0 && n >= 0");
-		D.assert(source < a.length, "source < a.length");
-		D.assert(destination + n <= a.length, "destination + n <= a.length");
-		D.assert(n <= a.length, "n <= a.length");
+		assert(destination >= 0 && source >= 0 && n >= 0, "destination >= 0 && source >= 0 && n >= 0");
+		assert(source < a.length, "source < a.length");
+		assert(destination + n <= a.length, "destination + n <= a.length");
+		assert(n <= a.length, "n <= a.length");
 		#end
 		
 		if (source == destination)
@@ -170,16 +170,16 @@ class ArrayUtil
 	 * Searches the sorted array <code>a</code> for the element <code>x</code> in the range <arg>(<code>min</code>, <code>max</code>&#093;</arg> using the binary search algorithm.
 	 * @return the index of the element <code>x</code> or the bitwise complement (~) of the index where <code>x</code> would be inserted (guaranteed to be a negative number).
 	 * <warn>The insertion point is only valid for <code>min</code>=0 and <code>max</code>=a.length-1.</warn>
-	 * @throws de.polygonal.core.util.AssertError <code>a</code>/<code>comparator</code> is null (debug only).
-	 * @throws de.polygonal.core.util.AssertError invalid min/max search boundaries (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>a</code>/<code>comparator</code> is null (debug only).
+	 * @throws de.polygonal.ds.error.AssertError invalid min/max search boundaries (debug only).
 	 */
 	public static function bsearchComparator<T>(a:Array<T>, x:T, min:Int, max:Int, comparator:T->T->Int):Int
 	{
 		#if debug
-		D.assert(a != null, "a != null");
-		D.assert(comparator != null, "comparator != null");
-		D.assert(min >= 0 && min < a.length, "min >= 0 && min < a.length");
-		D.assert(max < a.length, "max < a.length");
+		assert(a != null, "a != null");
+		assert(comparator != null, "comparator != null");
+		assert(min >= 0 && min < a.length, "min >= 0 && min < a.length");
+		assert(max < a.length, "max < a.length");
 		#end
 		
 		var l = min, m, h = max + 1;
@@ -202,15 +202,15 @@ class ArrayUtil
 	 * Searches the sorted array <code>a</code> for the element <code>x</code> in the range <arg>(<code>min</code>, <code>max</code>&#093;</arg> using the binary search algorithm.
 	 * @return the index of the element <code>x</code> or the bitwise complement (~) of the index where <code>x</code> would be inserted (guaranteed to be a negative number).<br/>
 	 * <warn>The insertion point is only valid for <code>min</code>=0 and <code>max</code>=a.length-1.</warn>
-	 * @throws de.polygonal.core.util.AssertError <code>a</code> is null (debug only).
-	 * @throws de.polygonal.core.util.AssertError invalid min/max search boundaries (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>a</code> is null (debug only).
+	 * @throws de.polygonal.ds.error.AssertError invalid min/max search boundaries (debug only).
 	 */
 	inline public static function bsearchInt(a:Array<Int>, x:Int, min:Int, max:Int):Int
 	{
 		#if debug
-		D.assert(a != null, "a != null");
-		D.assert(min >= 0 && min < a.length, "min >= 0 && min < a.length");
-		D.assert(max < a.length, "max < a.length");
+		assert(a != null, "a != null");
+		assert(min >= 0 && min < a.length, "min >= 0 && min < a.length");
+		assert(max < a.length, "max < a.length");
 		#end
 		
 		var l = min, m, h = max + 1;
@@ -233,15 +233,15 @@ class ArrayUtil
 	 * Searches the sorted array <code>a</code> for the element <code>x</code> in the range <arg>(<code>min</code>, <code>max</code>&#093;</arg> using the binary search algorithm.
 	 * @return the index of the element <code>x</code> or the bitwise complement (~) of the index where <code>x</code> would be inserted (guaranteed to be a negative number).
 	 * <warn>The insertion point is only valid for <code>min</code>=0 and <code>max</code>=a.length-1.</warn>
-	 * @throws de.polygonal.core.util.AssertError <code>a</code> is null (debug only).
-	 * @throws de.polygonal.core.util.AssertError invalid min/max search boundaries (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>a</code> is null (debug only).
+	 * @throws de.polygonal.ds.error.AssertError invalid min/max search boundaries (debug only).
 	 */
 	inline public static function bsearchFloat(a:Array<Float>, x:Float, min:Int, max:Int):Int
 	{
 		#if debug
-		D.assert(a != null, "a != null");
-		D.assert(min >= 0 && min < a.length, "min >= 0 && min < a.length");
-		D.assert(max < a.length, "max < a.length");
+		assert(a != null, "a != null");
+		assert(min >= 0 && min < a.length, "min >= 0 && min < a.length");
+		assert(max < a.length, "max < a.length");
 		#end
 		
 		var l = min, m, h = max + 1;
@@ -264,12 +264,12 @@ class ArrayUtil
 	 * Shuffles the elements of the array <code>a</code> by using the Fisher-Yates algorithm.<br/>
 	 * @param rval a list of random double values in the range between 0 (inclusive) to 1 (exclusive) defining the new positions of the elements.
 	 * If omitted, random values are generated on-the-fly by calling <em>Math.random()</em>.
-	 * @throws de.polygonal.core.util.AssertError insufficient random values (debug only).
+	 * @throws de.polygonal.ds.error.AssertError insufficient random values (debug only).
 	 */
 	public static function shuffle<T>(a:Array<T>, rval:Array<Float> = null):Void
 	{
 		#if debug
-		D.assert(a != null, "a != null");
+		assert(a != null, "a != null");
 		#end
 		
 		var s = a.length;
@@ -287,7 +287,7 @@ class ArrayUtil
 		else
 		{
 			#if debug
-			D.assert(rval.length >= a.length, "insufficient random values");
+			assert(rval.length >= a.length, "insufficient random values");
 			#end
 			
 			var j = 0;
@@ -308,7 +308,7 @@ class ArrayUtil
 	 * @param first sort start index. The default value is 0.
 	 * @param count the number of elements to sort (range: <arg>&#091;<code>first</code>, <code>first</code> + <code>count</code>&#093;</arg>).<br/>
 	 * If omitted, <code>count</code> is set to <code>size()</code>.
-	 * @throws de.polygonal.core.util.AssertError <code>first</code> or <code>count</code> out of bound (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>first</code> or <code>count</code> out of bound (debug only).
 	 */
 	public static function sortRange(a:Array<Float>, compare:Float->Float->Int, useInsertionSort:Bool, first:Int, count:Int):Void
 	{
@@ -316,8 +316,8 @@ class ArrayUtil
 		if (k > 1)
 		{
 			#if debug
-			D.assert(first >= 0 && first <= k - 1 && first + count <= k, "first out of bound");
-			D.assert(count >= 0 && count <= k, "count out of bound");
+			assert(first >= 0 && first <= k - 1 && first + count <= k, "first out of bound");
+			assert(count >= 0 && count <= k, "count out of bound");
 			#end
 			
 			if (useInsertionSort)
@@ -388,7 +388,7 @@ class ArrayUtil
 	public static function split<T>(a:Array<T>, n:Int, k:Int):Array<Array<T>>
 	{
 		#if debug
-		D.assert(n % k == 0, "n is not a multiple of k");
+		assert(n % k == 0, "n is not a multiple of k");
 		#end
 		
 		var output = new Array<Array<T>>();

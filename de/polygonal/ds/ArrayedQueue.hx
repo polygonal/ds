@@ -30,7 +30,7 @@
 package de.polygonal.ds;
 
 import de.polygonal.core.fmt.Sprintf;
-import de.polygonal.core.util.Assert;
+import de.polygonal.ds.error.Assert.assert;
 
 private typedef ArrayedQueueFriend<T> =
 {
@@ -104,7 +104,7 @@ class ArrayedQueue<T> implements Queue<T>
 	 * 
 	 * @param maxSize the maximum allowed size of this queue.<br/>
 	 * The default value of -1 indicates that there is no upper limit.
-	 * @throws de.polygonal.core.util.AssertError reserved size is greater than allowed size (debug only).
+	 * @throws de.polygonal.ds.error.AssertError reserved size is greater than allowed size (debug only).
 	 */
 	public function new(capacity:Int, isResizable = true, maxSize = -1)
 	{
@@ -134,12 +134,12 @@ class ArrayedQueue<T> implements Queue<T>
 	 * Returns the front element.<br/>
 	 * This is the "oldest" element.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.util.AssertError queue is empty (debug only).
+	 * @throws de.polygonal.ds.error.AssertError queue is empty (debug only).
 	 */
 	inline public function peek():T
 	{
 		#if debug
-		D.assert(_size > 0, "queue is empty");
+		assert(_size > 0, "queue is empty");
 		#end
 		return __get(_front);
 	}
@@ -148,12 +148,12 @@ class ArrayedQueue<T> implements Queue<T>
 	 * Returns the rear element.<br/>
 	 * This is the "newest" element.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.util.AssertError queue is empty (debug only).
+	 * @throws de.polygonal.ds.error.AssertError queue is empty (debug only).
 	 */
 	inline public function back():T
 	{
 		#if debug
-		D.assert(_size > 0, "queue is empty");
+		assert(_size > 0, "queue is empty");
 		#end
 		
 		return __get((_size - 1 + _front) % _capacity);
@@ -162,14 +162,14 @@ class ArrayedQueue<T> implements Queue<T>
 	/**
 	 * Enqueues the element <code>x</code>.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.util.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
-	 * @throws de.polygonal.core.util.AssertError out of space - queue is full but not resizable.
+	 * @throws de.polygonal.ds.error.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
+	 * @throws de.polygonal.ds.error.AssertError out of space - queue is full but not resizable.
 	 */
 	public function enqueue(x:T):Void
 	{
 		#if debug
 		if (maxSize != -1)
-			D.assert(_size < maxSize, 'size equals max size ($maxSize)');
+			assert(_size < maxSize, 'size equals max size ($maxSize)');
 		++_t1;
 		#end
 		
@@ -177,7 +177,7 @@ class ArrayedQueue<T> implements Queue<T>
 		{
 			#if debug
 			if (!_isResizable)
-				D.assert(false, 'out of space ($_capacity)');
+				assert(false, 'out of space ($_capacity)');
 			#end
 			
 			if (_isResizable)
@@ -196,12 +196,12 @@ class ArrayedQueue<T> implements Queue<T>
 	 * Dequeues and returns the front element.<br/>
 	 * To allow instant garbage collection of the dequeued element call <em>dequeue()</em> followed by <em>dispose()</em>.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.util.AssertError queue is empty (debug only).
+	 * @throws de.polygonal.ds.error.AssertError queue is empty (debug only).
 	 */
 	public function dequeue():T
 	{
 		#if debug
-		D.assert(_size > 0, "queue is empty");
+		assert(_size > 0, "queue is empty");
 		#end
 		
 		#if debug
@@ -230,12 +230,12 @@ class ArrayedQueue<T> implements Queue<T>
 	 * Nullifies the last dequeued element so it can be garbage collected.<br/>
 	 * <warn>Use only directly after <em>dequeue()</em>.</warn>
 	 * <o>1</o>
-	 * @throws de.polygonal.core.util.AssertError <em>dispose()</em> wasn't directly called after <em>dequeue()</em>(debug only).
+	 * @throws de.polygonal.ds.error.AssertError <em>dispose()</em> wasn't directly called after <em>dequeue()</em>(debug only).
 	 */
 	inline public function dispose():Void
 	{
 		#if debug
-		D.assert(_t0 == _t1, "dispose() is only allowed directly after dequeue()");
+		assert(_t0 == _t1, "dispose() is only allowed directly after dequeue()");
 		#end
 		
 		__set((_front == 0 ? _capacity : _front) - 1, cast null);
@@ -257,14 +257,14 @@ class ArrayedQueue<T> implements Queue<T>
 	 * Returns the element at index <code>i</code>.<br/>
 	 * The index is measured relative to the index of the front element (= 0).
 	 * <o>1</o>
-	 * @throws de.polygonal.core.util.AssertError queue is empty (debug only).
-	 * @throws de.polygonal.core.util.AssertError index out of range (debug only).
+	 * @throws de.polygonal.ds.error.AssertError queue is empty (debug only).
+	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
 	 */
 	inline public function get(i:Int):T
 	{
 		#if debug
-		D.assert(_size > 0, "queue is empty");
-		D.assert(i < _size, 'i index out of range ($i)');
+		assert(_size > 0, "queue is empty");
+		assert(i < _size, 'i index out of range ($i)');
 		#end
 		
 		return __get((i + _front) % _capacity);
@@ -274,14 +274,14 @@ class ArrayedQueue<T> implements Queue<T>
 	 * Replaces the element at index <code>i</code> with the element <code>x</code>.<br/>
 	 * The index is measured relative to the index of the front element (= 0).
 	 * <o>1</o>
-	 * @throws de.polygonal.core.util.AssertError queue is empty (debug only).
-	 * @throws de.polygonal.core.util.AssertError index out of range (debug only).
+	 * @throws de.polygonal.ds.error.AssertError queue is empty (debug only).
+	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
 	 */
 	inline public function set(i:Int, x:T):Void
 	{
 		#if debug
-		D.assert(_size > 0, "queue is empty");
-		D.assert(i < _size, 'i index out of range ($i)');
+		assert(_size > 0, "queue is empty");
+		assert(i < _size, 'i index out of range ($i)');
 		#end
 		
 		__set((i + _front) % _capacity, x);
@@ -291,17 +291,17 @@ class ArrayedQueue<T> implements Queue<T>
 	 * Swaps the element at index <code>i</code> with the element at index <code>j</code>.<br/>
 	 * The index is measured relative to the index of the front element (= 0).
 	 * <o>1</o>
-	 * @throws de.polygonal.core.util.AssertError queue is empty (debug only).
-	 * @throws de.polygonal.core.util.AssertError index out of range (debug only).
-	 * @throws de.polygonal.core.util.AssertError <code>i</code> equals <code>j</code> (debug only).
+	 * @throws de.polygonal.ds.error.AssertError queue is empty (debug only).
+	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>i</code> equals <code>j</code> (debug only).
 	 */
 	inline public function swp(i:Int, j:Int):Void
 	{
 		#if debug
-		D.assert(_size > 0, "queue is empty");
-		D.assert(i < _size, 'i index out of range ($i)');
-		D.assert(j < _size, 'j index out of range ($j)');
-		D.assert(i != j, 'i index equals j index ($i)');
+		assert(_size > 0, "queue is empty");
+		assert(i < _size, 'i index out of range ($i)');
+		assert(j < _size, 'j index out of range ($j)');
+		assert(i != j, 'i index equals j index ($i)');
 		#end
 		
 		var t = get(i);
@@ -313,17 +313,17 @@ class ArrayedQueue<T> implements Queue<T>
 	 * Replaces the element at index <code>i</code> with the element from index <code>j</code>.<br/>
 	 * The index is measured relative to the index of the front element (= 0).
 	 * <o>1</o>
-	 * @throws de.polygonal.core.util.AssertError queue is empty (debug only).
-	 * @throws de.polygonal.core.util.AssertError index out of range (debug only).
-	 * @throws de.polygonal.core.util.AssertError <code>i</code> equals <code>j</code> (debug only).
+	 * @throws de.polygonal.ds.error.AssertError queue is empty (debug only).
+	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>i</code> equals <code>j</code> (debug only).
 	 */
 	inline public function cpy(i:Int, j:Int):Void
 	{
 		#if debug
-		D.assert(_size > 0, "queue is empty");
-		D.assert(i < _size, 'i index out of range ($i)');
-		D.assert(j < _size, 'j index out of range ($j)');
-		D.assert(i != j, 'i index equals j index ($i)');
+		assert(_size > 0, "queue is empty");
+		assert(i < _size, 'i index out of range ($i)');
+		assert(j < _size, 'j index out of range ($j)');
+		assert(i != j, 'i index equals j index ($i)');
 		#end
 		
 		set(i, get(j));
@@ -335,17 +335,17 @@ class ArrayedQueue<T> implements Queue<T>
 	 * @param C the class to instantiate for each element.
 	 * @param args passes additional constructor arguments to the class <code>C</code>.
 	 * @param n the number of elements to replace. If 0, <code>n</code> is set to <em>capacity</em>.
-	 * @throws de.polygonal.core.util.AssertError <code>n</code> out of range (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>n</code> out of range (debug only).
 	 */
 	public function assign(C:Class<T>, args:Array<Dynamic> = null, n = 0):Void
 	{
 		#if debug
-		D.assert(n >= 0, "n >= 0");
+		assert(n >= 0, "n >= 0");
 		#end
 		
 		var k = n > 0 ? n : _capacity;
 		#if debug
-		D.assert(k <= _capacity, 'n out of range ($n)');
+		assert(k <= _capacity, 'n out of range ($n)');
 		#end
 		
 		if (args == null) args = [];
@@ -359,17 +359,17 @@ class ArrayedQueue<T> implements Queue<T>
 	 * Replaces up to <code>n</code> existing elements with the instance of <code>x</code>.
 	 * <o>n</o>
 	 * @param n the number of elements to replace. If 0, <code>n</code> is set to <em>capacity</em>.
-	 * @throws de.polygonal.core.util.AssertError <code>n</code> out of range (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>n</code> out of range (debug only).
 	 */
 	public function fill(x:T, n = 0):ArrayedQueue<T>
 	{
 		#if debug
-		D.assert(n >= 0, "n >= 0");
+		assert(n >= 0, "n >= 0");
 		#end
 		
 		var k = n > 0 ? n : _capacity;
 		#if debug
-		D.assert(k <= _capacity, 'n out of range ($n)');
+		assert(k <= _capacity, 'n out of range ($n)');
 		#end
 		
 		for (i in 0...k)
@@ -398,7 +398,7 @@ class ArrayedQueue<T> implements Queue<T>
 	 * <o>n</o>
 	 * @param rval a list of random double values in the range between 0 (inclusive) to 1 (exclusive) defining the new positions of the elements.
 	 * If omitted, random values are generated on-the-fly by calling <em>Math.random()</em>.
-	 * @throws de.polygonal.core.util.AssertError insufficient random values (debug only).
+	 * @throws de.polygonal.ds.error.AssertError insufficient random values (debug only).
 	 */
 	public function shuffle(rval:DA<Float> = null):Void
 	{
@@ -418,7 +418,7 @@ class ArrayedQueue<T> implements Queue<T>
 		else
 		{
 			#if debug
-			D.assert(rval.size() >= _size, "insufficient random values");
+			assert(rval.size() >= _size, "insufficient random values");
 			#end
 			
 			var j = 0;
@@ -667,7 +667,7 @@ class ArrayedQueue<T> implements Queue<T>
 	 * @param assign if true, the <code>copier</code> parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.<br/>
 	 * If false, the <em>clone()</em> method is called on each element. <warn>In this case all elements have to implement <em>Cloneable</em>.</warn>
 	 * @param copier a custom function for copying elements. Replaces element.<em>clone()</em> if <code>assign</code> is false.
-	 * @throws de.polygonal.core.util.AssertError element is not of type <em>Cloneable</em> (debug only).
+	 * @throws de.polygonal.ds.error.AssertError element is not of type <em>Cloneable</em> (debug only).
 	 */
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{
@@ -688,7 +688,7 @@ class ArrayedQueue<T> implements Queue<T>
 			for (i in 0..._size)
 			{
 				#if debug
-				D.assert(Std.is(__get(i), Cloneable), 'element is not of type Cloneable (${__get(i)})');
+				assert(Std.is(__get(i), Cloneable), 'element is not of type Cloneable (${__get(i)})');
 				#end
 				
 				c = cast(__get(i), Cloneable<Dynamic>);
@@ -772,7 +772,7 @@ class ArrayedQueueIterator<T> implements de.polygonal.ds.Itr<T>
 	inline public function remove():Void
 	{
 		#if debug
-		D.assert(_i > 0, "call next() before removing an element");
+		assert(_i > 0, "call next() before removing an element");
 		#end
 		_f.remove(_a[((_i - 1) + _front) % _capacity]);
 	}

@@ -29,7 +29,7 @@
  */
 package de.polygonal.ds;
 
-import de.polygonal.core.util.Assert;
+import de.polygonal.ds.error.Assert.assert;
 
 private typedef Array3Friend<T> =
 {
@@ -71,12 +71,12 @@ class Array3<T> implements Collection<T>
 	/**
 	 * Creates a three-dimensional array with dimensions <code>width</code>, <code>height</code> and <code>depth</code>.<br/>
 	 * The minimum size is 2x2x2.
-	 * @throws de.polygonal.core.util.AssertError invalid <code>width</code>, <code>height</code> or <code>depth</code> (debug only).
+	 * @throws de.polygonal.ds.error.AssertError invalid <code>width</code>, <code>height</code> or <code>depth</code> (debug only).
 	 */
 	public function new(width:Int, height:Int, depth:Int)
 	{
 		#if debug
-		D.assert(width >= 2 && height >= 2 && depth >= 2, 'invalid size (width: $width, height: $height, depth: $depth)');
+		assert(width >= 2 && height >= 2 && depth >= 2, 'invalid size (width: $width, height: $height, depth: $depth)');
 		#end
 		
 		_w            = width;
@@ -91,14 +91,14 @@ class Array3<T> implements Collection<T>
 	/**
 	 * Returns the element that is stored in column <code>x</code>, row <code>y</code> and layer <code>z</code>.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.util.AssertError <code>x</code>/<code>y</code>/<code>z</code> out of range (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>x</code>/<code>y</code>/<code>z</code> out of range (debug only).
 	 */
 	inline public function get(x:Int, y:Int, z:Int):T
 	{
 		#if debug
-		D.assert(x >= 0 && x < getW(), 'x index out of range ($x)');
-		D.assert(y >= 0 && y < getH(), 'y index out of range ($y)');
-		D.assert(z >= 0 && z < getD(), 'z index out of range ($z)');
+		assert(x >= 0 && x < getW(), 'x index out of range ($x)');
+		assert(y >= 0 && y < getH(), 'y index out of range ($y)');
+		assert(z >= 0 && z < getD(), 'z index out of range ($z)');
 		#end
 		
 		return __get(getIndex(x, y, z));
@@ -107,7 +107,7 @@ class Array3<T> implements Collection<T>
 	/**
 	 * Returns the element that is stored in column cell.<code>x</code>, row cell.<code>y</code> and layer cell.<code>z</code>.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.util.AssertError <code>x</code>/<code>y</code>/<code>z</code> out of range (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>x</code>/<code>y</code>/<code>z</code> out of range (debug only).
 	 */
 	inline public function getAt(cell:Array3Cell):T
 	{
@@ -117,14 +117,14 @@ class Array3<T> implements Collection<T>
 	/**
 	 * Replaces the element at column <code>x</code>, row <code>y</code> and layer <code>z</code> with <code>val</code>.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.util.AssertError <code>x</code>/<code>y</code>/<code>z</code> out of range (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>x</code>/<code>y</code>/<code>z</code> out of range (debug only).
 	 */
 	inline public function set(x:Int, y:Int, z:Int, val:T):Void
 	{
 		#if debug
-		D.assert(x >= 0 && x < getW(), 'x index out of range ($x)');
-		D.assert(y >= 0 && y < getH(), 'y index out of range ($y)');
-		D.assert(z >= 0 && z < getD(), 'z index out of range ($z)');
+		assert(x >= 0 && x < getW(), 'x index out of range ($x)');
+		assert(y >= 0 && y < getH(), 'y index out of range ($y)');
+		assert(z >= 0 && z < getD(), 'z index out of range ($z)');
 		#end
 		
 		__set(getIndex(x, y, z), val);
@@ -143,7 +143,7 @@ class Array3<T> implements Collection<T>
 	 * Sets the width to <code>x</code>.<br/>
 	 * The minimum value is 2.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.util.AssertError invalid width (debug only).
+	 * @throws de.polygonal.ds.error.AssertError invalid width (debug only).
 	 */
 	inline public function setW(x:Int):Void
 	{
@@ -163,7 +163,7 @@ class Array3<T> implements Collection<T>
 	 * Sets the height to <code>x</code>.<br/>
 	 * The minimum value is 2.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.util.AssertError invalid height (debug only).
+	 * @throws de.polygonal.ds.error.AssertError invalid height (debug only).
 	 */
 	inline public function setH(x:Int):Void
 	{
@@ -183,7 +183,7 @@ class Array3<T> implements Collection<T>
 	 * Sets the depth to <code>x</code>.<br/>
 	 * The minimum value is 2.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.util.AssertError invalid height (debug only).
+	 * @throws de.polygonal.ds.error.AssertError invalid height (debug only).
 	 */
 	inline public function setD(x:Int):Void
 	{
@@ -230,12 +230,12 @@ class Array3<T> implements Collection<T>
 	 * <o>n</o>
 	 * @param cell stores the result.
 	 * @return a reference to <code>cell</code>.
-	 * @throws de.polygonal.core.util.AssertError <code>cell</code> is null (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>cell</code> is null (debug only).
 	 */
 	inline public function cellOf(x:T, cell:Array3Cell):Array3Cell
 	{
 		#if debug
-		D.assert(cell != null, "cell != null");
+		assert(cell != null, "cell != null");
 		#end
 		
 		var i = indexOf(x);
@@ -250,14 +250,14 @@ class Array3<T> implements Collection<T>
 	 * <o>1</o>
 	 * @param cell stores the result.
 	 * @return a reference to <code>cell</code>.
-	 * @throws de.polygonal.core.util.AssertError index out of range (debug only).
-	 * @throws de.polygonal.core.util.AssertError <code>cell</code> is null (debug only).
+	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>cell</code> is null (debug only).
 	 */
 	inline public function indexToCell(i:Int, cell:Array3Cell):Array3Cell
 	{
 		#if debug
-		D.assert(i >= 0 && i < size(), 'index out of range ($i)');
-		D.assert(cell != null, "cell is null");
+		assert(i >= 0 && i < size(), 'index out of range ($i)');
+		assert(cell != null, "cell is null");
 		#end
 		
 		var s = _w * _h;
@@ -271,15 +271,15 @@ class Array3<T> implements Collection<T>
 	/**
 	 * Computes an array index into the linear array from the <code>cell</code> coordinates.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.util.AssertError <code>cell</code> index out of range or <code>cell</code> is null (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>cell</code> index out of range or <code>cell</code> is null (debug only).
 	 */
 	inline public function cellToIndex(cell:Array3Cell):Int
 	{
 		#if debug
-		D.assert(cell != null, "cell != null");
-		D.assert(cell.x >= 0 && cell.x < getW(), 'x index out of range (${cell.x})');
-		D.assert(cell.y >= 0 && cell.y < getH(), 'y index out of range (${cell.y})');
-		D.assert(cell.z >= 0 && cell.z < getD(), 'z index out of range (${cell.z})');
+		assert(cell != null, "cell != null");
+		assert(cell.x >= 0 && cell.x < getW(), 'x index out of range (${cell.x})');
+		assert(cell.y >= 0 && cell.y < getH(), 'y index out of range (${cell.y})');
+		assert(cell.z >= 0 && cell.z < getD(), 'z index out of range (${cell.z})');
 		#end
 		
 		return getIndex(cell.x, cell.y, cell.z);
@@ -290,15 +290,15 @@ class Array3<T> implements Collection<T>
 	 * <o>n</o>
 	 * @param output stores the "slice" of this three-dimensional array.
 	 * @return a reference to <code>output</code>.
-	 * @throws de.polygonal.core.util.AssertError <code>z</code> out of range (debug only).
-	 * @throws de.polygonal.core.util.AssertError invalid layer or <code>output</code> is null or <code>output</code> too small (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>z</code> out of range (debug only).
+	 * @throws de.polygonal.ds.error.AssertError invalid layer or <code>output</code> is null or <code>output</code> too small (debug only).
 	 */
 	public function getLayer(z:Int, output:Array2<T>):Array2<T>
 	{
 		#if debug
-		D.assert(z >= 0 && z < getD(), 'z index out of range ($z)');
-		D.assert(output != null, "output != null");
-		D.assert(output.getW() == getW() && output.getH() == getH(), 'output too small (w: ${output.getW()}, d: ${output.getH()})');
+		assert(z >= 0 && z < getD(), 'z index out of range ($z)');
+		assert(output != null, "output != null");
+		assert(output.getW() == getW() && output.getH() == getH(), 'output too small (w: ${output.getW()}, d: ${output.getH()})');
 		#end
 		
 		var offset = z * _w * _h;
@@ -312,14 +312,14 @@ class Array3<T> implements Collection<T>
 	 * Copies all elements stored in row <code>y</code> and layer <code>z</code> by reference into the <code>output</code> array.<br/>
 	 * <o>n</o>
 	 * @return a reference to the <code>output</code> array.
-	 * @throws de.polygonal.core.util.AssertError <code>x</code>/<code>y</code> out of range or <code>output</code> is null (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>x</code>/<code>y</code> out of range or <code>output</code> is null (debug only).
 	 */
 	public function getRow(z:Int, y:Int, output:Array<T>):Array<T>
 	{
 		#if debug
-		D.assert(y >= 0 && y < getH(), 'y index out of range ($y)');
-		D.assert(z >= 0 && z < getD(), 'z index out of range ($z)');
-		D.assert(output != null, "output != null");
+		assert(y >= 0 && y < getH(), 'y index out of range ($y)');
+		assert(z >= 0 && z < getD(), 'z index out of range ($z)');
+		assert(output != null, "output != null");
 		#end
 		
 		var offset = (z * _w * _h) + (y * _w);
@@ -330,16 +330,16 @@ class Array3<T> implements Collection<T>
 	/**
 	 * Overwrites all elements in row <code>y</code> and layer <code>z</code> with the elements stored in the <code>input</code> array.
 	 * <o>n</o>
-	 * @throws de.polygonal.core.util.AssertError <code>z</code>/<code>y</code> out of range (debug only).
-	 * @throws de.polygonal.core.util.AssertError <code>input</code> is null or insufficient input values (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>z</code>/<code>y</code> out of range (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>input</code> is null or insufficient input values (debug only).
 	 */
 	public function setRow(z:Int, y:Int, input:Array<T>):Void
 	{
 		#if debug
-		D.assert(y >= 0 && y < getH(), 'y index out of range ($y)');
-		D.assert(z >= 0 && z < getD(), 'z index out of range ($z)');
-		D.assert(input != null, "input is null");
-		D.assert(input.length >= size(), "insufficient values");
+		assert(y >= 0 && y < getH(), 'y index out of range ($y)');
+		assert(z >= 0 && z < getD(), 'z index out of range ($z)');
+		assert(input != null, "input is null");
+		assert(input.length >= size(), "insufficient values");
 		#end
 		
 		var offset = (z * _w * _h) + (y * _w);
@@ -350,15 +350,15 @@ class Array3<T> implements Collection<T>
 	 * Copies all elements stored in column <code>x</code> and layer <code>z</code> by reference into the <code>output</code> array.
 	 * <o>n</o>
 	 * @return a reference to the <code>output</code> array.
-	 * @throws de.polygonal.core.util.AssertError <code>z</code>/<code>x</code> out of range (debug only).
-	 * @throws de.polygonal.core.util.AssertError <code>output</code> is null (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>z</code>/<code>x</code> out of range (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>output</code> is null (debug only).
 	 */
 	inline public function getCol(z:Int, x:Int, output:Array<T>):Array<T>
 	{
 		#if debug
-		D.assert(x >= 0 && x < getW(), 'x index out of range (${x})');
-		D.assert(z >= 0 && z < getD(), 'z index out of range (${z})');
-		D.assert(output != null, "output != null");
+		assert(x >= 0 && x < getW(), 'x index out of range (${x})');
+		assert(z >= 0 && z < getD(), 'z index out of range (${z})');
+		assert(output != null, "output != null");
 		#end
 		
 		var offset = z * _w * _h;
@@ -369,16 +369,16 @@ class Array3<T> implements Collection<T>
 	/**
 	 * Overwrites all elements in column <code>x</code> and layer <code>z</code> with the elements stored in the <code>input</code> array.
 	 * <o>n</o>
-	 * @throws de.polygonal.core.util.AssertError <code>z</code>/<code>x</code> out of range (debug only).
-	 * @throws de.polygonal.core.util.AssertError <code>input</code> is null or insufficient input values (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>z</code>/<code>x</code> out of range (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>input</code> is null or insufficient input values (debug only).
 	 */
 	public function setCol(z:Int, x:Int, input:Array<T>):Void
 	{
 		#if debug
-		D.assert(x >= 0 && x < getW(), 'x index out of range ($x)');
-		D.assert(z >= 0 && z < getD(), 'z index out of range ($z)');
-		D.assert(input != null, "input is null");
-		D.assert(input.length >= getH(), "insufficient values");
+		assert(x >= 0 && x < getW(), 'x index out of range ($x)');
+		assert(z >= 0 && z < getD(), 'z index out of range ($z)');
+		assert(input != null, "input is null");
+		assert(input.length >= getH(), "insufficient values");
 		#end
 		
 		var offset = z * _w * _h;
@@ -389,15 +389,15 @@ class Array3<T> implements Collection<T>
 	 * Copies all elements stored in the pile at column <code>x</code> and row <code>y</code> by reference into the <code>output</code> array.
 	 * <o>n</o>
 	 * @return a reference to the <code>output</code> array.
-	 * @throws de.polygonal.core.util.AssertError <code>x</code>/<code>y</code> out of range (debug only).
-	 * @throws de.polygonal.core.util.AssertError <code>output</code> is null (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>x</code>/<code>y</code> out of range (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>output</code> is null (debug only).
 	 */
 	inline public function getPile(x:Int, y:Int, output:Array<T>):Array<T>
 	{
 		#if debug
-		D.assert(x >= 0 && x < getW(), 'x index out of range ($x)');
-		D.assert(y >= 0 && y < getH(), 'y index out of range ($y)');
-		D.assert(output != null, "output != null");
+		assert(x >= 0 && x < getW(), 'x index out of range ($x)');
+		assert(y >= 0 && y < getH(), 'y index out of range ($y)');
+		assert(output != null, "output != null");
 		#end
 		
 		var offset1 = _w * _h;
@@ -409,16 +409,16 @@ class Array3<T> implements Collection<T>
 	/**
 	 * Overwrites all elements in column <code>x</code> and row <code>y</code> with the elements stored in the <code>input</code> array.
 	 * <o>n</o>
-	 * @throws de.polygonal.core.util.AssertError <code>x</code>/<code>y</code> out of range (debug only).
-	 * @throws de.polygonal.core.util.AssertError <code>input</code> is null or insufficient input values (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>x</code>/<code>y</code> out of range (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>input</code> is null or insufficient input values (debug only).
 	 */
 	public function setPile(x:Int, y:Int, input:Array<T>):Void
 	{
 		#if debug
-		D.assert(x >= 0 && x < getW(), 'x index out of range ($x)');
-		D.assert(y >= 0 && y < getH(), 'y index out of range ($y)');
-		D.assert(input != null, "input is null");
-		D.assert(input.length >= getD(), "insufficient values");
+		assert(x >= 0 && x < getW(), 'x index out of range ($x)');
+		assert(y >= 0 && y < getH(), 'y index out of range ($y)');
+		assert(input != null, "input is null");
+		assert(input.length >= getD(), "insufficient values");
 		#end
 		
 		var offset1 = _w * _h;
@@ -475,12 +475,12 @@ class Array3<T> implements Collection<T>
 	 * @param width the new width (minimum is 2).
 	 * @param height the new height (minimum is 2).
 	 * @param depth the new depth (minimum is 2).
-	 * @throws de.polygonal.core.util.AssertError invalid dimensions (debug only).
+	 * @throws de.polygonal.ds.error.AssertError invalid dimensions (debug only).
 	 */
 	public function resize(width:Int, height:Int, depth:Int):Void
 	{
 		#if debug
-		D.assert(width >= 2 && height >= 2 && depth >= 1, 'invalid size (width:$width, height:$height, depth: $depth)');
+		assert(width >= 2 && height >= 2 && depth >= 1, 'invalid size (width:$width, height:$height, depth: $depth)');
 		#end
 		
 		if (width == _w && height == _h && depth == _d) return;
@@ -514,19 +514,19 @@ class Array3<T> implements Collection<T>
 	/**
 	 * Swaps the element at column/row/layer <code>x0</code>, <code>y0</code>, <code>z0</code> with the element at column/row/layer <code>x1</code>, <code>y1</code>, <code>z1</code>.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.util.AssertError <code>x0</code>/<code>y0</code>/<code>z0</code> or <code>x1</code>/<code>y1</code>/<code>z1</code> out of range (debug only).
-	 * @throws de.polygonal.core.util.AssertError <code>x0</code>, <code>y0</code>, <code>z0</code> equals <code>x1</code>, <code>y1</code>, <code>z1</code> (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>x0</code>/<code>y0</code>/<code>z0</code> or <code>x1</code>/<code>y1</code>/<code>z1</code> out of range (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>x0</code>, <code>y0</code>, <code>z0</code> equals <code>x1</code>, <code>y1</code>, <code>z1</code> (debug only).
 	 */
 	inline public function swap(x0:Int, y0:Int, z0:Int, x1:Int, y1:Int, z1:Int):Void
 	{
 		#if debug
-		D.assert(x0 >= 0 && x0 < getW(), 'x0 index out of range ($x0)');
-		D.assert(y0 >= 0 && y0 < getH(), 'y0 index out of range ($y0)');
-		D.assert(z0 >= 0 && z0 < getD(), 'z0 index out of range ($z0)');
-		D.assert(x1 >= 0 && x1 < getW(), 'x1 index out of range ($x1)');
-		D.assert(y1 >= 0 && y1 < getH(), 'y1 index out of range ($y1)');
-		D.assert(z1 >= 0 && z1 < getD(), 'z1 index out of range ($z1)');
-		D.assert(!(x0 == x1 && y0 == y1 && z0 == z1), 'source indices equal target indices (x: $x0, y: $y0, z: $z0)');
+		assert(x0 >= 0 && x0 < getW(), 'x0 index out of range ($x0)');
+		assert(y0 >= 0 && y0 < getH(), 'y0 index out of range ($y0)');
+		assert(z0 >= 0 && z0 < getD(), 'z0 index out of range ($z0)');
+		assert(x1 >= 0 && x1 < getW(), 'x1 index out of range ($x1)');
+		assert(y1 >= 0 && y1 < getH(), 'y1 index out of range ($y1)');
+		assert(z1 >= 0 && z1 < getD(), 'z1 index out of range ($z1)');
+		assert(!(x0 == x1 && y0 == y1 && z0 == z1), 'source indices equal target indices (x: $x0, y: $y0, z: $z0)');
 		#end
 		
 		var i = (z0 * _w * _h) + (y0 * _w) + x0;
@@ -551,7 +551,7 @@ class Array3<T> implements Collection<T>
 	 * <o>n</o>
 	 * @param rval a list of random double values in the range between 0 (inclusive) to 1 (exclusive) defining the new positions of the elements.
 	 * If omitted, random values are generated on-the-fly by calling <em>Math.random()</em>.
-	 * @throws de.polygonal.core.util.AssertError insufficient random values (debug only).
+	 * @throws de.polygonal.ds.error.AssertError insufficient random values (debug only).
 	 */
 	public function shuffle(rval:DA<Float> = null):Void
 	{
@@ -570,7 +570,7 @@ class Array3<T> implements Collection<T>
 		else
 		{
 			#if debug
-			D.assert(rval.size() >= size(), "insufficient random values");
+			assert(rval.size() >= size(), "insufficient random values");
 			#end
 			
 			var j = 0;
@@ -721,7 +721,7 @@ class Array3<T> implements Collection<T>
 	 * @param assign if true, the <code>copier</code> parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.<br/>
 	 * If false, the <em>clone()</em> method is called on each element. <warn>In this case all elements have to implement <em>Cloneable</em>.</warn>
 	 * @param copier a custom function for copying elements. Replaces element.<em>clone()</em> if <code>assign</code> is false.
-	 * @throws de.polygonal.core.util.AssertError element is not of type <em>Cloneable</em> (debug only).
+	 * @throws de.polygonal.ds.error.AssertError element is not of type <em>Cloneable</em> (debug only).
 	 */
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{
@@ -738,7 +738,7 @@ class Array3<T> implements Collection<T>
 			for (i in 0...size())
 			{
 				#if debug
-				D.assert(Std.is(__get(i), Cloneable), 'element is not of type Cloneable (${__get(i)})');
+				assert(Std.is(__get(i), Cloneable), 'element is not of type Cloneable (${__get(i)})');
 				#end
 				c = cast(__get(i), Cloneable<Dynamic>);
 				copy.__set(i, c.clone());
@@ -804,7 +804,7 @@ class Array3Iterator<T> implements de.polygonal.ds.Itr<T>
 	{
 		//just nullify value
 		#if debug
-		D.assert(_i > 0, "call next() before removing an element");
+		assert(_i > 0, "call next() before removing an element");
 		#end
 		
 		_a[_i - 1] = cast null;

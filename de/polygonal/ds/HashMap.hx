@@ -29,7 +29,7 @@
  */
 package de.polygonal.ds;
 
-import de.polygonal.core.util.Assert;
+import de.polygonal.ds.error.Assert.assert;
 
 #if !flash
 "The HashMap class is only available for flash9+"
@@ -103,13 +103,13 @@ class HashMap<K, T> implements Map<K, T>
 	 * Remaps an existing <code>key</code> to a new <code>val</code>.
 	 * <o>1</o>
 	 * @return true if <code>key</code> was successfully remapped to <code>val</code>.
-	 * @throws de.polygonal.core.util.AssertError <code>key</code>/<code>val</code> is null (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>key</code>/<code>val</code> is null (debug only).
 	 */
 	inline public function remap(key:K, val:T):Bool
 	{
 		#if debug
 		var x:Null<K> = key;
-		D.assert(x != null, "null keys are not allowed");
+		assert(x != null, "null keys are not allowed");
 		#end
 		
 		var x:Null<T> = untyped _map[key];
@@ -117,7 +117,7 @@ class HashMap<K, T> implements Map<K, T>
 		{
 			#if debug
 			x = val;
-			D.assert(x != null, "null values are not allowed");
+			assert(x != null, "null values are not allowed");
 			#end
 			
 			untyped _map[key] = val;
@@ -178,13 +178,13 @@ class HashMap<K, T> implements Map<K, T>
 	/**
 	 * Returns true if this map contains a mapping for <code>val</code>.
 	 * <o>n</o>
-	 * @throws de.polygonal.core.util.AssertError <code>val</code> is null (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>val</code> is null (debug only).
 	 */
 	inline public function has(val:T):Bool
 	{
 		#if debug
 		var x:Null<T> = val;
-		D.assert(x != null, "null values are not allowed");
+		assert(x != null, "null values are not allowed");
 		#end
 		
 		var exists = false;
@@ -203,13 +203,13 @@ class HashMap<K, T> implements Map<K, T>
 	/**
 	 * Returns true if this map contains the key <code>key</code>.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.util.AssertError <code>key</code> is null (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>key</code> is null (debug only).
 	 */
 	inline public function hasKey(key:K):Bool
 	{
 		#if debug
 		var x:Null<K> = key;
-		D.assert(x != null, "null keys are not allowed");
+		assert(x != null, "null keys are not allowed");
 		#end
 		
 		var x:Null<T> = untyped _map[key];
@@ -219,13 +219,13 @@ class HashMap<K, T> implements Map<K, T>
 	/**
 	 * Returns the value that is mapped to <code>key</code> or null if <code>key</code> does not exist.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.util.AssertError <code>key</code> is null (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>key</code> is null (debug only).
 	 */
 	inline public function get(key:K):T
 	{
 		#if debug
 		var x:Null<K> = key;
-		D.assert(x != null, "null keys are not allowed");
+		assert(x != null, "null keys are not allowed");
 		#end
 		
 		return untyped _map[key];
@@ -235,16 +235,16 @@ class HashMap<K, T> implements Map<K, T>
 	 * Maps <code>val</code> to <code>key</code>.
 	 * <o>1</o>
 	 * @return true if <code>key</code> was added, false if <code>key</code> already exists.
-	 * @throws de.polygonal.core.util.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
-	 * @throws de.polygonal.core.util.AssertError <code>key</code>/<code>val</code> is null (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>key</code>/<code>val</code> is null (debug only).
 	 */
 	inline public function set(key:K, val:T):Bool
 	{
 		#if debug
 		var x:Null<K> = key;
-		D.assert(x != null, "null keys are not allowed");
+		assert(x != null, "null keys are not allowed");
 		var x:Null<T> = val;
-		D.assert(x != null, "null values are not allowed");
+		assert(x != null, "null values are not allowed");
 		#end
 		
 		if (hasKey(key))
@@ -252,7 +252,7 @@ class HashMap<K, T> implements Map<K, T>
 		else
 		{
 			#if debug
-			D.assert(size() < maxSize, 'size equals max size ($maxSize)');
+			assert(size() < maxSize, 'size equals max size ($maxSize)');
 			#end
 			
 			untyped _map[key] = val;
@@ -265,13 +265,13 @@ class HashMap<K, T> implements Map<K, T>
 	 * Removes <code>key</code> and the value that is mapped to it.
 	 * <o>1</o>
 	 * @return true if <code>key</code> is successfully removed, false if <code>key</code> does not exist.
-	 * @throws de.polygonal.core.util.AssertError <code>key</code> is null (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>key</code> is null (debug only).
 	 */
 	inline public function clr(key:K):Bool
 	{
 		#if debug
 		var x:Null<K> = key;
-		D.assert(x != null, "null keys are not allowed");
+		assert(x != null, "null keys are not allowed");
 		#end
 		
 		if (untyped _map[key] != null)
@@ -339,7 +339,7 @@ class HashMap<K, T> implements Map<K, T>
 	/**
 	 * Same as <em>has()</em>.
 	 * <o>n</o>
-	 * @throws de.polygonal.core.util.AssertError <code>x</code> is null (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>x</code> is null (debug only).
 	 */
 	inline public function contains(x:T):Bool
 	{
@@ -350,7 +350,7 @@ class HashMap<K, T> implements Map<K, T>
 	 * Removes all keys that map the value <code>x</code>.
 	 * <o>n</o>
 	 * @return true if at least one value was removed, otherwise false.
-	 * @throws de.polygonal.core.util.AssertError <code>x</code> is null (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>x</code> is null (debug only).
 	 */
 	public function remove(x:T):Bool
 	{
@@ -451,7 +451,7 @@ class HashMap<K, T> implements Map<K, T>
 	 * If false, element.<em>clone()</em> is used for duplicating elements.<br/>
 	 * <warn>In this case all elements have to implement <em>Cloneable</em>.</warn>
 	 * @param copier uses a custom function instead of element.<em>clone()</em> for copying elements if the <code>assign</code> parameter is false.
-	 * @throws de.polygonal.core.util.AssertError element is not of type <em>Cloneable</em> (debug only).
+	 * @throws de.polygonal.ds.error.AssertError element is not of type <em>Cloneable</em> (debug only).
 	 */
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{
@@ -467,7 +467,7 @@ class HashMap<K, T> implements Map<K, T>
 			for (key in a)
 			{
 				#if debug
-				D.assert(Std.is(get(key), Cloneable), 'key is not of type Cloneable (${get(key)})');
+				assert(Std.is(get(key), Cloneable), 'key is not of type Cloneable (${get(key)})');
 				#end
 				
 				var c:Cloneable<T> = cast get(key);
@@ -520,7 +520,7 @@ class HashMapKeyIterator<K, T> implements de.polygonal.ds.Itr<K>
 	inline public function remove():Void
 	{
 		#if debug
-		D.assert(_i > 0, "call next() before removing an element");
+		assert(_i > 0, "call next() before removing an element");
 		#end
 		
 		_f.clr(_keys[_i - 1]);
@@ -571,7 +571,7 @@ class HashMapValIterator<K, T> implements de.polygonal.ds.Itr<T>
 	inline public function remove():Void
 	{
 		#if debug
-		D.assert(_i > 0, "call next() before removing an element");
+		assert(_i > 0, "call next() before removing an element");
 		#end
 		
 		_f.remove(untyped _map[_keys[_i - 1]]);

@@ -29,7 +29,7 @@
  */
 package de.polygonal.ds;
 
-import de.polygonal.core.util.Assert;
+import de.polygonal.ds.error.Assert.assert;
 
 /**
  * <p>A weighted graph.</p>
@@ -165,14 +165,14 @@ class Graph<T> implements Collection<T>
 	/**
 	 * Adds the node <code>x</code> to this graph.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.util.AssertError size() equals maxSize (debug only).
+	 * @throws de.polygonal.ds.error.AssertError size() equals maxSize (debug only).
 	 */
 	public function addNode(x:GraphNode<T>):GraphNode<T>
 	{
 		#if debug
 		if (maxSize != -1)
-			D.assert(size() < maxSize, 'size equals max size ($maxSize)');
-		D.assert(_nodeSet.set(x), "node exists");
+			assert(size() < maxSize, 'size equals max size ($maxSize)');
+		assert(_nodeSet.set(x), "node exists");
 		#end
 		
 		_size++;
@@ -188,12 +188,12 @@ class Graph<T> implements Collection<T>
 	 * Removes the node <code>x</code> from this graph.<br/>
 	 * This clears all outgoing and incoming arcs and removes <code>x</code> from the node list.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.util.AssertError graph is empty (debug only).
+	 * @throws de.polygonal.ds.error.AssertError graph is empty (debug only).
 	 */
 	public function removeNode(x:GraphNode<T>):Void
 	{
 		#if debug
-		D.assert(size() > 0, "graph is empty");
+		assert(size() > 0, "graph is empty");
 		#end
 		
 		unlink(x);
@@ -208,15 +208,15 @@ class Graph<T> implements Collection<T>
 	 * Creates an uni-directional link between two nodes with a weight of <code>cost</code> (default is 1.0).<br/>
 	 * This creates an arc pointing from the <code>source</code> node to the <code>target</code> node.
 	 * <o>n</o>
-	 * @throws de.polygonal.core.util.AssertError <code>source</code> or <code>target</code> is null (debug only).
-	 * @throws de.polygonal.core.util.AssertError <code>source</code> equals <code>target</code> (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>source</code> or <code>target</code> is null (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>source</code> equals <code>target</code> (debug only).
 	 */
 	public function addSingleArc(source:GraphNode<T>, target:GraphNode<T>, cost = 1.):Void
 	{
 		#if debug
-		D.assert(source != null, "source is null");
-		D.assert(target != null, "target is null");
-		D.assert(source != target, "source equals target");
+		assert(source != null, "source is null");
+		assert(target != null, "target is null");
+		assert(source != target, "source equals target");
 		#end
 		
 		var walker = _nodeList;
@@ -245,17 +245,17 @@ class Graph<T> implements Collection<T>
 	 * Creates a bi-directional link between two nodes with a weight of <code>cost</code> (default is 1.0).<br/>
 	 * This creates two arcs - an arc that points from the <code>source</code> node to the <code>target</code> node and vice versa.
 	 * <o>n</o>
-	 * @throws de.polygonal.core.util.AssertError <code>source</code> or <code>target</code> is null (debug only).
-	 * @throws de.polygonal.core.util.AssertError <code>source</code> equals <code>target</code> (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>source</code> or <code>target</code> is null (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>source</code> equals <code>target</code> (debug only).
 	 */
 	public function addMutualArc(source:GraphNode<T>, target:GraphNode<T>, cost = 1.):Void
 	{
 		#if debug
-		D.assert(source != null, "source is null");
-		D.assert(target != null, "target is null");
-		D.assert(source != target, "source equals target");
-		D.assert(source.getArc(target) == null, "arc from source to target already exists");
-		D.assert(target.getArc(source) == null, "arc from target to source already exists");
+		assert(source != null, "source is null");
+		assert(target != null, "target is null");
+		assert(source != target, "source equals target");
+		assert(source.getArc(target) == null, "arc from source to target already exists");
+		assert(target.getArc(source) == null, "arc from target to source already exists");
 		#end
 		
 		var walker = _nodeList;
@@ -287,16 +287,16 @@ class Graph<T> implements Collection<T>
 	 * The size remains unchanged as the node is not removed from the graph.
 	 * <o>(n&sup2; - n) / 2</o>
 	 * @return the disconnected graph node.
-	 * @throws de.polygonal.core.util.AssertError <code>node</code> is null (debug only).
-	 * @throws de.polygonal.core.util.AssertError graph is empty (debug only).
-	 * @throws de.polygonal.core.util.AssertError <code>node</code> does not belong to this graph (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>node</code> is null (debug only).
+	 * @throws de.polygonal.ds.error.AssertError graph is empty (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>node</code> does not belong to this graph (debug only).
 	 */
 	public function unlink(node:GraphNode<T>):GraphNode<T>
 	{
 		#if debug
-		D.assert(_nodeList != null, "graph is empty");
-		D.assert(_nodeSet.has(node), "unknown node");
-		D.assert(node != null, "node is null");
+		assert(_nodeList != null, "graph is empty");
+		assert(_nodeSet.has(node), "unknown node");
+		assert(node != null, "node is null");
 		#end
 		
 		var arc0 = node.arcList;
@@ -392,7 +392,7 @@ class Graph<T> implements Collection<T>
 		if (_size == 0) return;
 		
 		#if debug
-		D.assert(_busy == false, "recursive call to iterative DFS");
+		assert(_busy == false, "recursive call to iterative DFS");
 		_busy = true;
 		#end
 		
@@ -578,7 +578,7 @@ class Graph<T> implements Collection<T>
 		if (_size == 0) return;
 		
 		#if debug
-		D.assert(_busy == false, "recursive call to iterative BFS");
+		assert(_busy == false, "recursive call to iterative BFS");
 		_busy = true;
 		#end
 		
@@ -787,7 +787,7 @@ class Graph<T> implements Collection<T>
 		if (_size == 0) return;
 		
 		#if debug
-		D.assert(_busy == false, "recursive call to iterative BFS");
+		assert(_busy == false, "recursive call to iterative BFS");
 		_busy = true;
 		#end
 		
@@ -1239,7 +1239,7 @@ class Graph<T> implements Collection<T>
 	 * @param assign if true, the <code>copier</code> parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.<br/>
 	 * If false, the <em>clone()</em> method is called on each element. <warn>In this case all elements have to implement <em>Cloneable</em>.</warn>
 	 * @param copier a custom function for copying elements. Replaces element.<em>clone()</em> if <code>assign</code> is false.
-	 * @throws de.polygonal.core.util.AssertError element is not of type <em>Cloneable</em> (debug only).
+	 * @throws de.polygonal.ds.error.AssertError element is not of type <em>Cloneable</em> (debug only).
 	 */
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{
@@ -1266,7 +1266,7 @@ class Graph<T> implements Collection<T>
 			while (n != null)
 			{
 				#if debug
-				D.assert(Std.is(n.val, Cloneable), 'element is not of type Cloneable (${n.val})');
+				assert(Std.is(n.val, Cloneable), 'element is not of type Cloneable (${n.val})');
 				#end
 				
 				c = n.val;

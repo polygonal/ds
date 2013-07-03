@@ -30,7 +30,7 @@
 package de.polygonal.ds;
 
 import de.polygonal.core.fmt.Sprintf;
-import de.polygonal.core.util.Assert;
+import de.polygonal.ds.error.Assert.assert;
 
 #if flash10
 #if alchemy
@@ -166,14 +166,14 @@ class IntIntHashTable implements Map<Int, Int>
 	 * @param maxSize the maximum allowed size of the stack.
 	 * The default value of -1 indicates that there is no upper limit.
 	 * 
-	 * @throws de.polygonal.core.util.AssertError <code>slotCount</code> is not a power of two (debug only).
-	 * @throws de.polygonal.core.util.AssertError <code>capacity</code> is not a power of two (debug only).
-	 * @throws de.polygonal.core.util.AssertError <code>capacity</code> is &lt; 2 (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>slotCount</code> is not a power of two (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>capacity</code> is not a power of two (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>capacity</code> is &lt; 2 (debug only).
 	 */
 	public function new(slotCount:Int, capacity = -1, isResizable = true, maxSize = -1)
 	{
 		#if debug
-		D.assert(M.isPow2(slotCount), "slotCount is not a power of 2");
+		assert(M.isPow2(slotCount), "slotCount is not a power of 2");
 		#end
 		
 		if (capacity == -1)
@@ -181,8 +181,8 @@ class IntIntHashTable implements Map<Int, Int>
 		else
 		{
 			#if debug
-			D.assert(capacity >= 2, "minimum capacity is 2");
-			D.assert(M.isPow2(slotCount), "capacity is not a power of 2");
+			assert(capacity >= 2, "minimum capacity is 2");
+			assert(M.isPow2(slotCount), "capacity is not a power of 2");
 			#end
 		}
 		
@@ -356,13 +356,13 @@ class IntIntHashTable implements Map<Int, Int>
 	 * Maps <code>val</code> to <code>key</code> in this map, but only if <code>key</code> does not exist yet.<br/>
 	 * <o>1</o>
 	 * @return true if <code>key</code> was mapped to <code>val</code> for the first time.
-	 * @throws de.polygonal.core.util.AssertError out of space - hash table is full but not resizable.
-	 * @throws de.polygonal.core.util.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
+	 * @throws de.polygonal.ds.error.AssertError out of space - hash table is full but not resizable.
+	 * @throws de.polygonal.ds.error.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
 	 */
 	inline public function setIfAbsent(key:Int, val:Int):Bool
 	{
 		#if debug
-		D.assert(val != KEY_ABSENT, "val 0x80000000 is reserved");
+		assert(val != KEY_ABSENT, "val 0x80000000 is reserved");
 		#end
 		
 		var b = _hashCode(key);
@@ -376,14 +376,14 @@ class IntIntHashTable implements Map<Int, Int>
 		if (j == EMPTY_SLOT)
 		{
 			#if debug
-			D.assert(size() < maxSize, 'size equals max size ($maxSize)');
+			assert(size() < maxSize, 'size equals max size ($maxSize)');
 			#end
 			
 			if (_size == _capacity)
 			{
 				#if debug
 				if (!_isResizable)
-					D.assert(false, 'out of space (${getCapacity()})');
+					assert(false, 'out of space (${getCapacity()})');
 				#end
 				
 				if (_isResizable)
@@ -454,7 +454,7 @@ class IntIntHashTable implements Map<Int, Int>
 					{
 						#if debug
 						if (!_isResizable)
-							D.assert(false, 'out of space (${getCapacity()})');
+							assert(false, 'out of space (${getCapacity()})');
 						#end
 						
 						if (_isResizable)
@@ -486,12 +486,12 @@ class IntIntHashTable implements Map<Int, Int>
 	 * Redistributes all keys over <code>slotCount</code>.<br/>
 	 * This is an expensive operations as the hash table is rebuild from scratch.
 	 * <o>n</o>
-	 * @throws de.polygonal.core.util.AssertError <code>slotCount</code> is not a power of two (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>slotCount</code> is not a power of two (debug only).
 	 */
 	public function rehash(slotCount:Int):Void
 	{
 		#if debug
-		D.assert(M.isPow2(slotCount), "slotCount is not a power of 2");
+		assert(M.isPow2(slotCount), "slotCount is not a power of 2");
 		#end
 		
 		if (slotCount == getSlotCount()) return;
@@ -797,12 +797,12 @@ class IntIntHashTable implements Map<Int, Int>
 	
 	/**
 	 * Returns true if this map contains a mapping for the value <code>val</code>.
-	 * @throws de.polygonal.core.util.AssertError value 0x80000000 is reserved (debug only).
+	 * @throws de.polygonal.ds.error.AssertError value 0x80000000 is reserved (debug only).
 	 */
 	inline public function has(val:Int):Bool
 	{
 		#if debug
-		D.assert(val != VAL_ABSENT, "val 0x80000000 is reserved");
+		assert(val != VAL_ABSENT, "val 0x80000000 is reserved");
 		#end
 		
 		var exists = false;
@@ -991,22 +991,22 @@ class IntIntHashTable implements Map<Int, Int>
 	 * The method allows duplicate keys.<br/>
 	 * <warn>To ensure unique keys either use <em>hasKey()</em> before <em>set()</em> or <em>setIfAbsent()</em></warn>
 	 * @return true if <code>key</code> was added for the first time, false if another instance of <code>key</code> was inserted.
-	 * @throws de.polygonal.core.util.AssertError out of space - hash table is full but not resizable.
-	 * @throws de.polygonal.core.util.AssertError key/value 0x80000000 is reserved (debug only).
-	 * @throws de.polygonal.core.util.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
+	 * @throws de.polygonal.ds.error.AssertError out of space - hash table is full but not resizable.
+	 * @throws de.polygonal.ds.error.AssertError key/value 0x80000000 is reserved (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
 	 */
 	inline public function set(key:Int, val:Int):Bool
 	{
 		#if debug
-		D.assert(val != KEY_ABSENT, "val 0x80000000 is reserved");
-		D.assert(size() < maxSize, 'size equals max size ($maxSize)');
+		assert(val != KEY_ABSENT, "val 0x80000000 is reserved");
+		assert(size() < maxSize, 'size equals max size ($maxSize)');
 		#end
 		
 		if (_size == _capacity)
 		{
 			#if debug
 			if (!_isResizable)
-				D.assert(false, 'out of space (${getCapacity()})');
+				assert(false, 'out of space (${getCapacity()})');
 			#end
 			
 			if (_isResizable)
@@ -1271,12 +1271,12 @@ class IntIntHashTable implements Map<Int, Int>
 	/**
 	 * Removes all occurrences of the value <code>val</code>.
 	 * @return true if <code>val</code> was removed, false if <code>val</code> does not exist.
-	 * @throws de.polygonal.core.util.AssertError value 0x80000000 is reserved (debug only).
+	 * @throws de.polygonal.ds.error.AssertError value 0x80000000 is reserved (debug only).
 	 */
 	inline public function remove(val:Int):Bool
 	{
 		#if debug
-		D.assert(val != KEY_ABSENT, "val 0x80000000 is reserved");
+		assert(val != KEY_ABSENT, "val 0x80000000 is reserved");
 		#end
 		
 		var c = 0;

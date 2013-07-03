@@ -30,7 +30,7 @@
 package de.polygonal.ds.mem;
 
 import de.polygonal.core.fmt.Sprintf;
-import de.polygonal.core.util.Assert;
+import de.polygonal.ds.error.Assert.assert;
 
 #if !alchemy
 import de.polygonal.ds.ArrayUtil;
@@ -47,22 +47,22 @@ class DoubleMemory extends MemoryAccess
 	 * <warn>The bytes are written in little endian format.</warn>
 	 * @param min index pointing to the first double.
 	 * @param max index pointing to the last double.
-	 * @throws de.polygonal.core.util.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
+	 * @throws de.polygonal.ds.error.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
 	 */
 	#if (flash9 || cpp)
 	public static function toByteArray(input:DoubleMemory, min = -1, max = -1):flash.utils.ByteArray
 	{
 		#if debug
-		D.assert(input != null, "invalid input");
+		assert(input != null, "invalid input");
 		#end
 		
 		if (min == -1) min = 0;
 		if (max == -1) max = input.size;
 		
 		#if debug
-		D.assert(min >= 0, 'min out of range ($min)');
-		D.assert(max <= input.size, 'max out of range ($max)');
-		D.assert(max - min > 0, 'min equals max ($min)');
+		assert(min >= 0, 'min out of range ($min)');
+		assert(max <= input.size, 'max out of range ($max)');
+		assert(max - min > 0, 'min equals max ($min)');
 		#end
 		
 		var t = min;
@@ -90,21 +90,21 @@ class DoubleMemory extends MemoryAccess
 	 * If no range is specified, all <code>input</code> bytes are copied.
 	 * @param min index pointing to the byte storing the first double.
 	 * @param min index pointing to the byte storing the last double.
-	 * @throws de.polygonal.core.util.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
+	 * @throws de.polygonal.ds.error.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
 	 */
 	#if (flash9 || cpp)
 	public static function ofByteArray(input:flash.utils.ByteArray, min = -1, max = -1):DoubleMemory
 	{
 		#if debug
-		D.assert(input != null, "invalid input");
+		assert(input != null, "invalid input");
 		#end
 		
 		if (min == -1) min = 0;
 		if (max == -1) max = input.length;
 		
 		#if debug
-		D.assert(min >= 0, "min >= 0");
-		D.assert(max <= Std.int(input.length), "max <= input.length");
+		assert(min >= 0, "min >= 0");
+		assert(max <= Std.int(input.length), "max <= input.length");
 		#end
 		
 		input.position = min;
@@ -121,21 +121,21 @@ class DoubleMemory extends MemoryAccess
 	 * If no range is specified, all <code>input</code> bytes are copied.<br/>
 	 * @param min index pointing to the first double.
 	 * @param max index pointing to the last double.
-	 * @throws de.polygonal.core.util.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
+	 * @throws de.polygonal.ds.error.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
 	 */
 	public static function toBytesData(input:DoubleMemory, min = -1, max = -1):haxe.io.BytesData
 	{
 		#if debug
-		D.assert(input != null, "invalid input");
+		assert(input != null, "invalid input");
 		#end
 		
 		if (min == -1) min = 0;
 		if (max == -1) max = input.size;
 		
 		#if debug
-		D.assert(min >= 0, 'min out of range ($min)');
-		D.assert(max <= input.size, 'max out of range ($max)');
-		D.assert(max - min > 0, 'min equals max ($min)');
+		assert(min >= 0, 'min out of range ($min)');
+		assert(max <= input.size, 'max out of range ($max)');
+		assert(max - min > 0, 'min equals max ($min)');
 		#end
 		
 		var output = new haxe.io.BytesOutput();
@@ -149,12 +149,12 @@ class DoubleMemory extends MemoryAccess
 	 * If no range is specified, all <code>input</code> bytes are copied.
 	 * @param min index pointing to the byte storing the first float.
 	 * @param min index pointing to the byte storing the last float.
-	 * @throws de.polygonal.core.util.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
+	 * @throws de.polygonal.ds.error.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
 	 */
 	public static function ofBytesData(input:haxe.io.BytesData, min = -1, max = -1):DoubleMemory
 	{
 		#if debug
-		D.assert(input != null, "invalid input");
+		assert(input != null, "invalid input");
 		#end
 		
 		if (min == -1) min = 0;
@@ -166,11 +166,11 @@ class DoubleMemory extends MemoryAccess
 		#end
 		
 		#if debug
-		D.assert(min >= 0, "min >= 0");
+		assert(min >= 0, "min >= 0");
 		#if neko
-		D.assert(max <= neko.NativeString.length(input), "max <= input.length");
+		assert(max <= neko.NativeString.length(input), "max <= input.length");
 		#else
-		D.assert(max <= Std.int(input.length), "max <= input.length");
+		assert(max <= Std.int(input.length), "max <= input.length");
 		#end
 		#end
 		
@@ -188,21 +188,21 @@ class DoubleMemory extends MemoryAccess
 	 * If no range is specified, all <code>input</code> bytes are copied.
 	 * @param min index pointing to the first double.
 	 * @param max index pointing to the last double.
-	 * @throws de.polygonal.core.util.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
+	 * @throws de.polygonal.ds.error.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
 	 */
 	public static function toArray(input:DoubleMemory, min = -1, max = -1):Array<Float>
 	{
 		#if debug
-		D.assert(input != null, "invalid input");
+		assert(input != null, "invalid input");
 		#end
 		
 		if (min == -1) min = 0;
 		if (max == -1) max = input.size;
 		
 		#if debug
-		D.assert(min >= 0, 'min out of range ($min)');
-		D.assert(max <= input.size, 'max out of range ($max)');
-		D.assert(max - min > 0, 'min equals max ($min)');
+		assert(min >= 0, 'min out of range ($min)');
+		assert(max <= input.size, 'max out of range ($max)');
+		assert(max - min > 0, 'min equals max ($min)');
 		#end
 		
 		var output = new Array();
@@ -226,20 +226,20 @@ class DoubleMemory extends MemoryAccess
 	 * If no range is specified, all <code>input</code> values are copied.
 	 * @param min index pointing to the first double.
 	 * @param max index pointing to the last double.
-	 * @throws de.polygonal.core.util.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
+	 * @throws de.polygonal.ds.error.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
 	 */
 	public static function ofArray(input:Array<Float>, min = -1, max = -1):DoubleMemory
 	{
 		#if debug
-		D.assert(input != null, "invalid input");
+		assert(input != null, "invalid input");
 		#end
 		
 		if (min == -1) min = 0;
 		if (max == -1) max = input.length;
 		
 		#if debug
-		D.assert(min >= 0, "min >= 0");
-		D.assert(max <= Std.int(input.length), "max <= input.length");
+		assert(min >= 0, "min >= 0");
+		assert(max <= Std.int(input.length), "max <= input.length");
 		#end
 		
 		var output = new DoubleMemory(max - min, "ofArray");
@@ -254,25 +254,25 @@ class DoubleMemory extends MemoryAccess
 	 * @param min index pointing to the first double.
 	 * @param max index pointing to the last double.
 	 * @param output the <code>Vector</code> object to write into. If null, a new Vector object is created on-the-fly.
-	 * @throws de.polygonal.core.util.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
+	 * @throws de.polygonal.ds.error.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
 	 */
 	#if flash10
 	public static function toVector(input:DoubleMemory, min = -1, max = -1, output:flash.Vector<Float> = null):flash.Vector<Float>
 	{
 		#if debug
-		D.assert(input != null, "invalid input");
+		assert(input != null, "invalid input");
 		#end
 		
 		if (min == -1) min = 0;
 		if (max == -1) max = input.size;
 		
 		#if debug
-		D.assert(min >= 0, 'min out of range ($min)');
-		D.assert(max <= input.size, 'max out of range ($max)');
-		D.assert(max - min > 0, 'min equals max ($min)');
+		assert(min >= 0, 'min out of range ($min)');
+		assert(max <= input.size, 'max out of range ($max)');
+		assert(max - min > 0, 'min equals max ($min)');
 		if (output != null)
 			if (output.fixed)
-				D.assert(Std.int(output.length) >= max - min, "output vector is too small");
+				assert(Std.int(output.length) >= max - min, "output vector is too small");
 		#end
 		
 		if (output == null) output = new flash.Vector<Float>(max - min, true);
@@ -298,21 +298,21 @@ class DoubleMemory extends MemoryAccess
 	 * If no range is specified, all <code>input</code> values are copied.
 	 * @param min index pointing to the first double.
 	 * @param max index pointing to the last double.
-	 * @throws de.polygonal.core.util.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
+	 * @throws de.polygonal.ds.error.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
 	 */
 	#if flash10
 	public static function ofVector(input:flash.Vector<Float>, min = -1, max = -1):DoubleMemory
 	{
 		#if debug
-		D.assert(input != null, "invalid input");
+		assert(input != null, "invalid input");
 		#end
 		
 		if (min == -1) min = 0;
 		if (max == -1) max = input.length;
 		
 		#if debug
-		D.assert(min >= 0, "min >= 0");
-		D.assert(max <= Std.int(input.length), "max <= input.length");
+		assert(min >= 0, "min >= 0");
+		assert(max <= Std.int(input.length), "max <= input.length");
 		#end
 		
 		var output = new DoubleMemory(max - min, "ofVector");
@@ -395,13 +395,13 @@ class DoubleMemory extends MemoryAccess
 	
 	/**
 	 * Adjusts the size of this object so it's capable of storing <code>newSize</code> doubles.
-	 * @throws de.polygonal.core.util.AssertError invalid size (debug only).
-	 * @throws de.polygonal.core.util.AssertError memory was already deallocated (debug only).
+	 * @throws de.polygonal.ds.error.AssertError invalid size (debug only).
+	 * @throws de.polygonal.ds.error.AssertError memory was already deallocated (debug only).
 	 */
 	override public function resize(newSize:Int):Void
 	{
 		#if debug
-		D.assert(newSize >= 0, 'invalid size ($newSize)');
+		assert(newSize >= 0, 'invalid size ($newSize)');
 		#end
 		
 		#if alchemy
@@ -422,8 +422,8 @@ class DoubleMemory extends MemoryAccess
 	
 	/**
 	 * Returns the double at index <code>i</code>.
-	 * @throws de.polygonal.core.util.AssertError index out of range (debug only).
-	 * @throws de.polygonal.core.util.AssertError memory deallocated (debug only).
+	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
+	 * @throws de.polygonal.ds.error.AssertError memory deallocated (debug only).
 	 */
 	inline public function get(i:Int):Float
 	{
@@ -436,8 +436,8 @@ class DoubleMemory extends MemoryAccess
 	
 	/**
 	 * Replaces the double at the index <code>i</code> with the double <code>x</code>.
-	 * @throws de.polygonal.core.util.AssertError index out of range (debug only).
-	 * @throws de.polygonal.core.util.AssertError memory deallocated (debug only).
+	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
+	 * @throws de.polygonal.ds.error.AssertError memory deallocated (debug only).
 	 */
 	inline public function set(i:Int, x:Float):Void
 	{
@@ -450,13 +450,13 @@ class DoubleMemory extends MemoryAccess
 	
 	/**
 	 * Swaps the double at index <code>i</code> with the double at index <code>j</code>.
-	 * @throws de.polygonal.core.util.AssertError index out of range (debug only).
-	 * @throws de.polygonal.core.util.AssertError <code>i</code> equals <code>j</code> (debug only).
+	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>i</code> equals <code>j</code> (debug only).
 	 */
 	inline public function swp(i:Int, j:Int):Void
 	{
 		#if debug
-		D.assert(i != j, 'i equals j ($i)');
+		assert(i != j, 'i equals j ($i)');
 		#end
 		
 		#if alchemy
@@ -472,14 +472,14 @@ class DoubleMemory extends MemoryAccess
 	
 	/**
 	 * Returns the memory byte offset of the first byte storing the double at index <code>i</code>.
-	 * @throws de.polygonal.core.util.AssertError index out of range (debug only).
-	 * @throws de.polygonal.core.util.AssertError memory deallocated (debug only).
+	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
+	 * @throws de.polygonal.ds.error.AssertError memory deallocated (debug only).
 	 */
 	inline public function getAddr(i:Int):Int
 	{
 		#if debug
-		D.assert(i >= 0 && i < size, 'segfault, index $i');
-		D.assert(_memory != null, "memory deallocated");
+		assert(i >= 0 && i < size, 'segfault, index $i');
+		assert(_memory != null, "memory deallocated");
 		#end
 		
 		#if alchemy

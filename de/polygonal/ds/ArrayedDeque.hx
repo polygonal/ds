@@ -30,7 +30,7 @@
 package de.polygonal.ds;
 
 import de.polygonal.core.fmt.Sprintf;
-import de.polygonal.core.util.Assert;
+import de.polygonal.ds.error.Assert.assert;
 
 private typedef ArrayedDequeFriend<T> =
 {
@@ -94,13 +94,13 @@ class ArrayedDeque<T> implements Deque<T>
 	 * The default value is 4; a value of 0 disables block pooling.
 	 * @param maxSize the maximum allowed size of this deque.<br/>
 	 * The default value of -1 indicates that there is no upper limit.
-	 * @throws de.polygonal.core.util.AssertError invalid <code>blockSize</code> (debug only).
+	 * @throws de.polygonal.ds.error.AssertError invalid <code>blockSize</code> (debug only).
 	 */
 	public function new(blockSize = 64, blockPoolCapacity = 4, maxSize = -1)
 	{
 		#if debug
-		D.assert(M.isPow2(blockSize), "blockSize is not a power of 2");
-		D.assert(blockSize >= 4, "blockSize is too small");
+		assert(M.isPow2(blockSize), "blockSize is not a power of 2");
+		assert(blockSize >= 4, "blockSize is too small");
 		#end
 		
 		#if debug
@@ -132,12 +132,12 @@ class ArrayedDeque<T> implements Deque<T>
 	/**
 	 * Returns the first element of this deque.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.util.AssertError deque is empty (debug only).
+	 * @throws de.polygonal.ds.error.AssertError deque is empty (debug only).
 	 */
 	inline public function front():T
 	{
 		#if debug
-		D.assert(size() > 0, "deque is empty");
+		assert(size() > 0, "deque is empty");
 		#end
 		
 		return (_head == _blockSizeMinusOne) ? _headBlockNext[0] : _headBlock[_head + 1];
@@ -146,13 +146,13 @@ class ArrayedDeque<T> implements Deque<T>
 	/**
 	 * Inserts the element <code>x</code> at the front of this deque.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.util.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
 	 */
 	inline public function pushFront(x:T):Void
 	{
 		#if debug
 		if (maxSize != -1)
-			D.assert(size() < maxSize, 'size equals max size ($maxSize)');
+			assert(size() < maxSize, 'size equals max size ($maxSize)');
 		#end
 		
 		_headBlock[_head--] = x;
@@ -162,12 +162,12 @@ class ArrayedDeque<T> implements Deque<T>
 	/**
 	 * Removes and returns the element at the beginning of this deque.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.util.AssertError deque is empty (debug only).
+	 * @throws de.polygonal.ds.error.AssertError deque is empty (debug only).
 	 */
 	inline public function popFront():T
 	{
 		#if debug
-		D.assert(size() > 0, "deque is empty");
+		assert(size() > 0, "deque is empty");
 		#end
 		
 		if (_head == _blockSizeMinusOne)
@@ -182,12 +182,12 @@ class ArrayedDeque<T> implements Deque<T>
 	/**
 	 * Returns the last element of the deque.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.util.AssertError deque is empty (debug only).
+	 * @throws de.polygonal.ds.error.AssertError deque is empty (debug only).
 	 */
 	inline public function back():T
 	{
 		#if debug
-		D.assert(size() > 0, "deque is empty");
+		assert(size() > 0, "deque is empty");
 		#end
 		
 		return (_tail == 0) ? (_tailBlockPrev[_blockSizeMinusOne]) : _tailBlock[_tail - 1];
@@ -196,13 +196,13 @@ class ArrayedDeque<T> implements Deque<T>
 	/**
 	 * Inserts the element <code>x</code> at the back of the deque.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.util.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
 	 */
 	inline public function pushBack(x:T):Void
 	{
 		#if debug
 		if (maxSize != -1)
-			D.assert(size() < maxSize, 'size equals max size ($maxSize)');
+			assert(size() < maxSize, 'size equals max size ($maxSize)');
 		#end
 		
 		_tailBlock[_tail++] = x;
@@ -213,12 +213,12 @@ class ArrayedDeque<T> implements Deque<T>
 	/**
 	 * Deletes the element at the end of the deque.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.util.AssertError deque is empty (debug only).
+	 * @throws de.polygonal.ds.error.AssertError deque is empty (debug only).
 	 */
 	public function popBack():T
 	{
 		#if debug
-		D.assert(size() > 0, "deque is empty");
+		assert(size() > 0, "deque is empty");
 		#end
 		
 		if (_tail == 0)
@@ -234,13 +234,13 @@ class ArrayedDeque<T> implements Deque<T>
 	 * Returns the element at index <code>i</code> relative to the front of this deque.<br/>
 	 * The front element is at index [0], the back element is at index <b>&#091;<em>size()</em> - 1&#093;</b>.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.util.AssertError deque is empty (debug only).
-	 * @throws de.polygonal.core.util.AssertError index out of range (debug only).
+	 * @throws de.polygonal.ds.error.AssertError deque is empty (debug only).
+	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
 	 */
 	public function getFront(i:Int):T
 	{
 		#if debug
-		D.assert(i < size(), 'index out of range ($i)');
+		assert(i < size(), 'index out of range ($i)');
 		#end
 		
 		var c = (_head + 1) + i;
@@ -270,13 +270,13 @@ class ArrayedDeque<T> implements Deque<T>
 	 * Returns the element at index <code>i</code> relative to the back of this deque.<br/>
 	 * The back element is at index [0], the front element is at index &#091;<em>size()</em> - 1&#093;.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.util.AssertError deque is empty (debug only).
-	 * @throws de.polygonal.core.util.AssertError index out of range (debug only).
+	 * @throws de.polygonal.ds.error.AssertError deque is empty (debug only).
+	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
 	 */
 	public function getBack(i:Int):T
 	{
 		#if debug
-		D.assert(i < size(), 'index out of range ($i)');
+		assert(i < size(), 'index out of range ($i)');
 		#end
 		
 		var c = _tail - 1 - i;
@@ -321,7 +321,7 @@ class ArrayedDeque<T> implements Deque<T>
 	 * @param C the class to instantiate for each element.
 	 * @param args passes additional constructor arguments to the class <code>C</code>.
 	 * @param n the number of elements to replace. If 0, <code>n</code> is set to <em>size()</em>.
-	 * @throws de.polygonal.core.util.AssertError <code>n</code> &gt; <em>maxSize</em> (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>n</code> &gt; <em>maxSize</em> (debug only).
 	 */
 	public function assign(C:Class<T>, args:Array<Dynamic> = null, n = 0):Void
 	{
@@ -332,7 +332,7 @@ class ArrayedDeque<T> implements Deque<T>
 		{
 			#if debug
 			if (maxSize != -1)
-				D.assert(n < maxSize, 'n > max size ($maxSize)');
+				assert(n < maxSize, 'n > max size ($maxSize)');
 			#end
 			
 			var i = _head + 1;
@@ -398,7 +398,7 @@ class ArrayedDeque<T> implements Deque<T>
 		{
 			#if debug
 			if (maxSize != -1)
-				D.assert(n < maxSize, 'n > max size ($maxSize)');
+				assert(n < maxSize, 'n > max size ($maxSize)');
 			#end
 			
 			var i = _head + 1;
@@ -919,7 +919,7 @@ class ArrayedDeque<T> implements Deque<T>
 	 * @param assign if true, the <code>copier</code> parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.<br/>
 	 * If false, the <em>clone()</em> method is called on each element. <warn>In this case all elements have to implement <em>Cloneable</em>.</warn>
 	 * @param copier a custom function for copying elements. Replaces element.<em>clone()</em> if <code>assign</code> is false.
-	 * @throws de.polygonal.core.util.AssertError element is not of type <em>Cloneable</em> (debug only).
+	 * @throws de.polygonal.ds.error.AssertError element is not of type <em>Cloneable</em> (debug only).
 	 */
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{
@@ -1086,7 +1086,7 @@ class ArrayedDeque<T> implements Deque<T>
 		for (j in min...max)
 		{
 			#if debug
-			D.assert(Std.is(src[j], Cloneable), 'element is not of type Cloneable (${src[j]})');
+			assert(Std.is(src[j], Cloneable), 'element is not of type Cloneable (${src[j]})');
 			#end
 			
 			dst[j] = src[j];

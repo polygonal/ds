@@ -30,7 +30,7 @@
 package de.polygonal.ds;
 
 import de.polygonal.core.fmt.Sprintf;
-import de.polygonal.core.util.Assert;
+import de.polygonal.ds.error.Assert.assert;
 
 private typedef HeapFriend<T> =
 {
@@ -83,7 +83,7 @@ class HeapIterator<T:(Heapable<T>)> implements de.polygonal.ds.Itr<T>
 	inline public function remove():Void
 	{
 		#if debug
-		D.assert(_i > 0, "call next() before removing an element");
+		assert(_i > 0, "call next() before removing an element");
 		#end
 		_f.remove(_a[_i - 1]);
 	}
@@ -135,7 +135,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	 * @param reservedSize the initial capacity of the internal container. See <em>reserve()</em>.
 	 * @param maxSize the maximum allowed size of this heap.<br/>
 	 * The default value of -1 indicates that there is no upper limit.
-	 * @throws de.polygonal.core.util.AssertError <code>reservedSize</code> &gt; <code>maxSize</code> (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>reservedSize</code> &gt; <code>maxSize</code> (debug only).
 	 */
 	public function new(reservedSize = 0, maxSize = -1)
 	{
@@ -153,7 +153,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 		{
 			#if debug
 			if (this.maxSize != -1)
-				D.assert(reservedSize <= this.maxSize, "reserved size is greater than allowed size");
+				assert(reservedSize <= this.maxSize, "reserved size is greater than allowed size");
 			#end
 			_a = ArrayUtil.alloc(reservedSize + 1);
 		}
@@ -219,12 +219,12 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	 * Returns the item on top of the heap without removing it from the heap.<br/>
 	 * This is the smallest element (assuming ascending order).
 	 * <o>1</o>
-	 * @throws de.polygonal.core.util.AssertError heap is empty (debug only).
+	 * @throws de.polygonal.ds.error.AssertError heap is empty (debug only).
 	 */
 	inline public function top():T
 	{
 		#if debug
-		D.assert(size() > 0, "heap is empty");
+		assert(size() > 0, "heap is empty");
 		#end
 		return __get(1);
 	}
@@ -233,12 +233,12 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	 * Returns the item on the bottom of the heap without removing it from the heap.<br/>
 	 * This is the largest element (assuming ascending order).
 	 * <o>n</o>
-	 * @throws de.polygonal.core.util.AssertError heap is empty (debug only).
+	 * @throws de.polygonal.ds.error.AssertError heap is empty (debug only).
 	 */
 	public function bottom():T
 	{
 		#if debug
-		D.assert(size() > 0, "heap is empty");
+		assert(size() > 0, "heap is empty");
 		#end
 		
 		if (_size == 1) return __get(1);
@@ -255,22 +255,22 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	/**
 	 * Adds the element <code>x</code>.
 	 * <o>log n</o>
-	 * @throws de.polygonal.core.util.AssertError heap is full (debug only).
-	 * @throws de.polygonal.core.util.AssertError <code>x</code> is null or <code>x</code> already exists (debug only).
-	 * @throws de.polygonal.core.util.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
+	 * @throws de.polygonal.ds.error.AssertError heap is full (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>x</code> is null or <code>x</code> already exists (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
 	 */
 	public function add(x:T):Void
 	{
 		#if debug
-		D.assert(x != null, "x is null");
+		assert(x != null, "x is null");
 		#end
 		
 		#if (debug && flash)
-		D.assert(!_map.hasKey(x), "x already exists");
+		assert(!_map.hasKey(x), "x already exists");
 		_map.set(x, true);
 		#end
 		#if debug
-		if (maxSize != -1) D.assert(size() <= maxSize, 'size equals max size ($maxSize)');
+		if (maxSize != -1) assert(size() <= maxSize, 'size equals max size ($maxSize)');
 		#end
 		
 		__set(++_size, x);
@@ -282,12 +282,12 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	 * Removes the element on top of the heap.<br/>
 	 * This is the smallest element (assuming ascending order).
 	 * <o>log n</o>
-	 * @throws de.polygonal.core.util.AssertError heap is empty (debug only).
+	 * @throws de.polygonal.ds.error.AssertError heap is empty (debug only).
 	 */
 	public function pop():T
 	{
 		#if debug
-		D.assert(size() > 0, "heap is empty");
+		assert(size() > 0, "heap is empty");
 		#end
 		
 		var x = __get(1);
@@ -305,12 +305,12 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	/**
 	 * Replaces the item at the top of the heap with a new element <code>x</code>.
 	 * <o>log n</o>
-	 * @throws de.polygonal.core.util.AssertError <code>x</code> already exists (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>x</code> already exists (debug only).
 	 */
 	public function replace(x:T):Void
 	{
 		#if (debug && flash)
-		D.assert(!_map.hasKey(x), "x already exists");
+		assert(!_map.hasKey(x), "x already exists");
 		_map.clr(__get(1));
 		_map.set(x, true);
 		#end
@@ -325,12 +325,12 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	 * <o>log n</o>
 	 * @param hint a value &gt;= 0 indicates that <code>x</code> is now smaller (ascending order) or bigger (descending order) and should be moved towards the root of the tree to rebuild the heap property.<br/>
 	 * Likewise, a value &lt; 0 indicates that <code>x</code> is now bigger (ascending order) or smaller (descending order) and should be moved towards the leaf nodes of the tree.<br/>
-	 * @throws de.polygonal.core.util.AssertError <code>x</code> does not exist (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>x</code> does not exist (debug only).
 	 */
 	public function change(x:T, hint:Int):Void
 	{
 		#if (debug && flash)
-		D.assert(_map.hasKey(x), "x does not exist");
+		assert(_map.hasKey(x), "x does not exist");
 		#end
 		
 		if (hint >= 0)
@@ -501,13 +501,13 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	
 	/**
 	 * Returns true if this heap contains the element <code>x</code>.
-	 * @throws de.polygonal.core.util.AssertError <code>x</code> is invalid.
+	 * @throws de.polygonal.ds.error.AssertError <code>x</code> is invalid.
 	 * <o>1</o>
 	 */
 	inline public function contains(x:T):Bool
 	{
 		#if debug
-		D.assert(x != null, "x is null");
+		assert(x != null, "x is null");
 		#end
 		var position = x.position;
 		return (position > 0 && position <= _size) && (__get(position) == x);
@@ -516,7 +516,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	/**
 	 * Removes the element <code>x</code>.
 	 * <o>2 * log n</o>
-	 * @throws de.polygonal.core.util.AssertError <code>x</code> is invalid or does not exist (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>x</code> is invalid or does not exist (debug only).
 	 * @return true if <code>x</code> was removed.
 	 */
 	public function remove(x:T):Bool
@@ -526,10 +526,10 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 		else
 		{
 			#if debug
-			D.assert(x != null, "x is null");
+			assert(x != null, "x is null");
 			#end
 			#if (debug && flash)
-			D.assert(_map.hasKey(x), "x does not exist");
+			assert(_map.hasKey(x), "x does not exist");
 			_map.clr(x);
 			#end
 			
@@ -629,7 +629,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	 * @param assign if true, the <code>copier</code> parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.<br/>
 	 * If false, the <em>clone()</em> method is called on each element. <warn>In this case all elements have to implement <em>Cloneable</em>.</warn>
 	 * @param copier a custom function for copying elements. Replaces element.<em>clone()</em> if <code>assign</code> is false.
-	 * @throws de.polygonal.core.util.AssertError element is not of type <em>Cloneable</em> (debug only).
+	 * @throws de.polygonal.ds.error.AssertError element is not of type <em>Cloneable</em> (debug only).
 	 * <warn>If <code>assign</code> is true, only the copied version should be used from now on.</warn>
 	 */
 	public function clone(assign = true, copier:T->T = null):Collection<T>
@@ -654,7 +654,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 			{
 				var e = __get(i);
 				#if debug
-				D.assert(Std.is(e, Cloneable), 'element is not of type Cloneable (${__get(i)})');
+				assert(Std.is(e, Cloneable), 'element is not of type Cloneable (${__get(i)})');
 				#end
 				
 				var c = untyped e.clone();

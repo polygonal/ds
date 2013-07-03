@@ -29,7 +29,7 @@
  */
 package de.polygonal.ds;
 
-import de.polygonal.core.util.Assert;
+import de.polygonal.ds.error.Assert.assert;
 
 /**
  * <p>A doubly linked list node.</p>
@@ -84,12 +84,12 @@ class DLLNode<T>
 	/**
 	 * Returns true if this node is the head of a list.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.util.AssertError node is not managed by a list (debug only).
+	 * @throws de.polygonal.ds.error.AssertError node is not managed by a list (debug only).
 	 */
 	inline public function isHead():Bool
 	{
 		#if debug
-		D.assert(_list != null, "node is not managed by a list");
+		assert(_list != null, "node is not managed by a list");
 		#end
 		
 		return this == _list.head;
@@ -98,12 +98,12 @@ class DLLNode<T>
 	/**
 	 * Returns true if this node is the tail of a list.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.util.AssertError node is not managed by a list (debug only).
+	 * @throws de.polygonal.ds.error.AssertError node is not managed by a list (debug only).
 	 */
 	inline public function isTail():Bool
 	{
 		#if debug
-		D.assert(_list != null, "node is not managed by a list");
+		assert(_list != null, "node is not managed by a list");
 		#end
 		
 		return this == _list.tail;
@@ -130,12 +130,12 @@ class DLLNode<T>
 	/**
 	 * Returns the element of the next node.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.util.AssertError next node is null (debug only).
+	 * @throws de.polygonal.ds.error.AssertError next node is null (debug only).
 	 */
 	inline public function nextVal():T
 	{
 		#if debug
-		D.assert(hasNext(), "next node is null");
+		assert(hasNext(), "next node is null");
 		#end
 		
 		return next.val;
@@ -144,12 +144,12 @@ class DLLNode<T>
 	/**
 	 * Returns the element of the previous node.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.util.AssertError previous node is null (debug only).
+	 * @throws de.polygonal.ds.error.AssertError previous node is null (debug only).
 	 */
 	inline public function prevVal():T
 	{
 		#if debug
-		D.assert(hasPrev(), "previous node is null");
+		assert(hasPrev(), "previous node is null");
 		#end
 		
 		return prev.val;
@@ -167,12 +167,12 @@ class DLLNode<T>
 	/**
 	 * Unlinks this node from its list and returns node.<em>next</em>.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.util.AssertError list is null (debug only).
+	 * @throws de.polygonal.ds.error.AssertError list is null (debug only).
 	 */
 	inline public function unlink():DLLNode<T>
 	{
 		#if debug
-		D.assert(_list != null, "_list != null");
+		assert(_list != null, "_list != null");
 		#end
 		
 		return _list.unlink(this);
@@ -190,15 +190,15 @@ class DLLNode<T>
 	 * trace(head.nextVal()); //1</pre>
 	 * <o>1</o>
 	 * @return the list's new head node.
-	 * @throws de.polygonal.core.util.AssertError <code>node</code> is null or managed by a list.
-	 * @throws de.polygonal.core.util.AssertError <code>node</code>.<em>prev</em> exists (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>node</code> is null or managed by a list.
+	 * @throws de.polygonal.ds.error.AssertError <code>node</code>.<em>prev</em> exists (debug only).
 	 */
 	inline public function prepend(node:DLLNode<T>):DLLNode<T>
 	{
 		#if debug
-		D.assert(node != null, "node is null");
-		D.assert(prev == null, "prev is not null");
-		D.assert(_list == null && node._list == null, "node is managed by a list");
+		assert(node != null, "node is null");
+		assert(prev == null, "prev is not null");
+		assert(_list == null && node._list == null, "node is managed by a list");
 		#end
 		
 		node.next = this;
@@ -218,15 +218,15 @@ class DLLNode<T>
 	 * trace(tail.prevVal()); //0</pre>
 	 * <o>1</o>
 	 * @return the list's new tail node.
-	 * @throws de.polygonal.core.util.AssertError <code>node</code> is null or managed by a list.
-	 * @throws de.polygonal.core.util.AssertError <code>node</code>.<em>next</em> exists (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>node</code> is null or managed by a list.
+	 * @throws de.polygonal.ds.error.AssertError <code>node</code>.<em>next</em> exists (debug only).
 	 */
 	inline public function append(node:DLLNode<T>):DLLNode<T>
 	{
 		#if debug
-		D.assert(node != null, "node is null");
-		D.assert(next == null, "next is not null");
-		D.assert(_list == null && node._list == null, "node is managed by a list");
+		assert(node != null, "node is null");
+		assert(next == null, "next is not null");
+		assert(_list == null && node._list == null, "node is managed by a list");
 		#end
 		
 		next = node;
@@ -246,15 +246,15 @@ class DLLNode<T>
 	 * trace(head.nextVal()); //1</pre>
 	 * <o>1</o>
 	 * @return the list's new head node.
-	 * @throws de.polygonal.core.util.AssertError <code>node</code> is null or managed by a list (debug only).
-	 * @throws de.polygonal.core.util.AssertError <code>node</code>.<em>prev</em> exists (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>node</code> is null or managed by a list (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>node</code>.<em>prev</em> exists (debug only).
 	 */
 	inline public function prependTo(node:DLLNode<T>):DLLNode<T>
 	{
 		#if debug
-		D.assert(node != null, "node is null");
-		D.assert(_list == null && node._list == null, "node is managed by a list");
-		D.assert(node.prev == null, "node.prev is not null");
+		assert(node != null, "node is null");
+		assert(_list == null && node._list == null, "node is managed by a list");
+		assert(node.prev == null, "node.prev is not null");
 		#end
 		
 		next = node;
@@ -274,15 +274,15 @@ class DLLNode<T>
 	 * trace(tail.prevVal()); //0</pre>
 	 * <o>1</o>
 	 * @return the list's new tail node.
-	 * @throws de.polygonal.core.util.AssertError <code>node</code> is null or managed by a list (debug only).
-	 * @throws de.polygonal.core.util.AssertError <code>node</code>.<em>next</em> exists (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>node</code> is null or managed by a list (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>node</code>.<em>next</em> exists (debug only).
 	 */
 	inline public function appendTo(node:DLLNode<T>):DLLNode<T>
 	{
 		#if debug
-		D.assert(node != null, "node is null");
-		D.assert(_list == null && node._list == null, "node is managed by a list");
-		D.assert(node.next == null, "node.next is not null");
+		assert(node != null, "node is null");
+		assert(_list == null && node._list == null, "node is managed by a list");
+		assert(node.next == null, "node.next is not null");
 		#end
 		
 		prev = node;

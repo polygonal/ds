@@ -30,7 +30,7 @@
 package de.polygonal.ds.pooling;
 
 import de.polygonal.core.fmt.Sprintf;
-import de.polygonal.core.util.Assert;
+import de.polygonal.ds.error.Assert.assert;
 import de.polygonal.ds.Hashable;
 import de.polygonal.ds.HashKey;
 import de.polygonal.ds.Itr;
@@ -162,12 +162,12 @@ class ObjectPool<T> implements Hashable
 	/** 
 	 * Returns the id to the next free object.<br/>
 	 * After an id has been obtained, the corresponding object can be retrieved using <em>get(id)</em>.
-	 * @throws de.polygonal.core.util.AssertError pool exhausted (debug only).
+	 * @throws de.polygonal.ds.error.AssertError pool exhausted (debug only).
 	 */
 	inline public function next():Int
 	{
 		#if debug
-		D.assert(_count < _size && _free != -1, "pool exhausted");
+		assert(_count < _size && _free != -1, "pool exhausted");
 		++_count;
 		#end
 		
@@ -184,12 +184,12 @@ class ObjectPool<T> implements Hashable
 	/**
 	 * Returns the object that is mapped to <code>id</code>.<br/>
 	 * Call <em>next()</em> to request an <code>id</code> first.
-	 * @throws de.polygonal.core.util.AssertError invalid <code>id</code> or object linked to <code>id</code> is not used.
+	 * @throws de.polygonal.ds.error.AssertError invalid <code>id</code> or object linked to <code>id</code> is not used.
 	 */
 	inline public function get(id:Int):T
 	{
 		#if debug
-		D.assert(_usage.has(id), 'id $id is not used');
+		assert(_usage.has(id), 'id $id is not used');
 		#end
 		
 		if (_lazy)
@@ -203,13 +203,13 @@ class ObjectPool<T> implements Hashable
 	
 	/**
 	 * Puts the object mapped to <code>id</code> back into the pool.
-	 * @throws de.polygonal.core.util.AssertError pool is full or object linked to <code>id</code> is not used (debug only).
+	 * @throws de.polygonal.ds.error.AssertError pool is full or object linked to <code>id</code> is not used (debug only).
 	 */
 	inline public function put(id:Int):Void
 	{
 		#if debug
-		D.assert(_usage.has(id), 'id $id is not used');
-		D.assert(_count > 0, "pool is full");
+		assert(_usage.has(id), 'id $id is not used');
+		assert(_count > 0, "pool is full");
 		_usage.clr(id);
 		--_count;
 		#end
@@ -224,7 +224,7 @@ class ObjectPool<T> implements Hashable
 	 * @param C allocates objects by instantiating the class <code>C</code>.
 	 * @param fabricate allocates objects by calling <code>fabricate()</code>.
 	 * @param factory allocates objects by using a <em>Factory</em> object (calling <code>factory</code>.<em>create()</em>).
-	 * @throws de.polygonal.core.util.AssertError invalid arguments.
+	 * @throws de.polygonal.ds.error.AssertError invalid arguments.
 	 */
 	public function allocate(lazy:Bool, C:Class<T> = null, fabricate:Void->T = null, factory:Factory<T> = null):Void
 	{
@@ -246,7 +246,7 @@ class ObjectPool<T> implements Hashable
 		_pool = de.polygonal.ds.ArrayUtil.alloc(_size);
 		
 		#if debug
-		D.assert(C != null || fabricate != null || factory != null, "invalid arguments");
+		assert(C != null || fabricate != null || factory != null, "invalid arguments");
 		#end
 		
 		if (_lazy)

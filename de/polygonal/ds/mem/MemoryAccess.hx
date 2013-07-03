@@ -29,7 +29,7 @@
  */
 package de.polygonal.ds.mem;
 
-import de.polygonal.core.util.Assert;
+import de.polygonal.ds.error.Assert.assert;
 import de.polygonal.ds.Hashable;
 import de.polygonal.ds.HashKey;
 
@@ -62,7 +62,7 @@ class MemoryAccess implements Hashable
 	function new(bytes:Int, name = "?")
 	{
 		#if debug
-		D.assert(bytes > 0, "bytes > 0");
+		assert(bytes > 0, "bytes > 0");
 		#end
 		
 		this.bytes = bytes;
@@ -81,12 +81,12 @@ class MemoryAccess implements Hashable
 	 * Destroys this object by explicitly nullifying all pointers and instantly releases any memory that was allocated by this accessor.<br/>
 	 * <warn>Invoke this method when the life cycle of this object ends to prevent a memory leak.</warn><br/>
 	 * This is not optional if <em>MemoryManager.AUTO_RECLAIM_MEMORY</em> is true.
-	 * @throws de.polygonal.core.util.AssertError memory was already deallocated (debug only).
+	 * @throws de.polygonal.ds.error.AssertError memory was already deallocated (debug only).
 	 */
 	public function free():Void
 	{
 		#if debug
-		D.assert(_memory != null, "memory deallocated");
+		assert(_memory != null, "memory deallocated");
 		#end
 		
 		#if alchemy
@@ -98,7 +98,7 @@ class MemoryAccess implements Hashable
 	
 	/**
 	 * Sets all bytes to 0.
-	 * @throws de.polygonal.core.util.AssertError memory was already deallocated (debug only).
+	 * @throws de.polygonal.ds.error.AssertError memory was already deallocated (debug only).
 	 */
 	public function clear():Void
 	{
@@ -110,14 +110,14 @@ class MemoryAccess implements Hashable
 	
 	/**
 	 * Resizes the memory to <code>byteSize</code> bytes.
-	 * @throws de.polygonal.core.util.AssertError bytes <= 0 (debug only).
-	 * @throws de.polygonal.core.util.AssertError memory was already deallocated (debug only).
+	 * @throws de.polygonal.ds.error.AssertError bytes <= 0 (debug only).
+	 * @throws de.polygonal.ds.error.AssertError memory was already deallocated (debug only).
 	 */
 	public function resize(byteSize:Int):Void
 	{
 		#if debug
-		D.assert(byteSize > 0, "byteSize > 0");
-		D.assert(_memory != null, "memory deallocated");
+		assert(byteSize > 0, "byteSize > 0");
+		assert(_memory != null, "memory deallocated");
 		#end
 		
 		bytes = byteSize;

@@ -29,7 +29,7 @@
  */
 package de.polygonal.ds;
 
-import de.polygonal.core.util.Assert;
+import de.polygonal.ds.error.Assert.assert;
 
 private typedef DLLNodeFriend<T> =
 {
@@ -97,7 +97,7 @@ class DLL<T> implements Collection<T>
 	 * Prevents frequent node allocation and thus increases performance at the cost of using more memory.
 	 * @param maxSize the maximum allowed size of this list.<br/>
 	 * The default value of -1 indicates that there is no upper limit.
-	 * @throws de.polygonal.core.util.AssertError reserved size is greater than allowed size (debug only).
+	 * @throws de.polygonal.ds.error.AssertError reserved size is greater than allowed size (debug only).
 	 */
 	public function new(reservedSize = 0, maxSize = -1)
 	{
@@ -105,7 +105,7 @@ class DLL<T> implements Collection<T>
 		if (reservedSize > 0)
 		{
 			if (maxSize != -1)
-				D.assert(reservedSize <= maxSize, "reserved size is greater than allowed size");
+				assert(reservedSize <= maxSize, "reserved size is greater than allowed size");
 		}
 		this.maxSize = (maxSize == -1) ? M.INT32_MAX : maxSize;
 		#else
@@ -183,13 +183,13 @@ class DLL<T> implements Collection<T>
 	 * Appends the element <code>x</code> to the tail of this list by creating a <em>DLLNode</em> object storing <code>x</code>.
 	 * <o>1</o>
 	 * @return the appended node storing <code>x</code>.
-	 * @throws de.polygonal.core.util.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
 	 */
 	public function append(x:T):DLLNode<T>
 	{
 		#if debug
 		if (maxSize != -1)
-			D.assert(size() < maxSize, 'size equals max size ($maxSize)');
+			assert(size() < maxSize, 'size equals max size ($maxSize)');
 		#end
 		
 		var node = _getNode(x);
@@ -219,7 +219,7 @@ class DLL<T> implements Collection<T>
 	public function appendNode(x:DLLNode<T>):Void
 	{
 		#if debug
-		D.assert(x.getList() == this, "node is not managed by this list");
+		assert(x.getList() == this, "node is not managed by this list");
 		#end
 		
 		if (_valid(tail))
@@ -244,13 +244,13 @@ class DLL<T> implements Collection<T>
 	 * Prepends the element <code>x</code> to the head of this list by creating a <em>DLLNode</em> object storing <code>x</code>.
 	 * <o>1</o>
 	 * @return the prepended node storing <code>x</code>.
-	 * @throws de.polygonal.core.util.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
 	 */
 	public function prepend(x:T):DLLNode<T>
 	{
 		#if debug
 		if (maxSize != -1)
-			D.assert(size() < maxSize, 'size equals max size ($maxSize)');
+			assert(size() < maxSize, 'size equals max size ($maxSize)');
 		#end
 		
 		var node = _getNode(x);
@@ -278,7 +278,7 @@ class DLL<T> implements Collection<T>
 	public function prependNode(x:DLLNode<T>):Void
 	{
 		#if debug
-		D.assert(x.getList() == this, "node is not managed by this list");
+		assert(x.getList() == this, "node is not managed by this list");
 		#end
 		
 		x.next = head;
@@ -301,15 +301,15 @@ class DLL<T> implements Collection<T>
 	 * Inserts the element <code>x</code> after <code>node</code> by creating a <em>DLLNode</em> object storing <code>x</code>.
 	 * <o>1</o>
 	 * @return the inserted node storing <code>x</code>.
-	 * @throws de.polygonal.core.util.AssertError <code>node</code> is null or not managed by this list (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>node</code> is null or not managed by this list (debug only).
 	 */
 	public function insertAfter(node:DLLNode<T>, x:T):DLLNode<T>
 	{
 		#if debug
 		if (maxSize != -1)
-			D.assert(size() < maxSize, 'size equals max size ($maxSize)');
-		D.assert(_valid(node), "node is null");
-		D.assert(node.getList() == this, "node is not managed by this list");
+			assert(size() < maxSize, 'size equals max size ($maxSize)');
+		assert(_valid(node), "node is null");
+		assert(node.getList() == this, "node is not managed by this list");
 		#end
 		
 		var t = _getNode(x);
@@ -329,15 +329,15 @@ class DLL<T> implements Collection<T>
 	 * Inserts the element <code>x</code> before <code>node</code> by creating a <em>DLLNode</em> object storing <code>x</code>.
 	 * <o>1</o>
 	 * @return the inserted node storing <code>x</code>.
-	 * @throws de.polygonal.core.util.AssertError <code>node</code> is null or not managed by this list (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>node</code> is null or not managed by this list (debug only).
 	 */
 	public function insertBefore(node:DLLNode<T>, x:T):DLLNode<T>
 	{
 		#if debug
 		if (maxSize != -1)
-			D.assert(size() < maxSize, 'size equals max size ($maxSize)');
-		D.assert(_valid(node), "node is null");
-		D.assert(node.getList() == this, "node is not managed by this list");
+			assert(size() < maxSize, 'size equals max size ($maxSize)');
+		assert(_valid(node), "node is null");
+		assert(node.getList() == this, "node is not managed by this list");
 		#end
 		
 		var t = _getNode(x);
@@ -356,15 +356,15 @@ class DLL<T> implements Collection<T>
 	/**
 	 * Unlinks <code>node</code> from this list and returns <code>node</code>.<em>next</em>;
 	 * <o>1</o>
-	 * @throws de.polygonal.core.util.AssertError list is empty (debug only).
-	 * @throws de.polygonal.core.util.AssertError <code>node</code> is null or not managed by this list (debug only).
+	 * @throws de.polygonal.ds.error.AssertError list is empty (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>node</code> is null or not managed by this list (debug only).
 	 */
 	public function unlink(node:DLLNode<T>):DLLNode<T>
 	{
 		#if debug
-		D.assert(_valid(node), "node is null");
-		D.assert(node.getList() == this, "node is not managed by this list");
-		D.assert(_size > 0, "list is empty");
+		assert(_valid(node), "node is null");
+		assert(node.getList() == this, "node is not managed by this list");
+		assert(_size > 0, "list is empty");
 		#end
 		
 		var hook = node.next;
@@ -402,14 +402,14 @@ class DLL<T> implements Collection<T>
 	 * Returns the node at "index" <code>i</code>.<br/>
 	 * The index is measured relative to the head node (= index 0).
 	 * <o>n</o>
-	 * @throws de.polygonal.core.util.AssertError list is empty (debug only).
-	 * @throws de.polygonal.core.util.AssertError index out of range (debug only).
+	 * @throws de.polygonal.ds.error.AssertError list is empty (debug only).
+	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
 	 */
 	public function getNodeAt(i:Int):DLLNode<T>
 	{
 		#if debug
-		D.assert(_size > 0, "list is empty");
-		D.assert(i >= 0 || i < _size, 'i index out of range ($i)');
+		assert(_size > 0, "list is empty");
+		assert(i >= 0 || i < _size, 'i index out of range ($i)');
 		#end
 		
 		var node = head;
@@ -420,12 +420,12 @@ class DLL<T> implements Collection<T>
 	/**
 	 * Removes the head node and returns the element stored in this node.
 	 * <o>n</o>
-	 * @throws de.polygonal.core.util.AssertError list is empty (debug only).
+	 * @throws de.polygonal.ds.error.AssertError list is empty (debug only).
 	 */
 	public function removeHead():T
 	{
 		#if debug
-		D.assert(_size > 0, "list is empty");
+		assert(_size > 0, "list is empty");
 		#end
 		
 		var node = head;
@@ -452,12 +452,12 @@ class DLL<T> implements Collection<T>
 	/**
 	 * Removes the tail node and returns the element stored in this node.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.util.AssertError list is empty (debug only).
+	 * @throws de.polygonal.ds.error.AssertError list is empty (debug only).
 	 */
 	public function removeTail():T
 	{
 		#if debug
-		D.assert(_size > 0, "list is empty");
+		assert(_size > 0, "list is empty");
 		#end
 		
 		var node = tail;
@@ -485,12 +485,12 @@ class DLL<T> implements Collection<T>
 	/**
 	 * Unlinks the head node and appends it to the tail.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.util.AssertError list is empty (debug only).
+	 * @throws de.polygonal.ds.error.AssertError list is empty (debug only).
 	 */
 	public function shiftUp():Void
 	{
 		#if debug
-		D.assert(_size > 0, "list is empty");
+		assert(_size > 0, "list is empty");
 		#end
 		
 		if (_size > 1)
@@ -531,12 +531,12 @@ class DLL<T> implements Collection<T>
 	/**
 	 * Unlinks the tail node and prepends it to the head.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.util.AssertError list is empty (debug only).
+	 * @throws de.polygonal.ds.error.AssertError list is empty (debug only).
 	 */
 	public function popDown():Void
 	{
 		#if debug
-		D.assert(_size > 0, "list is empty");
+		assert(_size > 0, "list is empty");
 		#end
 		
 		if (_size > 1)
@@ -579,13 +579,13 @@ class DLL<T> implements Collection<T>
 	 * <o>n</o>
 	 * @return the node containing <code>x</code> or null if such a node does not exist.<br/>
 	 * If <code>from</code> is null, the search starts at the head of this list.
-	 * @throws de.polygonal.core.util.AssertError <code>from</code> is not managed by this list (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>from</code> is not managed by this list (debug only).
 	 */
 	public function nodeOf(x:T, from:DLLNode<T> = null):DLLNode<T>
 	{
 		#if debug
 		if (_valid(from))
-			D.assert(from.getList() == this, "node is not managed by this list");
+			assert(from.getList() == this, "node is not managed by this list");
 		#end
 		
 		var node = (from == null) ? head : from;
@@ -614,13 +614,13 @@ class DLL<T> implements Collection<T>
 	 * <o>n</o>
 	 * @return the node containing <code>x</code> or null if such a node does not exist.<br/>
 	 * If <code>from</code> is null, the search starts at the tail of this list.
-	 * @throws de.polygonal.core.util.AssertError <code>from</code> is not managed by this list (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>from</code> is not managed by this list (debug only).
 	 */
 	public function lastNodeOf(x:T, from:DLLNode<T> = null):DLLNode<T>
 	{
 		#if debug
 		if (_valid(from))
-			D.assert(from.getList() == this, "node is not managed by this list");
+			assert(from.getList() == this, "node is not managed by this list");
 		#end
 		
 		var node = (from == null) ? tail : from;
@@ -652,7 +652,7 @@ class DLL<T> implements Collection<T>
 	 * <warn>In this case all elements have to implement <em>Comparable</em>.</warn>
 	 * @param useInsertionSort if true, the linked list is sorted using the insertion sort algorithm.
 	 * This is faster for nearly sorted lists.
-	 * @throws de.polygonal.core.util.AssertError element does not implement <em>Comparable</em> (debug only).
+	 * @throws de.polygonal.ds.error.AssertError element does not implement <em>Comparable</em> (debug only).
 	 */
 	public function sort(compare:T->T->Int, useInsertionSort = false):Void
 	{
@@ -685,15 +685,15 @@ class DLL<T> implements Collection<T>
 	 * Merges this list with the list <code>x</code> by linking both lists together.<br/>
 	 * <warn>The merge operation destroys x so it should be discarded.</warn>
 	 * <o>n</o>
-	 * @throws de.polygonal.core.util.AssertError <code>x</code> is null or this list equals <code>x</code> (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>x</code> is null or this list equals <code>x</code> (debug only).
 	 */
 	public function merge(x:DLL<T>):Void
 	{
 		#if debug
 		if (maxSize != -1)
-			D.assert(size() + x.size() <= maxSize, 'size equals max size ($maxSize)');
-		D.assert(x != this, "x equals this list");
-		D.assert(x != null, "x is null");
+			assert(size() + x.size() <= maxSize, 'size equals max size ($maxSize)');
+		assert(x != this, "x equals this list");
+		assert(x != null, "x is null");
 		#end
 		
 		if (_valid(x.head))
@@ -732,13 +732,13 @@ class DLL<T> implements Collection<T>
 	 * This list and <code>x</code> are untouched.
 	 * <o>n</o>
 	 * @return a new list containing the elements of both lists.
-	 * @throws de.polygonal.core.util.AssertError <code>x</code> is null or this equals <code>x</code> (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>x</code> is null or this equals <code>x</code> (debug only).
 	 */
 	public function concat(x:DLL<T>):DLL<T>
 	{
 		#if debug
-		D.assert(x != null, "x is null");
-		D.assert(x != this, "x equals this list");
+		assert(x != null, "x is null");
+		assert(x != this, "x equals this list");
 		#end
 		
 		var c = new DLL<T>();
@@ -857,19 +857,19 @@ class DLL<T> implements Collection<T>
 	 * @param C the class to instantiate for each element.
 	 * @param args passes additional constructor arguments to <code>C</code>.
 	 * @param n the number of elements to replace. If 0, <code>n</code> is set to <em>size()</em>.
-	 * @throws de.polygonal.core.util.AssertError <code>n</code> out of range (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>n</code> out of range (debug only).
 	 */
 	public function assign(C:Class<T>, args:Array<Dynamic> = null, n = 0):Void
 	{
 		#if debug
-		D.assert(n >= 0, "n >= 0");
+		assert(n >= 0, "n >= 0");
 		#end
 		
 		if (n > 0)
 		{
 			#if debug
 			if (maxSize != -1)
-				D.assert(n <= size(), 'n out of range ($n)');
+				assert(n <= size(), 'n out of range ($n)');
 			#end
 		}
 		else
@@ -888,19 +888,19 @@ class DLL<T> implements Collection<T>
 	 * Replaces up to <code>n</code> existing elements with the instance of <code>x</code>.
 	 * <o>n</o>
 	 * @param n the number of elements to replace. If 0, <code>n</code> is set to <em>size()</em>.
-	 * @throws de.polygonal.core.util.AssertError <code>n</code> out of range (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>n</code> out of range (debug only).
 	 */
 	public function fill(x:T, args:Array<Dynamic> = null, n = 0):DLL<T>
 	{
 		#if debug
-		D.assert(n >= 0, "n >= 0");
+		assert(n >= 0, "n >= 0");
 		#end
 		
 		if (n > 0)
 		{
 			#if debug
 			if (maxSize != -1)
-				D.assert(n <= size(), 'n out of range ($n)');
+				assert(n <= size(), 'n out of range ($n)');
 			#end
 		}
 		else
@@ -921,7 +921,7 @@ class DLL<T> implements Collection<T>
 	 * <o>n</o>
 	 * @param rval a list of random double values in the range between 0 (inclusive) to 1 (exclusive) defining the new positions of the elements.
 	 * If omitted, random values are generated on-the-fly by calling <em>Math.random()</em>.
-	 * @throws de.polygonal.core.util.AssertError insufficient random values (debug only).
+	 * @throws de.polygonal.ds.error.AssertError insufficient random values (debug only).
 	 */
 	public function shuffle(rval:DA<Float> = null):Void
 	{
@@ -948,7 +948,7 @@ class DLL<T> implements Collection<T>
 		else
 		{
 			#if debug
-			D.assert(rval.size() >= size(), "insufficient random values");
+			assert(rval.size() >= size(), "insufficient random values");
 			#end
 			
 			var j = 0;
@@ -1209,7 +1209,7 @@ class DLL<T> implements Collection<T>
 	 * @param assign if true, the <code>copier</code> parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.<br/>
 	 * If false, the <em>clone()</em> method is called on each element. <warn>In this case all elements have to implement <em>Cloneable</em>.</warn>
 	 * @param copier a custom function for copying elements. Replaces element.<em>clone()</em> if <code>assign</code> is false.
-	 * @throws de.polygonal.core.util.AssertError element is not of type <em>Cloneable</em> (debug only).
+	 * @throws de.polygonal.ds.error.AssertError element is not of type <em>Cloneable</em> (debug only).
 	 */
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{
@@ -1259,7 +1259,7 @@ class DLL<T> implements Collection<T>
 			var srcNode = head;
 			
 			#if debug
-			D.assert(Std.is(head.val, Cloneable), 'element is not of type Cloneable (${head.val})');
+			assert(Std.is(head.val, Cloneable), 'element is not of type Cloneable (${head.val})');
 			#end
 			
 			var c = cast(head.val, Cloneable<Dynamic>);
@@ -1279,7 +1279,7 @@ class DLL<T> implements Collection<T>
 				var srcNode0 = srcNode;
 				
 				#if debug
-				D.assert(Std.is(srcNode.val, Cloneable), 'element is not of type Cloneable (${srcNode.val})');
+				assert(Std.is(srcNode.val, Cloneable), 'element is not of type Cloneable (${srcNode.val})');
 				#end
 				
 				c = cast(srcNode.val, Cloneable<Dynamic>);
@@ -1292,7 +1292,7 @@ class DLL<T> implements Collection<T>
 			}
 			
 			#if debug
-			D.assert(Std.is(srcNode.val, Cloneable), 'element is not of type Cloneable (${srcNode.val})');
+			assert(Std.is(srcNode.val, Cloneable), 'element is not of type Cloneable (${srcNode.val})');
 			#end
 			
 			c = cast(srcNode.val, Cloneable<Dynamic>);
@@ -1376,7 +1376,7 @@ class DLL<T> implements Collection<T>
 					else
 					{
 						#if debug
-						D.assert(Std.is(p.val, Comparable), 'element is not of type Comparable (${p.val})');
+						assert(Std.is(p.val, Comparable), 'element is not of type Comparable (${p.val})');
 						#end
 						
 						if (cast(p.val, Comparable<Dynamic>).compare(q.val) >= 0)
@@ -1492,7 +1492,7 @@ class DLL<T> implements Collection<T>
 			var v = n.val;
 			
 			#if debug
-			D.assert(Std.is(p.val, Comparable), 'element is not of type Comparable (${p.val})');
+			assert(Std.is(p.val, Comparable), 'element is not of type Comparable (${p.val})');
 			#end
 			
 			if (cast(p.val, Comparable<Dynamic>).compare(v) < 0)
@@ -1502,7 +1502,7 @@ class DLL<T> implements Collection<T>
 				while (i.hasPrev())
 				{
 					#if debug
-					D.assert(Std.is(i.prev.val, Comparable), 'element is not of type Comparable (${i.prev.val})');
+					assert(Std.is(i.prev.val, Comparable), 'element is not of type Comparable (${i.prev.val})');
 					#end
 					
 					if (cast(i.prev.val, Comparable<Dynamic>).compare(v) < 0)
@@ -1613,8 +1613,8 @@ class DLL<T> implements Collection<T>
 			var n = _headPool;
 			
 			#if debug
-			D.assert(n.prev == null, "node.prev == null");
-			D.assert(_valid(n.next), "node.next != null");
+			assert(n.prev == null, "node.prev == null");
+			assert(_valid(n.next), "node.next != null");
 			#end
 			
 			_headPool = _headPool.next;
@@ -1635,8 +1635,8 @@ class DLL<T> implements Collection<T>
 			x.val = cast null;
 			
 			#if debug
-			D.assert(x.next == null, "x.next == null");
-			D.assert(x.prev == null, "x.prev == null");
+			assert(x.next == null, "x.next == null");
+			assert(x.prev == null, "x.prev == null");
 			#end
 			
 			_poolSize++;
@@ -1706,7 +1706,7 @@ class DLLIterator<T> implements de.polygonal.ds.Itr<T>
 	inline public function remove():Void
 	{
 		#if debug
-		D.assert(_hook != null, "call next() before removing an element");
+		assert(_hook != null, "call next() before removing an element");
 		#end
 		
 		_f.unlink(_hook);
@@ -1759,7 +1759,7 @@ class CircularDLLIterator<T> implements de.polygonal.ds.Itr<T>
 	inline public function remove():Void
 	{
 		#if debug
-		D.assert(_i > 0, "call next() before removing an element");
+		assert(_i > 0, "call next() before removing an element");
 		#end
 		_f.unlink(_hook);
 		_i--;

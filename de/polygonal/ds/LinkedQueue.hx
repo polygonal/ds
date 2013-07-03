@@ -30,7 +30,7 @@
 package de.polygonal.ds;
 
 import de.polygonal.core.fmt.Sprintf;
-import de.polygonal.core.util.Assert;
+import de.polygonal.ds.error.Assert.assert;
 
 private typedef LinkedQueueFriend<T> =
 {
@@ -89,7 +89,7 @@ class LinkedQueue<T> implements Queue<T>
 	 * Prevents frequent node allocation and thus increases performance at the cost of using more memory.
 	 * @param maxSize the maximum allowed size of this queue.<br/>
 	 * The default value of -1 indicates that there is no upper limit.
-	 * @throws de.polygonal.core.util.AssertError reserved size is greater than allowed size (debug only).
+	 * @throws de.polygonal.ds.error.AssertError reserved size is greater than allowed size (debug only).
 	 */
 	public function new(reservedSize = 0, maxSize = -1)
 	{
@@ -97,7 +97,7 @@ class LinkedQueue<T> implements Queue<T>
 		if (reservedSize > 0)
 		{
 			if (maxSize != -1)
-				D.assert(reservedSize <= maxSize, "reserved size is greater than allowed size");
+				assert(reservedSize <= maxSize, "reserved size is greater than allowed size");
 		}
 		this.maxSize = (maxSize == -1) ? M.INT32_MAX : maxSize;
 		#else
@@ -129,12 +129,12 @@ class LinkedQueue<T> implements Queue<T>
 	 * Returns the front element.<br/>
 	 * This is the "oldest" element.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.util.AssertError queue is empty (debug only).
+	 * @throws de.polygonal.ds.error.AssertError queue is empty (debug only).
 	 */
 	inline public function peek():T
 	{
 		#if debug
-		D.assert(_head != null, "queue is empty");
+		assert(_head != null, "queue is empty");
 		#end
 		return _head.val;
 	}
@@ -143,12 +143,12 @@ class LinkedQueue<T> implements Queue<T>
 	 * Returns the rear element.<br/>
 	 * This is the "newest" element.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.util.AssertError queue is empty (debug only).
+	 * @throws de.polygonal.ds.error.AssertError queue is empty (debug only).
 	 */
 	inline public function back():T
 	{
 		#if debug
-		D.assert(_tail != null, "queue is empty");
+		assert(_tail != null, "queue is empty");
 		#end
 		return _tail.val;
 	}
@@ -156,13 +156,13 @@ class LinkedQueue<T> implements Queue<T>
 	/**
 	 * Enqueues the element <code>x</code>.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.util.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
  	 */
 	inline public function enqueue(x:T):Void
 	{
 		#if debug
 		if (maxSize != -1)
-			D.assert(size() < maxSize, 'size equals max size ($maxSize)');
+			assert(size() < maxSize, 'size equals max size ($maxSize)');
 		#end
 		
 		_size++;
@@ -183,12 +183,12 @@ class LinkedQueue<T> implements Queue<T>
 	/**
 	 * Dequeues and returns the front element.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.util.AssertError queue is empty (debug only).
+	 * @throws de.polygonal.ds.error.AssertError queue is empty (debug only).
 	 */
 	inline public function dequeue():T
 	{
 		#if debug
-		D.assert(_head != null, "queue is empty");
+		assert(_head != null, "queue is empty");
 		#end
 		
 		_size--;
@@ -211,19 +211,19 @@ class LinkedQueue<T> implements Queue<T>
 	 * @param C the class to instantiate for each element.
 	 * @param args passes additional constructor arguments to the class <code>C</code>.
 	 * @param n the number of elements to replace. If 0, <code>n</code> is set to <em>size()</em>.
-	 * @throws de.polygonal.core.util.AssertError <code>n</code> out of range (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>n</code> out of range (debug only).
 	 */
 	public function assign(C:Class<T>, args:Array<Dynamic> = null, n = 0):Void
 	{
 		#if debug
-		D.assert(n >= 0, "n >= 0");
+		assert(n >= 0, "n >= 0");
 		#end
 		
 		if (n > 0)
 		{
 			#if debug
 			if (maxSize != -1)
-				D.assert(n <= maxSize, 'n out of range ($n)');
+				assert(n <= maxSize, 'n out of range ($n)');
 			#end
 		}
 		else
@@ -242,19 +242,19 @@ class LinkedQueue<T> implements Queue<T>
 	 * Replaces up to <code>n</code> existing elements with the instance of <code>x</code>.
 	 * <o>n</o>
 	 * @param n the number of elements to replace. If 0, <code>n</code> is set to <em>size()</em>.
-	 * @throws de.polygonal.core.util.AssertError <code>n</code> out of range (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>n</code> out of range (debug only).
 	 */
 	public function fill(x:T, n = 0):LinkedQueue<T>
 	{
 		#if debug
-		D.assert(n >= 0, "n >= 0");
+		assert(n >= 0, "n >= 0");
 		#end
 		
 		if (n > 0)
 		{
 			#if debug
 			if (maxSize != -1)
-				D.assert(n <= maxSize, 'n out of range ($n)');
+				assert(n <= maxSize, 'n out of range ($n)');
 			#end
 		}
 		else
@@ -275,7 +275,7 @@ class LinkedQueue<T> implements Queue<T>
 	 * <o>n</o>
 	 * @param rval a list of random double values in the range between 0 (inclusive) to 1 (exclusive) defining the new positions of the elements.
 	 * If omitted, random values are generated on-the-fly by calling <em>Math.random()</em>.
-	 * @throws de.polygonal.core.util.AssertError insufficient random values (debug only).
+	 * @throws de.polygonal.ds.error.AssertError insufficient random values (debug only).
 	 */
 	public function shuffle(rval:DA<Float> = null):Void
 	{
@@ -302,7 +302,7 @@ class LinkedQueue<T> implements Queue<T>
 		else
 		{
 			#if debug
-			D.assert(rval.size() >= size(), "insufficient random values");
+			assert(rval.size() >= size(), "insufficient random values");
 			#end
 			
 			var j = 0;
@@ -567,7 +567,7 @@ class LinkedQueue<T> implements Queue<T>
 	 * @param assign if true, the <code>copier</code> parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.<br/>
 	 * If false, the <em>clone()</em> method is called on each element. <warn>In this case all elements have to implement <em>Cloneable</em>.</warn>
 	 * @param copier a custom function for copying elements. Replaces element.<em>clone()</em> if <code>assign</code> is false.
-	 * @throws de.polygonal.core.util.AssertError element is not of type <em>Cloneable</em> (debug only).
+	 * @throws de.polygonal.ds.error.AssertError element is not of type <em>Cloneable</em> (debug only).
 	 */
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{
@@ -601,7 +601,7 @@ class LinkedQueue<T> implements Queue<T>
 			if (node != null)
 			{
 				#if debug
-				D.assert(Std.is(node.val, Cloneable), 'element is not of type Cloneable (${node.val})');
+				assert(Std.is(node.val, Cloneable), 'element is not of type Cloneable (${node.val})');
 				#end
 				var c = cast(node.val, Cloneable<Dynamic>);
 				copy._head = copy._tail = new LinkedQueueNode<T>(c.clone());
@@ -614,7 +614,7 @@ class LinkedQueue<T> implements Queue<T>
 				while (node != null)
 				{
 					#if debug
-					D.assert(Std.is(node.val, Cloneable), 'element is not of type Cloneable (${node.val})');
+					assert(Std.is(node.val, Cloneable), 'element is not of type Cloneable (${node.val})');
 					#end
 					var c = cast(node.val, Cloneable<Dynamic>);
 					var t = new LinkedQueueNode<T>(c.clone());
@@ -760,7 +760,7 @@ class LinkedQueueIterator<T> implements de.polygonal.ds.Itr<T>
 	inline public function remove():Void
 	{
 		#if debug
-		D.assert(_hook != null, "call next() before removing an element");
+		assert(_hook != null, "call next() before removing an element");
 		#end
 		
 		#if flash

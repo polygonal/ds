@@ -29,7 +29,7 @@
  */
 package de.polygonal.ds;
 
-import de.polygonal.core.util.Assert;
+import de.polygonal.ds.error.Assert.assert;
 
 /**
  * <p>A graph node manages a doubly linked list of <em>GraphArc</em> objects.</p>
@@ -126,12 +126,12 @@ class GraphNode<T> implements Hashable
 	/**
 	 * Returns true if this node is connected to the <code>target</code> node.
 	 * <o>n</o>
-	 * @throws de.polygonal.core.util.AssertError <code>target</code> is null (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>target</code> is null (debug only).
 	 */
 	inline public function isConnected(target:GraphNode<T>):Bool
 	{
 		#if debug
-		D.assert(target != null, "target is null");
+		assert(target != null, "target is null");
 		#end
 		
 		return getArc(target) != null;
@@ -140,12 +140,12 @@ class GraphNode<T> implements Hashable
 	/**
 	 * Returns true if this node and the <code>target</code> node are pointing to each other.
 	 * <o>n</o>
-	 * @throws de.polygonal.core.util.AssertError <code>target</code> is null (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>target</code> is null (debug only).
 	 */
 	inline public function isMutuallyConnected(target:GraphNode<T>):Bool
 	{
 		#if debug
-		D.assert(target != null, "target is null");
+		assert(target != null, "target is null");
 		#end
 		
 		return getArc(target) != null && target.getArc(this) != null;
@@ -154,14 +154,14 @@ class GraphNode<T> implements Hashable
 	/**
 	 * Finds the arc that is pointing to the <code>target</code> node or returns null if such an arc does not exist.
 	 * <o>n</o>
-	 * @throws de.polygonal.core.util.AssertError <code>target</code> is null (debug only).
-	 * @throws de.polygonal.core.util.AssertError <code>target</code> equals this (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>target</code> is null (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>target</code> equals this (debug only).
 	 */
 	inline public function getArc(target:GraphNode<T>):GraphArc<T>
 	{
 		#if debug
-		D.assert(target != null, "target is null");
-		D.assert(target != this, "target equals this node");
+		assert(target != null, "target is null");
+		assert(target != this, "target equals this node");
 		#end
 		
 		var found = false;
@@ -186,13 +186,13 @@ class GraphNode<T> implements Hashable
 	 * Adds an arc pointing from this node to the specified <code>target</code> node.
 	 * <o>1</o>
 	 * @param cost defines how "hard" it is to get from one node to the other. Default is 1.0.
-	 * @throws de.polygonal.core.util.AssertError <code>target</code> is null or arc to <code>target</code> already exists (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>target</code> is null or arc to <code>target</code> already exists (debug only).
 	 */
 	public function addArc(target:GraphNode<T>, cost = 1.):Void
 	{
 		#if debug
-		D.assert(target != this, "target is null");
-		D.assert(getArc(target) == null, "arc to target already exists");
+		assert(target != this, "target is null");
+		assert(getArc(target) == null, "arc to target already exists");
 		#end
 		
 		var arc =
@@ -209,13 +209,13 @@ class GraphNode<T> implements Hashable
 	 * Removes the arc that is pointing to the specified <code>target</code> node.
 	 * <o>n</o>
 	 * @return true if the arc is successfully removed, false if such an arc does not exist.
-	 * @throws de.polygonal.core.util.AssertError <code>target</code> (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>target</code> (debug only).
 	 */
 	public function removeArc(target:GraphNode<T>):Bool
 	{
 		#if debug
-		D.assert(target != this, "target is null");
-		D.assert(getArc(target) != null, "arc to target does not exist");
+		assert(target != this, "target is null");
+		assert(getArc(target) != null, "arc to target does not exist");
 		#end
 		
 		var arc = getArc(target);

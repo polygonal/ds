@@ -30,7 +30,7 @@
 package de.polygonal.ds.mem;
 
 import de.polygonal.core.fmt.Sprintf;
-import de.polygonal.core.util.Assert;
+import de.polygonal.ds.error.Assert.assert;
 
 #if !alchemy
 import de.polygonal.ds.ArrayUtil;
@@ -47,22 +47,22 @@ class ShortMemory extends MemoryAccess
 	 * <warn>The bytes are written in little endian format.</warn>
 	 * @param min index pointing to the first short.
 	 * @param max index pointing to the last short.
-	 * @throws de.polygonal.core.util.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
+	 * @throws de.polygonal.ds.error.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
 	 */
 	#if (flash9 || cpp)
 	public static function toByteArray(input:ShortMemory, min = -1, max = -1):flash.utils.ByteArray
 	{
 		#if debug
-		D.assert(input != null, "invalid input");
+		assert(input != null, "invalid input");
 		#end
 		
 		if (min == -1) min = 0;
 		if (max == -1) max = input.size;
 		
 		#if debug
-		D.assert(min >= 0, 'min out of range ($min)');
-		D.assert(max <= input.size, 'max out of range ($max)');
-		D.assert(max - min > 0, 'min equals max ($min)');
+		assert(min >= 0, 'min out of range ($min)');
+		assert(max <= input.size, 'max out of range ($max)');
+		assert(max - min > 0, 'min equals max ($min)');
 		#end
 		
 		var t = min;
@@ -90,21 +90,21 @@ class ShortMemory extends MemoryAccess
 	 * If no range is specified, all <code>input</code> bytes are copied.
 	 * @param min index pointing to the byte storing the first short.
 	 * @param min index pointing to the byte storing the last short.
-	 * @throws de.polygonal.core.util.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
+	 * @throws de.polygonal.ds.error.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
 	 */
 	#if (flash9 || cpp)
 	public static function ofByteArray(input:flash.utils.ByteArray, min = -1, max = -1):ShortMemory
 	{
 		#if debug
-		D.assert(input != null, "invalid input");
+		assert(input != null, "invalid input");
 		#end
 		
 		if (min == -1) min = 0;
 		if (max == -1) max = input.length;
 		
 		#if debug
-		D.assert(min >= 0, "min >= 0");
-		D.assert(max <= Std.int(input.length), "max <= input.length");
+		assert(min >= 0, "min >= 0");
+		assert(max <= Std.int(input.length), "max <= input.length");
 		#end
 		
 		input.position = min;
@@ -122,21 +122,21 @@ class ShortMemory extends MemoryAccess
 	 * <warn>The bytes are written in little endian format.</warn>
 	 * @param min index pointing to the first short.
 	 * @param max index pointing to the last short.
-	 * @throws de.polygonal.core.util.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
+	 * @throws de.polygonal.ds.error.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
 	 */
 	public static function toBytesData(input:ShortMemory, min = -1, max = -1):haxe.io.BytesData
 	{
 		#if debug
-		D.assert(input != null, "invalid input");
+		assert(input != null, "invalid input");
 		#end
 		
 		if (min == -1) min = 0;
 		if (max == -1) max = input.size;
 		
 		#if debug
-		D.assert(min >= 0, 'min out of range ($min)');
-		D.assert(max <= input.size, 'max out of range ($max)');
-		D.assert(max - min > 0, 'min equals max ($min)');
+		assert(min >= 0, 'min out of range ($min)');
+		assert(max <= input.size, 'max out of range ($max)');
+		assert(max - min > 0, 'min equals max ($min)');
 		#end
 		
 		var output = new haxe.io.BytesOutput();
@@ -150,12 +150,12 @@ class ShortMemory extends MemoryAccess
 	 * If no range is specified, all <code>input</code> bytes are copied.
 	 * @param min index pointing to the byte storing the first short.
 	 * @param min index pointing to the byte storing the last short.
-	 * @throws de.polygonal.core.util.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
+	 * @throws de.polygonal.ds.error.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
 	 */
 	public static function ofBytesData(input:haxe.io.BytesData, min = -1, max = -1):ShortMemory
 	{
 		#if debug
-		D.assert(input != null, "invalid input");
+		assert(input != null, "invalid input");
 		#end
 		
 		if (min == -1) min = 0;
@@ -167,11 +167,11 @@ class ShortMemory extends MemoryAccess
 		#end
 		
 		#if debug
-		D.assert(min >= 0, "min >= 0");
+		assert(min >= 0, "min >= 0");
 		#if neko
-		D.assert(max <= neko.NativeString.length(input), "max <= input.length");
+		assert(max <= neko.NativeString.length(input), "max <= input.length");
 		#else
-		D.assert(max <= Std.int(input.length), "max <= input.length");
+		assert(max <= Std.int(input.length), "max <= input.length");
 		#end
 		#end
 		
@@ -189,21 +189,21 @@ class ShortMemory extends MemoryAccess
 	 * If no range is specified, all <code>input</code> bytes are copied.
 	 * @param min index pointing to the first short.
 	 * @param max index pointing to the last short.
-	 * @throws de.polygonal.core.util.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
+	 * @throws de.polygonal.ds.error.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
 	 */
 	public static function toArray(input:ShortMemory, min = -1, max = -1):Array<Int>
 	{
 		#if debug
-		D.assert(input != null, "invalid input");
+		assert(input != null, "invalid input");
 		#end
 		
 		if (min == -1) min = 0;
 		if (max == -1) max = input.size;
 		
 		#if debug
-		D.assert(min >= 0, 'min out of range ($min)');
-		D.assert(max <= input.size, 'max out of range ($max)');
-		D.assert(max - min > 0, 'min equals max ($min)');
+		assert(min >= 0, 'min out of range ($min)');
+		assert(max <= input.size, 'max out of range ($max)');
+		assert(max - min > 0, 'min equals max ($min)');
 		#end
 		
 		var output = new Array();
@@ -228,20 +228,20 @@ class ShortMemory extends MemoryAccess
 	 * If no range is specified, all <code>input</code> values are copied.
 	 * @param min index pointing to the first short.
 	 * @param max index pointing to the last short.
-	 * @throws de.polygonal.core.util.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
+	 * @throws de.polygonal.ds.error.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
 	 */
 	public static function ofArray(input:Array<Int>, min = -1, max = -1):ShortMemory
 	{
 		#if debug
-		D.assert(input != null, "invalid input");
+		assert(input != null, "invalid input");
 		#end
 		
 		if (min == -1) min = 0;
 		if (max == -1) max = input.length;
 		
 		#if debug
-		D.assert(min >= 0, "min >= 0");
-		D.assert(max <= Std.int(input.length), "max <= input.length");
+		assert(min >= 0, "min >= 0");
+		assert(max <= Std.int(input.length), "max <= input.length");
 		#end
 		
 		var output = new ShortMemory(max - min, "ofArray");
@@ -257,27 +257,27 @@ class ShortMemory extends MemoryAccess
 	 * @param min index pointing to the first short.
 	 * @param max index pointing to the last short.
 	 * @param output the <code>Vector</code> object to write into. If null, a new Vector object is created on-the-fly.
-	 * @throws de.polygonal.core.util.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
+	 * @throws de.polygonal.ds.error.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
 	 */
 	public static function toVector(input:ShortMemory, min = -1, max = -1, output:flash.Vector<Int> = null):flash.Vector<Int>
 	{
 		#if debug
-		D.assert(input != null, "invalid input");
+		assert(input != null, "invalid input");
 		#end
 		
 		if (min == -1) min = 0;
 		if (max == -1) max = input.size;
 		
 		#if debug
-		D.assert(min >= 0, 'min out of range ($min)');
-		D.assert(max <= input.size, 'max out of range ($max)');
-		D.assert(max - min > 0, 'min equals max ($min)');
+		assert(min >= 0, 'min out of range ($min)');
+		assert(max <= input.size, 'max out of range ($max)');
+		assert(max - min > 0, 'min equals max ($min)');
 		#end
 		
 		#if debug
 		if (output != null)
 			if (output.fixed)
-				D.assert(Std.int(output.length) >= max - min, "output vector is too small");
+				assert(Std.int(output.length) >= max - min, "output vector is too small");
 		#end
 		
 		if (output == null) output = new flash.Vector<Int>(max - min, true);
@@ -303,21 +303,21 @@ class ShortMemory extends MemoryAccess
 	 * If no range is specified, all <code>input</code> bytes are copied.
 	 * @param min index pointing to the first short.
 	 * @param max index pointing to the last short.
-	 * @throws de.polygonal.core.util.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
+	 * @throws de.polygonal.ds.error.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
 	 */
 	public static function toUnsignedVector(input:ShortMemory, min = -1, max = -1):flash.Vector<UInt>
 	{
 		#if debug
-		D.assert(input != null, "invalid input");
+		assert(input != null, "invalid input");
 		#end
 		
 		if (min == -1) min = 0;
 		if (max == -1) max = input.size;
 		
 		#if debug
-		D.assert(min >= 0, 'min out of range ($min)');
-		D.assert(max <= input.size, 'max out of range ($max)');
-		D.assert(max - min > 0, 'min equals max ($min)');
+		assert(min >= 0, 'min out of range ($min)');
+		assert(max <= input.size, 'max out of range ($max)');
+		assert(max - min > 0, 'min equals max ($min)');
 		#end
 		
 		var output = new flash.Vector<UInt>(max - min, true);
@@ -343,20 +343,20 @@ class ShortMemory extends MemoryAccess
 	 * If no range is specified, all <code>input</code> values are copied.
 	 * @param min index pointing to the first short.
 	 * @param max index pointing to the last short.
-	 * @throws de.polygonal.core.util.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
+	 * @throws de.polygonal.ds.error.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
 	 */
 	public static function ofVector(input:flash.Vector<Int>, min = -1, max = -1):ShortMemory
 	{
 		#if debug
-		D.assert(input != null, "invalid input");
+		assert(input != null, "invalid input");
 		#end
 		
 		if (min == -1) min = 0;
 		if (max == -1) max = input.length;
 		
 		#if debug
-		D.assert(min >= 0, "min >= 0");
-		D.assert(max <= Std.int(input.length), "max <= input.length");
+		assert(min >= 0, "min >= 0");
+		assert(max <= Std.int(input.length), "max <= input.length");
 		#end
 		
 		var output = new ShortMemory(max - min, "ofVector");
@@ -452,13 +452,13 @@ class ShortMemory extends MemoryAccess
 	
 	/**
 	 * Adjusts the size of this object so it's capable of storing <code>newSize</code> shorts.
-	 * @throws de.polygonal.core.util.AssertError invalid size (debug only).
-	 * @throws de.polygonal.core.util.AssertError memory was already deallocated (debug only).
+	 * @throws de.polygonal.ds.error.AssertError invalid size (debug only).
+	 * @throws de.polygonal.ds.error.AssertError memory was already deallocated (debug only).
 	 */
 	override public function resize(newSize:Int):Void
 	{
 		#if debug
-		D.assert(newSize >= 0, 'invalid size ($newSize)');
+		assert(newSize >= 0, 'invalid size ($newSize)');
 		#end
 		
 		#if alchemy
@@ -479,8 +479,8 @@ class ShortMemory extends MemoryAccess
 	
 	/**
 	 * Returns the short at index <code>i</code>.
-	 * @throws de.polygonal.core.util.AssertError index out of range (debug only).
-	 * @throws de.polygonal.core.util.AssertError memory deallocated (debug only).
+	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
+	 * @throws de.polygonal.ds.error.AssertError memory deallocated (debug only).
 	 */
 	inline public function get(i:Int):Int
 	{
@@ -493,8 +493,8 @@ class ShortMemory extends MemoryAccess
 	
 	/**
 	 * Replaces the short at the index <code>i</code> with the short <code>x</code>.
-	 * @throws de.polygonal.core.util.AssertError index out of range (debug only).
-	 * @throws de.polygonal.core.util.AssertError memory deallocated (debug only).
+	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
+	 * @throws de.polygonal.ds.error.AssertError memory deallocated (debug only).
 	 */
 	inline public function set(i:Int, x:Int):Void
 	{
@@ -507,13 +507,13 @@ class ShortMemory extends MemoryAccess
 	
 	/**
 	 * Swaps the short at index <code>i</code> with the short at index <code>j</code>.
-	 * @throws de.polygonal.core.util.AssertError index out of range (debug only).
-	 * @throws de.polygonal.core.util.AssertError <code>i</code> equals <code>j</code> (debug only).
+	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>i</code> equals <code>j</code> (debug only).
 	 */
 	inline public function swp(i:Int, j:Int):Void
 	{
 		#if debug
-		D.assert(i != j, 'i equals j ($i)');
+		assert(i != j, 'i equals j ($i)');
 		#end
 		
 		#if alchemy
@@ -529,14 +529,14 @@ class ShortMemory extends MemoryAccess
 	
 	/**
 	 * Returns the memory byte offset of the first byte storing the short at index <code>i</code>.
-	 * @throws de.polygonal.core.util.AssertError index out of range (debug only).
-	 * @throws de.polygonal.core.util.AssertError memory deallocated (debug only).
+	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
+	 * @throws de.polygonal.ds.error.AssertError memory deallocated (debug only).
 	 */
 	inline public function getAddr(i:Int):Int
 	{
 		#if debug
-		D.assert(i >= 0 && i < size, 'segfault, index $i');
-		D.assert(_memory != null, "memory deallocated");
+		assert(i >= 0 && i < size, 'segfault, index $i');
+		assert(_memory != null, "memory deallocated");
 		#end
 		
 		#if alchemy

@@ -29,7 +29,7 @@
  */
 package de.polygonal.ds;
 
-import de.polygonal.core.util.Assert;
+import de.polygonal.ds.error.Assert.assert;
 
 /**
  * <p>A binary tree.</p>
@@ -310,7 +310,7 @@ class BinaryTreeNode<T> implements Collection<T>
 		else
 		{
 			#if debug
-			D.assert(_busy == false, "recursive call to iterative postorder");
+			assert(_busy == false, "recursive call to iterative postorder");
 			_busy = true;
 			#end
 			
@@ -777,7 +777,7 @@ class BinaryTreeNode<T> implements Collection<T>
 	 * @param assign if true, the <code>copier</code> parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.<br/>
 	 * If false, the <em>clone()</em> method is called on each element. <warn>In this case all elements have to implement <em>Cloneable</em>.</warn>
 	 * @param copier a custom function for copying elements. Replaces element.<em>clone()</em> if <code>assign</code> is false.
-	 * @throws de.polygonal.core.util.AssertError element is not of type <em>Cloneable</em> (debug only).
+	 * @throws de.polygonal.ds.error.AssertError element is not of type <em>Cloneable</em> (debug only).
 	 */
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{
@@ -818,7 +818,7 @@ class BinaryTreeNode<T> implements Collection<T>
 				if (n.hasR())
 				{
 					#if debug
-					D.assert(Std.is(n.r.val, Cloneable), 'element is not of type Cloneable (${n.r.val})');
+					assert(Std.is(n.r.val, Cloneable), 'element is not of type Cloneable (${n.r.val})');
 					#end
 					
 					t = cast n.r.val;
@@ -829,7 +829,7 @@ class BinaryTreeNode<T> implements Collection<T>
 				if (n.hasL())
 				{
 					#if debug
-					D.assert(Std.is(n.l.val, Cloneable), 'element is not of type Cloneable (${n.l.val})');
+					assert(Std.is(n.l.val, Cloneable), 'element is not of type Cloneable (${n.l.val})');
 					#end
 					
 					t = cast n.l.val;

@@ -42,7 +42,7 @@ import flash.Vector;
 using de.polygonal.ds.ArrayUtil;
 #end
 
-import de.polygonal.core.util.Assert;
+import de.polygonal.ds.error.Assert.assert;
 
 private typedef IntHashSetFriend =
 {
@@ -147,14 +147,14 @@ class IntHashSet implements Set<Int>
 	 * @param maxSize the maximum allowed size of this hash set.
 	 * The default value of -1 indicates that there is no upper limit.
 	 * 
-	 * @throws de.polygonal.core.util.AssertError <code>slotCount</code> is not a power of two (debug only).
-	 * @throws de.polygonal.core.util.AssertError <code>capacity</code> is not a power of two (debug only).
-	 * @throws de.polygonal.core.util.AssertError <code>capacity</code> is &lt; 2 (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>slotCount</code> is not a power of two (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>capacity</code> is not a power of two (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>capacity</code> is &lt; 2 (debug only).
 	 */
 	public function new(slotCount:Int, capacity = -1, isResizable = true, maxSize = -1)
 	{
 		#if debug
-		D.assert(M.isPow2(slotCount), "slotCount is not a power of 2");
+		assert(M.isPow2(slotCount), "slotCount is not a power of 2");
 		#end
 		
 		_isResizable = isResizable;
@@ -164,8 +164,8 @@ class IntHashSet implements Set<Int>
 		else
 		{
 			#if debug
-			D.assert(capacity >= 2, "minimum capacity is 2");
-			D.assert(M.isPow2(slotCount), "capacity is not a power of 2");
+			assert(capacity >= 2, "minimum capacity is 2");
+			assert(M.isPow2(slotCount), "capacity is not a power of 2");
 			#end
 		}
 		
@@ -271,12 +271,12 @@ class IntHashSet implements Set<Int>
 	 * Returns true if this set contains the element <code>x</code>.<br/>
 	 * Uses move-to-front-on-access which reduces access time when similar elements are frequently queried.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.util.AssertError value 0x80000000 is reserved (debug only).
+	 * @throws de.polygonal.ds.error.AssertError value 0x80000000 is reserved (debug only).
 	 */
 	inline public function hasFront(x:Int):Bool
 	{
 		#if debug
-		D.assert(x != VAL_ABSENT, "value 0x80000000 is reserved");
+		assert(x != VAL_ABSENT, "value 0x80000000 is reserved");
 		#end
 		
 		var b = _hashCode(x);
@@ -339,12 +339,12 @@ class IntHashSet implements Set<Int>
 	 * Redistributes all elements over <code>slotCount</code>.<br/>
 	 * This is an expensive operations as the set is rebuild from scratch.
 	 * <o>n</o>
-	 * @throws de.polygonal.core.util.AssertError <code>slotCount</code> is not a power of two (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>slotCount</code> is not a power of two (debug only).
 	 */
 	public function rehash(slotCount:Int):Void
 	{
 		#if debug
-		D.assert(M.isPow2(slotCount), "slotCount is not a power of 2");
+		assert(M.isPow2(slotCount), "slotCount is not a power of 2");
 		#end
 		
 		if (slotCount == getSlotCount()) return;
@@ -419,12 +419,12 @@ class IntHashSet implements Set<Int>
 	/**
 	 * Returns true if this set contains the element <code>x</code>.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.util.AssertError value 0x80000000 is reserved (debug only).
+	 * @throws de.polygonal.ds.error.AssertError value 0x80000000 is reserved (debug only).
 	 */
 	inline public function has(x:Int):Bool
 	{
 		#if debug
-		D.assert(x != VAL_ABSENT, "value 0x80000000 is reserved");
+		assert(x != VAL_ABSENT, "value 0x80000000 is reserved");
 		#end
 		
 		var i = __getHash(_hashCode(x));
@@ -476,15 +476,15 @@ class IntHashSet implements Set<Int>
 	 * Adds the element <code>x</code> to this set if possible.
 	 * <o>1</o>
 	 * @return true if <code>x</code> was added to this set, false if <code>x</code> already exists.
-	 * @throws de.polygonal.core.util.AssertError value 0x80000000 is reserved (debug only).
-	 * @throws de.polygonal.core.util.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
-	 * @throws de.polygonal.core.util.AssertError hash set is full (if not resizable).
+	 * @throws de.polygonal.ds.error.AssertError value 0x80000000 is reserved (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
+	 * @throws de.polygonal.ds.error.AssertError hash set is full (if not resizable).
 	 */
 	inline public function set(x:Int):Bool
 	{
 		#if debug
-		D.assert(x != VAL_ABSENT, "value 0x80000000 is reserved");
-		D.assert(size() < maxSize, 'size equals max size ($maxSize)');
+		assert(x != VAL_ABSENT, "value 0x80000000 is reserved");
+		assert(size() < maxSize, 'size equals max size ($maxSize)');
 		#end
 		
 		var b = _hashCode(x);
@@ -501,7 +501,7 @@ class IntHashSet implements Set<Int>
 			{
 				#if debug
 				if (!_isResizable)
-					D.assert(false, 'hash set is full ($_capacity)');
+					assert(false, 'hash set is full ($_capacity)');
 				#end
 				
 				_expand();

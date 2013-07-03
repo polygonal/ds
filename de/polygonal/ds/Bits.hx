@@ -29,7 +29,7 @@
  */
 package de.polygonal.ds;
 
-import de.polygonal.core.util.Assert;
+import de.polygonal.ds.error.Assert.assert;
 
 #if macro
 import haxe.macro.Expr;
@@ -220,12 +220,12 @@ class Bits
 	
 	/**
 	 * Returns true if the bit in <code>x</code> at index <code>i</code> (LSB 0) is 1.
-	 * @throws de.polygonal.core.util.AssertError index out of range (debug only).
+	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
 	 */
 	inline public static function hasBitAt(x:Int, i:Int):Bool
 	{
 		#if debug
-		D.assert(i >= 0 && i < 32, 'index out of range ($i)');
+		assert(i >= 0 && i < 32, 'index out of range ($i)');
 		#end
 		
 		return (x & (1 << i)) != 0;
@@ -233,12 +233,12 @@ class Bits
 	
 	/**
 	 * Sets the bit in <code>x</code> at index <code>i</code> (LSB 0) to 1.
-	 * @throws de.polygonal.core.util.AssertError index out of range (debug only).
+	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
 	 */
 	inline public static function setBitAt(x:Int, i:Int):Int
 	{
 		#if debug
-		D.assert(i >= 0 && i < 32, 'index out of range ($i)');
+		assert(i >= 0 && i < 32, 'index out of range ($i)');
 		#end
 		
 		return x | (1 << i);
@@ -246,12 +246,12 @@ class Bits
 	
 	/**
 	 * Sets the bit in <code>x</code> at index <code>i</code> (LSB 0) to 0.
-	 * @throws de.polygonal.core.util.AssertError index out of range (debug only).
+	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
 	 */
 	inline public static function clrBitAt(x:Int, i:Int):Int
 	{
 		#if debug
-		D.assert(i >= 0 && i < 32, 'index out of range ($i)');
+		assert(i >= 0 && i < 32, 'index out of range ($i)');
 		#end
 		
 		return x & ~(1 << i);
@@ -259,12 +259,12 @@ class Bits
 	
 	/**
 	 * Flips the bit in <code>x</code> at index <code>i</code> (LSB 0).
-	 * @throws de.polygonal.core.util.AssertError index out of range (debug only).
+	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
 	 */
 	inline public static function invBitAt(x:Int, i:Int):Int
 	{
 		#if debug
-		D.assert(i >= 0 && i < 32, 'index out of range ($i)');
+		assert(i >= 0 && i < 32, 'index out of range ($i)');
 		#end
 		
 		return x ^ (1 << i);
@@ -272,12 +272,12 @@ class Bits
 	
 	/**
 	 * Sets all bits in <code>x</code> in the range &#091;0, 31&#093;.
-	 * @throws de.polygonal.core.util.AssertError invalid range (debug only).
+	 * @throws de.polygonal.ds.error.AssertError invalid range (debug only).
 	 */
 	inline public static function setBitsRange(x:Int, min:Int, max:Int):Int
 	{
 		#if debug
-		D.assert
+		assert
 		(
 			min < max  &&
 			min != max &&
@@ -297,7 +297,7 @@ class Bits
 	inline public static function mask(n:Int):Int
 	{
 		#if debug
-		D.assert(n >= 1 && n <= 32, "n >= 1 && n <= 32");
+		assert(n >= 1 && n <= 32, "n >= 1 && n <= 32");
 		#end
 		
 		return (1 << n) - 1;
@@ -437,8 +437,8 @@ class Bits
 	inline public static function packI16(lo:Int, hi:Int):Int
 	{
 		#if debug
-		D.assert(lo >= M.INT16_MIN && lo <= M.INT16_MAX, "lo overflow");
-		D.assert(hi >= M.INT16_MIN && hi <= M.INT16_MAX, "hi overflow");
+		assert(lo >= M.INT16_MIN && lo <= M.INT16_MAX, "lo overflow");
+		assert(hi >= M.INT16_MIN && hi <= M.INT16_MAX, "hi overflow");
 		#end
 		
 		return ((hi + 0x8000) << 16) | (lo + 0x8000);
@@ -452,8 +452,8 @@ class Bits
 	inline public static function packUI16(lo:Int, hi:Int):Int
 	{
 		#if debug
-		D.assert(lo >= 0 && lo <= M.UINT16_MAX, "lo overflow");
-		D.assert(hi >= 0 && hi <= M.UINT16_MAX, "hi overflow");
+		assert(lo >= 0 && lo <= M.UINT16_MAX, "lo overflow");
+		assert(hi >= 0 && hi <= M.UINT16_MAX, "hi overflow");
 		#end
 		
 		return (hi << 16) | lo;

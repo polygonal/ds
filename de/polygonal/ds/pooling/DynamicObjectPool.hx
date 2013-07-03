@@ -29,7 +29,7 @@
  */
 package de.polygonal.ds.pooling;
 
-import de.polygonal.core.util.Assert;
+import de.polygonal.ds.error.Assert.assert;
 import de.polygonal.ds.HashKey;
 import de.polygonal.ds.Itr;
 
@@ -139,7 +139,7 @@ class DynamicObjectPool<T>
 	 * @param factory allocates objects by using a <em>Factory</em> object (calling <code>factory</code>.<em>create()</em>).
 	 * @param capacity the maximum number of objects that are stored in this pool.<br/>
 	 * The default value of 0x7fffffff indicates that the size is unbound.
-	 * @throws de.polygonal.core.util.AssertError invalid arguments.
+	 * @throws de.polygonal.ds.error.AssertError invalid arguments.
 	 */
 	public function new(C:Class<T> = null, fabricate:Void->T = null, factory:Factory<T> = null, capacity = M.INT32_MAX)
 	{
@@ -161,7 +161,7 @@ class DynamicObjectPool<T>
 		if (factory   != null) _allocType |= Bits.BIT_03;
 		
 		#if debug
-		D.assert(Bits.ones(_allocType) == 1, "invalid arguments");
+		assert(Bits.ones(_allocType) == 1, "invalid arguments");
 		#end
 		
 		key = HashKey.next();
@@ -249,12 +249,12 @@ class DynamicObjectPool<T>
 	/**
 	 * Returns the object <code>x</code> to the pool.<br/>
 	 * Objects are pushed onto a stack, so <em>get()</em> returns <code>x</code> if called immediately after <em>put()</em>.<br/>
-	 * @throws de.polygonal.core.util.AssertError <code>x</code> was returned twice to the pool (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>x</code> was returned twice to the pool (debug only).
 	 */
 	inline public function put(x:T):Void
 	{
 		#if debug
-		D.assert(!_set.has(x), 'object $x was returned twice to the pool');
+		assert(!_set.has(x), 'object $x was returned twice to the pool');
 		_set.set(x);
 		#end
 		

@@ -29,7 +29,7 @@
  */
 package de.polygonal.ds;
 
-import de.polygonal.core.util.Assert;
+import de.polygonal.ds.error.Assert.assert;
 
 /**
  * <p>A tree structure.</p>
@@ -269,16 +269,16 @@ class TreeNode<T> implements Collection<T>
 	
 	/**
 	 * Swaps the child <code>a</code> with child <code>b</code> by swapping their values.
-	 * @throws de.polygonal.core.util.AssertError <code>a</code> and <code>b</code> are not siblings (debug only).
-	 * @throws de.polygonal.core.util.AssertError <code>a</code> equals <code>b</code> (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>a</code> and <code>b</code> are not siblings (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>a</code> equals <code>b</code> (debug only).
 	 * @return this node.
 	 * <o>1</o>
 	 */
 	public function swapChildren(a:TreeNode<T>, b:TreeNode<T>):TreeNode<T>
 	{
 		#if debug
-		D.assert(a.parent == b.parent, "a and b are not siblings");
-		D.assert(a != b, "a equals b");
+		assert(a.parent == b.parent, "a and b are not siblings");
+		assert(a != b, "a equals b");
 		#end
 		
 		var tmp = a.val; a.val = b.val; b.val = tmp;
@@ -288,18 +288,18 @@ class TreeNode<T> implements Collection<T>
 	
 	/**
 	 * Swaps the child at index <code>i</code> with the child at index <code>j</code> by swapping their values.
-	 * @throws de.polygonal.core.util.AssertError index <code>i</code> out of range (debug only).
-	 * @throws de.polygonal.core.util.AssertError index <code>j</code> out of range (debug only).
-	 * @throws de.polygonal.core.util.AssertError <code>i</code> equals <code>j</code> (debug only).
+	 * @throws de.polygonal.ds.error.AssertError index <code>i</code> out of range (debug only).
+	 * @throws de.polygonal.ds.error.AssertError index <code>j</code> out of range (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>i</code> equals <code>j</code> (debug only).
 	 * @return this node.
 	 * <o>1</o>
 	 */
 	public function swapChildrenAt(i:Int, j:Int):TreeNode<T>
 	{
 		#if debug
-		D.assert(i >= 0 && i < numChildren(), 'the index i ($i) is out of range ${numChildren()}');
-		D.assert(j >= 0 && j < numChildren(), 'the index j ($j) is out of range ${numChildren()}');
-		D.assert(i != j, 'index i ($i) equals index j');
+		assert(i >= 0 && i < numChildren(), 'the index i ($i) is out of range ${numChildren()}');
+		assert(j >= 0 && j < numChildren(), 'the index j ($j) is out of range ${numChildren()}');
+		assert(i != j, 'index i ($i) equals index j');
 		#end
 		
 		var t = null;
@@ -335,14 +335,14 @@ class TreeNode<T> implements Collection<T>
 	
 	/**
 	 * Removes the child at index <code>i</code> and returns the child.
-	 * @throws de.polygonal.core.util.AssertError index <code>i</code> is out of range (debug only).
+	 * @throws de.polygonal.ds.error.AssertError index <code>i</code> is out of range (debug only).
 	 * @return this node.
 	 * <o>n</o>
 	 */
 	public function removeChildAt(i:Int):TreeNode<T>
 	{
 		#if debug
-		D.assert(i >= 0 && i < numChildren(), 'the index $i is out of range ${numChildren()}');
+		assert(i >= 0 && i < numChildren(), 'the index $i is out of range ${numChildren()}');
 		#end
 		
 		var j = 0;
@@ -361,7 +361,7 @@ class TreeNode<T> implements Collection<T>
 	/**
 	 * Removes <code>n</code> children starting at the specified index <code>i</code> in the range &#091;<code>i</code>, <code>i</code> + <code>n</code>&#093;.<br/>
 	 * If <code>n</code> is -1, <code>n</code> is set to <code>numChildren()</code> - <code>i</code>.
-	 * @throws de.polygonal.core.util.AssertError <code>i</code> or <code>n</code> out of range (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>i</code> or <code>n</code> out of range (debug only).
 	 * @return this node.
 	 * <o>n</o>
 	 */
@@ -372,8 +372,8 @@ class TreeNode<T> implements Collection<T>
 		if (n == 0) return this;
 		
 		#if debug
-		D.assert(i >= 0 && i <= numChildren(), 'i index out of range ($i)');
-		D.assert(n > 0 && n <= numChildren() && (i + n <= numChildren()), 'n out of range ($n)');
+		assert(i >= 0 && i <= numChildren(), 'i index out of range ($i)');
+		assert(n > 0 && n <= numChildren() && (i + n <= numChildren()), 'n out of range ($n)');
 		#end
 		
 		var j = 0;
@@ -397,14 +397,14 @@ class TreeNode<T> implements Collection<T>
 	
 	/**
 	 * Changes the index of the child <code>x</code> to <code>i</code>.
-	 * @throws de.polygonal.core.util.AssertError index <code>i</code> is out of range (debug only).
+	 * @throws de.polygonal.ds.error.AssertError index <code>i</code> is out of range (debug only).
 	 * @return this node.
 	 * <o>n</o>
 	 */
 	public function setChildIndex(x:TreeNode<T>, i:Int):TreeNode<T>
 	{
 		#if debug
-		D.assert(i >= 0 && i < numChildren(), 'the index $i is out of range ${numChildren()}');
+		assert(i >= 0 && i < numChildren(), 'the index $i is out of range ${numChildren()}');
 		#end
 		
 		var n = null;
@@ -571,7 +571,7 @@ class TreeNode<T> implements Collection<T>
 	
 	/**
 	 * Returns the child at index <code>i</code> or null if the node has no children.
-	 * @throws de.polygonal.core.util.AssertError child index out of range (debug only).
+	 * @throws de.polygonal.ds.error.AssertError child index out of range (debug only).
 	 * <o>n</o>
 	 */
 	inline public function getChildAt(i:Int):TreeNode<T>
@@ -579,7 +579,7 @@ class TreeNode<T> implements Collection<T>
 		if (hasChildren())
 		{
 			#if debug
-			D.assert(i >= 0 && i < numChildren(), 'index i out of range ($i)');
+			assert(i >= 0 && i < numChildren(), 'index i out of range ($i)');
 			#end
 			
 			var child = children;
@@ -633,14 +633,14 @@ class TreeNode<T> implements Collection<T>
 	
 	/**
 	 * Unlinks <code>x</code> and appends <code>x</code> as a child to this node.
-	 * @throws de.polygonal.core.util.AssertError <code>x</code> is null (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>x</code> is null (debug only).
 	 * @return this node.
 	 * <o>1</o>
 	 */
 	public function appendNode(x:TreeNode<T>):TreeNode<T>
 	{
 		#if debug
-		D.assert(x != null, "x is null");
+		assert(x != null, "x is null");
 		#end
 		
 		x.unlink();
@@ -692,13 +692,13 @@ class TreeNode<T> implements Collection<T>
 	/**
 	 * Unlinks <code>x</code> and appends <code>x</code> to the specified code>child</code> node.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.util.AssertError <code>child</code> node is not a child of this node (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>child</code> node is not a child of this node (debug only).
 	 * @return this node.
 	 */
 	public function insertAfterChild(child:TreeNode<T>, x:TreeNode<T>):TreeNode<T>
 	{
 		#if debug
-		D.assert(child.parent == this, "given child node is not a child of this node");
+		assert(child.parent == this, "given child node is not a child of this node");
 		#end
 		
 		x.unlink();
@@ -728,13 +728,13 @@ class TreeNode<T> implements Collection<T>
 	/**
 	 * Unlinks <code>x</code> and prepends <code>x</code> to the specified child <code>node</code>.
 	 * <o>1</o>
-	 * @throws de.polygonal.core.util.AssertError <code>child</code> node is not a child of this node (debug only).
+	 * @throws de.polygonal.ds.error.AssertError <code>child</code> node is not a child of this node (debug only).
 	 * @return this node.
 	 */
 	public function insertBeforeChild(child:TreeNode<T>, x:TreeNode<T>):TreeNode<T>
 	{
 		#if debug
-		D.assert(child.parent == this, "given child node is not a child of this node");
+		assert(child.parent == this, "given child node is not a child of this node");
 		#end
 		
 		x.unlink();
@@ -762,14 +762,14 @@ class TreeNode<T> implements Collection<T>
 	
 	/**
 	 * Unlinks <code>x</code> and inserts <code>x</code> at the index position <code>i</code>.
-	 * @throws de.polygonal.core.util.AssertError index <code>i</code> out of range (debug only).
+	 * @throws de.polygonal.ds.error.AssertError index <code>i</code> out of range (debug only).
 	 * @return this node.
 	 * <o>1</o>
 	 */
 	public function insertChildAt(x:TreeNode<T>, i:Int):TreeNode<T>
 	{
 		#if debug
-		D.assert(i >= 0 && i <= numChildren(), 'index $i out of range');
+		assert(i >= 0 && i <= numChildren(), 'index $i out of range');
 		#end
 		
 		if (i == 0)
@@ -876,7 +876,7 @@ class TreeNode<T> implements Collection<T>
 			if (process == null)
 			{
 				#if debug
-				D.assert(Std.is(val, Visitable), "element is not of type Visitable");
+				assert(Std.is(val, Visitable), "element is not of type Visitable");
 				#end
 				
 				var v = cast(val, Visitable);
@@ -906,7 +906,7 @@ class TreeNode<T> implements Collection<T>
 			if (process == null)
 			{
 				#if debug
-				D.assert(Std.is(val, Visitable), "element is not of type Visitable");
+				assert(Std.is(val, Visitable), "element is not of type Visitable");
 				#end
 				
 				if (preflight)
@@ -979,8 +979,8 @@ class TreeNode<T> implements Collection<T>
 		{
 			var top = this;
 			#if debug
-			D.assert(_prevInStack == null, "_prevInStack == null");
-			D.assert(_nextInStack == null, "_nextInStack == null");
+			assert(_prevInStack == null, "_prevInStack == null");
+			assert(_nextInStack == null, "_nextInStack == null");
 			#end
 			
 			if (process == null)
@@ -992,19 +992,19 @@ class TreeNode<T> implements Collection<T>
 						var node = top;
 						#if debug
 						if (node != null)
-							D.assert(node._nextInStack == null, "node._nextInStack == null");
+							assert(node._nextInStack == null, "node._nextInStack == null");
 						#end
 						
 						top = popOffStack(top);
 						
 						#if debug
 						if (top != null)
-							D.assert(top._nextInStack == null, "top._nextInStack == null");
+							assert(top._nextInStack == null, "top._nextInStack == null");
 						#end
 						
 						
 						#if debug
-						D.assert(Std.is(node.val, Visitable), "element is not of type Visitable");
+						assert(Std.is(node.val, Visitable), "element is not of type Visitable");
 						#end
 						
 						var v = cast(node.val, Visitable);
@@ -1020,14 +1020,14 @@ class TreeNode<T> implements Collection<T>
 							{
 								#if debug
 								if (top != null)
-									D.assert(top._nextInStack == null, "top._nextInStack == null");
+									assert(top._nextInStack == null, "top._nextInStack == null");
 								#end
 								
 								top = pushOnStack(top, c);
 								
 								#if debug
 								if (top != null)
-									D.assert(top._nextInStack == null, "top._nextInStack == null");
+									assert(top._nextInStack == null, "top._nextInStack == null");
 								#end
 								
 								
@@ -1044,7 +1044,7 @@ class TreeNode<T> implements Collection<T>
 						top = popOffStack(top);
 						
 						#if debug
-						D.assert(Std.is(node.val, Visitable), "element is not of type Visitable");
+						assert(Std.is(node.val, Visitable), "element is not of type Visitable");
 						#end
 						
 						var v = cast(node.val, Visitable);
@@ -1138,7 +1138,7 @@ class TreeNode<T> implements Collection<T>
 			if (process == null)
 			{
 				#if debug
-				D.assert(Std.is(val, Visitable), "element is not of type Visitable");
+				assert(Std.is(val, Visitable), "element is not of type Visitable");
 				#end
 				
 				cast(val, Visitable).visit(false, userData);
@@ -1161,7 +1161,7 @@ class TreeNode<T> implements Collection<T>
 				}
 				
 				#if debug
-				D.assert(Std.is(val, Visitable), "element is not of type Visitable");
+				assert(Std.is(val, Visitable), "element is not of type Visitable");
 				#end
 				
 				cast(val, Visitable).visit(false, userData);
@@ -1181,7 +1181,7 @@ class TreeNode<T> implements Collection<T>
 		else
 		{
 			#if debug
-			D.assert(_busy == false, "recursive call to iterative postorder");
+			assert(_busy == false, "recursive call to iterative postorder");
 			_busy = true;
 			#end
 			
@@ -1212,7 +1212,7 @@ class TreeNode<T> implements Collection<T>
 						if (!found)
 						{
 							#if debug
-							D.assert(Std.is(node.val, Visitable), "element is not of type Visitable");
+							assert(Std.is(node.val, Visitable), "element is not of type Visitable");
 							#end
 							
 							var v = cast(node.val, Visitable);
@@ -1229,7 +1229,7 @@ class TreeNode<T> implements Collection<T>
 					else
 					{
 						#if debug
-						D.assert(Std.is(node.val, Visitable), "element is not of type Visitable");
+						assert(Std.is(node.val, Visitable), "element is not of type Visitable");
 						#end
 						
 						var v = cast(node.val, Visitable);
@@ -1319,7 +1319,7 @@ class TreeNode<T> implements Collection<T>
 			if (process == null)
 			{
 				#if debug
-				D.assert(Std.is(val, Visitable), "element is not of type Visitable");
+				assert(Std.is(val, Visitable), "element is not of type Visitable");
 				#end
 				cast(val, Visitable).visit(false, userData);
 			}
@@ -1342,7 +1342,7 @@ class TreeNode<T> implements Collection<T>
 				i++;
 				
 				#if debug
-				D.assert(Std.is(nodeHead.val, Visitable), "element is not of type Visitable");
+				assert(Std.is(nodeHead.val, Visitable), "element is not of type Visitable");
 				#end
 				
 				if (!cast(nodeHead.val, Visitable).visit(false, userData))
@@ -1389,7 +1389,7 @@ class TreeNode<T> implements Collection<T>
 	 * <warn>In this case all elements have to implement <em>Comparable</em>.</warn>
 	 * @param useInsertionSort if true, the dense array is sorted using the insertion sort algorithm.
 	 * This is faster for nearly sorted lists.
-	 * @throws de.polygonal.core.util.AssertError element does not implement <em>Comparable</em> (debug only).
+	 * @throws de.polygonal.ds.error.AssertError element does not implement <em>Comparable</em> (debug only).
 	 * @return this node.
 	 */
 	public function sort(compare:T->T->Int, useInsertionSort = false):TreeNode<T>
@@ -1515,7 +1515,7 @@ class TreeNode<T> implements Collection<T>
 	function _preOrderInternalVisitable(node:TreeNode<T>, userData:Dynamic):Bool
 	{
 		#if debug
-		D.assert(Std.is(node.val, Visitable), "element is not of type Visitable");
+		assert(Std.is(node.val, Visitable), "element is not of type Visitable");
 		#end
 		
 		var v = cast(node.val, Visitable);
@@ -1539,7 +1539,7 @@ class TreeNode<T> implements Collection<T>
 	function _preOrderInternalVisitablePreflight(node:TreeNode<T>, userData:Dynamic):Bool
 	{
 		#if debug
-		D.assert(Std.is(node.val, Visitable), "element is not of type Visitable");
+		assert(Std.is(node.val, Visitable), "element is not of type Visitable");
 		#end
 		
 		var v = cast(node.val, Visitable);
@@ -1592,7 +1592,7 @@ class TreeNode<T> implements Collection<T>
 		}
 		
 		#if debug
-		D.assert(Std.is(node.val, Visitable), "element is not of type Visitable");
+		assert(Std.is(node.val, Visitable), "element is not of type Visitable");
 		#end
 		
 		return cast(node.val, Visitable).visit(false, userData);
@@ -1609,7 +1609,7 @@ class TreeNode<T> implements Collection<T>
 			var v = n.val;
 			
 			#if debug
-			D.assert(Std.is(p.val, Comparable), 'element is not of type Comparable (${p.val})');
+			assert(Std.is(p.val, Comparable), 'element is not of type Comparable (${p.val})');
 			#end
 			
 			if (cast(p.val, Comparable<Dynamic>).compare(v) < 0)
@@ -1619,7 +1619,7 @@ class TreeNode<T> implements Collection<T>
 				while (i.hasPrevSibling())
 				{
 					#if debug
-					D.assert(Std.is(i.prev.val, Comparable), 'element is not of type Comparable (${i.prev.val})');
+					assert(Std.is(i.prev.val, Comparable), 'element is not of type Comparable (${i.prev.val})');
 					#end
 					
 					if (cast(i.prev.val, Comparable<Dynamic>).compare(v) < 0)
@@ -1757,7 +1757,7 @@ class TreeNode<T> implements Collection<T>
 					else
 					{
 						#if debug
-						D.assert(Std.is(p.val, Comparable), 'element is not of type Comparable (${p.val})');
+						assert(Std.is(p.val, Comparable), 'element is not of type Comparable (${p.val})');
 						#end
 						
 						if (cast(p.val, Comparable<Dynamic>).compare(q.val) >= 0)
@@ -2134,7 +2134,7 @@ class TreeNode<T> implements Collection<T>
 	 * @param assign if true, the <code>copier</code> parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.<br/>
 	 * If false, the <em>clone()</em> method is called on each element. <warn>In this case all elements have to implement <em>Cloneable</em>.</warn>
 	 * @param copier a custom function for copying elements. Replaces element.<em>clone()</em> if <code>assign</code> is false.
-	 * @throws de.polygonal.core.util.AssertError element is not of type <em>Cloneable</em> (debug only).
+	 * @throws de.polygonal.ds.error.AssertError element is not of type <em>Cloneable</em> (debug only).
 	 */
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{
@@ -2162,7 +2162,7 @@ class TreeNode<T> implements Collection<T>
 				if (copier == null)
 				{
 					#if debug
-					D.assert(Std.is(nchild.val, Cloneable), "element is not of type Cloneable ({nchild.val})");
+					assert(Std.is(nchild.val, Cloneable), "element is not of type Cloneable ({nchild.val})");
 					#end
 					
 					x = cast(nchild.val, Cloneable<Dynamic>).clone();
@@ -2348,7 +2348,7 @@ class ChildTreeIterator<T> implements de.polygonal.ds.Itr<T>
 	inline public function remove():Void
 	{
 		#if debug
-		D.assert(_hook != null, "call next() before removing an element");
+		assert(_hook != null, "call next() before removing an element");
 		#end
 		
 		_hook.unlink();

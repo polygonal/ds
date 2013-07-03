@@ -29,7 +29,7 @@
  */
 package de.polygonal.ds.pooling;
 
-import de.polygonal.core.util.Assert;
+import de.polygonal.ds.error.Assert.assert;
 import de.polygonal.ds.Hashable;
 import de.polygonal.ds.HashKey;
 
@@ -126,7 +126,7 @@ class LinkedObjectPool<T> implements Hashable
 	
 	/**
 	 * Retrieves the next available object from the pool.
-	 * @throws de.polygonal.core.util.AssertError object pool exhausted (debug only).
+	 * @throws de.polygonal.ds.error.AssertError object pool exhausted (debug only).
 	 */
 	inline public function get():T
 	{
@@ -140,7 +140,7 @@ class LinkedObjectPool<T> implements Hashable
 			else
 			{
 				#if debug
-				if (!_growable) D.assert(false, "object pool exhausted");
+				if (!_growable) assert(false, "object pool exhausted");
 				#end
 				return null;
 			}
@@ -151,12 +151,12 @@ class LinkedObjectPool<T> implements Hashable
 	
 	/**
 	 * Recycles the object <code>o</code> so it can be reused by calling <em>get()</em>.
-	 * @throws de.polygonal.core.util.AssertError object pool is full (debug only).
+	 * @throws de.polygonal.ds.error.AssertError object pool is full (debug only).
 	 */
 	inline public function put(o:T):Void
 	{
 		#if debug
-		D.assert(_usageCount != 0, "object pool is full");
+		assert(_usageCount != 0, "object pool is full");
 		#end
 		
 		_usageCount--;
@@ -169,14 +169,14 @@ class LinkedObjectPool<T> implements Hashable
 	 * @param C allocates objects by instantiating the class <code>C</code>.
 	 * @param fabricate allocates objects by calling <code>fabricate()</code>.
 	 * @param factory allocates objects by calling <code>factory</code>.<em>create()</em>.
-	 * @throws de.polygonal.core.util.AssertError invalid arguments.
+	 * @throws de.polygonal.ds.error.AssertError invalid arguments.
 	 */
 	public function allocate(C:Class<T> = null, fabricate:Void->T = null, factory:Factory<T> = null):Void
 	{
 		free();
 		
 		#if debug
-		D.assert(C != null || fabricate != null || factory != null, "invalid arguments");
+		assert(C != null || fabricate != null || factory != null, "invalid arguments");
 		#end
 		
 		var buffer = new Array<T>();
