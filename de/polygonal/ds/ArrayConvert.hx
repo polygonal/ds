@@ -31,8 +31,6 @@ package de.polygonal.ds;
 
 import de.polygonal.core.util.Assert;
 
-using de.polygonal.core.math.Mathematics;
-
 /**
  * <p>Helper class for converting arrays to various collections.</p>
  */
@@ -92,7 +90,7 @@ class ArrayConvert
 		#end
 		
 		var k = x.length;
-		var c = new ArrayedQueue<T>(k.nextPow2());
+		var c = new ArrayedQueue<T>(M.nextPow2(k));
 		for (i in 0...k) c.enqueue(x[i]);
 		return c;
 	}

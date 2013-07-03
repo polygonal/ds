@@ -33,7 +33,6 @@ import de.polygonal.core.fmt.Sprintf;
 import de.polygonal.core.util.Assert;
 
 #if !alchemy
-import de.polygonal.core.math.Mathematics;
 import de.polygonal.ds.ArrayUtil;
 #end
 

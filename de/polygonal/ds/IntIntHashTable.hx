@@ -30,8 +30,6 @@
 package de.polygonal.ds;
 
 import de.polygonal.core.fmt.Sprintf;
-import de.polygonal.core.math.Limits;
-import de.polygonal.core.math.Mathematics;
 import de.polygonal.core.util.Assert;
 
 #if flash10
@@ -81,12 +79,12 @@ class IntIntHashTable implements Map<Int, Int>
 	/**
 	 * Return code for a non-existing key. 
 	 */
-	inline public static var KEY_ABSENT = Limits.INT32_MIN;
+	inline public static var KEY_ABSENT = M.INT32_MIN;
 	
 	/**
 	 * Return code for a non-existing value. 
 	 */
-	inline public static var VAL_ABSENT = Limits.INT32_MIN;
+	inline public static var VAL_ABSENT = M.INT32_MIN;
 	
 	/**
 	 * Used internally. 
@@ -197,7 +195,7 @@ class IntIntHashTable implements Map<Int, Int>
 		_iterator    = null;
 		
 		#if debug
-		this.maxSize = (maxSize == -1) ? Limits.INT32_MAX : maxSize;
+		this.maxSize = (maxSize == -1) ? M.INT32_MAX : maxSize;
 		#else
 		this.maxSize = -1;
 		#end
@@ -778,7 +776,7 @@ class IntIntHashTable implements Map<Int, Int>
 		s += "\n|<\n";
 		
 		var max = 0.;
-		for (key in keys()) max = M.fmax(max, key);
+		for (key in keys()) max = Math.max(max, key);
 		var i = 1;
 		while (max != 0)
 		{

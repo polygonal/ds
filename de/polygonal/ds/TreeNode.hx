@@ -31,8 +31,6 @@ package de.polygonal.ds;
 
 import de.polygonal.core.util.Assert;
 
-using de.polygonal.core.math.Mathematics;
-
 /**
  * <p>A tree structure.</p>
  * <p>See <a href="http://lab.polygonal.de/?p=184" target="_blank">http://lab.polygonal.de/?p=184</a></p>
@@ -536,7 +534,7 @@ class TreeNode<T> implements Collection<T>
 		var node = children;
 		while (node != null)
 		{
-			h = h.max(node.height());
+			h = M.max(h, node.height());
 			node = node.next;
 		}
 		return 1 + h;

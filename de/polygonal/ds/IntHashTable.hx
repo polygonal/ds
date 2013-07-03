@@ -33,14 +33,11 @@ package de.polygonal.ds;
 #if alchemy
 import de.polygonal.ds.mem.IntMemory;
 #else
-import de.polygonal.core.math.Limits;
 import flash.Vector;
 #end
 #end
 
 import de.polygonal.core.fmt.Sprintf;
-import de.polygonal.core.math.Limits;
-import de.polygonal.core.math.Mathematics;
 import de.polygonal.core.util.Assert;
 
 private typedef IntHashTableFriend<T> =
@@ -152,7 +149,7 @@ class IntHashTable<T> implements Map<Int, T>
 		_vals = ArrayUtil.alloc(capacity);
 		
 		#if debug
-		this.maxSize = (maxSize == -1) ? Limits.INT32_MAX : maxSize;
+		this.maxSize = (maxSize == -1) ? M.INT32_MAX : maxSize;
 		#else
 		this.maxSize = -1;
 		#end
@@ -380,7 +377,7 @@ class IntHashTable<T> implements Map<Int, T>
 		s += "\n|<\n";
 		
 		var max = 0.;
-		for (key in keys()) max = M.fmax(max, key);
+		for (key in keys()) max = Math.max(max, key);
 		var i = 1;
 		while (max != 0)
 		{

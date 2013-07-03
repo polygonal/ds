@@ -30,12 +30,10 @@
 package de.polygonal.ds.mem;
 
 import de.polygonal.core.fmt.Sprintf;
-import de.polygonal.core.math.Limits;
 import de.polygonal.core.util.Assert;
 import de.polygonal.ds.BitVector;
 
 #if !alchemy
-import de.polygonal.core.math.Mathematics;
 import de.polygonal.ds.ArrayUtil;
 #end
 

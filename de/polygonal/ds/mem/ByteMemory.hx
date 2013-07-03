@@ -32,10 +32,6 @@ package de.polygonal.ds.mem;
 import de.polygonal.core.fmt.Sprintf;
 import de.polygonal.core.util.Assert;
 
-#if !alchemy
-import de.polygonal.core.math.Mathematics;
-#end
-
 /**
  * <p>A byte array using fast "alchemy-memory" for data storage.</p>
  */

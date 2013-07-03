@@ -29,7 +29,6 @@
  */
 package de.polygonal.ds;
 
-import de.polygonal.core.fmt.StringUtil;
 import de.polygonal.ds.TreeNode;
 import haxe.ds.StringMap;
 

@@ -30,8 +30,6 @@
 package de.polygonal.ds;
 
 import de.polygonal.core.fmt.Sprintf;
-import de.polygonal.core.math.Limits;
-import de.polygonal.core.math.Mathematics;
 
 #if flash10
 #if alchemy
@@ -74,7 +72,7 @@ class IntHashSet implements Set<Int>
 	/**
 	 * Return code for a non-existing element. 
 	 */
-	inline public static var VAL_ABSENT = Limits.INT32_MIN;
+	inline public static var VAL_ABSENT = M.INT32_MIN;
 	
 	inline static var EMPTY_SLOT        = -1;
 	inline static var NULL_POINTER      = -1;
@@ -179,7 +177,7 @@ class IntHashSet implements Set<Int>
 		_iterator  = null;
 		
 		#if debug
-		this.maxSize = (maxSize == -1) ? Limits.INT32_MAX : maxSize;
+		this.maxSize = (maxSize == -1) ? M.INT32_MAX : maxSize;
 		#else
 		this.maxSize = -1;
 		#end

@@ -29,7 +29,6 @@
  */
 package de.polygonal.ds;
 
-import de.polygonal.core.math.Mathematics;
 import de.polygonal.core.util.Assert;
 
 /**

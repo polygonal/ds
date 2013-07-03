@@ -29,7 +29,6 @@
  */
 package de.polygonal.ds;
 
-import de.polygonal.core.math.Limits;
 import de.polygonal.core.util.Assert;
 
 #if !flash
@@ -94,7 +93,7 @@ class HashMap<K, T> implements Map<K, T>
 		reuseIterator = false;
 		
 		#if debug
-		this.maxSize = (maxSize == -1) ? Limits.INT32_MAX : maxSize;
+		this.maxSize = (maxSize == -1) ? M.INT32_MAX : maxSize;
 		#else
 		this.maxSize = -1;
 		#end

@@ -38,7 +38,6 @@ import flash.Vector;
 #end
 
 import de.polygonal.core.fmt.Sprintf;
-import de.polygonal.core.math.Mathematics;
 import de.polygonal.core.util.Assert;
 
 private typedef HashTableFriend<K, T> =

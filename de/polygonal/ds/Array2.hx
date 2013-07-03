@@ -30,7 +30,6 @@
 package de.polygonal.ds;
 
 import de.polygonal.core.fmt.Sprintf;
-import de.polygonal.core.math.Mathematics;
 import de.polygonal.core.util.Assert;
 
 private typedef Array2Friend<T> =

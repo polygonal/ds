@@ -38,7 +38,6 @@ import flash.Vector;
 #end
 
 import de.polygonal.core.fmt.Sprintf;
-import de.polygonal.core.math.Limits;
 import de.polygonal.core.util.Assert;
 
 private typedef HashSetFriend<T> =
@@ -131,7 +130,7 @@ class HashSet<T:Hashable> implements Set<T>
 		_vals = ArrayUtil.alloc(capacity);
 		
 		#if debug
-		this.maxSize = (maxSize == -1) ? Limits.INT32_MAX : maxSize;
+		this.maxSize = (maxSize == -1) ? M.INT32_MAX : maxSize;
 		#else
 		this.maxSize = -1;
 		#end

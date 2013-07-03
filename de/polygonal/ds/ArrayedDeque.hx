@@ -30,8 +30,6 @@
 package de.polygonal.ds;
 
 import de.polygonal.core.fmt.Sprintf;
-import de.polygonal.core.math.Limits;
-import de.polygonal.core.math.Mathematics;
 import de.polygonal.core.util.Assert;
 
 private typedef ArrayedDequeFriend<T> =
@@ -106,7 +104,7 @@ class ArrayedDeque<T> implements Deque<T>
 		#end
 		
 		#if debug
-		this.maxSize = (maxSize == -1) ? Limits.INT32_MAX : maxSize;
+		this.maxSize = (maxSize == -1) ? M.INT32_MAX : maxSize;
 		#else
 		this.maxSize = -1;
 		#end
@@ -935,7 +933,7 @@ class ArrayedDeque<T> implements Deque<T>
 		copy._poolSize          = 0;
 		copy._poolCapacity      = 0;
 		copy.key                = HashKey.next();
-		copy.maxSize            = Limits.INT32_MAX;
+		copy.maxSize            = M.INT32_MAX;
 		
 		var blocks = copy._blocks = ArrayUtil.alloc(_tailBlockIndex + 1);
 		for (i in 0..._tailBlockIndex + 1)

@@ -29,8 +29,6 @@
  */
 package de.polygonal.ds;
 
-import de.polygonal.core.math.Limits;
-import de.polygonal.core.math.Mathematics;
 import de.polygonal.core.util.Assert;
 
 private typedef LinkedStackFriend<T> =
@@ -98,7 +96,7 @@ class LinkedStack<T> implements Stack<T>
 			if (maxSize != -1)
 				D.assert(reservedSize <= maxSize, "reserved size is greater than allowed size");
 		}
-		this.maxSize = (maxSize == -1) ? Limits.INT32_MAX : maxSize;
+		this.maxSize = (maxSize == -1) ? M.INT32_MAX : maxSize;
 		#else
 		this.maxSize = -1;
 		#end

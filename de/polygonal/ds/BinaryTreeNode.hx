@@ -31,8 +31,6 @@ package de.polygonal.ds;
 
 import de.polygonal.core.util.Assert;
 
-using de.polygonal.core.math.Mathematics;
-
 /**
  * <p>A binary tree.</p>
  * <p>A tree data structure in which each node has at most two child nodes.</p>
@@ -492,7 +490,7 @@ class BinaryTreeNode<T> implements Collection<T>
 	 */
 	public function height():Int
 	{
-		return 1 + (l != null ? l.height() : 0).max(r != null ? r.height() : 0);
+		return 1 + M.max((l != null ? l.height() : 0), r != null ? r.height() : 0);
 	}
 	
 	/**
@@ -631,7 +629,7 @@ class BinaryTreeNode<T> implements Collection<T>
 			cl = _heightRecursive(node.l);
 		if (node.hasR())
 			cr = _heightRecursive(node.r);
-		return cl.max(cr) + 1;
+		return M.max(cl, cr) + 1;
 	}
 	
 	/*///////////////////////////////////////////////////////

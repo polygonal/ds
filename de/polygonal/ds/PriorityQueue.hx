@@ -30,7 +30,6 @@
 package de.polygonal.ds;
 
 import de.polygonal.core.fmt.Sprintf;
-import de.polygonal.core.math.Limits;
 import de.polygonal.core.util.Assert;
 
 private typedef PriorityQueueFriend<T> =
@@ -144,7 +143,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	public function new(inverse = false, reservedSize = 0, maxSize = -1)
 	{
 		#if debug
-		this.maxSize = (maxSize == -1) ? Limits.INT32_MAX : maxSize;
+		this.maxSize = (maxSize == -1) ? M.INT32_MAX : maxSize;
 		#else
 		this.maxSize = -1;
 		#end

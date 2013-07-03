@@ -30,7 +30,6 @@
 package de.polygonal.ds;
 
 import de.polygonal.core.fmt.Sprintf;
-import de.polygonal.core.math.Limits;
 import de.polygonal.core.util.Assert;
 import haxe.ds.Vector;
 
@@ -187,7 +186,7 @@ class BitVector implements Hashable
 		{
 			var binIndex = current >> 5;
 			var nextBound = (binIndex + 1) << 5;
-			var mask = -1 << (Limits.INT_BITS - nextBound + current);
+			var mask = -1 << (32 - nextBound + current);
 			mask &= (max < nextBound) ? -1 >>> (nextBound - max) : -1;
 			_bits[binIndex] &= ~mask;
 			
@@ -214,7 +213,7 @@ class BitVector implements Hashable
 		{
 			var binIndex = current >> 5;
 			var nextBound = (binIndex + 1) << 5;
-			var mask = -1 << (Limits.INT_BITS - nextBound + current);
+			var mask = -1 << (32 - nextBound + current);
 			mask &= (max < nextBound) ? -1 >>> (nextBound - max) : -1;
 			_bits[binIndex] |= mask;
 			

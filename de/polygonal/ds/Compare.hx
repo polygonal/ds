@@ -29,8 +29,6 @@
  */
 package de.polygonal.ds;
 
-import de.polygonal.core.math.Mathematics;
-
 /**
  * <p>Various comparison functions.</p>
  */

@@ -29,8 +29,6 @@
  */
 package de.polygonal.ds.pooling;
 
-import de.polygonal.core.math.Limits;
-import de.polygonal.core.math.Mathematics;
 import de.polygonal.core.util.Assert;
 import de.polygonal.ds.HashKey;
 import de.polygonal.ds.Itr;
@@ -140,10 +138,10 @@ class DynamicObjectPool<T>
 	 * @param fabricate allocates objects by calling <code>fabricate()</code>.
 	 * @param factory allocates objects by using a <em>Factory</em> object (calling <code>factory</code>.<em>create()</em>).
 	 * @param capacity the maximum number of objects that are stored in this pool.<br/>
-	 * The default value of Limits.INT32_MAX indicates that the size is unbound.
+	 * The default value of 0x7fffffff indicates that the size is unbound.
 	 * @throws de.polygonal.core.util.AssertError invalid arguments.
 	 */
-	public function new(C:Class<T> = null, fabricate:Void->T = null, factory:Factory<T> = null, capacity = Limits.INT32_MAX)
+	public function new(C:Class<T> = null, fabricate:Void->T = null, factory:Factory<T> = null, capacity = M.INT32_MAX)
 	{
 		_class     = C;
 		_args      = new Array<Dynamic>();
