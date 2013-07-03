@@ -40,8 +40,8 @@ class AssertError
 		var stack = haxe.CallStack.toString(haxe.CallStack.callStack());
 		stack = ~/\nCalled from de\.polygonal\.ds\.error\.AssertError.*$/m.replace(stack, "");
 		
-		throw "Assertation " + (message == null ? "" : "\"" + message + "\" ") + "failed in file " +
-			info.fileName + ", line " + info.lineNumber + ", " + info.className + "::" + info.methodName + "\nCall stack:" + stack;
+		var s = (message == null ? "" : "\"" + message + "\"");
+		throw 'Assertation $s failed in file ${info.fileName}, line ${info.lineNumber}, ${info.className}:: ${info.methodName}\nCall stack:${stack}';
 	}
 	
 	public function toString():String return message;

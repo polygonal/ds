@@ -514,7 +514,7 @@ class FloatMemory extends MemoryAccess
 		s += "\n>|";
 		return s;
 		#else
-		return $d'{FloatMemory, size: $size, name: $name}';
+		return '{FloatMemory, size: $size, name: $name}';
 		#end
 	}
 }
