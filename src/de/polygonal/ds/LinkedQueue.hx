@@ -349,7 +349,7 @@ class LinkedQueue<T> implements Queue<T>
 		var i = 0;
 		while (node != null)
 		{
-			s += Sprintf.format("  %4d -> %s\n", [i++, Std.string(node.val)]);
+			s += Printf.format("  %4d -> %s\n", [i++, Std.string(node.val)]);
 			node = node.next;
 		}
 		s += ">|";

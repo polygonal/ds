@@ -479,30 +479,30 @@ class ArrayedDeque<T> implements Deque<T>
 		if (_tailBlockIndex == 0)
 		{
 			for (j in _head + 1..._tail)
-				s += Sprintf.format("  %4d -> %s\n", [i++, Std.string(_headBlock[j])]);
+				s += Printf.format("  %4d -> %s\n", [i++, Std.string(_headBlock[j])]);
 		}
 		else
 		if (_tailBlockIndex == 1)
 		{
 			for (j in _head + 1..._blockSize)
-				s += Sprintf.format("  %4d -> %s\n", [i++, Std.string(_headBlock[j])]);
+				s += Printf.format("  %4d -> %s\n", [i++, Std.string(_headBlock[j])]);
 			for (j in 0..._tail)
-				s += Sprintf.format("  %4d -> %s\n", [i++, Std.string(_tailBlock[j])]);
+				s += Printf.format("  %4d -> %s\n", [i++, Std.string(_tailBlock[j])]);
 		}
 		else
 		{
 			for (j in _head + 1..._blockSize)
-				s += Sprintf.format("  %4d -> %s\n", [i++, Std.string(_headBlock[j])]);
+				s += Printf.format("  %4d -> %s\n", [i++, Std.string(_headBlock[j])]);
 			
 			for (j in 1..._tailBlockIndex)
 			{
 				var block = _blocks[j];
 				for (k in 0..._blockSize)
-					s += Sprintf.format("  %4d -> %s\n", [i++, Std.string(block[k])]);
+					s += Printf.format("  %4d -> %s\n", [i++, Std.string(block[k])]);
 			}
 			
 			for (j in 0..._tail)
-				s += Sprintf.format("  %4d -> %s\n", [i++, Std.string(_tailBlock[j])]);
+				s += Printf.format("  %4d -> %s\n", [i++, Std.string(_tailBlock[j])]);
 		}
 		s += ">|";
 		return s;

@@ -456,7 +456,7 @@ class ArrayedQueue<T> implements Queue<T>
 		if (isEmpty()) return s;
 		s += "\n|< front\n";
 		for (i in 0..._size)
-			s += Sprintf.format("  %4d -> %s\n", [i, Std.string(get(i))]);
+			s += Printf.format("  %4d -> %s\n", [i, Std.string(get(i))]);
 		s += ">|";
 		return s;
 	}

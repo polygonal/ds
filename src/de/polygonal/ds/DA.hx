@@ -1003,7 +1003,7 @@ class DA<T> implements Collection<T>
 		if (isEmpty()) return s;
 		s += "\n|<\n";
 		for (i in 0...size())
-			s += Sprintf.format("  %4d -> %s\n", [i, Std.string(__get(i))]);
+			s += Printf.format("  %4d -> %s\n", [i, Std.string(__get(i))]);
 		s += ">|";
 		return s;
 	}

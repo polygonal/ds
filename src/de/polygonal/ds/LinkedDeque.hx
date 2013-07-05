@@ -376,7 +376,7 @@ class LinkedDeque<T> implements Deque<T>
 		var node = _head;
 		while (node != null)
 		{
-			s += Sprintf.format("  %4d -> %s\n", [i++, Std.string(node.val)]);
+			s += Printf.format("  %4d -> %s\n", [i++, Std.string(node.val)]);
 			node = node.next;
 		}
 		s += ">|";

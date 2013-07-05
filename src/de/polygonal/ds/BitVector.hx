@@ -400,7 +400,7 @@ class BitVector implements Hashable
 		if (size() == 0) return s;
 		s += "\n|<\n";
 		for (i in 0..._arrSize)
-			s += Sprintf.format("  %4d -> %#.32b\n", [i, _bits[i]]);
+			s += Printf.format("  %4d -> %#.32b\n", [i, _bits[i]]);
 		s += ">|";
 		return s;
 	}

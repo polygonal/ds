@@ -235,7 +235,7 @@ class MemoryManager
 		while (i != null)
 		{
 			var friend:{private var _access:MemoryAccess;} = i;
-			s += Sprintf.format("  %4d -> %s (%s)\n", [j++, Std.string(i), friend._access]);
+			s += Printf.format("  %4d -> %s (%s)\n", [j++, Std.string(i), friend._access]);
 			i = i.next;
 		}
 		s += ">|";

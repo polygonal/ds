@@ -252,7 +252,7 @@ class HashSet<T:Hashable> implements Set<T>
 	 */
 	public function toString():String
 	{
-		var s = Sprintf.format("{HashSet, size/capacity: %d/%d, load factor: %.2f}", [size(), getCapacity(), getLoadFactor()]);
+		var s = Printf.format("{HashSet, size/capacity: %d/%d, load factor: %.2f}", [size(), getCapacity(), getLoadFactor()]);
 		if (isEmpty()) return s;
 		s += "\n|<\n";
 		for (x in this)

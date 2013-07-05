@@ -299,7 +299,7 @@ class ObjectPool<T> implements Hashable
 		for (i in 0...size())
 		{
 			var t = Std.string(_pool[i]);
-			s += Sprintf.format("  %4d -> {%s}\n", [i, t]);
+			s += Printf.format("  %4d -> {%s}\n", [i, t]);
 		}
 		s += ">|";
 		return s;

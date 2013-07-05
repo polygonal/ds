@@ -453,7 +453,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 		s += "\n|< front\n";
 		var i = 0;
 		while (tmp.size() > 0)
-			s += Sprintf.format("  %4d -> %s\n", [i++, Std.string(tmp.pop())]);
+			s += Printf.format("  %4d -> %s\n", [i++, Std.string(tmp.pop())]);
 		s += ">|";
 		return s;
 	}

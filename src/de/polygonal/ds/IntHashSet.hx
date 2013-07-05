@@ -399,7 +399,7 @@ class IntHashSet implements Set<Int>
 	 */
 	public function toString():String
 	{
-		var s = Sprintf.format("{IntHashSet, size/capacity: %d/%d, load factor: %.2f}", [size(), _capacity, getLoadFactor()]);
+		var s = Printf.format("{IntHashSet, size/capacity: %d/%d, load factor: %.2f}", [size(), _capacity, getLoadFactor()]);
 		if (isEmpty()) return s;
 		s += "\n|<\n";
 		for (x in this)

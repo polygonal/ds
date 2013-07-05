@@ -404,7 +404,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 		s += "\n|< front\n";
 		var i = 0;
 		while (tmp.size() > 0)
-			s += Sprintf.format("  %4d -> %s\n", [i++, Std.string(tmp.dequeue())]);
+			s += Printf.format("  %4d -> %s\n", [i++, Std.string(tmp.dequeue())]);
 		s += ">|";
 		return s;
 	}

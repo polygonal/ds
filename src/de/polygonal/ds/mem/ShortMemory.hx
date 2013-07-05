@@ -578,7 +578,7 @@ class ShortMemory extends MemoryAccess
 		var s = '{ShortMemory, size: $size, name: $name}';
 		s += "\n|<\n";
 		for (i in 0...size)
-			s += Sprintf.format("  %3d -> %#.3f\n", [i, get(i)]);
+			s += Printf.format("  %3d -> %#.3f\n", [i, get(i)]);
 		s += "\n>|";
 		return s;
 		#else

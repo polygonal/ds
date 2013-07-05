@@ -858,7 +858,7 @@ class Array2<T> implements Collection<T>
 			s += "  ";
 			offset = y * _w;
 			for (x in 0..._w)
-				s += Sprintf.format("[%" + l + "s]", [Std.string(__get(offset + x))]);
+				s += Printf.format("[%" + l + "s]", [Std.string(__get(offset + x))]);
 			s += "\n";
 		}
 		

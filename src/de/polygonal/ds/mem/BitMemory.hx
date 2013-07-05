@@ -498,7 +498,7 @@ class BitMemory extends MemoryAccess
 				else
 					t += "#";
 			}
-			s += Sprintf.format("  %4d -> %s\n", [i, t]);
+			s += Printf.format("  %4d -> %s\n", [i, t]);
 		}
 		s += "\n>|";
 		return s;

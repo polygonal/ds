@@ -9,6 +9,6 @@
 	"releasenote": "See README",
 	"dependencies":
 	{
-		"polygonal-sprintf":""
+		"polygonal-printf":""
 	}
 }

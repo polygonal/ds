@@ -770,7 +770,7 @@ class IntIntHashTable implements Map<Int, Int>
 	 */
 	public function toString():String
 	{
-		var s = Sprintf.format("{IntIntHashTable, size/capacity: %d/%d, load factor: %.2f}", [size(), getCapacity(), getLoadFactor()]);
+		var s = Printf.format("{IntIntHashTable, size/capacity: %d/%d, load factor: %.2f}", [size(), getCapacity(), getLoadFactor()]);
 		if (isEmpty()) return s;
 		s += "\n|<\n";
 		
@@ -784,7 +784,7 @@ class IntIntHashTable implements Map<Int, Int>
 		}
 		
 		for (key in keys())
-			s += Sprintf.format("  %- " + i + "d -> %d\n", [key, get(key)]);
+			s += Printf.format("  %- " + i + "d -> %d\n", [key, get(key)]);
 		
 		s += ">|";
 		return s;

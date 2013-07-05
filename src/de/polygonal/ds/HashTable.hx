@@ -345,7 +345,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	 */
 	public function toString():String
 	{
-		var s = Sprintf.format("{HashTable, size/capacity: %d/%d, load factor: %.2f}", [size(), getCapacity(), getLoadFactor()]);
+		var s = Printf.format("{HashTable, size/capacity: %d/%d, load factor: %.2f}", [size(), getCapacity(), getLoadFactor()]);
 		if (isEmpty()) return s;
 		s += "\n|<\n";
 		
@@ -353,7 +353,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		for (key in keys()) max = M.max(max, Std.string(key).length);
 		
 		for (key in keys())
-			s += Sprintf.format("  %- " + max + "s -> %s\n", [key, Std.string(get(key))]);
+			s += Printf.format("  %- " + max + "s -> %s\n", [key, Std.string(get(key))]);
 		
 		s += ">|";
 		return s;
