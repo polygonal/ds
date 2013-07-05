@@ -381,17 +381,17 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	 *     }
 	 * }</pre>
 	 * <pre class="console">
-	 * {PriorityQueue, size: 3}
-	 * |< front
+	 * { PriorityQueue size: 3 }
+	 * [ front
 	 *    0 -> 5
 	 *    1 -> 3
 	 *    2 -> 0
-	 * >|
+	 * ]
 	 * </pre>
 	 */
 	public function toString():String
 	{
-		var s = '{PriorityQueue, size: ${size()}}';
+		var s = '{ PriorityQueue size: ${size()} }';
 		if (isEmpty()) return s;
 		var tmp = new PriorityQueue<PQElementWrapper<T>>();
 		tmp._inverse = _inverse;
@@ -401,11 +401,11 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 			tmp.__set(i, w);
 		}
 		tmp._size = _size;
-		s += "\n|< front\n";
+		s += "\n[ front\n";
 		var i = 0;
 		while (tmp.size() > 0)
 			s += Printf.format("  %4d -> %s\n", [i++, Std.string(tmp.dequeue())]);
-		s += ">|";
+		s += "]";
 		return s;
 	}
 	

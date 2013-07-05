@@ -760,19 +760,19 @@ class IntIntHashTable implements Map<Int, Int>
 	 * }
 	 * trace(hash);</pre>
 	 * <pre class="console">
-	 * {IntIntHashTable, size: 4, load factor: 0.25}
-	 * |<
+	 * { IntIntHashTable size: 4, load factor: 0.25 }
+	 * [
 	 *   0 -> 0
 	 *   1 -> 1
 	 *   2 -> 2
 	 *   3 -> 3
-	 * >|</pre>
+	 * ]</pre>
 	 */
 	public function toString():String
 	{
-		var s = Printf.format("{IntIntHashTable, size/capacity: %d/%d, load factor: %.2f}", [size(), getCapacity(), getLoadFactor()]);
+		var s = Printf.format("[ IntIntHashTable size/capacity: %d/%d, load factor: %.2f }", [size(), getCapacity(), getLoadFactor()]);
 		if (isEmpty()) return s;
-		s += "\n|<\n";
+		s += "\n[\n";
 		
 		var max = 0.;
 		for (key in keys()) max = Math.max(max, key);
@@ -786,7 +786,7 @@ class IntIntHashTable implements Map<Int, Int>
 		for (key in keys())
 			s += Printf.format("  %- " + i + "d -> %d\n", [key, get(key)]);
 		
-		s += ">|";
+		s += "]";
 		return s;
 	}
 	

@@ -563,26 +563,26 @@ class ShortMemory extends MemoryAccess
 	 * }
 	 * trace(mem);</pre>
 	 * <pre class="console">
-	 * {ShortMemory, size: 4}
-	 * |<
+	 * { ShortMemory size: 4 }
+	 * [
 	 *   0 -> 0
 	 *   1 -> 1
 	 *   2 -> 2
 	 *   3 -> 3
-	 * >|</pre>
+	 * ]</pre>
 	 */
 	public function toString():String
 	{
 		#if debug
-		if (_memory == null) return "{ShortMemory (unassigned)}";
-		var s = '{ShortMemory, size: $size, name: $name}';
-		s += "\n|<\n";
+		if (_memory == null) return "{ShortMemory (unassigned) }";
+		var s = '{ ShortMemory size: $size, name: $name }';
+		s += "\n[\n";
 		for (i in 0...size)
 			s += Printf.format("  %3d -> %#.3f\n", [i, get(i)]);
-		s += "\n>|";
+		s += "\n]";
 		return s;
 		#else
-		return '{ShortMemory, size: $size, name: $name}';
+		return '{ ShortMemory size: $size, name: $name }';
 		#end
 	}
 }

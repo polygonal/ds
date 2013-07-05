@@ -292,19 +292,19 @@ class ObjectPool<T> implements Hashable
 	public function toString():String
 	{
 		#if debug
-		var s = '{ObjectPool, used/total: $_count/$_size}';
+		var s = '{ ObjectPool used/total: $_count/$_size }';
 		if (size() == 0) return s;
-		s += "\n|<\n";
+		s += "\n[\n";
 		
 		for (i in 0...size())
 		{
 			var t = Std.string(_pool[i]);
 			s += Printf.format("  %4d -> {%s}\n", [i, t]);
 		}
-		s += ">|";
+		s += "]";
 		return s;
 		#else
-		return '{ObjectPool, used/total: ${countUsedObjects()}/$_size}';
+		return '{ ObjectPool used/total: ${countUsedObjects()}/$_size }';
 		#end
 	}
 	

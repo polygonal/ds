@@ -155,19 +155,19 @@ class HashMap<K, T> implements Map<K, T>
 	 * trace(hm);</pre>
 	 * <pre class="console">
 	 * {HashMap, size: 2}
-	 * |<
+	 * [
 	 *   key1 -> val1
 	 *   key2 -> val2
-	 * >|</pre>
+	 * ]</pre>
 	 */
 	public function toString():String
 	{
-		var s = '{HashMap, size: ${size()}}';
+		var s = '{ HashMap size: ${size()} }';
 		if (isEmpty()) return s;
-		s += "\n|<\n";
+		s += "\n[\n";
 		for (key in keys())
 			s += '  ${Std.string(key)} -> ${Std.string(get(key))}\n';
-		s += ">|";
+		s += "]";
 		return s;
 	}
 	

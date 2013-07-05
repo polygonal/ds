@@ -506,26 +506,26 @@ class DoubleMemory extends MemoryAccess
 	 * }
 	 * trace(mem);</pre>
 	 * <pre class="console">
-	 * {DoubleMemory, size: 4}
-	 * |<
+	 * { DoubleMemory size: 4 }
+	 * [
 	 *   0 -> 0.000
 	 *   1 -> 1.000
 	 *   2 -> 2.000
 	 *   3 -> 3.000
-	 * >|</pre>
+	 * ]</pre>
 	 */
 	public function toString():String
 	{
 		#if debug
-		if (_memory == null) return "{DoubleMemory (unassigned)}";
-		var s = '{DoubleMemory, size: $size, name: $name}';
-		s += "\n|<\n";
+		if (_memory == null) return "{ DoubleMemory (unassigned) }";
+		var s = '{ DoubleMemory size: $size, name: $name }';
+		s += "\n[\n";
 		for (i in 0...size)
 			s += Printf.format("  %3d -> %#.3f\n", [i, get(i)]);
-		s += "\n>|";
+		s += "\n]";
 		return s;
 		#else
-		return '{DoubleMemory, size: $size, name: $name}';
+		return '{ DoubleMemory size: $size, name: $name }';
 		#end
 	}
 }

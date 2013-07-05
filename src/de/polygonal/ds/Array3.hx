@@ -586,11 +586,18 @@ class Array3<T> implements Collection<T>
 	
 	/**
 	 * Returns a string representing the current object.<br/>
-	 * Use <em>getLayer()</em> to print the elements at a specific layer.
+	 * Use <em>getLayer()</em> to print the elements at a specific layer.<br/>
+	 * Example:<br/>
+	 * <pre class="prettyprint">
+	 * var array3 = new de.polygonal.ds.Array3&lt;String&gt;(4, 4, 3);
+	 * trace(array3);</pre>
+	 * <pre class="console">
+	 * { Array3 4x4x3 }
+	 * </pre>
 	 */
 	public function toString():String
 	{
-		return '{Array3, ${getW()}x${getH()}x${getD()}}';
+		return '{ Array3 ${getW()}x${getH()}x${getD()} }';
 	}
 	
 	/*///////////////////////////////////////////////////////

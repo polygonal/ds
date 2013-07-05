@@ -520,20 +520,20 @@ class BinaryTreeNode<T> implements Collection<T>
 	 * root.l.l.setR(4);
 	 * trace(root);</pre>
 	 * <pre class="console">
-	 * {BinaryTreeNode, val: 0 size: 4, node depth: 0, tree height: 3}
-	 * |<
+	 * { BinaryTreeNode val: 0, size: 4, node depth: 0, tree height: 3 }
+	 * [
 	 *   0
 	 *   L---1
 	 *   |   L---3
 	 *   |   |   R---4
 	 *   R---2
-	 * >|</pre>
+	 * ]</pre>
 	 */
 	public function toString():String
 	{
-		var s = '{BinaryTreeNode, val: ${Std.string(val)} size: ${size()}, node depth: ${depth()}, tree height: ${height()}}';
+		var s = '{ BinaryTreeNode val: ${Std.string(val)}, size: ${size()}, node depth: ${depth()}, tree height: ${height()} }';
 		if (size() == 1) return s;
-		s += "\n\n|<\n";
+		s += "\n\n[\n";
 		var f = function(node:BinaryTreeNode<T>, userData:Dynamic):Bool
 		{
 			var d = node.depth();
@@ -551,7 +551,7 @@ class BinaryTreeNode<T> implements Collection<T>
 			return true;
 		}
 		preorder(f);
-		s += ">|\n";
+		s += "]\n";
 		return s;
 	}
 	

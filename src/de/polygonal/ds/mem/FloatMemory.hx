@@ -495,26 +495,26 @@ class FloatMemory extends MemoryAccess
 	 * }
 	 * trace(mem);</pre>
 	 * <pre class="console">
-	 * {FloatMemory, size: 4}
-	 * |<
+	 * { FloatMemory, size: 4 }
+	 * [
 	 *   0 -> 0.000
 	 *   1 -> 1.000
 	 *   2 -> 2.000
 	 *   3 -> 3.000
-	 * >|</pre>
+	 * ]</pre>
 	 */
 	public function toString():String
 	{
 		#if debug
-		if (_memory == null) return "{FloatMemory (unassigned)}";
-		var s = '{FloatMemory, size: $size, name: $name}';
-		s += "\n|<\n";
+		if (_memory == null) return "{ FloatMemory (unassigned) }";
+		var s = '{ FloatMemory, size: $size, name: $name }';
+		s += "\n[\n";
 		for (i in 0...size)
 			s += Printf.format("  %3d -> %#.3f\n", [i, get(i)]);
-		s += "\n>|";
+		s += "\n]";
 		return s;
 		#else
-		return '{FloatMemory, size: $size, name: $name}';
+		return '{ FloatMemory, size: $size, name: $name }';
 		#end
 	}
 }

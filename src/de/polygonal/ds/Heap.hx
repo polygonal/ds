@@ -431,17 +431,17 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	 *     }
 	 * }</pre>
 	 * <pre class="console">
-	 * {Heap, size: 4}
-	 *   |< front
+	 * { Heap size: 4 }
+	 * [ front
 	 *   0 -> 1
 	 *   1 -> 13
 	 *   2 -> 37
 	 *   3 -> 64
-	 * >|</pre>
+	 * ]</pre>
 	 */
 	public function toString():String
 	{
-		var s = '{Heap, size: ${size()}}';
+		var s = '{ Heap size: ${size()} }';
 		if (isEmpty()) return s;
 		var tmp = new Heap<HeapElementWrapper<T>>();
 		for (i in 1..._size + 1)
@@ -450,11 +450,11 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 			tmp.__set(i, w);
 		}
 		tmp._size = _size;
-		s += "\n|< front\n";
+		s += "\n[ front\n";
 		var i = 0;
 		while (tmp.size() > 0)
 			s += Printf.format("  %4d -> %s\n", [i++, Std.string(tmp.pop())]);
-		s += ">|";
+		s += "]";
 		return s;
 	}
 	

@@ -416,7 +416,7 @@ class TreeBuilder<T>
 	 */
 	public function toString():String
 	{
-		return "{TreeBuilder, V: " + (valid() ? _node.val : cast null) + ", H: " + (childValid() ? _child.val : cast null) + "}";
+		return "{ TreeBuilder V: " + (valid() ? _node.val : cast null) + ", H: " + (childValid() ? _child.val : cast null) + " }";
 	}
 	
 	inline function _reset():Void

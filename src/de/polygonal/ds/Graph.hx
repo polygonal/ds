@@ -1000,25 +1000,25 @@ class Graph<T> implements Collection<T>
 	 * graph.addMutualArc(a, c, 1.0);
 	 * trace(graph);</pre>
 	 * <pre class="console">
-	 * {Graph, size: 3}
-	 * |<
+	 * { Graph size: 3 }
+	 * [
 	 *   {GraphNode, val: c, connected to: a}
 	 *   {GraphNode, val: b, connected to: a}
 	 *   {GraphNode, val: a, connected to: c,b}
-	 * >|</pre>
+	 * ]</pre>
 	 */
 	public function toString():String
 	{
-		var s = '{Graph, size: ${size()}}';
+		var s = '{ Graph size: ${size()} }';
 		if (isEmpty()) return s;
-		s += "\n|<\n";
+		s += "\n[\n";
 		var node = _nodeList;
 		while (node != null)
 		{
 			s += '  ${node.toString()}\n';
 			node = node.next;
 		}
-		s += ">|";
+		s += "]";
 		return s;
 	}
 	

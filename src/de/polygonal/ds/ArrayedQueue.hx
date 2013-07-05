@@ -433,7 +433,7 @@ class ArrayedQueue<T> implements Queue<T>
 	}
 	
 	/**
-	 * Returns a string representing the current object.<br/>
+	 * Returns a string representing the current object.<br/>  
 	 * Example:<br/>
 	 * <pre class="prettyprint">
 	 * var queue = new de.polygonal.ds.ArrayedQueue&lt;Int&gt;(4);
@@ -442,22 +442,22 @@ class ArrayedQueue<T> implements Queue<T>
 	 * }
 	 * trace(queue);</pre>
 	 * <pre class="console">
-	 * {ArrayedQueue, size/capacity: 4/4}
-	 * |< front
+	 * { ArrayedQueue size/capacity: 4/4 }
+	 * [ front
 	 *   0 -> 0
 	 *   1 -> 1
 	 *   2 -> 2
 	 *   3 -> 3
-	 * >|</pre>
+	 * ]</pre>
 	 */
 	public function toString():String
 	{
-		var s = '{ArrayedQueue, size/capacity: $_size/$_capacity}';
+		var s = '{ ArrayedQueue size/capacity: $_size/$_capacity }';
 		if (isEmpty()) return s;
-		s += "\n|< front\n";
+		s += "\n[ front\n";
 		for (i in 0..._size)
 			s += Printf.format("  %4d -> %s\n", [i, Std.string(get(i))]);
-		s += ">|";
+		s += "]";
 		return s;
 	}
 	

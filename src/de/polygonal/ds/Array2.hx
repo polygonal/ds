@@ -834,13 +834,13 @@ class Array2<T> implements Collection<T>
 	 * array2.walk(function(val:String, x:Int, y:Int):String { return Std.string(x) + "." + Std.string(y); });
 	 * trace(array2);</pre>
 	 * <pre class="console">
-	 * {Array2, 4x4}
-	 * |<
+	 * { Array2 4x4 }
+	 * [
 	 *   &#091;0.0&#093;&#091;1.0&#093;&#091;2.0&#093;&#091;3.0&#093;
 	 *   &#091;0.1&#093;&#091;1.1&#093;&#091;2.1&#093;&#091;3.1&#093;
 	 *   &#091;0.2&#093;&#091;1.2&#093;&#091;2.2&#093;&#091;3.2&#093;
 	 *   &#091;0.3&#093;&#091;1.3&#093;&#091;2.3&#093;&#091;3.3&#093;
-	 * >|</pre>
+	 * ]</pre>
 	 */
 	public function toString():String
 	{
@@ -850,19 +850,19 @@ class Array2<T> implements Collection<T>
 			var s = Std.string(__get(i));
 			l = Std.int(Math.max(s.length, l));
 		}
-		var s = '{Array2, ${_w}x${_h}}';
-		s += "\n|<\n";
+		var s = '{ Array2 ${_w}x${_h} }';
+		s += "\n[\n";
 		var offset, value;
 		for (y in 0..._h)
 		{
 			s += "  ";
 			offset = y * _w;
 			for (x in 0..._w)
-				s += Printf.format("[%" + l + "s]", [Std.string(__get(offset + x))]);
+				s += Printf.format("%" + l + "s%s", [Std.string(__get(offset + x)), x < _w - 1 ? ", " : ""]);
 			s += "\n";
 		}
 		
-		s += ">|";
+		s += "]";
 		return s;
 	}
 	

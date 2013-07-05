@@ -461,19 +461,19 @@ class ArrayedDeque<T> implements Deque<T>
 	 * }
 	 * trace(deque);</pre>
 	 * <pre class="console">
-	 * {ArrayedDeque, size: 4}
-	 * |< front
+	 * { ArrayedDeque size: 4 }
+	 * [ front
 	 *   0 -> 3
 	 *   1 -> 2
 	 *   2 -> 1
 	 *   3 -> 0
-	 * >|</pre>
+	 * ]</pre>
 	 */
 	public function toString():String
 	{
-		var s = '{ArrayedDeque, size: ${size()}}';
+		var s = '{ ArrayedDeque size: ${size()} }';
 		if (isEmpty()) return s;
-		s += "\n|< front\n";
+		s += "\n[ front\n";
 		
 		var i = 0;
 		if (_tailBlockIndex == 0)
@@ -504,7 +504,7 @@ class ArrayedDeque<T> implements Deque<T>
 			for (j in 0..._tail)
 				s += Printf.format("  %4d -> %s\n", [i++, Std.string(_tailBlock[j])]);
 		}
-		s += ">|";
+		s += "]";
 		return s;
 	}
 	

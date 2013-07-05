@@ -511,26 +511,26 @@ class ByteMemory extends MemoryAccess
 	 * }
 	 * trace(mem);</pre>
 	 * <pre class="console">
-	 * {ByteMemory, size: 4}
-	 * |<
+	 * { ByteMemory size: 4 }
+	 * [
 	 *   0 -> 0
 	 *   1 -> 1
 	 *   2 -> 2
 	 *   3 -> 3
-	 * >|</pre>
+	 * ]</pre>
 	 */
 	public function toString():String
 	{
 		#if debug
-		if (_memory == null) return "{ByteMemory (unassigned)}";
-		var s = '{ByteMemory, size: $size, name: $name}';
-		s += "\n|<\n";
+		if (_memory == null) return "{ ByteMemory (unassigned) }";
+		var s = '{ ByteMemory size: $size, name: $name }';
+		s += "\n[\n";
 		for (i in 0...size)
 			s += Printf.format("  %3d -> %d\n", [i, get(i)]);
-		s += "\n>|";
+		s += "\n]";
 		return s;
 		#else
-		return '{ByteMemory, size: $size, name: $name}';
+		return '{ ByteMemory size: $size, name: $name }';
 		#end
 	}
 }

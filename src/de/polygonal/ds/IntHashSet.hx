@@ -389,24 +389,24 @@ class IntHashSet implements Set<Int>
 	 * }
 	 * trace(set);</pre>
 	 * <pre class="console">
-	 * {IntHashSet, size/capacity: 4/16, load factor: 0.25 }
-	 * |<
+	 * { IntHashSet size/capacity: 4/16, load factor: 0.25 }
+	 * [
 	 *   0
 	 *   1
 	 *   2
 	 *   3
-	 * >|</pre>
+	 * ]</pre>
 	 */
 	public function toString():String
 	{
-		var s = Printf.format("{IntHashSet, size/capacity: %d/%d, load factor: %.2f}", [size(), _capacity, getLoadFactor()]);
+		var s = Printf.format("{ IntHashSet size/capacity: %d/%d, load factor: %.2f }", [size(), _capacity, getLoadFactor()]);
 		if (isEmpty()) return s;
-		s += "\n|<\n";
+		s += "\n[\n";
 		for (x in this)
 		{
 			s += '  $x\n';
 		}
-		s += ">|";
+		s += "]";
 		return s;
 	}
 	

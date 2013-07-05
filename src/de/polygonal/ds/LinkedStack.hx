@@ -523,17 +523,17 @@ class LinkedStack<T> implements Stack<T>
 	 * trace(ls);</pre>
 	 * <pre class="console">
 	 * {LinkedStack size: 3}
-	 * |< top
+	 * [ top
 	 *     0 -> 2
 	 *     1 -> 1
 	 *     2 -> 0
-	 * >|</pre>
+	 * ]</pre>
 	 */
 	public function toString():String
 	{
-		var s = '{LinkedStack size: ${size()}}';
+		var s = '{ LinkedStack size: ${size()} }';
 		if (isEmpty()) return s;
-		s += "\n|< top\n";
+		s += "\n[ top\n";
 		var node = _head;
 		var i = _top - 1;
 		while (i >= 0)
@@ -542,7 +542,7 @@ class LinkedStack<T> implements Stack<T>
 			i--;
 			node = node.next;
 		}
-		s += ">|";
+		s += "]";
 		return s;
 	}
 	

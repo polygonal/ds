@@ -228,8 +228,8 @@ class MemoryManager
 	public static function dump():String
 	{
 		#if alchemy
-		var s = '{MemoryManager, ${bytesTotal()} bytes total, ${bytesFree()} bytes free (${get()._bytes.length - get()._blockSizeBytes})}';
-		s += "\n|< front\n";
+		var s = '{ MemoryManager, ${bytesTotal()} bytes total, ${bytesFree()} bytes free (${get()._bytes.length - get()._blockSizeBytes}) }';
+		s += "\n[ front\n";
 		var i = get()._segmentList;
 		var j = 0;
 		while (i != null)
@@ -238,10 +238,10 @@ class MemoryManager
 			s += Printf.format("  %4d -> %s (%s)\n", [j++, Std.string(i), friend._access]);
 			i = i.next;
 		}
-		s += ">|";
+		s += "]";
 		return s;
 		#else
-		return "{MemoryManager}";
+		return "{ MemoryManager }";
 		#end
 	}
 	
@@ -1053,9 +1053,9 @@ private class MemorySegment
 	public function toString():String
 	{
 		#if debug
-		return '{MemorySegment, range: $b...$e, bytes: $size, isEmpty: $isEmpty}';
+		return '{ MemorySegment range: $b...$e, bytes: $size, isEmpty: $isEmpty }';
 		#else
-		return '{MemorySegment, bytes: $size}';
+		return '{ MemorySegment bytes: $size }';
 		#end
 	}
 	

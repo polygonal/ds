@@ -298,7 +298,7 @@ class DynamicObjectPool<T>
 	 */
 	public function toString():String
 	{
-		return '{DynamicObjectPool, size/capacity: ${size()}/${capacity()}}';
+		return '{ DynamicObjectPool, size/capacity: ${size()}/${capacity()} }';
 	}
 	
 	inline function _alloc()

@@ -228,7 +228,7 @@ class HashSet<T:Hashable> implements Set<T>
 	 *     }
 	 *     
 	 *     public function toString():String {
-	 *         return "{Foo value: " + value + "}";
+	 *         return "{ Foo value: " + value + " }";
 	 *     }
 	 * }
 	 * 
@@ -242,24 +242,24 @@ class HashSet<T:Hashable> implements Set<T>
 	 *     }
 	 * }</pre>
 	 * <pre class="console">
-	 * {HashSet, size/capacity: 4/16, load factor: 0.25 }
-	 * |<
-	 *   {Foo value: 0}
-	 *   {Foo value: 1}
-	 *   {Foo value: 2}
-	 *   {Foo value: 3}
-	 * >|</pre>
+	 * { HashSet size/capacity: 4/16, load factor: 0.25 }
+	 * [
+	 *   { Foo value: 0 }
+	 *   { Foo value: 1 }
+	 *   { Foo value: 2 }
+	 *   { Foo value: 3 }
+	 * ]</pre>
 	 */
 	public function toString():String
 	{
-		var s = Printf.format("{HashSet, size/capacity: %d/%d, load factor: %.2f}", [size(), getCapacity(), getLoadFactor()]);
+		var s = Printf.format("{ HashSet size/capacity: %d/%d, load factor: %.2f }", [size(), getCapacity(), getLoadFactor()]);
 		if (isEmpty()) return s;
-		s += "\n|<\n";
+		s += "\n[\n";
 		for (x in this)
 		{
 			s += '  ${Std.string(x)}\n';
 		}
-		s += ">|";
+		s += "]";
 		return s;
 	}
 	

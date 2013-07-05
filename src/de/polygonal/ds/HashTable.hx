@@ -322,7 +322,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	 *     }
 	 *     
 	 *     public function toString():String {
-	 *         return "{Foo value: " + value + "}";
+	 *         return "{ Foo value: " + value + " }";
 	 *     }
 	 * }
 	 * 
@@ -335,19 +335,19 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	 *     }
 	 * }</pre>
 	 * <pre class="console">
-	 * {HashTable, size/capacity: 4/16, load factor: 0.25 }
-	 * |<
+	 * { HashTable size/capacity: 4/16, load factor: 0.25 }
+	 * [
 	 *   {Foo value: 0} -> foo0
 	 *   {Foo value: 1} -> foo1
 	 *   {Foo value: 2} -> foo2
 	 *   {Foo value: 3} -> foo3
-	 * >|</pre>
+	 * ]</pre>
 	 */
 	public function toString():String
 	{
-		var s = Printf.format("{HashTable, size/capacity: %d/%d, load factor: %.2f}", [size(), getCapacity(), getLoadFactor()]);
+		var s = Printf.format("{ HashTable size/capacity: %d/%d, load factor: %.2f }", [size(), getCapacity(), getLoadFactor()]);
 		if (isEmpty()) return s;
-		s += "\n|<\n";
+		s += "\n[\n";
 		
 		var max = 0;
 		for (key in keys()) max = M.max(max, Std.string(key).length);
@@ -355,7 +355,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		for (key in keys())
 			s += Printf.format("  %- " + max + "s -> %s\n", [key, Std.string(get(key))]);
 		
-		s += ">|";
+		s += "]";
 		return s;
 	}
 	

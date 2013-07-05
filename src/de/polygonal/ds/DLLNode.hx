@@ -295,7 +295,7 @@ class DLLNode<T>
 	 */
 	public function toString():String
 	{
-		return '{DLLNode ${Std.string(val)}}';
+		return '{ DLLNode ${Std.string(val)} }';
 	}
 	
 	inline function _unlink():DLLNode<T>

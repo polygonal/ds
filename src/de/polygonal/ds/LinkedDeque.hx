@@ -359,19 +359,19 @@ class LinkedDeque<T> implements Deque<T>
 	 * }
 	 * trace(deque);</pre>
 	 * <pre class="console">
-	 * {LinkedDeque, size: 4}
-	 * |< front
+	 * { LinkedDeque, size: 4 }
+	 * [ front
 	 *   0 -> 3
 	 *   1 -> 2
 	 *   2 -> 1
 	 *   3 -> 0
-	 * >|</pre>
+	 * ]</pre>
 	 */
 	public function toString():String
 	{
-		var s = '{LinkedDeque, size: ${size()}}';
+		var s = '{ LinkedDeque size: ${size()} }';
 		if (isEmpty()) return s;
-		s += "\n|< front\n";
+		s += "\n[ front\n";
 		var i = 0;
 		var node = _head;
 		while (node != null)
@@ -379,7 +379,7 @@ class LinkedDeque<T> implements Deque<T>
 			s += Printf.format("  %4d -> %s\n", [i++, Std.string(node.val)]);
 			node = node.next;
 		}
-		s += ">|";
+		s += "]";
 		return s;
 	}
 	

@@ -313,19 +313,19 @@ class BST<T:Comparable<T>> implements Collection<T>
 	 *     }
 	 * }</pre>
 	 * <pre class="console">
-	 * {BST, size 4}
-	 * |<
+	 * { BST size: 4 }
+	 * [
 	 *   {Foo 7}
 	 *   {Foo 2}
 	 *   {Foo 1}
 	 *   {Foo 0}
-	 * >|</pre>
+	 * ]</pre>
 	 */
 	public function toString():String
 	{
-		var s = '{BST, size ${size()}}';
+		var s = '{ BST size: ${size()} }';
 		if (isEmpty()) return s;
-		s += "\n|<\n";
+		s += "\n[\n";
 		var dumpNode = function(node:BinaryTreeNode<T>, userData:Dynamic):Bool
 		{
 			s += '  ${Std.string(node.val)}\n';
@@ -333,7 +333,7 @@ class BST<T:Comparable<T>> implements Collection<T>
 		};
 		
 		_root.inorder(dumpNode);
-		s += ">|";
+		s += "]";
 		return s;
 	}
 	

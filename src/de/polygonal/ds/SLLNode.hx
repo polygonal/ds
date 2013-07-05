@@ -43,7 +43,7 @@ import de.polygonal.ds.error.Assert.assert;
 class SLLNode<T>
 {
 	/**
-	 * The node's data. 
+	 * The node's data.
 	 */
 	public var val:T;
 	
@@ -154,7 +154,7 @@ class SLLNode<T>
 	 */
 	public function toString():String
 	{
-		return '{SLLNode: ${Std.string(val)}}';
+		return '{ SLLNode ${Std.string(val)} }';
 	}
 	
 	inline function _insertAfter(node:SLLNode<T>):Void

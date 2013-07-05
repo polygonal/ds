@@ -348,7 +348,7 @@ class IntHashTable<T> implements Map<Int, T>
 	 *     }
 	 *     
 	 *     public function toString():String {
-	 *         return "{Foo " + value + "}";
+	 *         return "{ Foo " + value + " }";
 	 *     }
 	 * }
 	 * 
@@ -361,19 +361,19 @@ class IntHashTable<T> implements Map<Int, T>
 	 *     }
 	 * }</pre>
 	 * <pre class="console">
-	 * {IntHashTable, size/capacity: 4/16, load factor: 0.25 }
-	 * |<
-	 *    0 -> {Foo 0}
-	 *    1 -> {Foo 1}
-	 *    2 -> {Foo 2}
-	 *    3 -> {Foo 3}
-	 * >|</pre>
+	 * { IntHashTable size/capacity: 4/16, load factor: 0.25 }
+	 * [
+	 *    0 -> { Foo 0 }
+	 *    1 -> { Foo 1 }
+	 *    2 -> { Foo 2 }
+	 *    3 -> { Foo 3 }
+	 * ]</pre>
 	 */
 	public function toString():String
 	{
-		var s = Printf.format("{IntHashTable, size/capacity: %d/%d, load factor: %.2f}", [size(), getCapacity(), getLoadFactor()]);
+		var s = Printf.format("{ IntHashTable size/capacity: %d/%d, load factor: %.2f }", [size(), getCapacity(), getLoadFactor()]);
 		if (isEmpty()) return s;
-		s += "\n|<\n";
+		s += "\n[\n";
 		
 		var max = 0.;
 		for (key in keys()) max = Math.max(max, key);
@@ -386,7 +386,7 @@ class IntHashTable<T> implements Map<Int, T>
 		
 		for (key in keys())
 			s += Printf.format("  %- " + i + "d -> %s\n", [key, Std.string(_vals[_h.getFront(key)])]);
-		s += ">|";
+		s += "]";
 		return s;
 	}
 	

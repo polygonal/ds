@@ -295,9 +295,9 @@ class GraphNode<T> implements Hashable
 			}
 		}
 		if (t.length > 0)
-			return '{GraphNode, val: $val, connected to: ${t.join(",")}}';
+			return '{ GraphNode val: $val, connected to: ${t.join(",")} }';
 		else
-			return '{GraphNode, val: $val}';
+			return '{ GraphNode val: $val }';
 	}
 }
 

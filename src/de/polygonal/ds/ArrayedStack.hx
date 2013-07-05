@@ -505,25 +505,25 @@ class ArrayedStack<T> implements Stack<T>
 	 * }
 	 * trace(stack);</pre>
 	 * <pre class="console">
-	 * {ArrayedStack, size/max: 4/4}
-	 * |< top
+	 * { ArrayedStack size/max: 4/4 }
+	 * [ top
 	 *   3 -> 3
 	 *   2 -> 2
 	 *   1 -> 1
 	 *   0 -> 0
-	 * >|</pre>
+	 * ]</pre>
 	 */
 	public function toString():String
 	{
-		var s = '{ArrayedStack, size: ${size()}';
+		var s = '{ ArrayedStack size: ${size()} }';
 		if (isEmpty()) return s;
-		s += "\n|< top\n";
+		s += "\n[ top\n";
 		var i = _top - 1;
 		var j = _top - 1;
 		while (i >= 0)
 			s += Printf.format("  %4d -> %s\n", [j--, Std.string(__get(i--))]);
 			
-		s += ">|";
+		s += "]";
 		return s;
 	}
 	

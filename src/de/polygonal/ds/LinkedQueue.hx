@@ -333,18 +333,18 @@ class LinkedQueue<T> implements Queue<T>
 	 * lq.enqueue(2);
 	 * trace(lq);</pre>
 	 * <pre class="console">
-	 * {LinkedQueue size: 3}
-	 * |<
+	 * { LinkedQueue size: 3 }
+	 * [
 	 *   0 -> 0
 	 *   1 -> 1
 	 *   2 -> 2
-	 * >|</pre>
+	 * ]</pre>
 	 */
 	public function toString():String
 	{
-		var s = '{LinkedQueue size: ${size()}}';
+		var s = '{ LinkedQueue size: ${size()} }';
 		if (isEmpty()) return s;
-		s += "\n|<\n";
+		s += "\n[\n";
 		var node = _head;
 		var i = 0;
 		while (node != null)
@@ -352,7 +352,7 @@ class LinkedQueue<T> implements Queue<T>
 			s += Printf.format("  %4d -> %s\n", [i++, Std.string(node.val)]);
 			node = node.next;
 		}
-		s += ">|";
+		s += "]";
 		return s;
 	}
 	

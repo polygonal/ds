@@ -990,21 +990,21 @@ class DA<T> implements Collection<T>
 	 * }
 	 * trace(da);</pre>
 	 * <pre class="console">
-	 * {DA, size/max: 3/10}
-	 * |<
+	 * { DA size/max: 3/10 }
+	 * [
 	 *   0 -> 0
 	 *   1 -> 1
 	 *   2 -> 2
-	 * >|</pre>
+	 * ]</pre>
 	 */
 	public function toString():String
 	{
-		var s = '{DA, size: ${size()}}';
+		var s = '{ DA size: ${size()} }';
 		if (isEmpty()) return s;
-		s += "\n|<\n";
+		s += "\n[\n";
 		for (i in 0...size())
 			s += Printf.format("  %4d -> %s\n", [i, Std.string(__get(i))]);
-		s += ">|";
+		s += "]";
 		return s;
 	}
 	

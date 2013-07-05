@@ -69,20 +69,20 @@ class ListSet<T> implements Set<T>
 	 * set.set("val2");
 	 * trace(set);</pre>
 	 * <pre class="console">
-	 * {ListSet, size: 2}
-	 * |<
+	 * { ListSet size: 2 }
+	 * [
 	 *   val1
 	 *   val2
-	 * >|</pre>
+	 * ]</pre>
 	 */
 	public function toString():String
 	{
-		var s = '{ListSet, size: ${size()}}';
+		var s = '{ ListSet size: ${size()} }';
 		if (isEmpty()) return s;
-		s += "\n|<\n";
+		s += "\n[\n";
 		for (i in 0...size())
 			s += '  ${Std.string(_a.get(i))}\n';
-		s += ">|";
+		s += "]";
 		return s;
 	}
 	

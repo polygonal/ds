@@ -475,17 +475,17 @@ class BitMemory extends MemoryAccess
 	 * }
 	 * trace(mem);</pre>
 	 * <pre class="console">
-	 * {BitMemory, size: 32}
-	 * |<
+	 * { BitMemory size: 32 }
+	 * [
 	 *   0 -> 11111111111111110000000000000000
-	 * >|</pre>
+	 * ]</pre>
 	 */
 	public function toString():String
 	{
 		#if debug
-		if (_memory == null) return "{BitMemory (unassigned)}";
-		var s = '{BitMemory, size: $size, name: $name}';
-		s += "\n|<\n";
+		if (_memory == null) return "{ BitMemory (unassigned) }";
+		var s = '{ BitMemory size: $size, name: $name }';
+		s += "\n[\n";
 		
 		for (i in 0...bytes >> 2)
 		{
@@ -500,10 +500,10 @@ class BitMemory extends MemoryAccess
 			}
 			s += Printf.format("  %4d -> %s\n", [i, t]);
 		}
-		s += "\n>|";
+		s += "\n]";
 		return s;
 		#else
-		return '{BitMemory, size: $size, name: $name}';
+		return '{ BitMemory size: $size, name: $name }';
 		#end
 	}
 }

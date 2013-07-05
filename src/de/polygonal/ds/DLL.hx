@@ -986,26 +986,26 @@ class DLL<T> implements Collection<T>
 	 * }
 	 * trace(dll);</pre>
 	 * <pre class="console">
-	 * {DLL, size: 4, circular: false}
- 	 * |< head 
+	 * { DLL size: 4, circular: false }
+ 	 * [ head 
 	 *   0
 	 *   1
 	 *   2
 	 *   3
-	 * tail >|</pre>
+	 * ] tail</pre>
 	 */
 	public function toString():String
 	{
-		var s = '{DLL, size: ${size()}, circular: ${isCircular()}}';
+		var s = '{ DLL size: ${size()}, circular: ${isCircular()} }';
 		if (isEmpty()) return s;
-		s += "\n|< head \n";
+		s += "\n[ head \n";
 		var node = head;
 		for (i in 0..._size)
 		{
 			s += '  ${Std.string(node.val)}\n';
 			node = node.next;
 		}
-		s += " tail >|";
+		s += "] tail";
 		return s;
 	}
 	

@@ -388,20 +388,20 @@ class BitVector implements Hashable
 	 * }
 	 * trace(bv);</pre>
 	 * <pre class="console">
-	 * {BitVector, set/all: 20/40}
-	 * |<
+	 * { BitVector set/all: 20/40 }
+	 * [
 	 *   0 -> b01010101010101010101010101010101
 	 *   1 -> b00000000000000000000000001010101
-	 * >|</pre>
+	 * ]</pre>
 	 */
 	public function toString():String
 	{
-		var s = '{BitVector, set/all: ${size()}/${capacity()}}';
+		var s = '{ BitVector set/all: ${size()}/${capacity()} }';
 		if (size() == 0) return s;
-		s += "\n|<\n";
+		s += "\n[\n";
 		for (i in 0..._arrSize)
 			s += Printf.format("  %4d -> %#.32b\n", [i, _bits[i]]);
-		s += ">|";
+		s += "]";
 		return s;
 	}
 	
