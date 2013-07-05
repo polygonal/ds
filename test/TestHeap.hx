@@ -1,4 +1,4 @@
-﻿package test;
+﻿package;
 
 import de.polygonal.ds.DA;
 import de.polygonal.ds.Heap;

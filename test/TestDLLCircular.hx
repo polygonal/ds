@@ -1,4 +1,4 @@
-﻿package test;
+﻿package;
 
 import de.polygonal.ds.DLL;
 import de.polygonal.ds.ListSet;

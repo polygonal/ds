@@ -1,4 +1,4 @@
-﻿package test;
+﻿package;
 
 import de.polygonal.ds.HashMap;
 import de.polygonal.ds.Set;

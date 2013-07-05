@@ -1,4 +1,4 @@
-﻿package test;
+﻿package;
 
 import de.polygonal.ds.Compare;
 import de.polygonal.ds.TreeBuilder;

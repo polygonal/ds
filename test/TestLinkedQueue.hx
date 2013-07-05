@@ -1,4 +1,4 @@
-﻿package test;
+﻿package;
 
 import de.polygonal.ds.LinkedQueue;
 import de.polygonal.ds.ListSet;

@@ -1,4 +1,4 @@
-﻿package test;
+﻿package;
 
 import de.polygonal.ds.Collection;
 import de.polygonal.ds.ListSet;

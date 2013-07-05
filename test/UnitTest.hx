@@ -1,4 +1,4 @@
-﻿package test;
+﻿package;
 
 class UnitTest extends haxe.unit.TestRunner
 {

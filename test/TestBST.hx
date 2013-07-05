@@ -1,4 +1,4 @@
-﻿package test;
+﻿package;
 
 import de.polygonal.core.math.random.Random;
 import de.polygonal.ds.BinaryTreeNode;

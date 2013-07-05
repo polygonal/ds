@@ -1,4 +1,4 @@
-﻿package test;
+﻿package;
 
 import de.polygonal.ds.ArrayConvert;
 import de.polygonal.ds.Compare;

@@ -1,4 +1,4 @@
-﻿package test;
+﻿package;
 
 import de.polygonal.ds.ArrayedDeque;
 import de.polygonal.ds.Deque;

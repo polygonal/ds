@@ -1,4 +1,4 @@
-﻿package test;
+﻿package;
 
 import de.polygonal.ds.ArrayedStack;
 import de.polygonal.ds.LinkedStack;
