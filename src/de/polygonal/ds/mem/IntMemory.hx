@@ -404,7 +404,7 @@ class IntMemory extends MemoryAccess
 	}
 	
 	#if !alchemy
-	override public function free():Void
+	override public function free()
 	{
 		_data = null;
 		super.free();
@@ -455,7 +455,7 @@ class IntMemory extends MemoryAccess
 	 * @throws de.polygonal.ds.error.AssertError invalid size (debug only).
 	 * @throws de.polygonal.ds.error.AssertError memory was already deallocated (debug only).
 	 */
-	override public function resize(newSize:Int):Void
+	override public function resize(newSize:Int)
 	{
 		#if debug
 		assert(newSize >= 0, 'invalid size ($newSize)');
@@ -496,7 +496,7 @@ class IntMemory extends MemoryAccess
 	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
 	 * @throws de.polygonal.ds.error.AssertError memory deallocated (debug only).
 	 */
-	inline public function set(i:Int, x:Int):Void
+	inline public function set(i:Int, x:Int)
 	{
 		#if alchemy
 		flash.Memory.setI32(getAddr(i), x);
@@ -510,7 +510,7 @@ class IntMemory extends MemoryAccess
 	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
 	 * @throws de.polygonal.ds.error.AssertError <code>i</code> equals <code>j</code> (debug only).
 	 */
-	inline public function swp(i:Int, j:Int):Void
+	inline public function swp(i:Int, j:Int)
 	{
 		#if debug
 		assert(i != j, 'i equals j ($i)');
@@ -547,7 +547,7 @@ class IntMemory extends MemoryAccess
 	}
 	
 	#if !alchemy
-	override public function clear():Void
+	override public function clear()
 	{
 		for (i in 0...size) _data[i] = 0;
 	}

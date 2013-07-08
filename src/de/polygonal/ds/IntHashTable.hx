@@ -295,7 +295,7 @@ class IntHashTable<T> implements Map<Int, T>
 	 * <o>n</o>
 	 * @throws de.polygonal.ds.error.AssertError <code>slotCount</code> is not a power of two (debug only).
 	 */
-	public function rehash(slotCount:Int):Void
+	public function rehash(slotCount:Int)
 	{
 		_h.rehash(slotCount);
 	}
@@ -572,7 +572,7 @@ class IntHashTable<T> implements Map<Int, T>
 	 * <warn>If "alchemy memory" is used, always call this method when the life cycle of this object ends to prevent a memory leak.</warn>
 	 * <o>n</o>
 	 */
-	public function free():Void
+	public function free()
 	{
 		for (i in 0...size()) _vals[i] = null;
 		_vals = null;
@@ -635,7 +635,7 @@ class IntHashTable<T> implements Map<Int, T>
 	 * <o>n</o>
 	 * @param purge if true, nullifies references of all values and shrinks the hash table to the initial capacity defined in the constructor.
 	 */
-	public function clear(purge = false):Void
+	public function clear(purge = false)
 	{
 		_h.clear(purge);
 		for (i in 0...getCapacity()) __clrKey(i);
@@ -996,7 +996,7 @@ class IntHashTableIterator<T> implements de.polygonal.ds.Itr<T>
 		return _vals[_i];
 	}
 	
-	inline public function remove():Void
+	inline public function remove()
 	{
 		throw "unsupported operation";
 	}

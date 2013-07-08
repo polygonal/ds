@@ -325,7 +325,7 @@ class HashMap<K, T> implements Map<K, T>
 	 * Improves GC efficiency/performance (optional).
 	 * <o>n</o>
 	 */
-	public function free():Void
+	public function free()
 	{
 		if (!_weak)
 		{
@@ -376,7 +376,7 @@ class HashMap<K, T> implements Map<K, T>
 	 * <o>n</o>
 	 * @param purge if true, elements are nullified upon removal.
 	 */
-	inline public function clear(purge = false):Void
+	inline public function clear(purge = false)
 	{
 		var a:Array<K> = untyped __keys__(_map);
 		for (key in a) untyped __delete__(_map, key);
@@ -517,7 +517,7 @@ class HashMapKeyIterator<K, T> implements de.polygonal.ds.Itr<K>
 		return _keys[_i++];
 	}
 	
-	inline public function remove():Void
+	inline public function remove()
 	{
 		#if debug
 		assert(_i > 0, "call next() before removing an element");
@@ -568,7 +568,7 @@ class HashMapValIterator<K, T> implements de.polygonal.ds.Itr<T>
 		return untyped _map[_keys[_i++]];
 	}
 	
-	inline public function remove():Void
+	inline public function remove()
 	{
 		#if debug
 		assert(_i > 0, "call next() before removing an element");

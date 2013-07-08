@@ -320,7 +320,7 @@ class ByteMemory extends MemoryAccess
 	}
 	
 	#if !alchemy
-	override public function free():Void
+	override public function free()
 	{
 		_data = null;
 		super.free();
@@ -392,7 +392,7 @@ class ByteMemory extends MemoryAccess
 	 * @throws de.polygonal.ds.error.AssertError invalid size (debug only).
 	 * @throws de.polygonal.ds.error.AssertError memory was already deallocated (debug only).
 	 */
-	override public function resize(newSize:Int):Void
+	override public function resize(newSize:Int)
 	{
 		#if debug
 		assert(newSize >= 0, 'invalid size ($newSize)');
@@ -438,7 +438,7 @@ class ByteMemory extends MemoryAccess
 	 * @throws de.polygonal.ds.error.AssertError segmentation Fault (debug only).
 	 * @throws de.polygonal.ds.error.AssertError memory deallocated (debug only).
 	 */
-	inline public function set(i:Int, x:Int):Void
+	inline public function set(i:Int, x:Int)
 	{
 		#if alchemy
 		flash.Memory.setByte(getAddr(i), x);
@@ -457,7 +457,7 @@ class ByteMemory extends MemoryAccess
 	 * @throws de.polygonal.ds.error.AssertError segmentation Fault (debug only).
 	 * @throws de.polygonal.ds.error.AssertError memory deallocated (debug only).
 	 */
-	inline public function swp(i:Int, j:Int):Void
+	inline public function swp(i:Int, j:Int)
 	{
 		#if debug
 		assert(i != j, 'i equals j ($i)');
@@ -494,7 +494,7 @@ class ByteMemory extends MemoryAccess
 	}
 	
 	#if !alchemy
-	override public function clear():Void
+	override public function clear()
 	{
 		for (i in 0...size) set(i, 0);
 	}

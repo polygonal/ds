@@ -69,7 +69,7 @@ class SLLNode<T>
 	 * Improves GC efficiency/performance (optional).
 	 * <o>1</o>
 	 */
-	public function free():Void
+	public function free()
 	{
 		val = cast null;
 		next = null;
@@ -157,7 +157,7 @@ class SLLNode<T>
 		return '{ SLLNode ${Std.string(val)} }';
 	}
 	
-	inline function _insertAfter(node:SLLNode<T>):Void
+	inline function _insertAfter(node:SLLNode<T>)
 	{
 		node.next = next;
 		next = node;

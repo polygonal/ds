@@ -190,7 +190,7 @@ class Graph<T> implements Collection<T>
 	 * <o>1</o>
 	 * @throws de.polygonal.ds.error.AssertError graph is empty (debug only).
 	 */
-	public function removeNode(x:GraphNode<T>):Void
+	public function removeNode(x:GraphNode<T>)
 	{
 		#if debug
 		assert(size() > 0, "graph is empty");
@@ -211,7 +211,7 @@ class Graph<T> implements Collection<T>
 	 * @throws de.polygonal.ds.error.AssertError <code>source</code> or <code>target</code> is null (debug only).
 	 * @throws de.polygonal.ds.error.AssertError <code>source</code> equals <code>target</code> (debug only).
 	 */
-	public function addSingleArc(source:GraphNode<T>, target:GraphNode<T>, cost = 1.):Void
+	public function addSingleArc(source:GraphNode<T>, target:GraphNode<T>, cost = 1.)
 	{
 		#if debug
 		assert(source != null, "source is null");
@@ -248,7 +248,7 @@ class Graph<T> implements Collection<T>
 	 * @throws de.polygonal.ds.error.AssertError <code>source</code> or <code>target</code> is null (debug only).
 	 * @throws de.polygonal.ds.error.AssertError <code>source</code> equals <code>target</code> (debug only).
 	 */
-	public function addMutualArc(source:GraphNode<T>, target:GraphNode<T>, cost = 1.):Void
+	public function addMutualArc(source:GraphNode<T>, target:GraphNode<T>, cost = 1.)
 	{
 		#if debug
 		assert(source != null, "source is null");
@@ -343,7 +343,7 @@ class Graph<T> implements Collection<T>
 	 * <warn>Call this method to start a fresh traversal.</warn>
 	 * <o>n</o>
 	 */
-	inline public function clearMarks():Void
+	inline public function clearMarks()
 	{
 		var node = _nodeList;
 		while (node != null)
@@ -357,7 +357,7 @@ class Graph<T> implements Collection<T>
 	 * Clears the parent pointers on all graph nodes.
 	 * <o>n</o>
 	 */
-	inline public function clearParent():Void
+	inline public function clearParent()
 	{
 		var node = _nodeList;
 		while (node != null)
@@ -387,7 +387,7 @@ class Graph<T> implements Collection<T>
 	 * @param userData custom data that is passed to every visited node via <code>process</code> or element.<em>visit()</em>. If omitted, null is used.
 	 * @param recursive if true, performs a recursive traversal (default traversal style is iterative).
 	 */
-	public function DFS(preflight = false, seed:GraphNode<T> = null, process:GraphNode<T>->Bool->Dynamic->Bool = null, userData:Dynamic = null, recursive = false):Void
+	public function DFS(preflight = false, seed:GraphNode<T> = null, process:GraphNode<T>->Bool->Dynamic->Bool = null, userData:Dynamic = null, recursive = false)
 	{
 		if (_size == 0) return;
 		
@@ -573,7 +573,7 @@ class Graph<T> implements Collection<T>
 	 * <warn>In this case the elements of all nodes have to implement Visitable.</warn><br/>
 	 * @param userData custom data that is passed to every visited node via <code>process</code> or element.<em>visit()</em>. If omitted, null is used.
 	 */
-	public function BFS(preflight = false, seed:GraphNode<T> = null, process:GraphNode<T>->Bool->Dynamic->Bool = null, userData:Dynamic = null):Void
+	public function BFS(preflight = false, seed:GraphNode<T> = null, process:GraphNode<T>->Bool->Dynamic->Bool = null, userData:Dynamic = null)
 	{
 		if (_size == 0) return;
 		
@@ -782,7 +782,7 @@ class Graph<T> implements Collection<T>
 	 * <warn>In this case the elements of all nodes have to implement Visitable.</warn><br/>
 	 * @param userData custom data that is passed to every visited node via <code>process</code> or element.<em>visit()</em>. If omitted, null is used.
 	 */
-	public function DLBFS(maxDepth:Int, preflight = false, seed:GraphNode<T> = null, process:GraphNode<T>->Bool->Dynamic->Bool = null, userData:Dynamic = null):Void
+	public function DLBFS(maxDepth:Int, preflight = false, seed:GraphNode<T> = null, process:GraphNode<T>->Bool->Dynamic->Bool = null, userData:Dynamic = null)
 	{
 		if (_size == 0) return;
 		
@@ -1031,7 +1031,7 @@ class Graph<T> implements Collection<T>
 	 * Improves GC efficiency/performance (optional).
 	 * <o>n</o>
 	 */
-	public function free():Void
+	public function free()
 	{
 		var node = _nodeList;
 		while (node != null)
@@ -1117,7 +1117,7 @@ class Graph<T> implements Collection<T>
 	 * @param purge if true, explicitly nullifies nodes and elements upon removal.<br/>
 	 * Improves GC efficiency/performance (optional).
 	 */
-	public function clear(purge = false):Void
+	public function clear(purge = false)
 	{
 		if (purge)
 		{
@@ -1420,7 +1420,7 @@ class GraphIterator<T> implements de.polygonal.ds.Itr<T>
 		return x;
 	}
 	
-	inline public function remove():Void
+	inline public function remove()
 	{
 		throw "unsupported operation";
 	}
@@ -1466,7 +1466,7 @@ class GraphNodeIterator<T> implements de.polygonal.ds.Itr<GraphNode<T>>
 		return x;
 	}
 	
-	inline public function remove():Void
+	inline public function remove()
 	{
 		throw "unsupported operation";
 	}
@@ -1521,7 +1521,7 @@ class GraphArcIterator<T> implements de.polygonal.ds.Itr<GraphArc<T>>
 		return x;
 	}
 	
-	inline public function remove():Void
+	inline public function remove()
 	{
 		throw "unsupported operation";
 	}

@@ -74,7 +74,7 @@ class DLLNode<T>
 	 * Improves GC efficiency/performance (optional).
 	 * <o>1</o>
 	 */
-	public function free():Void
+	public function free()
 	{
 		val = cast null;
 		next = prev = null;
@@ -307,7 +307,7 @@ class DLLNode<T>
 		return t;
 	}
 	
-	inline function _insertAfter(node:DLLNode<T>):Void
+	inline function _insertAfter(node:DLLNode<T>)
 	{
 		node.next = next;
 		node.prev = this;
@@ -315,7 +315,7 @@ class DLLNode<T>
 		next = node;
 	}
 	
-	inline function _insertBefore(node:DLLNode<T>):Void
+	inline function _insertBefore(node:DLLNode<T>)
 	{
 		node.next = this;
 		node.prev = prev;

@@ -77,7 +77,7 @@ class BitFlags
 	/**
 	 * <code>x</code> = <code>x</code> | <code>mask</code>. 
 	 */
-	inline public static function setf(x:BitField, mask:Int):Void
+	inline public static function setf(x:BitField, mask:Int)
 	{
 		x._bits = x._bits.setBits(mask);
 	}
@@ -85,7 +85,7 @@ class BitFlags
 	/**
 	 * <code>x</code> = <code>x</code> AND ~<code>mask</code>. 
 	 */
-	inline public static function clrf(x:BitField, mask:Int):Void
+	inline public static function clrf(x:BitField, mask:Int)
 	{
 		x._bits = x._bits.clrBits(mask);
 	}
@@ -93,7 +93,7 @@ class BitFlags
 	/**
 	 * <code>x</code> = <code>x</code> ^ <code>mask</code>. 
 	 */
-	inline public static function invf(x:BitField, mask:Int):Void
+	inline public static function invf(x:BitField, mask:Int)
 	{
 		x._bits = x._bits.invBits(mask);
 	}
@@ -101,7 +101,7 @@ class BitFlags
 	/**
 	 * <code>x</code> = 0.
 	 */
-	inline public static function nulf(x:BitField):Void
+	inline public static function nulf(x:BitField)
 	{
 		x._bits = 0;
 	}
@@ -109,7 +109,7 @@ class BitFlags
 	/**
 	 * <code>x</code> = <code>other</code>.
 	 */
-	inline public static function cpyf(x:BitField, other:BitField):Void
+	inline public static function cpyf(x:BitField, other:BitField)
 	{
 		x._bits = other._bits;
 	}
@@ -118,7 +118,7 @@ class BitFlags
 	 * Swaps the bit at index <code>i</code> with the bit at index <code>j</code> (LSB 0).
 	 * @param x the bits that are modified.
 	 */
-	inline public static function swpf(x:BitField, i:Int, j:Int):Void
+	inline public static function swpf(x:BitField, i:Int, j:Int)
 	{
 		var b = x._bits;
 		var t = ((b >> i) ^ (b >> j)) & 0x01;
@@ -128,7 +128,7 @@ class BitFlags
 	/**
 	 * Calls <code>setf(x, bits)</code> if <code>expr</code> is true or <code>clrf(x, bits)</code> if <code>expr</code> is false. 
 	 */
-	inline public static function setfif(x:BitField, bits:Int, expr:Bool):Void
+	inline public static function setfif(x:BitField, bits:Int, expr:Bool)
 	{
 		expr ? setf(x, bits) : clrf(x, bits);
 	}

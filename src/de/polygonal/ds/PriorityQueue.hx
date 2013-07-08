@@ -55,7 +55,7 @@ class PriorityQueueIterator<T:(Prioritizable)> implements de.polygonal.ds.Itr<T>
 		reset();
 	}
 	
-	public function free():Void
+	public function free()
 	{
 		_a = null;
 	}
@@ -79,7 +79,7 @@ class PriorityQueueIterator<T:(Prioritizable)> implements de.polygonal.ds.Itr<T>
 		return _a[_i++];
 	}
 	
-	inline public function remove():Void
+	inline public function remove()
 	{
 		#if debug
 		assert(_i > 0, "call next() before removing an element");
@@ -178,7 +178,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	 * <em>pack()</em> therefore nullifies all obsolete references and shrinks the container to the actual size allowing the garbage collector to reclaim used memory.
 	 * <o>n</o>
 	 */
-	public function pack():Void
+	public function pack()
 	{
 		if (_a.length - 1 == size()) return;
 		
@@ -194,7 +194,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	 * This is useful if the expected size is known in advance - many platforms can optimize memory usage if an exact size is specified.
 	 * <o>n</o>
 	 */
-	public function reserve(x:Int):Void
+	public function reserve(x:Int)
 	{
 		if (size() == x) return;
 		
@@ -264,7 +264,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	 * @throws de.polygonal.ds.error.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
 	 * @throws de.polygonal.ds.error.AssertError <code>x</code> is null or <code>x</code> already exists (debug only).
 	 */
-	inline public function enqueue(x:T):Void
+	inline public function enqueue(x:T)
 	{
 		#if debug
 		if (maxSize != -1)
@@ -313,7 +313,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	 * @param priority the new priority.
 	 * @throws de.polygonal.ds.error.AssertError priority queue is empty or <code>x</code> does not exist (debug only).
 	 */
-	public function reprioritize(x:T, priority:Float):Void
+	public function reprioritize(x:T, priority:Float)
 	{
 		#if debug
 		assert(size() > 0, "priority queue is empty");
@@ -418,7 +418,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	 * Improves GC efficiency/performance (optional).
 	 * <o>n</o>
 	 */
-	public function free():Void
+	public function free()
 	{
 		for (i in 0..._a.length) __set(i, cast null);
 		_a = null;
@@ -490,7 +490,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	 * <o>1 or n if <code>purge</code> is true</o>
 	 * @param purge if true, elements are nullified upon removal.
 	 */
-	inline public function clear(purge = false):Void
+	inline public function clear(purge = false)
 	{
 		if (purge)
 		{
@@ -627,7 +627,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 		return copy;
 	}
 	
-	inline function _upheap(index:Int):Void
+	inline function _upheap(index:Int)
 	{
 		var parent = index >> 1;
 		var tmp = __get(index);
@@ -670,7 +670,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 		tmp.position = index;
 	}
 	
-	inline function _downheap(index:Int):Void
+	inline function _downheap(index:Int)
 	{
 		var child = index << 1;
 		var childVal:T;

@@ -106,7 +106,7 @@ class GraphNode<T> implements Hashable
 	 * Improves GC efficiency/performance (optional).
 	 * <o>1</o>
 	 */
-	public function free():Void
+	public function free()
 	{
 		val = cast  null;
 		next = prev = null;
@@ -188,7 +188,7 @@ class GraphNode<T> implements Hashable
 	 * @param cost defines how "hard" it is to get from one node to the other. Default is 1.0.
 	 * @throws de.polygonal.ds.error.AssertError <code>target</code> is null or arc to <code>target</code> already exists (debug only).
 	 */
-	public function addArc(target:GraphNode<T>, cost = 1.):Void
+	public function addArc(target:GraphNode<T>, cost = 1.)
 	{
 		#if debug
 		assert(target != this, "target is null");
@@ -237,7 +237,7 @@ class GraphNode<T> implements Hashable
 	 * Removes all outgoing arcs from this node.
 	 * <o>n</o>
 	 */
-	public function removeSingleArcs():Void
+	public function removeSingleArcs()
 	{
 		var arc = arcList;
 		while (arc != null)
@@ -251,7 +251,7 @@ class GraphNode<T> implements Hashable
 	 * Remove all outgoing and incoming arcs from this node.
 	 * <o>n</o>
 	 */
-	public function removeMutualArcs():Void
+	public function removeMutualArcs()
 	{
 		var arc = arcList;
 		while (arc != null)
@@ -336,7 +336,7 @@ class NodeValIterator<T> implements de.polygonal.ds.Itr<T>
 		return val;
 	}
 	
-	inline public function remove():Void
+	inline public function remove()
 	{
 		throw "unsupported operation";
 	}

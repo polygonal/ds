@@ -117,7 +117,7 @@ class ArrayedStack<T> implements Stack<T>
 	 * <em>pack()</em> therefore nullifies all obsolete references and shrinks the array to the actual size allowing the garbage collector to reclaim used memory.
 	 * <o>n</o>
 	 */
-	public function pack():Void
+	public function pack()
 	{
 		if (_a.length == size()) return;
 		
@@ -132,7 +132,7 @@ class ArrayedStack<T> implements Stack<T>
 	 * This is useful if the expected size is known in advance - many platforms can optimize memory usage if an exact size is specified.
 	 * <o>n</o>
 	 */
-	public function reserve(x:Int):Void
+	public function reserve(x:Int)
 	{
 		if (size() == x) return;
 		
@@ -166,7 +166,7 @@ class ArrayedStack<T> implements Stack<T>
 	 * <o>1</o>
 	 * @throws de.polygonal.ds.error.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
 	 */
-	inline public function push(x:T):Void
+	inline public function push(x:T)
 	{
 		#if debug
 		if (maxSize != -1)
@@ -202,7 +202,7 @@ class ArrayedStack<T> implements Stack<T>
 	 * @throws de.polygonal.ds.error.AssertError stack is empty (debug only).
 	 * @throws de.polygonal.ds.error.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
 	 */
-	inline public function dup():Void
+	inline public function dup()
 	{
 		#if debug
 		assert(_top > 0, "stack is empty");
@@ -222,7 +222,7 @@ class ArrayedStack<T> implements Stack<T>
 	 * <o>1</o>
 	 * @throws de.polygonal.ds.error.AssertError <em>size()</em> < 2 (debug only).
 	 */
-	inline public function exchange():Void
+	inline public function exchange()
 	{
 		#if debug
 		assert(_top > 1, "size() < 2");
@@ -247,7 +247,7 @@ class ArrayedStack<T> implements Stack<T>
 	 * <o>n</o>
 	 * @throws de.polygonal.ds.error.AssertError <em>size()</em> >= <code>n</code> (debug only).
 	 */
-	inline public function rotRight(n:Int):Void
+	inline public function rotRight(n:Int)
 	{
 		#if debug
 		assert(_top >= n, "size() < n");
@@ -276,7 +276,7 @@ class ArrayedStack<T> implements Stack<T>
 	 * <o>n</o>
 	 * @throws de.polygonal.ds.error.AssertError <em>size()</em> >= <code>n</code> (debug only).
 	 */
-	inline public function rotLeft(n:Int):Void
+	inline public function rotLeft(n:Int)
 	{
 		#if debug
 		assert(_top >= n, "size() < n");
@@ -299,7 +299,7 @@ class ArrayedStack<T> implements Stack<T>
 	 * <o>1</o>
 	 * @throws de.polygonal.ds.error.AssertError <em>pop()</em> wasn't directly called after <em>dequeue()</em>(debug only).
 	 */
-	inline public function dispose():Void
+	inline public function dispose()
 	{
 		#if debug
 		assert(_top > 0, "stack is empty");
@@ -333,7 +333,7 @@ class ArrayedStack<T> implements Stack<T>
 	 * <o>1</o>
 	 * @throws de.polygonal.ds.error.AssertError stack is empty or index out of range (debug only).
 	 */
-	inline public function set(i:Int, x:T):Void
+	inline public function set(i:Int, x:T)
 	{
 		#if debug
 		assert(_top > 0, "stack is empty");
@@ -352,7 +352,7 @@ class ArrayedStack<T> implements Stack<T>
 	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
 	 * @throws de.polygonal.ds.error.AssertError <code>i</code> equals <code>j</code> (debug only).
 	 */
-	inline public function swp(i:Int, j:Int):Void
+	inline public function swp(i:Int, j:Int)
 	{
 		#if debug
 		assert(_top > 0, "stack is empty");
@@ -375,7 +375,7 @@ class ArrayedStack<T> implements Stack<T>
 	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
 	 * @throws de.polygonal.ds.error.AssertError <code>i</code> equals <code>j</code> (debug only).
 	 */
-	inline public function cpy(i:Int, j:Int):Void
+	inline public function cpy(i:Int, j:Int)
 	{
 		#if debug
 		assert(_top > 0, "stack is empty");
@@ -395,7 +395,7 @@ class ArrayedStack<T> implements Stack<T>
 	 * @param n the number of elements to replace. If 0, <code>n</code> is set to <em>size()</em>.
 	 * @throws de.polygonal.ds.error.AssertError <code>n</code> out of range (debug only).
 	 */
-	public function assign(C:Class<T>, args:Array<Dynamic> = null, n = 0):Void
+	public function assign(C:Class<T>, args:Array<Dynamic> = null, n = 0)
 	{
 		#if debug
 		assert(n >= 0, "n >= 0");
@@ -451,7 +451,7 @@ class ArrayedStack<T> implements Stack<T>
 	 * The function signature is: <em>process(oldValue, index):newValue</em>
 	 * <o>n</o>
 	 */
-	public function walk(process:T->Int->T):Void
+	public function walk(process:T->Int->T)
 	{
 		for (i in 0..._top)
 			__set(i, process(__get(i), i));
@@ -464,7 +464,7 @@ class ArrayedStack<T> implements Stack<T>
 	 * If omitted, random values are generated on-the-fly by calling <em>Math.random()</em>.
 	 * @throws de.polygonal.ds.error.AssertError insufficient random values (debug only).
 	 */
-	public function shuffle(rval:DA<Float> = null):Void
+	public function shuffle(rval:DA<Float> = null)
 	{
 		var s = _top;
 		if (rval == null)
@@ -536,7 +536,7 @@ class ArrayedStack<T> implements Stack<T>
 	 * Improves GC efficiency/performance (optional).
 	 * <o>n</o>
 	 */
-	public function free():Void
+	public function free()
 	{
 		for (i in 0..._a.length) __set(i, cast null);
 		_a = null;
@@ -601,7 +601,7 @@ class ArrayedStack<T> implements Stack<T>
 	 * <o>1 or n if <code>purge</code> is true</o>
 	 * @param purge if true, elements are nullified upon removal.
 	 */
-	inline public function clear(purge = false):Void
+	inline public function clear(purge = false)
 	{
 		if (purge)
 		{
@@ -759,7 +759,7 @@ class ArrayedStackIterator<T> implements de.polygonal.ds.Itr<T>
 		return _a[_i--];
 	}
 	
-	inline public function remove():Void
+	inline public function remove()
 	{
 		#if debug
 		assert(_i != (__getTop(_f) - 1), "call next() before removing an element");

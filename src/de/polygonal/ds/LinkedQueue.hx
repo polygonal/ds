@@ -157,7 +157,7 @@ class LinkedQueue<T> implements Queue<T>
 	 * <o>1</o>
 	 * @throws de.polygonal.ds.error.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
  	 */
-	inline public function enqueue(x:T):Void
+	inline public function enqueue(x:T)
 	{
 		#if debug
 		if (maxSize != -1)
@@ -212,7 +212,7 @@ class LinkedQueue<T> implements Queue<T>
 	 * @param n the number of elements to replace. If 0, <code>n</code> is set to <em>size()</em>.
 	 * @throws de.polygonal.ds.error.AssertError <code>n</code> out of range (debug only).
 	 */
-	public function assign(C:Class<T>, args:Array<Dynamic> = null, n = 0):Void
+	public function assign(C:Class<T>, args:Array<Dynamic> = null, n = 0)
 	{
 		#if debug
 		assert(n >= 0, "n >= 0");
@@ -276,7 +276,7 @@ class LinkedQueue<T> implements Queue<T>
 	 * If omitted, random values are generated on-the-fly by calling <em>Math.random()</em>.
 	 * @throws de.polygonal.ds.error.AssertError insufficient random values (debug only).
 	 */
-	public function shuffle(rval:DA<Float> = null):Void
+	public function shuffle(rval:DA<Float> = null)
 	{
 		var s = _size;
 		if (rval == null)
@@ -365,7 +365,7 @@ class LinkedQueue<T> implements Queue<T>
 	 * Improves GC efficiency/performance (optional).
 	 * <o>n</o>
 	 */
-	public function free():Void
+	public function free()
 	{
 		var node = _head;
 		while (node != null)
@@ -471,7 +471,7 @@ class LinkedQueue<T> implements Queue<T>
 	 * <o>1 or n if <code>purge</code> is true</o>
 	 * @param purge if true, elements are nullified upon removal.
 	 */
-	public function clear(purge = false):Void
+	public function clear(purge = false)
 	{
 		if (purge || _reservedSize > 0)
 		{
@@ -756,7 +756,7 @@ class LinkedQueueIterator<T> implements de.polygonal.ds.Itr<T>
 		return x;
 	}
 	
-	inline public function remove():Void
+	inline public function remove()
 	{
 		#if debug
 		assert(_hook != null, "call next() before removing an element");

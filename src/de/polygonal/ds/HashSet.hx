@@ -210,7 +210,7 @@ class HashSet<T:Hashable> implements Set<T>
 	 * <o>n</o>
 	 * @throws de.polygonal.ds.error.AssertError <code>slotCount</code> is not a power of two (debug only).
 	 */
-	public function rehash(slotCount:Int):Void
+	public function rehash(slotCount:Int)
 	{
 		_h.rehash(slotCount);
 	}
@@ -402,7 +402,7 @@ class HashSet<T:Hashable> implements Set<T>
 	 * <o>n</o>
 	 * @param purge if true, nullifies references upon removal and shrinks the hash set to the initial capacity defined in the constructor.
 	 */
-	public function clear(purge = false):Void
+	public function clear(purge = false)
 	{
 		_h.clear(purge);
 		for (i in 0...getCapacity()) _vals[i] = null;
@@ -683,7 +683,7 @@ class HashSetIterator<T> implements de.polygonal.ds.Itr<T>
 		return _vals[_i];
 	}
 	
-	inline public function remove():Void
+	inline public function remove()
 	{
 		throw "unsupported operation";
 	}

@@ -121,7 +121,7 @@ class Array2<T> implements Collection<T>
 	 * <o>1</o>
 	 * @throws de.polygonal.ds.error.AssertError <code>x</code>/<code>y</code> out of range (debug only).
 	 */
-	inline public function set(x:Int, y:Int, val:T):Void
+	inline public function set(x:Int, y:Int, val:T)
 	{
 		#if debug
 		assert(x >= 0 && x < getW(), 'x index out of range ($x)');
@@ -150,7 +150,7 @@ class Array2<T> implements Collection<T>
 	 * <o>1</o>
 	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
 	 */
-	inline public function setAtIndex(i:Int, val:T):Void
+	inline public function setAtIndex(i:Int, val:T)
 	{
 		#if debug
 		assert(i >= 0 && i < size(), 'index out of range ($i)');
@@ -174,7 +174,7 @@ class Array2<T> implements Collection<T>
 	 * <o>1</o>
 	 * @throws de.polygonal.ds.error.AssertError invalid width (debug only).
 	 */
-	inline public function setW(x:Int):Void
+	inline public function setW(x:Int)
 	{
 		resize(x, _h);
 	}
@@ -194,7 +194,7 @@ class Array2<T> implements Collection<T>
 	 * <o>1</o>
 	 * @throws de.polygonal.ds.error.AssertError invalid height (debug only).
 	 */
-	inline public function setH(x:Int):Void
+	inline public function setH(x:Int)
 	{
 		resize(_w, x);
 	}
@@ -316,7 +316,7 @@ class Array2<T> implements Collection<T>
 	 * <o>n</o>
 	 * @throws de.polygonal.ds.error.AssertError <code>y</code> out of range or <code>input</code> is null or insufficient input values (debug only).
 	 */
-	public function setRow(y:Int, input:Array<T>):Void
+	public function setRow(y:Int, input:Array<T>)
 	{
 		#if debug
 		assert(y >= 0 && y < getH(), 'y index out of range ($y)');
@@ -354,7 +354,7 @@ class Array2<T> implements Collection<T>
 	 * @throws de.polygonal.ds.error.AssertError <code>x</code> out of range (debug only).
 	 * @throws de.polygonal.ds.error.AssertError <code>input</code> is null or insufficient input values (debug only).
 	 */
-	public function setCol(x:Int, input:Array<T>):Void
+	public function setCol(x:Int, input:Array<T>)
 	{
 		#if debug
 		assert(x >= 0 && x < getW(), 'x index out of range ($x)');
@@ -372,7 +372,7 @@ class Array2<T> implements Collection<T>
 	 * @param C the class to instantiate for each element.
 	 * @param args passes additional constructor arguments to the class <code>C</code>.
 	 */
-	public function assign(C:Class<T>, args:Array<Dynamic> = null):Void
+	public function assign(C:Class<T>, args:Array<Dynamic> = null)
 	{
 		if (args == null) args = [];
 		for (i in 0...size()) __set(i, Type.createInstance(C, args));
@@ -393,7 +393,7 @@ class Array2<T> implements Collection<T>
 	 * The function signature is: <em>process(oldValue, xIndex, yIndex):newValue</em>
 	 * <o>n</o>
 	 */
-	public function walk(process:T->Int->Int->T):Void
+	public function walk(process:T->Int->Int->T)
 	{
 		for (y in 0..._h)
 		{
@@ -412,7 +412,7 @@ class Array2<T> implements Collection<T>
 	 * @param height the new height (minimum is 2).
 	 * @throws de.polygonal.ds.error.AssertError invalid dimensions (debug only).
 	 */
-	public function resize(width:Int, height:Int):Void
+	public function resize(width:Int, height:Int)
 	{
 		#if debug
 		assert(width >= 2 && height >= 2, 'invalid size (width:$width, height:$height)');
@@ -442,7 +442,7 @@ class Array2<T> implements Collection<T>
 	 * Columns are wrapped so the column at index 0 is not lost but appended to the rightmost column.
 	 * <o>n</o>
 	 */
-	public function shiftW():Void
+	public function shiftW()
 	{
 		var t, k;
 		for (y in 0..._h)
@@ -460,7 +460,7 @@ class Array2<T> implements Collection<T>
 	 * Columns are wrapped, so the column at index &#091;<em>getW()</em> - 1&#093; is not lost but prepended to the leftmost column.
 	 * <o>n</o>
 	 */
-	public function shiftE():Void
+	public function shiftE()
 	{
 		var t, x, k;
 		for (y in 0..._h)
@@ -479,7 +479,7 @@ class Array2<T> implements Collection<T>
 	 * Rows are wrapped, so the row at index 0 is not lost but appended to the bottommost row.
 	 * <o>n</o>
 	 */
-	public function shiftN():Void
+	public function shiftN()
 	{
 		var t;
 		var k = _h - 1;
@@ -498,7 +498,7 @@ class Array2<T> implements Collection<T>
 	 * Rows are wrapped, so row at index &#091;<em>getH()</em> - 1&#093; is not lost but prepended to the topmost row.
 	 * <o>n</o>
 	 */
-	public function shiftS():Void
+	public function shiftS()
 	{
 		var t, k, y;
 		var k = _h - 1;
@@ -518,7 +518,7 @@ class Array2<T> implements Collection<T>
 	 * @throws de.polygonal.ds.error.AssertError <code>x0</code>/<code>y0</code> or <code>x1</code>/<code>y1</code> out of range (debug only).
 	 * @throws de.polygonal.ds.error.AssertError <code>x0</code>, <code>y0</code> equals <code>x1</code>, <code>y1</code> (debug only).
 	 */
-	inline public function swap(x0:Int, y0:Int, x1:Int, y1:Int):Void
+	inline public function swap(x0:Int, y0:Int, x1:Int, y1:Int)
 	{
 		#if debug
 		assert(x0 >= 0 && x0 < getW(), 'x0 index out of range ($x0)');
@@ -540,7 +540,7 @@ class Array2<T> implements Collection<T>
 	 * <o>n</o>
 	 * @throws de.polygonal.ds.error.AssertError <code>input</code> is null or too short (debug only).
 	 */
-	public function appendRow(input:Array<T>):Void
+	public function appendRow(input:Array<T>)
 	{
 		#if debug
 		assert(input != null, "input is null");
@@ -556,7 +556,7 @@ class Array2<T> implements Collection<T>
 	 * <o>n</o>
 	 * @throws de.polygonal.ds.error.AssertError <code>input</code> is null or too short (debug only).
 	 */
-	public function appendCol(input:Array<T>):Void
+	public function appendCol(input:Array<T>)
 	{
 		#if debug
 		assert(input != null, "input is null");
@@ -588,7 +588,7 @@ class Array2<T> implements Collection<T>
 	 * <o>n</o>
 	 * @throws de.polygonal.ds.error.AssertError <code>input</code> is null or too short (debug only).
 	 */
-	public function prependRow(input:Array<T>):Void
+	public function prependRow(input:Array<T>)
 	{
 		#if debug
 		assert(input != null, "input is null");
@@ -612,7 +612,7 @@ class Array2<T> implements Collection<T>
 	 * <o>n</o>
 	 * @throws de.polygonal.ds.error.AssertError <code>input</code> is null or too short (debug only).
 	 */
-	public function prependCol(input:Array<T>):Void
+	public function prependCol(input:Array<T>)
 	{
 		#if debug
 		assert(input != null, "input is null");
@@ -644,7 +644,7 @@ class Array2<T> implements Collection<T>
 	 * <o>n</o>
 	 * @throws de.polygonal.ds.error.AssertError <code>i</code>/<code>j</code> out of range (debug only).
 	 */
-	public function copyRow(i:Int, j:Int):Void
+	public function copyRow(i:Int, j:Int)
 	{
 		#if debug
 		assert(i >= 0 && i < getH(), 'i index out of range ($i)');
@@ -664,7 +664,7 @@ class Array2<T> implements Collection<T>
 	 * <o>n</o>
 	 * @throws de.polygonal.ds.error.AssertError <code>i</code>/<code>j</code> out of range (debug only).
 	 */
-	public function swapRow(i:Int, j:Int):Void
+	public function swapRow(i:Int, j:Int)
 	{
 		#if debug
 		assert(i >= 0 && i < getH(), 'i index out of range ($i)');
@@ -691,7 +691,7 @@ class Array2<T> implements Collection<T>
 	 * <o>n</o>
 	 * @throws de.polygonal.ds.error.AssertError <code>i</code>/<code>j</code> out of range (debug only).
 	 */
-	public function copyCol(i:Int, j:Int):Void
+	public function copyCol(i:Int, j:Int)
 	{
 		#if debug
 		assert(i >= 0 && i < getW(), 'i index out of range ($i)');
@@ -713,7 +713,7 @@ class Array2<T> implements Collection<T>
 	 * <o>n</o>
 	 * @throws de.polygonal.ds.error.AssertError <code>i</code>/<code>j</code> out of range (debug only).
 	 */
-	public function swapCol(i:Int, j:Int):Void
+	public function swapCol(i:Int, j:Int)
 	{
 		#if debug
 		assert(i >= 0 && i < getW(), 'i index out of range ($i)');
@@ -738,7 +738,7 @@ class Array2<T> implements Collection<T>
 	 * Transposes this two-dimensional array.
 	 * <o>n</o>
 	 */
-	public function transpose():Void
+	public function transpose()
 	{
 		if (_w == _h)
 		{
@@ -773,7 +773,7 @@ class Array2<T> implements Collection<T>
 	 * Copies all elements from the given nested two-dimensional array <code>a</code> into this two-dimensional array.
 	 * @throws de.polygonal.ds.error.AssertError invalid dimensions of <code>a</code> (debug only).
 	 */
-	public function setNestedArray(a:Array<Array<T>>):Void
+	public function setNestedArray(a:Array<Array<T>>)
 	{
 		#if debug
 		assert(a.length == getH() && a[0] != null && a[0].length == getW(), "invalid input");
@@ -795,7 +795,7 @@ class Array2<T> implements Collection<T>
 	 * If omitted, random values are generated on-the-fly by calling <em>Math.random()</em>.
 	 * @throws de.polygonal.ds.error.AssertError insufficient random values (debug only).
 	 */
-	public function shuffle(rval:DA<Float> = null):Void
+	public function shuffle(rval:DA<Float> = null)
 	{
 		var s = size();
 		if (rval == null)
@@ -875,7 +875,7 @@ class Array2<T> implements Collection<T>
 	 * Improves GC efficiency/performance (optional).
 	 * <o>n</o>
 	 */
-	public function free():Void
+	public function free()
 	{
 		for (i in 0...size()) __set(i, cast null);
 		_a = null;
@@ -922,7 +922,7 @@ class Array2<T> implements Collection<T>
 	 * The <code>purge</code> parameter has no effect.
 	 * <o>1 or n if <code>purge</code> is true</o>
 	 */
-	public function clear(purge = false):Void
+	public function clear(purge = false)
 	{
 		for (i in 0...size()) __set(i, cast null);
 	}
@@ -1074,7 +1074,7 @@ class Array2Iterator<T> implements de.polygonal.ds.Itr<T>
 		return _a[_i++];
 	}
 	
-	inline public function remove():Void
+	inline public function remove()
 	{
 		//just nullify value
 		#if debug

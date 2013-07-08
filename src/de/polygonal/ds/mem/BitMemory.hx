@@ -256,7 +256,7 @@ class BitMemory extends MemoryAccess
 	}
 	
 	#if !alchemy
-	override public function free():Void
+	override public function free()
 	{
 		_data = null;
 		super.free();
@@ -317,7 +317,7 @@ class BitMemory extends MemoryAccess
 	 * @throws de.polygonal.ds.error.AssertError invalid size (debug only).
 	 * @throws de.polygonal.ds.error.AssertError memory was already deallocated (debug only).
 	 */
-	override public function resize(newSize:Int):Void
+	override public function resize(newSize:Int)
 	{
 		#if debug
 		assert(newSize >= 0, 'invalid size ($newSize)');
@@ -374,7 +374,7 @@ class BitMemory extends MemoryAccess
 	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
 	 * @throws de.polygonal.ds.error.AssertError memory deallocated (debug only).
 	 */
-	inline public function set(i:Int):Void
+	inline public function set(i:Int)
 	{
 		var idx = getAddr(i);
 		#if alchemy
@@ -389,7 +389,7 @@ class BitMemory extends MemoryAccess
 	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
 	 * @throws de.polygonal.ds.error.AssertError memory deallocated (debug only).
 	 */
-	inline public function clr(i:Int):Void
+	inline public function clr(i:Int)
 	{
 		var idx = getAddr(i);
 		#if alchemy
@@ -403,7 +403,7 @@ class BitMemory extends MemoryAccess
 	 * Sets all bits to 0.
 	 * @throws de.polygonal.ds.error.AssertError memory deallocated (debug only).
 	 */
-	inline public function clrAll():Void
+	inline public function clrAll()
 	{
 		#if alchemy
 		for (i in 0...size) flash.Memory.setI32(getAddr(i), 0);
@@ -416,7 +416,7 @@ class BitMemory extends MemoryAccess
 	 * Sets all bits to 1.
 	 * @throws de.polygonal.ds.error.AssertError memory deallocated (debug only).
 	 */
-	inline public function setAll():Void
+	inline public function setAll()
 	{
 		#if alchemy
 		for (i in 0...size) flash.Memory.setI32(getAddr(i), -1);
@@ -430,7 +430,7 @@ class BitMemory extends MemoryAccess
 	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
 	 * @throws de.polygonal.ds.error.AssertError memory deallocated (debug only).
 	 */
-	inline public function ofBool(i:Int, cond:Bool):Void
+	inline public function ofBool(i:Int, cond:Bool)
 	{
 		cond ? set(i) : clr(i);
 	}
@@ -455,7 +455,7 @@ class BitMemory extends MemoryAccess
 	}
 	
 	#if !alchemy
-	override public function clear():Void
+	override public function clear()
 	{
 		for (i in 0...size) _data[getAddr(i)] = 0;
 	}

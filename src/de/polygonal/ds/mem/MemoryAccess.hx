@@ -83,7 +83,7 @@ class MemoryAccess implements Hashable
 	 * This is not optional if <em>MemoryManager.AUTO_RECLAIM_MEMORY</em> is true.
 	 * @throws de.polygonal.ds.error.AssertError memory was already deallocated (debug only).
 	 */
-	public function free():Void
+	public function free()
 	{
 		#if debug
 		assert(_memory != null, "memory deallocated");
@@ -100,7 +100,7 @@ class MemoryAccess implements Hashable
 	 * Sets all bytes to 0.
 	 * @throws de.polygonal.ds.error.AssertError memory was already deallocated (debug only).
 	 */
-	public function clear():Void
+	public function clear()
 	{
 		#if alchemy
 		for (i in 0...bytes)
@@ -113,7 +113,7 @@ class MemoryAccess implements Hashable
 	 * @throws de.polygonal.ds.error.AssertError bytes <= 0 (debug only).
 	 * @throws de.polygonal.ds.error.AssertError memory was already deallocated (debug only).
 	 */
-	public function resize(byteSize:Int):Void
+	public function resize(byteSize:Int)
 	{
 		#if debug
 		assert(byteSize > 0, "byteSize > 0");

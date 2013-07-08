@@ -108,7 +108,7 @@ class DA<T> implements Collection<T>
 	 * <em>pack()</em> therefore nullifies all obsolete references and shrinks the container to the actual size allowing the garbage collector to reclaim used memory.
 	 * <o>n</o>
 	 */
-	public function pack():Void
+	public function pack()
 	{
 		var s = _a.length;
 		if (s == size()) return;
@@ -123,7 +123,7 @@ class DA<T> implements Collection<T>
 	 * This is useful if the expected size is known in advance - many platforms can optimize memory usage if an exact size is specified.
 	 * <o>n</o>
 	 */
-	public function reserve(x:Int):Void
+	public function reserve(x:Int)
 	{
 		if (size() == x) return;
 		
@@ -144,7 +144,7 @@ class DA<T> implements Collection<T>
 	 * @param x the new size of this dense array.
 	 * @throws de.polygonal.ds.error.AssertError new size &gt; current <em>size()</em> (debug only).
 	 */
-	inline public function trim(x:Int):Void
+	inline public function trim(x:Int)
 	{
 		#if debug
 		assert(x <= size(), 'new size > current size ($x/${size()})');
@@ -202,7 +202,7 @@ class DA<T> implements Collection<T>
 	 * <o>1</o>
 	 * @throws de.polygonal.ds.error.AssertError index out of range or maximum size reached (debug only).
 	 */
-	inline public function set(i:Int, x:T):Void
+	inline public function set(i:Int, x:T)
 	{
 		#if debug
 		assert(i >= 0 && i <= _size, 'the index $i is out of range $_size');
@@ -218,7 +218,7 @@ class DA<T> implements Collection<T>
 	 * <o>1</o>
 	 * @throws de.polygonal.ds.error.AssertError index out of range or <code>i</code> equals <code>j</code> (debug only).
 	 */
-	inline public function swp(i:Int, j:Int):Void
+	inline public function swp(i:Int, j:Int)
 	{
 		#if debug
 		assert(i != j, 'i index equals j index ($i)');
@@ -234,7 +234,7 @@ class DA<T> implements Collection<T>
 	 * <o>1</o>
 	 * @throws de.polygonal.ds.error.AssertError index out of range or <code>i</code> equals <code>j</code> (debug only).
 	 */
-	inline public function cpy(i:Int, j:Int):Void
+	inline public function cpy(i:Int, j:Int)
 	{
 		#if debug
 		assert(i != j, 'i index equals j index ($i)');
@@ -282,7 +282,7 @@ class DA<T> implements Collection<T>
 	 * <o>1</o>
 	 * @throws de.polygonal.ds.error.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
 	 */
-	inline public function pushBack(x:T):Void
+	inline public function pushBack(x:T)
 	{
 		set(_size, x);
 	}
@@ -304,7 +304,7 @@ class DA<T> implements Collection<T>
 	 * <o>n</o>
 	 * @throws de.polygonal.ds.error.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
 	 */
-	inline public function pushFront(x:T):Void
+	inline public function pushFront(x:T)
 	{
 		#if debug
 		if (maxSize != -1)
@@ -321,7 +321,7 @@ class DA<T> implements Collection<T>
 	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
 	 * @throws de.polygonal.ds.error.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
 	 */
-	inline public function insertAt(i:Int, x:T):Void
+	inline public function insertAt(i:Int, x:T)
 	{
 		#if debug
 		assert(size() < maxSize, 'size equals max size ($maxSize)');
@@ -374,7 +374,7 @@ class DA<T> implements Collection<T>
 	 * <o>1</o>
 	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
 	 */
-	inline public function swapPop(i:Int):Void
+	inline public function swapPop(i:Int)
 	{
 		#if debug
 		assert(i >= 0 && i < size(), 'the index $i is out of range ${size()}');
@@ -571,7 +571,7 @@ class DA<T> implements Collection<T>
 	 * Reverses this dense array in place.
 	 * <o>n</o>
 	 */
-	public function reverse():Void
+	public function reverse()
 	{
 		if (_a.length > size())
 			_a = ArrayUtil.shrink(_a, size());
@@ -586,7 +586,7 @@ class DA<T> implements Collection<T>
 	 * @param n the number of elements to replace. If 0, <code>n</code> is set to <em>size()</em>.
 	 * @throws de.polygonal.ds.error.AssertError <code>n</code> out of range (debug only).
 	 */
-	public function assign(C:Class<T>, args:Array<Dynamic> = null, n = 0):Void
+	public function assign(C:Class<T>, args:Array<Dynamic> = null, n = 0)
 	{
 		#if debug
 		assert(n >= 0, "n >= 0");
@@ -642,7 +642,7 @@ class DA<T> implements Collection<T>
 	 * @throws de.polygonal.ds.error.AssertError invalid <code>destination</code>, <code>source</code> or <code>n</code> value (debug only).
 	 * @see <a href="http://www.cplusplus.com/reference/clibrary/cstring/memmove/" target="_blank">http://www.cplusplus.com/reference/clibrary/cstring/memmove/</a>
 	 */
-	inline public function memmove(destination:Int, source:Int, n:Int):Void
+	inline public function memmove(destination:Int, source:Int, n:Int)
 	{
 		#if debug
 		assert(destination >= 0 && source >= 0 && n >= 0, "destination >= 0 && source >= 0 && n >= 0");
@@ -708,7 +708,7 @@ class DA<T> implements Collection<T>
 	 * @throws de.polygonal.ds.error.AssertError element does not implement <em>Comparable</em> (debug only).
 	 * @throws de.polygonal.ds.error.AssertError <code>first</code> or <code>count</code> out of bound (debug only).
 	 */
-	public function sort(compare:T->T->Int, useInsertionSort = false, first = 0, count = -1):Void
+	public function sort(compare:T->T->Int, useInsertionSort = false, first = 0, count = -1)
 	{
 		if (size() > 1)
 		{
@@ -772,7 +772,7 @@ class DA<T> implements Collection<T>
 	 * Improves GC efficiency/performance (optional).
 	 * <o>n</o>
 	 */
-	public function free():Void
+	public function free()
 	{
 		for (i in 0..._a.length) __set(i, cast null);
 		_a = null;
@@ -834,7 +834,7 @@ class DA<T> implements Collection<T>
 	 * <o>1 or n if <code>purge</code> is true</o>
 	 * @param purge if true, elements are nullified upon removal.
 	 */
-	inline public function clear(purge = false):Void
+	inline public function clear(purge = false)
 	{
 		if (purge)
 			for (i in 0..._a.length)
@@ -949,7 +949,7 @@ class DA<T> implements Collection<T>
 	 * If omitted, random values are generated on-the-fly by calling <em>Math.random()</em>.
 	 * @throws de.polygonal.ds.error.AssertError insufficient random values (debug only).
 	 */
-	public function shuffle(rval:DA<Float> = null):Void
+	public function shuffle(rval:DA<Float> = null)
 	{
 		var s = size();
 		if (rval == null)
@@ -1008,7 +1008,7 @@ class DA<T> implements Collection<T>
 		return s;
 	}
 	
-	function _quickSort(first:Int, k:Int, cmp:T->T->Int):Void
+	function _quickSort(first:Int, k:Int, cmp:T->T->Int)
 	{
 		var last = first + k - 1;
 		var lo = first;
@@ -1057,7 +1057,7 @@ class DA<T> implements Collection<T>
 		}
 	}
 	
-	function _quickSortComparable(first:Int, k:Int):Void
+	function _quickSortComparable(first:Int, k:Int)
 	{
 		var last = first + k - 1;
 		var lo = first;
@@ -1124,7 +1124,7 @@ class DA<T> implements Collection<T>
 		}
 	}
 	
-	function _insertionSort(first:Int, k:Int, cmp:T->T->Int):Void
+	function _insertionSort(first:Int, k:Int, cmp:T->T->Int)
 	{
 		for (i in first + 1...first + k)
 		{
@@ -1145,7 +1145,7 @@ class DA<T> implements Collection<T>
 		}
 	}
 	
-	function _insertionSortComparable(first:Int, k:Int):Void
+	function _insertionSortComparable(first:Int, k:Int)
 	{
 		for (i in first + 1...first + k)
 		{
@@ -1229,7 +1229,7 @@ class DAIterator<T> implements de.polygonal.ds.Itr<T>
 		return _a[_i++];
 	}
 	
-	inline public function remove():Void
+	inline public function remove()
 	{
 		#if debug
 		assert(_i > 0, "call next() before removing an element");

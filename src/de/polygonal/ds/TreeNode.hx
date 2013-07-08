@@ -1963,7 +1963,7 @@ class TreeNode<T> implements Collection<T>
 	 * Improves GC efficiency/performance (optional).
 	 * <o>n</o>
 	 */
-	public function free():Void
+	public function free()
 	{
 		if (hasChildren())
 		{
@@ -2044,7 +2044,7 @@ class TreeNode<T> implements Collection<T>
 	 * <o>1 or n if <code>purge</code> is true</o>
 	 * @param purge if true, recursively nullifies this subtree.
 	 */
-	public function clear(purge = false):Void
+	public function clear(purge = false)
 	{
 		if (purge)
 		{
@@ -2223,22 +2223,22 @@ class TreeNode<T> implements Collection<T>
 		return x;
 	}
 	
-	inline function _incChildCount():Void
+	inline function _incChildCount()
 	{
 		_extraInfo = (_extraInfo & 0x0000ffff) | ((numChildren() + 1) << 16);
 	}
 	
-	inline function _decChildCount():Void
+	inline function _decChildCount()
 	{
 		_extraInfo = (_extraInfo & 0x0000ffff) | ((numChildren() - 1) << 16);
 	}
 	
-	inline function _setChildCount(x:Int):Void
+	inline function _setChildCount(x:Int)
 	{
 		_extraInfo = (_extraInfo & 0x0000ffff) | (x << 16);
 	}
 	
-	inline function _setTimeStamp(x:Int):Void
+	inline function _setTimeStamp(x:Int)
 	{
 		_extraInfo = (_extraInfo & 0xffff0000) | x;
 	}
@@ -2248,7 +2248,7 @@ class TreeNode<T> implements Collection<T>
 		return _extraInfo & 0xffff;
 	}
 	
-	inline function _incTimeStamp():Void
+	inline function _incTimeStamp()
 	{
 		_extraInfo = (_extraInfo & 0xffff0000) | (_getTimeStamp() + 1);
 	}
@@ -2301,7 +2301,7 @@ class TreeIterator<T> implements de.polygonal.ds.Itr<T>
 		return node.val;
 	}
 	
-	inline public function remove():Void
+	inline public function remove()
 	{
 		_top -= _c;
 	}
@@ -2345,7 +2345,7 @@ class ChildTreeIterator<T> implements de.polygonal.ds.Itr<T>
 		return x;
 	}
 	
-	inline public function remove():Void
+	inline public function remove()
 	{
 		#if debug
 		assert(_hook != null, "call next() before removing an element");

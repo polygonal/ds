@@ -80,7 +80,7 @@ class BSTIterator<T> implements de.polygonal.ds.Itr<T>
 		return node.val;
 	}
 	
-	inline public function remove():Void
+	inline public function remove()
 	{
 		_top -= _c;
 	}
@@ -346,7 +346,7 @@ class BST<T:Comparable<T>> implements Collection<T>
 	 * Improves GC efficiency/performance (optional).
 	 * <o>n</o>
 	 */
-	public function free():Void
+	public function free()
 	{
 		_root.free();
 		_root = null;
@@ -394,7 +394,7 @@ class BST<T:Comparable<T>> implements Collection<T>
 	 * <o>1 or n if <code>purge</code> is true</o>
 	 * @param purge if true, elements are nullified upon removal.
 	 */
-	public function clear(purge = false):Void
+	public function clear(purge = false)
 	{
 		if (purge)
 		{

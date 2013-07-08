@@ -140,7 +140,7 @@ class LinkedStack<T> implements Stack<T>
 	 * <o>1</o>
 	 * @throws de.polygonal.ds.error.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
 	 */
-	inline public function push(x:T):Void
+	inline public function push(x:T)
 	{
 		#if debug
 		if (maxSize != -1)
@@ -178,7 +178,7 @@ class LinkedStack<T> implements Stack<T>
 	 * @throws de.polygonal.ds.error.AssertError stack is empty (debug only).
 	 * @throws de.polygonal.ds.error.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
 	 */
-	inline public function dup():Void
+	inline public function dup()
 	{
 		#if debug
 		assert(_top > 0, "stack is empty");
@@ -197,7 +197,7 @@ class LinkedStack<T> implements Stack<T>
 	 * <o>1</o>
 	 * @throws de.polygonal.ds.error.AssertError <em>size()</em> < 2 (debug only).
 	 */
-	inline public function exchange():Void
+	inline public function exchange()
 	{
 		#if debug
 		assert(_top > 1, "size() < 2");
@@ -220,7 +220,7 @@ class LinkedStack<T> implements Stack<T>
 	 * <o>n</o>
 	 * @throws de.polygonal.ds.error.AssertError <em>size()</em> >= <code>n</code> (debug only).
 	 */
-	inline public function rotRight(n:Int):Void
+	inline public function rotRight(n:Int)
 	{
 		#if debug
 		assert(_top >= n, "size() < n");
@@ -249,7 +249,7 @@ class LinkedStack<T> implements Stack<T>
 	 * <o>n</o>
 	 * @throws de.polygonal.ds.error.AssertError <em>size()</em> >= <code>n</code> (debug only).
 	 */
-	inline public function rotLeft(n:Int):Void
+	inline public function rotLeft(n:Int)
 	{
 		#if debug
 		assert(_top >= n, "size() < n");
@@ -293,7 +293,7 @@ class LinkedStack<T> implements Stack<T>
 	 * <o>n</o>
 	 * @throws de.polygonal.ds.error.AssertError stack is empty or index out of range (debug only).
 	 */
-	inline public function set(i:Int, x:T):Void
+	inline public function set(i:Int, x:T)
 	{
 		#if debug
 		assert(_top > 0, "stack is empty");
@@ -315,7 +315,7 @@ class LinkedStack<T> implements Stack<T>
 	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
 	 * @throws de.polygonal.ds.error.AssertError <code>i</code> equals <code>j</code> (debug only).
 	 */
-	inline public function swp(i:Int, j:Int):Void
+	inline public function swp(i:Int, j:Int)
 	{
 		#if debug
 		assert(_top > 0, "stack is empty");
@@ -359,7 +359,7 @@ class LinkedStack<T> implements Stack<T>
 	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
 	 * @throws de.polygonal.ds.error.AssertError <code>i</code> equals <code>j</code> (debug only).
 	 */
-	inline public function cpy(i:Int, j:Int):Void
+	inline public function cpy(i:Int, j:Int)
 	{
 		#if debug
 		assert(_top > 0, "stack is empty");
@@ -400,7 +400,7 @@ class LinkedStack<T> implements Stack<T>
 	 * @param n the number of elements to replace. If 0, <code>n</code> is set to <em>size()</em>.
 	 * @throws de.polygonal.ds.error.AssertError <code>n</code> out of range (debug only).
 	 */
-	public function assign(C:Class<T>, args:Array<Dynamic> = null, n = 0):Void
+	public function assign(C:Class<T>, args:Array<Dynamic> = null, n = 0)
 	{
 		#if debug
 		assert(n >= 0, "n >= 0");
@@ -464,7 +464,7 @@ class LinkedStack<T> implements Stack<T>
 	 * If omitted, random values are generated on-the-fly by calling <em>Math.random()</em>.
 	 * @throws de.polygonal.ds.error.AssertError insufficient random values (debug only).
 	 */
-	public function shuffle(rval:DA<Float> = null):Void
+	public function shuffle(rval:DA<Float> = null)
 	{
 		var s = _top;
 		
@@ -555,7 +555,7 @@ class LinkedStack<T> implements Stack<T>
 	 * Improves GC efficiency/performance (optional).
 	 * <o>n</o>
 	 */
-	public function free():Void
+	public function free()
 	{
 		var node = _head;
 		while (node != null)
@@ -645,7 +645,7 @@ class LinkedStack<T> implements Stack<T>
 	 * <o>1 or n if <code>purge</code> is true</o>
 	 * @param purge if true, elements are nullified upon removal.
 	 */
-	public function clear(purge = false):Void
+	public function clear(purge = false)
 	{
 		if (_top == 0) return;
 		
@@ -910,7 +910,7 @@ class LinkedStackIterator<T> implements de.polygonal.ds.Itr<T>
 		return x;
 	}
 	
-	inline public function remove():Void
+	inline public function remove()
 	{
 		#if debug
 		assert(_hook != null, "call next() before removing an element");

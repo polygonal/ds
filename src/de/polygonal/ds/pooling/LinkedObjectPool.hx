@@ -82,7 +82,7 @@ class LinkedObjectPool<T> implements Hashable
 	 * Destroys this object by explicitly nullifying all nodes, pointers and elements for GC'ing used resources.<br/>
 	 * Improves GC efficiency/performance (optional).
 	 */
-	public function free():Void
+	public function free()
 	{
 		var node = _head;
 		while (node != null)
@@ -153,7 +153,7 @@ class LinkedObjectPool<T> implements Hashable
 	 * Recycles the object <code>o</code> so it can be reused by calling <em>get()</em>.
 	 * @throws de.polygonal.ds.error.AssertError object pool is full (debug only).
 	 */
-	inline public function put(o:T):Void
+	inline public function put(o:T)
 	{
 		#if debug
 		assert(_usageCount != 0, "object pool is full");
@@ -171,7 +171,7 @@ class LinkedObjectPool<T> implements Hashable
 	 * @param factory allocates objects by calling <code>factory</code>.<em>create()</em>.
 	 * @throws de.polygonal.ds.error.AssertError invalid arguments.
 	 */
-	public function allocate(C:Class<T> = null, fabricate:Void->T = null, factory:Factory<T> = null):Void
+	public function allocate(C:Class<T> = null, fabricate:Void->T = null, factory:Factory<T> = null)
 	{
 		free();
 		
@@ -209,7 +209,7 @@ class LinkedObjectPool<T> implements Hashable
 	 * Removes all unused objects from the pool.<br/>
 	 * If the number of remaining used objects is smaller than the initial capacity defined in the constructor, new objects are created to refill the pool. 
 	 */
-	public function purge():Void
+	public function purge()
 	{
 		if (_usageCount == 0)
 		{
@@ -307,7 +307,7 @@ class LinkedObjectPool<T> implements Hashable
 		#end
 	}
 	
-	inline function _grow():Void
+	inline function _grow()
 	{
 		_currSize += _initSize;
 		
@@ -353,7 +353,7 @@ class LinkedObjectPool<T> implements Hashable
 		_allocNode = n.next;
 	}
 	
-	inline function _fill(buffer:Array<T>):Void
+	inline function _fill(buffer:Array<T>)
 	{
 		_head = _tail = new ObjNode<T>();
 		_head.val = buffer.pop();

@@ -147,7 +147,7 @@ class ArrayedDeque<T> implements Deque<T>
 	 * <o>1</o>
 	 * @throws de.polygonal.ds.error.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
 	 */
-	inline public function pushFront(x:T):Void
+	inline public function pushFront(x:T)
 	{
 		#if debug
 		if (maxSize != -1)
@@ -197,7 +197,7 @@ class ArrayedDeque<T> implements Deque<T>
 	 * <o>1</o>
 	 * @throws de.polygonal.ds.error.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
 	 */
-	inline public function pushBack(x:T):Void
+	inline public function pushBack(x:T)
 	{
 		#if debug
 		if (maxSize != -1)
@@ -305,7 +305,7 @@ class ArrayedDeque<T> implements Deque<T>
 	 * Removes all superfluous blocks and overwrites elements stored in empty locations with null.
 	 * <o>n</o>
 	 */
-	public function pack():Void
+	public function pack()
 	{
 		for (i in 0..._head + 1) _headBlock[i] = null;
 		for (i in _tail..._blockSize) _tailBlock[i] = null;
@@ -322,7 +322,7 @@ class ArrayedDeque<T> implements Deque<T>
 	 * @param n the number of elements to replace. If 0, <code>n</code> is set to <em>size()</em>.
 	 * @throws de.polygonal.ds.error.AssertError <code>n</code> &gt; <em>maxSize</em> (debug only).
 	 */
-	public function assign(C:Class<T>, args:Array<Dynamic> = null, n = 0):Void
+	public function assign(C:Class<T>, args:Array<Dynamic> = null, n = 0)
 	{
 		if (n == 0) n = size();
 		if (n == 0) return;
@@ -517,7 +517,7 @@ class ArrayedDeque<T> implements Deque<T>
 	 * Improves GC efficiency/performance (optional).
 	 * <o>n</o>
 	 */
-	public function free():Void
+	public function free()
 	{
 		for (i in 0..._tailBlockIndex + 1)
 		{
@@ -783,7 +783,7 @@ class ArrayedDeque<T> implements Deque<T>
 	 * <o>1 or n if <code>purge</code> is true</o>
 	 * @param purge if true, elements are nullified upon removal. This also removes all superfluous blocks and clears the pool.
 	 */
-	public function clear(purge = false):Void
+	public function clear(purge = false)
 	{
 		if (purge)
 		{
@@ -1147,7 +1147,7 @@ class ArrayedDequeIterator<T> implements de.polygonal.ds.Itr<T>
 		return x;
 	}
 	
-	inline public function remove():Void
+	inline public function remove()
 	{
 		throw "unsupported operation";
 	}

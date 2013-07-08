@@ -61,7 +61,7 @@ private typedef DynamicObjectPoolFriend<T> =
  *         timer.run = algorithm;
  *     }
  *     
- *     function algorithm():Void {
+ *     function algorithm() {
  *         //add two points together and store the result in c
  *         var a = getPoint(10, 10);
  *         var b = getPoint(20, 20);
@@ -175,7 +175,7 @@ class DynamicObjectPool<T>
 	 * Destroys this object by explicitly nullifying all objects for GC'ing used resources.<br/>
 	 * Improves GC efficiency/performance (optional).
 	 */
-	public function free():Void
+	public function free()
 	{
 		for (i in 0..._size) _pool[i] = null;
 		_class     = null;
@@ -251,7 +251,7 @@ class DynamicObjectPool<T>
 	 * Objects are pushed onto a stack, so <em>get()</em> returns <code>x</code> if called immediately after <em>put()</em>.<br/>
 	 * @throws de.polygonal.ds.error.AssertError <code>x</code> was returned twice to the pool (debug only).
 	 */
-	inline public function put(x:T):Void
+	inline public function put(x:T)
 	{
 		#if debug
 		assert(!_set.has(x), 'object $x was returned twice to the pool');
@@ -348,7 +348,7 @@ class DynamicObjectPoolIterator<T> implements de.polygonal.ds.Itr<T>
 		return _i < _s;
 	}
 	
-	inline public function remove():Void
+	inline public function remove()
 	{
 		throw "unsupported operation";
 	}

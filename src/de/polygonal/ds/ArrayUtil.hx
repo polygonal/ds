@@ -106,7 +106,7 @@ class ArrayUtil
 	 * @param k the number of elements to put into <code>dst</code>.
 	 * If omitted <code>k</code> is set to <code>dst</code>.length;
 	 */
-	inline public static function fill<T>(dst:Array<T>, x:T, k = -1):Void
+	inline public static function fill<T>(dst:Array<T>, x:T, k = -1)
 	{
 		if (k == -1) k = dst.length;
 		for (i in 0...k) dst[i] = x;
@@ -117,7 +117,7 @@ class ArrayUtil
 	 * @param k the number of elements to put into <code>dst</code>.
 	 * If omitted <code>k</code> is set to <code>dst</code>.length;
 	 */
-	inline public static function assign<T>(dst:Array<T>, C:Class<T>, args:Array<Dynamic> = null, k = -1):Void
+	inline public static function assign<T>(dst:Array<T>, C:Class<T>, args:Array<Dynamic> = null, k = -1)
 	{
 		if (k == -1) k = dst.length;
 		if (args == null) args = [];
@@ -130,7 +130,7 @@ class ArrayUtil
 	 * @throws de.polygonal.ds.error.AssertError invalid <code>destination</code>, <code>source</code> or <code>n</code> value (debug only).
 	 * @see <a href="ttp://www.cplusplus.com/reference/clibrary/cstring/memmove/" target="_blank">ttp://www.cplusplus.com/reference/clibrary/cstring/memmove/</a>
 	 */
-	inline public static function memmove<T>(a:Array<T>, destination:Int, source:Int, n:Int):Void
+	inline public static function memmove<T>(a:Array<T>, destination:Int, source:Int, n:Int)
 	{
 		#if debug
 		assert(destination >= 0 && source >= 0 && n >= 0, "destination >= 0 && source >= 0 && n >= 0");
@@ -266,7 +266,7 @@ class ArrayUtil
 	 * If omitted, random values are generated on-the-fly by calling <em>Math.random()</em>.
 	 * @throws de.polygonal.ds.error.AssertError insufficient random values (debug only).
 	 */
-	public static function shuffle<T>(a:Array<T>, rval:Array<Float> = null):Void
+	public static function shuffle<T>(a:Array<T>, rval:Array<Float> = null)
 	{
 		#if debug
 		assert(a != null, "a != null");
@@ -310,7 +310,7 @@ class ArrayUtil
 	 * If omitted, <code>count</code> is set to <code>size()</code>.
 	 * @throws de.polygonal.ds.error.AssertError <code>first</code> or <code>count</code> out of bound (debug only).
 	 */
-	public static function sortRange(a:Array<Float>, compare:Float->Float->Int, useInsertionSort:Bool, first:Int, count:Int):Void
+	public static function sortRange(a:Array<Float>, compare:Float->Float->Int, useInsertionSort:Bool, first:Int, count:Int)
 	{
 		var k = a.length;
 		if (k > 1)
@@ -402,7 +402,7 @@ class ArrayUtil
 		return output;
 	}
 	
-	static function _insertionSort(a:Array<Float>, first:Int, k:Int, cmp:Float->Float->Int):Void
+	static function _insertionSort(a:Array<Float>, first:Int, k:Int, cmp:Float->Float->Int)
 	{
 		for (i in first + 1...first + k)
 		{
@@ -424,7 +424,7 @@ class ArrayUtil
 		}
 	}
 	
-	static function _quickSort(a:Array<Float>, first:Int, k:Int, cmp:Float->Float->Int):Void
+	static function _quickSort(a:Array<Float>, first:Int, k:Int, cmp:Float->Float->Int)
 	{
 		var last = first + k - 1;
 		var lo = first;

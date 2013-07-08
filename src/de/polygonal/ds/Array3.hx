@@ -119,7 +119,7 @@ class Array3<T> implements Collection<T>
 	 * <o>1</o>
 	 * @throws de.polygonal.ds.error.AssertError <code>x</code>/<code>y</code>/<code>z</code> out of range (debug only).
 	 */
-	inline public function set(x:Int, y:Int, z:Int, val:T):Void
+	inline public function set(x:Int, y:Int, z:Int, val:T)
 	{
 		#if debug
 		assert(x >= 0 && x < getW(), 'x index out of range ($x)');
@@ -145,7 +145,7 @@ class Array3<T> implements Collection<T>
 	 * <o>1</o>
 	 * @throws de.polygonal.ds.error.AssertError invalid width (debug only).
 	 */
-	inline public function setW(x:Int):Void
+	inline public function setW(x:Int)
 	{
 		resize(x, _h, _d);
 	}
@@ -165,7 +165,7 @@ class Array3<T> implements Collection<T>
 	 * <o>1</o>
 	 * @throws de.polygonal.ds.error.AssertError invalid height (debug only).
 	 */
-	inline public function setH(x:Int):Void
+	inline public function setH(x:Int)
 	{
 		resize(_w, x, _d);
 	}
@@ -185,7 +185,7 @@ class Array3<T> implements Collection<T>
 	 * <o>1</o>
 	 * @throws de.polygonal.ds.error.AssertError invalid height (debug only).
 	 */
-	inline public function setD(x:Int):Void
+	inline public function setD(x:Int)
 	{
 		resize(_w, _h, x);
 	}
@@ -333,7 +333,7 @@ class Array3<T> implements Collection<T>
 	 * @throws de.polygonal.ds.error.AssertError <code>z</code>/<code>y</code> out of range (debug only).
 	 * @throws de.polygonal.ds.error.AssertError <code>input</code> is null or insufficient input values (debug only).
 	 */
-	public function setRow(z:Int, y:Int, input:Array<T>):Void
+	public function setRow(z:Int, y:Int, input:Array<T>)
 	{
 		#if debug
 		assert(y >= 0 && y < getH(), 'y index out of range ($y)');
@@ -372,7 +372,7 @@ class Array3<T> implements Collection<T>
 	 * @throws de.polygonal.ds.error.AssertError <code>z</code>/<code>x</code> out of range (debug only).
 	 * @throws de.polygonal.ds.error.AssertError <code>input</code> is null or insufficient input values (debug only).
 	 */
-	public function setCol(z:Int, x:Int, input:Array<T>):Void
+	public function setCol(z:Int, x:Int, input:Array<T>)
 	{
 		#if debug
 		assert(x >= 0 && x < getW(), 'x index out of range ($x)');
@@ -412,7 +412,7 @@ class Array3<T> implements Collection<T>
 	 * @throws de.polygonal.ds.error.AssertError <code>x</code>/<code>y</code> out of range (debug only).
 	 * @throws de.polygonal.ds.error.AssertError <code>input</code> is null or insufficient input values (debug only).
 	 */
-	public function setPile(x:Int, y:Int, input:Array<T>):Void
+	public function setPile(x:Int, y:Int, input:Array<T>)
 	{
 		#if debug
 		assert(x >= 0 && x < getW(), 'x index out of range ($x)');
@@ -433,7 +433,7 @@ class Array3<T> implements Collection<T>
 	 * @param C the class to instantiate for each element.
 	 * @param args passes additional constructor arguments to the class <code>C</code>.
 	 */
-	public function assign(C:Class<T>, args:Array<Dynamic> = null):Void
+	public function assign(C:Class<T>, args:Array<Dynamic> = null)
 	{
 		if (args == null) args = [];
 		for (i in 0...size()) __set(i, Type.createInstance(C, args));
@@ -454,7 +454,7 @@ class Array3<T> implements Collection<T>
 	 * The function signature is: <em>process(oldValue, xIndex, yIndex, zIndex):newValue</em>
 	 * <o>n</o>
 	 */
-	public function walk(process:T->Int->Int->Int->T):Void
+	public function walk(process:T->Int->Int->Int->T)
 	{
 		for (z in 0..._d)
 		{
@@ -477,7 +477,7 @@ class Array3<T> implements Collection<T>
 	 * @param depth the new depth (minimum is 2).
 	 * @throws de.polygonal.ds.error.AssertError invalid dimensions (debug only).
 	 */
-	public function resize(width:Int, height:Int, depth:Int):Void
+	public function resize(width:Int, height:Int, depth:Int)
 	{
 		#if debug
 		assert(width >= 2 && height >= 2 && depth >= 1, 'invalid size (width:$width, height:$height, depth: $depth)');
@@ -517,7 +517,7 @@ class Array3<T> implements Collection<T>
 	 * @throws de.polygonal.ds.error.AssertError <code>x0</code>/<code>y0</code>/<code>z0</code> or <code>x1</code>/<code>y1</code>/<code>z1</code> out of range (debug only).
 	 * @throws de.polygonal.ds.error.AssertError <code>x0</code>, <code>y0</code>, <code>z0</code> equals <code>x1</code>, <code>y1</code>, <code>z1</code> (debug only).
 	 */
-	inline public function swap(x0:Int, y0:Int, z0:Int, x1:Int, y1:Int, z1:Int):Void
+	inline public function swap(x0:Int, y0:Int, z0:Int, x1:Int, y1:Int, z1:Int)
 	{
 		#if debug
 		assert(x0 >= 0 && x0 < getW(), 'x0 index out of range ($x0)');
@@ -553,7 +553,7 @@ class Array3<T> implements Collection<T>
 	 * If omitted, random values are generated on-the-fly by calling <em>Math.random()</em>.
 	 * @throws de.polygonal.ds.error.AssertError insufficient random values (debug only).
 	 */
-	public function shuffle(rval:DA<Float> = null):Void
+	public function shuffle(rval:DA<Float> = null)
 	{
 		var s = size();
 		if (rval == null)
@@ -609,7 +609,7 @@ class Array3<T> implements Collection<T>
 	 * Improves GC efficiency/performance (optional).
 	 * <o>n</o>
 	 */
-	public function free():Void
+	public function free()
 	{
 		for (i in 0...size()) __set(i, cast null);
 		_a = null;
@@ -656,7 +656,7 @@ class Array3<T> implements Collection<T>
 	 * The <code>purge</code> parameter has no effect.
 	 * <o>1 or n if <code>purge</code> is true</o>
 	 */
-	inline public function clear(purge = false):Void
+	inline public function clear(purge = false)
 	{
 		for (i in 0...size()) __set(i, cast null);
 	}
@@ -807,7 +807,7 @@ class Array3Iterator<T> implements de.polygonal.ds.Itr<T>
 		return _a[_i++];
 	}
 	
-	inline public function remove():Void
+	inline public function remove()
 	{
 		//just nullify value
 		#if debug

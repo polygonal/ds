@@ -64,7 +64,7 @@ class TreeBuilder<T>
 	 * Improves GC efficiency/performance (optional).
 	 * <o>1</o>
 	 */
-	public function free():Void
+	public function free()
 	{
 		_node = _child = null;
 	}
@@ -88,7 +88,7 @@ class TreeBuilder<T>
 	 * <o>1</o>
 	 * @throws de.polygonal.ds.error.AssertError vertical pointer is null (debug only).
 	 */
-	inline public function setVal(x:T):Void
+	inline public function setVal(x:T)
 	{
 		#if debug
 		assert(valid(), "vertical pointer is null");
@@ -143,7 +143,7 @@ class TreeBuilder<T>
 	 * <o>n</o>
 	 * @throws de.polygonal.ds.error.AssertError invalid pointer (debug only).
 	 */
-	inline public function root():Void
+	inline public function root()
 	{
 		#if debug
 		assert(valid(), "invalid vertical pointer");
@@ -419,7 +419,7 @@ class TreeBuilder<T>
 		return "{ TreeBuilder V: " + (valid() ? _node.val : cast null) + ", H: " + (childValid() ? _child.val : cast null) + " }";
 	}
 	
-	inline function _reset():Void
+	inline function _reset()
 	{
 		if (valid()) _child = _node.children;
 	}

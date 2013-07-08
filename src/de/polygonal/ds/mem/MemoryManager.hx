@@ -93,7 +93,7 @@ class MemoryManager
 	/**
 	 * Releases all allocated memory and nullifies references for GC'ing used resources. 
 	 */
-	public static function free():Void
+	public static function free()
 	{
 		if (_instance != null) _instance._free();
 		_instance = null;
@@ -139,7 +139,7 @@ class MemoryManager
 	/**
 	 * Allocates and assigns <code>numBytes</code> to be accessed by <code>accessor</code>. 
 	 */
-	public static function malloc(accessor:MemoryAccess, numBytes:Int):Void
+	public static function malloc(accessor:MemoryAccess, numBytes:Int)
 	{
 		get()._malloc(accessor, numBytes);
 		get()._changed = true;
@@ -148,7 +148,7 @@ class MemoryManager
 	/**
 	 * Deallocates the memory used by <code>accessor</code>. 
 	 */
-	public static function dealloc(accessor:MemoryAccess):Void
+	public static function dealloc(accessor:MemoryAccess)
 	{
 		get()._dealloc(accessor);
 		get()._changed = true;
@@ -157,7 +157,7 @@ class MemoryManager
 	/**
 	 * Resizes <code>accessor</code> to match <code>numBytes</code>. 
 	 */
-	public static function realloc(accessor:MemoryAccess, numBytes:Int):Void
+	public static function realloc(accessor:MemoryAccess, numBytes:Int)
 	{
 		get()._realloc(accessor, numBytes);
 		get()._changed = true;
@@ -166,7 +166,7 @@ class MemoryManager
 	/**
 	 * Performs a full defragmentation of the allocated memory. 
 	 */
-	public static function defrag():Void
+	public static function defrag()
 	{
 		get()._defrag();
 		get()._changed = true;
@@ -175,7 +175,7 @@ class MemoryManager
 	/**
 	 * Releases unused memory. 
 	 */
-	public static function pack():Void
+	public static function pack()
 	{
 		get()._pack();
 		get()._changed = true;
@@ -188,7 +188,7 @@ class MemoryManager
 	 * @see <a href="http://www.cplusplus.com/reference/clibrary/cstring/memmove/" target="_blank">http://www.cplusplus.com/reference/clibrary/cstring/memmove/</a>
 	 */
 	#if (flash10 && alchemy)
-	inline public static function memmove(destination:Int, source:Int, n:Int):Void
+	inline public static function memmove(destination:Int, source:Int, n:Int)
 	{
 		#if debug
 		assert(destination >= 0 && source >= 0 && n >= 0, "destination >= 0 && source >= 0 && n >= 0");
@@ -297,7 +297,7 @@ class MemoryManager
 		if (RESERVE_BYTES > 0) _grow(RESERVE_BYTES);
 	}
 	
-	function _free():Void
+	function _free()
 	{
 		while (_segmentList != null)
 		{
@@ -325,7 +325,7 @@ class MemoryManager
 		#end
 	}
 	
-	function _malloc(access:MemoryAccess, numBytes:Int):Void
+	function _malloc(access:MemoryAccess, numBytes:Int)
 	{
 		#if debug
 		//check upper limit
@@ -359,7 +359,7 @@ class MemoryManager
 		memory.setOffset();
 	}
 	
-	function _dealloc(access:MemoryAccess):Void
+	function _dealloc(access:MemoryAccess)
 	{
 		#if debug
 		assert(access != null, "invalid access");
@@ -397,7 +397,7 @@ class MemoryManager
 			memory.free();
 	}
 	
-	function _realloc(access:MemoryAccess, numBytes:Int):Void
+	function _realloc(access:MemoryAccess, numBytes:Int)
 	{
 		#if debug
 		assert(access != null, "invalid access");
@@ -556,7 +556,7 @@ class MemoryManager
 		}
 	}
 	
-	function _grow(numBytes:Int):Void
+	function _grow(numBytes:Int)
 	{
 		//calculate #required buckets
 		var requiredBuckets = M.max(1, Math.ceil((_bytesUsed + numBytes - _bytesTotal) / _blockSizeBytes));
@@ -615,7 +615,7 @@ class MemoryManager
 		}
 	}
 	
-	function _pack():Void
+	function _pack()
 	{
 		if (_bytesUsed == 0) return;
 		var freeBytes = _bytesTotal - _bytesUsed;
@@ -673,7 +673,7 @@ class MemoryManager
 		}
 	}
 	
-	function _defrag():Void
+	function _defrag()
 	{
 		if (_bytesUsed == _bytesTotal) return;
 		
@@ -746,7 +746,7 @@ class MemoryManager
 		_segmentList.wipe();
 	}
 	
-	function _wipe(destination:Int, size:Int, offset:Int):Void
+	function _wipe(destination:Int, size:Int, offset:Int)
 	{
 		#if alchemy
 		for (i in offset...size + offset) flash.Memory.setByte(destination + i, 0);
@@ -799,7 +799,7 @@ class MemoryManager
 		return null;
 	}
 	
-	function _mergeLeft(m:MemorySegment):Void
+	function _mergeLeft(m:MemorySegment)
 	{
 		//merge m and m.prev
 		var m0 = m.prev;
@@ -817,7 +817,7 @@ class MemoryManager
 			_segmentList = m;
 	}
 	
-	function _mergeRight(m:MemorySegment):Void
+	function _mergeRight(m:MemorySegment)
 	{
 		//merge m and m.next
 		var m1 = m.next;
@@ -831,7 +831,7 @@ class MemoryManager
 		m1.free();
 	}
 	
-	function _memmove(destination:Int, source:Int, n:Int, offset:Int):Void
+	function _memmove(destination:Int, source:Int, n:Int, offset:Int)
 	{
 		#if alchemy
 		if (source == destination)
@@ -902,7 +902,7 @@ private class MemorySegment
 		isEmpty = true;
 	}
 	
-	public function free():Void
+	public function free()
 	{
 		#if flash9
 		if (monitor != null) monitor.removeEventListener(flash.events.TimerEvent.TIMER, _checkPointer);
@@ -919,45 +919,45 @@ private class MemorySegment
 		offset       = -1;
 	}
 	
-	inline public function shiftLeft(x:Int):Void
+	inline public function shiftLeft(x:Int)
 	{
 		b -= x;
 		e -= x;
 		setOffset();
 	}
 	
-	inline public function shiftRight(x:Int):Void
+	inline public function shiftRight(x:Int)
 	{
 		b += x;
 		e += x;
 		setOffset();
 	}
 	
-	inline public function expandLeft(s:Int):Void
+	inline public function expandLeft(s:Int)
 	{
 		size += s;
 		b = e - size + 1;
 	}
 	
-	inline public function shrinkLeft(s:Int):Void
+	inline public function shrinkLeft(s:Int)
 	{
 		size -= s;
 		e = b + size - 1;
 	}
 	
-	inline public function expandRight(s:Int):Void
+	inline public function expandRight(s:Int)
 	{
 		size += s;
 		e = b + size - 1;
 	}
 	
-	inline public function shrinkRight(s:Int):Void
+	inline public function shrinkRight(s:Int)
 	{
 		size -= s;
 		b = e - size + 1;
 	}
 	
-	inline public function setOffset():Void
+	inline public function setOffset()
 	{
 		#if alchemy
 		var access = getAccess();
@@ -965,7 +965,7 @@ private class MemorySegment
 		#end
 	}
 	
-	inline public function wipe():Void
+	inline public function wipe()
 	{
 		#if alchemy
 		for (i in offset...offset + size) flash.Memory.setByte(b + i, 0);
@@ -985,7 +985,7 @@ private class MemorySegment
 			return _access;
 	}
 	
-	inline public function setAccess(x:MemoryAccess):Void
+	inline public function setAccess(x:MemoryAccess)
 	{
 		#if flash9
 		if (MemoryManager.AUTO_RECLAIM_MEMORY)
@@ -1027,7 +1027,7 @@ private class MemorySegment
 	}
 	
 	#if flash9
-	inline public function stopMonitor():Void
+	inline public function stopMonitor()
 	{
 		if (MemoryManager.AUTO_RECLAIM_MEMORY)
 		{
@@ -1060,7 +1060,7 @@ private class MemorySegment
 	}
 	
 	#if flash9
-	function _checkPointer(e:flash.events.TimerEvent):Void 
+	function _checkPointer(e:flash.events.TimerEvent) 
 	{
 		var keys:Array<Dynamic> = untyped __keys__(_weakPointer);
 		for (key in keys) return;

@@ -123,7 +123,7 @@ class ListSet<T> implements Set<T>
 	 * @param copier a custom function for copying elements. Replaces element.<em>clone()</em> if <code>assign</code> is false.
 	 * @throws de.polygonal.ds.error.AssertError element is not of type <em>Cloneable</em> (debug only).
 	 */
-	public function merge(x:Set<T>, assign:Bool, copier:T->T = null):Void
+	public function merge(x:Set<T>, assign:Bool, copier:T->T = null)
 	{
 		if (assign)
 		{
@@ -160,7 +160,7 @@ class ListSet<T> implements Set<T>
 	 * Improves GC efficiency/performance (optional).
 	 * <o>n</o>
 	 */
-	public function free():Void
+	public function free()
 	{
 		_a.free();
 		_a = null;
@@ -190,7 +190,7 @@ class ListSet<T> implements Set<T>
 	 * <o>1 or n if <code>purge</code> is true</o>
 	 * @param purge if true, nullifies references upon removal.
 	 */
-	public function clear(purge = false):Void
+	public function clear(purge = false)
 	{
 		_a.clear(purge);
 	}

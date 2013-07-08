@@ -55,7 +55,7 @@ class HeapIterator<T:(Heapable<T>)> implements de.polygonal.ds.Itr<T>
 		reset();
 	}
 	
-	public function free():Void
+	public function free()
 	{
 		_a = null;
 	}
@@ -79,7 +79,7 @@ class HeapIterator<T:(Heapable<T>)> implements de.polygonal.ds.Itr<T>
 		return _a[_i++];
 	}
 	
-	inline public function remove():Void
+	inline public function remove()
 	{
 		#if debug
 		assert(_i > 0, "call next() before removing an element");
@@ -172,7 +172,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	 * <em>pack()</em> therefore nullifies all obsolete references and shrinks the container to the actual size allowing the garbage collector to reclaim used memory.
 	 * <o>n</o>
 	 */
-	public function pack():Void
+	public function pack()
 	{
 		if (_a.length - 1 == size()) return;
 		
@@ -199,7 +199,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	 * This is useful if the expected size is known in advance - many platforms can optimize memory usage if an exact size is specified.
 	 * <o>n</o>
 	 */
-	public function reserve(x:Int):Void
+	public function reserve(x:Int)
 	{
 		if (size() == x) return;
 		
@@ -258,7 +258,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	 * @throws de.polygonal.ds.error.AssertError <code>x</code> is null or <code>x</code> already exists (debug only).
 	 * @throws de.polygonal.ds.error.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
 	 */
-	public function add(x:T):Void
+	public function add(x:T)
 	{
 		#if debug
 		assert(x != null, "x is null");
@@ -306,7 +306,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	 * <o>log n</o>
 	 * @throws de.polygonal.ds.error.AssertError <code>x</code> already exists (debug only).
 	 */
-	public function replace(x:T):Void
+	public function replace(x:T)
 	{
 		#if (debug && flash)
 		assert(!_map.hasKey(x), "x already exists");
@@ -326,7 +326,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	 * Likewise, a value &lt; 0 indicates that <code>x</code> is now bigger (ascending order) or smaller (descending order) and should be moved towards the leaf nodes of the tree.<br/>
 	 * @throws de.polygonal.ds.error.AssertError <code>x</code> does not exist (debug only).
 	 */
-	public function change(x:T, hint:Int):Void
+	public function change(x:T, hint:Int)
 	{
 		#if (debug && flash)
 		assert(_map.hasKey(x), "x does not exist");
@@ -462,7 +462,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	 * Uses the Floyd algorithm (bottom-up) to repair the heap tree by restoring the heap property.
 	 * <o>n</o>
 	 */
-	public function repair():Void
+	public function repair()
 	{
 		var i = _size >> 1;
 		while (i >= 1)
@@ -481,7 +481,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	 * Improves GC efficiency/performance (optional).
 	 * <o>n</o>
 	 */
-	public function free():Void
+	public function free()
 	{
 		for (i in 0..._a.length) __set(i, cast null);
 		_a = null;
@@ -551,7 +551,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	 * <o>1 or n if <code>purge</code> is true</o>
 	 * @param purge if true, elements are nullified upon removal.
 	 */
-	inline public function clear(purge = false):Void
+	inline public function clear(purge = false)
 	{
 		#if (debug && flash)
 		_map.clear();

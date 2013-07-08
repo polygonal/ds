@@ -143,7 +143,7 @@ class DLL<T> implements Collection<T>
 	 * Silently fails if this list is already closed.
 	 * <o>1</o>
 	 */
-	public function close():Void
+	public function close()
 	{
 		if (_circular) return;
 		_circular = true;
@@ -159,7 +159,7 @@ class DLL<T> implements Collection<T>
 	 * Silently fails if this list is already non-circular.
 	 * <o>1</o>
 	 */
-	public function open():Void
+	public function open()
 	{
 		if (!_circular) return;
 		_circular = false;
@@ -216,7 +216,7 @@ class DLL<T> implements Collection<T>
 	 * Appends the node <code>x</code> to this list.
 	 * <o>1</o>
 	 */
-	public function appendNode(x:DLLNode<T>):Void
+	public function appendNode(x:DLLNode<T>)
 	{
 		#if debug
 		assert(x.getList() == this, "node is not managed by this list");
@@ -275,7 +275,7 @@ class DLL<T> implements Collection<T>
 	 * Prepends the node <code>x</code> to this list.
 	 * <o>1</o>
 	 */
-	public function prependNode(x:DLLNode<T>):Void
+	public function prependNode(x:DLLNode<T>)
 	{
 		#if debug
 		assert(x.getList() == this, "node is not managed by this list");
@@ -487,7 +487,7 @@ class DLL<T> implements Collection<T>
 	 * <o>1</o>
 	 * @throws de.polygonal.ds.error.AssertError list is empty (debug only).
 	 */
-	public function shiftUp():Void
+	public function shiftUp()
 	{
 		#if debug
 		assert(_size > 0, "list is empty");
@@ -533,7 +533,7 @@ class DLL<T> implements Collection<T>
 	 * <o>1</o>
 	 * @throws de.polygonal.ds.error.AssertError list is empty (debug only).
 	 */
-	public function popDown():Void
+	public function popDown()
 	{
 		#if debug
 		assert(_size > 0, "list is empty");
@@ -654,7 +654,7 @@ class DLL<T> implements Collection<T>
 	 * This is faster for nearly sorted lists.
 	 * @throws de.polygonal.ds.error.AssertError element does not implement <em>Comparable</em> (debug only).
 	 */
-	public function sort(compare:T->T->Int, useInsertionSort = false):Void
+	public function sort(compare:T->T->Int, useInsertionSort = false)
 	{
 		if (_size > 1)
 		{
@@ -687,7 +687,7 @@ class DLL<T> implements Collection<T>
 	 * <o>n</o>
 	 * @throws de.polygonal.ds.error.AssertError <code>x</code> is null or this list equals <code>x</code> (debug only).
 	 */
-	public function merge(x:DLL<T>):Void
+	public function merge(x:DLL<T>)
 	{
 		#if debug
 		if (maxSize != -1)
@@ -804,7 +804,7 @@ class DLL<T> implements Collection<T>
 	 * Reverses the linked list in place.
 	 * <o>n</o>
 	 */
-	public function reverse():Void
+	public function reverse()
 	{
 		if (_size <= 1)
 			return;
@@ -859,7 +859,7 @@ class DLL<T> implements Collection<T>
 	 * @param n the number of elements to replace. If 0, <code>n</code> is set to <em>size()</em>.
 	 * @throws de.polygonal.ds.error.AssertError <code>n</code> out of range (debug only).
 	 */
-	public function assign(C:Class<T>, args:Array<Dynamic> = null, n = 0):Void
+	public function assign(C:Class<T>, args:Array<Dynamic> = null, n = 0)
 	{
 		#if debug
 		assert(n >= 0, "n >= 0");
@@ -923,7 +923,7 @@ class DLL<T> implements Collection<T>
 	 * If omitted, random values are generated on-the-fly by calling <em>Math.random()</em>.
 	 * @throws de.polygonal.ds.error.AssertError insufficient random values (debug only).
 	 */
-	public function shuffle(rval:DA<Float> = null):Void
+	public function shuffle(rval:DA<Float> = null)
 	{
 		var s = _size;
 		if (rval == null)
@@ -1018,7 +1018,7 @@ class DLL<T> implements Collection<T>
 	 * Improves GC efficiency/performance (optional).
 	 * <o>n</o>
 	 */
-	public function free():Void
+	public function free()
 	{
 		var node = head;
 		for (i in 0..._size)
@@ -1084,7 +1084,7 @@ class DLL<T> implements Collection<T>
 	 * <o>1 or n if <code>purge</code> is true</o>
 	 * @param purge if true, nodes, pointers and elements are nullified upon removal.
 	 */
-	public function clear(purge = false):Void
+	public function clear(purge = false)
 	{
 		if (purge || _reservedSize > 0)
 		{
@@ -1703,7 +1703,7 @@ class DLLIterator<T> implements de.polygonal.ds.Itr<T>
 		return x;
 	}
 	
-	inline public function remove():Void
+	inline public function remove()
 	{
 		#if debug
 		assert(_hook != null, "call next() before removing an element");
@@ -1756,7 +1756,7 @@ class CircularDLLIterator<T> implements de.polygonal.ds.Itr<T>
 		return x;
 	}
 	
-	inline public function remove():Void
+	inline public function remove()
 	{
 		#if debug
 		assert(_i > 0, "call next() before removing an element");

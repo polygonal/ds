@@ -94,7 +94,7 @@ class ObjectPool<T> implements Hashable
 	 * Destroys this object by explicitly nullifying all objects for GC'ing used resources.<br/>
 	 * Improves GC efficiency/performance (optional).
 	 */
-	public function free():Void
+	public function free()
 	{
 		if (_pool == null) return;
 		
@@ -204,7 +204,7 @@ class ObjectPool<T> implements Hashable
 	 * Puts the object mapped to <code>id</code> back into the pool.
 	 * @throws de.polygonal.ds.error.AssertError pool is full or object linked to <code>id</code> is not used (debug only).
 	 */
-	inline public function put(id:Int):Void
+	inline public function put(id:Int)
 	{
 		#if debug
 		assert(_usage.has(id), 'id $id is not used');
@@ -225,7 +225,7 @@ class ObjectPool<T> implements Hashable
 	 * @param factory allocates objects by using a <em>Factory</em> object (calling <code>factory</code>.<em>create()</em>).
 	 * @throws de.polygonal.ds.error.AssertError invalid arguments.
 	 */
-	public function allocate(lazy:Bool, C:Class<T> = null, fabricate:Void->T = null, factory:Factory<T> = null):Void
+	public function allocate(lazy:Bool, C:Class<T> = null, fabricate:Void->T = null, factory:Factory<T> = null)
 	{
 		_lazy = lazy;
 		
@@ -363,7 +363,7 @@ class ObjectPoolIterator<T> implements de.polygonal.ds.Itr<T>
 		return _a[_i++];
 	}
 	
-	inline public function remove():Void
+	inline public function remove()
 	{
 		throw "unsupported operation";
 	}

@@ -243,7 +243,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	 * <o>n</o>
 	 * @throws de.polygonal.ds.error.AssertError <code>slotCount</code> is not a power of two (debug only).
 	 */
-	public function rehash(slotCount:Int):Void
+	public function rehash(slotCount:Int)
 	{
 		_h.rehash(slotCount);
 	}
@@ -302,7 +302,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	 * <em>pack()</em> therefore nullifies all obsolete references.
 	 * <o>n</o>
 	 */
-	public function pack():Void
+	public function pack()
 	{
 		for (i in 0...getCapacity())
 			if (_keys[i] != null) _vals[i] = cast null;
@@ -539,7 +539,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	 * <warn>If "alchemy memory" is used, always call this method when the life cycle of this object ends to prevent a memory leak.</warn>
 	 * <o>n</o>
 	 */
-	public function free():Void
+	public function free()
 	{
 		for (i in 0...size())
 		{
@@ -604,7 +604,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	 * <o>n</o>
 	 * @param purge if true, nullifies all keys and values and shrinks the hash table to the initial capacity defined in the constructor.
 	 */
-	public function clear(purge = false):Void
+	public function clear(purge = false)
 	{
 		_h.clear(purge);
 		for (i in 0...getCapacity()) _keys[i] = null;
@@ -903,7 +903,7 @@ class HashTableKeyIterator<K, T> implements de.polygonal.ds.Itr<K>
 		return _keys[_i];
 	}
 	
-	inline public function remove():Void
+	inline public function remove()
 	{
 		throw "unsupported operation";
 	}
@@ -961,7 +961,7 @@ class HashTableValIterator<K, T> implements de.polygonal.ds.Itr<T>
 		return _vals[_i];
 	}
 	
-	inline public function remove():Void
+	inline public function remove()
 	{
 		throw "unsupported operation";
 	}

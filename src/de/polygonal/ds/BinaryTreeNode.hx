@@ -106,7 +106,7 @@ class BinaryTreeNode<T> implements Collection<T>
 	 * @param iterative if true, an iterative traversal is used (default traversal style is recursive).
 	 * @param userData custom data that is passed to every visited node via <code>process</code> or element.<em>visit()</em>. If omitted, null is used.
 	 */
-	public function preorder(process:BinaryTreeNode<T>->Dynamic->Bool = null, iterative = false, userData:Dynamic = null):Void
+	public function preorder(process:BinaryTreeNode<T>->Dynamic->Bool = null, iterative = false, userData:Dynamic = null)
 	{
 		if (iterative == false)
 		{
@@ -177,7 +177,7 @@ class BinaryTreeNode<T> implements Collection<T>
 	 * @param iterative if true, an iterative traversal is used (default traversal style is recursive).
 	 * @param userData custom data that is passed to every visited node via <code>process</code> or element.<em>visit()</em>. If omitted, null is used.
 	 */
-	public function inorder(process:BinaryTreeNode<T>->Dynamic->Bool = null, iterative = false, userData:Dynamic = null):Void
+	public function inorder(process:BinaryTreeNode<T>->Dynamic->Bool = null, iterative = false, userData:Dynamic = null)
 	{
 		if (iterative == false)
 		{
@@ -280,7 +280,7 @@ class BinaryTreeNode<T> implements Collection<T>
 	 * @param iterative if true, an iterative traversal is used (default traversal style is recursive).
 	 * @param userData custom data that is passed to every visited node via <code>process</code> or element.<em>visit()</em>. If omitted, null is used.
 	 */
-	public function postorder(process:BinaryTreeNode<T>->Dynamic->Bool = null, iterative = false, userData:Dynamic = null):Void
+	public function postorder(process:BinaryTreeNode<T>->Dynamic->Bool = null, iterative = false, userData:Dynamic = null)
 	{
 		if (iterative == false)
 		{
@@ -395,7 +395,7 @@ class BinaryTreeNode<T> implements Collection<T>
 	 * If a left child exists, only the element is updated to <code>x</code>.
 	 * <o>1</o>
 	 */
-	inline public function setL(x:T):Void
+	inline public function setL(x:T)
 	{
 		if (l == null)
 		{
@@ -420,7 +420,7 @@ class BinaryTreeNode<T> implements Collection<T>
 	 * If a right child exists, only the element is updated to <code>x</code>.
 	 * <o>1</o>
 	 */
-	inline public function setR(x:T):Void
+	inline public function setR(x:T)
 	{
 		if (r == null)
 		{
@@ -497,7 +497,7 @@ class BinaryTreeNode<T> implements Collection<T>
 	 * Disconnects this node from this sub tree.
 	 * <o>1</o>
 	 */
-	inline public function unlink():Void
+	inline public function unlink()
 	{
 		if (p != null)
 		{
@@ -641,7 +641,7 @@ class BinaryTreeNode<T> implements Collection<T>
 	 * Improves GC efficiency/performance (optional).
 	 * <o>n</o>
 	 */
-	public function free():Void
+	public function free()
 	{
 		if (hasL()) l.free();
 		if (hasR()) r.free();
@@ -700,7 +700,7 @@ class BinaryTreeNode<T> implements Collection<T>
 	 * <o>1 or n if <code>purge</code> is true</o>
 	 * @param purge if true, all nodes and elements of this subtree are recursively nullified.
 	 */
-	public function clear(purge = false):Void
+	public function clear(purge = false)
 	{
 		if (purge)
 		{
@@ -913,7 +913,7 @@ class BinaryTreeNodeIterator<T> implements de.polygonal.ds.Itr<T>
 		return node.val;
 	}
 	
-	inline public function remove():Void
+	inline public function remove()
 	{
 		_top -= _c;
 	}

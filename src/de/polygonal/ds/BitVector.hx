@@ -69,7 +69,7 @@ class BitVector implements Hashable
 	 * Destroys this object by explicitly nullifying the array storing the bits.
 	 * <o>1</o>
 	 */
-	public function free():Void
+	public function free()
 	{
 		_bits = null;
 	}
@@ -123,7 +123,7 @@ class BitVector implements Hashable
 	 * <o>1</o>
 	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
 	 */
-	inline public function set(i:Int):Void
+	inline public function set(i:Int)
 	{
 		#if debug
 		assert(i < capacity(), 'i index out of range ($i)');
@@ -138,7 +138,7 @@ class BitVector implements Hashable
 	 * <o>1</o>
 	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
 	 */
-	inline public function clr(i:Int):Void
+	inline public function clr(i:Int)
 	{
 		#if debug
 		assert(i < capacity(), 'i index out of range ($i)');
@@ -152,7 +152,7 @@ class BitVector implements Hashable
 	 * Sets all bits in the bit-vector to 0.
 	 * <o>n</o>
 	 */
-	inline public function clrAll():Void
+	inline public function clrAll()
 	{
 		for (i in 0..._arrSize) _bits[i] = 0;
 	}
@@ -161,7 +161,7 @@ class BitVector implements Hashable
 	 * Sets all bits in the bit-vector to 1.
 	 * <o>n</o>
 	 */
-	inline public function setAll():Void
+	inline public function setAll()
 	{
 		for (i in 0..._arrSize) _bits[i] = -1;
 	}
@@ -173,7 +173,7 @@ class BitVector implements Hashable
 	 * @throws de.polygonal.ds.error.AssertError max out of range (debug only).
 	 * <o>n</o>
 	 */
-	inline public function clrRange(min:Int, max:Int):Void
+	inline public function clrRange(min:Int, max:Int)
 	{
 		#if debug
 		assert(min >= 0 && min <= max && max < _bitSize, 'min/max out of range ($min/$max)');
@@ -200,7 +200,7 @@ class BitVector implements Hashable
 	 * @throws de.polygonal.ds.error.AssertError max out of range (debug only).
 	 * <o>n</o>
 	 */
-	inline public function setRange(min:Int, max:Int):Void
+	inline public function setRange(min:Int, max:Int)
 	{
 		#if debug
 		assert(min >= 0 && min <= max && max < _bitSize, 'min/max out of range ($min/$max)');
@@ -225,7 +225,7 @@ class BitVector implements Hashable
 	 * <o>1</o>
 	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only) (debug only).
 	 */
-	inline public function ofBool(i:Int, cond:Bool):Void
+	inline public function ofBool(i:Int, cond:Bool)
 	{
 		cond ? set(i) : clr(i);
 	}
@@ -261,7 +261,7 @@ class BitVector implements Hashable
 	 * Preserves existing values if the new size &gt; old size.
 	 * <o>n</o>
 	 */
-	public function resize(x:Int):Void
+	public function resize(x:Int)
 	{
 		if (_bitSize == x) return;
 		
@@ -328,7 +328,7 @@ class BitVector implements Hashable
 	 * @param bigEndian the input byte order (default is little endian)
 	 * @throws de.polygonal.ds.error.AssertError <code>input</code> is null (debug only).
 	 */
-	public function ofBytes(bytes:haxe.io.BytesData, bigEndian = false):Void
+	public function ofBytes(bytes:haxe.io.BytesData, bigEndian = false)
 	{
 		#if flash9
 		var input = bytes;

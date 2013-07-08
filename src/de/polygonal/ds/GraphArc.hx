@@ -87,7 +87,7 @@ class GraphArc<T> implements Hashable
 	 * Improves GC efficiency/performance (optional).
 	 * <o>1</o>
 	 */
-	public function free():Void
+	public function free()
 	{
 		node = null;
 		next = prev = null;

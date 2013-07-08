@@ -164,7 +164,7 @@ class ArrayedQueue<T> implements Queue<T>
 	 * @throws de.polygonal.ds.error.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
 	 * @throws de.polygonal.ds.error.AssertError out of space - queue is full but not resizable.
 	 */
-	public function enqueue(x:T):Void
+	public function enqueue(x:T)
 	{
 		#if debug
 		if (maxSize != -1)
@@ -231,7 +231,7 @@ class ArrayedQueue<T> implements Queue<T>
 	 * <o>1</o>
 	 * @throws de.polygonal.ds.error.AssertError <em>dispose()</em> wasn't directly called after <em>dequeue()</em>(debug only).
 	 */
-	inline public function dispose():Void
+	inline public function dispose()
 	{
 		#if debug
 		assert(_t0 == _t1, "dispose() is only allowed directly after dequeue()");
@@ -245,7 +245,7 @@ class ArrayedQueue<T> implements Queue<T>
 	 * <em>pack()</em> therefore nullifies all obsolete references.
 	 * <o>n</o>
 	 */
-	public function pack():Void
+	public function pack()
 	{
 		var i = _front + _size;
 		for (j in 0..._capacity - _size)
@@ -276,7 +276,7 @@ class ArrayedQueue<T> implements Queue<T>
 	 * @throws de.polygonal.ds.error.AssertError queue is empty (debug only).
 	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
 	 */
-	inline public function set(i:Int, x:T):Void
+	inline public function set(i:Int, x:T)
 	{
 		#if debug
 		assert(_size > 0, "queue is empty");
@@ -294,7 +294,7 @@ class ArrayedQueue<T> implements Queue<T>
 	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
 	 * @throws de.polygonal.ds.error.AssertError <code>i</code> equals <code>j</code> (debug only).
 	 */
-	inline public function swp(i:Int, j:Int):Void
+	inline public function swp(i:Int, j:Int)
 	{
 		#if debug
 		assert(_size > 0, "queue is empty");
@@ -316,7 +316,7 @@ class ArrayedQueue<T> implements Queue<T>
 	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
 	 * @throws de.polygonal.ds.error.AssertError <code>i</code> equals <code>j</code> (debug only).
 	 */
-	inline public function cpy(i:Int, j:Int):Void
+	inline public function cpy(i:Int, j:Int)
 	{
 		#if debug
 		assert(_size > 0, "queue is empty");
@@ -336,7 +336,7 @@ class ArrayedQueue<T> implements Queue<T>
 	 * @param n the number of elements to replace. If 0, <code>n</code> is set to <em>capacity</em>.
 	 * @throws de.polygonal.ds.error.AssertError <code>n</code> out of range (debug only).
 	 */
-	public function assign(C:Class<T>, args:Array<Dynamic> = null, n = 0):Void
+	public function assign(C:Class<T>, args:Array<Dynamic> = null, n = 0)
 	{
 		#if debug
 		assert(n >= 0, "n >= 0");
@@ -383,7 +383,7 @@ class ArrayedQueue<T> implements Queue<T>
 	 * The function signature is: <em>process(oldValue, index):newValue</em>
 	 * <o>n</o>
 	 */
-	public function walk(process:T->Int->T):Void
+	public function walk(process:T->Int->T)
 	{
 		for (i in 0..._capacity)
 		{
@@ -399,7 +399,7 @@ class ArrayedQueue<T> implements Queue<T>
 	 * If omitted, random values are generated on-the-fly by calling <em>Math.random()</em>.
 	 * @throws de.polygonal.ds.error.AssertError insufficient random values (debug only).
 	 */
-	public function shuffle(rval:DA<Float> = null):Void
+	public function shuffle(rval:DA<Float> = null)
 	{
 		var s = _size;
 		if (rval == null)
@@ -490,7 +490,7 @@ class ArrayedQueue<T> implements Queue<T>
 	 * Improves GC efficiency/performance (optional).
 	 * <o>n</o>
 	 */
-	public function free():Void
+	public function free()
 	{
 		for (i in 0..._capacity) _a[i] = cast null;
 		_a = null;
@@ -583,7 +583,7 @@ class ArrayedQueue<T> implements Queue<T>
 	 * <o>1 or n if <code>purge</code> is true</o>
 	 * @param purge if true, elements are nullified upon removal and <em>capacity</em> is set to the initial <em>capacity</em> defined in the constructor.
 	 */
-	inline public function clear(purge = false):Void
+	inline public function clear(purge = false)
 	{
 		if (purge)
 		{
@@ -768,7 +768,7 @@ class ArrayedQueueIterator<T> implements de.polygonal.ds.Itr<T>
 		return _a[(_i++ + _front) % _capacity];
 	}
 	
-	inline public function remove():Void
+	inline public function remove()
 	{
 		#if debug
 		assert(_i > 0, "call next() before removing an element");

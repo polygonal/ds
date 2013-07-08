@@ -339,7 +339,7 @@ class IntHashSet implements Set<Int>
 	 * <o>n</o>
 	 * @throws de.polygonal.ds.error.AssertError <code>slotCount</code> is not a power of two (debug only).
 	 */
-	public function rehash(slotCount:Int):Void
+	public function rehash(slotCount:Int)
 	{
 		#if debug
 		assert(M.isPow2(slotCount), "slotCount is not a power of 2");
@@ -742,7 +742,7 @@ class IntHashSet implements Set<Int>
 	 * <o>n</o>
 	 * @param purge If true, the hash set shrinks to the initial capacity defined in the constructor.
 	 */
-	public function clear(purge = false):Void
+	public function clear(purge = false)
 	{
 		if (purge && _sizeLevel > 0)
 		{
@@ -1152,7 +1152,7 @@ class IntHashSetIterator implements de.polygonal.ds.Itr<Int>
 		return x;
 	}
 	
-	inline public function remove():Void
+	inline public function remove()
 	{
 		throw "unsupported operation";
 	}

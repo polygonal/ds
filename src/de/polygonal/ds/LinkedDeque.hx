@@ -128,7 +128,7 @@ class LinkedDeque<T> implements Deque<T>
 	 * <o>1</o>
 	 * @throws de.polygonal.ds.error.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
 	 */
-	inline public function pushFront(x:T):Void
+	inline public function pushFront(x:T)
 	{
 		#if debug
 		if (maxSize != -1)
@@ -182,7 +182,7 @@ class LinkedDeque<T> implements Deque<T>
 	 * <o>1</o>
 	 * @throws de.polygonal.ds.error.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
 	 */
-	inline public function pushBack(x:T):Void
+	inline public function pushBack(x:T)
 	{
 		#if debug
 		if (maxSize != -1)
@@ -292,7 +292,7 @@ class LinkedDeque<T> implements Deque<T>
 	 * @param args passes additional constructor arguments to the class <code>C</code>.
 	 * @param n the number of elements to replace. If 0, <code>n</code> is set to <em>size()</em>.
 	 */
-	public function assign(C:Class<T>, args:Array<Dynamic> = null, n = 0):Void
+	public function assign(C:Class<T>, args:Array<Dynamic> = null, n = 0)
 	{
 		if (n == 0) n = size();
 		if (n == 0) return;
@@ -392,7 +392,7 @@ class LinkedDeque<T> implements Deque<T>
 	 * Improves GC efficiency/performance (optional).
 	 * <o>n</o>
 	 */
-	public function free():Void
+	public function free()
 	{
 		var node = _head;
 		while (node != null)
@@ -475,7 +475,7 @@ class LinkedDeque<T> implements Deque<T>
 	 * <o>n</o>
 	 * @param purge if true, elements are nullified upon removal and the node pool is cleared.
 	 */
-	public function clear(purge = false):Void
+	public function clear(purge = false)
 	{
 		if (purge)
 		{
@@ -734,7 +734,7 @@ class LinkedDeque<T> implements Deque<T>
 		return val;
 	}
 	
-	inline function _removeNode(x:LinkedDequeNode<T>):Void
+	inline function _removeNode(x:LinkedDequeNode<T>)
 	{
 		var next = x.next;
 		if (x.prev != null) x.prev.next = x.next;
@@ -809,7 +809,7 @@ class LinkedDequeIterator<T> implements de.polygonal.ds.Itr<T>
 		return x;
 	}
 	
-	inline public function remove():Void
+	inline public function remove()
 	{
 		#if debug
 		assert(_hook != null, "call next() before removing an element");
