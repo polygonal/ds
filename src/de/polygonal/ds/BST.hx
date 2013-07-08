@@ -31,61 +31,6 @@ package de.polygonal.ds;
 
 import de.polygonal.ds.error.Assert.assert;
 
-#if generic
-@:generic
-#end
-#if doc
-private
-#end
-class BSTIterator<T> implements de.polygonal.ds.Itr<T>
-{
-	var _node:BinaryTreeNode<T>;
-	var _stack:Array<BinaryTreeNode<T>>;
-	var _top:Int;
-	var _c:Int;
-	
-	public function new(node:BinaryTreeNode<T>)
-	{
-		_node = node;
-		_stack = new Array<BinaryTreeNode<T>>();
-		reset();
-	}
-	
-	inline public function reset():Itr<T>
-	{
-		_stack[0] = _node;
-		_top = 1;
-		_c = 0;
-		return this;
-	}
-	
-	inline public function hasNext():Bool
-	{
-		return _top > 0;
-	}
-	
-	inline public function next():T
-	{
-		var node = _stack[--_top];
-		if (node.hasL())
-		{
-			_c++;
-			_stack[_top++] = node.l;
-		}
-		if (node.hasR())
-		{
-			_c++;
-			_stack[_top++] = node.r;
-		}
-		return node.val;
-	}
-	
-	inline public function remove()
-	{
-		_top -= _c;
-	}
-}
-
 /**
  * <p>A binary search tree (BST).</p>
  * <p>A BST automatically arranges <em>BinaryTreeNode</em> objects so the resulting tree is a valid BST.</p>
@@ -482,5 +427,60 @@ class BST<T:Comparable<T>> implements Collection<T>
 		copy._root = cast _root.clone(assign, copier);
 		copy._size = _size;
 		return copy;
+	}
+}
+
+#if generic
+@:generic
+#end
+#if doc
+private
+#end
+class BSTIterator<T> implements de.polygonal.ds.Itr<T>
+{
+	var _node:BinaryTreeNode<T>;
+	var _stack:Array<BinaryTreeNode<T>>;
+	var _top:Int;
+	var _c:Int;
+	
+	public function new(node:BinaryTreeNode<T>)
+	{
+		_node = node;
+		_stack = new Array<BinaryTreeNode<T>>();
+		reset();
+	}
+	
+	inline public function reset():Itr<T>
+	{
+		_stack[0] = _node;
+		_top = 1;
+		_c = 0;
+		return this;
+	}
+	
+	inline public function hasNext():Bool
+	{
+		return _top > 0;
+	}
+	
+	inline public function next():T
+	{
+		var node = _stack[--_top];
+		if (node.hasL())
+		{
+			_c++;
+			_stack[_top++] = node.l;
+		}
+		if (node.hasR())
+		{
+			_c++;
+			_stack[_top++] = node.r;
+		}
+		return node.val;
+	}
+	
+	inline public function remove()
+	{
+		_top -= _c;
 	}
 }

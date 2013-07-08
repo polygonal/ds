@@ -38,10 +38,9 @@ class Assert
 {
 	macro public static function assert(predicate:Expr, ?info:Expr):Expr
 	{
-		if (!Context.defined("debug")) return {expr: EConst(CInt("0")), pos: Context.currentPos()};
+		if (!Context.defined("debug")) return macro {};
 		
 		var error = false;
-		
 		switch (Context.typeof(predicate))
 		{
 			case TAbstract(_, _):

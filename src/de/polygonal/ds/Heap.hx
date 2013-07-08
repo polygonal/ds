@@ -37,62 +37,6 @@ private typedef HeapFriend<T> =
 	private var _size:Int;
 }
 
-#if doc
-private
-#end
-class HeapIterator<T:(Heapable<T>)> implements de.polygonal.ds.Itr<T>
-{
-	var _f:Heap<T>;
-	var _a:Array<T>;
-	var _i:Int;
-	var _s:Int;
-	
-	public function new(f:Heap<T>)
-	{
-		_f = f;
-		_a = new Array<T>();
-		_a[0] = null;
-		reset();
-	}
-	
-	public function free()
-	{
-		_a = null;
-	}
-	
-	inline public function reset():Itr<T>
-	{
-		_s = _f.size() + 1;
-		_i = 1;
-		var a = __a(_f);
-		for (i in 1..._s) _a[i] = a[i];
-		return this;
-	}
-	
-	inline public function hasNext():Bool
-	{
-		return _i < _s;
-	}
-	
-	inline public function next():T
-	{
-		return _a[_i++];
-	}
-	
-	inline public function remove()
-	{
-		#if debug
-		assert(_i > 0, "call next() before removing an element");
-		#end
-		_f.remove(_a[_i - 1]);
-	}
-	
-	inline function __a(f:HeapFriend<T>)
-	{
-		return f._a;
-	}
-}
-
 /**
  * <p>A heap is a special kind of binary tree in which every node is greater than all of its children.</p>
  * <p>The implementation is based on an arrayed binary tree.</p>
@@ -762,6 +706,62 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	inline function __set(i:Int, x:T)
 	{
 		_a[i] = x;
+	}
+}
+
+#if doc
+private
+#end
+class HeapIterator<T:(Heapable<T>)> implements de.polygonal.ds.Itr<T>
+{
+	var _f:Heap<T>;
+	var _a:Array<T>;
+	var _i:Int;
+	var _s:Int;
+	
+	public function new(f:Heap<T>)
+	{
+		_f = f;
+		_a = new Array<T>();
+		_a[0] = null;
+		reset();
+	}
+	
+	public function free()
+	{
+		_a = null;
+	}
+	
+	inline public function reset():Itr<T>
+	{
+		_s = _f.size() + 1;
+		_i = 1;
+		var a = __a(_f);
+		for (i in 1..._s) _a[i] = a[i];
+		return this;
+	}
+	
+	inline public function hasNext():Bool
+	{
+		return _i < _s;
+	}
+	
+	inline public function next():T
+	{
+		return _a[_i++];
+	}
+	
+	inline public function remove()
+	{
+		#if debug
+		assert(_i > 0, "call next() before removing an element");
+		#end
+		_f.remove(_a[_i - 1]);
+	}
+	
+	inline function __a(f:HeapFriend<T>)
+	{
+		return f._a;
 	}
 }
 
