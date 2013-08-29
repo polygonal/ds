@@ -196,6 +196,20 @@ class ArrayedStack<T> implements Stack<T>
 		return __get(--_top);
 	}
 	
+	//TODO implement
+	inline public function popMany(n:Int):T
+	{
+		#if debug
+		assert(_top > 0, "stack is empty");
+		#end
+		
+		#if debug
+		_t0 = ++_t1;
+		#end
+		
+		return __get(--_top);
+	}
+	
 	/**
 	 * Pops the top element of the stack, and pushes it back twice, so that an additional copy of the former top item is now on top, with the original below it.
 	 * <o>1</o>
