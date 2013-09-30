@@ -29,6 +29,8 @@
  */
 package de.polygonal.ds;
 
+import de.polygonal.core.util.Assert;
+
 /**
  * <p>Generates unique, unsigned integer keys.</p>
  */
@@ -41,6 +43,13 @@ class HashKey
 	 */
 	inline public static function next():Int
 	{
+		#if debug
+		var x = _counter;
+		var y = ++_counter;
+		D.assert(x < y);
+		return x;
+		#else
 		return _counter++;
+		#end
 	}
 }
