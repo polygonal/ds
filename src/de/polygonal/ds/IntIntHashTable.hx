@@ -986,6 +986,54 @@ class IntIntHashTable implements Map<Int, Int>
 	}
 	
 	/**
+	 * Returns true if this map contains a mapping from <code>key</code> to <code>val</code>.
+	 * @throws de.polygonal.ds.error.AssertError value 0x80000000 is reserved (debug only).
+	 */
+	public function hasPair(key:Int, val:Int):Bool
+	{
+		#if debug
+		assert(val != KEY_ABSENT, "val 0x80000000 is reserved");
+		#end
+		
+		var i = __getHash(_hashCode(key));
+		if (i == EMPTY_SLOT)
+			return false;
+		else
+		{
+			#if (flash10 && alchemy)
+			var o = _data.getAddr(i);
+			if (Memory.getI32(o) == key)
+				if (Memory.getI32(o + 4) == val)
+					return true;
+			
+			i = Memory.getI32(o + 8);
+			while (i != NULL_POINTER)
+			{
+				o = _data.getAddr(i);
+				if (Memory.getI32(o) == key)
+					if (Memory.getI32(o + 4) == val)
+						return true;
+				i = Memory.getI32(o + 8);
+			}
+			#else
+			if (__getData(i) == key)
+				if (__getData(i + 1) == val)
+					return true;
+			
+			i = __getData(i + 2);
+			while (i != NULL_POINTER)
+			{
+				if (__getData(i) == key)
+					if (__getData(i + 1) == val)
+						return true;
+				i = __getData(i + 2);
+			}
+			#end
+			return false;
+		}
+	}
+	
+	/**
 	 * Maps the value <code>val</code> to <code>key</code>.<br/>
 	 * The method allows duplicate keys.<br/>
 	 * <warn>To ensure unique keys either use <em>hasKey()</em> before <em>set()</em> or <em>setIfAbsent()</em></warn>
