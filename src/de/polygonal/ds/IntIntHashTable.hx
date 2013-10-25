@@ -701,12 +701,6 @@ class IntIntHashTable implements Map<Int, Int>
 		}
 	}
 	
-	public function removePair(key:Int, val:Int):Bool
-	{
-		//TODO implement removePair()
-		return false;
-	}
-	
 	/**
 	 * Creates and returns an unordered array of all keys. 
 	 */
@@ -1129,7 +1123,7 @@ class IntIntHashTable implements Map<Int, Int>
 	}
 	
 	/**
-	 * Removes the first occurrence of <code>key</code> and 
+	 * Removes the first occurrence of <code>key</code>. 
 	 * @return true if <code>key</code> is successfully removed.
 	 */
 	inline public function clr(key:Int):Bool
