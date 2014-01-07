@@ -75,6 +75,10 @@ class MemoryAccess implements Hashable
 		#end
 		
 		key = HashKey.next();
+		
+		#if verbose
+		trace('allocated $bytes for $name');
+		#end
 	}
 	
 	/**
