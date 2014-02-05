@@ -366,11 +366,11 @@ class BitVector implements Hashable
 		var shift = 0, t = 0;
 		for (i in 0...numBytes)
 		{
-			var byte = input.readByte();
+			var b = input.readByte();
 			for (j in 0...8)
 			{
-				if ((byte & 1) == 1) set(index);
-				byte >>= 1;
+				if ((b & 1) == 1) set(index);
+				b >>= 1;
 				index++;
 			}
 		}

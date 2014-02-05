@@ -100,11 +100,11 @@ class BitMemory extends MemoryAccess
 		var i = 0;
 		for (j in min...max)
 		{
-			var byte = input[j];
+			var b = input[j];
 			for (k in 0...8)
 			{
-				var bit = byte & 1;
-				byte >>= 1;
+				var bit = b & 1;
+				b >>= 1;
 				if (bit == 1) output.set(i);
 				i++;
 			}
@@ -183,11 +183,11 @@ class BitMemory extends MemoryAccess
 			var i = 0;
 			for (j in min...max)
 			{
-				var byte = input[j];
+				var b = input[j];
 				for (k in 0...8)
 				{
-					var bit = byte & 1;
-					byte >>= 1;
+					var bit = b & 1;
+					b >>= 1;
 					if (bit == 1) output.set(i);
 					i++;
 				}
@@ -197,11 +197,11 @@ class BitMemory extends MemoryAccess
 			var i = 0;
 			for (j in min...max)
 			{
-				var byte = input2.get(j);
+				var b = input2.get(j);
 				for (k in 0...8)
 				{
-					var bit = byte & 1;
-					byte >>= 1;
+					var bit = b & 1;
+					b >>= 1;
 					if (bit == 1) output.set(i);
 					i++;
 				}

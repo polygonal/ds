@@ -77,7 +77,7 @@ class MemoryAccess implements Hashable
 		key = HashKey.next();
 		
 		#if verbose
-		trace('allocated $bytes for $name');
+		trace('allocated $bytes bytes for $name');
 		#end
 	}
 	
