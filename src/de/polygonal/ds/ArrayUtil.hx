@@ -34,7 +34,7 @@ import de.polygonal.ds.error.Assert.assert;
 /**
  * <p>Various utility functions for working with arrays.</p>
  */
-class ArrayUtil 
+class ArrayUtil
 {
 	/**
 	 * Allocates an array with a length of <code>x</code>.
@@ -45,7 +45,7 @@ class ArrayUtil
 		#if debug
 		assert(x >= 0, "x >= 0");
 		#end
-		
+
 		var a:Array<T>;
 		#if (flash || js)
 		a = untyped __new__(Array, x);
@@ -58,13 +58,13 @@ class ArrayUtil
 		#end
 		return a;
 	}
-	
+
 	/**
 	 * Shrinks the array to the size <code>x</code> and returns the modified array.
 	 */
 	inline public static function shrink<T>(a:Array<T>, x:Int):Array<T>
 	{
-		#if (flash || js)
+		#if (flash || js || python)
 		if (a.length > x)
 			untyped a.length = x;
 		return a;
@@ -77,7 +77,7 @@ class ArrayUtil
 		return b;
 		#end
 	}
-	
+
 	/**
 	 * Copies elements in the range &#091;<code>min</code>, <code>max</code>&#093; from <code>src</code> to <code>dst</code>.
 	 * @throws de.polygonal.ds.error.AssertError <code>src</code> is null (debug only).
@@ -87,7 +87,7 @@ class ArrayUtil
 	inline public static function copy<T>(src:Array<T>, dst:Array<T>, min = 0, max = -1):Array<T>
 	{
 		if (max == -1) max = src.length;
-		
+
 		#if debug
 		assert(src != null, "src != null");
 		assert(dst != null, "dst != null");
@@ -95,12 +95,12 @@ class ArrayUtil
 		assert(max <= src.length, "max <= src.length");
 		assert(min < max, "min < max");
 		#end
-		
+
 		var j = 0;
 		for (i in min...max) dst[j++] = src[i];
 		return dst;
 	}
-	
+
 	/**
 	 * Sets up to <code>k</code> elements in <code>dst</code> to the instance <code>x</code>.
 	 * @param k the number of elements to put into <code>dst</code>.
@@ -111,7 +111,7 @@ class ArrayUtil
 		if (k == -1) k = dst.length;
 		for (i in 0...k) dst[i] = x;
 	}
-	
+
 	/**
 	 * Sets up to <code>k</code> elements in <code>dst</code> to the object of type <code>C</code>.<br/>
 	 * @param k the number of elements to put into <code>dst</code>.
@@ -123,7 +123,7 @@ class ArrayUtil
 		if (args == null) args = [];
 		for (i in 0...k) dst[i] = Type.createInstance(C, args);
 	}
-	
+
 	/**
 	 * Copies <code>n</code> elements inside <code>a</code> from the location pointed by the index <code>source</code> to the location pointed by the index <code>destination</code>.<br/>
 	 * Copying takes place as if an intermediate buffer is used, allowing the destination and source to overlap.
@@ -138,7 +138,7 @@ class ArrayUtil
 		assert(destination + n <= a.length, "destination + n <= a.length");
 		assert(n <= a.length, "n <= a.length");
 		#end
-		
+
 		if (source == destination)
 			return;
 		else
@@ -165,7 +165,7 @@ class ArrayUtil
 			}
 		}
 	}
-	
+
 	/**
 	 * Searches the sorted array <code>a</code> for the element <code>x</code> in the range <arg>(<code>min</code>, <code>max</code>&#093;</arg> using the binary search algorithm.
 	 * @return the index of the element <code>x</code> or the bitwise complement (~) of the index where <code>x</code> would be inserted (guaranteed to be a negative number).
@@ -181,7 +181,7 @@ class ArrayUtil
 		assert(min >= 0 && min < a.length, "min >= 0 && min < a.length");
 		assert(max < a.length, "max < a.length");
 		#end
-		
+
 		var l = min, m, h = max + 1;
 		while (l < h)
 		{
@@ -191,13 +191,13 @@ class ArrayUtil
 			else
 				h = m;
 		}
-		
+
 		if ((l <= max) && comparator(a[l], x) == 0)
 			return l;
 		else
 			return ~l;
 	}
-	
+
 	/**
 	 * Searches the sorted array <code>a</code> for the element <code>x</code> in the range <arg>(<code>min</code>, <code>max</code>&#093;</arg> using the binary search algorithm.
 	 * @return the index of the element <code>x</code> or the bitwise complement (~) of the index where <code>x</code> would be inserted (guaranteed to be a negative number).<br/>
@@ -212,7 +212,7 @@ class ArrayUtil
 		assert(min >= 0 && min < a.length, "min >= 0 && min < a.length");
 		assert(max < a.length, "max < a.length");
 		#end
-		
+
 		var l = min, m, h = max + 1;
 		while (l < h)
 		{
@@ -222,13 +222,13 @@ class ArrayUtil
 			else
 				h = m;
 		}
-		
+
 		if ((l <= max) && (a[l] == x))
 			return l;
 		else
 			return ~l;
 	}
-	
+
 	/**
 	 * Searches the sorted array <code>a</code> for the element <code>x</code> in the range <arg>(<code>min</code>, <code>max</code>&#093;</arg> using the binary search algorithm.
 	 * @return the index of the element <code>x</code> or the bitwise complement (~) of the index where <code>x</code> would be inserted (guaranteed to be a negative number).
@@ -243,7 +243,7 @@ class ArrayUtil
 		assert(min >= 0 && min < a.length, "min >= 0 && min < a.length");
 		assert(max < a.length, "max < a.length");
 		#end
-		
+
 		var l = min, m, h = max + 1;
 		while (l < h)
 		{
@@ -253,13 +253,13 @@ class ArrayUtil
 			else
 				h = m;
 		}
-		
+
 		if ((l <= max) && (a[l] == x))
 			return l;
 		else
 			return ~l;
 	}
-	
+
 	/**
 	 * Shuffles the elements of the array <code>a</code> by using the Fisher-Yates algorithm.<br/>
 	 * @param rval a list of random double values in the range between 0 (inclusive) to 1 (exclusive) defining the new positions of the elements.
@@ -271,7 +271,7 @@ class ArrayUtil
 		#if debug
 		assert(a != null, "a != null");
 		#end
-		
+
 		var s = a.length;
 		if (rval == null)
 		{
@@ -289,7 +289,7 @@ class ArrayUtil
 			#if debug
 			assert(rval.length >= a.length, "insufficient random values");
 			#end
-			
+
 			var j = 0;
 			while (--s > 1)
 			{
@@ -300,7 +300,7 @@ class ArrayUtil
 			}
 		}
 	}
-	
+
 	/**
 	 * Sorts the elements of the array <code>a</code> by using the quick sort algorithm.
 	 * @param compare a comparison function.
@@ -319,14 +319,14 @@ class ArrayUtil
 			assert(first >= 0 && first <= k - 1 && first + count <= k, "first out of bound");
 			assert(count >= 0 && count <= k, "count out of bound");
 			#end
-			
+
 			if (useInsertionSort)
 				_insertionSort(a, first, count, compare);
 			else
 				_quickSort(a, first, count, compare);
 		}
 	}
-	
+
 	/**
 	 * A counting quick permutation algorithm.
 	 * @see <a href="http://www.freewebs.com/permute/quickperm.html" target="_blank">http://www.freewebs.com/permute/quickperm.html</a>
@@ -335,20 +335,20 @@ class ArrayUtil
 	public static function quickPerm(n:Int):Array<Array<Int>>
 	{
 		var results = [];
-		
+
 		var a:Array<Int> = [];
 		var p:Array<Int> = [];
-		
+
 		var i:Int, j:Int, tmp:Int;
-		
+
 		for (i in 0...n)
 		{
 			a[i] = i + 1;
 			p[i] = 0;
 		}
-		
+
 		results.push(a.copy());
-		
+
 		i = 1;
 		while(i < n)
 		{
@@ -368,10 +368,10 @@ class ArrayUtil
 				i++;
 			}
 		}
-		
+
 		return results;
 	}
-	
+
 	public static function equals<T>(a:Array<T>, b:Array<T>):Bool
 	{
 		if (a.length != b.length) return false;
@@ -380,7 +380,7 @@ class ArrayUtil
 				return false;
 		return true;
 	}
-	
+
 	/**
 	 * Splits the input array <code>a</code> storing <code>n</code> elements into smaller chunks, each containing k elements.
 	 * @throws de.polygonal.AssertError <code>n</code> is not a multiple of <code>k</code> (debug only).
@@ -390,7 +390,7 @@ class ArrayUtil
 		#if debug
 		assert(n % k == 0, "n is not a multiple of k");
 		#end
-		
+
 		var output = new Array<Array<T>>();
 		var b:Array<T> = null;
 		for (i in 0...n)
@@ -401,7 +401,7 @@ class ArrayUtil
 		}
 		return output;
 	}
-	
+
 	static function _insertionSort(a:Array<Float>, first:Int, k:Int, cmp:Float->Float->Int)
 	{
 		for (i in first + 1...first + k)
@@ -419,11 +419,11 @@ class ArrayUtil
 				else
 					break;
 			}
-			
+
 			a[j] = x;
 		}
 	}
-	
+
 	static function _quickSort(a:Array<Float>, first:Int, k:Int, cmp:Float->Float->Int)
 	{
 		var last = first + k - 1;
@@ -448,14 +448,14 @@ class ArrayUtil
 				else
 					mid = cmp(t2, t0) < 0 ? i1 : i0;
 			}
-			
+
 			var pivot = a[mid];
 			a[mid] = a[first];
-			
+
 			while (lo < hi)
 			{
 				while (cmp(pivot, a[hi]) < 0 && lo < hi) hi--;
-				if (hi != lo) 
+				if (hi != lo)
 				{
 					a[lo] = a[hi];
 					lo++;
@@ -467,7 +467,7 @@ class ArrayUtil
 					hi--;
 				}
 			}
-			
+
 			a[lo] = pivot;
 			_quickSort(a, first, lo - first, cmp);
 			_quickSort(a, lo + 1, last - lo, cmp);

@@ -7,11 +7,11 @@ import de.polygonal.ds.Set;
 class TestArray3 extends haxe.unit.TestCase
 {
 	inline static var DEFAULT_SIZE = 10;
-	
+
 	var _w:Int;
 	var _h:Int;
 	var _d:Int;
-	
+
 	function new(w = DEFAULT_SIZE, h = DEFAULT_SIZE, d = DEFAULT_SIZE)
 	{
 		_w = w;
@@ -19,7 +19,7 @@ class TestArray3 extends haxe.unit.TestCase
 		_d = d;
 		super();
 	}
-	
+
 	function testRemove()
 	{
 		var a = new Array3<Int>(10, 10, 10);
@@ -28,17 +28,17 @@ class TestArray3 extends haxe.unit.TestCase
 		a.set(2, 2, 2, 1);
 		var k = a.remove(1);
 		assertEquals(k, true);
-		
+
 		var x = a.get(0, 0, 0);
-		assertEquals(#if (js || neko) null #else 0 #end, x);
-		
+		assertEquals(#if (js || neko || python) null #else 0 #end, x);
+
 		var x = a.get(1, 1, 1);
-		assertEquals(#if (js || neko) null #else 0 #end, x);
-		
+		assertEquals(#if (js || neko || python) null #else 0 #end, x);
+
 		var x = a.get(2, 2, 2);
-		assertEquals(#if (js || neko) null #else 0 #end, x);
+		assertEquals(#if (js || neko || python) null #else 0 #end, x);
 	}
-	
+
 	function testIndexOf()
 	{
 		var a = new Array3<Int>(10, 10, 10);
@@ -46,7 +46,7 @@ class TestArray3 extends haxe.unit.TestCase
 		a.set(0, 0, 9, 1);
 		assertEquals(1000 - 100, a.indexOf(1));
 	}
-	
+
 	function testIndexToCell()
 	{
 		var a = new Array3<Int>(5, 5, 5);
@@ -66,7 +66,7 @@ class TestArray3 extends haxe.unit.TestCase
 			}
 		}
 	}
-	
+
 	function testCellOf()
 	{
 		var c = new Array3Cell();
@@ -78,7 +78,7 @@ class TestArray3 extends haxe.unit.TestCase
 		assertEquals(6, c.y);
 		assertEquals(3, c.z);
 	}
-	
+
 	function testAssign()
 	{
 		var a = new Array3<Int>(_w, _h, _d);
@@ -88,7 +88,7 @@ class TestArray3 extends haxe.unit.TestCase
 				for (x in 0..._w)
 					assertEquals(99, a.get(x, y, z));
 	}
-	
+
 	function testIterator()
 	{
 		var a = new Array3<Int>(_w, _h, _d);
@@ -118,20 +118,20 @@ class TestArray3 extends haxe.unit.TestCase
 		var s1:Set<String> = cast s.clone(true);
 		var s2:Set<String> = cast s.clone(true);
 		var itr:de.polygonal.ds.ResettableIterator<String> = cast a.iterator();
-		
+
 		for (i in itr) assertEquals(true, s1.remove(i));
 		assertTrue(s1.isEmpty());
 		itr.reset();
 		for (i in itr) assertEquals(true, s2.remove(i));
-		
+
 		assertTrue(s2.isEmpty());
 	}
-	
+
 	function testIteratorRemove()
 	{
 		var a = new Array3<String>(_w, _h, _d);
 		a.fill('?');
-		
+
 		var itr = a.iterator();
 		while (itr.hasNext())
 		{

@@ -9,17 +9,17 @@ import de.polygonal.ds.Set;
 class TestArray2 extends haxe.unit.TestCase
 {
 	inline static var DEFAULT_SIZE = 10;
-	
+
 	var _w:Int;
 	var _h:Int;
-	
+
 	function new(w = DEFAULT_SIZE, h = DEFAULT_SIZE)
 	{
 		super();
 		_w = w;
 		_h = h;
 	}
-	
+
 	function testRemove()
 	{
 		var a = new Array2<Int>(10, 10);
@@ -28,17 +28,17 @@ class TestArray2 extends haxe.unit.TestCase
 		a.set(2, 2, 1);
 		var success = a.remove(1);
 		assertEquals(true, success);
-		
+
 		var x = a.get(0, 0);
-		assertEquals(#if (js || neko) null #else 0 #end, x);
-		
+		assertEquals(#if (js || neko || python) null #else 0 #end, x);
+
 		var x = a.get(1, 1);
-		assertEquals(#if (js || neko) null #else 0 #end, x);
-		
+		assertEquals(#if (js || neko || python) null #else 0 #end, x);
+
 		var x = a.get(2, 2);
-		assertEquals(#if (js || neko) null #else 0 #end, x);
+		assertEquals(#if (js || neko || python) null #else 0 #end, x);
 	}
-	
+
 	function testIndexOf()
 	{
 		var a = new Array2<Int>(10, 10);
@@ -46,7 +46,7 @@ class TestArray2 extends haxe.unit.TestCase
 		a.set( 0, 9, 1);
 		assertEquals(100 - 10, a.indexOf(1));
 	}
-	
+
 	function testIndexToCell()
 	{
 		var a = new Array2<Int>(5, 5);
@@ -62,7 +62,7 @@ class TestArray2 extends haxe.unit.TestCase
 			}
 		}
 	}
-	
+
 	function testCellOf()
 	{
 		var c = new Array2Cell();
@@ -73,7 +73,7 @@ class TestArray2 extends haxe.unit.TestCase
 		assertEquals(6, c.x);
 		assertEquals(3, c.y);
 	}
-	
+
 	#if !generic
 	function testConvert()
 	{
@@ -86,7 +86,7 @@ class TestArray2 extends haxe.unit.TestCase
 				assertEquals(x, a.get(x, y));
 	}
 	#end
-	
+
 	function testToString()
 	{
 		var array2 = new de.polygonal.ds.Array2<String>(4, 4);
@@ -94,7 +94,7 @@ class TestArray2 extends haxe.unit.TestCase
 		array2.toString();
 		assertTrue(true);
 	}
-	
+
 	function testReadWrite()
 	{
 		var a = getIntArray();
@@ -103,7 +103,7 @@ class TestArray2 extends haxe.unit.TestCase
 		assertEquals(1, a.get(0, 0));
 		assertEquals(1, a.get(_w - 1,_h - 1));
 	}
-	
+
 	function testWidthHeight()
 	{
 		var a = getIntArray();
@@ -114,7 +114,7 @@ class TestArray2 extends haxe.unit.TestCase
 		a.setH(_w * 2);
 		assertEquals(_w * 2, a.getH());
 	}
-	
+
 	function testRow()
 	{
 		var a = getIntArray();
@@ -130,7 +130,7 @@ class TestArray2 extends haxe.unit.TestCase
 		a.setRow(1, input);
 		for (i in 0...a.getW()) assertEquals((a.size()) + i, a.get(i, 1));
 	}
-	
+
 	function testCol()
 	{
 		var a = getIntArray();
@@ -146,8 +146,8 @@ class TestArray2 extends haxe.unit.TestCase
 		a.setCol(1, input);
 		for (i in 0...a.getH()) assertEquals((a.size()) + i, a.get(1, i));
 	}
-	
-	#if !neko
+
+	#if (!neko && !python)
 	function testAssign()
 	{
 		var a = new Array2<E>(_w, _h);
@@ -155,7 +155,7 @@ class TestArray2 extends haxe.unit.TestCase
 		for (y in 0..._h)
 			for (x in 0..._w)
 				assertEquals(E, cast Type.getClass(a.get(x, y)));
-		
+
 		var a = new Array2<E>(_w, _h);
 		a.assign(E, [5]);
 		for (y in 0..._h)
@@ -168,7 +168,7 @@ class TestArray2 extends haxe.unit.TestCase
 		}
 	}
 	#end
-	
+
 	function testFill()
 	{
 		var a = getIntArray();
@@ -176,7 +176,7 @@ class TestArray2 extends haxe.unit.TestCase
 		for (y in 0..._h)
 			for (x in 0..._w)
 				assertEquals(99, a.get(x, y));
-		
+
 		var a = new Array2<E>(_w, _h);
 		var v = new E(0);
 		a.fill(v);
@@ -184,7 +184,7 @@ class TestArray2 extends haxe.unit.TestCase
 			for (x in 0..._w)
 				assertEquals(v, a.get(x, y));
 	}
-	
+
 	function testWalk()
 	{
 		var a = getStrArray();
@@ -192,7 +192,7 @@ class TestArray2 extends haxe.unit.TestCase
 			for (x in 0..._w)
 				assertEquals(x + '.' + y, a.get(x, y));
 	}
-	
+
 	function testResize()
 	{
 		var w2 = _w >> 1;
@@ -214,12 +214,12 @@ class TestArray2 extends haxe.unit.TestCase
 				else
 				{
 					var z = a.get(x, y);
-					assertEquals(#if (js||flash8||neko) null #else 0 #end, z);
+					assertEquals(#if (js||flash8||neko|| python) null #else 0 #end, z);
 				}
 			}
 		}
 	}
-	
+
 	function testShiftW()
 	{
 		var a = getStrArray();
@@ -230,7 +230,7 @@ class TestArray2 extends haxe.unit.TestCase
 		for (y in 0..._h)
 			assertEquals('0.' + y, a.get(_w - 1, y));
 	}
-	
+
 	function testShiftE()
 	{
 		var a = getStrArray();
@@ -241,7 +241,7 @@ class TestArray2 extends haxe.unit.TestCase
 		for (y in 0..._h)
 			assertEquals((_w - 1) + '.' + y, a.get(0, y));
 	}
-	
+
 	function testShiftN()
 	{
 		var a = getStrArray();
@@ -252,7 +252,7 @@ class TestArray2 extends haxe.unit.TestCase
 		for (x in 0..._w)
 			assertEquals(x + '.0', a.get(x, _h - 1));
 	}
-	
+
 	function testShiftS()
 	{
 		var a = getStrArray();
@@ -263,7 +263,7 @@ class TestArray2 extends haxe.unit.TestCase
 		for (x in 0..._w)
 			assertEquals(Std.string(x) + '.' + Std.string(_h - 1), a.get(x, 0));
 	}
-	
+
 	function testSwap()
 	{
 		var a = getIntArray();
@@ -273,7 +273,7 @@ class TestArray2 extends haxe.unit.TestCase
 		assertEquals(a.get(1, 1), 9);
 		assertEquals(a.get(_w - 1, _h - 1), 1);
 	}
-	
+
 	function testAppendRow()
 	{
 		var a = getIntArray(_w, _h - 1);
@@ -283,7 +283,7 @@ class TestArray2 extends haxe.unit.TestCase
 		assertEquals(a.getH(), _h);
 		for (x in 0..._w) assertEquals(x, a.get(x, _h - 1));
 	}
-	
+
 	function testAppendCol()
 	{
 		var a = getIntArray(_w - 1, _h);
@@ -293,7 +293,7 @@ class TestArray2 extends haxe.unit.TestCase
 		assertEquals(a.getW(), _w);
 		for (y in 0..._h) assertEquals(y, a.get(_w - 1, y));
 	}
-	
+
 	function testPrependRow()
 	{
 		var a = getIntArray(_w, _h - 1);
@@ -303,7 +303,7 @@ class TestArray2 extends haxe.unit.TestCase
 		assertEquals(a.getH(), _h);
 		for (x in 0..._w) assertEquals(x, a.get(x, 0));
 	}
-	
+
 	function testPrependCol()
 	{
 		var a = getIntArray(_w - 1, _h);
@@ -313,7 +313,7 @@ class TestArray2 extends haxe.unit.TestCase
 		assertEquals(a.getW(), _w);
 		for (y in 0..._h) assertEquals(y, a.get(0, y));
 	}
-	
+
 	function testCopyRow()
 	{
 		var a = getIntArray(_w, _h);
@@ -331,7 +331,7 @@ class TestArray2 extends haxe.unit.TestCase
 			assertEquals(i + 10, a.get(i, 2));
 		}
 	}
-	
+
 	function testSwapRow()
 	{
 		var a = getIntArray(_w, _h);
@@ -348,7 +348,7 @@ class TestArray2 extends haxe.unit.TestCase
 			assertEquals(i + 10, a.get(i, 0));
 		}
 	}
-	
+
 	function testCopyCol()
 	{
 		var a = getIntArray(_w, _h);
@@ -366,7 +366,7 @@ class TestArray2 extends haxe.unit.TestCase
 			assertEquals(i + 10, a.get(2, i));
 		}
 	}
-	
+
 	function testSwapCol()
 	{
 		var a = getIntArray(_w, _h);
@@ -383,7 +383,7 @@ class TestArray2 extends haxe.unit.TestCase
 			assertEquals(i + 10, a.get(0, i));
 		}
 	}
-	
+
 	function testTranspose()
 	{
 		if (_w != _h)
@@ -402,7 +402,7 @@ class TestArray2 extends haxe.unit.TestCase
 				 assertEquals(Std.string(y) + '.' + Std.string(x), a.get(x, y));
 		}
 	}
-	
+
 	function testContains()
 	{
 		var a = getStrArray();
@@ -411,7 +411,7 @@ class TestArray2 extends haxe.unit.TestCase
 			for (x in 0..._w)
 				assertEquals(true, a.contains('?'));
 	}
-	
+
 	function testToArray()
 	{
 		var a = getStrArray();
@@ -422,7 +422,7 @@ class TestArray2 extends haxe.unit.TestCase
 			assertEquals('?', i);
 		assertEquals(out.length, a.size());
 	}
-	
+
 	#if flash10
 	function testToVector()
 	{
@@ -435,7 +435,7 @@ class TestArray2 extends haxe.unit.TestCase
 		assertEquals(arr.length, a.size());
 	}
 	#end
-	
+
 	function testIterator()
 	{
 		var a = getStrArray();
@@ -470,7 +470,7 @@ class TestArray2 extends haxe.unit.TestCase
 		for (i in itr) assertEquals(true, s2.remove(i));
 		assertTrue(s2.isEmpty());
 	}
-	
+
 	function testIteratorRemove()
 	{
 		var a = getStrArray();
@@ -485,7 +485,7 @@ class TestArray2 extends haxe.unit.TestCase
 		for (i in arr)
 			assertEquals(i, null);
 	}
-	
+
 	function testShuffle()
 	{
 		var a = getIntArray();
@@ -502,7 +502,7 @@ class TestArray2 extends haxe.unit.TestCase
 		a.shuffle(rval);
 		for (i in a) assertEquals(true, s.remove(i));
 	}
-	
+
 	function testClone()
 	{
 		var a = getIntArray();
@@ -519,20 +519,20 @@ class TestArray2 extends haxe.unit.TestCase
 		assertEquals(myCopy.get(0, 0), 1);
 		assertEquals(myCopy.get(_w - 1, _h - 1), 1);
     }
-	
+
 	function testCollection()
 	{
 		var c:de.polygonal.ds.Collection<Int> = cast getIntArray();
 		assertEquals(true, true);
 	}
-	
+
 	function getIntArray(w = -1, h = -1)
 	{
 		if (w == -1) w = _w;
 		if (h == -1) h = _h;
 		return new Array2<Int>(w, h);
 	}
-	
+
 	function getStrArray(w = -1, h = -1)
 	{
 		if (w == -1) w = _w;
