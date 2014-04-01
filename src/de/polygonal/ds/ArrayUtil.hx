@@ -64,7 +64,7 @@ class ArrayUtil
 	 */
 	inline public static function shrink<T>(a:Array<T>, x:Int):Array<T>
 	{
-		#if (flash || js || python)
+		#if (flash || js)
 		if (a.length > x)
 			untyped a.length = x;
 		return a;
