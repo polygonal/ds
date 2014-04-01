@@ -1,0 +1,11 @@
+-cp src
+-cp test
+-lib polygonal-core
+-lib polygonal-printf
+-main UnitTest
+--each
+
+-js unit.js
+
+--next
+-python unit.py
