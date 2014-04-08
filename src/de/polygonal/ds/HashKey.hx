@@ -18,7 +18,7 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 */
 package de.polygonal.ds;
 
-import de.polygonal.core.util.Assert;
+import de.polygonal.ds.error.Assert.assert;
 
 /**
  * <p>Generates unique, unsigned integer keys.</p>
@@ -35,7 +35,7 @@ class HashKey
 		#if debug
 		var x = _counter;
 		var y = ++_counter;
-		D.assert(x < y);
+		assert(x < y);
 		return x;
 		#else
 		return _counter++;
