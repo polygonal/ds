@@ -1,6 +1,7 @@
 ﻿package test.mem;
 
 import de.polygonal.ds.mem.ByteMemory;
+import de.polygonal.ds.Vector;
 import haxe.io.Bytes;
 import haxe.io.BytesData;
 import haxe.io.BytesInput;
@@ -15,7 +16,7 @@ class TestByteMemory extends haxe.unit.TestCase
 	{
 		super();
 		
-		#if (flash10 && alchemy)
+		#if (flash && alchemy)
 		MemoryManager.free();
 		#end
 	}
@@ -81,7 +82,6 @@ class TestByteMemory extends haxe.unit.TestCase
 		#if alchemy MemoryManager.free(); #end
 	}
 	
-	#if flash10
 	function testToVector()
 	{
 		var b = new ByteMemory(256);
@@ -101,7 +101,7 @@ class TestByteMemory extends haxe.unit.TestCase
 	
 	function testOfVector()
 	{
-		var v = new flash.Vector(256, true);
+		var v = new Vector(256);
 		for (i in 0...256) v[i] = i % 10;
 		
 		var b = ByteMemory.ofVector(v);
@@ -114,9 +114,8 @@ class TestByteMemory extends haxe.unit.TestCase
 		b.free();
 		#if alchemy MemoryManager.free(); #end
 	}
-	#end
 	
-	#if (flash9 || cpp)
+	#if (flash || nme)
 	function testToByteArray()
 	{
 		var b = new ByteMemory(256);
@@ -157,7 +156,7 @@ class TestByteMemory extends haxe.unit.TestCase
 			for (j in 0...i) assertEquals(123, m.get(j));
 			m.free();
 		}
-		#if alchemy MemoryManager.free(); #end
+		#if (flash && alchemy) MemoryManager.free(); #end
 	}
 	
 	function fillData(m:ByteMemory)
@@ -173,15 +172,13 @@ class TestByteMemory extends haxe.unit.TestCase
 		for (i in 0...max - min) assertEquals((i + min) % 10, m.get(i));
 	}
 	
-	#if flash10
-	function checkVector(v:flash.Vector<Int>, min = -1, max = -1)
+	function checkVector(v:Vector<Int>, min = -1, max = -1)
 	{
 		if (min == -1) min = 0;
 		if (max == -1) max = v.length;
 		
 		for (i in 0...max - min) assertEquals((i + min) % 10, v[i]);
 	}
-	#end
 	
 	function checkArray(v:Array<Int>, min = -1, max = -1)
 	{
@@ -191,7 +188,7 @@ class TestByteMemory extends haxe.unit.TestCase
 		for (i in 0...max - min) assertEquals((i + min) % 10, v[i]);
 	}
 	
-	#if (flash9 || cpp)
+	#if flash
 	function checkByteArray(v:flash.utils.ByteArray, min = -1, max = -1)
 	{
 		v.position = 0;

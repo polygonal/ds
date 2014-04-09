@@ -544,17 +544,15 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 		return a;
 	}
 	
-	#if flash10
 	/**
 	 * Returns a Vector.&lt;T&gt; object containing all elements in this heap.
 	 */
-	public function toVector():flash.Vector<Dynamic>
+	inline public function toVector():Vector<T>
 	{
-		var a = new flash.Vector<Dynamic>(size());
-		for (i in 1..._size + 1) a[i - 1] = __get(i);
-		return a;
+		var v = new Vector<T>(size());
+		for (i in 1..._size + 1) v[i - 1] = __get(i);
+		return v;
 	}
-	#end
 	
 	/**
 	 * Duplicates this heap. Supports shallow (structure only) and deep copies (structure & elements).

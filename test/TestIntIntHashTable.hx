@@ -15,7 +15,7 @@ class TestIntIntHashTable extends haxe.unit.TestCase
 	function new()
 	{
 		super();
-		#if (flash10 && alchemy)
+		#if (flash && alchemy)
 		MemoryManager.free();
 		#end
 	}

@@ -2104,19 +2104,17 @@ class TreeNode<T> implements Collection<T>
 		return a;
 	}
 	
-	#if flash10
 	/**
 	 * Returns a Vector.&lt;T&gt; object containing all elements in the tree rooted at this node.<br/>
 	 * The elements are collected using a preorder traversal.
 	 */
-	public function toVector():flash.Vector<Dynamic>
+	inline public function toVector():Vector<T>
 	{
-		var a = new flash.Vector<Dynamic>(size());
+		var v = new Vector<T>(size());
 		var i = 0;
-		preorder(function(node:TreeNode<T>, _, _):Bool { a[i++] = node.val; return true; });
-		return a;
+		preorder(function(node:TreeNode<T>, _, _):Bool { v[i++] = node.val; return true; });
+		return v;
 	}
-	#end
 	
 	/**
 	 * Duplicates this subtree. Supports shallow (structure only) and deep copies (structure & elements).

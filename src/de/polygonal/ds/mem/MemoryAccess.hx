@@ -19,8 +19,6 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 package de.polygonal.ds.mem;
 
 import de.polygonal.ds.error.Assert.assert;
-import de.polygonal.ds.Hashable;
-import de.polygonal.ds.HashKey;
 
 /**
  * <p>Abstract class that grants read/write access to a chunk of fast "alchemy memory".</p>

@@ -20,8 +20,8 @@ package de.polygonal.ds.mem;
 
 import de.polygonal.ds.error.Assert.assert;
 
-#if !alchemy
-import de.polygonal.ds.ArrayUtil;
+#if (alchemy && !flash)
+"IntMemory is only available when targeting flash"
 #end
 
 /**
@@ -37,7 +37,7 @@ class IntMemory extends MemoryAccess
 	 * @param max index pointing to the last integer.
 	 * @throws de.polygonal.ds.error.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
 	 */
-	#if (flash9 || cpp)
+	#if flash
 	public static function toByteArray(input:IntMemory, min = -1, max = -1):flash.utils.ByteArray
 	{
 		#if debug
@@ -80,7 +80,7 @@ class IntMemory extends MemoryAccess
 	 * @param min index pointing to the byte storing the last integer.
 	 * @throws de.polygonal.ds.error.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
 	 */
-	#if (flash9 || cpp)
+	#if flash
 	public static function ofByteArray(input:flash.utils.ByteArray, min = -1, max = -1):IntMemory
 	{
 		#if debug
@@ -250,8 +250,7 @@ class IntMemory extends MemoryAccess
 	 * @param output the <code>Vector</code> object to write into. If null, a new Vector object is created on-the-fly.
 	 * @throws de.polygonal.ds.error.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
 	 */
-	#if flash10
-	public static function toVector(input:IntMemory, min = -1, max = -1, output:flash.Vector<Int> = null):flash.Vector<Int>
+	public static function toVector(input:IntMemory, min = -1, max = -1, output:Vector<Int> = null):Vector<Int>
 	{
 		#if debug
 		assert(input != null, "invalid input");
@@ -266,13 +265,13 @@ class IntMemory extends MemoryAccess
 		assert(max - min > 0, 'min equals max ($min)');
 		#end
 		
-		#if debug
+		#if (debug && flash)
 		if (output != null)
 			if (output.fixed)
 				assert(Std.int(output.length) >= max - min, "output vector is too small");
 		#end
 		
-		if (output == null) output = new flash.Vector<Int>(max - min, true);
+		if (output == null) output = new Vector<Int>(max - min);
 		
 		#if alchemy
 		min = input.getAddr(min);
@@ -289,7 +288,6 @@ class IntMemory extends MemoryAccess
 		
 		return output;
 	}
-	#end
 	
 	/**
 	 * Converts <code>input</code> in the range &#091;<code>min</code>, <code>max</code>&#093; to a vector object.
@@ -298,8 +296,7 @@ class IntMemory extends MemoryAccess
 	 * @param max index pointing to the last integer.
 	 * @throws de.polygonal.ds.error.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
 	 */
-	#if flash10
-	public static function toUnsignedVector(input:IntMemory, min = -1, max = -1):flash.Vector<UInt>
+	public static function toUnsignedVector(input:IntMemory, min = -1, max = -1):Vector<UInt>
 	{
 		#if debug
 		assert(input != null, "invalid input");
@@ -314,7 +311,7 @@ class IntMemory extends MemoryAccess
 		assert(max - min > 0, 'min equals max ($min)');
 		#end
 		
-		var output = new flash.Vector<UInt>(max - min, true);
+		var output = new Vector<UInt>(max - min);
 		
 		#if alchemy
 		min = input.getAddr(min);
@@ -331,7 +328,6 @@ class IntMemory extends MemoryAccess
 		
 		return output;
 	}
-	#end
 	
 	/**
 	 * Converts <code>input</code> in the range &#091;<code>min</code>, <code>max</code>&#093; to an <em>IntMemory</em> object.
@@ -340,8 +336,7 @@ class IntMemory extends MemoryAccess
 	 * @param max index pointing to the last integer.
 	 * @throws de.polygonal.ds.error.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
 	 */
-	#if flash10
-	public static function ofVector(input:flash.Vector<Int>, min = -1, max = -1):IntMemory
+	public static function ofVector(input:Vector<Int>, min = -1, max = -1):IntMemory
 	{
 		#if debug
 		assert(input != null, "invalid input");
@@ -360,14 +355,9 @@ class IntMemory extends MemoryAccess
 		
 		return output;
 	}
-	#end
 	
 	#if !alchemy
-		#if flash10
-		var _data:flash.Vector<Int>;
-		#else
-		var _data:Array<Int>;
-		#end
+	var _data:Vector<Int>;
 	#end
 	
 	/**
@@ -384,11 +374,7 @@ class IntMemory extends MemoryAccess
 		this.size = size;
 		
 		#if !alchemy
-			#if flash10
-			_data = new flash.Vector<Int>(size, true);
-			#else
-			_data = new Array<Int>();
-			#end
+		_data = new Vector<Int>(size);
 		#end
 	}
 	
@@ -453,14 +439,9 @@ class IntMemory extends MemoryAccess
 		#if alchemy
 		super.resize(newSize << 2);
 		#else
-			#if flash10
-			var tmp = new flash.Vector<Int>(newSize, true);
-			for (i in 0...M.min(newSize, size)) tmp[i] = _data[i];
-			#else
-			var tmp:Array<Int> = ArrayUtil.alloc(newSize);
-			ArrayUtil.copy(_data, tmp, 0, size);
-			#end
-			_data = tmp;
+		var tmp = new Vector<Int>(newSize);
+		for (i in 0...M.min(newSize, size)) tmp[i] = _data[i];
+		_data = tmp;
 		#end
 		
 		size = newSize;

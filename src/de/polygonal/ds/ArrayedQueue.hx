@@ -637,18 +637,16 @@ class ArrayedQueue<T> implements Queue<T>
 		return a;
 	}
 	
-	#if flash10
 	/**
 	 * Returns a Vector.&lt;T&gt; object containing all elements in this queue.<br/>
 	 * Preserves the natural order of this queue (First-In-First-Out).
 	 */
-	public function toVector():flash.Vector<Dynamic>
+	inline public function toVector():Vector<T>
 	{
-		var a = new flash.Vector<Dynamic>(_size);
-		for (i in 0..._size) a[i] = __get((i + _front) % _capacity);
-		return a;
+		var v = new Vector<T>(_size);
+		for (i in 0..._size) v[i] = __get((i + _front) % _capacity);
+		return v;
 	}
-	#end
 	
 	/**
 	 * Duplicates this queue. Supports shallow (structure only) and deep copies (structure & elements).

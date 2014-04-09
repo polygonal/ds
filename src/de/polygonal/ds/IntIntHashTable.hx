@@ -20,30 +20,19 @@ package de.polygonal.ds;
 
 import de.polygonal.ds.error.Assert.assert;
 
-#if flash10
-#if alchemy
+#if (flash && alchemy)
 import de.polygonal.ds.mem.IntMemory;
 import flash.Memory;
-#else
-import flash.Vector;
-#end
-#else
-using de.polygonal.ds.ArrayUtil;
 #end
 
 private typedef IntIntHashTableFriend =
 {
-	#if flash10
 	#if alchemy
 	private var _hash:IntMemory;
 	private var _data:IntMemory;
 	#else
 	private var _hash:Vector<Int>;
 	private var _data:Vector<Int>;
-	#end
-	#else
-	private var _hash:Array<Int>;
-	private var _data:Array<Int>;
 	#end
 	
 	private var _mask:Int;
@@ -108,7 +97,6 @@ class IntIntHashTable implements Map<Int, Int>
 	
 	var _isResizable:Bool;
 	
-	#if flash10
 	#if alchemy
 	var _hash:IntMemory;
 	var _data:IntMemory;
@@ -117,11 +105,6 @@ class IntIntHashTable implements Map<Int, Int>
 	var _hash:Vector<Int>;
 	var _data:Vector<Int>;
 	var _next:Vector<Int>;
-	#end
-	#else
-	var _hash:Array<Int>;
-	var _data:Array<Int>;
-	var _next:Array<Int>;
 	#end
 	
 	var _mask:Int;
@@ -188,7 +171,6 @@ class IntIntHashTable implements Map<Int, Int>
 		this.maxSize = -1;
 		#end
 		
-		#if flash10
 		#if alchemy
 		_hash = new IntMemory(slotCount, "IntIntHashTable._hash");
 		_hash.fill(EMPTY_SLOT);
@@ -199,14 +181,6 @@ class IntIntHashTable implements Map<Int, Int>
 		for (i in 0...slotCount) _hash[i] = EMPTY_SLOT;
 		_data = new Vector<Int>(_capacity * 3);
 		_next = new Vector<Int>(_capacity);
-		#end
-		#else
-		_hash = ArrayUtil.alloc(slotCount);
-		_hash.fill(EMPTY_SLOT, slotCount);
-		_data = ArrayUtil.alloc(_capacity * 3);
-		_data.fill(0, _capacity * 3);
-		_next = ArrayUtil.alloc(_capacity);
-		_next.fill(0, _capacity);
 		#end
 		
 		var j = 2;
@@ -288,7 +262,7 @@ class IntIntHashTable implements Map<Int, Int>
 			return KEY_ABSENT;
 		else
 		{
-			#if (flash10 && alchemy)
+			#if (flash && alchemy)
 			var o = _data.getAddr(i);
 			if (Memory.getI32(o) == key)
 				return Memory.getI32(o + 4);
@@ -302,7 +276,7 @@ class IntIntHashTable implements Map<Int, Int>
 				
 				var first = i, i0 = first;
 				
-				#if (flash10 && alchemy)
+				#if (flash && alchemy)
 				i = Memory.getI32(o + 8);
 				#else
 				i = __getData(i + 2);
@@ -310,14 +284,14 @@ class IntIntHashTable implements Map<Int, Int>
 				
 				while (i != NULL_POINTER)
 				{
-					#if (flash10 && alchemy)
+					#if (flash && alchemy)
 					o = _data.getAddr(i);
 					if (Memory.getI32(o) == key)
 					#else
 					if (__getData(i) == key)
 					#end
 					{
-						#if (flash10 && alchemy)
+						#if (flash && alchemy)
 						v = Memory.getI32(o + 4);
 						
 						var o1 = _data.getAddr(i0 + 2);
@@ -355,7 +329,7 @@ class IntIntHashTable implements Map<Int, Int>
 		
 		var b = _hashCode(key);
 		
-		#if (flash10 && alchemy)
+		#if (flash && alchemy)
 		var	o = _hash.getAddr(b);
 		var j = Memory.getI32(o);
 		#else
@@ -381,7 +355,7 @@ class IntIntHashTable implements Map<Int, Int>
 			var i = _free * 3;
 			_free = __getNext(_free);
 			
-			#if (flash10 && alchemy)
+			#if (flash && alchemy)
 			Memory.setI32(o, i);
 			o = _data.getAddr(i);
 			Memory.setI32(o    , key);
@@ -397,7 +371,7 @@ class IntIntHashTable implements Map<Int, Int>
 		}
 		else
 		{
-			#if (flash10 && alchemy)
+			#if (flash && alchemy)
 			o = _data.getAddr(j);
 			if (Memory.getI32(o) == key)
 			#else
@@ -406,7 +380,7 @@ class IntIntHashTable implements Map<Int, Int>
 				return false;
 			else
 			{
-				#if (flash10 && alchemy)
+				#if (flash && alchemy)
 				var t = Memory.getI32(o + 8);
 				while (t != NULL_POINTER)
 				{
@@ -454,7 +428,7 @@ class IntIntHashTable implements Map<Int, Int>
 					
 					__setData(j + 2, i);
 					
-					#if (flash10 && alchemy)
+					#if (flash && alchemy)
 					o = _data.getAddr(i);
 					Memory.setI32(o    , key);
 					Memory.setI32(o + 4, val);
@@ -486,7 +460,7 @@ class IntIntHashTable implements Map<Int, Int>
 		
 		var tmp = new IntIntHashTable(slotCount, _capacity);
 		
-		#if (flash10 && alchemy)
+		#if (flash && alchemy)
 		var o = _data.getAddr(0);
 		for (i in 0..._capacity)
 		{
@@ -502,7 +476,7 @@ class IntIntHashTable implements Map<Int, Int>
 		}
 		#end
 		
-		#if (flash10 && alchemy)
+		#if (flash && alchemy)
 		_hash.free();
 		_data.free();
 		_next.free();
@@ -528,7 +502,7 @@ class IntIntHashTable implements Map<Int, Int>
 			return false;
 		else
 		{
-			#if (flash10 && alchemy)
+			#if (flash && alchemy)
 			var o = _data.getAddr(i);
 			if (Memory.getI32(o) == key)
 			{
@@ -544,7 +518,7 @@ class IntIntHashTable implements Map<Int, Int>
 			#end
 			else
 			{
-				#if (flash10 && alchemy)
+				#if (flash && alchemy)
 				i = Memory.getI32(o + 8);
 				while (i != NULL_POINTER)
 				{
@@ -586,7 +560,7 @@ class IntIntHashTable implements Map<Int, Int>
 			return IntIntHashTable.KEY_ABSENT;
 		else
 		{
-			#if (flash10 && alchemy)
+			#if (flash && alchemy)
 			var o = _data.getAddr(i);
 			if (key == Memory.getI32(o))
 			{
@@ -596,7 +570,7 @@ class IntIntHashTable implements Map<Int, Int>
 			{
 				var val = __getData(i + 1);
 			#end
-				#if (flash10 && alchemy)
+				#if (flash && alchemy)
 				if (Memory.getI32(o + 8) == NULL_POINTER)
 				#else
 				if (__getData(i + 2) == NULL_POINTER)
@@ -609,7 +583,7 @@ class IntIntHashTable implements Map<Int, Int>
 				__setNext(j, _free);
 				_free = j;
 				
-				#if (flash10 && alchemy)
+				#if (flash && alchemy)
 				Memory.setI32(o + 4, VAL_ABSENT);
 				Memory.setI32(o + 8, NULL_POINTER);
 				#else
@@ -629,7 +603,7 @@ class IntIntHashTable implements Map<Int, Int>
 			else
 			{
 				var i0 = i;
-				#if (flash10 && alchemy)
+				#if (flash && alchemy)
 				i = Memory.getI32(o + 8);
 				#else
 				i = __getData(i + 2);
@@ -639,7 +613,7 @@ class IntIntHashTable implements Map<Int, Int>
 				
 				while (i != NULL_POINTER)
 				{
-					#if (flash10 && alchemy)
+					#if (flash && alchemy)
 					o = _data.getAddr(i);
 					if (Memory.getI32(o) == key)
 					{
@@ -666,7 +640,7 @@ class IntIntHashTable implements Map<Int, Int>
 					__setNext(j, _free);
 					_free = j;
 					
-					#if (flash10 && alchemy)
+					#if (flash && alchemy)
 					o = _data.getAddr(i + 1);
 					Memory.setI32(o    , VAL_ABSENT);
 					Memory.setI32(o + 4, NULL_POINTER);
@@ -701,7 +675,7 @@ class IntIntHashTable implements Map<Int, Int>
 		var j = 0;
 		for (i in 0..._capacity)
 		{
-			#if (flash10 && alchemy)
+			#if (flash && alchemy)
 			var o = _data.getAddr(i * 3);
 			if (Memory.getI32(o + 4) != VAL_ABSENT)
 				a[j++] = Memory.getI32(o);
@@ -721,7 +695,7 @@ class IntIntHashTable implements Map<Int, Int>
 		var a = new DA<Int>(size());
 		for (i in 0..._capacity)
 		{
-			#if (flash10 && alchemy)
+			#if (flash && alchemy)
 			var o = _data.getAddr(i * 3);
 			if (Memory.getI32(o + 4) != VAL_ABSENT)
 				a.pushBack(Memory.getI32(o));
@@ -810,7 +784,7 @@ class IntIntHashTable implements Map<Int, Int>
 			return false;
 		else
 		{
-			#if (flash10 && alchemy)
+			#if (flash && alchemy)
 			var o = _data.getAddr(i);
 			if (Memory.getI32(o) == key)
 				return true;
@@ -821,7 +795,7 @@ class IntIntHashTable implements Map<Int, Int>
 			else
 			{
 				var exists = false;
-				#if (flash10 && alchemy)
+				#if (flash && alchemy)
 				i = Memory.getI32(o + 8);
 				while (i != NULL_POINTER)
 				{
@@ -861,7 +835,7 @@ class IntIntHashTable implements Map<Int, Int>
 			return c;
 		else
 		{
-			#if (flash10 && alchemy)
+			#if (flash && alchemy)
 			while (i != NULL_POINTER)
 			{
 				var o = _data.getAddr(i);
@@ -889,7 +863,7 @@ class IntIntHashTable implements Map<Int, Int>
 			return KEY_ABSENT;
 		else
 		{
-			#if (flash10 && alchemy)
+			#if (flash && alchemy)
 			var o = _data.getAddr(i);
 			if (Memory.getI32(o) == key)
 				return Memory.getI32(o + 4);
@@ -900,7 +874,7 @@ class IntIntHashTable implements Map<Int, Int>
 			else
 			{
 				var v = KEY_ABSENT;
-				#if (flash10 && alchemy)
+				#if (flash && alchemy)
 				i = Memory.getI32(o + 8);
 				while (i != NULL_POINTER)
 				{
@@ -941,7 +915,7 @@ class IntIntHashTable implements Map<Int, Int>
 		else
 		{
 			var c = 0;
-			#if (flash10 && alchemy)
+			#if (flash && alchemy)
 			var o = _data.getAddr(i);
 			if (Memory.getI32(o) == key)
 				values[c++] = Memory.getI32(o + 4);
@@ -983,7 +957,7 @@ class IntIntHashTable implements Map<Int, Int>
 			return false;
 		else
 		{
-			#if (flash10 && alchemy)
+			#if (flash && alchemy)
 			var o = _data.getAddr(i);
 			if (Memory.getI32(o) == key)
 				if (Memory.getI32(o + 4) == val)
@@ -1046,7 +1020,7 @@ class IntIntHashTable implements Map<Int, Int>
 		var i = _free * 3;
 		_free = __getNext(_free);
 		
-		#if (flash10 && alchemy)
+		#if (flash && alchemy)
 		var o = _data.getAddr(i);
 		Memory.setI32(o    , key);
 		Memory.setI32(o + 4, val);
@@ -1057,7 +1031,7 @@ class IntIntHashTable implements Map<Int, Int>
 		
 		var b = _hashCode(key);
 		
-		#if (flash10 && alchemy)
+		#if (flash && alchemy)
 		o = _hash.getAddr(b);
 		var j = Memory.getI32(o);
 		if (j == EMPTY_SLOT)
@@ -1077,7 +1051,7 @@ class IntIntHashTable implements Map<Int, Int>
 		#end
 		else
 		{
-			#if (flash10 && alchemy)
+			#if (flash && alchemy)
 			o = _data.getAddr(j);
 			var first = flash.Memory.getI32(o) != key;
 			var t = flash.Memory.getI32(o + 8);
@@ -1088,7 +1062,7 @@ class IntIntHashTable implements Map<Int, Int>
 			
 			while (t != NULL_POINTER)
 			{
-				#if (flash10 && alchemy)
+				#if (flash && alchemy)
 				o = _data.getAddr(t);
 				if (flash.Memory.getI32(o) == key) first = false;
 				j = t;
@@ -1100,7 +1074,7 @@ class IntIntHashTable implements Map<Int, Int>
 				#end
 			}
 			
-			#if (flash10 && alchemy)
+			#if (flash && alchemy)
 			flash.Memory.setI32(o + 8, i);
 			#else
 			__setData(j + 2, i);
@@ -1124,14 +1098,14 @@ class IntIntHashTable implements Map<Int, Int>
 			return false;
 		else
 		{
-			#if (flash10 && alchemy)
+			#if (flash && alchemy)
 			var o = _data.getAddr(i);
 			if (key == Memory.getI32(o))
 			#else
 			if (key == __getData(i))
 			#end
 			{
-				#if (flash10 && alchemy)
+				#if (flash && alchemy)
 				if (Memory.getI32(o + 8) == NULL_POINTER)
 				#else
 				if (__getData(i + 2) == NULL_POINTER)
@@ -1144,7 +1118,7 @@ class IntIntHashTable implements Map<Int, Int>
 				__setNext(j, _free);
 				_free = j;
 				
-				#if (flash10 && alchemy)
+				#if (flash && alchemy)
 				Memory.setI32(o + 4, VAL_ABSENT);
 				Memory.setI32(o + 8, NULL_POINTER);
 				#else
@@ -1166,7 +1140,7 @@ class IntIntHashTable implements Map<Int, Int>
 				var exists = false;
 				
 				var i0 = i;
-				#if (flash10 && alchemy)
+				#if (flash && alchemy)
 				i = Memory.getI32(o + 8);
 				#else
 				i = __getData(i + 2);
@@ -1174,7 +1148,7 @@ class IntIntHashTable implements Map<Int, Int>
 				
 				while (i != NULL_POINTER)
 				{
-					#if (flash10 && alchemy)
+					#if (flash && alchemy)
 					o = _data.getAddr(i);
 					if (Memory.getI32(o) == key)
 					{
@@ -1201,7 +1175,7 @@ class IntIntHashTable implements Map<Int, Int>
 					__setNext(j, _free);
 					_free = j;
 					
-					#if (flash10 && alchemy)
+					#if (flash && alchemy)
 					o = _data.getAddr(i + 1);
 					Memory.setI32(o    , VAL_ABSENT);
 					Memory.setI32(o + 4, NULL_POINTER);
@@ -1278,7 +1252,7 @@ class IntIntHashTable implements Map<Int, Int>
 	 */
 	public function free()
 	{
-		#if (flash10 && alchemy)
+		#if (flash && alchemy)
 		_hash.free();
 		_data.free();
 		_next.free();
@@ -1313,7 +1287,7 @@ class IntIntHashTable implements Map<Int, Int>
 		var keys = new Array<Int>();
 		for (i in 0..._capacity)
 		{
-			#if (flash10 && alchemy)
+			#if (flash && alchemy)
 			var o = _data.getAddr(i * 3);
 			if (Memory.getI32(o + 4) == val)
 				keys[c++] = Memory.getI32(o);
@@ -1352,7 +1326,6 @@ class IntIntHashTable implements Map<Int, Int>
 			_capacity >>= _sizeLevel;
 			_sizeLevel = 0;
 			
-			#if flash10
 			#if alchemy
 			_data.resize(_capacity * 3);
 			_next.resize(_capacity);
@@ -1360,20 +1333,12 @@ class IntIntHashTable implements Map<Int, Int>
 			_data = new Vector<Int>(_capacity * 3);
 			_next = new Vector<Int>(_capacity);
 			#end
-			#else
-			_data = ArrayUtil.alloc(_capacity * 3);
-			_next = ArrayUtil.alloc(_capacity);
-			#end
 		}
 		
-		#if flash10
 		#if alchemy
 		_hash.fill(EMPTY_SLOT);
 		#else
 		for (i in 0...getSlotCount()) _hash[i] = EMPTY_SLOT;
-		#end
-		#else
-		_hash.fill(EMPTY_SLOT, getSlotCount());
 		#end
 		
 		var j = 2;
@@ -1432,22 +1397,20 @@ class IntIntHashTable implements Map<Int, Int>
 		return a;
 	}
 	
-	#if flash10
 	/**
 	 * Returns an unordered Vector.&lt;T&gt; object containing all values in this hash table.
 	 */
-	public function toVector():flash.Vector<Dynamic>
+	public function toVector():Vector<Int>
 	{
-		var a = new flash.Vector<Dynamic>(size());
-		var j = 0;
+		var v = new Vector<Int>(size());
+		var j = 0, val;
 		for (i in 0..._capacity)
 		{
-			var v = __getData((i * 3) + 1);
-				if (v != VAL_ABSENT) a[j++] = v;
+			val = __getData((i * 3) + 1);
+			if (val != VAL_ABSENT) v[j++] = val;
 		}
-		return a;
+		return v;
 	}
-	#end
 	
 	/**
 	 * Duplicates this hash table by creating a deep copy.<br/>
@@ -1459,7 +1422,6 @@ class IntIntHashTable implements Map<Int, Int>
 		c.key = HashKey.next();
 		c.maxSize = maxSize;
 		
-		#if flash10
 		#if alchemy
 		c._hash = _hash.clone();
 		c._data = _data.clone();
@@ -1471,15 +1433,6 @@ class IntIntHashTable implements Map<Int, Int>
 		for (i in 0...Std.int(_hash.length)) c._hash[i] = _hash[i];
 		for (i in 0...Std.int(_data.length)) c._data[i] = _data[i];
 		for (i in 0...Std.int(_next.length)) c._next[i] = _next[i];
-		#end
-		#else
-		c._hash = new Array<Int>();
-		ArrayUtil.copy(_hash, c._hash);
-		c._data = new Array<Int>();
-		ArrayUtil.copy(_data, c._data);
-		c._next = new Array<Int>();
-		ArrayUtil.copy(_next, c._next);
-		
 		#end
 		
 		c._mask      = _mask;
@@ -1504,7 +1457,6 @@ class IntIntHashTable implements Map<Int, Int>
 		var newSize = oldSize << 1;
 		_capacity = newSize;
 		
-		#if flash10
 		#if alchemy
 		_next.resize(newSize);
 		_data.resize(newSize * 3);
@@ -1516,14 +1468,6 @@ class IntIntHashTable implements Map<Int, Int>
 		for (i in 0...oldSize * 3) copy[i] = _data[i];
 		_data = copy;
 		#end
-		#else
-		var copy:Array<Int> = ArrayUtil.alloc(newSize);
-		ArrayUtil.copy(_next, copy, 0, oldSize);
-		_next = copy;
-		var copy:Array<Int> = ArrayUtil.alloc(newSize  * 3);
-		ArrayUtil.copy(_data, copy, 0, oldSize * 3);
-		_data = copy;
-		#end
 		
 		for (i in oldSize - 1...newSize - 1) __setNext(i, i + 1);
 		__setNext(newSize - 1, NULL_POINTER);
@@ -1532,7 +1476,7 @@ class IntIntHashTable implements Map<Int, Int>
 		var j = (oldSize * 3) + 2;
 		for (i in 0...oldSize)
 		{
-			#if (flash10 && alchemy)
+			#if (flash && alchemy)
 			var o = _data.getAddr(j - 1);
 			Memory.setI32(o    , VAL_ABSENT);
 			Memory.setI32(o + 4, NULL_POINTER);
@@ -1553,7 +1497,7 @@ class IntIntHashTable implements Map<Int, Int>
 		var newSize = oldSize >> 1; 
 		_capacity = newSize;
 		
-		#if (flash10 && alchemy)
+		#if (flash && alchemy)
 		_data.resize((oldSize + (newSize >> 1)) * 3);
 		var offset = oldSize * 3;
 		var e = offset;
@@ -1615,13 +1559,8 @@ class IntIntHashTable implements Map<Int, Int>
 		_next.resize(newSize);
 		#else
 		var k = newSize * 3;
-		#if flash10
 		var tmp = new Vector<Int>(k);
 		_next = new Vector<Int>(newSize);
-		#else
-		var tmp:Array<Int> = ArrayUtil.alloc(k);
-		_next = ArrayUtil.alloc(newSize);
-		#end
 		
 		var e = 0;
 		for (i in 0...getSlotCount())
@@ -1665,7 +1604,7 @@ class IntIntHashTable implements Map<Int, Int>
 	
 	inline function __getHash(i:Int)
 	{
-		#if (flash10 && alchemy)
+		#if (flash && alchemy)
 		return _hash.get(i);
 		//#elseif cpp
 		//return untyped _hash.__unsafe_get(i);
@@ -1675,7 +1614,7 @@ class IntIntHashTable implements Map<Int, Int>
 	}
 	inline function __setHash(i:Int, x:Int)
 	{
-		#if (flash10 && alchemy)
+		#if (flash && alchemy)
 		_hash.set(i, x);
 		//#elseif cpp
 		//untyped _hash.__unsafe_set(i, x);
@@ -1686,7 +1625,7 @@ class IntIntHashTable implements Map<Int, Int>
 	
 	inline function __getNext(i:Int)
 	{
-		#if (flash10 && alchemy)
+		#if (flash && alchemy)
 		return _next.get(i);
 		//#elseif cpp
 		//return untyped _next.__unsafe_get(i);
@@ -1696,7 +1635,7 @@ class IntIntHashTable implements Map<Int, Int>
 	}
 	inline function __setNext(i:Int, x:Int)
 	{
-		#if (flash10 && alchemy)
+		#if (flash && alchemy)
 		_next.set(i, x);
 		//#elseif cpp
 		//untyped _next.__unsafe_set(i, x);
@@ -1707,7 +1646,7 @@ class IntIntHashTable implements Map<Int, Int>
 	
 	inline function __getData(i:Int)
 	{
-		#if (flash10 && alchemy)
+		#if (flash && alchemy)
 		return _data.get(i);
 		//#elseif cpp
 		//return untyped _data.__unsafe_get(i);
@@ -1717,7 +1656,7 @@ class IntIntHashTable implements Map<Int, Int>
 	}
 	inline function __setData(i:Int, x:Int)
 	{
-		#if (flash10 && alchemy)
+		#if (flash && alchemy)
 		_data.set(i, x);
 		//#elseif cpp
 		//untyped _data.__unsafe_set(i, x);
@@ -1736,14 +1675,10 @@ class IntIntHashTableValIterator implements de.polygonal.ds.Itr<Int>
 	var _i:Int;
 	var _s:Int;
 	
-	#if flash10
 	#if alchemy
 	var _data:IntMemory;
 	#else
 	var _data:Vector<Int>;
-	#end
-	#else
-	var _data:Array<Int>;
 	#end
 	
 	public function new(hash:IntIntHashTableFriend)
@@ -1788,7 +1723,7 @@ class IntIntHashTableValIterator implements de.polygonal.ds.Itr<Int>
 	
 	inline function __getData(i:Int)
 	{
-		#if (flash10 && alchemy)
+		#if (flash && alchemy)
 		return _data.get(i);
 		//#elseif cpp
 		//return untyped _data.__unsafe_get(i);
@@ -1807,14 +1742,10 @@ class IntIntHashTableKeyIterator implements de.polygonal.ds.Itr<Int>
 	var _i:Int;
 	var _s:Int;
 	
-	#if flash10
 	#if alchemy
 	var _data:IntMemory;
 	#else
 	var _data:Vector<Int>;
-	#end
-	#else
-	var _data:Array<Int>;
 	#end
 	
 	public function new(hash:IntIntHashTableFriend)
@@ -1859,7 +1790,7 @@ class IntIntHashTableKeyIterator implements de.polygonal.ds.Itr<Int>
 	
 	inline function __getData(i:Int)
 	{
-		#if (flash10 && alchemy)
+		#if (flash && alchemy)
 		return _data.get(i);
 		//#elseif cpp
 		//return untyped _data.__unsafe_get(i);

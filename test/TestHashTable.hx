@@ -13,7 +13,7 @@ class TestHashTable extends haxe.unit.TestCase
 	function new()
 	{
 		super();
-		#if (flash10 && alchemy)
+		#if (flash && alchemy)
 		de.polygonal.ds.mem.MemoryManager.free();
 		#end
 	}

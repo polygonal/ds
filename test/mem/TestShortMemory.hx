@@ -16,7 +16,7 @@ class TestShortMemory extends haxe.unit.TestCase
 	{
 		super();
 		
-		#if (flash10 && alchemy)
+		#if (flash && alchemy)
 		MemoryManager.free();
 		#end
 	}

@@ -221,15 +221,13 @@ class ListSet<T> implements Set<T>
 		return _a.toArray();
 	}
 	
-	#if flash10
 	/**
 	 * Returns a Vector.&lt;T&gt; object containing all elements in this set.
 	 */
-	public function toVector():flash.Vector<Dynamic>
+	inline public function toVector():Vector<T>
 	{
 		return _a.toVector();
 	}
-	#end
 	
 	/**
 	 * Duplicates this set. Supports shallow (structure only) and deep copies (structure & elements).

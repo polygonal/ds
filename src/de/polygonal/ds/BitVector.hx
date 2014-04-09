@@ -295,7 +295,7 @@ class BitVector implements Hashable
 	 */
 	public function toBytes(bigEndian = false):haxe.io.BytesData
 	{
-		#if flash9
+		#if flash
 		var output = new flash.utils.ByteArray();
 		if (!bigEndian) output.endian = flash.utils.Endian.LITTLE_ENDIAN;
 		for (i in 0..._arrSize)
@@ -319,7 +319,7 @@ class BitVector implements Hashable
 	 */
 	public function ofBytes(bytes:haxe.io.BytesData, bigEndian = false)
 	{
-		#if flash9
+		#if flash
 		var input = bytes;
 		input.position = 0;
 		if (!bigEndian) input.endian = flash.utils.Endian.LITTLE_ENDIAN;
@@ -343,7 +343,7 @@ class BitVector implements Hashable
 		for (i in 0..._arrSize) _bits[i] = 0;
 		for (i in 0...numIntegers)
 		{
-			#if flash9
+			#if flash
 			_bits[i] = input.readInt();
 			#elseif cpp
 			_bits[i] = (cast input.readInt32()) & 0xFFFFFFFF;

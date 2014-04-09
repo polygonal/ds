@@ -20,6 +20,10 @@ package de.polygonal.ds.mem;
 
 import de.polygonal.ds.error.Assert.assert;
 
+#if (alchemy && !flash)
+"ByteMemory is only available when targeting flash"
+#end
+
 /**
  * <p>A byte array using fast "alchemy-memory" for data storage.</p>
  */
@@ -31,7 +35,7 @@ class ByteMemory extends MemoryAccess
 	 * <warn>The bytes are written in little endian format.</warn>
 	 * @throws de.polygonal.ds.error.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
 	 */
-	#if (flash9 || cpp)
+	#if flash
 	public static function toByteArray(input:ByteMemory, min = -1, max = -1):flash.utils.ByteArray
 	{
 		#if debug
@@ -54,7 +58,7 @@ class ByteMemory extends MemoryAccess
 		var output = new flash.utils.ByteArray();
 		output.endian = flash.utils.Endian.LITTLE_ENDIAN;
 		
-		#if alchemy
+		#if (flash && alchemy)
 		while (min <= max) output.writeByte(flash.Memory.getByte(min++));
 		#else
 		for (i in 0...(max - min) + 1) output.writeByte(input.get(min + i));
@@ -62,14 +66,12 @@ class ByteMemory extends MemoryAccess
 		output.position = 0;
 		return output;
 	}
-	#end
 	
 	/**
 	 * Converts <code>input</code> in the range &#091;<code>min</code>, <code>max</code>&#093; to a <em>ByteMemory</em> object.<br/>
 	 * If no range is specified, all <code>input</code> bytes are copied.
 	 * @throws de.polygonal.ds.error.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
 	 */
-	#if (flash9 || cpp)
 	public static function ofByteArray(input:flash.utils.ByteArray, min = -1, max = -1):ByteMemory
 	{
 		#if debug
@@ -166,7 +168,7 @@ class ByteMemory extends MemoryAccess
 		
 		var output = new Array();
 		
-		#if alchemy
+		#if (flash && alchemy)
 		min = input.getAddr(min);
 		max = input.getAddr(max - 1);
 		while (min <= max)
@@ -206,14 +208,13 @@ class ByteMemory extends MemoryAccess
 		return output;
 	}
 	
-	#if flash10
 	/**
 	 * Converts <code>input</code> in the range &#091;<code>min</code>, <code>max</code>&#093; to a Vector object.<br/>
 	 * If no range is specified, all <code>input</code> bytes are copied.
 	 * @param output the <code>Vector</code> object to write into. If null, a new Vector object is created on-the-fly.
 	 * @throws de.polygonal.ds.error.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
 	 */
-	public static function toVector(input:ByteMemory, min = -1, max = -1, output:flash.Vector<Int> = null):flash.Vector<Int>
+	public static function toVector(input:ByteMemory, min = -1, max = -1, output:Vector<Int> = null):Vector<Int>
 	{
 		#if debug
 		assert(input != null, "invalid input");
@@ -228,15 +229,15 @@ class ByteMemory extends MemoryAccess
 		assert(max - min > 0, 'min equals max ($min)');
 		#end
 		
-		#if debug
+		#if (debug && flash)
 		if (output != null)
 			if (output.fixed)
 				assert(Std.int(output.length) >= max - min, "output vector is too small");
 		#end
 		
-		if (output == null) output = new flash.Vector<Int>(max - min, true);
+		if (output == null) output = new Vector<Int>(max - min);
 		
-		#if alchemy
+		#if (flash && alchemy)
 		min = input.getAddr(min);
 		max = input.getAddr(max - 1);
 		var i = 0;
@@ -257,7 +258,7 @@ class ByteMemory extends MemoryAccess
 	 * If no range is specified, all <code>input</code> bytes are copied.
 	 * @throws de.polygonal.ds.error.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
 	 */
-	public static function ofVector(input:flash.Vector<Int>, min = -1, max = -1):ByteMemory
+	public static function ofVector(input:Vector<Int>, min = -1, max = -1):ByteMemory
 	{
 		#if debug
 		assert(input != null, "invalid input");
@@ -276,10 +277,11 @@ class ByteMemory extends MemoryAccess
 		
 		return output;
 	}
-	#end
 	
-	#if !alchemy
-		#if flash9
+	#if (!flash && alchemy)
+	var _data:haxe.io.Bytes;
+	#else
+		#if flash
 		var _data:flash.utils.ByteArray;
 		#else
 		var _data:haxe.io.Bytes;
@@ -299,7 +301,7 @@ class ByteMemory extends MemoryAccess
 		super(this.size = size, name);
 		
 		#if !alchemy
-			#if flash9
+			#if flash
 			_data = new flash.utils.ByteArray();
 			_data.length = size;
 			#else
@@ -322,19 +324,19 @@ class ByteMemory extends MemoryAccess
 	public function clone():ByteMemory
 	{
 		var c = new ByteMemory(bytes, name);
-		#if alchemy
+		#if (flash && alchemy)
 		var src = getAddr(0);
 		var dst = c.getAddr(0);
 		for (i in 0...size)
 			flash.Memory.setByte(dst + i, flash.Memory.getByte(src + i));
 		#else
 		var t = c._data;
-			#if flash9
+			#if flash
 			for (i in 0...size) t[i] = _data[i];
 			#else
 			for (i in 0...size)
 			{
-				#if flash9
+				#if flash
 				t[i] = _data[i];
 				#else
 				t.set(i, _data.get(i));
@@ -350,7 +352,7 @@ class ByteMemory extends MemoryAccess
 	 */
 	public function fill(x:Int):ByteMemory
 	{
-		#if alchemy
+		#if (flash && alchemy)
 		var offset = getAddr(0);
 		flash.Memory.setByte(0, x);
 		flash.Memory.setByte(1, x);
@@ -390,7 +392,7 @@ class ByteMemory extends MemoryAccess
 		#if alchemy
 		super.resize(newSize);
 		#else
-			#if flash9
+			#if flash
 			var tmp = new flash.utils.ByteArray();
 			tmp.length = newSize;
 			for (i in 0...M.min(newSize, size)) tmp[i] = _data[i];
@@ -411,10 +413,10 @@ class ByteMemory extends MemoryAccess
 	 */
 	inline public function get(i:Int):Int
 	{
-		#if alchemy
+		#if (flash && alchemy)
 		return flash.Memory.getByte(getAddr(i));
 		#else
-			#if flash9
+			#if flash
 			return _data[i];
 			#else
 			return _data.get(i);
@@ -429,10 +431,10 @@ class ByteMemory extends MemoryAccess
 	 */
 	inline public function set(i:Int, x:Int)
 	{
-		#if alchemy
+		#if (flash && alchemy)
 		flash.Memory.setByte(getAddr(i), x);
 		#else
-			#if flash9
+			#if flash
 			_data[i] = x;
 			#else
 			_data.set(i, x);
@@ -452,7 +454,7 @@ class ByteMemory extends MemoryAccess
 		assert(i != j, 'i equals j ($i)');
 		#end
 		
-		#if alchemy
+		#if (flash && alchemy)
 		var ai = getAddr(i);
 		var aj = getAddr(j);
 		var tmp = flash.Memory.getByte(ai);

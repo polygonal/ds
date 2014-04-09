@@ -19,12 +19,15 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 package de.polygonal.ds.mem;
 
 import de.polygonal.ds.error.Assert.assert;
-import de.polygonal.ds.Bits;
 
 private typedef MemoryAccessFriend =
 {
 	private var _memory:MemorySegment;
 }
+
+#if (alchemy && !flash)
+"MemoryManager is only available when targeting flash"
+#end
 
 /**
  * <p>Manages fast "alchemy memory".</p>
@@ -176,7 +179,7 @@ class MemoryManager
 	 * @throws de.polygonal.ds.error.AssertError invalid <code>destination</code>, <code>source</code> or <code>n</code> value (debug only).
 	 * @see <a href="http://www.cplusplus.com/reference/clibrary/cstring/memmove/" target="_blank">http://www.cplusplus.com/reference/clibrary/cstring/memmove/</a>
 	 */
-	#if (flash10 && alchemy)
+	#if (flash && alchemy)
 	inline public static function memmove(destination:Int, source:Int, n:Int)
 	{
 		#if debug
@@ -269,7 +272,7 @@ class MemoryManager
 		
 		#if alchemy
 			_bytes = new flash.utils.ByteArray();
-			#if flash10
+			#if flash
 			var tmp = new Array<Int>();
 			for (i in 0...1024) tmp[i] = flash.Memory.getByte(i);
 			_bytes.length = _bytesRaw + _bytesTotal;
@@ -295,7 +298,7 @@ class MemoryManager
 			_segmentList = next;
 		}
 		
-		#if flash9
+		#if flash
 		if (MemorySegment.monitor != null)
 		{
 			MemorySegment.monitor.stop();
@@ -361,7 +364,7 @@ class MemoryManager
 		
 		access.name = "?";
 		
-		#if flash9
+		#if flash
 		memory.stopMonitor();
 		#end
 		memory.wipe();
@@ -877,7 +880,7 @@ private class MemorySegment
 	
 	var _access:MemoryAccess;
 	
-	#if flash9
+	#if flash
 	var _weakPointer:flash.utils.Dictionary;
 	public static var monitor:flash.utils.Timer;
 	public static var listenerCount = 0; 
@@ -893,7 +896,7 @@ private class MemorySegment
 	
 	public function free()
 	{
-		#if flash9
+		#if flash
 		if (monitor != null) monitor.removeEventListener(flash.events.TimerEvent.TIMER, _checkPointer);
 		_weakPointer = null;
 		#end
@@ -976,7 +979,7 @@ private class MemorySegment
 	
 	inline public function setAccess(x:MemoryAccess)
 	{
-		#if flash9
+		#if flash
 		if (MemoryManager.AUTO_RECLAIM_MEMORY)
 		{
 			if (_weakPointer != null)
@@ -1015,7 +1018,7 @@ private class MemorySegment
 			_access = x;
 	}
 	
-	#if flash9
+	#if flash
 	inline public function stopMonitor()
 	{
 		if (MemoryManager.AUTO_RECLAIM_MEMORY)
@@ -1048,7 +1051,7 @@ private class MemorySegment
 		#end
 	}
 	
-	#if flash9
+	#if flash
 	function _checkPointer(e:flash.events.TimerEvent) 
 	{
 		var keys:Array<Dynamic> = untyped __keys__(_weakPointer);

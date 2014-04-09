@@ -84,12 +84,10 @@ interface Collection<T> extends Hashable
 	 */
 	function toArray():Array<T>;
 	
-	#if flash10
 	/**
 	 * Returns a Vector.&lt;T&gt; object storing all elements in this collection. 
 	 */
-	function toVector():flash.Vector<Dynamic>;
-	#end
+	function toVector():Vector<T>;
 	
 	/**
 	 * Duplicates this collection. Supports shallow (structure only) and deep copies (structure & elements).<br/>

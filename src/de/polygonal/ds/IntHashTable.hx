@@ -18,12 +18,8 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 */
 package de.polygonal.ds;
 
-#if flash10
-#if alchemy
+#if (flash && alchemy)
 import de.polygonal.ds.mem.IntMemory;
-#else
-import flash.Vector;
-#end
 #end
 
 import de.polygonal.ds.error.Assert.assert;
@@ -34,14 +30,10 @@ private typedef IntHashTableFriend<T> =
 	
 	private var _vals:Array<T>;
 	
-	#if flash10
 	#if alchemy
 	private var _keys:IntMemory;
 	#else
 	private var _keys:Vector<Int>;
-	#end
-	#else
-	private var _keys:Array<Int>;
 	#end
 }
 
@@ -78,17 +70,12 @@ class IntHashTable<T> implements Map<Int, T>
 	
 	var _vals:Array<T>;
 	
-	#if flash10
 	#if alchemy
 	var _keys:IntMemory;
 	var _next:IntMemory;
 	#else
 	var _next:Vector<Int>;
 	var _keys:Vector<Int>;
-	#end
-	#else
-	var _next:Array<Int>;
-	var _keys:Array<Int>;
 	#end
 	
 	var _free:Int;
@@ -142,7 +129,6 @@ class IntHashTable<T> implements Map<Int, T>
 		this.maxSize = -1;
 		#end
 		
-		#if flash10
 		#if alchemy
 		_next = new IntMemory(capacity, "IntHashTable._next");
 		_keys = new IntMemory(capacity, "IntHashTable._keys");
@@ -151,11 +137,6 @@ class IntHashTable<T> implements Map<Int, T>
 		_next = new Vector<Int>(capacity);
 		_keys = new Vector<Int>(capacity);
 		for (i in 0...capacity) _keys[i] = IntIntHashTable.KEY_ABSENT;
-		#end
-		#else
-		_next = ArrayUtil.alloc(capacity);
-		_keys = ArrayUtil.alloc(capacity);
-		ArrayUtil.fill(_keys, IntIntHashTable.KEY_ABSENT, capacity);
 		#end
 		
 		for (i in 0...capacity - 1) __setNext(i, i + 1);
@@ -462,7 +443,7 @@ class IntHashTable<T> implements Map<Int, T>
 	 * @throws de.polygonal.ds.error.AssertError key 0x80000000 is reserved (debug only).
 	 * @throws de.polygonal.ds.error.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
 	 */
-	inline public function set(key:Int, val:T):Bool
+	public function set(key:Int, val:T):Bool
 	{
 		#if debug
 		assert(key != IntIntHashTable.KEY_ABSENT, "key 0x80000000 is reserved");
@@ -487,7 +468,7 @@ class IntHashTable<T> implements Map<Int, T>
 	 * <o>1</o>
 	 * @return true if <code>key</code> is successfully removed.
 	 */
-	inline public function clr(key:Int):Bool
+	public function clr(key:Int):Bool
 	{
 		var i = _h.get(key);
 		if (i == IntIntHashTable.KEY_ABSENT)
@@ -566,7 +547,7 @@ class IntHashTable<T> implements Map<Int, T>
 		for (i in 0...size()) _vals[i] = null;
 		_vals = null;
 		
-		#if (flash10 && alchemy)
+		#if (flash && alchemy)
 		_next.free();
 		_keys.free();
 		#end
@@ -697,22 +678,21 @@ class IntHashTable<T> implements Map<Int, T>
 		return a;
 	}
 	
-	#if flash10
 	/**
 	 * Returns an unordered Vector.&lt;T&gt; object containing all values in this hash table.
 	 */
-	public function toVector():flash.Vector<Dynamic>
+	inline public function toVector():Vector<T>
 	{
-		var a = new flash.Vector<Dynamic>(size());
+		var v = new Vector<T>(size());
 		var j = 0;
+		var vals = _vals;
 		for (i in 0...getCapacity())
 		{
 			if (__hasKey(i))
-				a[j++] = _vals[i];
+				v[j++] = vals[i];
 		}
-		return a;
+		return v;
 	}
-	#end
 	
 	/**
 	 * Duplicates this hash table. Supports shallow (structure only) and deep copies (structure & elements).
@@ -768,7 +748,6 @@ class IntHashTable<T> implements Map<Int, T>
 		c._key0 = _key0;
 		c._i0 = _i0;
 		
-		#if flash10
 		#if alchemy
 		c._keys = _keys.clone();
 		c._next = _next.clone();
@@ -778,12 +757,6 @@ class IntHashTable<T> implements Map<Int, T>
 		for (i in 0...Std.int(_keys.length)) c._keys[i] = _keys[i];
 		for (i in 0...Std.int(_next.length)) c._next[i] = _next[i];
 		#end
-		#else
-		c._next = new Array<Int>();
-		ArrayUtil.copy(_next, c._next);
-		c._keys = new Array<Int>();
-		ArrayUtil.copy(_keys, c._keys);
-		#end
 		
 		return c;
 	}
@@ -792,7 +765,6 @@ class IntHashTable<T> implements Map<Int, T>
 	{
 		var newSize = oldSize << 1;
 		
-		#if flash10
 		#if alchemy
 		_next.resize(newSize);
 		_keys.resize(newSize);
@@ -802,14 +774,6 @@ class IntHashTable<T> implements Map<Int, T>
 		_next = tmp;
 		var tmp = new Vector<Int>(newSize);
 		for (i in 0...oldSize) tmp[i] = _keys[i];
-		_keys = tmp;
-		#end
-		#else
-		var tmp:Array<Int> = ArrayUtil.alloc(newSize);
-		ArrayUtil.copy(_next, tmp, 0, oldSize);
-		_next = tmp;
-		var tmp:Array<Int> = ArrayUtil.alloc(newSize);
-		ArrayUtil.copy(_keys, tmp, 0, oldSize);
 		_keys = tmp;
 		#end
 		
@@ -832,27 +796,19 @@ class IntHashTable<T> implements Map<Int, T>
 		var oldSize = getCapacity() << 1;
 		var newSize = getCapacity();
 		
-		#if flash10
 		#if alchemy
 		_next.resize(newSize);
 		#else
 		_next = new Vector<Int>(newSize);
-		#end
-		#else
-		_next = ArrayUtil.alloc(newSize);
 		#end
 		
 		for (i in 0...newSize - 1) __setNext(i, i + 1);
 		__setNext(newSize - 1, IntIntHashTable.NULL_POINTER);
 		_free = 0;
 		
-		#if (flash10 && !alchemy)
 		var tmpKeys = new Vector<Int>(newSize);
 		for (i in 0...newSize) tmpKeys[i] = IntIntHashTable.KEY_ABSENT;
-		#else
-		var tmpKeys:Array<Int> = ArrayUtil.alloc(newSize);
-		ArrayUtil.fill(tmpKeys, IntIntHashTable.KEY_ABSENT, newSize);
-		#end
+		
 		var tmpVals:Array<T> = ArrayUtil.alloc(newSize);
 		
 		for (i in _h)
@@ -862,8 +818,8 @@ class IntHashTable<T> implements Map<Int, T>
 			_free = __getNext(_free);
 		}
 		
-		#if (flash10 && alchemy)
-		_keys = IntMemory.ofArray(tmpKeys);
+		#if (flash && alchemy)
+		_keys = IntMemory.ofVector(tmpKeys);
 		#else
 		_keys = tmpKeys;
 		#end
@@ -880,7 +836,7 @@ class IntHashTable<T> implements Map<Int, T>
 	
 	inline function __getNext(i:Int)
 	{
-		#if (flash10 && alchemy)
+		#if (flash && alchemy)
 		return _next.get(i);
 		#else
 		return _next[i];
@@ -888,7 +844,7 @@ class IntHashTable<T> implements Map<Int, T>
 	}
 	inline function __setNext(i:Int, x:Int)
 	{
-		#if (flash10 && alchemy)
+		#if (flash && alchemy)
 		_next.set(i, x);
 		#else
 		_next[i] = x;
@@ -897,7 +853,7 @@ class IntHashTable<T> implements Map<Int, T>
 	
 	inline function __getKey(i:Int)
 	{
-		#if (flash10 && alchemy)
+		#if (flash && alchemy)
 		return _keys.get(i);
 		#else
 		return _keys[i];
@@ -905,7 +861,7 @@ class IntHashTable<T> implements Map<Int, T>
 	}
 	inline function __setKey(i:Int, x:Int)
 	{
-		#if (flash10 && alchemy)
+		#if (flash && alchemy)
 		_keys.set(i, x);
 		#else
 		_keys[i] = x;
@@ -913,7 +869,7 @@ class IntHashTable<T> implements Map<Int, T>
 	}
 	inline function __clrKey(i:Int)
 	{
-		#if (flash10 && alchemy)
+		#if (flash && alchemy)
 		_keys.set(i, IntIntHashTable.KEY_ABSENT);
 		#else
 		_keys[i] = IntIntHashTable.KEY_ABSENT;
@@ -921,7 +877,7 @@ class IntHashTable<T> implements Map<Int, T>
 	}
 	inline function __hasKey(i:Int)
 	{
-		#if (flash10 && alchemy)
+		#if (flash && alchemy)
 		return _keys.get(i) != IntIntHashTable.KEY_ABSENT;
 		#else
 		return _keys[i] != IntIntHashTable.KEY_ABSENT;
@@ -938,14 +894,10 @@ class IntHashTableIterator<T> implements de.polygonal.ds.Itr<T>
 	
 	var _vals:Array<T>;
 	
-	#if flash10
 	#if alchemy
 	var _keys:IntMemory;
 	#else
 	var _keys:Vector<Int>;
-	#end
-	#else
-	var _keys:Array<Int>;
 	#end
 	
 	var _i:Int;
@@ -970,7 +922,7 @@ class IntHashTableIterator<T> implements de.polygonal.ds.Itr<T>
 	{
 		while (++_i < _s)
 		{
-			#if (flash10 && alchemy)
+			#if (flash && alchemy)
 			if (_keys.get(_i) != IntIntHashTable.KEY_ABSENT)
 			#else
 			if (_keys[_i] != IntIntHashTable.KEY_ABSENT)

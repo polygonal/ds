@@ -1206,22 +1206,21 @@ class Graph<T> implements Collection<T>
 		return a;
 	}
 	
-	#if flash10
 	/**
 	 * Returns an unordered Vector.&lt;T&gt; object containing all elements stored in the graph nodes of this graph.
 	 */
-	public function toVector():flash.Vector<Dynamic>
+	inline public function toVector():Vector<T>
 	{
-		var a = new flash.Vector<Dynamic>(size());
+		var v = new Vector<T>(size());
 		var node = _nodeList;
+		var i = 0;
 		while (node != null)
 		{
-			a.push(node.val);
+			v[i++] = node.val;
 			node = node.next;
 		}
-		return a;
+		return v;
 	}
-	#end
 	
 	/**
 	 * Duplicates this graph. Supports shallow (structure only) and deep copies (structure & elements).

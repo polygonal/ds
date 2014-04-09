@@ -21,7 +21,7 @@ package de.polygonal.ds;
 import de.polygonal.ds.error.Assert.assert;
 
 #if !flash
-"The HashMap class is only available for flash9+"
+"The HashMap class is only available for flash+"
 #end
 
 private typedef HashMapFriend<K, T> =
@@ -420,18 +420,16 @@ class HashMap<K, T> implements Map<K, T>
 		return a;
 	}
 	
-	#if flash10
 	/**
 	 * Returns a Vector.&lt;T&gt; object containing all values in this hash map.
 	 */
-	public function toVector():flash.Vector<Dynamic>
+	inline public function toVector():Vector<T>
 	{
-		var a = new flash.Vector<Dynamic>(size());
+		var v = new Vector<T>(size());
 		var i = 0;
-		for (v in this) a[i++] = v;
-		return a;
+		for (val in this) v[i++] = val;
+		return v;
 	}
-	#end
 	
 	/**
 	 * Duplicates this hash map either by creating a shallow or deep copy.

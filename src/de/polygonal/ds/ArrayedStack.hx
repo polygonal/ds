@@ -662,19 +662,17 @@ class ArrayedStack<T> implements Stack<T>
 		return a;
 	}
 	
-	#if flash10
 	/**
 	 * Returns a Vector.&lt;T&gt; object containing all elements in this stack.<br/>
 	 * Preserves the natural order of this stack (First-In-Last-Out).
 	 */
-	public function toVector():flash.Vector<Dynamic>
+	inline public function toVector():Vector<T>
 	{
-		var a = new flash.Vector<Dynamic>(size());
+		var v = new Vector<T>(size());
 		var i = _top, j = 0;
-		while (i > 0) a[j++] = __get(--i);
-		return a;
+		while (i > 0) v[j++] = __get(--i);
+		return v;
 	}
-	#end
 
 	/**
 	 * Duplicates this stack. Supports shallow (structure only) and deep copies (structure & elements).

@@ -20,8 +20,8 @@ package de.polygonal.ds.mem;
 
 import de.polygonal.ds.error.Assert.assert;
 
-#if !alchemy
-import de.polygonal.ds.ArrayUtil;
+#if (alchemy && !flash)
+"DoubleMemory is only available when targeting flash"
 #end
 
 /**
@@ -37,7 +37,7 @@ class DoubleMemory extends MemoryAccess
 	 * @param max index pointing to the last double.
 	 * @throws de.polygonal.ds.error.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
 	 */
-	#if (flash9 || cpp)
+	#if flash
 	public static function toByteArray(input:DoubleMemory, min = -1, max = -1):flash.utils.ByteArray
 	{
 		#if debug
@@ -80,7 +80,7 @@ class DoubleMemory extends MemoryAccess
 	 * @param min index pointing to the byte storing the last double.
 	 * @throws de.polygonal.ds.error.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
 	 */
-	#if (flash9 || cpp)
+	#if flash
 	public static function ofByteArray(input:flash.utils.ByteArray, min = -1, max = -1):DoubleMemory
 	{
 		#if debug
@@ -244,8 +244,7 @@ class DoubleMemory extends MemoryAccess
 	 * @param output the <code>Vector</code> object to write into. If null, a new Vector object is created on-the-fly.
 	 * @throws de.polygonal.ds.error.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
 	 */
-	#if flash10
-	public static function toVector(input:DoubleMemory, min = -1, max = -1, output:flash.Vector<Float> = null):flash.Vector<Float>
+	public static function toVector(input:DoubleMemory, min = -1, max = -1, output:Vector<Float> = null):Vector<Float>
 	{
 		#if debug
 		assert(input != null, "invalid input");
@@ -258,12 +257,15 @@ class DoubleMemory extends MemoryAccess
 		assert(min >= 0, 'min out of range ($min)');
 		assert(max <= input.size, 'max out of range ($max)');
 		assert(max - min > 0, 'min equals max ($min)');
+		
+		#if flash
 		if (output != null)
 			if (output.fixed)
 				assert(Std.int(output.length) >= max - min, "output vector is too small");
 		#end
+		#end
 		
-		if (output == null) output = new flash.Vector<Float>(max - min, true);
+		if (output == null) output = new Vector<Float>(max - min);
 		
 		#if alchemy
 		min = input.getAddr(min);
@@ -279,7 +281,6 @@ class DoubleMemory extends MemoryAccess
 		#end
 		return output;
 	}
-	#end
 	
 	/**
 	 * Converts <code>input</code> in the range &#091;<code>min</code>, <code>max</code>&#093; to a <em>DoubleMemory</em> object.<br/>
@@ -288,8 +289,7 @@ class DoubleMemory extends MemoryAccess
 	 * @param max index pointing to the last double.
 	 * @throws de.polygonal.ds.error.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
 	 */
-	#if flash10
-	public static function ofVector(input:flash.Vector<Float>, min = -1, max = -1):DoubleMemory
+	public static function ofVector(input:Vector<Float>, min = -1, max = -1):DoubleMemory
 	{
 		#if debug
 		assert(input != null, "invalid input");
@@ -308,14 +308,9 @@ class DoubleMemory extends MemoryAccess
 		
 		return output;
 	}
-	#end
 	
 	#if !alchemy
-		#if flash10
-		var _data:flash.Vector<Float>;
-		#else
-		var _data:Array<Float>;
-		#end
+	var _data:Vector<Float>;
 	#end
 	
 	/**
@@ -332,11 +327,7 @@ class DoubleMemory extends MemoryAccess
 		this.size = size;
 		
 		#if !alchemy
-			#if flash10
-			_data = new flash.Vector<Float>(size, true);
-			#else
-			_data = new Array<Float>();
-			#end
+		_data = new Vector<Float>(size);
 		#end
 	}
 	
@@ -395,14 +386,9 @@ class DoubleMemory extends MemoryAccess
 		#if alchemy
 		super.resize(newSize << 3);
 		#else
-		#if flash10
-			var tmp = new flash.Vector<Float>(newSize, true);
-			for (i in 0...M.min(newSize, size)) tmp[i] = _data[i];
-			#else
-			var tmp:Array<Float> = ArrayUtil.alloc(newSize);
-			ArrayUtil.copy(_data, tmp, 0, size);
-			#end
-			_data = tmp;
+		var tmp = new Vector<Float>(newSize);
+		for (i in 0...M.min(newSize, size)) tmp[i] = _data[i];
+		_data = tmp;
 		#end
 		
 		size = newSize;

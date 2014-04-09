@@ -531,24 +531,22 @@ class LinkedQueue<T> implements Queue<T>
 		return a;
 	}
 	
-	#if flash10
 	/**
 	 * Returns a Vector.&lt;T&gt; object containing all elements in this queue.<br/>
 	 * Preserves the natural order of this queue (First-In-First-Out).
 	 */
-	public function toVector():flash.Vector<Dynamic>
+	inline public function toVector():Vector<T>
 	{
-		var a = new flash.Vector<Dynamic>(size());
+		var v = new Vector<T>(size());
 		var i = 0;
 		var node = _head;
 		while (node != null)
 		{
-			a[i++] = node.val;
+			v[i++] = node.val;
 			node = node.next;
 		}
-		return a;
+		return v;
 	}
-	#end
 	
 	/**
 	 * Duplicates this queue. Supports shallow (structure only) and deep copies (structure & elements).

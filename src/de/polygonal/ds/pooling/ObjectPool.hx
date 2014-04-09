@@ -19,9 +19,6 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 package de.polygonal.ds.pooling;
 
 import de.polygonal.ds.error.Assert.assert;
-import de.polygonal.ds.Hashable;
-import de.polygonal.ds.HashKey;
-import de.polygonal.ds.Itr;
 
 private typedef ObjectPoolFriend<T> =
 {
@@ -41,14 +38,10 @@ class ObjectPool<T> implements Hashable
 	 */
 	public var key:Int;
 	
-	#if flash10
 	#if alchemy
 	var _next:de.polygonal.ds.mem.IntMemory;
 	#else
-	var _next:flash.Vector<Int>;
-	#end
-	#else
-	var _next:Array<Int>;
+	var _next:Vector<Int>;
 	#end
 	
 	var _pool:Array<T>;
@@ -87,11 +80,10 @@ class ObjectPool<T> implements Hashable
 	{
 		if (_pool == null) return;
 		
-		for (i in 0..._size)
-			_pool[i] = null;
+		for (i in 0..._size) _pool[i] = null;
 		_pool = null;
 		
-		#if (flash10 && alchemy)
+		#if alchemy
 		_next.free();
 		#end
 		
@@ -218,14 +210,10 @@ class ObjectPool<T> implements Hashable
 	{
 		_lazy = lazy;
 		
-		#if flash10
 		#if alchemy
 		_next = new de.polygonal.ds.mem.IntMemory(_size, "ObjectPool._next");
 		#else
-		_next = new flash.Vector<Int>(_size);
-		#end
-		#else
-		_next = de.polygonal.ds.ArrayUtil.alloc(_size);
+		_next = new Vector<Int>(_size);
 		#end
 		
 		for (i in 0..._size - 1) __setNext(i, i + 1);
@@ -299,7 +287,7 @@ class ObjectPool<T> implements Hashable
 	
 	inline function __getNext(i:Int)
 	{
-		#if (flash10 && alchemy)
+		#if alchemy
 		return _next.get(i);
 		#else
 		return _next[i];
@@ -307,7 +295,7 @@ class ObjectPool<T> implements Hashable
 	}
 	inline function __setNext(i:Int, x:Int)
 	{
-		#if (flash10 && alchemy)
+		#if alchemy
 		_next.set(i, x);
 		#else
 		_next[i] = x;

@@ -1035,23 +1035,21 @@ class SLL<T> implements Collection<T>
 		return a;
 	}
 	
-	#if flash10
 	/**
 	 * Returns a vector.&lt;T&gt; objec containing all elements in this singly linked list.<br/>
 	 * The elements are ordered head-to-tail.
 	 */
-	public function toVector():flash.Vector<Dynamic>
+	inline public function toVector():Vector<T>
 	{
-		var a = new flash.Vector<Dynamic>(size());
+		var v = new Vector<T>(size());
 		var node = head;
 		for (i in 0..._size)
 		{
-			a[i] = node.val;
+			v[i] = node.val;
 			node = node.next;
 		}
-		return a;
+		return v;
 	}
-	#end
 	
 	/**
 	 * Duplicates this linked list. Supports shallow (structure only) and deep copies (structure & elements).

@@ -312,7 +312,7 @@ class Bits
 	 */
 	inline public static function ntz(x:Int):Int
 	{
-		#if (flash10 && alchemy)
+		#if (flash && alchemy)
 		if (x == 0)
 			return 0;
 		else

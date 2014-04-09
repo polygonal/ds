@@ -12,7 +12,7 @@ class TestHashSet extends haxe.unit.TestCase
 	{
 		super();
 		
-		#if (flash10 && alchemy)
+		#if (flash && alchemy)
 		de.polygonal.ds.mem.MemoryManager.free();
 		#end
 	}

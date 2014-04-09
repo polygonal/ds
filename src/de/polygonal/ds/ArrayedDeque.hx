@@ -870,37 +870,35 @@ class ArrayedDeque<T> implements Deque<T>
 		return a;
 	}
 	
-	#if flash10
 	/**
 	 * Returns a Vector.&lt;T&gt; object containing all elements in this deque in the natural order.
 	 */
-	public function toVector():flash.Vector<Dynamic>
+	inline public function toVector():Vector<T>
 	{
-		var a = new flash.Vector<Dynamic>(size());
+		var v = new Vector<T>(size());
 		var i = 0;
 		if (_tailBlockIndex == 0)
 		{
-			for (j in _head + 1..._tail) a[i++] = _headBlock[j];
+			for (j in _head + 1..._tail) v[i++] = _headBlock[j];
 		}
 		else
 		if (_tailBlockIndex == 1)
 		{
-			for (j in _head + 1..._blockSize) a[i++] = _headBlock[j];
-			for (j in 0..._tail) a[i++] = _tailBlock[j];
+			for (j in _head + 1..._blockSize) v[i++] = _headBlock[j];
+			for (j in 0..._tail) v[i++] = _tailBlock[j];
 		}
 		else
 		{
-			for (j in _head + 1..._blockSize) a[i++] = _headBlock[j];
+			for (j in _head + 1..._blockSize) v[i++] = _headBlock[j];
 			for (j in 1..._tailBlockIndex)
 			{
 				var block = _blocks[j];
-				for (k in 0..._blockSize) a[i++] = block[k];
+				for (k in 0..._blockSize) v[i++] = block[k];
 			}
-			for (j in 0..._tail) a[i++] = _tailBlock[j];
+			for (j in 0..._tail) v[i++] = _tailBlock[j];
 		}
-		return a;
+		return v;
 	}
-	#end
 	
 	/**
 	 * Duplicates this deque. Supports shallow (structure only) and deep copies (structure & elements).

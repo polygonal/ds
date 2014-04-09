@@ -19,8 +19,6 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 package de.polygonal.ds.pooling;
 
 import de.polygonal.ds.error.Assert.assert;
-import de.polygonal.ds.Hashable;
-import de.polygonal.ds.HashKey;
 
 /**
  * <p>A dynamic object pool based on a doubly linked list.</p>

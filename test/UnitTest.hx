@@ -1,6 +1,6 @@
-﻿package;
+﻿import haxe.unit.TestRunner;
 
-class UnitTest extends haxe.unit.TestRunner
+class UnitTest extends TestRunner
 {
 	static function main()
 	{
@@ -11,15 +11,21 @@ class UnitTest extends haxe.unit.TestRunner
 	{
 		super();
 		
-		#if alchemy
-		#if (flash10 || cpp)
+		#if flash
+			#if no_inline
+			TestRunner.print("using against flash.Vector<Dynamic>\n");
+			#else
+			TestRunner.print("using against flash.Vector<T>\n");
+			#end
+		#end
+		
+		#if (flash && alchemy)
 		add(new test.mem.TestMemoryManager());
 		run();
 		this.cases = new List<haxe.unit.TestCase>();
 		de.polygonal.ds.mem.MemoryManager.free();
 		de.polygonal.ds.mem.MemoryManager.RESERVE_BYTES = 1024 * 1024 * 20;
 		de.polygonal.ds.mem.MemoryManager.BLOCK_SIZE_BYTES = 1024 * 512;
-		#end
 		#end
 		
 		add(new TestArray2());
@@ -39,7 +45,7 @@ class UnitTest extends haxe.unit.TestRunner
 		add(new TestDLLCircular());
 		add(new TestGraph());
 		
-		#if flash9
+		#if flash
 		add(new TestHashMap());
 		#end
 		

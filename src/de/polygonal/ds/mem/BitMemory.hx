@@ -19,10 +19,9 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 package de.polygonal.ds.mem;
 
 import de.polygonal.ds.error.Assert.assert;
-import de.polygonal.ds.BitVector;
 
-#if !alchemy
-import de.polygonal.ds.ArrayUtil;
+#if (alchemy && !flash)
+"BitMemory is only available when targeting flash"
 #end
 
 /**
@@ -35,7 +34,7 @@ class BitMemory extends MemoryAccess
 	 * <warn>The bytes are written in little endian format.</warn>
 	 * @throws de.polygonal.ds.error.AssertError memory deallocated (debug only).
 	 */
-	#if (flash9 || cpp)
+	#if flash
 	public static function toByteArray(input:BitMemory):flash.utils.ByteArray
 	{
 		var output = new flash.utils.ByteArray();
@@ -66,7 +65,7 @@ class BitMemory extends MemoryAccess
 	 * If no range is specified, all <code>input</code> bytes are copied.
 	 * @throws de.polygonal.ds.error.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
 	 */
-	#if (flash9 || cpp)
+	#if flash
 	public static function ofByteArray(input:flash.utils.ByteArray, min = -1, max = -1):BitMemory
 	{
 		#if debug
@@ -213,11 +212,7 @@ class BitMemory extends MemoryAccess
 	}
 	
 	#if !alchemy
-		#if flash10
-		var _data:flash.Vector<Int>;
-		#else
-		var _data:Array<Int>;
-		#end
+	var _data:Vector<Int>;
 	#end
 	
 	/**
@@ -235,12 +230,7 @@ class BitMemory extends MemoryAccess
 		this.size = size;
 		
 		#if !alchemy
-			#if flash10
-			_data = new flash.Vector<Int>(bytes >> 2, true);
-			#else
-			_data = new Array<Int>();
-			for (i in 0...bytes >> 2) _data[i] = 0;
-			#end
+		_data = new Vector<Int>(bytes >> 2);
 		#end
 	}
 	
@@ -317,13 +307,8 @@ class BitMemory extends MemoryAccess
 		#if alchemy
 		super.resize(newBytes);	
 		#else
-			#if flash10
-			var tmp = new flash.Vector<Int>(newBytes >> 2, true);
+			var tmp = new Vector<Int>(newBytes >> 2);
 			for (i in 0...M.min(newSize, size)) tmp[i] = _data[i];
-			#else
-			var tmp:Array<Int> = ArrayUtil.alloc(newBytes >> 2);
-			ArrayUtil.copy(_data, tmp, 0, size);
-			#end
 			_data = tmp;
 		#end
 		

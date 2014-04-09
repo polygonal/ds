@@ -708,23 +708,21 @@ class LinkedStack<T> implements Stack<T>
 		return a;
 	}
 	
-	#if flash10
 	/**
 	 * Returns a Vector.&lt;T&gt; object containing all elements in this stack.<br/>
 	 * Preserves the natural order of this stack (First-In-Last-Out).
 	 */
-	public function toVector():flash.Vector<Dynamic>
+	inline public function toVector():Vector<T>
 	{
-		var a = new flash.Vector<Dynamic>(size());
+		var v = new Vector<T>(size());
 		var node = _head;
 		for (i in 0..._top)
 		{
-			a[_top - i - 1] = node.val;
+			v[_top - i - 1] = node.val;
 			node = node.next;
 		}
-		return a;
+		return v;
 	}
-	#end
 	
 	/**
 	 * Duplicates this stack. Supports shallow (structure only) and deep copies (structure & elements).

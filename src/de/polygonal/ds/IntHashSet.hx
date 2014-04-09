@@ -18,32 +18,21 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 */
 package de.polygonal.ds;
 
-#if flash10
-#if alchemy
+#if (flash && alchemy)
 import de.polygonal.ds.mem.IntMemory;
 import flash.Memory;
-#else
-import flash.Vector;
-#end
-#else
-using de.polygonal.ds.ArrayUtil;
 #end
 
 import de.polygonal.ds.error.Assert.assert;
 
 private typedef IntHashSetFriend =
 {
-	#if flash10
 	#if alchemy
 	private var _hash:IntMemory;
 	private var _data:IntMemory;
 	#else
 	private var _hash:Vector<Int>;
 	private var _data:Vector<Int>;
-	#end
-	#else
-	private var _hash:Array<Int>;
-	private var _data:Array<Int>;
 	#end
 	
 	private var _mask:Int;
@@ -86,7 +75,6 @@ class IntHashSet implements Set<Int>
 	 */
 	public var reuseIterator:Bool;
 	
-	#if flash10
 	#if alchemy
 	var _hash:IntMemory;
 	var _data:IntMemory;
@@ -95,11 +83,6 @@ class IntHashSet implements Set<Int>
 	var _hash:Vector<Int>;
 	var _data:Vector<Int>;
 	var _next:Vector<Int>;
-	#end
-	#else
-	var _hash:Array<Int>;
-	var _data:Array<Int>;
-	var _next:Array<Int>;
 	#end
 	
 	var _mask:Int;
@@ -169,7 +152,6 @@ class IntHashSet implements Set<Int>
 		this.maxSize = -1;
 		#end
 		
-		#if flash10
 		#if alchemy
 		_hash = new IntMemory(slotCount, "IntHashSet._hash");
 		_hash.fill(EMPTY_SLOT);
@@ -180,12 +162,6 @@ class IntHashSet implements Set<Int>
 		for (i in 0...slotCount) _hash[i] = EMPTY_SLOT;
 		_data = new Vector<Int>(_capacity << 1);
 		_next = new Vector<Int>(_capacity);
-		#end
-		#else
-		_hash = ArrayUtil.alloc(slotCount);
-		_hash.fill(EMPTY_SLOT, slotCount);
-		_data = ArrayUtil.alloc(_capacity << 1);
-		_next = ArrayUtil.alloc(_capacity);
 		#end
 		
 		var j = 1;
@@ -272,7 +248,7 @@ class IntHashSet implements Set<Int>
 			return false;
 		else
 		{
-			#if (flash10 && alchemy)
+			#if (flash && alchemy)
 			var o = _data.getAddr(i);
 			if (Memory.getI32(o) == x)
 				return true;
@@ -286,7 +262,7 @@ class IntHashSet implements Set<Int>
 				
 				var first = i, i0 = first;
 				
-				#if (flash10 && alchemy)
+				#if (flash && alchemy)
 				i = Memory.getI32(o + 4);
 				#else
 				i = __getData(i + 1);
@@ -294,14 +270,14 @@ class IntHashSet implements Set<Int>
 				
 				while (i != NULL_POINTER)
 				{
-					#if (flash10 && alchemy)
+					#if (flash && alchemy)
 					o = _data.getAddr(i);
 					if (Memory.getI32(o) == x)
 					#else
 					if (__getData(i) == x)
 					#end
 					{
-						#if (flash10 && alchemy)
+						#if (flash && alchemy)
 						var o1 = _data.getAddr(i0 + 1);
 						Memory.setI32(o1, Memory.getI32(o + 4));
 						Memory.setI32(o + 4, first);
@@ -338,7 +314,7 @@ class IntHashSet implements Set<Int>
 		
 		var tmp = new IntHashSet(slotCount, _capacity);
 		
-		#if (flash10 && alchemy)
+		#if (flash && alchemy)
 		var o = _data.getAddr(0);
 		for (i in 0..._capacity)
 		{
@@ -354,7 +330,7 @@ class IntHashSet implements Set<Int>
 		}
 		#end
 		
-		#if (flash10 && alchemy)
+		#if (flash && alchemy)
 		_hash.free();
 		_data.free();
 		_next.free();
@@ -419,7 +395,7 @@ class IntHashSet implements Set<Int>
 			return false;
 		else
 		{
-			#if (flash10 && alchemy)
+			#if (flash && alchemy)
 			var o = _data.getAddr(i);
 			if (Memory.getI32(o) == x)
 				return true;
@@ -430,7 +406,7 @@ class IntHashSet implements Set<Int>
 			else
 			{
 				var exists = false;
-				#if (flash10 && alchemy)
+				#if (flash && alchemy)
 				i = Memory.getI32(o + 4);
 				while (i != NULL_POINTER)
 				{
@@ -467,7 +443,7 @@ class IntHashSet implements Set<Int>
 	 * @throws de.polygonal.ds.error.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
 	 * @throws de.polygonal.ds.error.AssertError hash set is full (if not resizable).
 	 */
-	inline public function set(x:Int):Bool
+	public function set(x:Int):Bool
 	{
 		#if debug
 		assert(x != VAL_ABSENT, "value 0x80000000 is reserved");
@@ -476,7 +452,7 @@ class IntHashSet implements Set<Int>
 		
 		var b = _hashCode(x);
 		
-		#if (flash10 && alchemy)
+		#if (flash && alchemy)
 		var o = _hash.getAddr(b);
 		var j = Memory.getI32(o);
 		#else
@@ -497,7 +473,7 @@ class IntHashSet implements Set<Int>
 			var i = _free << 1;
 			_free = __getNext(_free);
 			
-			#if (flash10 && alchemy)
+			#if (flash && alchemy)
 			Memory.setI32(o, i);
 			#else
 			__setHash(b, i);
@@ -510,7 +486,7 @@ class IntHashSet implements Set<Int>
 		}
 		else
 		{
-			#if (flash10 && alchemy)
+			#if (flash && alchemy)
 			o = _data.getAddr(j);
 			if (Memory.getI32(o) == x)
 				return false;
@@ -520,7 +496,7 @@ class IntHashSet implements Set<Int>
 			#end
 			else
 			{
-				#if (flash10 && alchemy)
+				#if (flash && alchemy)
 				var t = Memory.getI32(o + 4);
 				while (t != NULL_POINTER)
 				{
@@ -582,7 +558,7 @@ class IntHashSet implements Set<Int>
 	 */
 	public function free()
 	{
-		#if (flash10 && alchemy)
+		#if (flash && alchemy)
 		_hash.free();
 		_data.free();
 		_next.free();
@@ -616,14 +592,14 @@ class IntHashSet implements Set<Int>
 			return false;
 		else
 		{
-			#if (flash10 && alchemy)
+			#if (flash && alchemy)
 			var o = _data.getAddr(i);
 			if (x == Memory.getI32(o))
 			#else
 			if (x == __getData(i))
 			#end
 			{
-				#if (flash10 && alchemy)
+				#if (flash && alchemy)
 				if (Memory.getI32(o + 4) == NULL_POINTER)
 				#else
 				if (__getData(i + 1) == NULL_POINTER)
@@ -636,7 +612,7 @@ class IntHashSet implements Set<Int>
 				__setNext(j, _free);
 				_free = j;
 				
-				#if (flash10 && alchemy)
+				#if (flash && alchemy)
 				Memory.setI32(o    , VAL_ABSENT);
 				Memory.setI32(o + 4, NULL_POINTER);
 				#else
@@ -658,7 +634,7 @@ class IntHashSet implements Set<Int>
 				var exists = false;
 				
 				var i0 = i;
-				#if (flash10 && alchemy)
+				#if (flash && alchemy)
 				i = Memory.getI32(o + 4);
 				#else
 				i = __getData(i + 1);
@@ -666,7 +642,7 @@ class IntHashSet implements Set<Int>
 				
 				while (i != NULL_POINTER)
 				{
-					#if (flash10 && alchemy)
+					#if (flash && alchemy)
 					o = _data.getAddr(i);
 					if (Memory.getI32(o) == x)
 					{
@@ -693,7 +669,7 @@ class IntHashSet implements Set<Int>
 					__setNext(j, _free);
 					_free = j;
 					
-					#if (flash10 && alchemy)
+					#if (flash && alchemy)
 					o = _data.getAddr(i);
 					Memory.setI32(o    , VAL_ABSENT);
 					Memory.setI32(o + 4, NULL_POINTER);
@@ -738,7 +714,6 @@ class IntHashSet implements Set<Int>
 			_capacity >>= _sizeLevel;
 			_sizeLevel = 0;
 			
-			#if flash10
 			#if alchemy
 			_data.resize(_capacity << 1);
 			_next.resize(_capacity);
@@ -746,20 +721,12 @@ class IntHashSet implements Set<Int>
 			_data = new Vector<Int>(_capacity << 1);
 			_next = new Vector<Int>(_capacity);
 			#end
-			#else
-			_data = ArrayUtil.alloc(_capacity << 1);
-			_next = ArrayUtil.alloc(_capacity);
-			#end
 		}
 		
-		#if flash10
 		#if alchemy
 		_hash.fill(EMPTY_SLOT);
 		#else
 		for (i in 0...getSlotCount()) _hash[i] = EMPTY_SLOT;
-		#end
-		#else
-		_hash.fill(EMPTY_SLOT, getSlotCount());
 		#end
 		
 		var j = 1;
@@ -819,22 +786,20 @@ class IntHashSet implements Set<Int>
 		return a;
 	}
 	
-	#if flash10
 	/**
 	 * Returns an unordered Vector.&lt;T&gt; object containing all elements in this set.
 	 */
-	public function toVector():flash.Vector<Dynamic>
+	public function toVector():Vector<Int>
 	{
-		var a = new flash.Vector<Int>(size());
+		var v = new Vector<Int>(size());
 		var j = 0;
 		for (i in 0..._capacity)
 		{
-			var v = __getData(i << 1);
-			if (v != VAL_ABSENT) a[j++] = v;
+			var val = __getData(i << 1);
+			if (val != VAL_ABSENT) v[j++] = val;
 		}
-		return a;
+		return v;
 	}
-	#end
 	
 	/**
 	 * Duplicates this hash set by creating a deep copy.<br/>
@@ -846,7 +811,6 @@ class IntHashSet implements Set<Int>
 		c.key = HashKey.next();
 		c.maxSize = maxSize;
 		
-		#if flash10
 		#if alchemy
 		c._hash = _hash.clone();
 		c._data = _data.clone();
@@ -858,14 +822,6 @@ class IntHashSet implements Set<Int>
 		for (i in 0...Std.int(_hash.length)) c._hash[i] = _hash[i];
 		for (i in 0...Std.int(_data.length)) c._data[i] = _data[i];
 		for (i in 0...Std.int(_next.length)) c._next[i] = _next[i];
-		#end
-		#else
-		c._hash = new Array<Int>();
-		ArrayUtil.copy(_hash, c._hash);
-		c._data = new Array<Int>();
-		ArrayUtil.copy(_data, c._data);
-		c._next = new Array<Int>();
-		ArrayUtil.copy(_next, c._next);
 		#end
 		
 		c._mask      = _mask;
@@ -890,7 +846,6 @@ class IntHashSet implements Set<Int>
 		var newSize = oldSize << 1;
 		_capacity = newSize;
 		
-		#if flash10
 		#if alchemy
 		_next.resize(newSize);
 		_data.resize(newSize << 1);
@@ -902,14 +857,6 @@ class IntHashSet implements Set<Int>
 		for (i in 0...oldSize << 1) copy[i] = _data[i];
 		_data = copy;
 		#end
-		#else
-		var copy:Array<Int> = ArrayUtil.alloc(newSize);
-		ArrayUtil.copy(_next, copy, 0, oldSize);
-		_next = copy;
-		var copy:Array<Int> = ArrayUtil.alloc(newSize << 1);
-		ArrayUtil.copy(_data, copy, 0, oldSize << 1);
-		_data = copy;
-		#end
 		
 		for (i in oldSize - 1...newSize - 1) __setNext(i, i + 1);
 		__setNext(newSize - 1, NULL_POINTER);
@@ -918,7 +865,7 @@ class IntHashSet implements Set<Int>
 		var j = (oldSize << 1) + 1;
 		for (i in 0...oldSize)
 		{
-			#if (flash10 && alchemy)
+			#if (flash && alchemy)
 			var o = _data.getAddr(j - 1);
 			Memory.setI32(o    , VAL_ABSENT);
 			Memory.setI32(o + 4, NULL_POINTER);
@@ -939,7 +886,7 @@ class IntHashSet implements Set<Int>
 		var newSize = oldSize >> 1; 
 		_capacity = newSize;
 		
-		#if (flash10 && alchemy)
+		#if (flash && alchemy)
 		_data.resize((oldSize + (newSize >> 1)) << 1);
 		
 		var offset = oldSize << 1;
@@ -998,13 +945,8 @@ class IntHashSet implements Set<Int>
 		_next.resize(newSize);
 		#else
 		var k = newSize << 1;
-		#if flash10
 		var tmp = new Vector<Int>(k);
 		_next = new Vector<Int>(newSize);
-		#else
-		var tmp:Array<Int> = ArrayUtil.alloc(k);
-		_next = ArrayUtil.alloc(newSize);
-		#end
 		
 		var e = 0;
 		for (i in 0...getSlotCount())
@@ -1042,7 +984,7 @@ class IntHashSet implements Set<Int>
 	
 	inline function __getHash(i:Int)
 	{
-		#if (flash10 && alchemy)
+		#if (flash && alchemy)
 		return _hash.get(i);
 		#else
 		return _hash[i];
@@ -1050,7 +992,7 @@ class IntHashSet implements Set<Int>
 	}
 	inline function __setHash(i:Int, x:Int)
 	{
-		#if (flash10 && alchemy)
+		#if (flash && alchemy)
 		_hash.set(i, x);
 		#else
 		_hash[i] = x;
@@ -1059,7 +1001,7 @@ class IntHashSet implements Set<Int>
 	
 	inline function __getNext(i:Int)
 	{
-		#if (flash10 && alchemy)
+		#if (flash && alchemy)
 		return _next.get(i);
 		#else
 		return _next[i];
@@ -1067,7 +1009,7 @@ class IntHashSet implements Set<Int>
 	}
 	inline function __setNext(i:Int, x:Int)
 	{
-		#if (flash10 && alchemy)
+		#if (flash && alchemy)
 		_next.set(i, x);
 		#else
 		_next[i] = x;
@@ -1076,7 +1018,7 @@ class IntHashSet implements Set<Int>
 	
 	inline function __getData(i:Int)
 	{
-		#if (flash10 && alchemy)
+		#if (flash && alchemy)
 		return _data.get(i);
 		#else
 		return _data[i];
@@ -1084,7 +1026,7 @@ class IntHashSet implements Set<Int>
 	}
 	inline function __setData(i:Int, x:Int)
 	{
-		#if (flash10 && alchemy)
+		#if (flash && alchemy)
 		_data.set(i, x);
 		#else
 		_data[i] = x;
@@ -1101,14 +1043,10 @@ class IntHashSetIterator implements de.polygonal.ds.Itr<Int>
 	var _i:Int;
 	var _s:Int;
 	
-	#if flash10
 	#if alchemy
 	var _data:IntMemory;
 	#else
 	var _data:Vector<Int>;
-	#end
-	#else
-	var _data:Array<Int>;
 	#end
 	
 	public function new(hash:IntHashSetFriend)
@@ -1153,7 +1091,7 @@ class IntHashSetIterator implements de.polygonal.ds.Itr<Int>
 	
 	inline function __getData(i:Int)
 	{
-		#if (flash10 && alchemy)
+		#if (flash && alchemy)
 		return _data.get(i);
 		#else
 		return _data[i];

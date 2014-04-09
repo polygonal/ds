@@ -699,18 +699,16 @@ class Array3<T> implements Collection<T>
 		return a;
 	}
 	
-	#if flash10
 	/**
 	 * Returns a Vector.&lt;T&gt; object containing all elements in this three-dimensional array.<br/>
 	 * Order: Row-major order (row-by-row).
 	 */
-	public function toVector():flash.Vector<Dynamic>
+	inline public function toVector():Vector<T>
 	{
-		var a = new flash.Vector<Dynamic>(size(), false);
-		for (i in 0...size()) a[i] = __get(i);
-		return a;
+		var v = new Vector<T>(size());
+		for (i in 0...size()) v[i] = __get(i);
+		return v;
 	}
-	#end
 	
 	/**
 	 * Duplicates this three-dimensional array. Supports shallow (structure only) and deep copies (structure & elements).

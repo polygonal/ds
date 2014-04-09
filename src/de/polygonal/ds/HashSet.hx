@@ -18,12 +18,8 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 */
 package de.polygonal.ds;
 
-#if flash10
 #if alchemy
 import de.polygonal.ds.mem.IntMemory;
-#else
-import flash.Vector;
-#end
 #end
 
 import de.polygonal.ds.error.Assert.assert;
@@ -66,14 +62,10 @@ class HashSet<T:Hashable> implements Set<T>
 	
 	var _vals:Array<T>;
 	
-	#if flash10
 	#if alchemy
 	var _next:IntMemory;
 	#else
 	var _next:Vector<Int>;
-	#end
-	#else
-	var _next:Array<Int>;
 	#end
 	
 	var _free:Int;
@@ -123,14 +115,10 @@ class HashSet<T:Hashable> implements Set<T>
 		this.maxSize = -1;
 		#end
 		
-		#if flash10
 		#if alchemy
 		_next = new IntMemory(capacity, "HashSet._next");
 		#else
 		_next = new Vector<Int>(capacity);
-		#end
-		#else
-		_next = ArrayUtil.alloc(capacity);
 		#end
 		
 		for (i in 0...capacity - 1) __setNext(i, i + 1);
@@ -325,7 +313,7 @@ class HashSet<T:Hashable> implements Set<T>
 			_vals[i] = null;
 		_vals = null;
 		
-		#if (flash10 && alchemy)
+		#if alchemy
 		_next.free();
 		#end
 		_next = null;
@@ -452,22 +440,21 @@ class HashSet<T:Hashable> implements Set<T>
 		return a;
 	}
 	
-	#if flash10
 	/**
 	 * Returns a Vector.&lt;T&gt; object containing all elements in this set.
 	 */
-	public function toVector():flash.Vector<Dynamic>
+	inline public function toVector():Vector<T>
 	{
-		var a = new flash.Vector<Dynamic>(size());
+		var v = new Vector<T>(size());
 		var j = 0;
+		var t = _vals;
 		for (i in 0...getCapacity())
 		{
-			var v = _vals[i];
-			if (v != null) a[j++] = v;
+			var val = t[i];
+			if (val != null) v[j++] = val;
 		}
-		return a;
+		return v;
 	}
-	#end
 	
 	/**
 	 * Duplicates this hash set. Supports shallow (structure only) and deep copies (structure & elements).
@@ -525,16 +512,11 @@ class HashSet<T:Hashable> implements Set<T>
 		c._sizeLevel = _sizeLevel;
 		c._free = _free;
 		
-		#if flash10
 		#if alchemy
 		c._next = _next.clone();
 		#else
 		c._next = new Vector<Int>(_next.length);
 		for (i in 0...Std.int(_next.length)) c._next[i] = _next[i];
-		#end
-		#else
-		c._next = new Array<Int>();
-		ArrayUtil.copy(_next, c._next);
 		#end
 		
 		return c;
@@ -544,17 +526,11 @@ class HashSet<T:Hashable> implements Set<T>
 	{
 		var newSize = oldSize << 1;
 		
-		#if flash10
 		#if alchemy
 		_next.resize(newSize);
 		#else
 		var tmp = new Vector<Int>(newSize);
 		for (i in 0...oldSize) tmp[i] = _next[i];
-		_next = tmp;
-		#end
-		#else
-		var tmp:Array<Int> = ArrayUtil.alloc(newSize);
-		ArrayUtil.copy(_next, tmp, 0, oldSize);
 		_next = tmp;
 		#end
 		
@@ -576,14 +552,10 @@ class HashSet<T:Hashable> implements Set<T>
 		var oldSize = getCapacity() << 1;
 		var newSize = getCapacity();
 		
-		#if flash10
 		#if alchemy
 		_next.resize(newSize);
 		#else
 		_next = new Vector<Int>(newSize);
-		#end
-		#else
-		_next = ArrayUtil.alloc(newSize);
 		#end
 		
 		for (i in 0...newSize - 1) __setNext(i, i + 1);
@@ -606,7 +578,7 @@ class HashSet<T:Hashable> implements Set<T>
 	
 	inline function __getNext(i:Int)
 	{
-		#if (flash10 && alchemy)
+		#if alchemy
 		return _next.get(i);
 		#else
 		return _next[i];
@@ -614,7 +586,7 @@ class HashSet<T:Hashable> implements Set<T>
 	}
 	inline function __setNext(i:Int, x:Int)
 	{
-		#if (flash10 && alchemy)
+		#if alchemy
 		_next.set(i, x);
 		#else
 		_next[i] = x;
