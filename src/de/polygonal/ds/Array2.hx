@@ -356,6 +356,35 @@ class Array2<T> implements Collection<T>
 	}
 	
 	/**
+	 * Copies all elements inside the rectangular region bounded by &#91;<code>minX</code>, <code>minY</code>&#93; and &#91;<code>maxX</code>, <code>maxY</code>&#93;
+	 * by reference to the <code>output</code> array.
+	 * <o>n</o>
+	 * @return a reference to the <code>output</code> array.
+	 */
+	public function getRect(minX:Int, minY:Int, maxX:Int, maxY:Int, output:Array<T>):Array<T>
+	{
+		if (minX < 0) minX = 0;
+		if (minY < 0) minY = 0;
+		if (maxX > _w - 1) maxX = _w - 1;
+		if (maxY > _h - 1) maxY = _h - 1;
+		
+		var y = minY, x, i = 0, offset, w = _w;
+		while (y <= maxY)
+		{
+			offset = y * w;
+			x = minX;
+			while (x <= maxX)
+			{
+				output[i++] = __get(offset + x);
+				x++;
+			}
+			y++;
+		}
+		
+		return output;
+	}
+	
+	/**
 	 * Replaces all existing elements with objects of type <code>C</code>.
 	 * <o>n</o>
 	 * @param C the class to instantiate for each element.
