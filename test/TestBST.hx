@@ -1,12 +1,11 @@
-﻿package;
-
-import de.polygonal.core.math.random.Random;
+﻿import de.polygonal.core.math.random.Random;
 import de.polygonal.ds.BinaryTreeNode;
 import de.polygonal.ds.BST;
 import de.polygonal.ds.Collection;
 import de.polygonal.ds.ListSet;
 import de.polygonal.ds.Set;
 
+@:access(de.polygonal.ds.BST)
 class TestBST extends haxe.unit.TestCase
 {
 	function testPreorder()
@@ -357,7 +356,7 @@ class TestBST extends haxe.unit.TestCase
 		while (nodes.length > 0) bst.removeNode(nodes.pop());
 		
 		assertTrue(bst.isEmpty());
-		assertEquals(null, untyped bst._root);
+		assertEquals(null, bst.mRoot);
 		
 		var data = [4, 5, 6];
 		var nodes = new Array();
@@ -368,7 +367,7 @@ class TestBST extends haxe.unit.TestCase
 			bst.removeNode(nodes.pop());
 		
 		assertTrue(bst.isEmpty());
-		assertEquals(null, untyped bst._root);
+		assertEquals(null, bst.mRoot);
 	}
 }
 

@@ -1,4 +1,4 @@
-﻿package test.mem;
+﻿package mem;
 
 import de.polygonal.ds.mem.DoubleMemory;
 import haxe.io.Bytes;
@@ -229,16 +229,14 @@ class TestDoubleMemory extends haxe.unit.TestCase
 		for (i in 0...max - min) assertEquals((i + min) % 10, Std.int(data[i]));
 	}
 	
-	#if flash10
+	#if flash
 	function checkVector(data:flash.Vector<Float>, min = -1, max = -1)
 	{
 		if (min == -1) min = 0;
 		if (max == -1) max = data.length;
 		for (i in 0...max - min) assertEquals((i + min) % 10, Std.int(data[i]));
 	}
-	#end
 	
-	#if (flash9 || cpp)
 	function checkByteArray(data:flash.utils.ByteArray, min = -1, max = -1)
 	{
 		data.position = 0;
@@ -250,7 +248,7 @@ class TestDoubleMemory extends haxe.unit.TestCase
 	
 	function checkBytesData(data:BytesData, min = -1, max = -1)
 	{
-		#if (flash && !flash8)
+		#if (flash)
 		data.position = 0;
 		
 		if (min == -1) min = 0;

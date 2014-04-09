@@ -46,7 +46,7 @@ class DLLNode<T>
 	 */
 	public var prev:DLLNode<T>;
 	
-	var _list:DLL<T>;
+	var mList:DLL<T>;
 	
 	/**
 	 * @param x the element to store in this node.
@@ -55,7 +55,7 @@ class DLLNode<T>
 	public function new(x:T, list:DLL<T>)
 	{
 		val = x;
-		_list = list;
+		mList = list;
 	}
 	
 	/**
@@ -67,7 +67,7 @@ class DLLNode<T>
 	{
 		val = cast null;
 		next = prev = null;
-		_list = null;
+		mList = null;
 	}
 	
 	/**
@@ -78,10 +78,10 @@ class DLLNode<T>
 	inline public function isHead():Bool
 	{
 		#if debug
-		assert(_list != null, "node is not managed by a list");
+		assert(mList != null, "node is not managed by a list");
 		#end
 		
-		return this == _list.head;
+		return this == mList.head;
 	}
 	
 	/**
@@ -92,10 +92,10 @@ class DLLNode<T>
 	inline public function isTail():Bool
 	{
 		#if debug
-		assert(_list != null, "node is not managed by a list");
+		assert(mList != null, "node is not managed by a list");
 		#end
 		
-		return this == _list.tail;
+		return this == mList.tail;
 	}
 	
 	/**
@@ -150,7 +150,7 @@ class DLLNode<T>
 	 */
 	inline public function getList():DLL<T>
 	{
-		return _list;
+		return mList;
 	}
 	
 	/**
@@ -161,10 +161,10 @@ class DLLNode<T>
 	inline public function unlink():DLLNode<T>
 	{
 		#if debug
-		assert(_list != null, "_list != null");
+		assert(mList != null, "mList != null");
 		#end
 		
-		return _list.unlink(this);
+		return mList.unlink(this);
 	}
 	
 	/**
@@ -187,7 +187,7 @@ class DLLNode<T>
 		#if debug
 		assert(node != null, "node is null");
 		assert(prev == null, "prev is not null");
-		assert(_list == null && node._list == null, "node is managed by a list");
+		assert(mList == null && node.mList == null, "node is managed by a list");
 		#end
 		
 		node.next = this;
@@ -215,7 +215,7 @@ class DLLNode<T>
 		#if debug
 		assert(node != null, "node is null");
 		assert(next == null, "next is not null");
-		assert(_list == null && node._list == null, "node is managed by a list");
+		assert(mList == null && node.mList == null, "node is managed by a list");
 		#end
 		
 		next = node;
@@ -242,7 +242,7 @@ class DLLNode<T>
 	{
 		#if debug
 		assert(node != null, "node is null");
-		assert(_list == null && node._list == null, "node is managed by a list");
+		assert(mList == null && node.mList == null, "node is managed by a list");
 		assert(node.prev == null, "node.prev is not null");
 		#end
 		
@@ -270,7 +270,7 @@ class DLLNode<T>
 	{
 		#if debug
 		assert(node != null, "node is null");
-		assert(_list == null && node._list == null, "node is managed by a list");
+		assert(mList == null && node.mList == null, "node is managed by a list");
 		assert(node.next == null, "node.next is not null");
 		#end
 		
@@ -296,7 +296,7 @@ class DLLNode<T>
 		return t;
 	}
 	
-	inline function _insertAfter(node:DLLNode<T>)
+	inline function insertAfter(node:DLLNode<T>)
 	{
 		node.next = next;
 		node.prev = this;
@@ -304,7 +304,7 @@ class DLLNode<T>
 		next = node;
 	}
 	
-	inline function _insertBefore(node:DLLNode<T>)
+	inline function insertBefore(node:DLLNode<T>)
 	{
 		node.next = this;
 		node.prev = prev;

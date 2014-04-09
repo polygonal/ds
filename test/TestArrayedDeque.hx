@@ -1,6 +1,4 @@
-﻿package;
-
-import de.polygonal.ds.ArrayedDeque;
+﻿import de.polygonal.ds.ArrayedDeque;
 import de.polygonal.ds.Deque;
 
 class TestArrayedDeque extends haxe.unit.TestCase

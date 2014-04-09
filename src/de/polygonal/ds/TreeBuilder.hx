@@ -31,8 +31,8 @@ import de.polygonal.ds.error.Assert.assert;
 #end
 class TreeBuilder<T>
 {
-	var _node:TreeNode<T>;
-	var _child:TreeNode<T>;
+	var mNode:TreeNode<T>;
+	var mChild:TreeNode<T>;
 	
 	/**
 	 * Creates a <em>TreeBuilder</em> object pointing to <code>node</code>.
@@ -44,7 +44,7 @@ class TreeBuilder<T>
 		assert(node != null, "node is null");
 		#end
 		
-		_node = node;
+		mNode = node;
 		childStart();
 	}
 	
@@ -55,7 +55,7 @@ class TreeBuilder<T>
 	 */
 	public function free()
 	{
-		_node = _child = null;
+		mNode = mChild = null;
 	}
 	
 	/**
@@ -69,7 +69,7 @@ class TreeBuilder<T>
 		assert(valid(), "vertical pointer is null");
 		#end
 		
-		return _node.val;
+		return mNode.val;
 	}
 	
 	/**
@@ -83,7 +83,7 @@ class TreeBuilder<T>
 		assert(valid(), "vertical pointer is null");
 		#end
 		
-		_node.val = x;
+		mNode.val = x;
 	}
 	
 	/**
@@ -92,7 +92,7 @@ class TreeBuilder<T>
 	 */
 	inline public function getNode():TreeNode<T>
 	{
-		return _node;
+		return mNode;
 	}
 	
 	/**
@@ -101,7 +101,7 @@ class TreeBuilder<T>
 	 */
 	inline public function getChildNode():TreeNode<T>
 	{
-		return _child;
+		return mChild;
 	}
 	
 	/**
@@ -115,7 +115,7 @@ class TreeBuilder<T>
 		assert(childValid(), "invalid child node");
 		#end
 		
-		return _child.val;
+		return mChild.val;
 	}
 	
 	/**
@@ -124,7 +124,7 @@ class TreeBuilder<T>
 	 */
 	inline public function valid():Bool
 	{
-		return _node != null;
+		return mNode != null;
 	}
 	
 	/**
@@ -138,8 +138,8 @@ class TreeBuilder<T>
 		assert(valid(), "invalid vertical pointer");
 		#end
 		
-		while (_node.hasParent()) _node = _node.parent;
-		_reset();
+		while (mNode.hasParent()) mNode = mNode.parent;
+		reset();
 	}
 	
 	/**
@@ -153,10 +153,10 @@ class TreeBuilder<T>
 		assert(valid(), "invalid vertical pointer");
 		#end
 		
-		if (_node.hasParent())
+		if (mNode.hasParent())
 		{
-			_node = _node.parent;
-			_reset();
+			mNode = mNode.parent;
+			reset();
 			return true;
 		}
 		else
@@ -174,10 +174,10 @@ class TreeBuilder<T>
 		assert(childValid(), "node has no children");
 		#end
 		
-		if (_child != null)
+		if (mChild != null)
 		{
-			_node = _child;
-			_reset();
+			mNode = mChild;
+			reset();
 			return true;
 		}
 		else
@@ -190,7 +190,7 @@ class TreeBuilder<T>
 	 */
 	inline public function hasNextChild():Bool
 	{
-		return childValid() && _child.next != null;
+		return childValid() && mChild.next != null;
 	}
 	
 	/**
@@ -199,7 +199,7 @@ class TreeBuilder<T>
 	 */
 	inline public function hasPrevChild():Bool
 	{
-		return childValid() && _child.prev != null;
+		return childValid() && mChild.prev != null;
 	}
 	
 	/**
@@ -211,7 +211,7 @@ class TreeBuilder<T>
 	{
 		if (hasNextChild())
 		{
-			_child = _child.next;
+			mChild = mChild.next;
 			return true;
 		}
 		else
@@ -227,7 +227,7 @@ class TreeBuilder<T>
 	{
 		if (hasPrevChild())
 		{
-			_child = _child.prev;
+			mChild = mChild.prev;
 			return true;
 		}
 		else
@@ -243,7 +243,7 @@ class TreeBuilder<T>
 	{
 		if (valid())
 		{
-			_child = _node.children;
+			mChild = mNode.children;
 			return true;
 		}
 		else
@@ -259,7 +259,7 @@ class TreeBuilder<T>
 	{
 		if (childValid())
 		{
-			_child = _node.getLastChild();
+			mChild = mNode.getLastChild();
 			return true;
 		}
 		else
@@ -272,7 +272,7 @@ class TreeBuilder<T>
 	 */
 	inline public function childValid():Bool
 	{
-		return _child != null;
+		return mChild != null;
 	}
 	
 	/**
@@ -286,8 +286,8 @@ class TreeBuilder<T>
 		assert(valid(), "invalid vertical pointer");
 		#end
 		
-		_child = _createChildNode(x, true);
-		return _child;
+		mChild = createChildNode(x, true);
+		return mChild;
 	}
 	
 	/**
@@ -301,16 +301,16 @@ class TreeBuilder<T>
 		assert(valid(), "invalid vertical pointer");
 		#end
 		
-		var childNode = _createChildNode(x, false);
+		var childNode = createChildNode(x, false);
 		if (childValid())
 		{
-			childNode.next = _node.children;
-			_node.children.prev = childNode;
-			_node.children = childNode;
+			childNode.next = mNode.children;
+			mNode.children.prev = childNode;
+			mNode.children = childNode;
 		}
 		else
-			_node.children = childNode;
-		_child = childNode;
+			mNode.children = childNode;
+		mChild = childNode;
 		return childNode;
 	}
 	
@@ -327,16 +327,16 @@ class TreeBuilder<T>
 		
 		if (childValid())
 		{
-			var childNode = _createChildNode(x, false);
+			var childNode = createChildNode(x, false);
 			
-			childNode.next = _child;
-			childNode.prev = _child.prev;
+			childNode.next = mChild;
+			childNode.prev = mChild.prev;
 			
-			if (_child.hasPrevSibling())
-				_child.prev.next = childNode;
+			if (mChild.hasPrevSibling())
+				mChild.prev.next = childNode;
 			
-			_child.prev = childNode;
-			_child = childNode;
+			mChild.prev = childNode;
+			mChild = childNode;
 			
 			return childNode;
 		}
@@ -357,16 +357,16 @@ class TreeBuilder<T>
 		
 		if (childValid())
 		{
-			var childNode = _createChildNode(x, false);
+			var childNode = createChildNode(x, false);
 			
-			childNode.prev = _child;
-			childNode.next = _child.next;
+			childNode.prev = mChild;
+			childNode.next = mChild.next;
 			
-			if (_child.hasNextSibling())
-				_child.next.prev = childNode;
+			if (mChild.hasNextSibling())
+				mChild.next.prev = childNode;
 			
-			_child.next = childNode;
-			_child = childNode;
+			mChild.next = childNode;
+			mChild = childNode;
 			
 			return childNode;
 		}
@@ -383,13 +383,13 @@ class TreeBuilder<T>
 	{
 		if (valid() && childValid())
 		{
-			_child.parent = null;
+			mChild.parent = null;
 			
-			var node = _child;
-			_child = node.next;
+			var node = mChild;
+			mChild = node.next;
 			
-			if (_node.children == node)
-				_node.children = _child;
+			if (mNode.children == node)
+				mNode.children = mChild;
 			
 			if (node.hasPrevSibling()) node.prev.next = node.next;
 			if (node.hasNextSibling()) node.next.prev = node.prev;
@@ -405,27 +405,27 @@ class TreeBuilder<T>
 	 */
 	public function toString():String
 	{
-		return "{ TreeBuilder V: " + (valid() ? _node.val : cast null) + ", H: " + (childValid() ? _child.val : cast null) + " }";
+		return "{ TreeBuilder V: " + (valid() ? mNode.val : cast null) + ", H: " + (childValid() ? mChild.val : cast null) + " }";
 	}
 	
-	inline function _reset()
+	inline function reset()
 	{
-		if (valid()) _child = _node.children;
+		if (valid()) mChild = mNode.children;
 	}
 	
-	inline function _createChildNode(x:T, append:Bool)
+	inline function createChildNode(x:T, append:Bool)
 	{
 		if (append)
-			return new TreeNode<T>(x, _node);
+			return new TreeNode<T>(x, mNode);
 		else
 		{
 			var node = new TreeNode<T>(x);
-			node.parent = _node;
+			node.parent = mNode;
 			return node;
 		}
 	}
 	
-	inline function _getTail(node:TreeNode<T>):TreeNode<T>
+	inline function getTail(node:TreeNode<T>):TreeNode<T>
 	{
 		var tail = node;
 		while (tail.hasNextSibling()) tail.next;

@@ -117,7 +117,7 @@ class ArrayUtil
 	 * Copies <code>n</code> elements inside <code>a</code> from the location pointed by the index <code>source</code> to the location pointed by the index <code>destination</code>.<br/>
 	 * Copying takes place as if an intermediate buffer is used, allowing the destination and source to overlap.
 	 * @throws de.polygonal.ds.error.AssertError invalid <code>destination</code>, <code>source</code> or <code>n</code> value (debug only).
-	 * @see <a href="ttp://www.cplusplus.com/reference/clibrary/cstring/memmove/" target="_blank">ttp://www.cplusplus.com/reference/clibrary/cstring/memmove/</a>
+	 * @see <a href="ttp://www.cplusplus.com/reference/clibrary/cstring/memmove/" target="mBlank">ttp://www.cplusplus.com/reference/clibrary/cstring/memmove/</a>
 	 */
 	inline public static function memmove<T>(a:Array<T>, destination:Int, source:Int, n:Int)
 	{
@@ -310,15 +310,15 @@ class ArrayUtil
 			#end
 			
 			if (useInsertionSort)
-				_insertionSort(a, first, count, compare);
+				insertionSort(a, first, count, compare);
 			else
-				_quickSort(a, first, count, compare);
+				quickSort(a, first, count, compare);
 		}
 	}
 	
 	/**
 	 * A counting quick permutation algorithm.
-	 * @see <a href="http://www.freewebs.com/permute/quickperm.html" target="_blank">http://www.freewebs.com/permute/quickperm.html</a>
+	 * @see <a href="http://www.freewebs.com/permute/quickperm.html" target="mBlank">http://www.freewebs.com/permute/quickperm.html</a>
 	 * @param n number of elements to permute.
 	 */
 	public static function quickPerm(n:Int):Array<Array<Int>>
@@ -391,7 +391,7 @@ class ArrayUtil
 		return output;
 	}
 	
-	static function _insertionSort(a:Array<Float>, first:Int, k:Int, cmp:Float->Float->Int)
+	static function insertionSort(a:Array<Float>, first:Int, k:Int, cmp:Float->Float->Int)
 	{
 		for (i in first + 1...first + k)
 		{
@@ -413,7 +413,7 @@ class ArrayUtil
 		}
 	}
 	
-	static function _quickSort(a:Array<Float>, first:Int, k:Int, cmp:Float->Float->Int)
+	static function quickSort(a:Array<Float>, first:Int, k:Int, cmp:Float->Float->Int)
 	{
 		var last = first + k - 1;
 		var lo = first;
@@ -458,8 +458,8 @@ class ArrayUtil
 			}
 			
 			a[lo] = pivot;
-			_quickSort(a, first, lo - first, cmp);
-			_quickSort(a, lo + 1, last - lo, cmp);
+			quickSort(a, first, lo - first, cmp);
+			quickSort(a, lo + 1, last - lo, cmp);
 		}
 	}
 }

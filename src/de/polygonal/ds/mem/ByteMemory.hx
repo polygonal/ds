@@ -279,12 +279,12 @@ class ByteMemory extends MemoryAccess
 	}
 	
 	#if (!flash && alchemy)
-	var _data:haxe.io.Bytes;
+	var mData:haxe.io.Bytes;
 	#else
 		#if flash
-		var _data:flash.utils.ByteArray;
+		var mData:flash.utils.ByteArray;
 		#else
-		var _data:haxe.io.Bytes;
+		var mData:haxe.io.Bytes;
 		#end
 	#end
 	
@@ -302,10 +302,10 @@ class ByteMemory extends MemoryAccess
 		
 		#if !alchemy
 			#if flash
-			_data = new flash.utils.ByteArray();
-			_data.length = size;
+			mData = new flash.utils.ByteArray();
+			mData.length = size;
 			#else
-			_data = haxe.io.Bytes.alloc(size);
+			mData = haxe.io.Bytes.alloc(size);
 			#end
 		#end
 	}
@@ -313,7 +313,7 @@ class ByteMemory extends MemoryAccess
 	#if !alchemy
 	override public function free()
 	{
-		_data = null;
+		mData = null;
 		super.free();
 	}
 	#end
@@ -330,16 +330,16 @@ class ByteMemory extends MemoryAccess
 		for (i in 0...size)
 			flash.Memory.setByte(dst + i, flash.Memory.getByte(src + i));
 		#else
-		var t = c._data;
+		var t = c.mData;
 			#if flash
-			for (i in 0...size) t[i] = _data[i];
+			for (i in 0...size) t[i] = mData[i];
 			#else
 			for (i in 0...size)
 			{
 				#if flash
-				t[i] = _data[i];
+				t[i] = mData[i];
 				#else
-				t.set(i, _data.get(i));
+				t.set(i, mData.get(i));
 				#end
 			}
 			#end
@@ -395,12 +395,12 @@ class ByteMemory extends MemoryAccess
 			#if flash
 			var tmp = new flash.utils.ByteArray();
 			tmp.length = newSize;
-			for (i in 0...M.min(newSize, size)) tmp[i] = _data[i];
+			for (i in 0...M.min(newSize, size)) tmp[i] = mData[i];
 			#else
 			var tmp = haxe.io.Bytes.alloc(newSize);
-			for (i in 0...M.min(newSize, size)) tmp.set(i, _data.get(i));
+			for (i in 0...M.min(newSize, size)) tmp.set(i, mData.get(i));
 			#end
-		_data = tmp;
+		mData = tmp;
 		#end
 		
 		size = newSize;
@@ -417,9 +417,9 @@ class ByteMemory extends MemoryAccess
 		return flash.Memory.getByte(getAddr(i));
 		#else
 			#if flash
-			return _data[i];
+			return mData[i];
 			#else
-			return _data.get(i);
+			return mData.get(i);
 			#end
 		#end
 	}
@@ -435,9 +435,9 @@ class ByteMemory extends MemoryAccess
 		flash.Memory.setByte(getAddr(i), x);
 		#else
 			#if flash
-			_data[i] = x;
+			mData[i] = x;
 			#else
-			_data.set(i, x);
+			mData.set(i, x);
 			#end
 		#end
 	}
@@ -474,7 +474,7 @@ class ByteMemory extends MemoryAccess
 	{
 		#if debug
 		assert(i >= 0 && i < size, 'segfault, index $i');
-		assert(_memory != null, "memory deallocated");
+		assert(mMemory != null, "memory deallocated");
 		#end
 		
 		#if alchemy
@@ -513,7 +513,7 @@ class ByteMemory extends MemoryAccess
 	public function toString():String
 	{
 		#if debug
-		if (_memory == null) return "{ ByteMemory (unassigned) }";
+		if (mMemory == null) return "{ ByteMemory (unassigned) }";
 		var s = '{ ByteMemory size: $size, name: $name }';
 		s += "\n[\n";
 		for (i in 0...size)

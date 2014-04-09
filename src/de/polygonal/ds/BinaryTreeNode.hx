@@ -57,10 +57,10 @@ class BinaryTreeNode<T> implements Collection<T>
 	 */
 	public var r:BinaryTreeNode<T>;
 	
-	var _timestamp:Int;
+	var mTimestamp:Int;
 	
 	#if debug
-	var _busy:Bool;
+	var mBusy:Bool;
 	#end
 	
 	/**
@@ -72,10 +72,10 @@ class BinaryTreeNode<T> implements Collection<T>
 		p = l = r = null;
 		
 		#if debug
-		_busy = false;
+		mBusy = false;
 		#end
 		
-		_timestamp = 0;
+		mTimestamp = 0;
 		key = HashKey.next();
 	}
 	
@@ -103,14 +103,14 @@ class BinaryTreeNode<T> implements Collection<T>
 			{
 				var v:Dynamic = val;
 				var run = v.visit(false, userData);
-				if (run && hasL()) run = _preorderRecursiveVisitable(l, userData);
-				if (run && hasR()) _preorderRecursiveVisitable(r, userData);
+				if (run && hasL()) run = preorderRecursiveVisitable(l, userData);
+				if (run && hasR()) preorderRecursiveVisitable(r, userData);
 			}
 			else
 			{
 				var run = process(this, userData);
-				if (run && hasL()) run = _preorderRecursive(l, process, userData);
-				if (run && hasR()) _preorderRecursive(r, process, userData);
+				if (run && hasL()) run = preorderRecursive(l, process, userData);
+				if (run && hasR()) preorderRecursive(r, process, userData);
 			}
 		}
 		else
@@ -173,22 +173,22 @@ class BinaryTreeNode<T> implements Collection<T>
 			if (process == null)
 			{
 				if (hasL())
-					if (!_inorderRecursiveVisitable(l, userData))
+					if (!inorderRecursiveVisitable(l, userData))
 						return;
 				
 				var v:Dynamic = val;
 				if (!v.visit(false, userData)) return;
 				if (hasR())
-					_inorderRecursiveVisitable(r, userData);
+					inorderRecursiveVisitable(r, userData);
 			}
 			else
 			{
 				if (hasL())
-					if (!_inorderRecursive(l, process, userData))
+					if (!inorderRecursive(l, process, userData))
 						return;
 				if (!process(this, userData)) return;
 				if (hasR())
-					_inorderRecursive(r, process, userData);
+					inorderRecursive(r, process, userData);
 			}
 		}
 		else
@@ -276,10 +276,10 @@ class BinaryTreeNode<T> implements Collection<T>
 			if (process == null)
 			{
 				if (hasL())
-					if (!_postorderRecursiveVisitable(l, userData))
+					if (!postorderRecursiveVisitable(l, userData))
 						return;
 				if (hasR())
-					if (!_postorderRecursiveVisitable(r, userData))
+					if (!postorderRecursiveVisitable(r, userData))
 						return;
 				
 				var v:Dynamic = val;
@@ -288,10 +288,10 @@ class BinaryTreeNode<T> implements Collection<T>
 			else
 			{
 				if (hasL())
-					if (!_postorderRecursive(l, process, userData))
+					if (!postorderRecursive(l, process, userData))
 						return;
 				if (hasR())
-					if (!_postorderRecursive(r, process, userData))
+					if (!postorderRecursive(r, process, userData))
 						return;
 				process(this, userData);
 			}
@@ -299,11 +299,11 @@ class BinaryTreeNode<T> implements Collection<T>
 		else
 		{
 			#if debug
-			assert(_busy == false, "recursive call to iterative postorder");
-			_busy = true;
+			assert(mBusy == false, "recursive call to iterative postorder");
+			mBusy = true;
 			#end
 			
-			var time = _timestamp + 1;
+			var time = mTimestamp + 1;
 			var stack = new Array<BinaryTreeNode<T>>();
 			
 			var top = 0;
@@ -315,11 +315,11 @@ class BinaryTreeNode<T> implements Collection<T>
 				while (top != 0)
 				{
 					var node = stack[top - 1];
-					if ((node.l != null) && (node.l._timestamp < time))
+					if ((node.l != null) && (node.l.mTimestamp < time))
 						stack[top++] = node.l;
 					else
 					{
-						if ((node.r != null) && (node.r._timestamp < time))
+						if ((node.r != null) && (node.r.mTimestamp < time))
 							stack[top++] = node.r;
 						else
 						{
@@ -327,11 +327,11 @@ class BinaryTreeNode<T> implements Collection<T>
 							if (!v.visit(false, userData))
 							{
 								#if debug
-								_busy = false;
+								mBusy = false;
 								#end
 								return;
 							}
-							node._timestamp++;
+							node.mTimestamp++;
 							top--;
 						}
 					}
@@ -342,22 +342,22 @@ class BinaryTreeNode<T> implements Collection<T>
 				while (top != 0)
 				{
 					var node = stack[top - 1];
-					if ((node.l != null) && (node.l._timestamp < time))
+					if ((node.l != null) && (node.l.mTimestamp < time))
 						stack[top++] = node.l;
 					else
 					{
-						if ((node.r != null) && (node.r._timestamp < time))
+						if ((node.r != null) && (node.r.mTimestamp < time))
 							stack[top++] = node.r;
 						else
 						{
 							if (!process(node, userData))
 							{
 								#if debug
-								_busy = false;
+								mBusy = false;
 								#end
 								return;
 							}
-							node._timestamp++;
+							node.mTimestamp++;
 							top--;
 						}
 					}
@@ -365,7 +365,7 @@ class BinaryTreeNode<T> implements Collection<T>
 			}
 			
 			#if debug
-			_busy = false;
+			mBusy = false;
 			#end
 		}
 	}
@@ -544,80 +544,80 @@ class BinaryTreeNode<T> implements Collection<T>
 		return s;
 	}
 	
-	function _preorderRecursive(node:BinaryTreeNode<T>, process:BinaryTreeNode<T>->Dynamic->Bool, userData:Dynamic):Bool
+	function preorderRecursive(node:BinaryTreeNode<T>, process:BinaryTreeNode<T>->Dynamic->Bool, userData:Dynamic):Bool
 	{
 		var run = process(node, userData);
-		if (run && node.hasL()) run = _preorderRecursive(node.l, process, userData);
-		if (run && node.hasR()) run = _preorderRecursive(node.r, process, userData);
+		if (run && node.hasL()) run = preorderRecursive(node.l, process, userData);
+		if (run && node.hasR()) run = preorderRecursive(node.r, process, userData);
 		return run;
 	}
 	
-	function _preorderRecursiveVisitable(node:BinaryTreeNode<T>, userData:Dynamic):Bool
+	function preorderRecursiveVisitable(node:BinaryTreeNode<T>, userData:Dynamic):Bool
 	{
 		var v:Dynamic = node.val;
 		var run = v.visit(false, userData);
-		if (run && node.hasL()) run = _preorderRecursiveVisitable(node.l, userData);
-		if (run && node.hasR()) run = _preorderRecursiveVisitable(node.r, userData);
+		if (run && node.hasL()) run = preorderRecursiveVisitable(node.l, userData);
+		if (run && node.hasR()) run = preorderRecursiveVisitable(node.r, userData);
 		return run;
 	}
 	
-	function _inorderRecursive(node:BinaryTreeNode<T>, process:BinaryTreeNode<T>->Dynamic->Bool, userData:Dynamic):Bool
+	function inorderRecursive(node:BinaryTreeNode<T>, process:BinaryTreeNode<T>->Dynamic->Bool, userData:Dynamic):Bool
 	{
 		if (node.hasL())
-			if (!_inorderRecursive(node.l, process, userData))
+			if (!inorderRecursive(node.l, process, userData))
 				return false;
 		if (!process(node, userData)) return false;
 		if (node.hasR())
-			if (!_inorderRecursive(node.r, process, userData))
+			if (!inorderRecursive(node.r, process, userData))
 				return false;
 		return true;
 	}
 	
-	function _inorderRecursiveVisitable(node:BinaryTreeNode<T>, userData:Dynamic):Bool
+	function inorderRecursiveVisitable(node:BinaryTreeNode<T>, userData:Dynamic):Bool
 	{
 		if (node.hasL())
-			if (!_inorderRecursiveVisitable(node.l, userData))
+			if (!inorderRecursiveVisitable(node.l, userData))
 				return false;
 		var v:Dynamic = node.val;
 		if (!v.visit(false, userData))
 			return false;
 		if (node.hasR())
-			if (!_inorderRecursiveVisitable(node.r, userData))
+			if (!inorderRecursiveVisitable(node.r, userData))
 				return false;
 		return true;
 	}
 	
-	function _postorderRecursive(node:BinaryTreeNode<T>, process:BinaryTreeNode<T>->Dynamic->Bool, userData:Dynamic):Bool
+	function postorderRecursive(node:BinaryTreeNode<T>, process:BinaryTreeNode<T>->Dynamic->Bool, userData:Dynamic):Bool
 	{
 		if (node.hasL())
-			if (!_postorderRecursive(node.l, process, userData))
+			if (!postorderRecursive(node.l, process, userData))
 				return false;
 		if (node.hasR())
-			if (!_postorderRecursive(node.r, process, userData))
+			if (!postorderRecursive(node.r, process, userData))
 				return false;
 		return process(node, userData);
 	}
 	
-	function _postorderRecursiveVisitable(node:BinaryTreeNode<T>, userData:Dynamic):Bool
+	function postorderRecursiveVisitable(node:BinaryTreeNode<T>, userData:Dynamic):Bool
 	{
 		if (node.hasL())
-			if (!_postorderRecursiveVisitable(node.l, userData))
+			if (!postorderRecursiveVisitable(node.l, userData))
 				return false;
 		if (node.hasR())
-			if (!_postorderRecursiveVisitable(node.r, userData))
+			if (!postorderRecursiveVisitable(node.r, userData))
 				return false;
 		var v:Dynamic = node.val;
 		return v.visit(false, userData);
 	}
 	
-	function _heightRecursive(node:BinaryTreeNode<T>):Int
+	function heightRecursive(node:BinaryTreeNode<T>):Int
 	{
 		var cl = -1;
 		var cr = -1;
 		if (node.hasL())
-			cl = _heightRecursive(node.l);
+			cl = heightRecursive(node.l);
 		if (node.hasR())
-			cr = _heightRecursive(node.r);
+			cr = heightRecursive(node.r);
 		return M.max(cl, cr) + 1;
 	}
 	
@@ -708,7 +708,7 @@ class BinaryTreeNode<T> implements Collection<T>
 	/**
 	 * Returns a new <em>BinaryTreeNodeIterator</em> object to iterate over all elements contained in the nodes of this subtree (including this node).<br/>
 	 * The elements are visited by using a preorder traversal.
-	 * @see <a href="http://haxe.org/ref/iterators" target="_blank">http://haxe.org/ref/iterators</a>
+	 * @see <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
 	 */
 	public function iterator():Itr<T>
 	{
@@ -858,50 +858,50 @@ private
 #end
 class BinaryTreeNodeIterator<T> implements de.polygonal.ds.Itr<T>
 {
-	var _node:BinaryTreeNode<T>;
-	var _stack:Array<BinaryTreeNode<T>>;
-	var _top:Int;
-	var _c:Int;
+	var mNode:BinaryTreeNode<T>;
+	var mStack:Array<BinaryTreeNode<T>>;
+	var mTop:Int;
+	var mC:Int;
 	
 	public function new(node:BinaryTreeNode<T>)
 	{
-		_stack = new Array<BinaryTreeNode<T>>();
-		_node = node;
+		mStack = new Array<BinaryTreeNode<T>>();
+		mNode = node;
 		reset();
 	}
 	
 	inline public function reset():Itr<T>
 	{
-		_stack[0] = _node;
-		_top = 1;
-		_c = 0;
+		mStack[0] = mNode;
+		mTop = 1;
+		mC = 0;
 		return this;
 	}
 	
 	inline public function hasNext():Bool
 	{
-		return _top > 0;
+		return mTop > 0;
 	}
 	
 	inline public function next():T
 	{
-		var node = _stack[--_top];
-		_c = 0;
+		var node = mStack[--mTop];
+		mC = 0;
 		if (node.hasL())
 		{
-			_stack[_top++] = node.l;
-			_c++;
+			mStack[mTop++] = node.l;
+			mC++;
 		}
 		if (node.hasR())
 		{
-			_stack[_top++] = node.r;
-			_c++;
+			mStack[mTop++] = node.r;
+			mC++;
 		}
 		return node.val;
 	}
 	
 	inline public function remove()
 	{
-		_top -= _c;
+		mTop -= mC;
 	}
 }

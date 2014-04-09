@@ -20,23 +20,15 @@ package de.polygonal.ds;
 
 import de.polygonal.ds.error.Assert.assert;
 
-private typedef DLLNodeFriend<T> =
-{
-	public var next:DLLNode<T>;
-	private function _insertAfter(node:DLLNode<T>):Void;
-	private function _insertBefore(node:DLLNode<T>):Void;
-	private function _unlink():DLLNode<T>;
-	private var _list:DLL<T>;
-}
-
 /**
  * <p>A doubly linked list.</p>
- * <p>See <a href="http://lab.polygonal.de/?p=206" target="_blank">http://lab.polygonal.de/?p=206</a></p>
+ * <p>See <a href="http://lab.polygonal.de/?p=206" target="mBlank">http://lab.polygonal.de/?p=206</a></p>
  * <p><o>Worst-case running time in Big O notation</o></p>
  */
 #if generic
 @:generic
 #end
+@:access(de.polygonal.ds.DLLNode)
 class DLL<T> implements Collection<T>
 {
 	/**
@@ -71,15 +63,15 @@ class DLL<T> implements Collection<T>
 	 */
 	public var reuseIterator:Bool;
 	
-	var _size:Int;
-	var _reservedSize:Int;
-	var _poolSize:Int;
+	var mSize:Int;
+	var mReservedSize:Int;
+	var mPoolSize:Int;
 	
-	var _headPool:DLLNode<T>;
-	var _tailPool:DLLNode<T>;
+	var mHeadPool:DLLNode<T>;
+	var mTailPool:DLLNode<T>;
 	
-	var _circular:Bool;
-	var _iterator:Itr<T>;
+	var mCircular:Bool;
+	var mIterator:Itr<T>;
 	
 	/**
 	 * @param reservedSize if &gt; 0, this list maintains an object pool of node objects.<br/>
@@ -101,15 +93,15 @@ class DLL<T> implements Collection<T>
 		this.maxSize = -1;
 		#end
 		
-		_reservedSize = reservedSize;
-		_size         = 0;
-		_poolSize     = 0;
-		_circular     = false;
-		_iterator     = null;
+		mReservedSize = reservedSize;
+		mSize         = 0;
+		mPoolSize     = 0;
+		mCircular     = false;
+		mIterator     = null;
 		
 		if (reservedSize > 0)
 		{
-			_headPool = _tailPool = new DLLNode<T>(cast null, this);
+			mHeadPool = mTailPool = new DLLNode<T>(cast null, this);
 		}
 		
 		head = tail = null;
@@ -124,7 +116,7 @@ class DLL<T> implements Collection<T>
 	 */
 	public function isCircular():Bool
 	{
-		return _circular;
+		return mCircular;
 	}
 	
 	/**
@@ -134,9 +126,9 @@ class DLL<T> implements Collection<T>
 	 */
 	public function close()
 	{
-		if (_circular) return;
-		_circular = true;
-		if (_valid(head))
+		if (mCircular) return;
+		mCircular = true;
+		if (valid(head))
 		{
 			tail.next = head;
 			head.prev = tail;
@@ -150,9 +142,9 @@ class DLL<T> implements Collection<T>
 	 */
 	public function open()
 	{
-		if (!_circular) return;
-		_circular = false;
-		if (_valid(head))
+		if (!mCircular) return;
+		mCircular = false;
+		if (valid(head))
 		{
 			tail.next = null;
 			head.prev = null;
@@ -181,8 +173,8 @@ class DLL<T> implements Collection<T>
 			assert(size() < maxSize, 'size equals max size ($maxSize)');
 		#end
 		
-		var node = _getNode(x);
-		if (_valid(tail))
+		var node = getNode(x);
+		if (valid(tail))
 		{
 			tail.next = node;
 			node.prev = tail;
@@ -191,13 +183,13 @@ class DLL<T> implements Collection<T>
 			head = node;
 		tail = node;
 		
-		if (_circular)
+		if (mCircular)
 		{
 			tail.next = head;
 			head.prev = tail;
 		}
 		
-		_size++;
+		mSize++;
 		return node;
 	}
 	
@@ -211,7 +203,7 @@ class DLL<T> implements Collection<T>
 		assert(x.getList() == this, "node is not managed by this list");
 		#end
 		
-		if (_valid(tail))
+		if (valid(tail))
 		{
 			tail.next = x;
 			x.prev = tail;
@@ -220,13 +212,13 @@ class DLL<T> implements Collection<T>
 			head = x;
 		tail = x;
 		
-		if (_circular)
+		if (mCircular)
 		{
 			tail.next = head;
 			head.prev = tail;
 		}
 		
-		_size++;
+		mSize++;
 	}
 	
 	/**
@@ -242,21 +234,21 @@ class DLL<T> implements Collection<T>
 			assert(size() < maxSize, 'size equals max size ($maxSize)');
 		#end
 		
-		var node = _getNode(x);
+		var node = getNode(x);
 		node.next = head;
-		if (_valid(head))
+		if (valid(head))
 			head.prev = node;
 		else
 			tail = node;
 		head = node;
 		
-		if (_circular)
+		if (mCircular)
 		{
 			tail.next = head;
 			head.prev = tail;
 		}
 		
-		_size++;
+		mSize++;
 		return node;
 	}
 	
@@ -271,19 +263,19 @@ class DLL<T> implements Collection<T>
 		#end
 		
 		x.next = head;
-		if (_valid(head))
+		if (valid(head))
 			head.prev = x;
 		else
 			tail = x;
 		head = x;
 		
-		if (_circular)
+		if (mCircular)
 		{
 			tail.next = head;
 			head.prev = tail;
 		}
 		
-		_size++;
+		mSize++;
 	}
 	
 	/**
@@ -297,20 +289,20 @@ class DLL<T> implements Collection<T>
 		#if debug
 		if (maxSize != -1)
 			assert(size() < maxSize, 'size equals max size ($maxSize)');
-		assert(_valid(node), "node is null");
+		assert(valid(node), "node is null");
 		assert(node.getList() == this, "node is not managed by this list");
 		#end
 		
-		var t = _getNode(x);
-		__insertAfter(node, t);
+		var t = getNode(x);
+		node.insertAfter(t);
 		if (node == tail)
 		{
 			tail = t;
-			if (_circular)
+			if (mCircular)
 				tail.next = head;
 		}
 		
-		_size++;
+		mSize++;
 		return t;
 	}
 	
@@ -325,20 +317,20 @@ class DLL<T> implements Collection<T>
 		#if debug
 		if (maxSize != -1)
 			assert(size() < maxSize, 'size equals max size ($maxSize)');
-		assert(_valid(node), "node is null");
+		assert(valid(node), "node is null");
 		assert(node.getList() == this, "node is not managed by this list");
 		#end
 		
-		var t = _getNode(x);
-		__insertBefore(node, t);
+		var t = getNode(x);
+		node.insertBefore(t);
 		if (node == head)
 		{
 			head = t;
-			if (_circular)
+			if (mCircular)
 				head.prev = tail;
 		}
 		
-		_size++;
+		mSize++;
 		return t;
 	}
 	
@@ -351,16 +343,16 @@ class DLL<T> implements Collection<T>
 	public function unlink(node:DLLNode<T>):DLLNode<T>
 	{
 		#if debug
-		assert(_valid(node), "node is null");
+		assert(valid(node), "node is null");
 		assert(node.getList() == this, "node is not managed by this list");
-		assert(_size > 0, "list is empty");
+		assert(mSize > 0, "list is empty");
 		#end
 		
 		var hook = node.next;
 		if (node == head)
 		{
 			head = head.next;
-			if (_circular)
+			if (mCircular)
 			{
 				if (head == tail)
 					head = null;
@@ -374,15 +366,15 @@ class DLL<T> implements Collection<T>
 		if (node == tail)
 		{
 			tail = tail.prev;
-			if (_circular)
+			if (mCircular)
 				head.prev = tail;
 				
 			if (tail == null) head = null;
 		}
 		
-		__unlink(node);
-		_putNode(node);
-		_size--;
+		node._unlink();
+		putNode(node);
+		mSize--;
 		
 		return hook;
 	}
@@ -397,8 +389,8 @@ class DLL<T> implements Collection<T>
 	public function getNodeAt(i:Int):DLLNode<T>
 	{
 		#if debug
-		assert(_size > 0, "list is empty");
-		assert(i >= 0 || i < _size, 'i index out of range ($i)');
+		assert(mSize > 0, "list is empty");
+		assert(i >= 0 || i < mSize, 'i index out of range ($i)');
 		#end
 		
 		var node = head;
@@ -414,7 +406,7 @@ class DLL<T> implements Collection<T>
 	public function removeHead():T
 	{
 		#if debug
-		assert(_size > 0, "list is empty");
+		assert(mSize > 0, "list is empty");
 		#end
 		
 		var node = head;
@@ -425,7 +417,7 @@ class DLL<T> implements Collection<T>
 			head = head.next;
 			node.next = null;
 			
-			if (_circular)
+			if (mCircular)
 			{
 				head.prev = tail;
 				tail.next = head;
@@ -433,9 +425,9 @@ class DLL<T> implements Collection<T>
 			else
 				head.prev = null;
 		}
-		_size--;
+		mSize--;
 		
-		return _putNode(node);
+		return putNode(node);
 	}
 	
 	/**
@@ -446,7 +438,7 @@ class DLL<T> implements Collection<T>
 	public function removeTail():T
 	{
 		#if debug
-		assert(_size > 0, "list is empty");
+		assert(mSize > 0, "list is empty");
 		#end
 		
 		var node = tail;
@@ -457,7 +449,7 @@ class DLL<T> implements Collection<T>
 			tail = tail.prev;
 			node.prev = null;
 			
-			if (_circular)
+			if (mCircular)
 			{
 				tail.next = head;
 				head.prev = tail;
@@ -466,9 +458,9 @@ class DLL<T> implements Collection<T>
 				tail.next = null;
 		}
 		
-		_size--;
+		mSize--;
 		
-		return _putNode(node);
+		return putNode(node);
 	}
 	
 	/**
@@ -479,10 +471,10 @@ class DLL<T> implements Collection<T>
 	public function shiftUp()
 	{
 		#if debug
-		assert(_size > 0, "list is empty");
+		assert(mSize > 0, "list is empty");
 		#end
 		
-		if (_size > 1)
+		if (mSize > 1)
 		{
 			var t = head;
 			if (head.next == tail)
@@ -509,7 +501,7 @@ class DLL<T> implements Collection<T>
 				tail = t;
 			}
 			
-			if (_circular)
+			if (mCircular)
 			{
 				tail.next = head;
 				head.prev = tail;
@@ -525,10 +517,10 @@ class DLL<T> implements Collection<T>
 	public function popDown()
 	{
 		#if debug
-		assert(_size > 0, "list is empty");
+		assert(mSize > 0, "list is empty");
 		#end
 		
-		if (_size > 1)
+		if (mSize > 1)
 		{
 			var t = tail;
 			if (tail.prev == head)
@@ -555,7 +547,7 @@ class DLL<T> implements Collection<T>
 				head = t;
 			}
 			
-			if (_circular)
+			if (mCircular)
 			{
 				tail.next = head;
 				head.prev = tail;
@@ -573,12 +565,12 @@ class DLL<T> implements Collection<T>
 	public function nodeOf(x:T, from:DLLNode<T> = null):DLLNode<T>
 	{
 		#if debug
-		if (_valid(from))
+		if (valid(from))
 			assert(from.getList() == this, "node is not managed by this list");
 		#end
 		
 		var node = (from == null) ? head : from;
-		if (_circular)
+		if (mCircular)
 		{
 			while (node != tail)
 			{
@@ -589,7 +581,7 @@ class DLL<T> implements Collection<T>
 		}
 		else
 		{
-			while (_valid(node))
+			while (valid(node))
 			{
 				if (node.val == x) return node;
 				node = node.next;
@@ -608,12 +600,12 @@ class DLL<T> implements Collection<T>
 	public function lastNodeOf(x:T, from:DLLNode<T> = null):DLLNode<T>
 	{
 		#if debug
-		if (_valid(from))
+		if (valid(from))
 			assert(from.getList() == this, "node is not managed by this list");
 		#end
 		
 		var node = (from == null) ? tail : from;
-		if (_circular)
+		if (mCircular)
 		{
 			while (node != head)
 			{
@@ -624,7 +616,7 @@ class DLL<T> implements Collection<T>
 		}
 		else
 		{
-			while (_valid(node))
+			while (valid(node))
 			{
 				if (node.val == x) return node;
 				node = node.prev;
@@ -645,9 +637,9 @@ class DLL<T> implements Collection<T>
 	 */
 	public function sort(compare:T->T->Int, useInsertionSort = false)
 	{
-		if (_size > 1)
+		if (mSize > 1)
 		{
-			if (_circular)
+			if (mCircular)
 			{
 				tail.next = null;
 				head.prev = null;
@@ -655,14 +647,14 @@ class DLL<T> implements Collection<T>
 			
 			if (compare == null)
 			{
-				head = useInsertionSort ? _insertionSortComparable(head) : _mergeSortComparable(head);
+				head = useInsertionSort ? insertionSortComparable(head) : mergeSortComparable(head);
 			}
 			else
 			{
-				head = useInsertionSort ? _insertionSort(head, compare) : _mergeSort(head, compare);
+				head = useInsertionSort ? insertionSort(head, compare) : mergeSort(head, compare);
 			}
 			
-			if (_circular)
+			if (mCircular)
 			{
 				tail.next = head;
 				head.prev = tail;
@@ -685,16 +677,16 @@ class DLL<T> implements Collection<T>
 		assert(x != null, "x is null");
 		#end
 		
-		if (_valid(x.head))
+		if (valid(x.head))
 		{
 			var node = x.head;
 			for (i in 0...x.size())
 			{
-				__list(node, this);
+				node.mList = this;
 				node = node.next;
 			}
 				
-			if (_valid(head))
+			if (valid(head))
 			{
 				tail.next = x.head;
 				x.head.prev = tail;
@@ -706,9 +698,9 @@ class DLL<T> implements Collection<T>
 				tail = x.tail;
 			}
 			
-			_size += x.size();
+			mSize += x.size();
 			
-			if (_circular)
+			if (mCircular)
 			{
 				tail.next = head;
 				head.prev = tail;
@@ -748,12 +740,12 @@ class DLL<T> implements Collection<T>
 			}
 			
 			c.head = t;
-			c._size = k;
+			c.mSize = k;
 			
-			if (_size > 0)
+			if (mSize > 0)
 			{
 				var node = tail;
-				var i = _size;
+				var i = mSize;
 				while (i-- > 0)
 				{
 					var copy = new DLLNode<T>(node.val, c);
@@ -763,16 +755,16 @@ class DLL<T> implements Collection<T>
 					node = node.prev;
 				}
 				c.head = t;
-				c._size += _size;
+				c.mSize += mSize;
 			}
 		}
 		else
-		if (_size > 0)
+		if (mSize > 0)
 		{
 			var node = tail;
 			var t = c.tail = new DLLNode<T>(node.val, this);
 			node = node.prev;
-			var i = _size - 1;
+			var i = mSize - 1;
 			while (i-- > 0)
 			{
 				var copy = new DLLNode<T>(node.val, this);
@@ -783,7 +775,7 @@ class DLL<T> implements Collection<T>
 			}
 			
 			c.head = t;
-			c._size = _size;
+			c.mSize = mSize;
 		}
 		
 		return c;
@@ -795,10 +787,10 @@ class DLL<T> implements Collection<T>
 	 */
 	public function reverse()
 	{
-		if (_size <= 1)
+		if (mSize <= 1)
 			return;
 		else
-		if (_size <= 3)
+		if (mSize <= 3)
 		{
 			var t = head.val;
 			head.val = tail.val;
@@ -808,7 +800,7 @@ class DLL<T> implements Collection<T>
 		{
 			var head = head;
 			var tail = tail;
-			for (i in 0..._size >> 1)
+			for (i in 0...mSize >> 1)
 			{
 				var t = head.val;
 				head.val = tail.val;
@@ -827,10 +819,10 @@ class DLL<T> implements Collection<T>
 	public function join(x:String):String
 	{
 		var s = "";
-		if (_size > 0)
+		if (mSize > 0)
 		{
 			var node = head;
-			for (i in 0..._size - 1)
+			for (i in 0...mSize - 1)
 			{
 				s += Std.string(node.val) + x;
 				node = node.next;
@@ -914,7 +906,7 @@ class DLL<T> implements Collection<T>
 	 */
 	public function shuffle(rval:DA<Float> = null)
 	{
-		var s = _size;
+		var s = mSize;
 		if (rval == null)
 		{
 			var m = Math;
@@ -958,7 +950,7 @@ class DLL<T> implements Collection<T>
 			}
 		}
 		
-		if (_circular)
+		if (mCircular)
 		{
 			tail.next = head;
 			head.prev = tail;
@@ -989,7 +981,7 @@ class DLL<T> implements Collection<T>
 		if (isEmpty()) return s;
 		s += "\n[ head \n";
 		var node = head;
-		for (i in 0..._size)
+		for (i in 0...mSize)
 		{
 			s += '  ${Std.string(node.val)}\n';
 			node = node.next;
@@ -1010,7 +1002,7 @@ class DLL<T> implements Collection<T>
 	public function free()
 	{
 		var node = head;
-		for (i in 0..._size)
+		for (i in 0...mSize)
 		{
 			var next = node.next;
 			node.free();
@@ -1018,16 +1010,16 @@ class DLL<T> implements Collection<T>
 		}
 		head = tail = null;
 		
-		var node = _headPool;
-		while (_valid(node))
+		var node = mHeadPool;
+		while (valid(node))
 		{
 			var next = node.next;
 			node.free();
 			node = next;
 		}
 		
-		_headPool = _tailPool = null;
-		_iterator = null;
+		mHeadPool = mTailPool = null;
+		mIterator = null;
 	}
 	
 	/**
@@ -1037,7 +1029,7 @@ class DLL<T> implements Collection<T>
 	public function contains(x:T):Bool
 	{
 		var node = head;
-		for (i in 0..._size)
+		for (i in 0...mSize)
 		{
 			if (node.val == x)
 				return true;
@@ -1057,7 +1049,7 @@ class DLL<T> implements Collection<T>
 		if (s == 0) return false;
 		
 		var node = head;
-		while (_valid(node))
+		while (valid(node))
 		{
 			if (node.val == x)
 				node = unlink(node);
@@ -1075,21 +1067,21 @@ class DLL<T> implements Collection<T>
 	 */
 	public function clear(purge = false)
 	{
-		if (purge || _reservedSize > 0)
+		if (purge || mReservedSize > 0)
 		{
 			var node = head;
-			for (i in 0..._size)
+			for (i in 0...mSize)
 			{
 				var next = node.next;
 				node.prev = null;
 				node.next = null;
-				_putNode(node);
+				putNode(node);
 				node = next;
 			}
 		}
 		
 		head = tail = null;
-		_size = 0;
+		mSize = 0;
 	}
 	
 	/**
@@ -1114,27 +1106,27 @@ class DLL<T> implements Collection<T>
 	 *     node = node.next;
 	 * }
 	 * </pre>
-	 * @see <a href="http://haxe.org/ref/iterators" target="_blank">http://haxe.org/ref/iterators</a>
+	 * @see <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
 	 * 
 	 */
 	public function iterator():Itr<T>
 	{
 		if (reuseIterator)
 		{
-			if (_iterator == null)
+			if (mIterator == null)
 			{
-				if (_circular)
+				if (mCircular)
 					return new CircularDLLIterator<T>(this);
 				else
 					return new DLLIterator<T>(this);
 			}
 			else
-				_iterator.reset();
-			return _iterator;
+				mIterator.reset();
+			return mIterator;
 		}
 		else
 		{
-			if (_circular)
+			if (mCircular)
 				return new CircularDLLIterator<T>(this);
 			else
 				return new DLLIterator<T>(this);
@@ -1147,7 +1139,7 @@ class DLL<T> implements Collection<T>
 	 */
 	inline public function size():Int
 	{
-		return _size;
+		return mSize;
 	}
 	
 	/**
@@ -1156,7 +1148,7 @@ class DLL<T> implements Collection<T>
 	 */
 	inline public function isEmpty():Bool
 	{
-		return _size == 0;
+		return mSize == 0;
 	}
 	
 	/**
@@ -1167,7 +1159,7 @@ class DLL<T> implements Collection<T>
 	{
 		var a:Array<T> = ArrayUtil.alloc(size());
 		var node = head;
-		for (i in 0..._size)
+		for (i in 0...mSize)
 		{
 			a[i] = node.val;
 			node = node.next;
@@ -1183,7 +1175,7 @@ class DLL<T> implements Collection<T>
 	{
 		var v = new Vector<T>(size());
 		var node = head;
-		for (i in 0..._size)
+		for (i in 0...mSize)
 		{
 			v[i] = node.val;
 			node = node.next;
@@ -1200,31 +1192,31 @@ class DLL<T> implements Collection<T>
 	 */
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{
-		if (_size == 0)
+		if (mSize == 0)
 		{
-			var copy = new DLL<T>(_reservedSize, maxSize);
-			if (_circular) copy._circular = true;
+			var copy = new DLL<T>(mReservedSize, maxSize);
+			if (mCircular) copy.mCircular = true;
 			return copy;
 		}
 		
 		var copy = new DLL<T>();
-		copy._size = _size;
+		copy.mSize = mSize;
 		
 		if (assign)
 		{
 			var srcNode = head;
 			var dstNode = copy.head = new DLLNode<T>(head.val, copy);
 			
-			if (_size == 1)
+			if (mSize == 1)
 			{
 				copy.tail = copy.head;
-				if (_circular) copy.tail.next = copy.head;
+				if (mCircular) copy.tail.next = copy.head;
 				return copy;
 			}
 			
 			var dstNode0;
 			srcNode = srcNode.next;
-			for (i in 1..._size - 1)
+			for (i in 1...mSize - 1)
 			{
 				dstNode0 = dstNode;
 				var srcNode0 = srcNode;
@@ -1251,16 +1243,16 @@ class DLL<T> implements Collection<T>
 			
 			var c = cast(head.val, Cloneable<Dynamic>);
 			var dstNode = copy.head = new DLLNode<T>(c.clone(), copy);
-			if (_size == 1)
+			if (mSize == 1)
 			{
 				copy.tail = copy.head;
-				if (_circular) copy.tail.next = copy.head;
+				if (mCircular) copy.tail.next = copy.head;
 				return copy;
 			}
 			
 			var dstNode0;
 			srcNode = srcNode.next;
-			for (i in 1..._size - 1)
+			for (i in 1...mSize - 1)
 			{
 				dstNode0 = dstNode;
 				var srcNode0 = srcNode;
@@ -1292,16 +1284,16 @@ class DLL<T> implements Collection<T>
 			var srcNode = head;
 			var dstNode = copy.head = new DLLNode<T>(copier(head.val), copy);
 			
-			if (_size == 1)
+			if (mSize == 1)
 			{
 				copy.tail = copy.head;
-				if (_circular) copy.tail.next = copy.head;
+				if (mCircular) copy.tail.next = copy.head;
 				return copy;
 			}
 			
 			var dstNode0;
 			srcNode = srcNode.next;
-			for (i in 1..._size - 1)
+			for (i in 1...mSize - 1)
 			{
 				dstNode0 = dstNode;
 				var srcNode0 = srcNode;
@@ -1318,11 +1310,11 @@ class DLL<T> implements Collection<T>
 			copy.tail.prev = dstNode0;
 		}
 		
-		if (_circular) copy.tail.next = copy.head;
+		if (mCircular) copy.tail.next = copy.head;
 		return copy;
 	}
 	
-	function _mergeSortComparable(node:DLLNode<T>):DLLNode<T>
+	function mergeSortComparable(node:DLLNode<T>):DLLNode<T>
 	{
 		var h = node;
 		var p, q, e, tail = null;
@@ -1335,7 +1327,7 @@ class DLL<T> implements Collection<T>
 			h = tail = null;
 			nmerges = 0;
 			
-			while (_valid(p))
+			while (valid(p))
 			{
 				nmerges++;
 				
@@ -1349,7 +1341,7 @@ class DLL<T> implements Collection<T>
 				
 				qsize = insize;
 				
-				while (psize > 0 || (qsize > 0 && _valid(q)))
+				while (psize > 0 || (qsize > 0 && valid(q)))
 				{
 					if (psize == 0)
 					{
@@ -1376,7 +1368,7 @@ class DLL<T> implements Collection<T>
 						}
 					}
 					
-					if (_valid(tail))
+					if (valid(tail))
 						tail.next = e;
 					else
 						h = e;
@@ -1398,7 +1390,7 @@ class DLL<T> implements Collection<T>
 		return h;
 	}
 	
-	function _mergeSort(node:DLLNode<T>, cmp:T->T->Int):DLLNode<T>
+	function mergeSort(node:DLLNode<T>, cmp:T->T->Int):DLLNode<T>
 	{
 		var h = node;
 		var p, q, e, tail = null;
@@ -1411,7 +1403,7 @@ class DLL<T> implements Collection<T>
 			h = tail = null;
 			nmerges = 0;
 			
-			while (_valid(p))
+			while (valid(p))
 			{
 				nmerges++;
 				
@@ -1425,7 +1417,7 @@ class DLL<T> implements Collection<T>
 				
 				qsize = insize;
 				
-				while (psize > 0 || (qsize > 0 && _valid(q)))
+				while (psize > 0 || (qsize > 0 && valid(q)))
 				{
 					if (psize == 0)
 					{
@@ -1446,7 +1438,7 @@ class DLL<T> implements Collection<T>
 						e = q; q = q.next; qsize--;
 					}
 					
-					if (_valid(tail))
+					if (valid(tail))
 						tail.next = e;
 					else
 						h = e;
@@ -1468,11 +1460,11 @@ class DLL<T> implements Collection<T>
 		return h;
 	}
 	
-	function _insertionSortComparable(node:DLLNode<T>):DLLNode<T>
+	function insertionSortComparable(node:DLLNode<T>):DLLNode<T>
 	{
 		var h = node;
 		var n = h.next;
-		while (_valid(n))
+		while (valid(n))
 		{
 			var m = n.next;
 			var p = n.prev;
@@ -1497,7 +1489,7 @@ class DLL<T> implements Collection<T>
 					else
 						break;
 				}
-				if (_valid(m))
+				if (valid(m))
 				{
 					p.next = m;
 					m.prev = p;
@@ -1531,11 +1523,11 @@ class DLL<T> implements Collection<T>
 		return h;
 	}
 	
-	function _insertionSort(node:DLLNode<T>, cmp:T->T->Int):DLLNode<T>
+	function insertionSort(node:DLLNode<T>, cmp:T->T->Int):DLLNode<T>
 	{
 		var h = node;
 		var n = h.next;
-		while (_valid(n))
+		while (valid(n))
 		{
 			var m = n.next;
 			var p = n.prev;
@@ -1552,7 +1544,7 @@ class DLL<T> implements Collection<T>
 					else
 						break;
 				}
-				if (_valid(m))
+				if (valid(m))
 				{
 					p.next = m;
 					m.prev = p;
@@ -1586,26 +1578,26 @@ class DLL<T> implements Collection<T>
 		return h;
 	}
 	
-	inline function _valid(node:DLLNode<T>):Bool
+	inline function valid(node:DLLNode<T>):Bool
 	{
 		return node != null;
 	}
 	
-	inline function _getNode(x:T)
+	inline function getNode(x:T)
 	{
-		if (_reservedSize == 0 || _poolSize == 0)
+		if (mReservedSize == 0 || mPoolSize == 0)
 			return new DLLNode<T>(x, this);
 		else
 		{
-			var n = _headPool;
+			var n = mHeadPool;
 			
 			#if debug
 			assert(n.prev == null, "node.prev == null");
-			assert(_valid(n.next), "node.next != null");
+			assert(valid(n.next), "node.next != null");
 			#end
 			
-			_headPool = _headPool.next;
-			_poolSize--;
+			mHeadPool = mHeadPool.next;
+			mPoolSize--;
 			
 			n.next = null;
 			n.val = x;
@@ -1613,12 +1605,12 @@ class DLL<T> implements Collection<T>
 		}
 	}
 	
-	inline function _putNode(x:DLLNode<T>):T
+	inline function putNode(x:DLLNode<T>):T
 	{
 		var val = x.val;
-		if (_reservedSize > 0 && _poolSize < _reservedSize)
+		if (mReservedSize > 0 && mPoolSize < mReservedSize)
 		{
-			_tailPool = _tailPool.next = x;
+			mTailPool = mTailPool.next = x;
 			x.val = cast null;
 			
 			#if debug
@@ -1626,29 +1618,12 @@ class DLL<T> implements Collection<T>
 			assert(x.prev == null, "x.prev == null");
 			#end
 			
-			_poolSize++;
+			mPoolSize++;
 		}
 		else
-			__list(x, null);
+			x.mList = null;
 		
 		return val;
-	}
-	
-	inline function __insertAfter(f:DLLNodeFriend<T>, x:DLLNode<T>)
-	{
-		f._insertAfter(x);
-	}
-	inline function __insertBefore(f:DLLNodeFriend<T>, x:DLLNode<T>)
-	{
-		f._insertBefore(x);
-	}
-	inline function __unlink(f:DLLNodeFriend<T>)
-	{
-		f._unlink();
-	}
-	inline function __list(f:DLLNodeFriend<T>, x:DLL<T>)
-	{
-		f._list = x;
 	}
 }
 
@@ -1660,43 +1635,43 @@ private
 #end
 class DLLIterator<T> implements de.polygonal.ds.Itr<T>
 {
-	var _f:DLL<T>;
-	var _walker:DLLNode<T>;
-	var _hook:DLLNode<T>;
+	var mF:DLL<T>;
+	var mWalker:DLLNode<T>;
+	var mHook:DLLNode<T>;
 	
 	public function new(f:DLL<T>)
 	{
-		_f = f;
+		mF = f;
 		reset();
 	}
 	
 	inline public function reset():Itr<T>
 	{
-		_walker = _f.head;
-		_hook = null;
+		mWalker = mF.head;
+		mHook = null;
 		return this;
 	}
 	
 	inline public function hasNext():Bool
 	{
-		return _walker != null;
+		return mWalker != null;
 	}
 
 	inline public function next():T
 	{
-		var x = _walker.val;
-		_hook = _walker;
-		_walker = _walker.next;
+		var x = mWalker.val;
+		mHook = mWalker;
+		mWalker = mWalker.next;
 		return x;
 	}
 	
 	inline public function remove()
 	{
 		#if debug
-		assert(_hook != null, "call next() before removing an element");
+		assert(mHook != null, "call next() before removing an element");
 		#end
 		
-		_f.unlink(_hook);
+		mF.unlink(mHook);
 	}
 }
 
@@ -1708,48 +1683,48 @@ private
 #end
 class CircularDLLIterator<T> implements de.polygonal.ds.Itr<T>
 {
-	var _f:DLL<T>;
-	var _walker:DLLNode<T>;
-	var _i:Int;
-	var _s:Int;
-	var _hook:DLLNode<T>;
+	var mF:DLL<T>;
+	var mWalker:DLLNode<T>;
+	var mI:Int;
+	var mS:Int;
+	var mHook:DLLNode<T>;
 	
 	public function new(f:DLL<T>)
 	{
-		_f = f;
+		mF = f;
 		reset();
 	}
 	
 	inline public function reset():Itr<T>
 	{
-		_walker = _f.head;
-		_s = _f.size();
-		_i = 0;
-		_hook = null;
+		mWalker = mF.head;
+		mS = mF.size();
+		mI = 0;
+		mHook = null;
 		return this;
 	}
 	
 	inline public function hasNext():Bool
 	{
-		return _i < _s;
+		return mI < mS;
 	}
 
 	inline public function next():T
 	{
-		var x = _walker.val;
-		_hook = _walker;
-		_walker = _walker.next;
-		_i++;
+		var x = mWalker.val;
+		mHook = mWalker;
+		mWalker = mWalker.next;
+		mI++;
 		return x;
 	}
 	
 	inline public function remove()
 	{
 		#if debug
-		assert(_i > 0, "call next() before removing an element");
+		assert(mI > 0, "call next() before removing an element");
 		#end
-		_f.unlink(_hook);
-		_i--;
-		_s--;
+		mF.unlink(mHook);
+		mI--;
+		mS--;
 	}
 }

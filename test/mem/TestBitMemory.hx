@@ -1,4 +1,4 @@
-﻿package test.mem;
+﻿package mem;
 
 import de.polygonal.core.fmt.NumberFormat;
 import de.polygonal.core.math.Limits;
@@ -56,7 +56,7 @@ class TestBitMemory extends haxe.unit.TestCase
 		m.free();
 		#if alchemy MemoryManager.free(); #end
 		
-		#if (flash && !flash8)
+		#if flash
 		var b = new flash.utils.ByteArray();
 		b.endian = flash.utils.Endian.LITTLE_ENDIAN;
 		
@@ -229,7 +229,7 @@ class TestBitMemory extends haxe.unit.TestCase
 		m.free();
 		#if alchemy MemoryManager.free(); #end
 		
-		#if (flash && !flash8)
+		#if flash
 		var b = new flash.utils.ByteArray();
 		b.endian = flash.utils.Endian.LITTLE_ENDIAN;
 		
@@ -415,7 +415,7 @@ class TestBitMemory extends haxe.unit.TestCase
 			m.fill(1);
 			for (i in 0...s) assertEquals(true, m.has(i));
 			
-			#if (flash && !flash8 &&alchemy)
+			#if (flash && alchemy)
 			var addr = m.getAddr(0);
 			for (i in 0...s) assertEquals(-1, flash.Memory.getI32(addr + i));
 			#end

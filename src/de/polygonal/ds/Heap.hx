@@ -20,12 +20,6 @@ package de.polygonal.ds;
 
 import de.polygonal.ds.error.Assert.assert;
 
-private typedef HeapFriend<T> =
-{
-	private var _a:Array<T>;
-	private var _size:Int;
-}
-
 /**
  * <p>A heap is a special kind of binary tree in which every node is greater than all of its children.</p>
  * <p>The implementation is based on an arrayed binary tree.</p>
@@ -55,12 +49,12 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	 */
 	public var reuseIterator:Bool;
 	
-	var _a:Array<T>;
-	var _size:Int;
-	var _iterator:HeapIterator<T>;
+	var mA:Array<T>;
+	var mSize:Int;
+	var mIterator:HeapIterator<T>;
 	
 	#if (debug && flash)
-	var _map:HashMap<T, Bool>;
+	var mMap:HashMap<T, Bool>;
 	#end
 	
 	/**
@@ -78,7 +72,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 		#end
 		
 		#if (debug && flash)
-		_map = new HashMap<T, Bool>();
+		mMap = new HashMap<T, Bool>();
 		#end
 		
 		if (reservedSize > 0)
@@ -87,14 +81,14 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 			if (this.maxSize != -1)
 				assert(reservedSize <= this.maxSize, "reserved size is greater than allowed size");
 			#end
-			_a = ArrayUtil.alloc(reservedSize + 1);
+			mA = ArrayUtil.alloc(reservedSize + 1);
 		}
 		else
-			_a = new Array<T>();
+			mA = new Array<T>();
 		
-		__set(0, cast null);
-		_size = 0;
-		_iterator = null;
+		set(0, cast null);
+		mSize = 0;
+		mIterator = null;
 		
 		key = HashKey.next();
 		reuseIterator = false;
@@ -107,21 +101,21 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	 */
 	public function pack()
 	{
-		if (_a.length - 1 == size()) return;
+		if (mA.length - 1 == size()) return;
 		
 		#if (debug && flash)
-		_map.clear();
+		mMap.clear();
 		#end
 		
-		var tmp = _a;
-		_a = ArrayUtil.alloc(size() + 1);
-		__set(0, cast null);
+		var tmp = mA;
+		mA = ArrayUtil.alloc(size() + 1);
+		set(0, cast null);
 		for (i in 1...size() + 1)
 		{
-			__set(i, tmp[i]);
+			set(i, tmp[i]);
 			
 			#if (debug && flash)
-			_map.set(tmp[i], true);
+			mMap.set(tmp[i], true);
 			#end
 		}
 		for (i in size() + 1...tmp.length) tmp[i] = cast null;
@@ -136,14 +130,14 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	{
 		if (size() == x) return;
 		
-		var tmp = _a;
-		_a = ArrayUtil.alloc(x + 1);
+		var tmp = mA;
+		mA = ArrayUtil.alloc(x + 1);
 		
-		__set(0, cast null);
+		set(0, cast null);
 		if (size() < x)
 		{
 			for (i in 1...size() + 1)
-				__set(i, tmp[i]);
+				set(i, tmp[i]);
 		}
 	}
 	
@@ -158,7 +152,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 		#if debug
 		assert(size() > 0, "heap is empty");
 		#end
-		return __get(1);
+		return get(1);
 	}
 	
 	/**
@@ -173,11 +167,11 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 		assert(size() > 0, "heap is empty");
 		#end
 		
-		if (_size == 1) return __get(1);
-		var a = __get(1), b;
-		for (i in 2..._size + 1)
+		if (mSize == 1) return get(1);
+		var a = get(1), b;
+		for (i in 2...mSize + 1)
 		{
-			b = __get(i);
+			b = get(i);
 			if (a.compare(b) > 0) a = b;
 		}
 		
@@ -198,16 +192,16 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 		#end
 		
 		#if (debug && flash)
-		assert(!_map.hasKey(x), "x already exists");
-		_map.set(x, true);
+		assert(!mMap.hasKey(x), "x already exists");
+		mMap.set(x, true);
 		#end
 		#if debug
 		if (maxSize != -1) assert(size() <= maxSize, 'size equals max size ($maxSize)');
 		#end
 		
-		__set(++_size, x);
-		x.position = _size;
-		_upheap(_size);
+		set(++mSize, x);
+		x.position = mSize;
+		upheap(mSize);
 	}
 	
 	/**
@@ -222,15 +216,15 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 		assert(size() > 0, "heap is empty");
 		#end
 		
-		var x = __get(1);
+		var x = get(1);
 		
 		#if (debug && flash)
-		_map.clr(x);
+		mMap.clr(x);
 		#end
 		
-		__set(1, __get(_size));
-		_downheap(1);
-		_size--;
+		set(1, get(mSize));
+		downheap(1);
+		mSize--;
 		return x;
 	}
 	
@@ -242,13 +236,13 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	public function replace(x:T)
 	{
 		#if (debug && flash)
-		assert(!_map.hasKey(x), "x already exists");
-		_map.clr(__get(1));
-		_map.set(x, true);
+		assert(!mMap.hasKey(x), "x already exists");
+		mMap.clr(get(1));
+		mMap.set(x, true);
 		#end
 		
-		__set(1, x);
-		_downheap(1);
+		set(1, x);
+		downheap(1);
 	}
 	
 	/**
@@ -262,15 +256,15 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	public function change(x:T, hint:Int)
 	{
 		#if (debug && flash)
-		assert(_map.hasKey(x), "x does not exist");
+		assert(mMap.hasKey(x), "x does not exist");
 		#end
 		
 		if (hint >= 0)
-			_upheap(x.position);
+			upheap(x.position);
 		else
 		{
-			_downheap(x.position);
-			_upheap(_size);
+			downheap(x.position);
+			upheap(mSize);
 		}
 	}
 	
@@ -282,11 +276,11 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	{
 		if (isEmpty()) return new Array();
 		
-		var a = ArrayUtil.alloc(_size);
-		var h = ArrayUtil.alloc(_size + 1);
-		ArrayUtil.copy(_a, h, 0, _size + 1);
+		var a = ArrayUtil.alloc(mSize);
+		var h = ArrayUtil.alloc(mSize + 1);
+		ArrayUtil.copy(mA, h, 0, mSize + 1);
 		
-		var k = _size;
+		var k = mSize;
 		var j = 0;
 		while (k > 0)
 		{
@@ -326,7 +320,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	 */
 	public function height():Int
 	{
-		return 32 - Bits.nlz(_size);
+		return 32 - Bits.nlz(mSize);
 	}
 	
 	/**
@@ -377,12 +371,12 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 		var s = '{ Heap size: ${size()} }';
 		if (isEmpty()) return s;
 		var tmp = new Heap<HeapElementWrapper<T>>();
-		for (i in 1..._size + 1)
+		for (i in 1...mSize + 1)
 		{
-			var w = new HeapElementWrapper<T>(__get(i));
-			tmp.__set(i, w);
+			var w = new HeapElementWrapper<T>(get(i));
+			tmp.set(i, w);
 		}
-		tmp._size = _size;
+		tmp.mSize = mSize;
 		s += "\n[ front\n";
 		var i = 0;
 		while (tmp.size() > 0)
@@ -397,10 +391,10 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	 */
 	public function repair()
 	{
-		var i = _size >> 1;
+		var i = mSize >> 1;
 		while (i >= 1)
 		{
-			_heapify(i, _size);
+			heapify(i, mSize);
 			i--;
 		}
 	}
@@ -416,18 +410,18 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	 */
 	public function free()
 	{
-		for (i in 0..._a.length) __set(i, cast null);
-		_a = null;
+		for (i in 0...mA.length) set(i, cast null);
+		mA = null;
 		
-		if (_iterator != null)
+		if (mIterator != null)
 		{
-			_iterator.free();
-			_iterator = null;
+			mIterator.free();
+			mIterator = null;
 		}
 		
 		#if (debug && flash)
-		_map.free();
-		_map = null;
+		mMap.free();
+		mMap = null;
 		#end
 	}
 	
@@ -442,7 +436,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 		assert(x != null, "x is null");
 		#end
 		var position = x.position;
-		return (position > 0 && position <= _size) && (__get(position) == x);
+		return (position > 0 && position <= mSize) && (get(position) == x);
 	}
 	
 	/**
@@ -461,8 +455,8 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 			assert(x != null, "x is null");
 			#end
 			#if (debug && flash)
-			assert(_map.hasKey(x), "x does not exist");
-			_map.clr(x);
+			assert(mMap.hasKey(x), "x does not exist");
+			mMap.clr(x);
 			#end
 			
 			if (x.position == 1)
@@ -470,10 +464,10 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 			else
 			{
 				var p = x.position;
-				__set(p, __get(_size));
-				_downheap(p);
-				_upheap(p);
-				_size--;
+				set(p, get(mSize));
+				downheap(p);
+				upheap(p);
+				mSize--;
 			}
 			return true;
 		}
@@ -487,30 +481,30 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	inline public function clear(purge = false)
 	{
 		#if (debug && flash)
-		_map.clear();
+		mMap.clear();
 		#end
 		
 		if (purge)
 		{
-			for (i in 1..._a.length) __set(i, cast null);
+			for (i in 1...mA.length) set(i, cast null);
 		}
-		_size = 0;
+		mSize = 0;
 	}
 	
 	/**
 	 * Returns a new <em>HeapIterator</em> object to iterate over all elements contained in this heap.<br/>
 	 * The values are visited in an unsorted order.
-	 * @see <a href="http://haxe.org/ref/iterators" target="_blank">http://haxe.org/ref/iterators</a>
+	 * @see <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
 	 */
 	public function iterator():Itr<T>
 	{
 		if (reuseIterator)
 		{
-			if (_iterator == null)
-				_iterator = new HeapIterator<T>(this);
+			if (mIterator == null)
+				mIterator = new HeapIterator<T>(this);
 			else
-				_iterator.reset();
-			return _iterator;
+				mIterator.reset();
+			return mIterator;
 		}
 		else
 			return new HeapIterator<T>(this);
@@ -522,7 +516,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	 */
 	inline public function size():Int
 	{
-		return _size;
+		return mSize;
 	}
 	
 	/**
@@ -531,7 +525,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	 */
 	inline public function isEmpty():Bool
 	{
-		return _size == 0;
+		return mSize == 0;
 	}
 	
 	/**
@@ -540,7 +534,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	public function toArray():Array<T>
 	{
 		var a:Array<T> = ArrayUtil.alloc(size());
-		for (i in 1..._size + 1) a[i - 1] = __get(i);
+		for (i in 1...mSize + 1) a[i - 1] = get(i);
 		return a;
 	}
 	
@@ -550,7 +544,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	inline public function toVector():Vector<T>
 	{
 		var v = new Vector<T>(size());
-		for (i in 1..._size + 1) v[i - 1] = __get(i);
+		for (i in 1...mSize + 1) v[i - 1] = get(i);
 		return v;
 	}
 	
@@ -564,67 +558,67 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	 */
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{
-		var copy = new Heap<T>(_size, maxSize);
-		if (_size == 0) return copy;
+		var copy = new Heap<T>(mSize, maxSize);
+		if (mSize == 0) return copy;
 		if (assign)
 		{
-			for (i in 1..._size + 1)
+			for (i in 1...mSize + 1)
 			{
-				copy.__set(i, __get(i));
+				copy.set(i, get(i));
 				
 				#if (debug && flash)
-				copy._map.set(__get(i), true);
+				copy.mMap.set(get(i), true);
 				#end
 			}
 		}
 		else
 		if (copier == null)
 		{
-			for (i in 1..._size + 1)
+			for (i in 1...mSize + 1)
 			{
-				var e = __get(i);
+				var e = get(i);
 				#if debug
-				assert(Std.is(e, Cloneable), 'element is not of type Cloneable (${__get(i)})');
+				assert(Std.is(e, Cloneable), 'element is not of type Cloneable (${get(i)})');
 				#end
 				
 				var c = untyped e.clone();
 				c.position = e.position;
-				copy.__set(i, untyped c);
+				copy.set(i, untyped c);
 				
 				#if (debug && flash)
-				copy._map.set(untyped c, true);
+				copy.mMap.set(untyped c, true);
 				#end
 			}
 		}
 		else
 		{
-			for (i in 1..._size + 1)
+			for (i in 1...mSize + 1)
 			{
-				var e = __get(i);
+				var e = get(i);
 				var c = copier(e);
 				c.position = e.position;
-				copy.__set(i, c);
+				copy.set(i, c);
 				
 				#if (debug && flash)
-				copy._map.set(c, true);
+				copy.mMap.set(c, true);
 				#end
 			}
 		}
 		
-		copy._size = _size;
+		copy.mSize = mSize;
 		return copy;
 	}
 	
-	inline function _upheap(i:Int)
+	inline function upheap(i:Int)
 	{
 		var p = i >> 1;
-		var a = __get(i), b;
+		var a = get(i), b;
 		while (p > 0)
 		{
-			b = __get(p);
+			b = get(p);
 			if (a.compare(b) > 0)
 			{
-				__set(i, b);
+				set(i, b);
 				b.position = i;
 				i = p;
 				p >>= 1;
@@ -632,25 +626,25 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 			else break;
 		}
 		a.position = i;
-		__set(i, a);
+		set(i, a);
 	}
 	
-	inline function _downheap(i:Int)
+	inline function downheap(i:Int)
 	{
 		var c = i << 1;
-		var a = __get(i);
-		var s = _size - 1;
+		var a = get(i);
+		var s = mSize - 1;
 		
-		while (c < _size)
+		while (c < mSize)
 		{
 			if (c < s)
-				if (__get(c).compare(__get(c + 1)) < 0)
+				if (get(c).compare(get(c + 1)) < 0)
 					c++;
 			
-			var b = __get(c);
+			var b = get(c);
 			if (a.compare(b) < 0)
 			{
-				__set(i, b);
+				set(i, b);
 				b.position = i;
 				a.position = c;
 				i = c;
@@ -659,96 +653,92 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 			else break;
 		}
 		a.position = i;
-		__set(i, a);
+		set(i, a);
 	}
 	
-	function _heapify(p:Int, s:Int)
+	function heapify(p:Int, s:Int)
 	{
 		var l = p << 1;
 		var r = l + 1;
 		
 		var max = p;
 		
-		if (l <= s && __get(l).compare(__get(max)) > 0) max = l;
-		if (l + 1 <= s && __get(l + 1).compare(__get(max)) > 0) max = r;
+		if (l <= s && get(l).compare(get(max)) > 0) max = l;
+		if (l + 1 <= s && get(l + 1).compare(get(max)) > 0) max = r;
 		
 		if (max != p)
 		{
-			var a = __get(max);
-			var b = __get(p);
-			__set(max, b);
-			__set(p, a);
+			var a = get(max);
+			var b = get(p);
+			set(max, b);
+			set(p, a);
 			var tmp = a.position;
 			a.position = b.position;
 			b.position = tmp;
 			
-			_heapify(max, s);
+			heapify(max, s);
 		}
 	}
 	
-	inline function __get(i:Int)
+	inline function get(i:Int)
 	{
-		return _a[i];
+		return mA[i];
 	}
-	inline function __set(i:Int, x:T)
+	inline function set(i:Int, x:T)
 	{
-		_a[i] = x;
+		mA[i] = x;
 	}
 }
 
 #if doc
 private
 #end
+@:access(de.polygonal.ds.Heap)
 class HeapIterator<T:(Heapable<T>)> implements de.polygonal.ds.Itr<T>
 {
-	var _f:Heap<T>;
-	var _a:Array<T>;
-	var _i:Int;
-	var _s:Int;
+	var mF:Heap<T>;
+	var mA:Array<T>;
+	var mI:Int;
+	var mS:Int;
 	
 	public function new(f:Heap<T>)
 	{
-		_f = f;
-		_a = new Array<T>();
-		_a[0] = null;
+		mF = f;
+		mA = new Array<T>();
+		mA[0] = null;
 		reset();
 	}
 	
 	public function free()
 	{
-		_a = null;
+		mA = null;
 	}
 	
 	inline public function reset():Itr<T>
 	{
-		_s = _f.size() + 1;
-		_i = 1;
-		var a = __a(_f);
-		for (i in 1..._s) _a[i] = a[i];
+		mS = mF.size() + 1;
+		mI = 1;
+		var a = mF.mA;
+		for (i in 1...mS) mA[i] = a[i];
 		return this;
 	}
 	
 	inline public function hasNext():Bool
 	{
-		return _i < _s;
+		return mI < mS;
 	}
 	
 	inline public function next():T
 	{
-		return _a[_i++];
+		return mA[mI++];
 	}
 	
 	inline public function remove()
 	{
 		#if debug
-		assert(_i > 0, "call next() before removing an element");
+		assert(mI > 0, "call next() before removing an element");
 		#end
-		_f.remove(_a[_i - 1]);
-	}
-	
-	inline function __a(f:HeapFriend<T>)
-	{
-		return f._a;
+		mF.remove(mA[mI - 1]);
 	}
 }
 

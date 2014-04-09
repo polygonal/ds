@@ -1,4 +1,4 @@
-﻿package test.mem;
+﻿package mem;
 
 #if alchemy
 import de.polygonal.ds.mem.MemoryManager;
@@ -169,7 +169,7 @@ class TestShortMemory extends haxe.unit.TestCase
 		m.free();
 		#if alchemy MemoryManager.free(); #end
 		
-		#if (flash && !flash8)
+		#if flash
 		var bytes = new flash.utils.ByteArray();
 		bytes.endian = flash.utils.Endian.BIG_ENDIAN;
 		for (i in 0...256) bytes.writeShort(i % 10);

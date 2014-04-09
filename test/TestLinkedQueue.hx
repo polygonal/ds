@@ -1,9 +1,8 @@
-﻿package;
-
-import de.polygonal.ds.LinkedQueue;
+﻿import de.polygonal.ds.LinkedQueue;
 import de.polygonal.ds.ListSet;
 import de.polygonal.ds.Queue;
 
+@:access(de.polygonal.ds.LinkedQueue)
 class TestLinkedQueue extends haxe.unit.TestCase
 {
 	function testPool()
@@ -12,13 +11,13 @@ class TestLinkedQueue extends haxe.unit.TestCase
 		
 		for (i in 0...10) l.enqueue(i);
 		for (i in 0...10) l.dequeue();
-		assertEquals(10, untyped l._poolSize);
+		assertEquals(10, l.mPoolSize);
 		
 		for (i in 0...10) l.enqueue(i);
-		assertEquals(0, untyped l._poolSize);
+		assertEquals(0, l.mPoolSize);
 		
 		for (i in 0...10) l.dequeue();
-		assertEquals(10, untyped l._poolSize);
+		assertEquals(10, l.mPoolSize);
 	}
 	
 	function test()
@@ -72,11 +71,11 @@ class TestLinkedQueue extends haxe.unit.TestCase
 		assertTrue(l.isEmpty());
 		
 		#if generic
-		assertEquals(untyped l._head, null);
-		assertEquals(untyped l._tail, null);
+		assertEquals(l.mHead, null);
+		assertEquals(l.mTail, null);
 		#else
-		var h:LinkedQueueNode<Int> = untyped l._head;
-		var t:LinkedQueueNode<Int> = untyped l._tail;
+		var h:LinkedQueueNode<Int> = l.mHead;
+		var t:LinkedQueueNode<Int> = l.mTail;
 		assertEquals(h, null);
 		assertEquals(t, null);
 		#end
@@ -133,8 +132,8 @@ class TestLinkedQueue extends haxe.unit.TestCase
 			
 			while (!l.isEmpty()) assertTrue(set.remove(l.dequeue()));
 			assertTrue(set.isEmpty());
-			assertEquals(null, untyped l._head);
-			assertEquals(null, untyped l._tail);
+			assertEquals(null, l.mHead);
+			assertEquals(null, l.mTail);
 		}
 		
 		var l = new de.polygonal.ds.LinkedQueue<Int>();
@@ -147,8 +146,8 @@ class TestLinkedQueue extends haxe.unit.TestCase
 			itr.remove();
 		}
 		assertTrue(l.isEmpty());
-		assertEquals(null, untyped l._head);
-		assertEquals(null, untyped l._tail);
+		assertEquals(null, l.mHead);
+		assertEquals(null, l.mTail);
 	}
 	
 	#if debug

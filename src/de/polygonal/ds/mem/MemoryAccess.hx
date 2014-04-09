@@ -44,7 +44,7 @@ class MemoryAccess implements Hashable
 	
 	public var name:String;
 	
-	var _memory:Dynamic;
+	var mMemory:Dynamic;
 	
 	function new(bytes:Int, name = "?")
 	{
@@ -56,9 +56,9 @@ class MemoryAccess implements Hashable
 		this.name = name;
 		
 		#if alchemy
-		MemoryManager.malloc(this, bytes);
+		MemoryManager.instance.malloc(this, bytes);
 		#else
-		_memory = {};
+		mMemory = {};
 		#end
 		
 		key = HashKey.next();
@@ -77,13 +77,13 @@ class MemoryAccess implements Hashable
 	public function free()
 	{
 		#if debug
-		assert(_memory != null, "memory deallocated");
+		assert(mMemory != null, "memory deallocated");
 		#end
 		
 		#if alchemy
-		MemoryManager.dealloc(this);
+		MemoryManager.instance.dealloc(this);
 		#else
-		_memory = null;
+		mMemory = null;
 		#end
 	}
 	
@@ -108,13 +108,13 @@ class MemoryAccess implements Hashable
 	{
 		#if debug
 		assert(byteSize > 0, "byteSize > 0");
-		assert(_memory != null, "memory deallocated");
+		assert(mMemory != null, "memory deallocated");
 		#end
 		
 		bytes = byteSize;
 		
 		#if alchemy
-		MemoryManager.realloc(this, byteSize);
+		MemoryManager.instance.realloc(this, byteSize);
 		#end
 	}
 }

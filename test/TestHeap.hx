@@ -1,8 +1,7 @@
-﻿package;
-
-import de.polygonal.ds.DA;
+﻿import de.polygonal.ds.DA;
 import de.polygonal.ds.Heap;
 
+@:access(de.polygonal.ds.Heap)
 class TestHeap extends haxe.unit.TestCase
 {
 	inline static var DEFAULT_SIZE = 100;
@@ -163,7 +162,7 @@ class TestHeap extends haxe.unit.TestCase
 		l.add(b);
 		l.add(c);
 		
-		var a:Array<E1> = untyped l._a;
+		var a:Array<E1> = l.mA;
 		
 		assertEquals(null, a[0]);
 		assertEquals(0   , a[1].ID);
@@ -194,7 +193,7 @@ class TestHeap extends haxe.unit.TestCase
 		
 		l.clear();
 		
-		var a:Array<E1> = untyped l._a;
+		var a:Array<E1> = l.mA;
 		
 		assertEquals(null, a[0]);
 		assertEquals(0, a[1].ID);
@@ -203,7 +202,7 @@ class TestHeap extends haxe.unit.TestCase
 		
 		l.pack();
 		
-		var a:Array<E1> = untyped l._a;
+		var a:Array<E1> = l.mA;
 		assertEquals(1, a.length);
 		assertEquals(null, a[0]);
 	}

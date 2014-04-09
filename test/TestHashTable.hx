@@ -1,6 +1,4 @@
-﻿package;
-
-import de.polygonal.core.math.random.ParkMiller;
+﻿import de.polygonal.core.math.random.ParkMiller;
 import de.polygonal.ds.ArrayUtil;
 import de.polygonal.ds.DA;
 import de.polygonal.ds.DLL;
@@ -444,13 +442,13 @@ class TestHashTable extends haxe.unit.TestCase
 		var h = new HashTable<E, Null<Int>>(16);
 		
 		var a = new E(1);
-		untyped a.key = 34;
+		a.key = 34;
 		
 		var b = new E(2);
-		untyped a.key = 50;
+		a.key = 50;
 		
 		var c = new E(3);
-		untyped a.key = 66;
+		a.key = 66;
 		
 		//everything to key #2
 		h.set(a, 1);
@@ -483,7 +481,7 @@ class TestHashTable extends haxe.unit.TestCase
 			keys.pushBack(K[i]);
 			
 			var item = new E(i);
-			untyped item.key = K[i];
+			item.key = K[i];
 			items.pushBack(item);
 		}
 		
@@ -513,7 +511,7 @@ class TestHashTable extends haxe.unit.TestCase
 				keys.pushBack(x);
 				
 				var item = new E(i);
-				untyped item.key = x;
+				item.key = x;
 				
 				items.pushBack(item);
 			}
@@ -549,7 +547,7 @@ class TestHashTable extends haxe.unit.TestCase
 				keys.pushBack(x);
 				
 				var item = new E(i);
-				untyped item.key = x;
+				item.key = x;
 				
 				items.pushBack(item);
 			}
@@ -581,7 +579,7 @@ class TestHashTable extends haxe.unit.TestCase
 		for (i in 0...s)
 		{
 			var item = items[i];
-			untyped item.key = i * 2;
+			item.key = i * 2;
 			h.set(item, i);
 		}
 		

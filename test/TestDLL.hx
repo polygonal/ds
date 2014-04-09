@@ -1,10 +1,9 @@
-﻿package;
-
-import de.polygonal.ds.Compare;
+﻿import de.polygonal.ds.Compare;
 import de.polygonal.ds.DLL;
 import de.polygonal.ds.DLLNode;
 import de.polygonal.ds.ListSet;
 
+@:access(de.polygonal.ds.DLL)
 class TestDLL extends haxe.unit.TestCase
 {
 	function testPool()
@@ -13,16 +12,16 @@ class TestDLL extends haxe.unit.TestCase
 		
 		for (i in 0...10) l.append(i);
 		for (i in 0...10) l.removeHead();
-		assertEquals(10, untyped l._poolSize);
+		assertEquals(10, l.mPoolSize);
 		
 		for (i in 0...10) l.append(i);
-		assertEquals(0, untyped l._poolSize);
+		assertEquals(0, l.mPoolSize);
 		
 		for (i in 0...10) l.removeTail();
-		assertEquals(10, untyped l._poolSize);
+		assertEquals(10, l.mPoolSize);
 		
 		for (i in 0...10) l.prepend(i);
-		assertEquals(0, untyped l._poolSize);
+		assertEquals(0, l.mPoolSize);
 		
 		assertEquals(10, l.size());
 		assertTrue(l.head != null);
@@ -30,7 +29,7 @@ class TestDLL extends haxe.unit.TestCase
 		for (i in 0...10)
 			l.head.unlink();
 		
-		assertEquals(10, untyped l._poolSize);
+		assertEquals(10, l.mPoolSize);
 		assertEquals(0, l.size());
 		assertTrue(l.head == null);
 	}
@@ -653,8 +652,8 @@ class TestDLL extends haxe.unit.TestCase
 				assertTrue(set.remove(list.removeHead()));
 			}
 			assertTrue(set.isEmpty());
-			assertEquals(null, untyped list.head);
-			assertEquals(null, untyped list.tail);
+			assertEquals(null, list.head);
+			assertEquals(null, list.tail);
 		}
 		
 		for (i in 0...5)
@@ -675,8 +674,8 @@ class TestDLL extends haxe.unit.TestCase
 			}
 			assertTrue(list.isEmpty());
 			assertTrue(set.isEmpty());
-			assertEquals(null, untyped list.head);
-			assertEquals(null, untyped list.tail);
+			assertEquals(null, list.head);
+			assertEquals(null, list.tail);
 		}
 	}
 	
@@ -819,13 +818,13 @@ class TestDLL extends haxe.unit.TestCase
 		assertEquals(list.size(), 0);
 		assertEquals(list.head, null);
 		assertEquals(list.tail, null);
-		assertEquals(10, untyped list._poolSize);
+		assertEquals(10, list.mPoolSize);
 		
 		for (i in 0...10) list.append(i);
 		for (i in 0...10) list.removeHead();
-		assertEquals(10, untyped list._poolSize);
+		assertEquals(10, list.mPoolSize);
 		for (i in 0...10) list.append(i);
-		assertEquals(0, untyped list._poolSize);
+		assertEquals(0, list.mPoolSize);
 	}
 	
 	function testAppend()

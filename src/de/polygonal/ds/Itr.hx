@@ -26,13 +26,13 @@ interface Itr<T>
 {
 	/**
 	 * Returns true if this iteration has more elements.
-	 * @see <a href="http://haxe.org/api/iterator" target="_blank">http://haxe.org/api/iterator</a>
+	 * @see <a href="http://haxe.org/api/iterator" target="mBlank">http://haxe.org/api/iterator</a>
 	 */
 	function hasNext():Bool;
 	
 	/**
 	 * Returns the next element in this iteration.
-	 * @see <a href="http://haxe.org/api/iterator" target="_blank">http://haxe.org/api/iterator</a>
+	 * @see <a href="http://haxe.org/api/iterator" target="mBlank">http://haxe.org/api/iterator</a>
 	 */
 	function next():T;
 	

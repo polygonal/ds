@@ -357,7 +357,7 @@ class IntMemory extends MemoryAccess
 	}
 	
 	#if !alchemy
-	var _data:Vector<Int>;
+	var mData:Vector<Int>;
 	#end
 	
 	/**
@@ -374,14 +374,14 @@ class IntMemory extends MemoryAccess
 		this.size = size;
 		
 		#if !alchemy
-		_data = new Vector<Int>(size);
+		mData = new Vector<Int>(size);
 		#end
 	}
 	
 	#if !alchemy
 	override public function free()
 	{
-		_data = null;
+		mData = null;
 		super.free();
 	}
 	#end
@@ -398,8 +398,8 @@ class IntMemory extends MemoryAccess
 		for (i in 0...size)
 			flash.Memory.setI32(dst + (i << 2), flash.Memory.getI32(src + (i << 2)));
 		#else
-		var t = c._data;
-		for (i in 0...size) t[i] = _data[i];
+		var t = c.mData;
+		for (i in 0...size) t[i] = mData[i];
 		#end
 		return c;
 	}
@@ -419,7 +419,7 @@ class IntMemory extends MemoryAccess
 		if ((size & 1) == 1)
 			flash.Memory.setI32(getAddr(size - 1), x);
 		#else
-		for (i in 0...size) _data[i] = x;
+		for (i in 0...size) mData[i] = x;
 		#end
 		
 		return this;
@@ -440,8 +440,8 @@ class IntMemory extends MemoryAccess
 		super.resize(newSize << 2);
 		#else
 		var tmp = new Vector<Int>(newSize);
-		for (i in 0...M.min(newSize, size)) tmp[i] = _data[i];
-		_data = tmp;
+		for (i in 0...M.min(newSize, size)) tmp[i] = mData[i];
+		mData = tmp;
 		#end
 		
 		size = newSize;
@@ -457,7 +457,7 @@ class IntMemory extends MemoryAccess
 		#if alchemy
 		return flash.Memory.getI32(getAddr(i));
 		#else
-		return _data[i];
+		return mData[i];
 		#end
 	}
 	
@@ -471,7 +471,7 @@ class IntMemory extends MemoryAccess
 		#if alchemy
 		flash.Memory.setI32(getAddr(i), x);
 		#else
-		_data[i] = x;
+		mData[i] = x;
 		#end
 	}
 	
@@ -493,7 +493,7 @@ class IntMemory extends MemoryAccess
 		flash.Memory.setI32(ai, flash.Memory.getI32(aj));
 		flash.Memory.setI32(ai, tmp);
 		#else
-		var tmp = _data[i]; _data[i] = _data[j]; _data[j] = tmp;
+		var tmp = mData[i]; mData[i] = mData[j]; mData[j] = tmp;
 		#end
 	}
 	
@@ -506,7 +506,7 @@ class IntMemory extends MemoryAccess
 	{
 		#if debug
 		assert(i >= 0 && i < size, 'segfault, index $i');
-		assert(_memory != null, "memory deallocated");
+		assert(mMemory != null, "memory deallocated");
 		#end
 		
 		#if alchemy
@@ -519,7 +519,7 @@ class IntMemory extends MemoryAccess
 	#if !alchemy
 	override public function clear()
 	{
-		for (i in 0...size) _data[i] = 0;
+		for (i in 0...size) mData[i] = 0;
 	}
 	#end
 	
@@ -545,7 +545,7 @@ class IntMemory extends MemoryAccess
 	public function toString():String
 	{
 		#if debug
-		if (_memory == null) return "{ IntMemory (unassigned) }";
+		if (mMemory == null) return "{ IntMemory (unassigned) }";
 		var s = '{ IntMemory size: $size, name: $name }';
 		s += "\n[\n";
 		for (i in 0...size)

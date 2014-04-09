@@ -22,7 +22,7 @@ import de.polygonal.ds.error.Assert.assert;
 
 /**
  * <p>A dynamic object pool based on a doubly linked list.</p>
- * <p>See <a href="http://lab.polygonal.de/2008/06/18/using-object-pools/" target="_blank">http://lab.polygonal.de/2008/06/18/using-object-pools/</a>.</p>
+ * <p>See <a href="http://lab.polygonal.de/2008/06/18/using-object-pools/" target="mBlank">http://lab.polygonal.de/2008/06/18/using-object-pools/</a>.</p>
  */
 #if generic
 @:generic
@@ -36,21 +36,21 @@ class LinkedObjectPool<T> implements Hashable
 	 */
 	public var key:Int;
 	
-	var _initSize:Int;
-	var _currSize:Int;
-	var _usageCount:Int;
+	var mInitSize:Int;
+	var mCurrSize:Int;
+	var mUsageCount:Int;
 
-	var _head:ObjNode<T>;
-	var _tail:ObjNode<T>;
+	var mHead:ObjNode<T>;
+	var mTail:ObjNode<T>;
 	
-	var _emptyNode:ObjNode<T>;
-	var _allocNode:ObjNode<T>;
+	var mEmptyNode:ObjNode<T>;
+	var mAllocNode:ObjNode<T>;
 	
-	var _growable:Bool;
+	var mGrowable:Bool;
 	
-	var _C:Class<T>;
-	var _fabricate:Void->T;
-	var _factory:Factory<T>;
+	var mC:Class<T>;
+	var mFabricate:Void->T;
+	var mFactory:Factory<T>;
 	
 	/** 
 	 * Creates a <em>LinkedObjectPool</em> object capable of managing <code>x</code> pre-allocated objects.<br/>
@@ -59,8 +59,8 @@ class LinkedObjectPool<T> implements Hashable
 	 */
 	public function new(x:Int, growable = false)
 	{
-		_initSize = _currSize = x;
-		_growable = growable;
+		mInitSize = mCurrSize = x;
+		mGrowable = growable;
 		
 		key = HashKey.next();
 	}
@@ -71,7 +71,7 @@ class LinkedObjectPool<T> implements Hashable
 	 */
 	public function free()
 	{
-		var node = _head;
+		var node = mHead;
 		while (node != null)
 		{
 			var t = node.next;
@@ -79,11 +79,11 @@ class LinkedObjectPool<T> implements Hashable
 			node.val = null;
 			node = t;
 		}
-		_head = _tail = _emptyNode = _allocNode = null;
+		mHead = mTail = mEmptyNode = mAllocNode = null;
 		
-		_C = null;
-		_fabricate = null;
-		_factory = null;
+		mC = null;
+		mFabricate = null;
+		mFactory = null;
 	}
 	
 	/**
@@ -91,7 +91,7 @@ class LinkedObjectPool<T> implements Hashable
 	 */
 	inline public function getSize():Int
 	{
-		return _currSize;
+		return mCurrSize;
 	}
 	
 	/**
@@ -99,7 +99,7 @@ class LinkedObjectPool<T> implements Hashable
 	 */
 	inline public function getUsageCount():Int
 	{
-		return _usageCount;
+		return mUsageCount;
 	}
 	
 	/**
@@ -108,7 +108,7 @@ class LinkedObjectPool<T> implements Hashable
 	 */
 	inline public function getWasteCount():Int
 	{
-		return _currSize - _usageCount;
+		return mCurrSize - mUsageCount;
 	}
 	
 	/**
@@ -117,23 +117,23 @@ class LinkedObjectPool<T> implements Hashable
 	 */
 	inline public function get():T
 	{
-		if (_usageCount == _currSize)
+		if (mUsageCount == mCurrSize)
 		{
-			if (_growable)
+			if (mGrowable)
 			{
-				_grow();
-				return _getInternal();
+				grow();
+				return getInternal();
 			}
 			else
 			{
 				#if debug
-				if (!_growable) assert(false, "object pool exhausted");
+				if (!mGrowable) assert(false, "object pool exhausted");
 				#end
 				return null;
 			}
 		}
 		else
-			return _getInternal();
+			return getInternal();
 	}
 	
 	/**
@@ -143,12 +143,12 @@ class LinkedObjectPool<T> implements Hashable
 	inline public function put(o:T)
 	{
 		#if debug
-		assert(_usageCount != 0, "object pool is full");
+		assert(mUsageCount != 0, "object pool is full");
 		#end
 		
-		_usageCount--;
-		_emptyNode.val = o;
-		_emptyNode = _emptyNode.next;
+		mUsageCount--;
+		mEmptyNode.val = o;
+		mEmptyNode = mEmptyNode.next;
 	}
 	
 	/**
@@ -169,27 +169,27 @@ class LinkedObjectPool<T> implements Hashable
 		var buffer = new Array<T>();
 		if (C != null)
 		{
-			for (i in 0..._initSize)
+			for (i in 0...mInitSize)
 				buffer.push(Type.createInstance(C, []));
 		}
 		else
 		if (fabricate != null)
 		{
-			for (i in 0..._initSize)
+			for (i in 0...mInitSize)
 				buffer.push(fabricate());
 		}
 		else
 		if (factory != null)
 		{
-			for (i in 0..._initSize)
+			for (i in 0...mInitSize)
 				buffer.push(factory.create());
 		}
 		
-		_fill(buffer);
+		fill(buffer);
 		
-		_C = C;
-		_fabricate = fabricate;
-		_factory = factory;
+		mC = C;
+		mFabricate = fabricate;
+		mFactory = factory;
 	}
 	
 	/**
@@ -198,22 +198,22 @@ class LinkedObjectPool<T> implements Hashable
 	 */
 	public function purge()
 	{
-		if (_usageCount == 0)
+		if (mUsageCount == 0)
 		{
-			if (_currSize == _initSize)
+			if (mCurrSize == mInitSize)
 				return;
 			
-			if (_currSize > _initSize)
+			if (mCurrSize > mInitSize)
 			{
 				var i:Int = 0;
-				var node:ObjNode<T> = _head;
-				while (++i < _initSize)
+				var node:ObjNode<T> = mHead;
+				while (++i < mInitSize)
 					node = node.next;
 				
-				_tail = node;
-				_allocNode = _emptyNode = _head;
+				mTail = node;
+				mAllocNode = mEmptyNode = mHead;
 				
-				_currSize = _initSize;
+				mCurrSize = mInitSize;
 				return;
 			}
 		}
@@ -221,48 +221,48 @@ class LinkedObjectPool<T> implements Hashable
 		{
 			var i = 0;
 			var a = new Array<ObjNode<T>>();
-			var node =_head;
+			var node =mHead;
 			while (node != null)
 			{
 				if (node.val == null) a[i++] = node;
-				if (node == _tail) break;
+				if (node == mTail) break;
 				node = node.next;
 			}
 			
-			_currSize = a.length;
-			_usageCount = _currSize;
+			mCurrSize = a.length;
+			mUsageCount = mCurrSize;
 			
-			_head = _tail = a[0];
-			for (i in 1..._currSize)
+			mHead = mTail = a[0];
+			for (i in 1...mCurrSize)
 			{
 				node = a[i];
-				node.next = _head;
-				_head = node;
+				node.next = mHead;
+				mHead = node;
 			}
 			
-			_emptyNode = _allocNode = _head;
-			_tail.next = _head;
+			mEmptyNode = mAllocNode = mHead;
+			mTail.next = mHead;
 			
-			if (_usageCount < _initSize)
+			if (mUsageCount < mInitSize)
 			{
-				_currSize = _initSize;
+				mCurrSize = mInitSize;
 				
-				var n = _tail;
-				var t = _tail;
-				var k = _initSize - _usageCount;
+				var n = mTail;
+				var t = mTail;
+				var k = mInitSize - mUsageCount;
 				for (i in 0...k)
 				{
 					node = new ObjNode<T>();
-					node.val = _factory.create();
+					node.val = mFactory.create();
 					
 					t.next = node;
 					t = node;
 				}
 				
-				_tail = t;
+				mTail = t;
 				
-				_tail.next = _emptyNode = _head;
-				_allocNode = n.next;
+				mTail.next = mEmptyNode = mHead;
+				mAllocNode = n.next;
 				
 			}
 		}
@@ -278,14 +278,14 @@ class LinkedObjectPool<T> implements Hashable
 		var s = 'LinkedObjectPool (${getUsageCount()}/${getSize()} objects used)';
 		if (getSize() == 0) return s;
 		s += "\n[\n";
-		var node = _head;
+		var node = mHead;
 		var i = 0;
 		while (true)
 		{
 			s += '  ${i} -> ${node.val}\n';
 			i++;
 			node = node.next;
-			if (node == _head) break;
+			if (node == mHead) break;
 		}
 		s += "]";
 		return s;
@@ -294,75 +294,75 @@ class LinkedObjectPool<T> implements Hashable
 		#end
 	}
 	
-	inline function _grow()
+	inline function grow()
 	{
-		_currSize += _initSize;
+		mCurrSize += mInitSize;
 		
-		var n = _tail;
-		var t = _tail;
+		var n = mTail;
+		var t = mTail;
 		
-		if (_C != null)
+		if (mC != null)
 		{
-			for (i in 0..._initSize)
+			for (i in 0...mInitSize)
 			{
 				var node = new ObjNode<T>();
-				node.val = Type.createInstance(_C, []);
+				node.val = Type.createInstance(mC, []);
 				t.next = node;
 				t = node;
 			}
 		}
 		else
-		if (_fabricate != null)
+		if (mFabricate != null)
 		{
-			for (i in 0..._initSize)
+			for (i in 0...mInitSize)
 			{
 				var node = new ObjNode<T>();
-				node.val = _fabricate();
+				node.val = mFabricate();
 				t.next = node;
 				t = node;
 			}
 		}
 		else
-		if (_factory != null)
+		if (mFactory != null)
 		{
-			for (i in 0..._initSize)
+			for (i in 0...mInitSize)
 			{
 				var node = new ObjNode<T>();
-				node.val = _factory.create();
+				node.val = mFactory.create();
 				t.next = node;
 				t = node;
 			}
 		}
 		
-		_tail = t;
-		_tail.next = _emptyNode = _head;
-		_allocNode = _tail;
-		_allocNode = n.next;
+		mTail = t;
+		mTail.next = mEmptyNode = mHead;
+		mAllocNode = mTail;
+		mAllocNode = n.next;
 	}
 	
-	inline function _fill(buffer:Array<T>)
+	inline function fill(buffer:Array<T>)
 	{
-		_head = _tail = new ObjNode<T>();
-		_head.val = buffer.pop();
+		mHead = mTail = new ObjNode<T>();
+		mHead.val = buffer.pop();
 		
-		for (i in 1..._initSize)
+		for (i in 1...mInitSize)
 		{
 			var n = new ObjNode<T>();
 			n.val = buffer.pop();
-			n.next = _head;
-			_head = n;
+			n.next = mHead;
+			mHead = n;
 		}
 		
-		_emptyNode = _allocNode = _head;
-		_tail.next = _head;
+		mEmptyNode = mAllocNode = mHead;
+		mTail.next = mHead;
 	}
 	
-	inline function _getInternal():T
+	inline function getInternal():T
 	{
-		_usageCount++;
-		var o = _allocNode.val;
-		_allocNode.val = null;
-		_allocNode = _allocNode.next;
+		mUsageCount++;
+		var o = mAllocNode.val;
+		mAllocNode.val = null;
+		mAllocNode = mAllocNode.next;
 		return o;
 	}
 }

@@ -20,12 +20,6 @@ package de.polygonal.ds;
 
 import de.polygonal.ds.error.Assert.assert;
 
-private typedef PriorityQueueFriend<T> =
-{
-	private var _a:Array<T>;
-	private var _size:Int;
-}
-
 /**
  * <p>A priority queue is heap data structure with a simplified API for managing prioritized data.</p>
  * Adds additional methods for removing and re-prioritizing elements.</p>
@@ -55,13 +49,13 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	 */
 	public var reuseIterator:Bool;
 	
-	var _a:Array<T>;
-	var _size:Int;
-	var _inverse:Bool;
-	var _iterator:PriorityQueueIterator<T>;
+	var mA:Array<T>;
+	var mSize:Int;
+	var mInverse:Bool;
+	var mIterator:PriorityQueueIterator<T>;
 	
 	#if (debug && flash)
-	var _map:HashMap<T, Bool>;
+	var mMap:HashMap<T, Bool>;
 	#end
 	
 	/**
@@ -79,8 +73,8 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 		this.maxSize = -1;
 		#end
 		
-		_inverse = inverse;
-		_iterator = null;
+		mInverse = inverse;
+		mIterator = null;
 		
 		if (reservedSize > 0)
 		{
@@ -89,16 +83,16 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 				assert(reservedSize <= this.maxSize, "reserved size is greater than allowed size");
 			#end
 			
-			_a = ArrayUtil.alloc(reservedSize + 1);
+			mA = ArrayUtil.alloc(reservedSize + 1);
 		}
 		else
-			_a = new Array<T>();
+			mA = new Array<T>();
 		
-		__set(0, cast null);
-		_size = 0;
+		set(0, cast null);
+		mSize = 0;
 		
 		#if (debug && flash)
-		_map = new HashMap<T, Bool>();
+		mMap = new HashMap<T, Bool>();
 		#end
 		
 		key = HashKey.next();
@@ -112,12 +106,12 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	 */
 	public function pack()
 	{
-		if (_a.length - 1 == size()) return;
+		if (mA.length - 1 == size()) return;
 		
-		var tmp = _a;
-		_a = ArrayUtil.alloc(size() + 1);
-		__set(0, cast null);
-		for (i in 1...size() + 1) __set(i, tmp[i]);
+		var tmp = mA;
+		mA = ArrayUtil.alloc(size() + 1);
+		set(0, cast null);
+		for (i in 1...size() + 1) set(i, tmp[i]);
 		for (i in size() + 1...tmp.length) tmp[i] = null;
 	}
 	
@@ -130,15 +124,15 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	{
 		if (size() == x) return;
 		
-		var tmp = _a;
+		var tmp = mA;
 		
-		_a = ArrayUtil.alloc(x + 1);
+		mA = ArrayUtil.alloc(x + 1);
 		
-		__set(0, cast null);
+		set(0, cast null);
 		if (size() < x)
 		{
 			for (i in 1...size() + 1)
-				__set(i, tmp[i]);
+				set(i, tmp[i]);
 		}
 	}
 	
@@ -154,7 +148,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 		assert(size() > 0, "priority queue is empty");
 		#end
 		
-		return __get(1);
+		return get(1);
 	}
 	
 	/**
@@ -169,21 +163,21 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 		assert(size() > 0, "priority queue is empty");
 		#end
 		
-		if (_size == 1) return __get(1);
-		var a = __get(1), b;
-		if (_inverse)
+		if (mSize == 1) return get(1);
+		var a = get(1), b;
+		if (mInverse)
 		{
-			for (i in 2..._size + 1)
+			for (i in 2...mSize + 1)
 			{
-				b = __get(i);
+				b = get(i);
 				if (a.priority < b.priority) a = b;
 			}
 		}
 		else
 		{
-			for (i in 2..._size + 1)
+			for (i in 2...mSize + 1)
 			{
-				b = __get(i);
+				b = get(i);
 				if (a.priority > b.priority) a = b;
 			}
 		}
@@ -205,13 +199,13 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 		#end
 		
 		#if (debug && flash)
-		assert(!_map.hasKey(x), "element already exists");
-		_map.set(x, true);
+		assert(!mMap.hasKey(x), "element already exists");
+		mMap.set(x, true);
 		#end
 		
-		__set(++_size, x);
-		x.position = _size;
-		_upheap(_size);
+		set(++mSize, x);
+		x.position = mSize;
+		upheap(mSize);
 	}
 	
 	/**
@@ -225,16 +219,16 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 		assert(size() > 0, "priority queue is empty");
 		#end
 		
-		var x = __get(1);
+		var x = get(1);
 		x.position = -1;
-		__set(1, __get(_size));
-		_downheap(1);
+		set(1, get(mSize));
+		downheap(1);
 		
 		#if (debug && flash)
-		_map.clr(x);
+		mMap.clr(x);
 		#end
 		
-		_size--;
+		mSize--;
 		return x;
 	}
 	
@@ -252,7 +246,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 		#end
 		
 		#if (debug && flash)
-		assert(_map.hasKey(x), "unknown element");
+		assert(mMap.hasKey(x), "unknown element");
 		#end
 		
 		var oldPriority = x.priority;
@@ -261,24 +255,24 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 			x.priority = priority;
 			var pos = x.position;
 			
-			if (_inverse)
+			if (mInverse)
 			{
 				if (priority < oldPriority)
-					_upheap(pos);
+					upheap(pos);
 				else
 				{
-					_downheap(pos);
-					_upheap(_size);
+					downheap(pos);
+					upheap(mSize);
 				}
 			}
 			else
 			{
 				if (priority > oldPriority)
-					_upheap(pos);
+					upheap(pos);
 				else
 				{
-					_downheap(pos);
-					_upheap(_size);
+					downheap(pos);
+					upheap(mSize);
 				}
 			}
 		}
@@ -326,13 +320,13 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 		var s = '{ PriorityQueue size: ${size()} }';
 		if (isEmpty()) return s;
 		var tmp = new PriorityQueue<PQElementWrapper<T>>();
-		tmp._inverse = _inverse;
-		for (i in 1..._size + 1)
+		tmp.mInverse = mInverse;
+		for (i in 1...mSize + 1)
 		{
-			var w = new PQElementWrapper<T>(__get(i));
-			tmp.__set(i, w);
+			var w = new PQElementWrapper<T>(get(i));
+			tmp.set(i, w);
 		}
-		tmp._size = _size;
+		tmp.mSize = mSize;
 		s += "\n[ front\n";
 		var i = 0;
 		while (tmp.size() > 0)
@@ -352,18 +346,18 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	 */
 	public function free()
 	{
-		for (i in 0..._a.length) __set(i, cast null);
-		_a = null;
+		for (i in 0...mA.length) set(i, cast null);
+		mA = null;
 		
-		if (_iterator != null)
+		if (mIterator != null)
 		{
-			_iterator.free();
-			_iterator = null;
+			mIterator.free();
+			mIterator = null;
 		}
 		
 		#if (debug && flash)
-		_map.free();
-		_map = null;
+		mMap.free();
+		mMap = null;
 		#end
 	}
 	
@@ -379,7 +373,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 		#end
 		
 		var position = x.position;
-		return (position > 0 && position <= _size) && (__get(position) == x);
+		return (position > 0 && position <= mSize) && (get(position) == x);
 	}
 	
 	/**
@@ -399,8 +393,8 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 			#end
 			
 			#if (debug && flash)
-			assert(_map.hasKey(x), "x does not exist");
-			_map.clr(x);
+			assert(mMap.hasKey(x), "x does not exist");
+			mMap.clr(x);
 			#end
 			
 			if (x.position == 1)
@@ -408,10 +402,10 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 			else
 			{
 				var p = x.position;
-				__set(p, __get(_size));
-				_downheap(p);
-				_upheap(p);
-				_size--;
+				set(p, get(mSize));
+				downheap(p);
+				upheap(p);
+				mSize--;
 			}
 			return true;
 		}
@@ -426,30 +420,30 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	{
 		if (purge)
 		{
-			for (i in 1..._a.length) __set(i, cast null);
+			for (i in 1...mA.length) set(i, cast null);
 		}
 		
 		#if (debug && flash)
-		_map.clear(true);
+		mMap.clear(true);
 		#end
 		
-		_size = 0;
+		mSize = 0;
 	}
 	
 	/**
 	 * Returns a new <em>PriorityQueueIterator</em> object to iterate over all elements contained in this priority queue.<br/>
 	 * The values are visited in an unsorted order.
-	 * @see <a href="http://haxe.org/ref/iterators" target="_blank">http://haxe.org/ref/iterators</a>
+	 * @see <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
 	 */
 	public function iterator():Itr<T>
 	{
 		if (reuseIterator)
 		{
-			if (_iterator == null)
+			if (mIterator == null)
 				return new PriorityQueueIterator<T>(this);
 			else
-				_iterator.reset();
-			return _iterator;
+				mIterator.reset();
+			return mIterator;
 		}
 		else
 			return new PriorityQueueIterator<T>(this);
@@ -461,7 +455,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	 */
 	inline public function size():Int
 	{
-		return _size;
+		return mSize;
 	}
 	
 	/**
@@ -470,7 +464,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	 */
 	inline public function isEmpty():Bool
 	{
-		return _size == 0;
+		return mSize == 0;
 	}
 	
 	/**
@@ -479,7 +473,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	public function toArray():Array<T>
 	{
 		var a:Array<T> = ArrayUtil.alloc(size());
-		for (i in 1...size() + 1) a[i - 1] = __get(i);
+		for (i in 1...size() + 1) a[i - 1] = get(i);
 		return a;
 	}
 	
@@ -489,7 +483,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	inline public function toVector():Vector<T>
 	{
 		var v = new Vector<T>(size());
-		for (i in 1..._size + 1) v[i - 1] = __get(i);
+		for (i in 1...mSize + 1) v[i - 1] = get(i);
 		return v;
 	}
 	
@@ -503,25 +497,25 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	 */
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{
-		var copy = new PriorityQueue<T>(_inverse, size(), maxSize);
-		if (_size == 0) return copy;
+		var copy = new PriorityQueue<T>(mInverse, size(), maxSize);
+		if (mSize == 0) return copy;
 		if (assign)
 		{
-			for (i in 1..._size + 1)
+			for (i in 1...mSize + 1)
 			{
-				copy.__set(i, __get(i));
+				copy.set(i, get(i));
 				
 				#if (debug && flash)
-				copy._map.set(__get(i), true);
+				copy.mMap.set(get(i), true);
 				#end
 			}
 		}
 		else
 		if (copier == null)
 		{
-			for (i in 1..._size + 1)
+			for (i in 1...mSize + 1)
 			{
-				var e = __get(i);
+				var e = get(i);
 				
 				#if debug
 				assert(Std.is(e, Cloneable), 'element is not of type Cloneable ($e)');
@@ -530,47 +524,47 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 				var c = untyped e.clone();
 				c.position = e.position;
 				c.priority = e.priority;
-				copy.__set(i, untyped c);
+				copy.set(i, untyped c);
 				
 				#if (debug && flash)
-				copy._map.set(untyped c, true);
+				copy.mMap.set(untyped c, true);
 				#end
 			}
 		}
 		else
 		{
-			for (i in 1..._size + 1)
+			for (i in 1...mSize + 1)
 			{
-				var e = __get(i);
+				var e = get(i);
 				var c = copier(e);
 				c.position = e.position;
 				c.priority = e.priority;
-				copy.__set(i, c);
+				copy.set(i, c);
 				
 				#if (debug && flash)
-				copy._map.set(e, true);
+				copy.mMap.set(e, true);
 				#end
 			}
 		}
 		
-		copy._size = _size;
+		copy.mSize = mSize;
 		return copy;
 	}
 	
-	inline function _upheap(index:Int)
+	inline function upheap(index:Int)
 	{
 		var parent = index >> 1;
-		var tmp = __get(index);
+		var tmp = get(index);
 		var p = tmp.priority;
 		
-		if (_inverse)
+		if (mInverse)
 		{
 			while (parent > 0)
 			{
-				var parentVal = __get(parent);
+				var parentVal = get(parent);
 				if (p - parentVal.priority < 0)
 				{
-					__set(index, parentVal);
+					set(index, parentVal);
 					parentVal.position = index;
 					
 					index = parent;
@@ -583,10 +577,10 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 		{
 			while (parent > 0)
 			{
-				var parentVal = __get(parent);
+				var parentVal = get(parent);
 				if (p - parentVal.priority > 0)
 				{
-					__set(index, parentVal);
+					set(index, parentVal);
 					parentVal.position = index;
 					
 					index = parent;
@@ -596,30 +590,30 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 			}
 		}
 		
-		__set(index, tmp);
+		set(index, tmp);
 		tmp.position = index;
 	}
 	
-	inline function _downheap(index:Int)
+	inline function downheap(index:Int)
 	{
 		var child = index << 1;
 		var childVal:T;
 		
-		var tmp = __get(index);
+		var tmp = get(index);
 		var p = tmp.priority;
 		
-		if (_inverse)
+		if (mInverse)
 		{
-			while (child < _size)
+			while (child < mSize)
 			{
-				if (child < _size - 1)
-					if (__get(child).priority - __get(child + 1).priority > 0)
+				if (child < mSize - 1)
+					if (get(child).priority - get(child + 1).priority > 0)
 						child++;
 				
-				childVal = __get(child);
+				childVal = get(child);
 				if (p - childVal.priority > 0)
 				{
-					__set(index, childVal);
+					set(index, childVal);
 					childVal.position = index;
 					tmp.position = child;
 					index = child;
@@ -630,16 +624,16 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 		}
 		else
 		{
-			while (child < _size)
+			while (child < mSize)
 			{
-				if (child < _size - 1)
-					if (__get(child).priority - __get(child + 1).priority < 0)
+				if (child < mSize - 1)
+					if (get(child).priority - get(child + 1).priority < 0)
 						child++;
 				
-				childVal = __get(child);
+				childVal = get(child);
 				if (p - childVal.priority < 0)
 				{
-					__set(index, childVal);
+					set(index, childVal);
 					childVal.position = index;
 					tmp.position = child;
 					index = child;
@@ -649,74 +643,65 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 			}
 		}
 		
-		__set(index, tmp);
+		set(index, tmp);
 		tmp.position = index;
 	}
 	
-	inline function __get(i:Int)
-	{
-		return _a[i];
-	}
-	inline function __set(i:Int, x:T)
-	{
-		_a[i] = x;
-	}
+	inline function get(i:Int) return mA[i];
+	
+	inline function set(i:Int, x:T) mA[i] = x;
 }
 
 #if doc
 private
 #end
+@:access(de.polygonal.ds.PriorityQueue)
 class PriorityQueueIterator<T:(Prioritizable)> implements de.polygonal.ds.Itr<T>
 {
-	var _f:PriorityQueue<T>;
-	var _a:Array<T>;
-	var _i:Int;
-	var _s:Int;
+	var mF:PriorityQueue<T>;
+	var mA:Array<T>;
+	var mI:Int;
+	var mS:Int;
 	
 	public function new(f:PriorityQueue<T>)
 	{
-		_f = f;
-		_a = new Array<T>();
-		_a[0] = null;
+		mF = f;
+		mA = new Array<T>();
+		mA[0] = null;
 		reset();
 	}
 	
 	public function free()
 	{
-		_a = null;
+		mA = null;
 	}
 	
 	inline public function reset():Itr<T>
 	{
-		_s = _f.size() + 1;
-		_i = 1;
-		var a = __a(_f);
-		for (i in 1..._s) _a[i] = a[i];
+		mS = mF.size() + 1;
+		mI = 1;
+		var a = mF.mA;
+		for (i in 1...mS) mA[i] = a[i];
 		return this;
 	}
 	
 	inline public function hasNext():Bool
 	{
-		return _i < _s;
+		return mI < mS;
 	}
 	
 	inline public function next():T
 	{
-		return _a[_i++];
+		return mA[mI++];
 	}
 	
 	inline public function remove()
 	{
 		#if debug
-		assert(_i > 0, "call next() before removing an element");
+		assert(mI > 0, "call next() before removing an element");
 		#end
 		
-		_f.remove(_a[_i - 1]);
-	}
-	
-	inline function __a(f:PriorityQueueFriend<T>)
-	{
-		return f._a;
+		mF.remove(mA[mI - 1]);
 	}
 }
 

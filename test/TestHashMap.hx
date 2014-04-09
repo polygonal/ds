@@ -1,6 +1,4 @@
-﻿package;
-
-import de.polygonal.ds.HashMap;
+﻿import de.polygonal.ds.HashMap;
 import de.polygonal.ds.Set;
 
 class TestHashMap extends haxe.unit.TestCase
@@ -223,7 +221,7 @@ class TestHashMap extends haxe.unit.TestCase
 		h.set('key2', 'val2');
 		h.set('key3', 'val3');
 		
-		var clone:de.polygonal.ds.HashMap<String, String> = untyped h.clone(true);
+		var clone:de.polygonal.ds.HashMap<String, String> = cast h.clone(true);
 		assertEquals(clone.get('key1a'), 'val1');
 		assertEquals(clone.get('key1b'), 'val1');
 		assertEquals(clone.get('key2') , 'val2');

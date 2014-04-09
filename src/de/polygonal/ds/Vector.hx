@@ -20,7 +20,7 @@ package de.polygonal.ds;
 
 typedef Vector<T> =
 #if flash
-	#if no_inline
+	#if nomInline
 	flash.Vector<Dynamic>
 	#else
 	flash.Vector<T>

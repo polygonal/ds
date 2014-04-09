@@ -20,20 +20,15 @@ package de.polygonal.ds;
 
 import de.polygonal.ds.error.Assert.assert;
 
-private typedef SLLNodeFriend<T> =
-{
-	private function _insertAfter(node:SLLNode<T>):Void;
-	private var _list:SLL<T>;
-}
-
 /**
  * <p>A singly linked list.</p>
- * <p>See <a href="http://lab.polygonal.de/?p=206" target="_blank">http://lab.polygonal.de/?p=206</a></p>
+ * <p>See <a href="http://lab.polygonal.de/?p=206" target="mBlank">http://lab.polygonal.de/?p=206</a></p>
  * <p><o>Worst-case running time in Big O notation</o></p>
  */
 #if generic
 @:generic
 #end
+@:access(de.polygonal.ds.SLLNode)
 class SLL<T> implements Collection<T>
 {
 	/**
@@ -68,15 +63,15 @@ class SLL<T> implements Collection<T>
 	 */
 	public var reuseIterator:Bool;
 	
-	var _size:Int;
-	var _reservedSize:Int;
-	var _poolSize:Int;
+	var mSize:Int;
+	var mReservedSize:Int;
+	var mPoolSize:Int;
 	
-	var _headPool:SLLNode<T>;
-	var _tailPool:SLLNode<T>;
+	var mHeadPool:SLLNode<T>;
+	var mTailPool:SLLNode<T>;
 	
-	var _circular:Bool;
-	var _iterator:Itr<T>;
+	var mCircular:Bool;
+	var mIterator:Itr<T>;
 	
 	/**
 	 * @param reservedSize if &gt; 0, this list maintains an object pool of node objects.<br/>
@@ -98,15 +93,15 @@ class SLL<T> implements Collection<T>
 		this.maxSize = -1;
 		#end
 		
-		_reservedSize = reservedSize;
-		_size         = 0;
-		_poolSize     = 0;
-		_circular     = false;
-		_iterator     = null;    
+		mReservedSize = reservedSize;
+		mSize         = 0;
+		mPoolSize     = 0;
+		mCircular     = false;
+		mIterator     = null;    
 		
 		if (reservedSize > 0)
 		{
-			_headPool = _tailPool = new SLLNode<T>(cast null, this);
+			mHeadPool = mTailPool = new SLLNode<T>(cast null, this);
 		}
 		
 		head = tail = null;
@@ -122,7 +117,7 @@ class SLL<T> implements Collection<T>
 	 */
 	public function isCircular():Bool
 	{
-		return _circular;
+		return mCircular;
 	}
 	
 	/**
@@ -132,9 +127,9 @@ class SLL<T> implements Collection<T>
 	 */
 	public function close()
 	{
-		if (_circular) return;
-		_circular = true;
-		if (_valid(head))
+		if (mCircular) return;
+		mCircular = true;
+		if (valid(head))
 			tail.next = head;
 	}
 	
@@ -145,9 +140,9 @@ class SLL<T> implements Collection<T>
 	 */
 	public function open()
 	{
-		if (!_circular) return;
-		_circular = false;
-		if (_valid(head))
+		if (!mCircular) return;
+		mCircular = false;
+		if (valid(head))
 			tail.next = null;
 	}
 	
@@ -173,17 +168,17 @@ class SLL<T> implements Collection<T>
 			assert(size() < maxSize, 'size equals max size ($maxSize)');
 		#end
 		
-		var node = _getNode(x);
-		if (_valid(tail))
+		var node = getNode(x);
+		if (valid(tail))
 			tail.next = node;
 		else
 			head = node;
 		tail = node;
 		
-		if (_circular)
+		if (mCircular)
 			tail.next = head;
 		
-		_size++;
+		mSize++;
 		return node;
 	}
 	
@@ -197,16 +192,16 @@ class SLL<T> implements Collection<T>
 		assert(x.getList() == this, "node is not managed by this list");
 		#end
 		
-		if (_valid(tail))
+		if (valid(tail))
 			tail.next = x;
 		else
 			head = x;
 		tail = x;
 		
-		if (_circular)
+		if (mCircular)
 			tail.next = head;
 		
-		_size++;
+		mSize++;
 	}
 	
 	/**
@@ -222,17 +217,17 @@ class SLL<T> implements Collection<T>
 			assert(size() < maxSize, 'size equals max size ($maxSize)');
 		#end
 		
-		var node = _getNode(x);
-		if (_valid(tail))
+		var node = getNode(x);
+		if (valid(tail))
 			node.next = head;
 		else
 			tail = node;
 		head = node;
 		
-		if (_circular)
+		if (mCircular)
 			tail.next = head;
 		
-		_size++;
+		mSize++;
 		return node;
 	}
 	
@@ -246,16 +241,16 @@ class SLL<T> implements Collection<T>
 		assert(x.getList() == this, "node is not managed by this list");
 		#end
 		
-		if (_valid(tail))
+		if (valid(tail))
 			x.next = head;
 		else
 			tail = x;
 		head = x;
 		
-		if (_circular)
+		if (mCircular)
 			tail.next = head;
 		
-		_size++;
+		mSize++;
 	}
 	
 	/**
@@ -269,20 +264,20 @@ class SLL<T> implements Collection<T>
 		#if debug
 		if (maxSize != -1)
 			assert(size() < maxSize, 'size equals max size ($maxSize)');
-		assert(_valid(node), "node is null");
+		assert(valid(node), "node is null");
 		assert(node.getList() == this, "node is not managed by this list");
 		#end
 		
-		var t = _getNode(x);
-		__insertAfter(node, t);
+		var t = getNode(x);
+		node.insertAfter(t);
 		
 		if (node == tail)
 		{
 			tail = t;
-			if (_circular)
+			if (mCircular)
 				tail.next = head;
 		}
-		_size++;
+		mSize++;
 		return t;
 	}
 	
@@ -297,23 +292,23 @@ class SLL<T> implements Collection<T>
 		#if debug
 		if (maxSize != -1)
 			assert(size() < maxSize, 'size equals max size ($maxSize)');
-		assert(_valid(node), "node is null");
+		assert(valid(node), "node is null");
 		assert(node.getList() == this, "node is not managed by this list");
 		#end
 		
-		var t = _getNode(x);
+		var t = getNode(x);
 		if (node == head)
 		{
 			t.next = head;
 			head = t;
 			
-			if (_circular)
+			if (mCircular)
 				tail.next = head;
 		}
 		else
-			__insertAfter(_getNodeBefore(node), t);
+			getNodeBefore(node).insertAfter(t);
 		
-		_size++;
+		mSize++;
 		return t;
 	}
 	
@@ -326,9 +321,9 @@ class SLL<T> implements Collection<T>
 	inline public function unlink(node:SLLNode<T>):SLLNode<T>
 	{
 		#if debug
-		assert(_valid(node), "node is null");
+		assert(valid(node), "node is null");
 		assert(node.getList() == this, "node is not managed by this list");
-		assert(_size > 0, "list is empty");
+		assert(mSize > 0, "list is empty");
 		#end
 		
 		var hook = node.next;
@@ -337,10 +332,10 @@ class SLL<T> implements Collection<T>
 			removeHead();
 		else
 		{
-			var t = _getNodeBefore(node);
+			var t = getNodeBefore(node);
 			if (t.next == tail)
 			{
-				if (_circular)
+				if (mCircular)
 				{
 					tail = t;
 					t.next = head;
@@ -355,8 +350,8 @@ class SLL<T> implements Collection<T>
 				t.next = hook;
 			
 			node.next = null;
-			_putNode(node);
-			_size--;
+			putNode(node);
+			mSize--;
 		}
 		
 		return hook;
@@ -372,8 +367,8 @@ class SLL<T> implements Collection<T>
 	inline public function getNodeAt(i:Int):SLLNode<T>
 	{
 		#if debug
-		assert(_size > 0, "list is empty");
-		assert(i >= 0 || i < _size, 'i index out of range ($i)');
+		assert(mSize > 0, "list is empty");
+		assert(i >= 0 || i < mSize, 'i index out of range ($i)');
 		#end
 		
 		var node = head;
@@ -389,24 +384,24 @@ class SLL<T> implements Collection<T>
 	inline public function removeHead():T
 	{
 		#if debug
-		assert(_size > 0, "list is empty");
+		assert(mSize > 0, "list is empty");
 		#end
 		
 		var node = head;
-		if (_size > 1)
+		if (mSize > 1)
 		{
 			head = head.next;
 			
-			if (_circular)
+			if (mCircular)
 				tail.next = head;
 		}
 		else
 			head = tail = null;
 		
-		_size--;
+		mSize--;
 		
 		node.next = null;
-		return _putNode(node);
+		return putNode(node);
 	}
 	
 	/**
@@ -417,29 +412,29 @@ class SLL<T> implements Collection<T>
 	inline public function removeTail():T
 	{
 		#if debug
-		assert(_size > 0, "list is empty");
+		assert(mSize > 0, "list is empty");
 		#end
 		
 		var node = tail;
-		if (_size > 1)
+		if (mSize > 1)
 		{
-			var t = _getNodeBefore(tail);
+			var t = getNodeBefore(tail);
 			tail = t;
 			
-			if (_circular)
+			if (mCircular)
 				t.next = head;
 			else
 				t.next = null;
-			_size--;
+			mSize--;
 		}
 		else
 		{
 			head = tail = null;
-			_size = 0;
+			mSize = 0;
 		}
 		
 		node.next = null;
-		return _putNode(node);
+		return putNode(node);
 	}
 	
 	/**
@@ -450,24 +445,24 @@ class SLL<T> implements Collection<T>
 	inline public function shiftUp()
 	{
 		#if debug
-		assert(_size > 0, "list is empty");
+		assert(mSize > 0, "list is empty");
 		#end
 		
-		if (_size > 1)
+		if (mSize > 1)
 		{
 			var t = head;
 			if (head.next == tail)
 			{
 				head = tail;
 				tail = t;
-				t.next = _circular ? head : null;
+				t.next = mCircular ? head : null;
 				head.next = tail;
 			}
 			else
 			{
 				head = head.next;
 				tail.next = t;
-				t.next = _circular ? head : null;
+				t.next = mCircular ? head : null;
 				tail = t;
 			}
 		}
@@ -481,17 +476,17 @@ class SLL<T> implements Collection<T>
 	inline public function popDown()
 	{
 		#if debug
-		assert(_size > 0, "list is empty");
+		assert(mSize > 0, "list is empty");
 		#end
 		
-		if (_size > 1)
+		if (mSize > 1)
 		{
 			var t = tail;
 			if (head.next == tail)
 			{
 				tail = head;
 				head = t;
-				t.next = _circular ? head : null;
+				t.next = mCircular ? head : null;
 				head.next = tail;
 			}
 			else
@@ -500,7 +495,7 @@ class SLL<T> implements Collection<T>
 				while (node.next != tail)
 					node = node.next;
 				tail = node;
-				tail.next = _circular ? t : null;
+				tail.next = mCircular ? t : null;
 				t.next = head;
 				head = t;
 			}
@@ -517,12 +512,12 @@ class SLL<T> implements Collection<T>
 	public function nodeOf(x:T, from:SLLNode<T> = null):SLLNode<T>
 	{
 		#if debug
-		if (_valid(from))
+		if (valid(from))
 			assert(from.getList() == this, "node is not managed by this list");
 		#end
 		
 		var node = (from == null) ? head : from;
-		while (_valid(node))
+		while (valid(node))
 		{
 			if (node.val == x) break;
 			node = node.next;
@@ -542,20 +537,20 @@ class SLL<T> implements Collection<T>
 	 */
 	public function sort(compare:T->T->Int, useInsertionSort = false)
 	{
-		if (_size > 1)
+		if (mSize > 1)
 		{
-			if (_circular) tail.next = null;
+			if (mCircular) tail.next = null;
 			
 			if (compare == null)
 			{
-				head = useInsertionSort ? _insertionSortComparable(head) : _mergeSortComparable(head);
+				head = useInsertionSort ? insertionSortComparable(head) : mergeSortComparable(head);
 			}
 			else
 			{
-				head = useInsertionSort ? _insertionSort(head, compare) : _mergeSort(head, compare);
+				head = useInsertionSort ? insertionSort(head, compare) : mergeSort(head, compare);
 			}
 			
-			if (_circular) tail.next = head;
+			if (mCircular) tail.next = head;
 		}
 	}
 	
@@ -574,16 +569,16 @@ class SLL<T> implements Collection<T>
 		assert(x != null, "x is null");
 		#end
 		
-		if (_valid(x.head))
+		if (valid(x.head))
 		{
 			var node = x.head;
 			for (i in 0...x.size())
 			{
-				__list(node, this);
+				node.mList = this;
 				node = node.next;
 			}
 			
-			if (_valid(head))
+			if (valid(head))
 			{
 				tail.next = x.head;
 				tail = x.tail;
@@ -594,9 +589,9 @@ class SLL<T> implements Collection<T>
 				tail = x.tail;
 			}
 			
-			_size += x.size();
+			mSize += x.size();
 			
-			if (_circular)
+			if (mCircular)
 				tail.next = head;
 		}
 	}
@@ -617,13 +612,13 @@ class SLL<T> implements Collection<T>
 		
 		var c = new SLL<T>();
 		var node = head;
-		for (i in 0..._size)
+		for (i in 0...mSize)
 		{
 			c.append(node.val);
 			node = node.next;
 		}
 		node = x.head;
-		for (i in 0...x._size)
+		for (i in 0...x.mSize)
 		{
 			c.append(node.val);
 			node = node.next;
@@ -638,11 +633,11 @@ class SLL<T> implements Collection<T>
 	 */
 	public function reverse()
 	{
-		if (_size > 1)
+		if (mSize > 1)
 		{
 			var v = new Array<T>();
 			var node = head;
-			for (i in 0..._size)
+			for (i in 0...mSize)
 			{
 				v[i] = node.val;
 				node = node.next;
@@ -651,7 +646,7 @@ class SLL<T> implements Collection<T>
 			v.reverse();
 			
 			var node = head;
-			for (i in 0..._size)
+			for (i in 0...mSize)
 			{
 				node.val = v[i];
 				node = node.next;
@@ -666,10 +661,10 @@ class SLL<T> implements Collection<T>
 	public function join(x:String):String
 	{
 		var s = "";
-		if (_size > 0)
+		if (mSize > 0)
 		{
 			var node = head;
-			for (i in 0..._size - 1)
+			for (i in 0...mSize - 1)
 			{
 				s += Std.string(node.val) + x;
 				node = node.next;
@@ -753,11 +748,11 @@ class SLL<T> implements Collection<T>
 	 */
 	public function shuffle(rval:DA<Float> = null)
 	{
-		var s = _size;
+		var s = mSize;
 		
 		if (s == 1) return;
 		
-		if (_circular) tail.next = null;
+		if (mCircular) tail.next = null;
 		
 		if (rval == null)
 		{
@@ -802,7 +797,7 @@ class SLL<T> implements Collection<T>
 			}
 		}
 		
-		if (_circular) tail.next = head;
+		if (mCircular) tail.next = head;
 	}
 	
 	/**
@@ -829,7 +824,7 @@ class SLL<T> implements Collection<T>
 		if (isEmpty()) return s;
 		s += "\n[ head \n";
 		var node = head;
-		for (i in 0..._size)
+		for (i in 0...mSize)
 		{
 			s += '  ${Std.string(node.val)}\n';
 			node = node.next;
@@ -850,7 +845,7 @@ class SLL<T> implements Collection<T>
 	public function free()
 	{
 		var node = head;
-		for (i in 0..._size)
+		for (i in 0...mSize)
 		{
 			var next = node.next;
 			node.free();
@@ -858,16 +853,16 @@ class SLL<T> implements Collection<T>
 		}
 		head = tail = null;
 		
-		var node = _headPool;
-		while (_valid(node))
+		var node = mHeadPool;
+		while (valid(node))
 		{
 			var next = node.next;
 			node.free();
 			node = next;
 		}
 		
-		_headPool = _tailPool = null;
-		_iterator = null;
+		mHeadPool = mTailPool = null;
+		mIterator = null;
 	}
 	
 	/**
@@ -877,7 +872,7 @@ class SLL<T> implements Collection<T>
 	public function contains(x:T):Bool
 	{
 		var node = head;
-		for (i in 0..._size)
+		for (i in 0...mSize)
 		{
 			if (node.val == x) return true;
 			node = node.next;
@@ -898,20 +893,20 @@ class SLL<T> implements Collection<T>
 		var node0 = head;
 		var node1 = head.next;
 		
-		for (i in 1..._size)
+		for (i in 1...mSize)
 		{
 			if (node1.val == x)
 			{
 				if (node1 == tail)
 				{
 					tail = node0;
-					if (_circular) tail.next = head;
+					if (mCircular) tail.next = head;
 				}
 				var node2 = node1.next;
 				node0.next = node2;
-				_putNode(node1);
+				putNode(node1);
 				node1 = node2;
-				_size--;
+				mSize--;
 			}
 			else
 			{
@@ -923,17 +918,17 @@ class SLL<T> implements Collection<T>
 		if (head.val == x)
 		{
 			var head1 = head.next;
-			_putNode(head);
+			putNode(head);
 			head = head1;
 			if (head == null)
 				tail = null;
 			else
 			{
-				if (_circular)
+				if (mCircular)
 					tail.next = head;
 			}
 			
-			_size--;
+			mSize--;
 		}
 		
 		return size() < s;
@@ -946,20 +941,20 @@ class SLL<T> implements Collection<T>
 	 */
 	inline public function clear(purge = false)
 	{
-		if (purge || _reservedSize > 0)
+		if (purge || mReservedSize > 0)
 		{
 			var node = head;
-			for (i in 0..._size)
+			for (i in 0...mSize)
 			{
 				var next = node.next;
 				node.next = null;
-				_putNode(node);
+				putNode(node);
 				node = next;
 			}
 		}
 		
 		head = tail = null;
-		_size = 0;
+		mSize = 0;
 	}
 	
 	/**
@@ -974,27 +969,27 @@ class SLL<T> implements Collection<T>
 	 *     node = node.next;
 	 * }
 	 * </pre>
-	 * @see <a href="http://haxe.org/ref/iterators" target="_blank">http://haxe.org/ref/iterators</a>
+	 * @see <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
 	 * 
 	 */
 	public function iterator():Itr<T>
 	{
 		if (reuseIterator)
 		{
-			if (_iterator == null)
+			if (mIterator == null)
 			{
-				if (_circular)
+				if (mCircular)
 					return new CircularSLLIterator<T>(this);
 				else
 					return new SLLIterator<T>(this);
 			}
 			else
-				_iterator.reset();
-			return _iterator;
+				mIterator.reset();
+			return mIterator;
 		}
 		else
 		{
-			if (_circular)
+			if (mCircular)
 				return new CircularSLLIterator<T>(this);
 			else
 				return new SLLIterator<T>(this);
@@ -1007,7 +1002,7 @@ class SLL<T> implements Collection<T>
 	 */
 	inline public function size():Int
 	{
-		return _size;
+		return mSize;
 	}
 	
 	/**
@@ -1016,7 +1011,7 @@ class SLL<T> implements Collection<T>
 	 */
 	inline public function isEmpty():Bool
 	{
-		return _size == 0;
+		return mSize == 0;
 	}
 	
 	/**
@@ -1027,7 +1022,7 @@ class SLL<T> implements Collection<T>
 	{
 		var a:Array<T> = ArrayUtil.alloc(size());
 		var node = head;
-		for (i in 0..._size)
+		for (i in 0...mSize)
 		{
 			a[i] = node.val;
 			node = node.next;
@@ -1043,7 +1038,7 @@ class SLL<T> implements Collection<T>
 	{
 		var v = new Vector<T>(size());
 		var node = head;
-		for (i in 0..._size)
+		for (i in 0...mSize)
 		{
 			v[i] = node.val;
 			node = node.next;
@@ -1060,29 +1055,29 @@ class SLL<T> implements Collection<T>
 	 */
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{
-		if (_size == 0)
+		if (mSize == 0)
 		{
-			var copy = new SLL<T>(_reservedSize, maxSize);
-			if (_circular) copy._circular = true;
+			var copy = new SLL<T>(mReservedSize, maxSize);
+			if (mCircular) copy.mCircular = true;
 			return copy;
 		}
 		
 		var copy = new SLL<T>();
-		if (_circular) copy._circular = true;
-		copy._size = _size;
+		if (mCircular) copy.mCircular = true;
+		copy.mSize = mSize;
 		
 		if (assign)
 		{
 			var srcNode = head;
 			var dstNode = copy.head = new SLLNode<T>(head.val, copy);
-			if (_size == 1)
+			if (mSize == 1)
 			{
 				copy.tail = copy.head;
-				if (_circular) copy.tail.next = copy.head;
+				if (mCircular) copy.tail.next = copy.head;
 				return copy;
 			}
 			srcNode = srcNode.next;
-			for (i in 1..._size - 1)
+			for (i in 1...mSize - 1)
 			{
 				dstNode = dstNode.next = new SLLNode<T>(srcNode.val, copy);
 				srcNode = srcNode.next;
@@ -1100,14 +1095,14 @@ class SLL<T> implements Collection<T>
 			
 			var c = cast(head.val, Cloneable<Dynamic>);
 			var dstNode = copy.head = new SLLNode<T>(c.clone(), copy);
-			if (_size == 1)
+			if (mSize == 1)
 			{
 				copy.tail = copy.head;
-				if (_circular) copy.tail.next = copy.head;
+				if (mCircular) copy.tail.next = copy.head;
 				return copy;
 			}
 			srcNode = srcNode.next;
-			for (i in 1..._size - 1)
+			for (i in 1...mSize - 1)
 			{
 				#if debug
 				assert(Std.is(srcNode.val, Cloneable), 'element is not of type Cloneable (${srcNode.val})');
@@ -1130,14 +1125,14 @@ class SLL<T> implements Collection<T>
 		{
 			var srcNode = head;
 			var dstNode = copy.head = new SLLNode<T>(copier(head.val), copy);
-			if (_size == 1)
+			if (mSize == 1)
 			{
-				if (_circular) copy.tail.next = copy.head;
+				if (mCircular) copy.tail.next = copy.head;
 				copy.tail = copy.head;
 				return copy;
 			}
 			srcNode = srcNode.next;
-			for (i in 1..._size - 1)
+			for (i in 1...mSize - 1)
 			{
 				dstNode = dstNode.next = new SLLNode<T>(copier(srcNode.val), copy);
 				srcNode = srcNode.next;
@@ -1145,11 +1140,11 @@ class SLL<T> implements Collection<T>
 			copy.tail = dstNode.next = new SLLNode<T>(copier(srcNode.val), copy);
 		}
 		
-		if (_circular) copy.tail.next = copy.head;
+		if (mCircular) copy.tail.next = copy.head;
 		return copy;
 	}
 	
-	function _mergeSortComparable(node:SLLNode<T>):SLLNode<T>
+	function mergeSortComparable(node:SLLNode<T>):SLLNode<T>
 	{
 		var h = node;
 		var p, q, e, tail = null;
@@ -1161,7 +1156,7 @@ class SLL<T> implements Collection<T>
 			h = tail = null;
 			nmerges = 0;
 			
-			while (_valid(p))
+			while (valid(p))
 			{
 				nmerges++;
 				
@@ -1175,7 +1170,7 @@ class SLL<T> implements Collection<T>
 				
 				qsize = insize;
 				
-				while (psize > 0 || (qsize > 0 && _valid(q)))
+				while (psize > 0 || (qsize > 0 && valid(q)))
 				{
 					if (psize == 0)
 					{
@@ -1202,7 +1197,7 @@ class SLL<T> implements Collection<T>
 						}
 					}
 					
-					if (_valid(tail))
+					if (valid(tail))
 						tail.next = e;
 					else
 						h = e;
@@ -1221,7 +1216,7 @@ class SLL<T> implements Collection<T>
 		return h;
 	}
 	
-	function _mergeSort(node:SLLNode<T>, cmp:T->T->Int):SLLNode<T>
+	function mergeSort(node:SLLNode<T>, cmp:T->T->Int):SLLNode<T>
 	{
 		var h = node;
 		var p, q, e, tail = null;
@@ -1234,7 +1229,7 @@ class SLL<T> implements Collection<T>
 			h = tail = null;
 			nmerges = 0;
 			
-			while (_valid(p))
+			while (valid(p))
 			{
 				nmerges++;
 				
@@ -1248,7 +1243,7 @@ class SLL<T> implements Collection<T>
 				
 				qsize = insize;
 				
-				while (psize > 0 || (qsize > 0 && _valid(q)))
+				while (psize > 0 || (qsize > 0 && valid(q)))
 				{
 					if (psize == 0)
 					{
@@ -1269,7 +1264,7 @@ class SLL<T> implements Collection<T>
 						e = q; q = q.next; qsize--;
 					}
 					
-					if (_valid(tail))
+					if (valid(tail))
 						tail.next = e;
 					else
 						h = e;
@@ -1288,12 +1283,12 @@ class SLL<T> implements Collection<T>
 		return h;
 	}
 	
-	function _insertionSortComparable(node:SLLNode<T>):SLLNode<T>
+	function insertionSortComparable(node:SLLNode<T>):SLLNode<T>
 	{
 		var v = new Array<T>();
 		var i = 0;
 		var t = node;
-		while (_valid(t))
+		while (valid(t))
 		{
 			v[i++] = t.val;
 			t = t.next;
@@ -1302,7 +1297,7 @@ class SLL<T> implements Collection<T>
 		var h = node;
 		var j;
 		var val;
-		for (i in 1..._size)
+		for (i in 1...mSize)
 		{
 			val = v[i];
 			j = i;
@@ -1327,7 +1322,7 @@ class SLL<T> implements Collection<T>
 		
 		t = h;
 		i = 0;
-		while (_valid(t))
+		while (valid(t))
 		{
 			t.val = v[i++];
 			t = t.next;
@@ -1335,12 +1330,12 @@ class SLL<T> implements Collection<T>
 		return h;
 	}
 	
-	function _insertionSort(node:SLLNode<T>, cmp:T->T->Int):SLLNode<T>
+	function insertionSort(node:SLLNode<T>, cmp:T->T->Int):SLLNode<T>
 	{
 		var v = new Array<T>();
 		var i = 0;
 		var t = node;
-		while (_valid(t))
+		while (valid(t))
 		{
 			v[i++] = t.val;
 			t = t.next;
@@ -1349,7 +1344,7 @@ class SLL<T> implements Collection<T>
 		var h = node;
 		var j;
 		var val;
-		for (i in 1..._size)
+		for (i in 1...mSize)
 		{
 			val = v[i];
 			j = i;
@@ -1363,7 +1358,7 @@ class SLL<T> implements Collection<T>
 		
 		t = h;
 		i = 0;
-		while (_valid(t))
+		while (valid(t))
 		{
 			t.val = v[i++];
 			t = t.next;
@@ -1371,12 +1366,12 @@ class SLL<T> implements Collection<T>
 		return h;
 	}
 	
-	inline function _valid(node:SLLNode<T>):Bool
+	inline function valid(node:SLLNode<T>):Bool
 	{
 		return node != null;
 	}
 	
-	inline function _getNodeBefore(x:SLLNode<T>):SLLNode<T>
+	inline function getNodeBefore(x:SLLNode<T>):SLLNode<T>
 	{
 		var node = head;
 		while (node.next != x)
@@ -1384,53 +1379,44 @@ class SLL<T> implements Collection<T>
 		return node;
 	}
 	
-	inline function _getNode(x:T)
+	inline function getNode(x:T)
 	{
-		if (_reservedSize == 0 || _poolSize == 0)
+		if (mReservedSize == 0 || mPoolSize == 0)
 			return new SLLNode<T>(x, this);
 		else
 		{
 			#if debug
-			assert(_valid(_headPool.next), "_headPool.next != null");
+			assert(valid(mHeadPool.next), "mHeadPool.next != null");
 			#end
 			
-			var t = _headPool;
-			_headPool = _headPool.next;
-			_poolSize--;
+			var t = mHeadPool;
+			mHeadPool = mHeadPool.next;
+			mPoolSize--;
 			t.val = x;
 			t.next = null;
 			return t;
 		}
 	}
 	
-	inline function _putNode(x:SLLNode<T>):T
+	inline function putNode(x:SLLNode<T>):T
 	{
 		var val = x.val;
 		
-		if (_reservedSize > 0 && _poolSize < _reservedSize)
+		if (mReservedSize > 0 && mPoolSize < mReservedSize)
 		{
 			#if debug
 			assert(x.next == null, "x.next == null");
 			#end
 			
-			_tailPool = _tailPool.next = x;
+			mTailPool = mTailPool.next = x;
 			x.val = cast null;
 			x.next = null;
-			_poolSize++;
+			mPoolSize++;
 		}
 		else
-			__list(x, null);
+			x.mList = null;
 		
 		return val;
-	}
-	
-	inline function __insertAfter(f:SLLNodeFriend<T>, x:SLLNode<T>)
-	{
-		f._insertAfter(x);
-	}
-	inline function __list(f:SLLNodeFriend<T>, x:SLL<T>)
-	{
-		f._list = x;
 	}
 }
 
@@ -1442,43 +1428,43 @@ private
 #end
 class SLLIterator<T> implements de.polygonal.ds.Itr<T>
 {
-	var _f:SLL<T>;
-	var _walker:SLLNode<T>;
-	var _hook:SLLNode<T>;
+	var mF:SLL<T>;
+	var mWalker:SLLNode<T>;
+	var mHook:SLLNode<T>;
 	
 	public function new(f:SLL<T>)
 	{
-		_f = f;
+		mF = f;
 		reset();
 	}
 	
 	inline public function reset():Itr<T>
 	{
-		_walker = _f.head;
-		_hook = null;
+		mWalker = mF.head;
+		mHook = null;
 		return this;
 	}
 	
 	inline public function hasNext():Bool
 	{
-		return _walker != null;
+		return mWalker != null;
 	}
 	
 	inline public function next():T
 	{
-		var x = _walker.val;
-		_hook = _walker;
-		_walker = _walker.next;
+		var x = mWalker.val;
+		mHook = mWalker;
+		mWalker = mWalker.next;
 		return x;
 	}
 	
 	inline public function remove()
 	{
 		#if debug
-		assert(_hook != null, "call next() before removing an element");
+		assert(mHook != null, "call next() before removing an element");
 		#end
 		
-		_f.unlink(_hook);
+		mF.unlink(mHook);
 	}
 }
 
@@ -1490,49 +1476,49 @@ private
 #end
 class CircularSLLIterator<T> implements de.polygonal.ds.Itr<T>
 {
-	var _f:SLL<T>;
-	var _walker:SLLNode<T>;
-	var _i:Int;
-	var _s:Int;
-	var _hook:SLLNode<T>;
+	var mF:SLL<T>;
+	var mWalker:SLLNode<T>;
+	var mI:Int;
+	var mS:Int;
+	var mHook:SLLNode<T>;
 	
 	public function new(f:SLL<T>)
 	{
-		_f = f;
+		mF = f;
 		reset();
 	}
 	
 	inline public function reset():Itr<T>
 	{
-		_walker = _f.head;
-		_s = _f.size();
-		_i = 0;
-		_hook = null;
+		mWalker = mF.head;
+		mS = mF.size();
+		mI = 0;
+		mHook = null;
 		return this;
 	}
 	
 	inline public function hasNext():Bool
 	{
-		return _i < _s;
+		return mI < mS;
 	}
 	
 	inline public function next():T
 	{
-		var x = _walker.val;
-		_hook = _walker;
-		_walker = _walker.next;
-		_i++;
+		var x = mWalker.val;
+		mHook = mWalker;
+		mWalker = mWalker.next;
+		mI++;
 		return x;
 	}
 	
 	inline public function remove()
 	{
 		#if debug
-		assert(_i > 0, "call next() before removing an element");
+		assert(mI > 0, "call next() before removing an element");
 		#end
 		
-		_f.unlink(_hook);
-		_i--;
-		_s--;
+		mF.unlink(mHook);
+		mI--;
+		mS--;
 	}
 }

@@ -41,7 +41,7 @@ class SLLNode<T>
 	 */
 	public var next:SLLNode<T>;
 	
-	var _list:SLL<T>;
+	var mList:SLL<T>;
 	
 	/**
 	 * @param x the element to store in this node.
@@ -50,7 +50,7 @@ class SLLNode<T>
 	public function new(x:T, list:SLL<T>)
 	{
 		val = x;
-		_list = list;
+		mList = list;
 	}
 	
 	/**
@@ -72,10 +72,10 @@ class SLLNode<T>
 	inline public function isHead():Bool
 	{
 		#if debug
-		assert(_list != null, "node is not managed by a list");
+		assert(mList != null, "node is not managed by a list");
 		#end
 		
-		return this == _list.head;
+		return this == mList.head;
 	}
 	
 	/**
@@ -86,10 +86,10 @@ class SLLNode<T>
 	inline public function isTail():Bool
 	{
 		#if debug
-		assert(_list != null, "node is not managed by a list");
+		assert(mList != null, "node is not managed by a list");
 		#end
 		
-		return this == _list.tail;
+		return this == mList.tail;
 	}
 	
 	/**
@@ -121,7 +121,7 @@ class SLLNode<T>
 	 */
 	inline public function getList():SLL<T>
 	{
-		return _list;
+		return mList;
 	}
 	
 	/**
@@ -132,10 +132,10 @@ class SLLNode<T>
 	inline public function unlink():SLLNode<T>
 	{
 		#if debug
-		assert(_list != null, "_list != null");
+		assert(mList != null, "mList != null");
 		#end
 		
-		return _list.unlink(this);
+		return mList.unlink(this);
 	}
 	
 	/**
@@ -146,7 +146,7 @@ class SLLNode<T>
 		return '{ SLLNode ${Std.string(val)} }';
 	}
 	
-	inline function _insertAfter(node:SLLNode<T>)
+	inline function insertAfter(node:SLLNode<T>)
 	{
 		node.next = next;
 		next = node;

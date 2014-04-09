@@ -295,7 +295,7 @@ class FloatMemory extends MemoryAccess
 	}
 	
 	#if !alchemy
-	var _data:Vector<Float>;
+	var mData:Vector<Float>;
 	#end
 	
 	/**
@@ -312,14 +312,14 @@ class FloatMemory extends MemoryAccess
 		this.size = size;
 		
 		#if !alchemy
-		_data = new Vector<Float>(size);
+		mData = new Vector<Float>(size);
 		#end
 	}
 	
 	#if !alchemy
 	override public function free()
 	{
-		_data = null;
+		mData = null;
 		super.free();
 	}
 	#end
@@ -336,8 +336,8 @@ class FloatMemory extends MemoryAccess
 		for (i in 0...size)
 			flash.Memory.setFloat(dst + (i << 2), flash.Memory.getFloat(src + (i << 2)));
 		#else
-		var t = c._data;
-		for (i in 0...size) t[i] = _data[i];
+		var t = c.mData;
+		for (i in 0...size) t[i] = mData[i];
 		#end
 		return c;
 	}
@@ -357,7 +357,7 @@ class FloatMemory extends MemoryAccess
 		if ((size & 1) == 1)
 			flash.Memory.setFloat(getAddr(size - 1), x);
 		#else
-		for (i in 0...size) _data[i] = x;
+		for (i in 0...size) mData[i] = x;
 		#end
 		
 		return this;
@@ -376,8 +376,8 @@ class FloatMemory extends MemoryAccess
 		super.resize(newSize << 2);
 		#else
 		var tmp = new Vector<Float>(newSize);
-		for (i in 0...M.min(newSize, size)) tmp[i] = _data[i];
-		_data = tmp;
+		for (i in 0...M.min(newSize, size)) tmp[i] = mData[i];
+		mData = tmp;
 		#end
 		
 		size = newSize;
@@ -393,7 +393,7 @@ class FloatMemory extends MemoryAccess
 		#if alchemy
 		return flash.Memory.getFloat(getAddr(i));
 		#else
-		return _data[i];
+		return mData[i];
 		#end
 	}
 	
@@ -407,7 +407,7 @@ class FloatMemory extends MemoryAccess
 		#if alchemy
 		flash.Memory.setFloat(getAddr(i), x);
 		#else
-		_data[i] = x;
+		mData[i] = x;
 		#end
 	}
 	
@@ -428,7 +428,7 @@ class FloatMemory extends MemoryAccess
 		flash.Memory.setFloat(ai, flash.Memory.getFloat(aj));
 		flash.Memory.setFloat(ai, tmp);
 		#else
-		var tmp = _data[i]; _data[i] = _data[j]; _data[j] = tmp;
+		var tmp = mData[i]; mData[i] = mData[j]; mData[j] = tmp;
 		#end
 	}
 	
@@ -440,7 +440,7 @@ class FloatMemory extends MemoryAccess
 	inline public function getAddr(i:Int):Int
 	{
 		assert(i >= 0 && i < size, 'segfault, index $i');
-		assert(_memory != null, "memory deallocated");
+		assert(mMemory != null, "memory deallocated");
 		
 		#if alchemy
 		return offset + (i << 2);
@@ -452,7 +452,7 @@ class FloatMemory extends MemoryAccess
 	#if !alchemy
 	override public function clear()
 	{
-		for (i in 0...size) _data[i] = .0;
+		for (i in 0...size) mData[i] = .0;
 	}
 	#end
 	
@@ -478,7 +478,7 @@ class FloatMemory extends MemoryAccess
 	public function toString():String
 	{
 		#if debug
-		if (_memory == null) return "{ FloatMemory (unassigned) }";
+		if (mMemory == null) return "{ FloatMemory (unassigned) }";
 		var s = '{ FloatMemory, size: $size, name: $name }';
 		s += "\n[\n";
 		for (i in 0...size)

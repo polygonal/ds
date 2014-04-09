@@ -1,4 +1,4 @@
-﻿package test.mem;
+﻿package mem;
 
 import de.polygonal.ds.mem.FloatMemory;
 
@@ -262,7 +262,7 @@ class TestFloatMemory extends haxe.unit.TestCase
 	
 	function checkBytesData(data:BytesData, min = -1, max = -1)
 	{
-		#if (flash && !flash8)
+		#if flash
 		data.position = 0;
 		
 		if (min == -1) min = 0;

@@ -44,15 +44,15 @@ class BST<T:Comparable<T>> implements Collection<T>
 	 */
 	public var reuseIterator:Bool;
 	
-	var _size:Int;
-	var _root:BinaryTreeNode<T>;
-	var _iterator:BSTIterator<T>;
+	var mSize:Int;
+	var mRoot:BinaryTreeNode<T>;
+	var mIterator:BSTIterator<T>;
 	
 	public function new()
 	{
-		_root         = null;
-		_iterator     = null;
-		_size         = 0;
+		mRoot         = null;
+		mIterator     = null;
+		mSize         = 0;
 		key           = HashKey.next();
 		reuseIterator = false;
 	}
@@ -63,7 +63,7 @@ class BST<T:Comparable<T>> implements Collection<T>
 	 */
 	public function root():BinaryTreeNode<T>
 	{
-		return _root;
+		return mRoot;
 	}
 	
 	/**
@@ -78,16 +78,16 @@ class BST<T:Comparable<T>> implements Collection<T>
 		assert(x != null, "element is null");
 		#end
 		
-		_size++;
-		if (_root == null)
+		mSize++;
+		if (mRoot == null)
 		{
-			_root = new BinaryTreeNode<T>(x);
-			return _root;
+			mRoot = new BinaryTreeNode<T>(x);
+			return mRoot;
 		}
 		else
 		{
 			var t:BinaryTreeNode<T> = null;
-			var node = _root;
+			var node = mRoot;
 			while (node != null)
 			{
 				if (x.compare(node.val) < 0)
@@ -127,11 +127,11 @@ class BST<T:Comparable<T>> implements Collection<T>
 	public function find(x:T):BinaryTreeNode<T>
 	{
 		#if debug
-		assert(_root != null, "tree is empty");
+		assert(mRoot != null, "tree is empty");
 		assert(x != null, "element is null");
 		#end
 		
-		var node = _root;
+		var node = mRoot;
 		while (node != null)
 		{
 			var i = x.compare(node.val);
@@ -159,7 +159,7 @@ class BST<T:Comparable<T>> implements Collection<T>
 			if (x.l != null) child = x.l;
 			if (x.r != null) child = x.r;
 			if (x.p == null)
-				_root = child;
+				mRoot = child;
 			else
 			{
 				if (x == x.p.l)
@@ -194,7 +194,7 @@ class BST<T:Comparable<T>> implements Collection<T>
 			}
 			
 			if (x.p == null)
-				_root = l;
+				mRoot = l;
 			else
 			{
 				if (x == x.p.l)
@@ -209,7 +209,7 @@ class BST<T:Comparable<T>> implements Collection<T>
 			x = null;
 		}
 		
-		if (--_size == 0) _root = null;
+		if (--mSize == 0) mRoot = null;
 		
 		return true;
 	}
@@ -266,7 +266,7 @@ class BST<T:Comparable<T>> implements Collection<T>
 			return true;
 		};
 		
-		_root.inorder(dumpNode);
+		mRoot.inorder(dumpNode);
 		s += "]";
 		return s;
 	}
@@ -282,9 +282,9 @@ class BST<T:Comparable<T>> implements Collection<T>
 	 */
 	public function free()
 	{
-		_root.free();
-		_root = null;
-		_iterator = null;
+		mRoot.free();
+		mRoot = null;
+		mIterator = null;
 	}
 	
 	/**
@@ -293,7 +293,7 @@ class BST<T:Comparable<T>> implements Collection<T>
 	 */
 	inline public function contains(x:T):Bool
 	{
-		return _size > 0 && (find(x) != null);
+		return mSize > 0 && (find(x) != null);
 	}
 	
 	/**
@@ -310,7 +310,7 @@ class BST<T:Comparable<T>> implements Collection<T>
 		
 		if (size() == 0) return false;
 		
-		var s = _root.size();
+		var s = mRoot.size();
 		var found = false;
 		while (s > 0)
 		{
@@ -332,31 +332,31 @@ class BST<T:Comparable<T>> implements Collection<T>
 	{
 		if (purge)
 		{
-			if (_root != null)
-				_root.clear(purge);
+			if (mRoot != null)
+				mRoot.clear(purge);
 		}
 		
-		_root = null;
-		_size = 0;
+		mRoot = null;
+		mSize = 0;
 	}
 	
 	/**
 	 * Returns a new <em>BSTIterator</em> object to iterate over all elements contained in this BST.<br/>
 	 * The elements are visited by using a preorder traversal.
-	 * @see <a href="http://haxe.org/ref/iterators" target="_blank">http://haxe.org/ref/iterators</a>
+	 * @see <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
 	 */
 	public function iterator():Itr<T>
 	{
 		if (reuseIterator)
 		{
-			if (_iterator == null)
-				_iterator = new BSTIterator<T>(_root);
+			if (mIterator == null)
+				mIterator = new BSTIterator<T>(mRoot);
 			else
-				_iterator.reset();
-			return _iterator;
+				mIterator.reset();
+			return mIterator;
 		}
 		else
-			return new BSTIterator<T>(_root);
+			return new BSTIterator<T>(mRoot);
 	}
 	
 	/**
@@ -365,7 +365,7 @@ class BST<T:Comparable<T>> implements Collection<T>
 	 */
 	public function size():Int
 	{
-		return _size;
+		return mSize;
 	}
 	
 	/**
@@ -374,7 +374,7 @@ class BST<T:Comparable<T>> implements Collection<T>
 	 */
 	public function isEmpty():Bool
 	{
-		return _size == 0;
+		return mSize == 0;
 	}
 	
 	/**
@@ -385,7 +385,7 @@ class BST<T:Comparable<T>> implements Collection<T>
 	{
 		var a:Array<T> = ArrayUtil.alloc(size());
 		var i = 0;
-		_root.preorder(function(node:BinaryTreeNode<T>, userData:Dynamic):Bool { a[i++] = node.val; return true; });
+		mRoot.preorder(function(node:BinaryTreeNode<T>, userData:Dynamic):Bool { a[i++] = node.val; return true; });
 		return a;
 	}
 	
@@ -397,7 +397,7 @@ class BST<T:Comparable<T>> implements Collection<T>
 	{
 		var v = new Vector<T>(size());
 		var i = 0;
-		_root.preorder(function(node:BinaryTreeNode<T>, userData:Dynamic):Bool { v[i++] = node.val; return true; });
+		mRoot.preorder(function(node:BinaryTreeNode<T>, userData:Dynamic):Bool { v[i++] = node.val; return true; });
 		return v;
 	}
 	
@@ -411,8 +411,8 @@ class BST<T:Comparable<T>> implements Collection<T>
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{
 		var copy = new BST<T>();
-		copy._root = cast _root.clone(assign, copier);
-		copy._size = _size;
+		copy.mRoot = cast mRoot.clone(assign, copier);
+		copy.mSize = mSize;
 		return copy;
 	}
 }
@@ -425,49 +425,49 @@ private
 #end
 class BSTIterator<T> implements de.polygonal.ds.Itr<T>
 {
-	var _node:BinaryTreeNode<T>;
-	var _stack:Array<BinaryTreeNode<T>>;
-	var _top:Int;
-	var _c:Int;
+	var mNode:BinaryTreeNode<T>;
+	var mStack:Array<BinaryTreeNode<T>>;
+	var mTop:Int;
+	var mC:Int;
 	
 	public function new(node:BinaryTreeNode<T>)
 	{
-		_node = node;
-		_stack = new Array<BinaryTreeNode<T>>();
+		mNode = node;
+		mStack = new Array<BinaryTreeNode<T>>();
 		reset();
 	}
 	
 	inline public function reset():Itr<T>
 	{
-		_stack[0] = _node;
-		_top = 1;
-		_c = 0;
+		mStack[0] = mNode;
+		mTop = 1;
+		mC = 0;
 		return this;
 	}
 	
 	inline public function hasNext():Bool
 	{
-		return _top > 0;
+		return mTop > 0;
 	}
 	
 	inline public function next():T
 	{
-		var node = _stack[--_top];
+		var node = mStack[--mTop];
 		if (node.hasL())
 		{
-			_c++;
-			_stack[_top++] = node.l;
+			mC++;
+			mStack[mTop++] = node.l;
 		}
 		if (node.hasR())
 		{
-			_c++;
-			_stack[_top++] = node.r;
+			mC++;
+			mStack[mTop++] = node.r;
 		}
 		return node.val;
 	}
 	
 	inline public function remove()
 	{
-		_top -= _c;
+		mTop -= mC;
 	}
 }

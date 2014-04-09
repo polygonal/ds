@@ -1,6 +1,4 @@
-﻿package;
-
-import de.polygonal.ds.Graph;
+﻿import de.polygonal.ds.Graph;
 import de.polygonal.ds.GraphArc;
 import de.polygonal.ds.GraphNode;
 

@@ -72,7 +72,7 @@ interface Map<K, T> extends Collection<T>
 	
 	/**
 	 * Creates and returns an iterator over all keys in this map.
-	 * @see <a href="http://haxe.org/ref/iterators" target="_blank">http://haxe.org/ref/iterators</a>
+	 * @see <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
 	 */
 	function keys():Itr<K>;
 }

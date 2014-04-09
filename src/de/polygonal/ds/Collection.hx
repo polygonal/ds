@@ -65,7 +65,7 @@ interface Collection<T> extends Hashable
 	 *     var element:* = itr.next();
 	 *     trace(element);
 	 * }</pre>
-	 * @see <a href="http://haxe.org/ref/iterators" target="_blank">http://haxe.org/ref/iterators</a>
+	 * @see <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
 	 */
 	function iterator():Itr<T>;
 	

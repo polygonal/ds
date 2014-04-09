@@ -1,7 +1,6 @@
-﻿package;
+﻿import de.polygonal.ds.PriorityQueue;
 
-import de.polygonal.ds.PriorityQueue;
-
+@:access(de.polygonal.ds.PriorityQueue)
 class TestPriorityQueue extends haxe.unit.TestCase
 {
 	function test()
@@ -27,7 +26,7 @@ class TestPriorityQueue extends haxe.unit.TestCase
 		pq.enqueue(b);
 		pq.enqueue(c);
 		
-		var a:Array<E> = untyped pq._a;
+		var a:Array<E> = pq.mA;
 		
 		assertEquals(null, a[0]);
 		assertEquals(1.  , a[1].priority);
@@ -57,14 +56,14 @@ class TestPriorityQueue extends haxe.unit.TestCase
 		pq.enqueue(new E(2));
 		pq.clear();
 		
-		var a:Array<E> = untyped pq._a;
+		var a:Array<E> = pq.mA;
 		assertEquals(null, a[0]);
 		assertEquals(2.  , a[1].priority);
 		assertEquals(0.  , a[2].priority);
 		assertEquals(1.  , a[3].priority);
 		pq.pack();
 		
-		var a:Array<E> = untyped pq._a;
+		var a:Array<E> = pq.mA;
 		assertEquals(null, a[0]);
 		assertEquals(null, a[1]);
 		assertEquals(null, a[2]);
@@ -114,7 +113,7 @@ class TestPriorityQueue extends haxe.unit.TestCase
 		pq.enqueue(new E(2));
 		pq.enqueue(new E(3));
 		
-		var copy:PriorityQueue<E> = untyped pq.clone(false);
+		var copy:PriorityQueue<E> = cast pq.clone(false);
 		assertEquals(3., copy.dequeue().priority);
 		assertEquals(2., copy.dequeue().priority);
 		assertEquals(1., copy.dequeue().priority);

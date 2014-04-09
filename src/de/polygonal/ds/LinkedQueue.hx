@@ -20,17 +20,11 @@ package de.polygonal.ds;
 
 import de.polygonal.ds.error.Assert.assert;
 
-private typedef LinkedQueueFriend<T> =
-{
-	private var _head:LinkedQueueNode<T>;
-	private function _removeNode(x:LinkedQueueNode<T>):Void;
-}
-
 /**
  * <p>A queue based on a linked list.</p>
  * <p>A queue is a linear list for which all insertions are made at one end of the list; all deletions (and usually all accesses) are made at the other end.</p>
  * <p>This is called a FIFO structure (First In, First Out).</p>
- * <p>See <a href="http://lab.polygonal.de/2007/05/23/data-structures-example-the-queue-class/" target="_blank">http://lab.polygonal.de/2007/05/23/data-structures-example-the-queue-class/</a></p>
+ * <p>See <a href="http://lab.polygonal.de/2007/05/23/data-structures-example-the-queue-class/" target="mBlank">http://lab.polygonal.de/2007/05/23/data-structures-example-the-queue-class/</a></p>
  * <p><o>Worst-case running time in Big O notation</o></p>
  */
 #if generic
@@ -60,17 +54,17 @@ class LinkedQueue<T> implements Queue<T>
 	 */
 	public var reuseIterator:Bool;
 	
-	var _head:LinkedQueueNode<T>;
-	var _tail:LinkedQueueNode<T>;
+	var mHead:LinkedQueueNode<T>;
+	var mTail:LinkedQueueNode<T>;
 	
-	var _size:Int;
-	var _reservedSize:Int;
-	var _poolSize:Int;
+	var mSize:Int;
+	var mReservedSize:Int;
+	var mPoolSize:Int;
 	
-	var _headPool:LinkedQueueNode<T>;
-	var _tailPool:LinkedQueueNode<T>;
+	var mHeadPool:LinkedQueueNode<T>;
+	var mTailPool:LinkedQueueNode<T>;
 	
-	var _iterator:LinkedQueueIterator<T>;
+	var mIterator:LinkedQueueIterator<T>;
 	
 	/**
 	 * @param reservedSize if &gt; 0, this queue maintains an object pool of node objects.<br/>
@@ -92,21 +86,21 @@ class LinkedQueue<T> implements Queue<T>
 		this.maxSize = -1;
 		#end
 		
-		_reservedSize = reservedSize;
-		_size         = 0;
-		_poolSize     = 0;
-		_iterator     = null;
-		_head         = null;
-		_tail         = null;
+		mReservedSize = reservedSize;
+		mSize         = 0;
+		mPoolSize     = 0;
+		mIterator     = null;
+		mHead         = null;
+		mTail         = null;
 		
 		if (reservedSize > 0)
 		{
-			_headPool = _tailPool = new LinkedQueueNode<T>(cast null);
+			mHeadPool = mTailPool = new LinkedQueueNode<T>(cast null);
 		}
 		else
 		{
-			_headPool = null;
-			_tailPool = null;
+			mHeadPool = null;
+			mTailPool = null;
 		}
 		
 		key = HashKey.next();
@@ -122,9 +116,9 @@ class LinkedQueue<T> implements Queue<T>
 	inline public function peek():T
 	{
 		#if debug
-		assert(_head != null, "queue is empty");
+		assert(mHead != null, "queue is empty");
 		#end
-		return _head.val;
+		return mHead.val;
 	}
 	
 	/**
@@ -136,9 +130,9 @@ class LinkedQueue<T> implements Queue<T>
 	inline public function back():T
 	{
 		#if debug
-		assert(_tail != null, "queue is empty");
+		assert(mTail != null, "queue is empty");
 		#end
-		return _tail.val;
+		return mTail.val;
 	}
 	
 	/**
@@ -153,18 +147,18 @@ class LinkedQueue<T> implements Queue<T>
 			assert(size() < maxSize, 'size equals max size ($maxSize)');
 		#end
 		
-		_size++;
+		mSize++;
 		
-		var node = _getNode(x);
-		if (_head == null)
+		var node = getNode(x);
+		if (mHead == null)
 		{
-			_head = _tail = node;
-			_head.next = null;
+			mHead = mTail = node;
+			mHead.next = null;
 		}
 		else
 		{
-			_tail.next = node;
-			_tail = node;
+			mTail.next = node;
+			mTail = node;
 		}
 	}
 	
@@ -176,21 +170,21 @@ class LinkedQueue<T> implements Queue<T>
 	inline public function dequeue():T
 	{
 		#if debug
-		assert(_head != null, "queue is empty");
+		assert(mHead != null, "queue is empty");
 		#end
 		
-		_size--;
+		mSize--;
 		
-		var node = _head;
-		if (_head == _tail)
+		var node = mHead;
+		if (mHead == mTail)
 		{
-			_head = null;
-			_tail = null;
+			mHead = null;
+			mTail = null;
 		}
 		else
-			_head = _head.next;
+			mHead = mHead.next;
 		
-		return _putNode(node);
+		return putNode(node);
 	}
 	
 	/**
@@ -218,7 +212,7 @@ class LinkedQueue<T> implements Queue<T>
 			n = size();
 		
 		if (args == null) args = [];
-		var node = _head;
+		var node = mHead;
 		for (i in 0...n)
 		{
 			node.val = Type.createInstance(C, args);
@@ -248,7 +242,7 @@ class LinkedQueue<T> implements Queue<T>
 		else
 			n = size();
 		
-		var node = _head;
+		var node = mHead;
 		for (i in 0...n)
 		{
 			node.val = x;
@@ -267,7 +261,7 @@ class LinkedQueue<T> implements Queue<T>
 	 */
 	public function shuffle(rval:DA<Float> = null)
 	{
-		var s = _size;
+		var s = mSize;
 		if (rval == null)
 		{
 			var m = Math;
@@ -275,12 +269,12 @@ class LinkedQueue<T> implements Queue<T>
 			{
 				s--;
 				var i = Std.int(m.random() * s);
-				var node1 = _head;
+				var node1 = mHead;
 				for (j in 0...s) node1 = node1.next;
 				
 				var t = node1.val;
 				
-				var node2 = _head;
+				var node2 = mHead;
 				for (j in 0...i) node2 = node2.next;
 				
 				node1.val = node2.val;
@@ -298,12 +292,12 @@ class LinkedQueue<T> implements Queue<T>
 			{
 				s--;
 				var i = Std.int(rval.get(j++) * s);
-				var node1 = _head;
+				var node1 = mHead;
 				for (j in 0...s) node1 = node1.next;
 				
 				var t = node1.val;
 				
-				var node2 = _head;
+				var node2 = mHead;
 				for (j in 0...i) node2 = node2.next;
 				
 				node1.val = node2.val;
@@ -334,7 +328,7 @@ class LinkedQueue<T> implements Queue<T>
 		var s = '{ LinkedQueue size: ${size()} }';
 		if (isEmpty()) return s;
 		s += "\n[\n";
-		var node = _head;
+		var node = mHead;
 		var i = 0;
 		while (node != null)
 		{
@@ -356,7 +350,7 @@ class LinkedQueue<T> implements Queue<T>
 	 */
 	public function free()
 	{
-		var node = _head;
+		var node = mHead;
 		while (node != null)
 		{
 			var next = node.next;
@@ -365,9 +359,9 @@ class LinkedQueue<T> implements Queue<T>
 			node = next;
 		}
 		
-		_head = _tail = null;
+		mHead = mTail = null;
 		
-		var node = _headPool;
+		var node = mHeadPool;
 		while (node != null)
 		{
 			var next = node.next;
@@ -376,8 +370,8 @@ class LinkedQueue<T> implements Queue<T>
 			node = next;
 		}
 		
-		_headPool = _tailPool = null;
-		_iterator = null;
+		mHeadPool = mTailPool = null;
+		mIterator = null;
 	}
 	
 	/**
@@ -386,7 +380,7 @@ class LinkedQueue<T> implements Queue<T>
 	 */
 	public function contains(x:T):Bool
 	{
-		var node = _head;
+		var node = mHead;
 		while (node != null)
 		{
 			if (node.val == x)
@@ -406,17 +400,17 @@ class LinkedQueue<T> implements Queue<T>
 		if (isEmpty()) return false;
 		
 		var found = false;
-		var node0 = _head;
-		var node1 = _head.next;
+		var node0 = mHead;
+		var node1 = mHead.next;
 		
-		if (_head == _tail)
+		if (mHead == mTail)
 		{
-			if (_head.val == x)
+			if (mHead.val == x)
 			{
-				_size = 0;
-				_putNode(_head);
-				_head = null;
-				_tail = null;
+				mSize = 0;
+				putNode(mHead);
+				mHead = null;
+				mTail = null;
 				return true;
 			}
 			
@@ -428,12 +422,12 @@ class LinkedQueue<T> implements Queue<T>
 			if (node1.val == x)
 			{
 				found = true;
-				if (node1 == _tail) _tail = node0;
+				if (node1 == mTail) mTail = node0;
 				var node2 = node1.next;
 				node0.next = node2;
-				_putNode(node1);
+				putNode(node1);
 				node1 = node2;
-				_size--;
+				mSize--;
 			}
 			else
 			{
@@ -442,14 +436,14 @@ class LinkedQueue<T> implements Queue<T>
 			}
 		}
 		
-		if (_head.val == x)
+		if (mHead.val == x)
 		{
 			found = true;
-			var head1 = _head.next;
-			_putNode(_head);
-			_head = head1;
-			if (_head == null) _tail = null;
-			_size--;
+			var head1 = mHead.next;
+			putNode(mHead);
+			mHead = head1;
+			if (mHead == null) mTail = null;
+			mSize--;
 		}
 		
 		return found;
@@ -462,35 +456,35 @@ class LinkedQueue<T> implements Queue<T>
 	 */
 	public function clear(purge = false)
 	{
-		if (purge || _reservedSize > 0)
+		if (purge || mReservedSize > 0)
 		{
-			var node = _head;
+			var node = mHead;
 			while (node != null)
 			{
 				var next = node.next;
-				_putNode(node);
+				putNode(node);
 				node = node.next;
 			}
 		}
 		
-		_head = _tail = null;
-		_size = 0;
+		mHead = mTail = null;
+		mSize = 0;
 	}
 	
 	/**
 	 * Returns a new <em>LinkedQueue</em> object to iterate over all elements contained in this queue.<br/>
 	 * Preserves the natural order of a queue (First-In-First-Out).
-	 * @see <a href="http://haxe.org/ref/iterators" target="_blank">http://haxe.org/ref/iterators</a>
+	 * @see <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
 	 */
 	public function iterator():Itr<T>
 	{
 		if (reuseIterator)
 		{
-			if (_iterator == null)
+			if (mIterator == null)
 				return new LinkedQueueIterator<T>(this);
 			else
-				_iterator.reset();
-			return _iterator;
+				mIterator.reset();
+			return mIterator;
 		}
 		else
 			return new LinkedQueueIterator<T>(this);
@@ -502,7 +496,7 @@ class LinkedQueue<T> implements Queue<T>
 	 */
 	inline public function size():Int
 	{
-		return _size;
+		return mSize;
 	}
 	
 	/**
@@ -511,7 +505,7 @@ class LinkedQueue<T> implements Queue<T>
 	 */
 	inline public function isEmpty():Bool
 	{
-		return _size == 0;
+		return mSize == 0;
 	}
 	
 	/**
@@ -522,7 +516,7 @@ class LinkedQueue<T> implements Queue<T>
 	{
 		var a:Array<T> = ArrayUtil.alloc(size());
 		var i = 0;
-		var node = _head;
+		var node = mHead;
 		while (node != null)
 		{
 			a[i++] = node.val;
@@ -539,7 +533,7 @@ class LinkedQueue<T> implements Queue<T>
 	{
 		var v = new Vector<T>(size());
 		var i = 0;
-		var node = _head;
+		var node = mHead;
 		while (node != null)
 		{
 			v[i++] = node.val;
@@ -557,25 +551,25 @@ class LinkedQueue<T> implements Queue<T>
 	 */
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{
-		var copy = new LinkedQueue<T>(_reservedSize, maxSize);
-		if (_size == 0) return copy;
+		var copy = new LinkedQueue<T>(mReservedSize, maxSize);
+		if (mSize == 0) return copy;
 		
 		if (assign)
 		{
-			var node = _head;
+			var node = mHead;
 			if (node != null)
 			{
-				copy._head = copy._tail = new LinkedQueueNode<T>(node.val);
-				copy._head.next = copy._tail;
+				copy.mHead = copy.mTail = new LinkedQueueNode<T>(node.val);
+				copy.mHead.next = copy.mTail;
 			}
 			
-			if (_size > 1)
+			if (mSize > 1)
 			{
 				node = node.next;
 				while (node != null)
 				{
 					var t = new LinkedQueueNode<T>(node.val);
-					copy._tail = copy._tail.next = t;
+					copy.mTail = copy.mTail.next = t;
 					node = node.next;
 				}
 			}
@@ -583,18 +577,18 @@ class LinkedQueue<T> implements Queue<T>
 		else
 		if (copier == null)
 		{
-			var node = _head;
+			var node = mHead;
 			if (node != null)
 			{
 				#if debug
 				assert(Std.is(node.val, Cloneable), 'element is not of type Cloneable (${node.val})');
 				#end
 				var c = cast(node.val, Cloneable<Dynamic>);
-				copy._head = copy._tail = new LinkedQueueNode<T>(c.clone());
-				copy._head.next = copy._tail;
+				copy.mHead = copy.mTail = new LinkedQueueNode<T>(c.clone());
+				copy.mHead.next = copy.mTail;
 			}
 			
-			if (_size > 1)
+			if (mSize > 1)
 			{
 				node = node.next;
 				while (node != null)
@@ -604,82 +598,82 @@ class LinkedQueue<T> implements Queue<T>
 					#end
 					var c = cast(node.val, Cloneable<Dynamic>);
 					var t = new LinkedQueueNode<T>(c.clone());
-					copy._tail = copy._tail.next = t;
+					copy.mTail = copy.mTail.next = t;
 					node = node.next;
 				}
 			}
 		}
 		else
 		{
-			var node = _head;
+			var node = mHead;
 			if (node != null)
 			{
-				copy._head = copy._tail = new LinkedQueueNode<T>(copier(node.val));
-				copy._head.next = copy._tail;
+				copy.mHead = copy.mTail = new LinkedQueueNode<T>(copier(node.val));
+				copy.mHead.next = copy.mTail;
 			}
-			if (_size > 1)
+			if (mSize > 1)
 			{
 				node = node.next;
 				while (node != null)
 				{
 					var t = new LinkedQueueNode<T>(copier(node.val));
-					copy._tail = copy._tail.next = t;
+					copy.mTail = copy.mTail.next = t;
 					node = node.next;
 				}
 			}
 		}
 		
-		copy._size = _size;
+		copy.mSize = mSize;
 		return copy;
 	}
 	
-	inline function _getNode(x:T)
+	inline function getNode(x:T)
 	{
-		if (_reservedSize == 0 || _poolSize == 0)
+		if (mReservedSize == 0 || mPoolSize == 0)
 			return new LinkedQueueNode<T>(x);
 		else
 		{
-			var n = _headPool;
-			_headPool = _headPool.next;
-			_poolSize--;
+			var n = mHeadPool;
+			mHeadPool = mHeadPool.next;
+			mPoolSize--;
 			
 			n.val = x;
 			return n;
 		}
 	}
 	
-	inline function _putNode(x:LinkedQueueNode<T>):T
+	inline function putNode(x:LinkedQueueNode<T>):T
 	{
 		var val = x.val;
 		
-		if (_reservedSize > 0 && _poolSize < _reservedSize)
+		if (mReservedSize > 0 && mPoolSize < mReservedSize)
 		{
-			_tailPool = _tailPool.next = x;
+			mTailPool = mTailPool.next = x;
 			x.val = cast null;
 			x.next = null;
-			_poolSize++;
+			mPoolSize++;
 		}
 		return val;
 	}
 	
-	inline function _removeNode(x:LinkedQueueNode<T>)
+	inline function removeNode(x:LinkedQueueNode<T>)
 	{
-		var n = _head;
+		var n = mHead;
 		if (x == n)
 		{
-			_head = x.next;
-			if (x == _tail)
-				_tail = null;
+			mHead = x.next;
+			if (x == mTail)
+				mTail = null;
 		}
 		else
 		{
 			while (n.next != x) n = n.next;
-			if (x == _tail)
-				_tail = null;
+			if (x == mTail)
+				mTail = null;
 			n.next = x.next;
 		}
-		_putNode(x);
-		_size--;
+		putNode(x);
+		mSize--;
 	}
 }
 
@@ -711,61 +705,45 @@ class LinkedQueueNode<T>
 #if doc
 private
 #end
+@:access(de.polygonal.ds.LinkedQueue)
 class LinkedQueueIterator<T> implements de.polygonal.ds.Itr<T>
 {
-	var _f:LinkedQueue<T>;
-	var _walker:LinkedQueueNode<T>;
-	var _hook:LinkedQueueNode<T>;
+	var mF:LinkedQueue<T>;
+	var mWalker:LinkedQueueNode<T>;
+	var mHook:LinkedQueueNode<T>;
 	
 	public function new(f:LinkedQueue<T>)
 	{
-		_f = f;
+		mF = f;
 		reset();
 	}
 	
 	inline public function reset():Itr<T>
 	{
-		_walker = __head(_f);
-		_hook = null;
+		mWalker = mF.mHead;
+		mHook = null;
 		return this;
 	}
 	
 	inline public function hasNext():Bool
 	{
-		return _walker != null;
+		return mWalker != null;
 	}
 	
 	inline public function next():T
 	{
-		var x = _walker.val;
-		_hook = _walker;
-		_walker = _walker.next;
+		var x = mWalker.val;
+		mHook = mWalker;
+		mWalker = mWalker.next;
 		return x;
 	}
 	
 	inline public function remove()
 	{
 		#if debug
-		assert(_hook != null, "call next() before removing an element");
+		assert(mHook != null, "call next() before removing an element");
 		#end
 		
-		#if flash
-		__remove(_f, _hook);
-		#else
-		var f:LinkedQueueFriend<T> = _f;
-		f._removeNode(_hook);
-		#end
+		mF.removeNode(mHook);
 	}
-	
-	inline function __head(f:LinkedQueueFriend<T>)
-	{
-		return f._head;
-	}
-	
-	#if flash
-	inline function __remove(f:LinkedQueueFriend<T>, x:LinkedQueueNode<T>)
-	{
-		return f._removeNode(x);
-	}
-	#end
 }

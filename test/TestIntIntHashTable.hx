@@ -1,6 +1,4 @@
-﻿package;
-
-import de.polygonal.core.math.random.ParkMiller;
+﻿import de.polygonal.core.math.random.ParkMiller;
 import de.polygonal.ds.ArrayConvert;
 import de.polygonal.ds.ArrayUtil;
 import de.polygonal.ds.DA;
@@ -931,7 +929,6 @@ class TestIntIntHashTable extends haxe.unit.TestCase
 		assertEquals(0, h.get(0));
 	}
 	
-	#if (!flash8)
 	/*function testBug1()
 	{
 		var hash:IntIntHashTable = new IntIntHashTable(8192, 512);
@@ -3508,7 +3505,7 @@ class TestIntIntHashTable extends haxe.unit.TestCase
 		
 		//ht.dump();
 	}*/
-	#end
+	
 	inline function resolve(i:Int) { return i; }
 	
 	function clrAll(h:IntIntHashTable, key:Int):Bool

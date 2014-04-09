@@ -212,7 +212,7 @@ class BitMemory extends MemoryAccess
 	}
 	
 	#if !alchemy
-	var _data:Vector<Int>;
+	var mData:Vector<Int>;
 	#end
 	
 	/**
@@ -230,14 +230,14 @@ class BitMemory extends MemoryAccess
 		this.size = size;
 		
 		#if !alchemy
-		_data = new Vector<Int>(bytes >> 2);
+		mData = new Vector<Int>(bytes >> 2);
 		#end
 	}
 	
 	#if !alchemy
 	override public function free()
 	{
-		_data = null;
+		mData = null;
 		super.free();
 	}
 	#end
@@ -254,8 +254,8 @@ class BitMemory extends MemoryAccess
 		for (i in 0...bytes >> 2)
 			flash.Memory.setI32(dst + (i << 2), flash.Memory.getI32(src + (i << 2)));
 		#else
-		var t = c._data;
-		for (i in 0...bytes >> 2) t[i] = _data[i];
+		var t = c.mData;
+		for (i in 0...bytes >> 2) t[i] = mData[i];
 		#end
 		return c;
 	}
@@ -283,9 +283,9 @@ class BitMemory extends MemoryAccess
 			flash.Memory.setI32(offset + (bytes - 4), bits);
 		#else
 		if (x == 0)
-			for (i in 0...bytes >> 2) _data[i] = 0;
+			for (i in 0...bytes >> 2) mData[i] = 0;
 		else
-			for (i in 0...bytes >> 2) _data[i] =-1;
+			for (i in 0...bytes >> 2) mData[i] =-1;
 		#end
 		
 		return this;
@@ -308,8 +308,8 @@ class BitMemory extends MemoryAccess
 		super.resize(newBytes);	
 		#else
 			var tmp = new Vector<Int>(newBytes >> 2);
-			for (i in 0...M.min(newSize, size)) tmp[i] = _data[i];
-			_data = tmp;
+			for (i in 0...M.min(newSize, size)) tmp[i] = mData[i];
+			mData = tmp;
 		#end
 		
 		size = newSize;
@@ -325,7 +325,7 @@ class BitMemory extends MemoryAccess
 		#if alchemy
 		return ((flash.Memory.getI32(getAddr(i)) & (1 << (i & (32 - 1)))) >> (i & (32 - 1))) != 0;
 		#else
-		return (_data[getAddr(i)] & (1 << (i & (32 - 1)))) >> (i & (32 - 1)) != 0;
+		return (mData[getAddr(i)] & (1 << (i & (32 - 1)))) >> (i & (32 - 1)) != 0;
 		#end
 	}
 	
@@ -339,7 +339,7 @@ class BitMemory extends MemoryAccess
 		#if alchemy
 			return ((flash.Memory.getI32(getAddr(i)) & (1 << (i & (32 - 1)))) >> (i & (32 - 1)));
 		#else
-		return (_data[getAddr(i)] & (1 << (i & (32 - 1)))) >> (i & (32 - 1));
+		return (mData[getAddr(i)] & (1 << (i & (32 - 1)))) >> (i & (32 - 1));
 		#end
 	}
 	
@@ -354,7 +354,7 @@ class BitMemory extends MemoryAccess
 		#if alchemy
 		flash.Memory.setI32(idx, flash.Memory.getI32(idx) | (1 << (i & (32 - 1))));
 		#else
-		_data[idx] = _data[idx] | (1 << (i & (32 - 1)));
+		mData[idx] = mData[idx] | (1 << (i & (32 - 1)));
 		#end
 	}
 	
@@ -369,7 +369,7 @@ class BitMemory extends MemoryAccess
 		#if alchemy
 		flash.Memory.setI32(idx, flash.Memory.getI32(idx) & ~(1 << (i & (32 - 1))));
 		#else
-		_data[idx] = _data[idx] & ~(1 << (i & (32 - 1)));
+		mData[idx] = mData[idx] & ~(1 << (i & (32 - 1)));
 		#end
 	}
 	
@@ -382,7 +382,7 @@ class BitMemory extends MemoryAccess
 		#if alchemy
 		for (i in 0...size) flash.Memory.setI32(getAddr(i), 0);
 		#else
-		for (i in 0...size) _data[getAddr(i)] = 0;
+		for (i in 0...size) mData[getAddr(i)] = 0;
 		#end
 	}
 	
@@ -395,7 +395,7 @@ class BitMemory extends MemoryAccess
 		#if alchemy
 		for (i in 0...size) flash.Memory.setI32(getAddr(i), -1);
 		#else
-		for (i in 0...size) _data[getAddr(i)] = -1;
+		for (i in 0...size) mData[getAddr(i)] = -1;
 		#end
 	}
 	
@@ -418,7 +418,7 @@ class BitMemory extends MemoryAccess
 	{
 		#if debug
 		assert(i >= 0 && i < size, 'segfault, index $i');
-		assert(_memory != null, "memory deallocated");
+		assert(mMemory != null, "memory deallocated");
 		#end
 		
 		#if alchemy
@@ -431,7 +431,7 @@ class BitMemory extends MemoryAccess
 	#if !alchemy
 	override public function clear()
 	{
-		for (i in 0...size) _data[getAddr(i)] = 0;
+		for (i in 0...size) mData[getAddr(i)] = 0;
 	}
 	#end
 	
@@ -457,7 +457,7 @@ class BitMemory extends MemoryAccess
 	public function toString():String
 	{
 		#if debug
-		if (_memory == null) return "{ BitMemory (unassigned) }";
+		if (mMemory == null) return "{ BitMemory (unassigned) }";
 		var s = '{ BitMemory size: $size, name: $name }';
 		s += "\n[\n";
 		

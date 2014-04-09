@@ -22,7 +22,7 @@ import de.polygonal.ds.error.Assert.assert;
 
 /**
  * <p>A tree structure.</p>
- * <p>See <a href="http://lab.polygonal.de/?p=184" target="_blank">http://lab.polygonal.de/?p=184</a></p>
+ * <p>See <a href="http://lab.polygonal.de/?p=184" target="mBlank">http://lab.polygonal.de/?p=184</a></p>
  * <p><o>Worst-case running time in Big O notation</o></p>
  */
 #if generic
@@ -63,13 +63,13 @@ class TreeNode<T> implements Collection<T>
 	 */
 	public var next:TreeNode<T>;
 	
-	var _tail:TreeNode<T>;
-	var _nextInStack:TreeNode<T>;
-	var _prevInStack:TreeNode<T>;
-	var _extraInfo:Int;
+	var mTail:TreeNode<T>;
+	var mNextInStack:TreeNode<T>;
+	var mPrevInStack:TreeNode<T>;
+	var mExtraInfo:Int;
 	
 	#if debug
-	var _busy:Bool;
+	var mBusy:Bool;
 	#end
 	
 	/**
@@ -85,13 +85,13 @@ class TreeNode<T> implements Collection<T>
 		children = null;
 		prev = null;
 		next = null;
-		_tail = null;
-		_nextInStack = null;
-		_prevInStack = null;
+		mTail = null;
+		mNextInStack = null;
+		mPrevInStack = null;
 		
 		if (hasParent())
 		{
-			parent._incChildCount();
+			parent.incChildCount();
 			
 			if (parent.hasChildren())
 			{
@@ -103,13 +103,13 @@ class TreeNode<T> implements Collection<T>
 			else
 				parent.children = this;
 			
-			parent._tail = this;
+			parent.mTail = this;
 		}
 		
-		_extraInfo = 0;
+		mExtraInfo = 0;
 		
 		#if debug
-		_busy = false;
+		mBusy = false;
 		#end
 		
 		key = HashKey.next();
@@ -142,7 +142,7 @@ class TreeNode<T> implements Collection<T>
 	 */
 	inline public function isChild():Bool
 	{
-		return _valid(parent);
+		return valid(parent);
 	}
 	
 	/**
@@ -188,7 +188,7 @@ class TreeNode<T> implements Collection<T>
 	 */
 	inline public function hasChildren():Bool
 	{
-		return _valid(children);
+		return valid(children);
 	}
 	
 	/**
@@ -197,8 +197,8 @@ class TreeNode<T> implements Collection<T>
 	 */
 	inline public function hasSiblings():Bool
 	{
-		if (_valid(parent))
-			return _valid(prev) || _valid(next);
+		if (valid(parent))
+			return valid(prev) || valid(next);
 		else
 			return false;
 	}
@@ -209,7 +209,7 @@ class TreeNode<T> implements Collection<T>
 	 */
 	inline public function hasNextSibling():Bool
 	{
-		return _valid(next);
+		return valid(next);
 	}
 	
 	/**
@@ -218,7 +218,7 @@ class TreeNode<T> implements Collection<T>
 	 */
 	inline public function hasPrevSibling():Bool
 	{
-		return _valid(prev);
+		return valid(prev);
 	}
 	
 	/**
@@ -236,7 +236,7 @@ class TreeNode<T> implements Collection<T>
 	 */
 	inline public function getLastSibling():TreeNode<T>
 	{
-		return parent != null ? parent._tail : null;
+		return parent != null ? parent.mTail : null;
 	}
 	
 	/**
@@ -440,7 +440,7 @@ class TreeNode<T> implements Collection<T>
 	 */
 	inline public function numChildren():Int
 	{
-		return _extraInfo >>> 16;
+		return mExtraInfo >>> 16;
 	}
 	
 	/**
@@ -463,7 +463,7 @@ class TreeNode<T> implements Collection<T>
 	{
 		var c = 0;
 		var node = prev;
-		while (_valid(node))
+		while (valid(node))
 		{
 			c++;
 			node = node.prev;
@@ -480,7 +480,7 @@ class TreeNode<T> implements Collection<T>
 	{
 		var c = 0;
 		var node = next;
-		while (_valid(node))
+		while (valid(node))
 		{
 			c++;
 			node = node.next;
@@ -555,7 +555,7 @@ class TreeNode<T> implements Collection<T>
 	 */
 	inline public function getLastChild():TreeNode<T>
 	{
-		return _tail;
+		return mTail;
 	}
 	
 	/**
@@ -605,17 +605,17 @@ class TreeNode<T> implements Collection<T>
 		{
 			if (parent.children == this)
 				parent.children = next;
-			if (parent._tail == this)
-				parent._tail = prev;
-			parent._decChildCount();
+			if (parent.mTail == this)
+				parent.mTail = prev;
+			parent.decChildCount();
 			
 			parent = null;
 		}
 		if (hasPrevSibling()) prev.next = next;
 		if (hasNextSibling()) next.prev = prev;
 		next = prev = null;
-		_nextInStack = null;
-		_prevInStack = null;
+		mNextInStack = null;
+		mPrevInStack = null;
 		
 		return this;
 	}
@@ -634,18 +634,18 @@ class TreeNode<T> implements Collection<T>
 		
 		x.unlink();
 		x.parent = this;
-		_incChildCount();
+		incChildCount();
 		
 		if (hasChildren())
 		{
-			_tail.next = x;
-			x.prev = _tail;
+			mTail.next = x;
+			x.prev = mTail;
 			x.next = null;
-			_tail = x;
+			mTail = x;
 		}
 		else
 		{
-			_tail = x;
+			mTail = x;
 			children = x;
 		}
 		
@@ -661,7 +661,7 @@ class TreeNode<T> implements Collection<T>
 	{
 		x.unlink();
 		x.parent = this;
-		_incChildCount();
+		incChildCount();
 		
 		if (hasChildren())
 		{
@@ -671,7 +671,7 @@ class TreeNode<T> implements Collection<T>
 			x.prev = null;
 		}
 		else
-			_tail = x;
+			mTail = x;
 		
 		children = x;
 		
@@ -692,7 +692,7 @@ class TreeNode<T> implements Collection<T>
 		
 		x.unlink();
 		x.parent = this;
-		_incChildCount();
+		incChildCount();
 		
 		if (children == null)
 		{
@@ -708,8 +708,8 @@ class TreeNode<T> implements Collection<T>
 		child.next = x;
 		x.prev = child;
 		
-		if (child == _tail)
-			_tail = x;
+		if (child == mTail)
+			mTail = x;
 		
 		return this;
 	}
@@ -728,7 +728,7 @@ class TreeNode<T> implements Collection<T>
 		
 		x.unlink();
 		x.parent = this;
-		_incChildCount();
+		incChildCount();
 		
 		if (children == null)
 		{
@@ -823,7 +823,7 @@ class TreeNode<T> implements Collection<T>
 			var n = node.children;
 			if (n != null)
 			{
-				var c = node._tail;
+				var c = node.mTail;
 				while (c != null)
 				{
 					top = pushOnStack(top, c);
@@ -910,7 +910,7 @@ class TreeNode<T> implements Collection<T>
 							while (child != null)
 							{
 								hook = child.next;
-								if (!_preOrderInternalVisitablePreflight(child, userData)) return this;
+								if (!preOrderInternalVisitablePreflight(child, userData)) return this;
 								child = hook;
 							}
 						}
@@ -925,7 +925,7 @@ class TreeNode<T> implements Collection<T>
 						while (child != null)
 						{
 							hook = child.next;
-							if (!_preOrderInternalVisitable(child, userData)) return this;
+							if (!preOrderInternalVisitable(child, userData)) return this;
 							child = hook;
 						}
 					}
@@ -943,7 +943,7 @@ class TreeNode<T> implements Collection<T>
 							while (child != null)
 							{
 								hook = child.next;
-								if (!_preOrderInternalPreflight(child, process, userData)) return this;
+								if (!preOrderInternalPreflight(child, process, userData)) return this;
 								child = hook;
 							}
 						}
@@ -957,7 +957,7 @@ class TreeNode<T> implements Collection<T>
 						while (child != null)
 						{
 							hook = child.next;
-							if (!_preOrderInternal(child, process, userData)) return this;
+							if (!preOrderInternal(child, process, userData)) return this;
 							child = hook;
 						}
 					}
@@ -968,8 +968,8 @@ class TreeNode<T> implements Collection<T>
 		{
 			var top = this;
 			#if debug
-			assert(_prevInStack == null, "_prevInStack == null");
-			assert(_nextInStack == null, "_nextInStack == null");
+			assert(mPrevInStack == null, "mPrevInStack == null");
+			assert(mNextInStack == null, "mNextInStack == null");
 			#end
 			
 			if (process == null)
@@ -981,14 +981,14 @@ class TreeNode<T> implements Collection<T>
 						var node = top;
 						#if debug
 						if (node != null)
-							assert(node._nextInStack == null, "node._nextInStack == null");
+							assert(node.mNextInStack == null, "node.mNextInStack == null");
 						#end
 						
 						top = popOffStack(top);
 						
 						#if debug
 						if (top != null)
-							assert(top._nextInStack == null, "top._nextInStack == null");
+							assert(top.mNextInStack == null, "top.mNextInStack == null");
 						#end
 						
 						
@@ -1004,19 +1004,19 @@ class TreeNode<T> implements Collection<T>
 						var n = node.children;
 						if (n != null)
 						{
-							var c = node._tail;
+							var c = node.mTail;
 							while (c != null)
 							{
 								#if debug
 								if (top != null)
-									assert(top._nextInStack == null, "top._nextInStack == null");
+									assert(top.mNextInStack == null, "top.mNextInStack == null");
 								#end
 								
 								top = pushOnStack(top, c);
 								
 								#if debug
 								if (top != null)
-									assert(top._nextInStack == null, "top._nextInStack == null");
+									assert(top.mNextInStack == null, "top.mNextInStack == null");
 								#end
 								
 								
@@ -1043,7 +1043,7 @@ class TreeNode<T> implements Collection<T>
 						var n = node.children;
 						if (n != null)
 						{
-							var c = node._tail;
+							var c = node.mTail;
 							while (c != null)
 							{
 								top = pushOnStack(top, c);
@@ -1068,7 +1068,7 @@ class TreeNode<T> implements Collection<T>
 						var n = node.children;
 						if (n != null)
 						{
-							var c = node._tail;
+							var c = node.mTail;
 							while (c != null)
 							{
 								top = pushOnStack(top, c);
@@ -1088,7 +1088,7 @@ class TreeNode<T> implements Collection<T>
 						var n = node.children;
 						if (n != null)
 						{
-							var c = node._tail;
+							var c = node.mTail;
 							while (c != null)
 							{
 								top = pushOnStack(top, c);
@@ -1145,7 +1145,7 @@ class TreeNode<T> implements Collection<T>
 				while (child != null)
 				{
 					hook = child.next;
-					if (!_postOrderInternalVisitable(child, userData)) return this;
+					if (!postOrderInternalVisitable(child, userData)) return this;
 					child = hook;
 				}
 				
@@ -1161,7 +1161,7 @@ class TreeNode<T> implements Collection<T>
 				while (child != null)
 				{
 					hook = child.next;
-					if (!_postOrderInternal(child, process, userData)) return this;
+					if (!postOrderInternal(child, process, userData)) return this;
 					child = hook;
 				}
 				process(this, userData);
@@ -1170,11 +1170,11 @@ class TreeNode<T> implements Collection<T>
 		else
 		{
 			#if debug
-			assert(_busy == false, "recursive call to iterative postorder");
-			_busy = true;
+			assert(mBusy == false, "recursive call to iterative postorder");
+			mBusy = true;
 			#end
 			
-			var time = _getTimeStamp() + 1;
+			var time = getTimeStamp() + 1;
 			var top = this;
 			
 			if (process == null)
@@ -1185,12 +1185,12 @@ class TreeNode<T> implements Collection<T>
 					if (node.hasChildren())
 					{
 						var found = false;
-						var c = node._tail;
+						var c = node.mTail;
 						while (c != null)
 						{
-							if (c._getTimeStamp() < time)
+							if (c.getTimeStamp() < time)
 							{
-								c._incTimeStamp();
+								c.incTimeStamp();
 								top = pushOnStack(top, c);
 								
 								found = true;
@@ -1208,7 +1208,7 @@ class TreeNode<T> implements Collection<T>
 							if (!v.visit(false, userData))
 							{
 								#if debug
-								_busy = false;
+								mBusy = false;
 								#end
 								return this;
 							}
@@ -1225,11 +1225,11 @@ class TreeNode<T> implements Collection<T>
 						if (!v.visit(false, userData))
 						{
 							#if debug
-							_busy = false;
+							mBusy = false;
 							#end
 							return this;
 						}
-						node._incTimeStamp();
+						node.incTimeStamp();
 						top = popOffStack(top);
 					}
 				}
@@ -1244,12 +1244,12 @@ class TreeNode<T> implements Collection<T>
 					if (node.hasChildren())
 					{
 						var found = false;
-						var c = node._tail;
+						var c = node.mTail;
 						while (c != null)
 						{
-							if (c._getTimeStamp() < time)
+							if (c.getTimeStamp() < time)
 							{
-								c._incTimeStamp();
+								c.incTimeStamp();
 								top = pushOnStack(top, c);
 								found = true;
 							}
@@ -1261,7 +1261,7 @@ class TreeNode<T> implements Collection<T>
 							if (!process(node, userData))
 							{
 								#if debug
-								_busy = false;
+								mBusy = false;
 								#end
 								return this;
 							}
@@ -1273,17 +1273,17 @@ class TreeNode<T> implements Collection<T>
 						if (!process(node, userData))
 						{
 							#if debug
-							_busy = false;
+							mBusy = false;
 							#end
 							return this;
 						}
-						node._incTimeStamp();
+						node.incTimeStamp();
 						top = popOffStack(top);
 					}
 				}
 			}
 			#if debug
-			_busy = false;
+			mBusy = false;
 			#end
 		}
 		
@@ -1322,7 +1322,7 @@ class TreeNode<T> implements Collection<T>
 		var child;
 		var nodeHead = this;
 		var nodeTail = this;
-		nodeHead._nextInStack = null;
+		nodeHead.mNextInStack = null;
 		
 		if (process == null)
 		{
@@ -1341,10 +1341,10 @@ class TreeNode<T> implements Collection<T>
 				while (child != null)
 				{
 					s++;
-					nodeTail = nodeTail != null ? nodeTail._nextInStack = child : child;
+					nodeTail = nodeTail != null ? nodeTail.mNextInStack = child : child;
 					child = child.next;
 				}
-				nodeHead = nodeHead._nextInStack;
+				nodeHead = nodeHead.mNextInStack;
 			}
 		}
 		else
@@ -1360,10 +1360,10 @@ class TreeNode<T> implements Collection<T>
 				while (child != null)
 				{
 					s++;
-					nodeTail = nodeTail != null ? nodeTail._nextInStack = child : child;
+					nodeTail = nodeTail != null ? nodeTail.mNextInStack = child : child;
 					child = child.next;
 				}
-				nodeHead = nodeHead._nextInStack;
+				nodeHead = nodeHead.mNextInStack;
 			}
 		}
 		
@@ -1386,9 +1386,9 @@ class TreeNode<T> implements Collection<T>
 		if (hasChildren())
 		{
 			if (compare == null)
-				children = useInsertionSort ? _insertionSortComparable(children) : _mergeSortComparable(children);
+				children = useInsertionSort ? insertionSortComparable(children) : mergeSortComparable(children);
 			else
-				children = useInsertionSort ? _insertionSort(children, compare) : _mergeSort(children, compare);
+				children = useInsertionSort ? insertionSort(children, compare) : mergeSort(children, compare);
 		}
 		
 		return this;
@@ -1415,7 +1415,7 @@ class TreeNode<T> implements Collection<T>
 	public function toString():String
 	{
 		if (children == null)
-			return '{ TreeNode ${_print()} }';
+			return '{ TreeNode ${print()} }';
 		
 		var s = "";
 		preorder(function(node:TreeNode<T>, preflight:Bool, userData:Dynamic):Bool
@@ -1428,7 +1428,7 @@ class TreeNode<T> implements Collection<T>
 				else
 					s += "|    ";
 			}
-			s += "{ " + node._print() + " }\n";
+			s += "{ " + node.print() + " }\n";
 			return true;
 		});
 		return s;
@@ -1446,14 +1446,14 @@ class TreeNode<T> implements Collection<T>
 	/**
 	 * Returns a new <em>ChildTreeIterator</em> object to iterate over all direct children (excluding this node).<br/>
 	 * <warn>In contrast to <code>iterator()</code>, this method is not recursive</warn>
-	 * @see <a href="http://haxe.org/ref/iterators" target="_blank">http://haxe.org/ref/iterators</a>
+	 * @see <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
 	 */
 	public function childIterator():Itr<T>
 	{
 		return new ChildTreeIterator<T>(this);
 	}
 	
-	function _print():String
+	function print():String
 	{
 		var flags = "";
 		if (isRoot())  flags += ", root";
@@ -1462,7 +1462,7 @@ class TreeNode<T> implements Collection<T>
 		return 'val: $val, children: ${numChildren()}, depth: ${depth()}$flags';
 	}
 	
-	function _preOrderInternal(node:TreeNode<T>, process:TreeNode<T>->Bool->Dynamic->Bool, userData:Dynamic):Bool
+	function preOrderInternal(node:TreeNode<T>, process:TreeNode<T>->Bool->Dynamic->Bool, userData:Dynamic):Bool
 	{
 		if (process(node, false, userData))
 		{
@@ -1471,7 +1471,7 @@ class TreeNode<T> implements Collection<T>
 				var walker = node.children;
 				while (walker != null)
 				{
-					if (!_preOrderInternal(walker, process, userData)) return false;
+					if (!preOrderInternal(walker, process, userData)) return false;
 					walker = walker.next;
 				}
 			}
@@ -1480,7 +1480,7 @@ class TreeNode<T> implements Collection<T>
 		return false;
 	}
 	
-	function _preOrderInternalPreflight(node:TreeNode<T>, process:TreeNode<T>->Bool->Dynamic->Bool, userData:Dynamic):Bool
+	function preOrderInternalPreflight(node:TreeNode<T>, process:TreeNode<T>->Bool->Dynamic->Bool, userData:Dynamic):Bool
 	{
 		if (process(node, true, userData))
 		{
@@ -1491,7 +1491,7 @@ class TreeNode<T> implements Collection<T>
 					var walker = node.children;
 					while (walker != null)
 					{
-						if (!_preOrderInternalPreflight(walker, process, userData)) return false;
+						if (!preOrderInternalPreflight(walker, process, userData)) return false;
 						walker = walker.next;
 					}
 				}
@@ -1501,7 +1501,7 @@ class TreeNode<T> implements Collection<T>
 		return false;
 	}
 	
-	function _preOrderInternalVisitable(node:TreeNode<T>, userData:Dynamic):Bool
+	function preOrderInternalVisitable(node:TreeNode<T>, userData:Dynamic):Bool
 	{
 		#if debug
 		assert(Std.is(node.val, Visitable), "element is not of type Visitable");
@@ -1516,7 +1516,7 @@ class TreeNode<T> implements Collection<T>
 				while (walker != null)
 				{
 					hook = walker.next;
-					if (!_preOrderInternalVisitable(walker, userData)) return false;
+					if (!preOrderInternalVisitable(walker, userData)) return false;
 					walker = hook;
 				}
 			}
@@ -1525,7 +1525,7 @@ class TreeNode<T> implements Collection<T>
 		return false;
 	}
 	
-	function _preOrderInternalVisitablePreflight(node:TreeNode<T>, userData:Dynamic):Bool
+	function preOrderInternalVisitablePreflight(node:TreeNode<T>, userData:Dynamic):Bool
 	{
 		#if debug
 		assert(Std.is(node.val, Visitable), "element is not of type Visitable");
@@ -1542,7 +1542,7 @@ class TreeNode<T> implements Collection<T>
 					while (walker != null)
 					{
 						hook = walker.next;
-						if (!_preOrderInternalVisitablePreflight(walker, userData)) return false;
+						if (!preOrderInternalVisitablePreflight(walker, userData)) return false;
 						walker = hook;
 					}
 				}
@@ -1552,7 +1552,7 @@ class TreeNode<T> implements Collection<T>
 		return false;
 	}
 	
-	function _postOrderInternal(node:TreeNode<T>, process:TreeNode<T>->Dynamic->Bool, userData:Dynamic):Bool
+	function postOrderInternal(node:TreeNode<T>, process:TreeNode<T>->Dynamic->Bool, userData:Dynamic):Bool
 	{
 		if (node.hasChildren())
 		{
@@ -1560,14 +1560,14 @@ class TreeNode<T> implements Collection<T>
 			while (walker != null)
 			{
 				hook = walker.next;
-				if (!_postOrderInternal(walker, process, userData)) return false;
+				if (!postOrderInternal(walker, process, userData)) return false;
 				walker = hook;
 			}
 		}
 		return process(node, userData);
 	}
 	
-	function _postOrderInternalVisitable(node:TreeNode<T>, userData:Dynamic):Bool
+	function postOrderInternalVisitable(node:TreeNode<T>, userData:Dynamic):Bool
 	{
 		if (node.hasChildren())
 		{
@@ -1575,7 +1575,7 @@ class TreeNode<T> implements Collection<T>
 			while (walker != null)
 			{
 				hook = walker.next;
-				if (!_postOrderInternalVisitable(walker, userData)) return false;
+				if (!postOrderInternalVisitable(walker, userData)) return false;
 				walker = hook;
 			}
 		}
@@ -1587,11 +1587,11 @@ class TreeNode<T> implements Collection<T>
 		return cast(node.val, Visitable).visit(false, userData);
 	}
 	
-	function _insertionSortComparable(node:TreeNode<T>):TreeNode<T>
+	function insertionSortComparable(node:TreeNode<T>):TreeNode<T>
 	{
 		var h = node;
 		var n = h.next;
-		while (_valid(n))
+		while (valid(n))
 		{
 			var m = n.next;
 			var p = n.prev;
@@ -1616,7 +1616,7 @@ class TreeNode<T> implements Collection<T>
 					else
 						break;
 				}
-				if (_valid(m))
+				if (valid(m))
 				{
 					p.next = m;
 					m.prev = p;
@@ -1624,7 +1624,7 @@ class TreeNode<T> implements Collection<T>
 				else
 				{
 					p.next = null;
-					_tail = p;
+					mTail = p;
 				}
 				
 				if (i == h)
@@ -1650,11 +1650,11 @@ class TreeNode<T> implements Collection<T>
 		return h;
 	}
 	
-	function _insertionSort(node:TreeNode<T>, cmp:T->T->Int):TreeNode<T>
+	function insertionSort(node:TreeNode<T>, cmp:T->T->Int):TreeNode<T>
 	{
 		var h = node;
 		var n = h.next;
-		while (_valid(n))
+		while (valid(n))
 		{
 			var m = n.next;
 			var p = n.prev;
@@ -1671,7 +1671,7 @@ class TreeNode<T> implements Collection<T>
 					else
 						break;
 				}
-				if (_valid(m))
+				if (valid(m))
 				{
 					p.next = m;
 					m.prev = p;
@@ -1679,7 +1679,7 @@ class TreeNode<T> implements Collection<T>
 				else
 				{
 					p.next = null;
-					_tail = p;
+					mTail = p;
 				}
 				
 				if (i == h)
@@ -1705,7 +1705,7 @@ class TreeNode<T> implements Collection<T>
 		return h;
 	}
 	
-	function _mergeSortComparable(node:TreeNode<T>):TreeNode<T>
+	function mergeSortComparable(node:TreeNode<T>):TreeNode<T>
 	{
 		var h = node;
 		var p, q, e, tail = null;
@@ -1718,7 +1718,7 @@ class TreeNode<T> implements Collection<T>
 			h = tail = null;
 			nmerges = 0;
 			
-			while (_valid(p))
+			while (valid(p))
 			{
 				nmerges++;
 				
@@ -1732,7 +1732,7 @@ class TreeNode<T> implements Collection<T>
 				
 				qsize = insize;
 				
-				while (psize > 0 || (qsize > 0 && _valid(q)))
+				while (psize > 0 || (qsize > 0 && valid(q)))
 				{
 					if (psize == 0)
 					{
@@ -1759,7 +1759,7 @@ class TreeNode<T> implements Collection<T>
 						}
 					}
 					
-					if (_valid(tail))
+					if (valid(tail))
 						tail.next = e;
 					else
 						h = e;
@@ -1776,12 +1776,12 @@ class TreeNode<T> implements Collection<T>
 		}
 		
 		h.prev = null;
-		_tail = tail;
+		mTail = tail;
 		
 		return h;
 	}
 	
-	function _mergeSort(node:TreeNode<T>, cmp:T->T->Int):TreeNode<T>
+	function mergeSort(node:TreeNode<T>, cmp:T->T->Int):TreeNode<T>
 	{
 		var h = node;
 		var p, q, e, tail = null;
@@ -1794,7 +1794,7 @@ class TreeNode<T> implements Collection<T>
 			h = tail = null;
 			nmerges = 0;
 			
-			while (_valid(p))
+			while (valid(p))
 			{
 				nmerges++;
 				
@@ -1808,7 +1808,7 @@ class TreeNode<T> implements Collection<T>
 				
 				qsize = insize;
 				
-				while (psize > 0 || (qsize > 0 && _valid(q)))
+				while (psize > 0 || (qsize > 0 && valid(q)))
 				{
 					if (psize == 0)
 					{
@@ -1829,7 +1829,7 @@ class TreeNode<T> implements Collection<T>
 						e = q; q = q.next; qsize--;
 					}
 					
-					if (_valid(tail))
+					if (valid(tail))
 						tail.next = e;
 					else
 						h = e;
@@ -1846,17 +1846,17 @@ class TreeNode<T> implements Collection<T>
 		}
 		
 		h.prev = null;
-		this._tail = tail;
+		this.mTail = tail;
 		
 		return h;
 	}
 	
-	inline function _valid(node:TreeNode<T>):Bool
+	inline function valid(node:TreeNode<T>):Bool
 	{
 		return node != null;
 	}
 	
-	inline function _findHead(node:TreeNode<T>):TreeNode<T>
+	inline function findHead(node:TreeNode<T>):TreeNode<T>
 	{
 		if (node.parent != null)
 			return node.parent.children;
@@ -1868,10 +1868,10 @@ class TreeNode<T> implements Collection<T>
 		}
 	}
 	
-	inline function _findTail(node:TreeNode<T>):TreeNode<T>
+	inline function findTail(node:TreeNode<T>):TreeNode<T>
 	{
 		if (node.parent != null)
-			return node.parent._tail;
+			return node.parent.mTail;
 		else
 		{
 			var t = node;
@@ -1883,7 +1883,7 @@ class TreeNode<T> implements Collection<T>
 	/**
 	 * Serializes this tree.
 	 * The tree can be rebuild by calling <em>unserialize()</em>.
-	 * @see <a href="http://eli.thegreenplace.net/2011/09/29/an-interesting-tree-serialization-algorithm-from-dwarf/" target="_blank">An interesting tree serialization algorithm from DWARF</a>
+	 * @see <a href="http://eli.thegreenplace.net/2011/09/29/an-interesting-tree-serialization-algorithm-from-dwarf/" target="mBlank">An interesting tree serialization algorithm from DWARF</a>
 	 * @param node the root of the tree.
 	 * @return a flattened tree.
 	 */
@@ -1970,9 +1970,9 @@ class TreeNode<T> implements Collection<T>
 		next = null;
 		children = null;
 		parent = null;
-		_tail = null;
-		_nextInStack = null;
-		_prevInStack = null;
+		mTail = null;
+		mNextInStack = null;
+		mPrevInStack = null;
 	}
 	
 	/**
@@ -1990,7 +1990,7 @@ class TreeNode<T> implements Collection<T>
 			var n = node.children;
 			if (n != null)
 			{
-				var c = node._tail;
+				var c = node.mTail;
 				while (c != null)
 				{
 					top = pushOnStack(top, c);
@@ -2038,7 +2038,7 @@ class TreeNode<T> implements Collection<T>
 		if (purge)
 		{
 			var node = children;
-			while (_valid(node))
+			while (valid(node))
 			{
 				var hook = node.next;
 				node.prev = null;
@@ -2050,17 +2050,17 @@ class TreeNode<T> implements Collection<T>
 			val      = cast null;
 			parent   = null;
 			children = null;
-			_tail    = null;
+			mTail    = null;
 		}
 		else
 			children = null;
-		_setChildCount(0);
+		setChildCount(0);
 	}
 	
 	/**
 	 * Returns a new <em>TreeIterator</em> object to iterate over all elements contained in the nodes of this subtree (including this node).<br/>
 	 * The elements are visited by using a preorder traversal.
-	 * @see <a href="http://haxe.org/ref/iterators" target="_blank">http://haxe.org/ref/iterators</a>
+	 * @see <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
 	 */
 	public function iterator():Itr<T>
 	{
@@ -2075,7 +2075,7 @@ class TreeNode<T> implements Collection<T>
 	{
 		var c = 1;
 		var node = children;
-		while (_valid(node))
+		while (valid(node))
 		{
 			c += node.size();
 			node = node.next;
@@ -2136,7 +2136,7 @@ class TreeNode<T> implements Collection<T>
 			var c = stack[--i];
 			var n = stack[--i];
 			
-			c._setChildCount(n.numChildren());
+			c.setChildCount(n.numChildren());
 			
 			if (n.hasChildren())
 			{
@@ -2179,7 +2179,7 @@ class TreeNode<T> implements Collection<T>
 					cchild.next = new TreeNode<T>(x, c);
 					cchild = cchild.next;
 					
-					c._tail = cchild;
+					c.mTail = cchild;
 					
 					stack[i++] = nchild;
 					stack[i++] = cchild;
@@ -2194,9 +2194,9 @@ class TreeNode<T> implements Collection<T>
 	inline function popOffStack(top:TreeNode<T>):TreeNode<T>
 	{
 		var tmp = top;
-		top = top._prevInStack;
-		if (top != null) top._nextInStack = null;
-		tmp._prevInStack = null;
+		top = top.mPrevInStack;
+		if (top != null) top.mNextInStack = null;
+		tmp.mPrevInStack = null;
 		return top;
 	}
 	
@@ -2204,40 +2204,40 @@ class TreeNode<T> implements Collection<T>
 	{
 		if (top != null)
 		{
-			top._nextInStack = x;
-			x._prevInStack = top;
+			top.mNextInStack = x;
+			x.mPrevInStack = top;
 		}
 		return x;
 	}
 	
-	inline function _incChildCount()
+	inline function incChildCount()
 	{
-		_extraInfo = (_extraInfo & 0x0000ffff) | ((numChildren() + 1) << 16);
+		mExtraInfo = (mExtraInfo & 0x0000ffff) | ((numChildren() + 1) << 16);
 	}
 	
-	inline function _decChildCount()
+	inline function decChildCount()
 	{
-		_extraInfo = (_extraInfo & 0x0000ffff) | ((numChildren() - 1) << 16);
+		mExtraInfo = (mExtraInfo & 0x0000ffff) | ((numChildren() - 1) << 16);
 	}
 	
-	inline function _setChildCount(x:Int)
+	inline function setChildCount(x:Int)
 	{
-		_extraInfo = (_extraInfo & 0x0000ffff) | (x << 16);
+		mExtraInfo = (mExtraInfo & 0x0000ffff) | (x << 16);
 	}
 	
-	inline function _setTimeStamp(x:Int)
+	inline function setTimeStamp(x:Int)
 	{
-		_extraInfo = (_extraInfo & 0xffff0000) | x;
+		mExtraInfo = (mExtraInfo & 0xffff0000) | x;
 	}
 	
-	inline function _getTimeStamp():Int
+	inline function getTimeStamp():Int
 	{
-		return _extraInfo & 0xffff;
+		return mExtraInfo & 0xffff;
 	}
 	
-	inline function _incTimeStamp()
+	inline function incTimeStamp()
 	{
-		_extraInfo = (_extraInfo & 0xffff0000) | (_getTimeStamp() + 1);
+		mExtraInfo = (mExtraInfo & 0xffff0000) | (getTimeStamp() + 1);
 	}
 }
 
@@ -2249,40 +2249,40 @@ private
 #end
 class TreeIterator<T> implements de.polygonal.ds.Itr<T>
 {
-	var _node:TreeNode<T>;
-	var _stack:Array<TreeNode<T>>;
-	var _top:Int;
-	var _c:Int;
+	var mNode:TreeNode<T>;
+	var mStack:Array<TreeNode<T>>;
+	var mTop:Int;
+	var mC:Int;
 	
 	public function new(node:TreeNode<T>)
 	{
-		_node = node;
-		_stack = new Array<TreeNode<T>>();
+		mNode = node;
+		mStack = new Array<TreeNode<T>>();
 		reset();
 	}
 	
 	inline public function reset():Itr<T>
 	{
-		_stack[0] = _node;
-		_top = 1;
-		_c = 0;
+		mStack[0] = mNode;
+		mTop = 1;
+		mC = 0;
 		return this;
 	}
 	
 	inline public function hasNext():Bool
 	{
-		return _top > 0;
+		return mTop > 0;
 	}
 	
 	inline public function next():T
 	{
-		var node = _stack[--_top];
+		var node = mStack[--mTop];
 		var walker = node.children;
-		_c = 0;
+		mC = 0;
 		while (walker != null)
 		{
-			_stack[_top++] = walker;
-			_c++;
+			mStack[mTop++] = walker;
+			mC++;
 			walker = walker.next;
 		}
 		return node.val;
@@ -2290,7 +2290,7 @@ class TreeIterator<T> implements de.polygonal.ds.Itr<T>
 	
 	inline public function remove()
 	{
-		_top -= _c;
+		mTop -= mC;
 	}
 }
 
@@ -2302,42 +2302,42 @@ private
 #end
 class ChildTreeIterator<T> implements de.polygonal.ds.Itr<T>
 {
-	var _f:TreeNode<T>;
-	var _walker:TreeNode<T>;
-	var _hook:TreeNode<T>;
+	var mF:TreeNode<T>;
+	var mWalker:TreeNode<T>;
+	var mHook:TreeNode<T>;
 	
 	public function new(f:TreeNode<T>)
 	{
-		_f = f;
+		mF = f;
 		reset();
 	}
 	
 	inline public function reset():Itr<T>
 	{
-		_walker = _f.children;
-		_hook = null;
+		mWalker = mF.children;
+		mHook = null;
 		return this;
 	}
 	
 	inline public function hasNext():Bool
 	{
-		return _walker != null;
+		return mWalker != null;
 	}
 	
 	inline public function next():T
 	{
-		var x = _walker.val;
-		_hook = _walker;
-		_walker = _walker.next;
+		var x = mWalker.val;
+		mHook = mWalker;
+		mWalker = mWalker.next;
 		return x;
 	}
 	
 	inline public function remove()
 	{
 		#if debug
-		assert(_hook != null, "call next() before removing an element");
+		assert(mHook != null, "call next() before removing an element");
 		#end
 		
-		_hook.unlink();
+		mHook.unlink();
 	}
 }

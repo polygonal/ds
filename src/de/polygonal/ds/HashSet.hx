@@ -24,12 +24,6 @@ import de.polygonal.ds.mem.IntMemory;
 
 import de.polygonal.ds.error.Assert.assert;
 
-private typedef HashSetFriend<T> =
-{
-	private var _h:IntIntHashTable;
-	private var _vals:Array<T>;
-}
-
 /**
  * <p>An array hash set for storing <em>Hashable</em> objects.</p>
  * <p><o>Worst-case running time in Big O notation</o></p>
@@ -58,20 +52,20 @@ class HashSet<T:Hashable> implements Set<T>
 	 */
 	public var reuseIterator:Bool;
 	
-	var _h:IntIntHashTable;
+	var mH:IntIntHashTable;
 	
-	var _vals:Array<T>;
+	var mVals:Array<T>;
 	
 	#if alchemy
-	var _next:IntMemory;
+	var mNext:IntMemory;
 	#else
-	var _next:Vector<Int>;
+	var mNext:Vector<Int>;
 	#end
 	
-	var _free:Int;
-	var _sizeLevel:Int;
-	var _isResizable:Bool;
-	var _iterator:HashSetIterator<T>;
+	var mFree:Int;
+	var mSizeLevel:Int;
+	var mIsResizable:Bool;
+	var mIterator:HashSetIterator<T>;
 	
 	/**
 	 * @param slotCount the total number of slots into which the hashed values are distributed.
@@ -104,10 +98,10 @@ class HashSet<T:Hashable> implements Set<T>
 	{
 		if (capacity == -1) capacity = slotCount;
 		
-		_isResizable = isResizable;
+		mIsResizable = isResizable;
 		
-		_h = new IntIntHashTable(slotCount, capacity, _isResizable, maxSize);
-		_vals = ArrayUtil.alloc(capacity);
+		mH = new IntIntHashTable(slotCount, capacity, mIsResizable, maxSize);
+		mVals = ArrayUtil.alloc(capacity);
 		
 		#if debug
 		this.maxSize = (maxSize == -1) ? M.INT32_MAX : maxSize;
@@ -116,16 +110,16 @@ class HashSet<T:Hashable> implements Set<T>
 		#end
 		
 		#if alchemy
-		_next = new IntMemory(capacity, "HashSet._next");
+		mNext = new IntMemory(capacity, "HashSet.mNext");
 		#else
-		_next = new Vector<Int>(capacity);
+		mNext = new Vector<Int>(capacity);
 		#end
 		
-		for (i in 0...capacity - 1) __setNext(i, i + 1);
-		__setNext(capacity - 1, IntIntHashTable.NULL_POINTER);
-		_free = 0;
-		_sizeLevel = 0;
-		_iterator = null;
+		for (i in 0...capacity - 1) setNext(i, i + 1);
+		setNext(capacity - 1, IntIntHashTable.NULL_POINTER);
+		mFree = 0;
+		mSizeLevel = 0;
+		mIterator = null;
 		
 		key = HashKey.next();
 		reuseIterator = false;
@@ -139,7 +133,7 @@ class HashSet<T:Hashable> implements Set<T>
 	 */
 	inline public function getLoadFactor():Float
 	{
-		return _h.getLoadFactor();
+		return mH.getLoadFactor();
 	}
 	
 	/**
@@ -147,7 +141,7 @@ class HashSet<T:Hashable> implements Set<T>
 	 */
 	inline public function getSlotCount():Int
 	{
-		return _h.getSlotCount();
+		return mH.getSlotCount();
 	}
 	
 	/**
@@ -157,7 +151,7 @@ class HashSet<T:Hashable> implements Set<T>
 	 */
 	inline public function getCapacity():Int
 	{
-		return _h.getCapacity();
+		return mH.getCapacity();
 	}
 	
 	/**
@@ -166,7 +160,7 @@ class HashSet<T:Hashable> implements Set<T>
 	 */
 	public function getCollisionCount():Int
 	{
-		return _h.getCollisionCount();
+		return mH.getCollisionCount();
 	}
 	
 	/**
@@ -177,7 +171,7 @@ class HashSet<T:Hashable> implements Set<T>
 	 */
 	inline public function hasFront(x:T):Bool
 	{
-		var i = _h.getFront(__key(x));
+		var i = mH.getFront(_key(x));
 		return i != IntIntHashTable.KEY_ABSENT;
 	}
 	
@@ -189,7 +183,7 @@ class HashSet<T:Hashable> implements Set<T>
 	 */
 	public function rehash(slotCount:Int)
 	{
-		_h.rehash(slotCount);
+		mH.rehash(slotCount);
 	}
 	
 	/**
@@ -251,7 +245,7 @@ class HashSet<T:Hashable> implements Set<T>
 	 */
 	inline public function has(x:T):Bool
 	{
-		return _h.get(__key(x)) != IntIntHashTable.KEY_ABSENT;
+		return mH.get(_key(x)) != IntIntHashTable.KEY_ABSENT;
 	}
 	
 	/**
@@ -270,16 +264,16 @@ class HashSet<T:Hashable> implements Set<T>
 		
 		if ((size() == getCapacity()))
 		{
-			if (_h.setIfAbsent(__key(x), size()))
+			if (mH.setIfAbsent(_key(x), size()))
 			{
 				#if debug
-				if (!_isResizable)
+				if (!mIsResizable)
 					assert(false, 'hash set is full (${getCapacity()})');
 				#end
 				
-				_expand(getCapacity() >> 1);
-				_vals[_free] = x;
-				_free = __getNext(_free);
+				expand(getCapacity() >> 1);
+				mVals[mFree] = x;
+				mFree = getNext(mFree);
 				return true;
 			}
 			else
@@ -287,10 +281,10 @@ class HashSet<T:Hashable> implements Set<T>
 		}
 		else
 		{
-			if (_h.setIfAbsent(__key(x), _free))
+			if (mH.setIfAbsent(_key(x), mFree))
 			{
-				_vals[_free] = x;
-				_free = __getNext(_free);
+				mVals[mFree] = x;
+				mFree = getNext(mFree);
 				return true;
 			}
 			else
@@ -310,17 +304,17 @@ class HashSet<T:Hashable> implements Set<T>
 	public function free()
 	{
 		for (i in 0...size())
-			_vals[i] = null;
-		_vals = null;
+			mVals[i] = null;
+		mVals = null;
 		
 		#if alchemy
-		_next.free();
+		mNext.free();
 		#end
-		_next = null;
+		mNext = null;
 		
-		_h.free();
-		_h = null;
-		_iterator = null;
+		mH.free();
+		mH = null;
+		mIterator = null;
 	}
 	
 	/**
@@ -341,25 +335,25 @@ class HashSet<T:Hashable> implements Set<T>
 	 */
 	inline public function remove(x:T):Bool
 	{
-		var i = _h.get(__key(x));
+		var i = mH.get(_key(x));
 		if (i == IntIntHashTable.KEY_ABSENT)
 			return false;
 		else
 		{
-			_vals[i] = null;
-			__setNext(i, _free);
-			_free = i;
+			mVals[i] = null;
+			setNext(i, mFree);
+			mFree = i;
 			
-			var shrink = false;
+			var doShrink = false;
 			
-			if (_sizeLevel > 0)
+			if (mSizeLevel > 0)
 				if (size() - 1 == (getCapacity() >> 2))
-					if (_isResizable)
-						shrink = true;
+					if (mIsResizable)
+						doShrink = true;
 			
-			_h.clr(__key(x));
+			mH.clr(_key(x));
 			
-			if (shrink) _shrink();
+			if (doShrink) shrink();
 			
 			return true;
 		}
@@ -371,7 +365,7 @@ class HashSet<T:Hashable> implements Set<T>
 	 */
 	public function size():Int
 	{
-		return _h.size();
+		return mH.size();
 	}
 	
 	/**
@@ -381,36 +375,36 @@ class HashSet<T:Hashable> implements Set<T>
 	 */
 	public function clear(purge = false)
 	{
-		_h.clear(purge);
-		for (i in 0...getCapacity()) _vals[i] = null;
+		mH.clear(purge);
+		for (i in 0...getCapacity()) mVals[i] = null;
 		
 		if (purge)
 		{
-			while (_sizeLevel > 0) _shrink();
+			while (mSizeLevel > 0) shrink();
 			
 			for (i in 0...getCapacity())
-				_vals[i] = null;
+				mVals[i] = null;
 		}
 		
-		for (i in 0...getCapacity() - 1) __setNext(i, i + 1);
-		__setNext(getCapacity() - 1, IntIntHashTable.NULL_POINTER);
-		_free = 0;
+		for (i in 0...getCapacity() - 1) setNext(i, i + 1);
+		setNext(getCapacity() - 1, IntIntHashTable.NULL_POINTER);
+		mFree = 0;
 	}
 	
 	/**
 	 * Returns a new <em>HashSetIterator</em> object to iterate over all elements contained in this hash set.<br/>
 	 * The elements are visited in a random order.
-	 * @see <a href="http://haxe.org/ref/iterators" target="_blank">http://haxe.org/ref/iterators</a>
+	 * @see <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
 	 */
 	public function iterator():Itr<T>
 	{
 		if (reuseIterator)
 		{
-			if (_iterator == null)
-				_iterator = new HashSetIterator(this);
+			if (mIterator == null)
+				mIterator = new HashSetIterator(this);
 			else
-				_iterator.reset();
-			return _iterator;
+				mIterator.reset();
+			return mIterator;
 		}
 		else
 			return new HashSetIterator(this);
@@ -422,7 +416,7 @@ class HashSet<T:Hashable> implements Set<T>
 	 */
 	inline public function isEmpty():Bool
 	{
-		return _h.isEmpty();
+		return mH.isEmpty();
 	}
 	
 	/**
@@ -434,7 +428,7 @@ class HashSet<T:Hashable> implements Set<T>
 		var j = 0;
 		for (i in 0...getCapacity())
 		{
-			var v = _vals[i];
+			var v = mVals[i];
 			if (v != null) a[j++] = v;
 		}
 		return a;
@@ -447,7 +441,7 @@ class HashSet<T:Hashable> implements Set<T>
 	{
 		var v = new Vector<T>(size());
 		var j = 0;
-		var t = _vals;
+		var t = mVals;
 		for (i in 0...getCapacity())
 		{
 			var val = t[i];
@@ -467,15 +461,15 @@ class HashSet<T:Hashable> implements Set<T>
 	{
 		var c:HashSet<T> = Type.createEmptyInstance(HashSet);
 		
-		c._isResizable = _isResizable;
+		c.mIsResizable = mIsResizable;
 		c.maxSize = maxSize;
 		c.key = HashKey.next();
-		c._h = cast _h.clone(false);
+		c.mH = cast mH.clone(false);
 		
 		if (assign)
 		{
-			c._vals = new Array<T>();
-			ArrayUtil.copy(_vals, c._vals);
+			c.mVals = new Array<T>();
+			ArrayUtil.copy(mVals, c.mVals);
 		}
 		else
 		{
@@ -484,7 +478,7 @@ class HashSet<T:Hashable> implements Set<T>
 			{
 				for (i in 0...getCapacity())
 				{
-					var v = _vals[i];
+					var v = mVals[i];
 					if (v != null)
 						tmp[i] = copier(v);
 				}
@@ -494,7 +488,7 @@ class HashSet<T:Hashable> implements Set<T>
 				var c:Cloneable<T> = null;
 				for (i in 0...getCapacity())
 				{
-					var v = _vals[i];
+					var v = mVals[i];
 					if (v != null)
 					{
 						#if debug
@@ -506,94 +500,94 @@ class HashSet<T:Hashable> implements Set<T>
 					}
 				}
 			}
-			c._vals = tmp;
+			c.mVals = tmp;
 		}
 		
-		c._sizeLevel = _sizeLevel;
-		c._free = _free;
+		c.mSizeLevel = mSizeLevel;
+		c.mFree = mFree;
 		
 		#if alchemy
-		c._next = _next.clone();
+		c.mNext = mNext.clone();
 		#else
-		c._next = new Vector<Int>(_next.length);
-		for (i in 0...Std.int(_next.length)) c._next[i] = _next[i];
+		c.mNext = new Vector<Int>(mNext.length);
+		for (i in 0...Std.int(mNext.length)) c.mNext[i] = mNext[i];
 		#end
 		
 		return c;
 	}
 	
-	inline function _expand(oldSize:Int)
+	inline function expand(oldSize:Int)
 	{
 		var newSize = oldSize << 1;
 		
 		#if alchemy
-		_next.resize(newSize);
+		mNext.resize(newSize);
 		#else
 		var tmp = new Vector<Int>(newSize);
-		for (i in 0...oldSize) tmp[i] = _next[i];
-		_next = tmp;
+		for (i in 0...oldSize) tmp[i] = mNext[i];
+		mNext = tmp;
 		#end
 		
-		for (i in oldSize - 1...newSize - 1) __setNext(i, i + 1);
-		__setNext(newSize - 1, IntIntHashTable.NULL_POINTER);
-		_free = oldSize;
+		for (i in oldSize - 1...newSize - 1) setNext(i, i + 1);
+		setNext(newSize - 1, IntIntHashTable.NULL_POINTER);
+		mFree = oldSize;
 		
 		var tmp:Array<T> = ArrayUtil.alloc(newSize);
-		ArrayUtil.copy(_vals, tmp, 0, oldSize);
-		_vals = tmp;
+		ArrayUtil.copy(mVals, tmp, 0, oldSize);
+		mVals = tmp;
 		
-		_sizeLevel++;
+		mSizeLevel++;
 	}
 	
-	inline function _shrink()
+	inline function shrink()
 	{
-		_sizeLevel--;
+		mSizeLevel--;
 		
 		var oldSize = getCapacity() << 1;
 		var newSize = getCapacity();
 		
 		#if alchemy
-		_next.resize(newSize);
+		mNext.resize(newSize);
 		#else
-		_next = new Vector<Int>(newSize);
+		mNext = new Vector<Int>(newSize);
 		#end
 		
-		for (i in 0...newSize - 1) __setNext(i, i + 1);
-		__setNext(newSize - 1, IntIntHashTable.NULL_POINTER);
-		_free = 0;
+		for (i in 0...newSize - 1) setNext(i, i + 1);
+		setNext(newSize - 1, IntIntHashTable.NULL_POINTER);
+		mFree = 0;
 		
 		var tmpVals:Array<T> = ArrayUtil.alloc(newSize);
 		
-		for (i in _h)
+		for (i in mH)
 		{
-			tmpVals[_free] = _vals[i];
-			_free = __getNext(_free);
+			tmpVals[mFree] = mVals[i];
+			mFree = getNext(mFree);
 		}
 		
-		_vals = tmpVals;
+		mVals = tmpVals;
 		
-		for (i in 0..._free)
-			_h.remap(__key(_vals[i]), i);
+		for (i in 0...mFree)
+			mH.remap(_key(mVals[i]), i);
 	}
 	
-	inline function __getNext(i:Int)
+	inline function getNext(i:Int)
 	{
 		#if alchemy
-		return _next.get(i);
+		return mNext.get(i);
 		#else
-		return _next[i];
+		return mNext[i];
 		#end
 	}
-	inline function __setNext(i:Int, x:Int)
+	inline function setNext(i:Int, x:Int)
 	{
 		#if alchemy
-		_next.set(i, x);
+		mNext.set(i, x);
 		#else
-		_next[i] = x;
+		mNext[i] = x;
 		#end
 	}
 	
-	inline function __key(x:Hashable)
+	inline function _key(x:Hashable)
 	{
 		#if debug
 		assert(x != null, "element is null");
@@ -606,34 +600,35 @@ class HashSet<T:Hashable> implements Set<T>
 #if doc
 private
 #end
+@:access(de.polygonal.ds.HashSet)
 class HashSetIterator<T> implements de.polygonal.ds.Itr<T>
 {
-	var _f:HashSetFriend<T>;
+	var mF:HashSet<T>;
 	
-	var _vals:Array<T>;
+	var mVals:Array<T>;
 	
-	var _i:Int;
-	var _s:Int;
+	var mI:Int;
+	var mS:Int;
 	
-	public function new(f:HashSetFriend<T>)
+	public function new(f:HashSet<T>)
 	{
-		_f = f;
+		mF = f;
 		reset();
 	}
 	
 	inline public function reset():Itr<T>
 	{
-		_vals = __vals(_f);
-		_i = -1;
-		_s = _f._h.getCapacity();
+		mVals = mF.mVals;
+		mI = -1;
+		mS = mF.mH.getCapacity();
 		return this;
 	}
 	
 	inline public function hasNext():Bool
 	{
-		while (++_i < _s)
+		while (++mI < mS)
 		{
-			if (_vals[_i] != null)
+			if (mVals[mI] != null)
 				return true;
 		}
 		return false;
@@ -641,16 +636,11 @@ class HashSetIterator<T> implements de.polygonal.ds.Itr<T>
 	
 	inline public function next():T
 	{
-		return _vals[_i];
+		return mVals[mI];
 	}
 	
 	inline public function remove()
 	{
 		throw "unsupported operation";
-	}
-	
-	inline function __vals(f:HashSetFriend<T>)
-	{
-		return f._vals;
 	}
 }

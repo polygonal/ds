@@ -24,19 +24,6 @@ import de.polygonal.ds.mem.IntMemory;
 
 import de.polygonal.ds.error.Assert.assert;
 
-private typedef IntHashTableFriend<T> =
-{
-	private var _h:IntIntHashTable;
-	
-	private var _vals:Array<T>;
-	
-	#if alchemy
-	private var _keys:IntMemory;
-	#else
-	private var _keys:Vector<Int>;
-	#end
-}
-
 /**
  * <p>An array hash table for mapping integer keys to generic elements.</p>
  * <p>The implementation is based <em>IntIntHashTable</em>.</p>
@@ -66,27 +53,27 @@ class IntHashTable<T> implements Map<Int, T>
 	 */
 	public var reuseIterator:Bool;
 	
-	var _h:IntIntHashTable;
+	var mH:IntIntHashTable;
 	
-	var _vals:Array<T>;
+	var mVals:Array<T>;
 	
 	#if alchemy
-	var _keys:IntMemory;
-	var _next:IntMemory;
+	var mKeys:IntMemory;
+	var mNext:IntMemory;
 	#else
-	var _next:Vector<Int>;
-	var _keys:Vector<Int>;
+	var mNext:Vector<Int>;
+	var mKeys:Vector<Int>;
 	#end
 	
-	var _free:Int;
-	var _key0:Int;
-	var _i0:Int;
+	var mFree:Int;
+	var mKey0:Int;
+	var mI0:Int;
 	
-	var _sizeLevel:Int;
-	var _isResizable:Bool;
-	var _iterator:IntHashTableIterator<T>;
+	var mSizeLevel:Int;
+	var mIsResizable:Bool;
+	var mIterator:IntHashTableIterator<T>;
 	
-	var _tmpArr:Array<Int>;
+	var mTmpArr:Array<Int>;
 	
 	/**
 	 * @param slotCount the total number of slots into which the hashed keys are distributed.
@@ -118,10 +105,10 @@ class IntHashTable<T> implements Map<Int, T>
 	{
 		if (capacity == -1) capacity = slotCount;
 		
-		_isResizable = isResizable;
+		mIsResizable = isResizable;
 		
-		_h    = new IntIntHashTable(slotCount, capacity, isResizable, maxSize);
-		_vals = ArrayUtil.alloc(capacity);
+		mH    = new IntIntHashTable(slotCount, capacity, isResizable, maxSize);
+		mVals = ArrayUtil.alloc(capacity);
 		
 		#if debug
 		this.maxSize = (maxSize == -1) ? M.INT32_MAX : maxSize;
@@ -130,23 +117,23 @@ class IntHashTable<T> implements Map<Int, T>
 		#end
 		
 		#if alchemy
-		_next = new IntMemory(capacity, "IntHashTable._next");
-		_keys = new IntMemory(capacity, "IntHashTable._keys");
-		_keys.fill(IntIntHashTable.KEY_ABSENT);
+		mNext = new IntMemory(capacity, "IntHashTable.mNext");
+		mKeys = new IntMemory(capacity, "IntHashTable.mKeys");
+		mKeys.fill(IntIntHashTable.KEY_ABSENT);
 		#else
-		_next = new Vector<Int>(capacity);
-		_keys = new Vector<Int>(capacity);
-		for (i in 0...capacity) _keys[i] = IntIntHashTable.KEY_ABSENT;
+		mNext = new Vector<Int>(capacity);
+		mKeys = new Vector<Int>(capacity);
+		for (i in 0...capacity) mKeys[i] = IntIntHashTable.KEY_ABSENT;
 		#end
 		
-		for (i in 0...capacity - 1) __setNext(i, i + 1);
-		__setNext(capacity - 1, IntIntHashTable.NULL_POINTER);
-		_free      = 0;
-		_key0      = 0;
-		_i0        = 0;
-		_sizeLevel = 0;
-		_iterator  = null;
-		_tmpArr = [];
+		for (i in 0...capacity - 1) setNext(i, i + 1);
+		setNext(capacity - 1, IntIntHashTable.NULL_POINTER);
+		mFree      = 0;
+		mKey0      = 0;
+		mI0        = 0;
+		mSizeLevel = 0;
+		mIterator  = null;
+		mTmpArr = [];
 		
 		key = HashKey.next();
 		reuseIterator = false;
@@ -160,7 +147,7 @@ class IntHashTable<T> implements Map<Int, T>
 	 */
 	inline public function getLoadFactor():Float
 	{
-		return _h.getLoadFactor();
+		return mH.getLoadFactor();
 	}
 	
 	/**
@@ -168,7 +155,7 @@ class IntHashTable<T> implements Map<Int, T>
 	 */
 	inline public function getSlotCount():Int
 	{
-		return _h.getSlotCount();
+		return mH.getSlotCount();
 	}
 	
 	/**
@@ -178,7 +165,7 @@ class IntHashTable<T> implements Map<Int, T>
 	 */
 	inline public function getCapacity():Int
 	{
-		return _h.getCapacity();
+		return mH.getCapacity();
 	}
 	
 	/**
@@ -187,7 +174,7 @@ class IntHashTable<T> implements Map<Int, T>
 	 */
 	public function getCollisionCount():Int
 	{
-		return _h.getCollisionCount();
+		return mH.getCollisionCount();
 	}
 	
 	/**
@@ -197,17 +184,17 @@ class IntHashTable<T> implements Map<Int, T>
 	 */
 	inline public function getFront(key:Int):T
 	{
-		if (_key0 == key)
-			return _vals[_i0];
+		if (mKey0 == key)
+			return mVals[mI0];
 		else
 		{
-			var i = _h.getFront(key);
+			var i = mH.getFront(key);
 			if (i == IntIntHashTable.KEY_ABSENT)
 				return null;
 			else
 			{
-				_key0 = key;
-				return _vals[_i0 = i];
+				mKey0 = key;
+				return mVals[mI0 = i];
 			}
 		}
 	}
@@ -227,15 +214,15 @@ class IntHashTable<T> implements Map<Int, T>
 		
 		if ((size() == getCapacity()))
 		{
-			if (_h.setIfAbsent(key, _free))
+			if (mH.setIfAbsent(key, mFree))
 			{
-				_invalidate();
+				invalidate();
 				
-				_expand(getCapacity() >> 1);
+				expand(getCapacity() >> 1);
 				
-				_vals[_free] = val;
-				__setKey(_free, key);
-				_free = __getNext(_free);
+				mVals[mFree] = val;
+				setKey(mFree, key);
+				mFree = getNext(mFree);
 				
 				return true;
 			}
@@ -244,13 +231,13 @@ class IntHashTable<T> implements Map<Int, T>
 		}
 		else
 		{
-			if (_h.setIfAbsent(key, _free))
+			if (mH.setIfAbsent(key, mFree))
 			{
-				_invalidate();
+				invalidate();
 				
-				_vals[_free] = val;
-				__setKey(_free, key);
-				_free = __getNext(_free);
+				mVals[mFree] = val;
+				setKey(mFree, key);
+				mFree = getNext(mFree);
 				
 				return true;
 			}
@@ -267,7 +254,7 @@ class IntHashTable<T> implements Map<Int, T>
 	 */
 	public function rehash(slotCount:Int)
 	{
-		_h.rehash(slotCount);
+		mH.rehash(slotCount);
 	}
 	
 	/**
@@ -277,10 +264,10 @@ class IntHashTable<T> implements Map<Int, T>
 	 */
 	inline public function remap(key:Int, val:T):Bool
 	{
-		var i = _h.get(key);
+		var i = mH.get(key);
 		if (i != IntIntHashTable.KEY_ABSENT)
 		{
-			_vals[i] = val;
+			mVals[i] = val;
 			return true;
 		}
 		else
@@ -293,7 +280,7 @@ class IntHashTable<T> implements Map<Int, T>
 	 */
 	public function toKeyArray():Array<Int>
 	{
-		return _h.toKeyArray();
+		return mH.toKeyArray();
 	}
 	
 	/**
@@ -302,7 +289,7 @@ class IntHashTable<T> implements Map<Int, T>
 	 */
 	public function toKeyDA():DA<Int>
 	{
-		return _h.toKeyDA();
+		return mH.toKeyDA();
 	}
 	
 	/**
@@ -355,7 +342,7 @@ class IntHashTable<T> implements Map<Int, T>
 		}
 		
 		for (key in keys())
-			s += Printf.format("  %- " + i + "d -> %s\n", [key, Std.string(_vals[_h.getFront(key)])]);
+			s += Printf.format("  %- " + i + "d -> %s\n", [key, Std.string(mVals[mH.getFront(key)])]);
 		s += "]";
 		return s;
 	}
@@ -373,9 +360,9 @@ class IntHashTable<T> implements Map<Int, T>
 		var exists = false;
 		for (i in 0...getCapacity())
 		{
-			if (__hasKey(i))
+			if (_hasKey(i))
 			{
-				if (_vals[i] == val)
+				if (mVals[i] == val)
 				{
 					exists = true;
 					break;
@@ -391,7 +378,7 @@ class IntHashTable<T> implements Map<Int, T>
 	 */
 	inline public function hasKey(key:Int):Bool
 	{
-		return _h.hasKey(key);
+		return mH.hasKey(key);
 	}
 	
 	/**
@@ -400,7 +387,7 @@ class IntHashTable<T> implements Map<Int, T>
 	 */
 	public function count(key:Int):Int
 	{
-		return _h.count(key);
+		return mH.count(key);
 	}
 	
 	/**
@@ -409,11 +396,11 @@ class IntHashTable<T> implements Map<Int, T>
 	 */
 	inline public function get(key:Int):T
 	{
-		var i = _h.get(key);
+		var i = mH.get(key);
 		if (i == IntIntHashTable.KEY_ABSENT)
 			return null;
 		else
-			return _vals[i];
+			return mVals[i];
 	}
 	
 	/**
@@ -422,13 +409,13 @@ class IntHashTable<T> implements Map<Int, T>
 	 */
 	public function getAll(key:Int, values:Array<T>):Int
 	{
-		var i = _h.get(key);
+		var i = mH.get(key);
 		if (i == IntIntHashTable.KEY_ABSENT)
 			return 0;
 		else
 		{
-			var c = _h.getAll(key, _tmpArr);
-			for (i in 0...c) values[i] = _vals[_tmpArr[i]];
+			var c = mH.getAll(key, mTmpArr);
+			for (i in 0...c) values[i] = mVals[mTmpArr[i]];
 			return c;
 		}
 	}
@@ -450,16 +437,16 @@ class IntHashTable<T> implements Map<Int, T>
 		assert(size() < maxSize, 'size equals max size (${maxSize})');
 		#end
 		
-		_invalidate();
+		invalidate();
 		if (size() == getCapacity())
 		{
-			_expand(getCapacity());
+			expand(getCapacity());
 		}
-		_h.set(key, _free);
-		_vals[_free] = val;
-		__setKey(_free, key);
+		mH.set(key, mFree);
+		mVals[mFree] = val;
+		setKey(mFree, key);
 		
-		_free = __getNext(_free);
+		mFree = getNext(mFree);
 		return true;
 	}
 	
@@ -470,28 +457,28 @@ class IntHashTable<T> implements Map<Int, T>
 	 */
 	public function clr(key:Int):Bool
 	{
-		var i = _h.get(key);
+		var i = mH.get(key);
 		if (i == IntIntHashTable.KEY_ABSENT)
 			return false;
 		else
 		{
-			_invalidate();
+			invalidate();
 			
-			_vals[i] = null;
-			__clrKey(i);
-			__setNext(i, _free);
-			_free = i;
+			mVals[i] = null;
+			clrKey(i);
+			setNext(i, mFree);
+			mFree = i;
 			
-			var shrink = false;
+			var doShrink = false;
 			
-			if (_sizeLevel > 0)
+			if (mSizeLevel > 0)
 				if (size() - 1 == (getCapacity() >> 2))
-					if (_isResizable)
-						shrink = true;
+					if (mIsResizable)
+						doShrink = true;
 			
-			_h.clr(key);
+			mH.clr(key);
 			
-			if (shrink) _shrink();
+			if (doShrink) shrink();
 			
 			return true;
 		}
@@ -506,8 +493,8 @@ class IntHashTable<T> implements Map<Int, T>
 		var s = new ListSet<T>();
 		for (i in 0...getCapacity())
 		{
-			if (__hasKey(i))
-				s.set(_vals[i]);
+			if (_hasKey(i))
+				s.set(mVals[i]);
 		}
 		
 		return s;
@@ -519,18 +506,18 @@ class IntHashTable<T> implements Map<Int, T>
 	 */
 	public function toKeySet():Set<Int>
 	{
-		return _h.toKeySet();
+		return mH.toKeySet();
 	}
 	
 	/**
 	 * Returns a new <em>IntIntHashTableKeyIterator</em> object to iterate over all keys stored in this map.
 	 * The keys are visited in a random order.
 	 * <o>n</o>
-	 * @see <a href="http://haxe.org/ref/iterators" target="_blank">http://haxe.org/ref/iterators</a>
+	 * @see <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
 	 */
 	public function keys():Itr<Int>
 	{
-		return _h.keys();
+		return mH.keys();
 	}
 	
 	/*///////////////////////////////////////////////////////
@@ -544,21 +531,21 @@ class IntHashTable<T> implements Map<Int, T>
 	 */
 	public function free()
 	{
-		for (i in 0...size()) _vals[i] = null;
-		_vals = null;
+		for (i in 0...size()) mVals[i] = null;
+		mVals = null;
 		
 		#if (flash && alchemy)
-		_next.free();
-		_keys.free();
+		mNext.free();
+		mKeys.free();
 		#end
 		
-		_keys = null;
-		_next = null;
+		mKeys = null;
+		mNext = null;
 		
-		_h.free();
-		_h = null;
-		_iterator = null;
-		_tmpArr = null;
+		mH.free();
+		mH = null;
+		mIterator = null;
+		mTmpArr = null;
 	}
 	
 	/**
@@ -581,11 +568,11 @@ class IntHashTable<T> implements Map<Int, T>
 		var tmp = new Array<Int>();
 		for (i in 0...getCapacity())
 		{
-			if (__hasKey(i))
+			if (_hasKey(i))
 			{
-				if (_vals[i] == x)
+				if (mVals[i] == x)
 				{
-					tmp.push(__getKey(i));
+					tmp.push(getKey(i));
 					found = true;
 				}
 			}
@@ -607,39 +594,39 @@ class IntHashTable<T> implements Map<Int, T>
 	 */
 	public function clear(purge = false)
 	{
-		_h.clear(purge);
-		for (i in 0...getCapacity()) __clrKey(i);
+		mH.clear(purge);
+		for (i in 0...getCapacity()) clrKey(i);
 		
 		if (purge)
 		{
-			while (_sizeLevel > 0) _shrink();
+			while (mSizeLevel > 0) shrink();
 			
 			for (i in 0...getCapacity())
 			{
-				_vals[i] = null;
-				__clrKey(i);
+				mVals[i] = null;
+				clrKey(i);
 			}
 		}
 		
-		for (i in 0...getCapacity() - 1) __setNext(i, i + 1);
-		__setNext(getCapacity() - 1, IntIntHashTable.NULL_POINTER);
-		_free = 0;
+		for (i in 0...getCapacity() - 1) setNext(i, i + 1);
+		setNext(getCapacity() - 1, IntIntHashTable.NULL_POINTER);
+		mFree = 0;
 	}
 
 	/**
 	 * Returns a new <em>IntHashTableIterator</em> object to iterate over all values contained in this hash table.<br/>
 	 * The values are visited in a random order.
-	 * @see <a href="http://haxe.org/ref/iterators" target="_blank">http://haxe.org/ref/iterators</a>
+	 * @see <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
 	 */
 	public function iterator():Itr<T>
 	{
 		if (reuseIterator)
 		{
-			if (_iterator == null)
-				_iterator = new IntHashTableIterator<T>(this);
+			if (mIterator == null)
+				mIterator = new IntHashTableIterator<T>(this);
 			else
-				_iterator.reset();
-			return _iterator;
+				mIterator.reset();
+			return mIterator;
 		}
 		else
 			return new IntHashTableIterator<T>(this);
@@ -651,7 +638,7 @@ class IntHashTable<T> implements Map<Int, T>
 	 */
 	inline public function isEmpty():Bool
 	{
-		return _h.isEmpty();
+		return mH.isEmpty();
 	}
 	
 	/**
@@ -660,7 +647,7 @@ class IntHashTable<T> implements Map<Int, T>
 	 */
 	inline public function size():Int
 	{
-		return _h.size();
+		return mH.size();
 	}
 	
 	/**
@@ -672,8 +659,8 @@ class IntHashTable<T> implements Map<Int, T>
 		var j = 0;
 		for (i in 0...getCapacity())
 		{
-			if (__hasKey(i))
-				a[j++] = _vals[i];
+			if (_hasKey(i))
+				a[j++] = mVals[i];
 		}
 		return a;
 	}
@@ -685,10 +672,10 @@ class IntHashTable<T> implements Map<Int, T>
 	{
 		var v = new Vector<T>(size());
 		var j = 0;
-		var vals = _vals;
+		var vals = mVals;
 		for (i in 0...getCapacity())
 		{
-			if (__hasKey(i))
+			if (_hasKey(i))
 				v[j++] = vals[i];
 		}
 		return v;
@@ -706,12 +693,12 @@ class IntHashTable<T> implements Map<Int, T>
 		var c:IntHashTable<T> = Type.createEmptyInstance(IntHashTable);
 		c.key = HashKey.next();
 		c.maxSize = maxSize;
-		c._h = cast _h.clone(false);
+		c.mH = cast mH.clone(false);
 		
 		if (assign)
 		{
-			c._vals = new Array<T>();
-			ArrayUtil.copy(_vals, c._vals);
+			c.mVals = new Array<T>();
+			ArrayUtil.copy(mVals, c.mVals);
 		}
 		else
 		{
@@ -720,8 +707,8 @@ class IntHashTable<T> implements Map<Int, T>
 			{
 				for (i in 0...getCapacity())
 				{
-					if (__hasKey(i))
-						tmp[i] = copier(_vals[i]);
+					if (_hasKey(i))
+						tmp[i] = copier(mVals[i]);
 				}
 			}
 			else
@@ -729,158 +716,158 @@ class IntHashTable<T> implements Map<Int, T>
 				var c:Cloneable<T> = null;
 				for (i in 0...getCapacity())
 				{
-					if (__hasKey(i))
+					if (_hasKey(i))
 					{
 						#if debug
-						assert(Std.is(_vals[i], Cloneable), 'element is not of type Cloneable (${_vals[i]})');
+						assert(Std.is(mVals[i], Cloneable), 'element is not of type Cloneable (${mVals[i]})');
 						#end
 						
-						c = untyped _vals[i];
+						c = untyped mVals[i];
 						tmp[i] = c.clone();
 					}
 				}
 			}
-			c._vals = tmp;
+			c.mVals = tmp;
 		}
 		
-		c._sizeLevel = _sizeLevel;
-		c._free = _free;
-		c._key0 = _key0;
-		c._i0 = _i0;
+		c.mSizeLevel = mSizeLevel;
+		c.mFree = mFree;
+		c.mKey0 = mKey0;
+		c.mI0 = mI0;
 		
 		#if alchemy
-		c._keys = _keys.clone();
-		c._next = _next.clone();
+		c.mKeys = mKeys.clone();
+		c.mNext = mNext.clone();
 		#else
-		c._keys = new Vector<Int>(_keys.length);
-		c._next = new Vector<Int>(_next.length);
-		for (i in 0...Std.int(_keys.length)) c._keys[i] = _keys[i];
-		for (i in 0...Std.int(_next.length)) c._next[i] = _next[i];
+		c.mKeys = new Vector<Int>(mKeys.length);
+		c.mNext = new Vector<Int>(mNext.length);
+		for (i in 0...Std.int(mKeys.length)) c.mKeys[i] = mKeys[i];
+		for (i in 0...Std.int(mNext.length)) c.mNext[i] = mNext[i];
 		#end
 		
 		return c;
 	}
 	
-	inline function _expand(oldSize:Int)
+	inline function expand(oldSize:Int)
 	{
 		var newSize = oldSize << 1;
 		
 		#if alchemy
-		_next.resize(newSize);
-		_keys.resize(newSize);
+		mNext.resize(newSize);
+		mKeys.resize(newSize);
 		#else
 		var tmp = new Vector<Int>(newSize);
-		for (i in 0...oldSize) tmp[i] = _next[i];
-		_next = tmp;
+		for (i in 0...oldSize) tmp[i] = mNext[i];
+		mNext = tmp;
 		var tmp = new Vector<Int>(newSize);
-		for (i in 0...oldSize) tmp[i] = _keys[i];
-		_keys = tmp;
+		for (i in 0...oldSize) tmp[i] = mKeys[i];
+		mKeys = tmp;
 		#end
 		
-		for (i in oldSize...newSize) __clrKey(i);
-		for (i in oldSize - 1...newSize - 1) __setNext(i, i + 1);
-		__setNext(newSize - 1, IntIntHashTable.NULL_POINTER);
-		_free = oldSize;
+		for (i in oldSize...newSize) clrKey(i);
+		for (i in oldSize - 1...newSize - 1) setNext(i, i + 1);
+		setNext(newSize - 1, IntIntHashTable.NULL_POINTER);
+		mFree = oldSize;
 		
 		var tmp:Array<T> = ArrayUtil.alloc(newSize);
-		ArrayUtil.copy(_vals, tmp, 0, oldSize);
-		_vals = tmp;
+		ArrayUtil.copy(mVals, tmp, 0, oldSize);
+		mVals = tmp;
 		
-		_sizeLevel++;
+		mSizeLevel++;
 	}
 	
-	inline function _shrink()
+	inline function shrink()
 	{
-		_sizeLevel--;
+		mSizeLevel--;
 		
 		var oldSize = getCapacity() << 1;
 		var newSize = getCapacity();
 		
 		#if alchemy
-		_next.resize(newSize);
+		mNext.resize(newSize);
 		#else
-		_next = new Vector<Int>(newSize);
+		mNext = new Vector<Int>(newSize);
 		#end
 		
-		for (i in 0...newSize - 1) __setNext(i, i + 1);
-		__setNext(newSize - 1, IntIntHashTable.NULL_POINTER);
-		_free = 0;
+		for (i in 0...newSize - 1) setNext(i, i + 1);
+		setNext(newSize - 1, IntIntHashTable.NULL_POINTER);
+		mFree = 0;
 		
 		var tmpKeys = new Vector<Int>(newSize);
 		for (i in 0...newSize) tmpKeys[i] = IntIntHashTable.KEY_ABSENT;
 		
 		var tmpVals:Array<T> = ArrayUtil.alloc(newSize);
 		
-		for (i in _h)
+		for (i in mH)
 		{
-			tmpKeys[_free] = __getKey(i);
-			tmpVals[_free] = _vals[i];
-			_free = __getNext(_free);
+			tmpKeys[mFree] = getKey(i);
+			tmpVals[mFree] = mVals[i];
+			mFree = getNext(mFree);
 		}
 		
 		#if (flash && alchemy)
-		_keys = IntMemory.ofVector(tmpKeys);
+		mKeys = IntMemory.ofVector(tmpKeys);
 		#else
-		_keys = tmpKeys;
+		mKeys = tmpKeys;
 		#end
 		
-		_vals = tmpVals;
+		mVals = tmpVals;
 		
-		for (i in 0..._free) _h.remap(__getKey(i), i);
+		for (i in 0...mFree) mH.remap(getKey(i), i);
 	}
 	
-	inline function _invalidate()
+	inline function invalidate()
 	{
-		_key0 = IntIntHashTable.KEY_ABSENT;
+		mKey0 = IntIntHashTable.KEY_ABSENT;
 	}
 	
-	inline function __getNext(i:Int)
+	inline function getNext(i:Int)
 	{
 		#if (flash && alchemy)
-		return _next.get(i);
+		return mNext.get(i);
 		#else
-		return _next[i];
+		return mNext[i];
 		#end
 	}
-	inline function __setNext(i:Int, x:Int)
+	inline function setNext(i:Int, x:Int)
 	{
 		#if (flash && alchemy)
-		_next.set(i, x);
+		mNext.set(i, x);
 		#else
-		_next[i] = x;
+		mNext[i] = x;
 		#end
 	}
 	
-	inline function __getKey(i:Int)
+	inline function getKey(i:Int)
 	{
 		#if (flash && alchemy)
-		return _keys.get(i);
+		return mKeys.get(i);
 		#else
-		return _keys[i];
+		return mKeys[i];
 		#end
 	}
-	inline function __setKey(i:Int, x:Int)
+	inline function setKey(i:Int, x:Int)
 	{
 		#if (flash && alchemy)
-		_keys.set(i, x);
+		mKeys.set(i, x);
 		#else
-		_keys[i] = x;
+		mKeys[i] = x;
 		#end
 	}
-	inline function __clrKey(i:Int)
+	inline function clrKey(i:Int)
 	{
 		#if (flash && alchemy)
-		_keys.set(i, IntIntHashTable.KEY_ABSENT);
+		mKeys.set(i, IntIntHashTable.KEY_ABSENT);
 		#else
-		_keys[i] = IntIntHashTable.KEY_ABSENT;
+		mKeys[i] = IntIntHashTable.KEY_ABSENT;
 		#end
 	}
-	inline function __hasKey(i:Int)
+	inline function _hasKey(i:Int)
 	{
 		#if (flash && alchemy)
-		return _keys.get(i) != IntIntHashTable.KEY_ABSENT;
+		return mKeys.get(i) != IntIntHashTable.KEY_ABSENT;
 		#else
-		return _keys[i] != IntIntHashTable.KEY_ABSENT;
+		return mKeys[i] != IntIntHashTable.KEY_ABSENT;
 		#end
 	}
 }
@@ -888,44 +875,45 @@ class IntHashTable<T> implements Map<Int, T>
 #if doc
 private
 #end
+@:access(de.polygonal.ds.IntHashTable)
 class IntHashTableIterator<T> implements de.polygonal.ds.Itr<T>
 {
-	var _f:IntHashTableFriend<T>;
+	var mF:IntHashTable<T>;
 	
-	var _vals:Array<T>;
+	var mVals:Array<T>;
 	
 	#if alchemy
-	var _keys:IntMemory;
+	var mKeys:IntMemory;
 	#else
-	var _keys:Vector<Int>;
+	var mKeys:Vector<Int>;
 	#end
 	
-	var _i:Int;
-	var _s:Int;
+	var mI:Int;
+	var mS:Int;
 	
-	public function new(f:IntHashTableFriend<T>)
+	public function new(f:IntHashTable<T>)
 	{
-		_f = f;
+		mF = f;
 		reset();
 	}
 	
 	inline public function reset():Itr<T>
 	{
-		_vals = __vals(_f);
-		_keys = __keys(_f);
-		_i = -1;
-		_s = _f._h.getCapacity();
+		mVals = mF.mVals;
+		mKeys = mF.mKeys;
+		mI = -1;
+		mS = mF.mH.getCapacity();
 		return this;
 	}
 	
 	inline public function hasNext():Bool
 	{
-		while (++_i < _s)
+		while (++mI < mS)
 		{
 			#if (flash && alchemy)
-			if (_keys.get(_i) != IntIntHashTable.KEY_ABSENT)
+			if (mKeys.get(mI) != IntIntHashTable.KEY_ABSENT)
 			#else
-			if (_keys[_i] != IntIntHashTable.KEY_ABSENT)
+			if (mKeys[mI] != IntIntHashTable.KEY_ABSENT)
 			#end
 				return true;
 		}
@@ -934,20 +922,11 @@ class IntHashTableIterator<T> implements de.polygonal.ds.Itr<T>
 	
 	inline public function next():T
 	{
-		return _vals[_i];
+		return mVals[mI];
 	}
 	
 	inline public function remove()
 	{
 		throw "unsupported operation";
-	}
-	
-	inline function __vals(f:IntHashTableFriend<T>)
-	{
-		return f._vals;
-	}
-	inline function __keys(f:IntHashTableFriend<T>)
-	{
-		return f._keys;
 	}
 }

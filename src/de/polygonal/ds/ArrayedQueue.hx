@@ -20,20 +20,12 @@ package de.polygonal.ds;
 
 import de.polygonal.ds.error.Assert.assert;
 
-private typedef ArrayedQueueFriend<T> =
-{
-	private var _a:Array<T>;
-	private var _front:Int;
-	private var _size:Int;
-	private var _capacity:Int;
-}
-
 /**
  * <p>An arrayed queue based on an arrayed circular queue.</p>
  * <p>A queue is a linear list for which all insertions are made at one end of the list; all deletions (and usually all accesses) are made at the other end.</p>
  * <p>This is called a FIFO structure (First In, First Out).</p>
  * <p><o>Worst-case running time in Big O notation</o></p>
- * See <a href="http://lab.polygonal.de/?p=189" target="_blank">http://lab.polygonal.de/?p=189</a></p>
+ * See <a href="http://lab.polygonal.de/?p=189" target="mBlank">http://lab.polygonal.de/?p=189</a></p>
  */
 #if (generic && cpp)
 @:generic
@@ -62,18 +54,18 @@ class ArrayedQueue<T> implements Queue<T>
 	 */
 	public var reuseIterator:Bool;
 	
-	var _a:Array<T>;
+	var mA:Array<T>;
 	
-	var _size:Int;
-	var _sizeLevel:Int;
-	var _front:Int;
-	var _capacity:Int;
-	var _isResizable:Bool;
-	var _iterator:ArrayedQueueIterator<T>;
+	var mSize:Int;
+	var mSizeLevel:Int;
+	var mFront:Int;
+	var mCapacity:Int;
+	var mIsResizable:Bool;
+	var mIterator:ArrayedQueueIterator<T>;
 	
 	#if debug
-	var _t0:Int;
-	var _t1:Int;
+	var mT0:Int;
+	var mT1:Int;
 	#end
 	
 	/**
@@ -97,23 +89,23 @@ class ArrayedQueue<T> implements Queue<T>
 	public function new(capacity:Int, isResizable = true, maxSize = -1)
 	{
 		#if debug
-		_t0 = _t1 = 0;
+		mT0 = mT1 = 0;
 		this.maxSize = (maxSize == -1) ? M.INT32_MAX : maxSize;
 		#else
 		this.maxSize = -1;
 		#end
 		
 		#if debug
-		_t0 = 0;
-		_t1 = 0;
+		mT0 = 0;
+		mT1 = 0;
 		#end
 		
-		_capacity     = capacity;
-		_isResizable  = isResizable;
-		_sizeLevel    = 0;
-		_size         = _front = 0;
-		_a            = ArrayUtil.alloc(_capacity);
-		_iterator     = null;
+		mCapacity     = capacity;
+		mIsResizable  = isResizable;
+		mSizeLevel    = 0;
+		mSize         = mFront = 0;
+		mA            = ArrayUtil.alloc(mCapacity);
+		mIterator     = null;
 		key           = HashKey.next();
 		reuseIterator = false;
 	}
@@ -127,9 +119,9 @@ class ArrayedQueue<T> implements Queue<T>
 	inline public function peek():T
 	{
 		#if debug
-		assert(_size > 0, "queue is empty");
+		assert(mSize > 0, "queue is empty");
 		#end
-		return __get(_front);
+		return _get(mFront);
 	}
 	
 	/**
@@ -141,10 +133,10 @@ class ArrayedQueue<T> implements Queue<T>
 	inline public function back():T
 	{
 		#if debug
-		assert(_size > 0, "queue is empty");
+		assert(mSize > 0, "queue is empty");
 		#end
 		
-		return __get((_size - 1 + _front) % _capacity);
+		return _get((mSize - 1 + mFront) % mCapacity);
 	}
 	
 	/**
@@ -157,27 +149,27 @@ class ArrayedQueue<T> implements Queue<T>
 	{
 		#if debug
 		if (maxSize != -1)
-			assert(_size < maxSize, 'size equals max size ($maxSize)');
-		++_t1;
+			assert(mSize < maxSize, 'size equals max size ($maxSize)');
+		++mT1;
 		#end
 		
-		if (_capacity == _size)
+		if (mCapacity == mSize)
 		{
 			#if debug
-			if (!_isResizable)
-				assert(false, 'out of space ($_capacity)');
+			if (!mIsResizable)
+				assert(false, 'out of space ($mCapacity)');
 			#end
 			
-			if (_isResizable)
+			if (mIsResizable)
 			{
-				_sizeLevel++;
-				_pack(_capacity << 1);
-				_front = 0;
-				_capacity <<= 1;
+				mSizeLevel++;
+				_pack(mCapacity << 1);
+				mFront = 0;
+				mCapacity <<= 1;
 			}
 		}
 		
-		__set((_size++ + _front) % _capacity, x);
+		_set((mSize++ + mFront) % mCapacity, x);
 	}
 	
 	/**
@@ -189,25 +181,25 @@ class ArrayedQueue<T> implements Queue<T>
 	public function dequeue():T
 	{
 		#if debug
-		assert(_size > 0, "queue is empty");
+		assert(mSize > 0, "queue is empty");
 		#end
 		
 		#if debug
-		_t0 = ++_t1;
+		mT0 = ++mT1;
 		#end
 		
-		var x = __get(_front++);
-		if (_front == _capacity) _front = 0;
-		_size--;
+		var x = _get(mFront++);
+		if (mFront == mCapacity) mFront = 0;
+		mSize--;
 		
-		if (_isResizable && _sizeLevel > 0)
+		if (mIsResizable && mSizeLevel > 0)
 		{
-			if (_size == _capacity >> 2)
+			if (mSize == mCapacity >> 2)
 			{
-				_sizeLevel--;
-				_pack(_capacity >> 2);
-				_front = 0;
-				_capacity >>= 2;
+				mSizeLevel--;
+				_pack(mCapacity >> 2);
+				mFront = 0;
+				mCapacity >>= 2;
 			}
 		}
 		
@@ -223,10 +215,10 @@ class ArrayedQueue<T> implements Queue<T>
 	inline public function dispose()
 	{
 		#if debug
-		assert(_t0 == _t1, "dispose() is only allowed directly after dequeue()");
+		assert(mT0 == mT1, "dispose() is only allowed directly after dequeue()");
 		#end
 		
-		__set((_front == 0 ? _capacity : _front) - 1, cast null);
+		_set((mFront == 0 ? mCapacity : mFront) - 1, cast null);
 	}
 	
 	/**
@@ -236,9 +228,9 @@ class ArrayedQueue<T> implements Queue<T>
 	 */
 	public function pack()
 	{
-		var i = _front + _size;
-		for (j in 0..._capacity - _size)
-			__set((j + i) % _capacity, cast null);
+		var i = mFront + mSize;
+		for (j in 0...mCapacity - mSize)
+			_set((j + i) % mCapacity, cast null);
 	}
 	
 	/**
@@ -251,11 +243,11 @@ class ArrayedQueue<T> implements Queue<T>
 	inline public function get(i:Int):T
 	{
 		#if debug
-		assert(_size > 0, "queue is empty");
-		assert(i < _size, 'i index out of range ($i)');
+		assert(mSize > 0, "queue is empty");
+		assert(i < mSize, 'i index out of range ($i)');
 		#end
 		
-		return __get((i + _front) % _capacity);
+		return _get((i + mFront) % mCapacity);
 	}
 	
 	/**
@@ -268,11 +260,11 @@ class ArrayedQueue<T> implements Queue<T>
 	inline public function set(i:Int, x:T)
 	{
 		#if debug
-		assert(_size > 0, "queue is empty");
-		assert(i < _size, 'i index out of range ($i)');
+		assert(mSize > 0, "queue is empty");
+		assert(i < mSize, 'i index out of range ($i)');
 		#end
 		
-		__set((i + _front) % _capacity, x);
+		_set((i + mFront) % mCapacity, x);
 	}
 	
 	/**
@@ -286,9 +278,9 @@ class ArrayedQueue<T> implements Queue<T>
 	inline public function swp(i:Int, j:Int)
 	{
 		#if debug
-		assert(_size > 0, "queue is empty");
-		assert(i < _size, 'i index out of range ($i)');
-		assert(j < _size, 'j index out of range ($j)');
+		assert(mSize > 0, "queue is empty");
+		assert(i < mSize, 'i index out of range ($i)');
+		assert(j < mSize, 'j index out of range ($j)');
 		assert(i != j, 'i index equals j index ($i)');
 		#end
 		
@@ -308,9 +300,9 @@ class ArrayedQueue<T> implements Queue<T>
 	inline public function cpy(i:Int, j:Int)
 	{
 		#if debug
-		assert(_size > 0, "queue is empty");
-		assert(i < _size, 'i index out of range ($i)');
-		assert(j < _size, 'j index out of range ($j)');
+		assert(mSize > 0, "queue is empty");
+		assert(i < mSize, 'i index out of range ($i)');
+		assert(j < mSize, 'j index out of range ($j)');
 		assert(i != j, 'i index equals j index ($i)');
 		#end
 		
@@ -331,16 +323,16 @@ class ArrayedQueue<T> implements Queue<T>
 		assert(n >= 0, "n >= 0");
 		#end
 		
-		var k = n > 0 ? n : _capacity;
+		var k = n > 0 ? n : mCapacity;
 		#if debug
-		assert(k <= _capacity, 'n out of range ($n)');
+		assert(k <= mCapacity, 'n out of range ($n)');
 		#end
 		
 		if (args == null) args = [];
 		for (i in 0...k)
-			__set((i + _front) % _capacity, Type.createInstance(C, args));
+			_set((i + mFront) % mCapacity, Type.createInstance(C, args));
 		
-		_size = k;
+		mSize = k;
 	}
 	
 	/**
@@ -355,15 +347,15 @@ class ArrayedQueue<T> implements Queue<T>
 		assert(n >= 0, "n >= 0");
 		#end
 		
-		var k = n > 0 ? n : _capacity;
+		var k = n > 0 ? n : mCapacity;
 		#if debug
-		assert(k <= _capacity, 'n out of range ($n)');
+		assert(k <= mCapacity, 'n out of range ($n)');
 		#end
 		
 		for (i in 0...k)
-			__set((i + _front) % _capacity, x);
+			_set((i + mFront) % mCapacity, x);
 		
-		_size = k;
+		mSize = k;
 		return this;
 	}
 	
@@ -374,10 +366,10 @@ class ArrayedQueue<T> implements Queue<T>
 	 */
 	public function walk(process:T->Int->T)
 	{
-		for (i in 0..._capacity)
+		for (i in 0...mCapacity)
 		{
-			var j = (i + _front) % _capacity;
-			__set(j, process(__get(j), i));
+			var j = (i + mFront) % mCapacity;
+			_set(j, process(_get(j), i));
 		}
 	}
 	
@@ -390,33 +382,33 @@ class ArrayedQueue<T> implements Queue<T>
 	 */
 	public function shuffle(rval:DA<Float> = null)
 	{
-		var s = _size;
+		var s = mSize;
 		if (rval == null)
 		{
 			var m = Math;
 			while (s > 1)
 			{
 				s--;
-				var i = (Std.int(m.random() * s) + _front) % _capacity;
-				var t = __get(s);
-				__set(s, __get(i));
-				__set(i, t);
+				var i = (Std.int(m.random() * s) + mFront) % mCapacity;
+				var t = _get(s);
+				_set(s, _get(i));
+				_set(i, t);
 			}
 		}
 		else
 		{
 			#if debug
-			assert(rval.size() >= _size, "insufficient random values");
+			assert(rval.size() >= mSize, "insufficient random values");
 			#end
 			
 			var j = 0;
 			while (s > 1)
 			{
 				s--;
-				var i = (Std.int(rval.get(j++) * s) + _front) % _capacity;
-				var t = __get(s);
-				__set(s, __get(i));
-				__set(i, t);
+				var i = (Std.int(rval.get(j++) * s) + mFront) % mCapacity;
+				var t = _get(s);
+				_set(s, _get(i));
+				_set(i, t);
 			}
 		}
 	}
@@ -441,10 +433,10 @@ class ArrayedQueue<T> implements Queue<T>
 	 */
 	public function toString():String
 	{
-		var s = '{ ArrayedQueue size/capacity: $_size/$_capacity }';
+		var s = '{ ArrayedQueue size/capacity: $mSize/$mCapacity }';
 		if (isEmpty()) return s;
 		s += "\n[ front\n";
-		for (i in 0..._size)
+		for (i in 0...mSize)
 			s += Printf.format("  %4d -> %s\n", [i, Std.string(get(i))]);
 		s += "]";
 		return s;
@@ -458,7 +450,7 @@ class ArrayedQueue<T> implements Queue<T>
 	 */
 	inline public function getCapacity():Int
 	{
-		return _capacity;
+		return mCapacity;
 	}
 	
 	/**
@@ -467,7 +459,7 @@ class ArrayedQueue<T> implements Queue<T>
 	 */
 	inline public function isFull():Bool
 	{
-		return _size == _capacity;
+		return mSize == mCapacity;
 	}
 	
 	/*///////////////////////////////////////////////////////
@@ -481,9 +473,9 @@ class ArrayedQueue<T> implements Queue<T>
 	 */
 	public function free()
 	{
-		for (i in 0..._capacity) _a[i] = cast null;
-		_a = null;
-		_iterator = null;
+		for (i in 0...mCapacity) mA[i] = cast null;
+		mA = null;
+		mIterator = null;
 	}
 	
 	/**
@@ -492,9 +484,9 @@ class ArrayedQueue<T> implements Queue<T>
 	 */
 	public function contains(x:T):Bool
 	{
-		for (i in 0..._size)
+		for (i in 0...mSize)
 		{
-			if (__get((i + _front) % _capacity) == x)
+			if (_get((i + mFront) % mCapacity) == x)
 				return true;
 		}
 		return false;
@@ -509,36 +501,36 @@ class ArrayedQueue<T> implements Queue<T>
 	{
 		if (isEmpty()) return false;
 		
-		var s = _size;
+		var s = mSize;
 		var found = false;
-		while (_size > 0)
+		while (mSize > 0)
 		{
 			found = false;
-			for (i in 0..._size)
+			for (i in 0...mSize)
 			{
-				if (__get((i + _front) % _capacity) == x)
+				if (_get((i + mFront) % mCapacity) == x)
 				{
 					found = true;
-					__set((i + _front) % _capacity, cast null);
+					_set((i + mFront) % mCapacity, cast null);
 					
 					if (i == 0)
 					{
-						if (++_front == _capacity) _front = 0;
-						_size--;
+						if (++mFront == mCapacity) mFront = 0;
+						mSize--;
 					}
 					else
-					if (i == _size - 1)
-						_size--;
+					if (i == mSize - 1)
+						mSize--;
 					else
 					{
-						var i0 = (_front + i);
-						var i1 = (_front + _size - 1);
+						var i0 = (mFront + i);
+						var i1 = (mFront + mSize - 1);
 						
 						for (j in i0...i1)
-							__set(j % _capacity, __get((j + 1) % _capacity));
-						__set(i1 % _capacity, cast null);
+							_set(j % mCapacity, _get((j + 1) % mCapacity));
+						_set(i1 % mCapacity, cast null);
 						
-						_size--;
+						mSize--;
 					}
 					break;
 				}
@@ -547,24 +539,24 @@ class ArrayedQueue<T> implements Queue<T>
 			if (!found) break;
 		}
 		
-		if (_isResizable && _size < s)
+		if (mIsResizable && mSize < s)
 		{
-			if (_sizeLevel > 0 && _capacity > 2)
+			if (mSizeLevel > 0 && mCapacity > 2)
 			{
-				var s = _capacity;
-				while (_size <= s >> 2)
+				var s = mCapacity;
+				while (mSize <= s >> 2)
 				{
 					s >>= 2;
-					_sizeLevel--;
+					mSizeLevel--;
 				}
 				
 				_pack(s);
-				_front = 0;
-				_capacity = s;
+				mFront = 0;
+				mCapacity = s;
 			}
 		}
 		
-		return _size < s;
+		return mSize < s;
 	}
 	
 	/**
@@ -576,33 +568,33 @@ class ArrayedQueue<T> implements Queue<T>
 	{
 		if (purge)
 		{
-			var i = _front;
-			for (j in 0..._size) __set(i++ % _capacity, cast null);
+			var i = mFront;
+			for (j in 0...mSize) _set(i++ % mCapacity, cast null);
 			
-			if (_isResizable && _sizeLevel > 0)
+			if (mIsResizable && mSizeLevel > 0)
 			{
-				_capacity >>= _sizeLevel;
-				_sizeLevel = 0;
-				_a = ArrayUtil.alloc(_capacity);
+				mCapacity >>= mSizeLevel;
+				mSizeLevel = 0;
+				mA = ArrayUtil.alloc(mCapacity);
 			}
 		}
-		_front = _size = 0;
+		mFront = mSize = 0;
 	}
 	
 	/**
 	 * Returns a new <em>ArrayedQueueIterator</em> object to iterate over all elements contained in this queue.<br/>
 	 * Preserves the natural order of a queue (First-In-First-Out).
-	 * @see <a href="http://haxe.org/ref/iterators" target="_blank">http://haxe.org/ref/iterators</a>
+	 * @see <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
 	 */
 	public function iterator():Itr<T>
 	{
 		if (reuseIterator)
 		{
-			if (_iterator == null)
-				_iterator = new ArrayedQueueIterator<T>(this);
+			if (mIterator == null)
+				mIterator = new ArrayedQueueIterator<T>(this);
 			else
-				_iterator.reset();
-			return _iterator;
+				mIterator.reset();
+			return mIterator;
 		}
 		else
 			return new ArrayedQueueIterator<T>(this);
@@ -614,7 +606,7 @@ class ArrayedQueue<T> implements Queue<T>
 	 */
 	inline public function size():Int
 	{
-		return _size;
+		return mSize;
 	}
 	
 	/**
@@ -623,7 +615,7 @@ class ArrayedQueue<T> implements Queue<T>
 	 */
 	inline public function isEmpty():Bool
 	{
-		return _size == 0;
+		return mSize == 0;
 	}
 	
 	/**
@@ -632,8 +624,8 @@ class ArrayedQueue<T> implements Queue<T>
 	 */
 	public function toArray():Array<T>
 	{
-		var a:Array<T> = ArrayUtil.alloc(_size);
-		for (i in 0..._size) a[i] = __get((i + _front) % _capacity);
+		var a:Array<T> = ArrayUtil.alloc(mSize);
+		for (i in 0...mSize) a[i] = _get((i + mFront) % mCapacity);
 		return a;
 	}
 	
@@ -643,8 +635,8 @@ class ArrayedQueue<T> implements Queue<T>
 	 */
 	inline public function toVector():Vector<T>
 	{
-		var v = new Vector<T>(_size);
-		for (i in 0..._size) v[i] = __get((i + _front) % _capacity);
+		var v = new Vector<T>(mSize);
+		for (i in 0...mSize) v[i] = _get((i + mFront) % mCapacity);
 		return v;
 	}
 	
@@ -657,60 +649,55 @@ class ArrayedQueue<T> implements Queue<T>
 	 */
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{
-		var copy = new ArrayedQueue<T>(_capacity, _isResizable, maxSize);
-		copy._sizeLevel = _sizeLevel;
-		if (_capacity == 0) return copy;
+		var copy = new ArrayedQueue<T>(mCapacity, mIsResizable, maxSize);
+		copy.mSizeLevel = mSizeLevel;
+		if (mCapacity == 0) return copy;
 		
-		var t = copy._a;
+		var t = copy.mA;
 		if (assign)
 		{
-			for (i in 0..._size)
-				t[i] = __get(i);
+			for (i in 0...mSize)
+				t[i] = _get(i);
 		}
 		else
 		if (copier == null)
 		{
 			var c:Cloneable<Dynamic> = null;
-			for (i in 0..._size)
+			for (i in 0...mSize)
 			{
 				#if debug
-				assert(Std.is(__get(i), Cloneable), 'element is not of type Cloneable (${__get(i)})');
+				assert(Std.is(_get(i), Cloneable), 'element is not of type Cloneable (${_get(i)})');
 				#end
 				
-				c = cast(__get(i), Cloneable<Dynamic>);
+				c = cast(_get(i), Cloneable<Dynamic>);
 				t[i] = c.clone();
 			}
 		}
 		else
 		{
-			for (i in 0..._size)
-				t[i] = copier(__get(i));
+			for (i in 0...mSize)
+				t[i] = copier(_get(i));
 		}
 		
-		copy._front = _front;
-		copy._size = _size;
+		copy.mFront = mFront;
+		copy.mSize = mSize;
 		return copy;
 	}
 	
 	inline function _pack(newSize:Int)
 	{
 		var tmp:Array<T> = ArrayUtil.alloc(newSize);
-		for (i in 0..._size)
+		for (i in 0...mSize)
 		{
-			tmp[i] = __get(_front++);
-			if (_front == _capacity) _front = 0;
+			tmp[i] = _get(mFront++);
+			if (mFront == mCapacity) mFront = 0;
 		}
-		_a = tmp;
+		mA = tmp;
 	}
 	
-	inline function __get(i:Int)
-	{
-		return _a[i];
-	}
-	inline function __set(i:Int, x:T)
-	{
-		_a[i] = x;
-	}
+	inline function _get(i:Int) return mA[i];
+	
+	inline function _set(i:Int, x:T) mA[i] = x;
 }
 
 #if (generic && cpp)
@@ -719,64 +706,48 @@ class ArrayedQueue<T> implements Queue<T>
 #if doc
 private
 #end
+@:access(de.polygonal.ds.ArrayedQueue)
 class ArrayedQueueIterator<T> implements de.polygonal.ds.Itr<T>
 {
-	var _f:ArrayedQueue<T>;
+	var mF:ArrayedQueue<T>;
 	
-	var _a:Array<T>;
-	var _front:Int;
-	var _capacity:Int;
-	var _size:Int;
-	var _i:Int;
+	var mA:Array<T>;
+	var mFront:Int;
+	var mCapacity:Int;
+	var mSize:Int;
+	var mI:Int;
 	
 	public function new(f:ArrayedQueue<T>)
 	{
-		_f = f;
+		mF = f;
 		reset();
 	}
 	
 	inline public function reset():Itr<T>
 	{
-		_a        = ArrayUtil.copy(__a(_f), new Array<T>());
-		_front    = __front(_f);
-		_capacity = __size(_f);
-		_size     = __count(_f);
-		_i        = 0;
+		mA = ArrayUtil.copy(mF.mA, new Array<T>());
+		mFront = mF.mFront;
+		mCapacity = mF.mCapacity;
+		mSize = mF.mSize;
+		mI = 0;
 		return this;
 	}
 	
 	inline public function hasNext():Bool
 	{
-		return _i < _size;
+		return mI < mSize;
 	}
 	
 	inline public function next():T
 	{
-		return _a[(_i++ + _front) % _capacity];
+		return mA[(mI++ + mFront) % mCapacity];
 	}
 	
 	inline public function remove()
 	{
 		#if debug
-		assert(_i > 0, "call next() before removing an element");
+		assert(mI > 0, "call next() before removing an element");
 		#end
-		_f.remove(_a[((_i - 1) + _front) % _capacity]);
-	}
-	
-	inline function __a<T>(f:ArrayedQueueFriend<T>)
-	{
-		return f._a;
-	}
-	inline function __front<T>(f:ArrayedQueueFriend<T>)
-	{
-		return f._front;
-	}
-	inline function __size<T>(f:ArrayedQueueFriend<T>)
-	{
-		return f._capacity;
-	}
-	inline function __count<T>(f:ArrayedQueueFriend<T>)
-	{
-		return f._size;
+		mF.remove(mA[((mI - 1) + mFront) % mCapacity]);
 	}
 }

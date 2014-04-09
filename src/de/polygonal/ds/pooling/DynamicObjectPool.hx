@@ -20,12 +20,6 @@ package de.polygonal.ds.pooling;
 
 import de.polygonal.ds.error.Assert.assert;
 
-private typedef DynamicObjectPoolFriend<T> =
-{
-	private var _pool:Array<T>;
-	private var _size:Int;
-}
-
 /**
  * <p>An dynamic, arrayed object pool with an unbounded size that creates new objects on-the-fly and stores them for repeated use.</p>
  * <p>Use this pool if the number of objects is not known in advance.</p>
@@ -37,11 +31,11 @@ private typedef DynamicObjectPoolFriend<T> =
  *         new Main();
  *     }
  *     
- *     var _pool:de.polygonal.ds.pooling.DynamicObjectPool&lt;Point&gt;;
+ *     var mPool:de.polygonal.ds.pooling.DynamicObjectPool&lt;Point&gt;;
  *     
  *     public function new() {
  *         //setup the pool
- *         _pool = new de.polygonal.ds.pooling.DynamicObjectPool(Point);
+ *         mPool = new de.polygonal.ds.pooling.DynamicObjectPool(Point);
  *         
  *         //setup an algorithm that runs every 100ms
  *         var timer = new haxe.Timer(100);
@@ -55,10 +49,10 @@ private typedef DynamicObjectPoolFriend<T> =
  *         var c = addition(a, b);
  *         
  *         //at this point the pool has allocated three point objects;
- *         //we could call _pool.get() to create a new point, but instead we reuse the points we already have
- *         _pool.put(a);
- *         _pool.put(b);
- *         _pool.put(c);
+ *         //we could call mPool.get() to create a new point, but instead we reuse the points we already have
+ *         mPool.put(a);
+ *         mPool.put(b);
+ *         mPool.put(c);
  *         
  *         //now the same calculation doesn't allocate any objects
  *         var a = getPoint(10, 10);
@@ -66,18 +60,18 @@ private typedef DynamicObjectPoolFriend<T> =
  *         var c = addition(a, b);
  *         
  *         //after we are done, call reclaim() to mark all objects as available for reuse in the next iteration
- *         _pool.reclaim();
+ *         mPool.reclaim();
  *     }
  *     
  *     inline function getPoint(x:Float, y:Float):Point {
- *         var p = _pool.get();
+ *         var p = mPool.get();
  *         p.x = x;
  *         p.y = y;
  *         return p;
  *     }
  *     
  *     inline function addition(a:Point, b:Point):Point {
- *         var sum = _pool.get();
+ *         var sum = mPool.get();
  *         sum.x = a.x + b.x;
  *         sum.y = a.y + b.y;
  *         return sum;
@@ -101,22 +95,22 @@ class DynamicObjectPool<T>
 	 */
 	public var key:Int;
 	
-	var _size:Int;
-	var _oldSize:Int;
-	var _capacity:Int;
-	var _top:Int;
-	var _used:Int;
-	var _usedMax:Int;
-	var _pool:Array<T>;
+	var mSize:Int;
+	var mOldSize:Int;
+	var mCapacity:Int;
+	var mTop:Int;
+	var mUsed:Int;
+	var mUsedMax:Int;
+	var mPool:Array<T>;
 	
-	var _class:Class<T>;
-	var _args:Array<Dynamic>;
-	var _fabricate:Void->T;
-	var _factory:Factory<T>;
-	var _allocType:Int;
+	var mClass:Class<T>;
+	var mArgs:Array<Dynamic>;
+	var mFabricate:Void->T;
+	var mFactory:Factory<T>;
+	var mAllocType:Int;
 	
 	#if debug
-	var _set:de.polygonal.ds.Set<T>;
+	var mSet:de.polygonal.ds.Set<T>;
 	#end
 	
 	/**
@@ -130,31 +124,31 @@ class DynamicObjectPool<T>
 	 */
 	public function new(C:Class<T> = null, fabricate:Void->T = null, factory:Factory<T> = null, capacity = M.INT32_MAX)
 	{
-		_class     = C;
-		_args      = new Array<Dynamic>();
-		_fabricate = fabricate;
-		_factory   = factory;
-		_capacity  = capacity;
-		_pool      = new Array<T>();
-		_allocType = 0;
-		_top       = 0;
-		_size      = 0;
-		_oldSize   = 0;
-		_used      = 0;
-		_usedMax   = 0;
+		mClass     = C;
+		mArgs      = new Array<Dynamic>();
+		mFabricate = fabricate;
+		mFactory   = factory;
+		mCapacity  = capacity;
+		mPool      = new Array<T>();
+		mAllocType = 0;
+		mTop       = 0;
+		mSize      = 0;
+		mOldSize   = 0;
+		mUsed      = 0;
+		mUsedMax   = 0;
 		
-		if (C         != null) _allocType |= Bits.BIT_01;
-		if (fabricate != null) _allocType |= Bits.BIT_02;
-		if (factory   != null) _allocType |= Bits.BIT_03;
+		if (C         != null) mAllocType |= Bits.BIT_01;
+		if (fabricate != null) mAllocType |= Bits.BIT_02;
+		if (factory   != null) mAllocType |= Bits.BIT_03;
 		
 		#if debug
-		assert(Bits.ones(_allocType) == 1, "invalid arguments");
+		assert(Bits.ones(mAllocType) == 1, "invalid arguments");
 		#end
 		
 		key = HashKey.next();
 		
 		#if debug
-		_set = new de.polygonal.ds.ListSet<T>();
+		mSet = new de.polygonal.ds.ListSet<T>();
 		#end
 	}
 	
@@ -164,12 +158,12 @@ class DynamicObjectPool<T>
 	 */
 	public function free()
 	{
-		for (i in 0..._size) _pool[i] = null;
-		_class     = null;
-		_args      = null;
-		_fabricate = null;
-		_factory   = null;
-		_pool      = null;
+		for (i in 0...mSize) mPool[i] = null;
+		mClass     = null;
+		mArgs      = null;
+		mFabricate = null;
+		mFactory   = null;
+		mPool      = null;
 	}
 	
 	/**
@@ -177,7 +171,7 @@ class DynamicObjectPool<T>
 	 */
 	inline public function size():Int
 	{
-		return _size;
+		return mSize;
 	}
 	
 	/**
@@ -186,7 +180,7 @@ class DynamicObjectPool<T>
 	 */
 	inline public function capacity():Int
 	{
-		return _capacity;
+		return mCapacity;
 	}
 	
 	/**
@@ -194,7 +188,7 @@ class DynamicObjectPool<T>
 	 */
 	inline public function used():Int
 	{
-		return _used;
+		return mUsed;
 	}
 	
 	/**
@@ -202,7 +196,7 @@ class DynamicObjectPool<T>
 	 */
 	inline public function maxUsageCount():Int
 	{
-		return _usedMax;
+		return mUsedMax;
 	}
 	
 	/**
@@ -214,22 +208,22 @@ class DynamicObjectPool<T>
 	{
 		var x = null;
 		
-		if (_top > 0)
+		if (mTop > 0)
 		{
-			x = _pool[--_top];
+			x = mPool[--mTop];
 			
 			#if debug
-			_set.remove(x);
+			mSet.remove(x);
 			#end
 		}
 		else
 		{
-			x = _alloc();
-			if (_size < _capacity)
-				_pool[_size++] = x;
+			x = alloc();
+			if (mSize < mCapacity)
+				mPool[mSize++] = x;
 		}
 		
-		_used++;
+		mUsed++;
 		return x;
 	}
 	
@@ -241,12 +235,12 @@ class DynamicObjectPool<T>
 	inline public function put(x:T)
 	{
 		#if debug
-		assert(!_set.has(x), 'object $x was returned twice to the pool');
-		_set.set(x);
+		assert(!mSet.has(x), 'object $x was returned twice to the pool');
+		mSet.set(x);
 		#end
 		
-		_pool[_top++] = x;
-		_used--;
+		mPool[mTop++] = x;
+		mUsed--;
 	}
 	
 	/**
@@ -257,23 +251,23 @@ class DynamicObjectPool<T>
 	 */
 	inline public function reclaim():Int
 	{
-		_top = _size;
+		mTop = mSize;
 		
 		#if debug
-		_set.clear();
+		mSet.clear();
 		#end
 		
-		var c = _size - _oldSize;
-		_oldSize = _size;
-		_usedMax = M.max(_usedMax, _used);
-		_used = 0;
+		var c = mSize - mOldSize;
+		mOldSize = mSize;
+		mUsedMax = M.max(mUsedMax, mUsed);
+		mUsed = 0;
 		
 		return c;
 	}
 	
 	/**
 	 * Returns a new <em>DynamicObjectPoolIterator</em> object to iterate over all pooled objects.<br/>
-	 * @see <a href="http://haxe.org/ref/iterators" target="_blank">http://haxe.org/ref/iterators</a>
+	 * @see <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
 	 */
 	public function iterator():Itr<T>
 	{
@@ -288,15 +282,15 @@ class DynamicObjectPool<T>
 		return '{ DynamicObjectPool, size/capacity: ${size()}/${capacity()} }';
 	}
 	
-	inline function _alloc()
+	inline function alloc()
 	{
 		var x = null;
 		
-		switch (_allocType)
+		switch (mAllocType)
 		{
-			case Bits.BIT_01: x = Type.createInstance(_class, _args);
-			case Bits.BIT_02: x = _fabricate();
-			case Bits.BIT_03: x = _factory.create();
+			case Bits.BIT_01: x = Type.createInstance(mClass, mArgs);
+			case Bits.BIT_02: x = mFabricate();
+			case Bits.BIT_03: x = mFactory.create();
 		}
 		
 		return x;
@@ -309,30 +303,31 @@ class DynamicObjectPool<T>
 #if doc
 private
 #end
+@:access(de.polygonal.ds.pooling.DynamicObjectPool)
 class DynamicObjectPoolIterator<T> implements de.polygonal.ds.Itr<T>
 {
-	var _f:DynamicObjectPoolFriend<T>;
-	var _a:Array<T>;
-	var _s:Int;
-	var _i:Int;
+	var mF:DynamicObjectPool<T>;
+	var mA:Array<T>;
+	var mS:Int;
+	var mI:Int;
 	
-	public function new(f:DynamicObjectPoolFriend<T>)
+	public function new(f:DynamicObjectPool<T>)
 	{
-		_f = f;
+		mF = f;
 		reset();
 	}
 	
 	inline public function reset():Itr<T>
 	{
-		_a = __pool(_f);
-		_s = __size(_f);
-		_i = 0;
+		mA = mF.mPool;
+		mS = mF.mSize;
+		mI = 0;
 		return this;
 	}
 	
 	inline public function hasNext():Bool
 	{
-		return _i < _s;
+		return mI < mS;
 	}
 	
 	inline public function remove()
@@ -342,15 +337,6 @@ class DynamicObjectPoolIterator<T> implements de.polygonal.ds.Itr<T>
 	
 	inline public function next():T
 	{
-		return _a[_i++];
-	}
-	
-	inline function __pool<T>(f:DynamicObjectPoolFriend<T>)
-	{
-		return _f._pool;
-	}
-	inline function __size<T>(f:DynamicObjectPoolFriend<T>)
-	{
-		return f._size;
+		return mA[mI++];
 	}
 }

@@ -1,9 +1,8 @@
-﻿package;
-
-import de.polygonal.ds.ArrayedStack;
+﻿import de.polygonal.ds.ArrayedStack;
 import de.polygonal.ds.ListSet;
 import de.polygonal.ds.Stack;
 
+@:access(de.polygonal.ds.ArrayedStack)
 class TestArrayedStack extends haxe.unit.TestCase
 {
 	inline static var DEFAULT_SIZE = 100;
@@ -243,15 +242,15 @@ class TestArrayedStack extends haxe.unit.TestCase
 		
 		l.clear();
 		
-		assertEquals(0, untyped l.__get(0));
-		assertEquals(1, untyped l.__get(1));
-		assertEquals(2, untyped l.__get(2));
+		assertEquals(0, l._get(0));
+		assertEquals(1, l._get(1));
+		assertEquals(2, l._get(2));
 		
 		l.pack();
 		
-		assertEquals(#if (flash9||flash10) 0 #else null #end, untyped l.__get(0));
-		assertEquals(#if (flash9||flash10) 0 #else null #end, untyped l.__get(1));
-		assertEquals(#if (flash9||flash10) 0 #else null #end, untyped l.__get(2));
+		assertEquals(#if (flash9||flash10) 0 #else null #end, l._get(0));
+		assertEquals(#if (flash9||flash10) 0 #else null #end, l._get(1));
+		assertEquals(#if (flash9||flash10) 0 #else null #end, l._get(2));
 	}
 	
 	function testPeek()
@@ -336,11 +335,11 @@ class TestArrayedStack extends haxe.unit.TestCase
 	{
 		var stack = getStack();
 		for (i in 0...3) stack.push(i);
-		var x = untyped stack._a[stack._top - 1];
+		var x = stack.mA[stack.mTop - 1];
 		assertEquals(2, x);
 		stack.pop();
 		stack.dispose();
-		var x = untyped stack._a[stack._top];
+		var x = stack.mA[stack.mTop];
 		var value = #if (flash) 0 #else null #end;
 		assertEquals(value, x);
 	}

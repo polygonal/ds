@@ -1,6 +1,4 @@
-﻿package;
-
-import de.polygonal.core.fmt.NumberFormat;
+﻿import de.polygonal.core.fmt.NumberFormat;
 import de.polygonal.core.math.Limits;
 import de.polygonal.ds.Bits;
 

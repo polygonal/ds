@@ -20,12 +20,6 @@ package de.polygonal.ds;
 
 import de.polygonal.ds.error.Assert.assert;
 
-private typedef LinkedDequeFriend<T> =
-{
-	private var _head:LinkedDequeNode<T>;
-	private function _removeNode(x:LinkedDequeNode<T>):Void;
-}
-
 /**
  * <p>A deque ("double-ended queue") is a linear list for which all insertions and deletions (and usually all accesses) are made at the ends of the list.</p>
  * <p><o>Worst-case running time in Big O notation</o></p>
@@ -57,16 +51,16 @@ class LinkedDeque<T> implements Deque<T>
 	 */
 	public var reuseIterator:Bool;
 	
-	var _head:LinkedDequeNode<T>;
-	var _tail:LinkedDequeNode<T>;
+	var mHead:LinkedDequeNode<T>;
+	var mTail:LinkedDequeNode<T>;
 	
-	var _headPool:LinkedDequeNode<T>;
-	var _tailPool:LinkedDequeNode<T>;
+	var mHeadPool:LinkedDequeNode<T>;
+	var mTailPool:LinkedDequeNode<T>;
 	
-	var _size:Int;
-	var _reservedSize:Int;
-	var _poolSize:Int;
-	var _iterator:LinkedDequeIterator<T>;
+	var mSize:Int;
+	var mReservedSize:Int;
+	var mPoolSize:Int;
+	var mIterator:LinkedDequeIterator<T>;
 	
 	/**
 	 * @param reservedSize if &gt; 0, this queue maintains an object pool of node objects.<br/>
@@ -88,13 +82,13 @@ class LinkedDeque<T> implements Deque<T>
 		this.maxSize = -1;
 		#end
 		
-		_poolSize     = 0;
-		_reservedSize = reservedSize;
-		_size         = 0;
-		_head         = null;
-		_tail         = null;
-		_iterator     = null;
-		_headPool = _tailPool = new LinkedDequeNode<T>(cast null);
+		mPoolSize     = 0;
+		mReservedSize = reservedSize;
+		mSize         = 0;
+		mHead         = null;
+		mTail         = null;
+		mIterator     = null;
+		mHeadPool = mTailPool = new LinkedDequeNode<T>(cast null);
 		reuseIterator = false;
 	}
 	
@@ -109,7 +103,7 @@ class LinkedDeque<T> implements Deque<T>
 		assert(size() > 0, "deque is empty");
 		#end
 		
-		return _head.val;
+		return mHead.val;
 	}
 	
 	/**
@@ -124,12 +118,12 @@ class LinkedDeque<T> implements Deque<T>
 			assert(size() < maxSize, 'size equals max size ($maxSize)');
 		#end
 		
-		var node = _getNode(x);
-		node.next = _head;
-		if (_head != null) _head.prev = node;
-		_head = node;
+		var node = getNode(x);
+		node.next = mHead;
+		if (mHead != null) mHead.prev = node;
+		mHead = node;
 		
-		if (_size++ == 0) _tail = _head;
+		if (mSize++ == 0) mTail = mHead;
 	}
 	
 	/**
@@ -143,13 +137,13 @@ class LinkedDeque<T> implements Deque<T>
 		assert(size() > 0, "deque is empty");
 		#end
 		
-		var node = _head;
-		_head = _head.next;
-		if (_head != null) _head.prev = null;
+		var node = mHead;
+		mHead = mHead.next;
+		if (mHead != null) mHead.prev = null;
 		node.next = null;
-		if (--_size == 0) _tail = null;
+		if (--mSize == 0) mTail = null;
 		
-		return _putNode(node, true);
+		return putNode(node, true);
 	}
 	
 	/**
@@ -163,7 +157,7 @@ class LinkedDeque<T> implements Deque<T>
 		assert(size() > 0, "deque is empty");
 		#end
 		
-		return _tail.val;
+		return mTail.val;
 	}
 	
 	/**
@@ -178,12 +172,12 @@ class LinkedDeque<T> implements Deque<T>
 			assert(size() < maxSize, 'size equals max size ($maxSize)');
 		#end
 		
-		var node = _getNode(x);
-		node.prev = _tail;
-		if (_tail != null) _tail.next = node;
-		_tail = node;
+		var node = getNode(x);
+		node.prev = mTail;
+		if (mTail != null) mTail.next = node;
+		mTail = node;
 		
-		if (_size++ == 0) _head = _tail;
+		if (mSize++ == 0) mHead = mTail;
 	}
 	
 	/**
@@ -197,13 +191,13 @@ class LinkedDeque<T> implements Deque<T>
 		assert(size() > 0, "deque is empty");
 		#end
 		
-		var node = _tail;
-		_tail = _tail.prev;
+		var node = mTail;
+		mTail = mTail.prev;
 		node.prev = null;
-		if (_tail != null) _tail.next = null;
-		if (--_size == 0) _head = null;
+		if (mTail != null) mTail.next = null;
+		if (--mSize == 0) mHead = null;
 		
-		return _putNode(node, true);
+		return putNode(node, true);
 	}
 	
 	/**
@@ -219,7 +213,7 @@ class LinkedDeque<T> implements Deque<T>
 		assert(i < size(), 'index out of range ($i)');
 		#end
 		
-		var node = _head;
+		var node = mHead;
 		for (j in 0...i) node = node.next;
 		return node.val;
 	}
@@ -231,8 +225,8 @@ class LinkedDeque<T> implements Deque<T>
 	 */
 	public function indexOfFront(x:T):Int
 	{
-		var node = _head;
-		for (i in 0..._size)
+		var node = mHead;
+		for (i in 0...mSize)
 		{
 			if (node.val == x) return i;
 			node = node.next;
@@ -253,7 +247,7 @@ class LinkedDeque<T> implements Deque<T>
 		assert(i < size(), 'index out of range ($i)');
 		#end
 		
-		var node = _tail;
+		var node = mTail;
 		for (j in 0...i) node = node.prev;
 		return node.val;
 	}
@@ -265,8 +259,8 @@ class LinkedDeque<T> implements Deque<T>
 	 */
 	public function indexOfBack(x:T):Int
 	{
-		var node = _tail;
-		for (i in 0..._size)
+		var node = mTail;
+		for (i in 0...mSize)
 		{
 			if (node.val == x) return i;
 			node = node.prev;
@@ -287,8 +281,8 @@ class LinkedDeque<T> implements Deque<T>
 		if (n == 0) return;
 		
 		if (args == null) args = [];
-		var k = M.min(_size, n);
-		var node = _head;
+		var k = M.min(mSize, n);
+		var node = mHead;
 		for (i in 0...k)
 		{
 			node.val = Type.createInstance(C, args);
@@ -298,11 +292,11 @@ class LinkedDeque<T> implements Deque<T>
 		n -= k;
 		for (i in 0...n)
 		{
-			node = _getNode(Type.createInstance(C, args));
-			node.prev = _tail;
-			if (_tail != null) _tail.next = node;
-			_tail = node;
-			if (_size++ == 0) _head = _tail;
+			node = getNode(Type.createInstance(C, args));
+			node.prev = mTail;
+			if (mTail != null) mTail.next = node;
+			mTail = node;
+			if (mSize++ == 0) mHead = mTail;
 		}
 	}
 	
@@ -317,8 +311,8 @@ class LinkedDeque<T> implements Deque<T>
 		if (n == 0) n = size();
 		if (n == 0) return this;
 		
-		var k = M.min(_size, n);
-		var node = _head;
+		var k = M.min(mSize, n);
+		var node = mHead;
 		for (i in 0...k)
 		{
 			node.val = x;
@@ -328,11 +322,11 @@ class LinkedDeque<T> implements Deque<T>
 		n -= k;
 		for (i in 0...n)
 		{
-			node = _getNode(x);
-			node.prev = _tail;
-			if (_tail != null) _tail.next = node;
-			_tail = node;
-			if (_size++ == 0) _head = _tail;
+			node = getNode(x);
+			node.prev = mTail;
+			if (mTail != null) mTail.next = node;
+			mTail = node;
+			if (mSize++ == 0) mHead = mTail;
 		}
 		
 		return this;
@@ -362,7 +356,7 @@ class LinkedDeque<T> implements Deque<T>
 		if (isEmpty()) return s;
 		s += "\n[ front\n";
 		var i = 0;
-		var node = _head;
+		var node = mHead;
 		while (node != null)
 		{
 			s += Printf.format("  %4d -> %s\n", [i++, Std.string(node.val)]);
@@ -383,7 +377,7 @@ class LinkedDeque<T> implements Deque<T>
 	 */
 	public function free()
 	{
-		var node = _head;
+		var node = mHead;
 		while (node != null)
 		{
 			var next = node.next;
@@ -392,9 +386,9 @@ class LinkedDeque<T> implements Deque<T>
 			node = next;
 		}
 		
-		_head = _tail = null;
+		mHead = mTail = null;
 		
-		var node = _headPool;
+		var node = mHeadPool;
 		while (node != null)
 		{
 			var next = node.next;
@@ -403,8 +397,8 @@ class LinkedDeque<T> implements Deque<T>
 			node = next;
 		}
 		
-		_headPool = _tailPool = null;
-		_iterator = null;
+		mHeadPool = mTailPool = null;
+		mIterator = null;
 	}
 	
 	/**
@@ -414,7 +408,7 @@ class LinkedDeque<T> implements Deque<T>
 	public function contains(x:T):Bool
 	{
 		var found = false;
-		var node = _head;
+		var node = mHead;
 		while (node != null)
 		{
 			if (node.val == x)
@@ -436,7 +430,7 @@ class LinkedDeque<T> implements Deque<T>
 	public function remove(x:T):Bool
 	{
 		var found = false;
-		var node = _head;
+		var node = mHead;
 		while (node != null)
 		{
 			if (node.val == x)
@@ -446,12 +440,12 @@ class LinkedDeque<T> implements Deque<T>
 				var next = node.next;
 				if (node.prev != null) node.prev.next = node.next;
 				if (node.next != null) node.next.prev = node.prev;
-				if (node == _head) _head = _head.next;
-				if (node == _tail) _tail = _tail.prev;
-				_putNode(node, true);
+				if (node == mHead) mHead = mHead.next;
+				if (node == mTail) mTail = mTail.prev;
+				putNode(node, true);
 				
-				_size--;
-				node = _head;
+				mSize--;
+				node = mHead;
 			}
 			else
 				node = node.next;
@@ -468,17 +462,17 @@ class LinkedDeque<T> implements Deque<T>
 	{
 		if (purge)
 		{
-			var node = _head;
+			var node = mHead;
 			while (node != null)
 			{
 				var next = node.next;
-				_putNode(node, true);
+				putNode(node, true);
 				node = next;
 			}
 			
-			if (_reservedSize > 0)
+			if (mReservedSize > 0)
 			{
-				var node = _headPool;
+				var node = mHeadPool;
 				while (node != null)
 				{
 					var next = node.next;
@@ -489,24 +483,24 @@ class LinkedDeque<T> implements Deque<T>
 			}
 		}
 		
-		_head = _tail = null;
-		_size = 0;
+		mHead = mTail = null;
+		mSize = 0;
 	}
 	
 	/**
 	 * Returns a new <em>LinkedDequeIterator</em> object to iterate over all elements contained in this deque.<br/>
 	 * Preserves the natural order of a deque.
-	 * @see <a href="http://haxe.org/ref/iterators" target="_blank">http://haxe.org/ref/iterators</a>
+	 * @see <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
 	 */
 	public function iterator():Itr<T>
 	{
 		if (reuseIterator)
 		{
-			if (_iterator == null)
+			if (mIterator == null)
 				return new LinkedDequeIterator<T>(this);
 			else
-				_iterator.reset();
-			return _iterator;
+				mIterator.reset();
+			return mIterator;
 		}
 		else
 			return new LinkedDequeIterator<T>(this);
@@ -518,7 +512,7 @@ class LinkedDeque<T> implements Deque<T>
 	 */
 	inline public function isEmpty():Bool
 	{
-		return _size == 0;
+		return mSize == 0;
 	}
 	
 	/**
@@ -527,7 +521,7 @@ class LinkedDeque<T> implements Deque<T>
 	 */
 	inline public function size():Int
 	{
-		return _size;
+		return mSize;
 	}
 	
 	/**
@@ -537,7 +531,7 @@ class LinkedDeque<T> implements Deque<T>
 	{
 		var a = ArrayUtil.alloc(size());
 		var i = 0;
-		var node = _head;
+		var node = mHead;
 		while (node != null)
 		{
 			a[i++] = node.val;
@@ -553,7 +547,7 @@ class LinkedDeque<T> implements Deque<T>
 	{
 		var v = new Vector<T>(size());
 		var i = 0;
-		var node = _head;
+		var node = mHead;
 		while (node != null)
 		{
 			v[i++] = node.val;
@@ -571,31 +565,31 @@ class LinkedDeque<T> implements Deque<T>
 	 */
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{
-		if (_size == 0) return new LinkedDeque<T>(_reservedSize, maxSize);
+		if (mSize == 0) return new LinkedDeque<T>(mReservedSize, maxSize);
 		
-		var copy           = new LinkedDeque<T>(_reservedSize, maxSize);
+		var copy           = new LinkedDeque<T>(mReservedSize, maxSize);
 		copy.key           = HashKey.next();
 		copy.maxSize       = maxSize;
-		copy._size         = _size;
-		copy._reservedSize = _reservedSize;
-		copy._poolSize     = _poolSize;
-		copy._headPool     = new LinkedDequeNode<T>(cast null);
-		copy._tailPool     = new LinkedDequeNode<T>(cast null);
+		copy.mSize         = mSize;
+		copy.mReservedSize = mReservedSize;
+		copy.mPoolSize     = mPoolSize;
+		copy.mHeadPool     = new LinkedDequeNode<T>(cast null);
+		copy.mTailPool     = new LinkedDequeNode<T>(cast null);
 		
 		if (assign)
 		{
-			var srcNode = _head;
-			var dstNode = copy._head = new LinkedDequeNode<T>(_head.val);
+			var srcNode = mHead;
+			var dstNode = copy.mHead = new LinkedDequeNode<T>(mHead.val);
 			
-			if (_size == 1)
+			if (mSize == 1)
 			{
-				copy._tail = copy._head;
+				copy.mTail = copy.mHead;
 				return copy;
 			}
 			
 			var dstNode0, srcNode0;
 			srcNode = srcNode.next;
-			for (i in 1..._size - 1)
+			for (i in 1...mSize - 1)
 			{
 				dstNode0 = dstNode;
 				srcNode0 = srcNode;
@@ -608,30 +602,30 @@ class LinkedDeque<T> implements Deque<T>
 			}
 			
 			dstNode0 = dstNode;
-			copy._tail = dstNode.next = new LinkedDequeNode<T>(srcNode.val);
-			copy._tail.prev = dstNode0;
+			copy.mTail = dstNode.next = new LinkedDequeNode<T>(srcNode.val);
+			copy.mTail.prev = dstNode0;
 		}
 		else
 		if (copier == null)
 		{
-			var srcNode = _head;
+			var srcNode = mHead;
 			
 			#if debug
-			assert(Std.is(_head.val, Cloneable), 'element is not of type Cloneable (${_head.val})');
+			assert(Std.is(mHead.val, Cloneable), 'element is not of type Cloneable (${mHead.val})');
 			#end
 			
-			var c:Cloneable<T> = untyped _head.val;
-			var dstNode = copy._head = new LinkedDequeNode<T>(c.clone());
+			var c:Cloneable<T> = untyped mHead.val;
+			var dstNode = copy.mHead = new LinkedDequeNode<T>(c.clone());
 			
-			if (_size == 1)
+			if (mSize == 1)
 			{
-				copy._tail = copy._head;
+				copy.mTail = copy.mHead;
 				return copy;
 			}
 			
 			var dstNode0;
 			srcNode = srcNode.next;
-			for (i in 1..._size - 1)
+			for (i in 1...mSize - 1)
 			{
 				dstNode0 = dstNode;
 				var srcNode0 = srcNode;
@@ -652,23 +646,23 @@ class LinkedDeque<T> implements Deque<T>
 			#end
 			c = untyped srcNode.val;
 			dstNode0 = dstNode;
-			copy._tail = dstNode.next = new LinkedDequeNode<T>(c.clone());
-			copy._tail.prev = dstNode0;
+			copy.mTail = dstNode.next = new LinkedDequeNode<T>(c.clone());
+			copy.mTail.prev = dstNode0;
 		}
 		else
 		{
-			var srcNode = _head;
-			var dstNode = copy._head = new LinkedDequeNode<T>(copier(_head.val));
+			var srcNode = mHead;
+			var dstNode = copy.mHead = new LinkedDequeNode<T>(copier(mHead.val));
 			
-			if (_size == 1)
+			if (mSize == 1)
 			{
-				copy._tail = copy._head;
+				copy.mTail = copy.mHead;
 				return copy;
 			}
 			
 			var dstNode0;
 			srcNode = srcNode.next;
-			for (i in 1..._size - 1)
+			for (i in 1...mSize - 1)
 			{
 				dstNode0 = dstNode;
 				var srcNode0 = srcNode;
@@ -681,36 +675,36 @@ class LinkedDeque<T> implements Deque<T>
 			}
 			
 			dstNode0 = dstNode;
-			copy._tail = dstNode.next = new LinkedDequeNode<T>(copier(srcNode.val));
-			copy._tail.prev = dstNode0;
+			copy.mTail = dstNode.next = new LinkedDequeNode<T>(copier(srcNode.val));
+			copy.mTail.prev = dstNode0;
 		}
 		
 		return copy;
 	}
 	
-	inline function _getNode(x:T)
+	inline function getNode(x:T)
 	{
-		if (_reservedSize == 0 || _poolSize == 0)
+		if (mReservedSize == 0 || mPoolSize == 0)
 			return new LinkedDequeNode<T>(x);
 		else
 		{
-			var node = _headPool;
-			_headPool = _headPool.next;
-			_poolSize--;
+			var node = mHeadPool;
+			mHeadPool = mHeadPool.next;
+			mPoolSize--;
 			node.val = x;
 			return node;
 		}
 	}
 	
-	inline function _putNode(x:LinkedDequeNode<T>, nullify:Bool):T
+	inline function putNode(x:LinkedDequeNode<T>, nullify:Bool):T
 	{
 		var val = x.val;
-		if (_reservedSize > 0)
+		if (mReservedSize > 0)
 		{
-			if (_poolSize < _reservedSize)
+			if (mPoolSize < mReservedSize)
 			{
-				_tailPool = _tailPool.next = x;
-				_poolSize++;
+				mTailPool = mTailPool.next = x;
+				mPoolSize++;
 				if (nullify)
 				{
 					x.prev = x.next = null;
@@ -721,15 +715,15 @@ class LinkedDeque<T> implements Deque<T>
 		return val;
 	}
 	
-	inline function _removeNode(x:LinkedDequeNode<T>)
+	inline function removeNode(x:LinkedDequeNode<T>)
 	{
 		var next = x.next;
 		if (x.prev != null) x.prev.next = x.next;
 		if (x.next != null) x.next.prev = x.prev;
-		if (x == _head) _head = _head.next;
-		if (x == _tail) _tail = _tail.prev;
-		_putNode(x, true);
-		_size--;
+		if (x == mHead) mHead = mHead.next;
+		if (x == mTail) mTail = mTail.prev;
+		putNode(x, true);
+		mSize--;
 	}
 }
 
@@ -764,53 +758,45 @@ class LinkedDequeNode<T>
 #if doc
 private
 #end
+@:access(de.polygonal.ds.LinkedDeque)
 class LinkedDequeIterator<T> implements de.polygonal.ds.Itr<T>
 {
-	var _f:LinkedDeque<T>;
-	var _walker:LinkedDequeNode<T>;
-	var _hook:LinkedDequeNode<T>;
+	var mF:LinkedDeque<T>;
+	var mWalker:LinkedDequeNode<T>;
+	var mHook:LinkedDequeNode<T>;
 	
 	public function new(f:LinkedDeque<T>)
 	{
-		_f = f;
+		mF = f;
 		reset();
 	}
 	
 	inline public function reset():Itr<T>
 	{
-		_walker = __head(_f);
-		_hook = null;
+		mWalker = mF.mHead;
+		mHook = null;
 		return this;
 	}
 	
 	inline public function hasNext():Bool
 	{
-		return _walker != null;
+		return mWalker != null;
 	}
 	
 	inline public function next():T
 	{
-		var x:T = _walker.val;
-		_hook = _walker;
-		_walker = _walker.next;
+		var x:T = mWalker.val;
+		mHook = mWalker;
+		mWalker = mWalker.next;
 		return x;
 	}
 	
 	inline public function remove()
 	{
 		#if debug
-		assert(_hook != null, "call next() before removing an element");
+		assert(mHook != null, "call next() before removing an element");
 		#end
 		
-		__removeNode(_f, _hook);
-	}
-	
-	inline function __head(f:LinkedDequeFriend<T>)
-	{
-		return f._head;
-	}
-	inline function __removeNode(f:LinkedDequeFriend<T>, x:LinkedDequeNode<T>)
-	{
-		f._removeNode(x);
+		mF.removeNode(mHook);
 	}
 }

@@ -11,6 +11,9 @@ class UnitTest extends TestRunner
 	{
 		super();
 		
+		//no columns
+		
+		/*
 		#if flash
 			#if no_inline
 			TestRunner.print("using against flash.Vector<Dynamic>\n");
@@ -20,13 +23,15 @@ class UnitTest extends TestRunner
 		#end
 		
 		#if (flash && alchemy)
-		add(new test.mem.TestMemoryManager());
+		add(new mem.TestMemoryManager());
 		run();
 		this.cases = new List<haxe.unit.TestCase>();
 		de.polygonal.ds.mem.MemoryManager.free();
 		de.polygonal.ds.mem.MemoryManager.RESERVE_BYTES = 1024 * 1024 * 20;
 		de.polygonal.ds.mem.MemoryManager.BLOCK_SIZE_BYTES = 1024 * 512;
-		#end
+		#end*/
+		
+		//TODO remove _ !
 		
 		add(new TestArray2());
 		add(new TestArray3());
@@ -59,17 +64,18 @@ class UnitTest extends TestRunner
 		add(new TestLinkedDeque());
 		add(new TestLinkedQueue());
 		add(new TestLinkedStack());
+		
 		add(new TestListSet());
 		add(new TestPriorityQueue());
 		add(new TestSLL());
 		add(new TestTree());
 		
-		add(new test.mem.TestByteMemory());
-		add(new test.mem.TestBitMemory());
-		add(new test.mem.TestShortMemory());
-		add(new test.mem.TestFloatMemory());
-		add(new test.mem.TestDoubleMemory());
-		add(new test.mem.TestIntMemory());
+		//add(new mem.TestByteMemory());
+		//add(new mem.TestBitMemory());
+		//add(new mem.TestShortMemory());
+		//add(new mem.TestFloatMemory());
+		//add(new mem.TestDoubleMemory());
+		//add(new mem.TestIntMemory());
 		
 		add(new test.pooling.TestObjectPool());
 		add(new test.pooling.TestDynamicObjectPool());

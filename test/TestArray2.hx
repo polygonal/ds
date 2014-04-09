@@ -1,6 +1,4 @@
-﻿package;
-
-import de.polygonal.ds.Array2;
+﻿import de.polygonal.ds.Array2;
 import de.polygonal.ds.ArrayConvert;
 import de.polygonal.ds.DA;
 import de.polygonal.ds.ListSet;
@@ -214,7 +212,7 @@ class TestArray2 extends haxe.unit.TestCase
 				else
 				{
 					var z = a.get(x, y);
-					assertEquals(#if (js||flash8||neko) null #else 0 #end, z);
+					assertEquals(#if (js||neko) null #else 0 #end, z);
 				}
 			}
 		}

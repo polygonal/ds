@@ -1,9 +1,8 @@
-﻿package;
-
-import de.polygonal.ds.ArrayedQueue;
+﻿import de.polygonal.ds.ArrayedQueue;
 import de.polygonal.ds.ListSet;
 import de.polygonal.ds.Queue;
 
+@:access(de.polygonal.ds.ArrayedQueue)
 class TestArrayedQueue extends haxe.unit.TestCase
 {
 	inline static var DEFAULT_SIZE = 16;
@@ -135,8 +134,8 @@ class TestArrayedQueue extends haxe.unit.TestCase
 			q.dispose();
 		}
 		
-		var a = untyped q._a;
-		for (i in 0...16) assertEquals(#if (js||flash8||neko) null #else 0 #end, a[i]);
+		var a = q.mA;
+		for (i in 0...16) assertEquals(#if (js||neko) null #else 0 #end, a[i]);
 		var q = new ArrayedQueue<Int>(16);
 		for (i in 0...16) q.enqueue(i);
 		for (i in 0...10) q.dequeue();
@@ -148,9 +147,9 @@ class TestArrayedQueue extends haxe.unit.TestCase
 			q.dequeue();
 			q.dispose();
 		}
-		var a:Array<Int> = untyped q._a;
+		var a:Array<Int> = q.mA;
 		for (i in 0...16)
-			assertEquals(#if (js||flash8||neko) null #else 0 #end, untyped a[i]);
+			assertEquals(#if (js||neko) null #else 0 #end, a[i]);
 	}
 	
 	function testRemove()
@@ -193,10 +192,10 @@ class TestArrayedQueue extends haxe.unit.TestCase
 		for (i in 0...16) q.enqueue(i);
 		for (i in 0...16) q.remove(i);
 		
-		var friend:{ private var _front:Int; private var _size:Int; } = q;
+		var friend:{ private var mFront:Int; private var mSize:Int; } = q;
 		
-		assertEquals(friend._front, 0);
-		assertEquals(friend._size, 0);
+		assertEquals(friend.mFront, 0);
+		assertEquals(friend.mSize, 0);
 		assertEquals(q.isEmpty(), true);
 		
 		for (i in 0...16) q.enqueue(i);

@@ -76,7 +76,7 @@ class GraphNode<T> implements Hashable
 	 */
 	public var marked:Bool;
 	
-	var _graph:Graph<T>;
+	var mGraph:Graph<T>;
 	
 	/**
 	 * Creates a graph node storing the element <code>x</code>. 
@@ -87,7 +87,7 @@ class GraphNode<T> implements Hashable
 		arcList = null;
 		marked = false;
 		key = HashKey.next();
-		_graph = graph;
+		mGraph = graph;
 	}
 	
 	/**
@@ -100,12 +100,12 @@ class GraphNode<T> implements Hashable
 		val = cast  null;
 		next = prev = null;
 		arcList = null;
-		_graph = null;
+		mGraph = null;
 	}
 	
 	/**
 	 * Returns a new <em>NodeValIterator</em> object to iterate over the elements stored in all nodes that are connected to this node by an outgoing arc.<br/>
-	 * @see <a href="http://haxe.org/ref/iterators" target="_blank">http://haxe.org/ref/iterators</a>
+	 * @see <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
 	 */
 	public function iterator():Itr<T>
 	{
@@ -185,8 +185,8 @@ class GraphNode<T> implements Hashable
 		#end
 		
 		var arc =
-		if (_graph.borrowArc != null)
-			_graph.borrowArc(target, cost);
+		if (mGraph.borrowArc != null)
+			mGraph.borrowArc(target, cost);
 		else
 			new GraphArc<T>(target, cost);
 		arc.next = arcList;
@@ -216,7 +216,7 @@ class GraphNode<T> implements Hashable
 			arc.next = null;
 			arc.prev = null;
 			arc.node = null;
-			if (_graph.returnArc != null) _graph.returnArc(arc);
+			if (mGraph.returnArc != null) mGraph.returnArc(arc);
 			return true;
 		}
 		return false;
@@ -298,30 +298,30 @@ private
 #end
 class NodeValIterator<T> implements de.polygonal.ds.Itr<T>
 {
-	var _node:GraphNode<T>;
-	var _arcList:GraphArc<T>;
+	var mNode:GraphNode<T>;
+	var mArcList:GraphArc<T>;
 	
 	public function new(node:GraphNode<T>)
 	{
-		_node = node;
+		mNode = node;
 		reset();
 	}
 	
 	inline public function reset():Itr<T>
 	{
-		_arcList = _node.arcList;
+		mArcList = mNode.arcList;
 		return this;
 	}
 	
 	inline public function hasNext():Bool
 	{
-		return _arcList != null;
+		return mArcList != null;
 	}
 	
 	inline public function next():T
 	{
-		var val = _arcList.node.val;
-		_arcList = _arcList.next;
+		var val = mArcList.node.val;
+		mArcList = mArcList.next;
 		return val;
 	}
 	

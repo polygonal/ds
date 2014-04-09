@@ -353,7 +353,7 @@ class ShortMemory extends MemoryAccess
 	}
 	
 	#if !alchemy
-	var _data:Vector<Int>;
+	var mData:Vector<Int>;
 	#end
 	
 	/**
@@ -370,14 +370,14 @@ class ShortMemory extends MemoryAccess
 		this.size = size;
 		
 		#if !alchemy
-		_data = new Vector<Int>(size);
+		mData = new Vector<Int>(size);
 		#end
 	}
 	
 	#if !alchemy
 	override public function free()
 	{
-		_data = null;
+		mData = null;
 		super.free();
 	}
 	#end
@@ -394,8 +394,8 @@ class ShortMemory extends MemoryAccess
 		for (i in 0...size)
 			flash.Memory.setI16(dst + (i << 1), flash.Memory.getUI16(src + (i << 1)));
 		#else
-		var t = c._data;
-		for (i in 0...size) t[i] = _data[i];
+		var t = c.mData;
+		for (i in 0...size) t[i] = mData[i];
 		#end
 		return c;
 	}
@@ -422,7 +422,7 @@ class ShortMemory extends MemoryAccess
 			for (i in 0...r) flash.Memory.setI16(offset + (i << 1), x);
 		}
 		#else
-		for (i in 0...size) _data[i] = x;
+		for (i in 0...size) mData[i] = x;
 		#end
 		
 		return this;
@@ -443,8 +443,8 @@ class ShortMemory extends MemoryAccess
 		super.resize(newSize << 1);
 		#else
 		var tmp = new Vector<Int>(newSize);
-		for (i in 0...M.min(newSize, size)) tmp[i] = _data[i];
-		_data = tmp;
+		for (i in 0...M.min(newSize, size)) tmp[i] = mData[i];
+		mData = tmp;
 		#end
 		
 		size = newSize;
@@ -460,7 +460,7 @@ class ShortMemory extends MemoryAccess
 		#if alchemy
 		return flash.Memory.getUI16(getAddr(i));
 		#else
-		return _data[i];
+		return mData[i];
 		#end
 	}
 	
@@ -474,7 +474,7 @@ class ShortMemory extends MemoryAccess
 		#if alchemy
 		flash.Memory.setI16(getAddr(i), x);
 		#else
-		_data[i] = x;
+		mData[i] = x;
 		#end
 	}
 	
@@ -496,7 +496,7 @@ class ShortMemory extends MemoryAccess
 		flash.Memory.setI16(ai, flash.Memory.getUI16(aj));
 		flash.Memory.setI16(ai, tmp);
 		#else
-		var tmp = _data[i]; _data[i] = _data[j]; _data[j] = tmp;
+		var tmp = mData[i]; mData[i] = mData[j]; mData[j] = tmp;
 		#end
 	}
 	
@@ -509,7 +509,7 @@ class ShortMemory extends MemoryAccess
 	{
 		#if debug
 		assert(i >= 0 && i < size, 'segfault, index $i');
-		assert(_memory != null, "memory deallocated");
+		assert(mMemory != null, "memory deallocated");
 		#end
 		
 		#if alchemy
@@ -522,7 +522,7 @@ class ShortMemory extends MemoryAccess
 	#if !alchemy
 	override public function clear()
 	{
-		for (i in 0...size) _data[i] = 0;
+		for (i in 0...size) mData[i] = 0;
 	}
 	#end
 	
@@ -548,7 +548,7 @@ class ShortMemory extends MemoryAccess
 	public function toString():String
 	{
 		#if debug
-		if (_memory == null) return "{ShortMemory (unassigned) }";
+		if (mMemory == null) return "{ShortMemory (unassigned) }";
 		var s = '{ ShortMemory size: $size, name: $name }';
 		s += "\n[\n";
 		for (i in 0...size)

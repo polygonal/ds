@@ -24,11 +24,6 @@ import de.polygonal.ds.error.Assert.assert;
 "The HashMap class is only available for flash+"
 #end
 
-private typedef HashMapFriend<K, T> =
-{
-	private var _map:flash.utils.Dictionary;
-}
-
 /**
  * <p>A hash using flash.utils.Dictionary (<b>Flash only</b>).</p>
  * <ul>
@@ -61,10 +56,10 @@ class HashMap<K, T> implements Map<K, T>
 	 */
 	public var reuseIterator:Bool;
 	
-	var _map:flash.utils.Dictionary;
-	var _weak:Bool;
-	var _size:Int;
-	var _iterator:HashMapValIterator<K, T>;
+	var mMap:flash.utils.Dictionary;
+	var mWeak:Bool;
+	var mSize:Int;
+	var mIterator:HashMapValIterator<K, T>;
 	
 	/**
 	 * @param weak if true, weak keys are used. A key/value pair is lost when no other object
@@ -75,9 +70,9 @@ class HashMap<K, T> implements Map<K, T>
 	 */
 	public function new(weak = false, maxSize = -1)
 	{
-		_map          = new flash.utils.Dictionary(_weak = weak);
-		_size         = 0;
-		_iterator     = null;
+		mMap          = new flash.utils.Dictionary(mWeak = weak);
+		mSize         = 0;
+		mIterator     = null;
 		key           = HashKey.next();
 		reuseIterator = false;
 		
@@ -101,7 +96,7 @@ class HashMap<K, T> implements Map<K, T>
 		assert(x != null, "null keys are not allowed");
 		#end
 		
-		var x:Null<T> = untyped _map[key];
+		var x:Null<T> = untyped mMap[key];
 		if (x != null)
 		{
 			#if debug
@@ -109,7 +104,7 @@ class HashMap<K, T> implements Map<K, T>
 			assert(x != null, "null values are not allowed");
 			#end
 			
-			untyped _map[key] = val;
+			untyped mMap[key] = val;
 			return true;
 		}
 		else
@@ -122,7 +117,7 @@ class HashMap<K, T> implements Map<K, T>
 	 */
 	public function toKeyArray():Array<K>
 	{
-		return untyped __keys__(_map);
+		return untyped __keys__(mMap);
 	}
 	
 	/**
@@ -177,10 +172,10 @@ class HashMap<K, T> implements Map<K, T>
 		#end
 		
 		var exists = false;
-		var a:Array<K> = untyped __keys__(_map);
+		var a:Array<K> = untyped __keys__(mMap);
 		for (i in a)
 		{
-			if (untyped _map[i] == val)
+			if (untyped mMap[i] == val)
 			{
 				exists = true;
 				break;
@@ -201,7 +196,7 @@ class HashMap<K, T> implements Map<K, T>
 		assert(x != null, "null keys are not allowed");
 		#end
 		
-		var x:Null<T> = untyped _map[key];
+		var x:Null<T> = untyped mMap[key];
 		return x != null;
 	}
 	
@@ -217,7 +212,7 @@ class HashMap<K, T> implements Map<K, T>
 		assert(x != null, "null keys are not allowed");
 		#end
 		
-		return untyped _map[key];
+		return untyped mMap[key];
 	}
 	
 	/**
@@ -244,8 +239,8 @@ class HashMap<K, T> implements Map<K, T>
 			assert(size() < maxSize, 'size equals max size ($maxSize)');
 			#end
 			
-			untyped _map[key] = val;
-			_size++;
+			untyped mMap[key] = val;
+			mSize++;
 			return true;
 		}
 	}
@@ -263,10 +258,10 @@ class HashMap<K, T> implements Map<K, T>
 		assert(x != null, "null keys are not allowed");
 		#end
 		
-		if (untyped _map[key] != null)
+		if (untyped mMap[key] != null)
 		{
-			untyped __delete__(_map, key);
-			_size--;
+			untyped __delete__(mMap, key);
+			mSize--;
 			return true;
 		}
 		else
@@ -280,8 +275,8 @@ class HashMap<K, T> implements Map<K, T>
 	public function toValSet():Set<T>
 	{
 		var s = new ListSet<T>();
-		var a:Array<K> = untyped __keys__(_map);
-		for (key in a) s.set(untyped _map[key]);
+		var a:Array<K> = untyped __keys__(mMap);
+		for (key in a) s.set(untyped mMap[key]);
 		return s;
 	}
 	
@@ -292,7 +287,7 @@ class HashMap<K, T> implements Map<K, T>
 	public function toKeySet():Set<K>
 	{
 		var s = new ListSet<K>();
-		var a:Array<K> = untyped __keys__(_map);
+		var a:Array<K> = untyped __keys__(mMap);
 		for (key in a) s.set(key);
 		return s;
 	}
@@ -316,13 +311,13 @@ class HashMap<K, T> implements Map<K, T>
 	 */
 	public function free()
 	{
-		if (!_weak)
+		if (!mWeak)
 		{
-			var a:Array<K> = untyped __keys__(_map);
-			for (i in a) untyped __delete__(_map, i);
+			var a:Array<K> = untyped __keys__(mMap);
+			for (i in a) untyped __delete__(mMap, i);
 		}
-		_map = null;
-		_iterator = null;
+		mMap = null;
+		mIterator = null;
 	}
 	
 	/**
@@ -346,13 +341,13 @@ class HashMap<K, T> implements Map<K, T>
 		var success = false;
 		if (has(x))
 		{
-			var a:Array<K> = untyped __keys__(_map);
+			var a:Array<K> = untyped __keys__(mMap);
 			for (k in a)
 			{
-				if (untyped _map[k] == x)
+				if (untyped mMap[k] == x)
 				{
-					untyped __delete__(_map, k);
-					_size--;
+					untyped __delete__(mMap, k);
+					mSize--;
 					success = true;
 				}
 			}
@@ -367,25 +362,25 @@ class HashMap<K, T> implements Map<K, T>
 	 */
 	inline public function clear(purge = false)
 	{
-		var a:Array<K> = untyped __keys__(_map);
-		for (key in a) untyped __delete__(_map, key);
-		_size = 0;
+		var a:Array<K> = untyped __keys__(mMap);
+		for (key in a) untyped __delete__(mMap, key);
+		mSize = 0;
 	}
 	
 	/**
 	 * Returns a new <em>HashMapValIterator</em> object to iterate over all values contained in this hash map.<br/>
 	 * The values are visited in a random order.
-	 * @see <a href="http://haxe.org/ref/iterators" target="_blank">http://haxe.org/ref/iterators</a>
+	 * @see <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
 	 */
 	public function iterator():Itr<T>
 	{
 		if (reuseIterator)
 		{
-			if (_iterator == null)
-				_iterator = new HashMapValIterator<K, T>(this);
+			if (mIterator == null)
+				mIterator = new HashMapValIterator<K, T>(this);
 			else
-				_iterator.reset();
-			return _iterator;
+				mIterator.reset();
+			return mIterator;
 		}
 		else
 			return new HashMapValIterator<K, T>(this);
@@ -397,7 +392,7 @@ class HashMap<K, T> implements Map<K, T>
 	 */
 	inline public function size():Int
 	{
-		return _size;
+		return mSize;
 	}
 	
 	/**
@@ -406,7 +401,7 @@ class HashMap<K, T> implements Map<K, T>
 	 */
 	inline public function isEmpty():Bool
 	{
-		return _size == 0;
+		return mSize == 0;
 	}
 	
 	/**
@@ -442,8 +437,8 @@ class HashMap<K, T> implements Map<K, T>
 	 */
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{
-		var copy = new HashMap<K, T>(_weak, maxSize);
-		var a:Array<K> = untyped __keys__(_map);
+		var copy = new HashMap<K, T>(mWeak, maxSize);
+		var a:Array<K> = untyped __keys__(mMap);
 		if (assign)
 		{
 			for (key in a) copy.set(key, get(key));
@@ -473,99 +468,91 @@ class HashMap<K, T> implements Map<K, T>
 #if doc
 private
 #end
+@:access(de.polygonal.ds.HashMap)
 class HashMapKeyIterator<K, T> implements de.polygonal.ds.Itr<K>
 {
-	var _f:HashMap<K, T>;
-	var _keys:Array<K>;
-	var _i:Int;
-	var _s:Int;
+	var mF:HashMap<K, T>;
+	var mKeys:Array<K>;
+	var mI:Int;
+	var mS:Int;
 	
 	public function new(f:HashMap<K, T>)
 	{
-		_f = f;
+		mF = f;
 		reset();
 	}
 	
 	inline public function reset():Itr<K>
 	{
-		_keys = untyped __keys__(__map(_f));
-		_i = 0;
-		_s = _keys.length;
+		mKeys = untyped __keys__(mF.mMap);
+		mI = 0;
+		mS = mKeys.length;
 		return this;
 	}
 	
 	inline public function hasNext():Bool
 	{
-		return _i < _s;
+		return mI < mS;
 	}
 
 	inline public function next():K
 	{
-		return _keys[_i++];
+		return mKeys[mI++];
 	}
 	
 	inline public function remove()
 	{
 		#if debug
-		assert(_i > 0, "call next() before removing an element");
+		assert(mI > 0, "call next() before removing an element");
 		#end
 		
-		_f.clr(_keys[_i - 1]);
-	}
-	
-	inline function __map(f:HashMapFriend<K, T>)
-	{
-		return f._map;
+		mF.clr(mKeys[mI - 1]);
 	}
 }
 
 #if doc
 private
 #end
+@:access(de.polygonal.ds.HashMap)
 class HashMapValIterator<K, T> implements de.polygonal.ds.Itr<T>
 {
-	var _f:HashMap<K, T>;
-	var _map:flash.utils.Dictionary;
-	var _keys:Array<K>;
-	var _i:Int;
-	var _s:Int;
+	var mF:HashMap<K, T>;
+	var mMap:flash.utils.Dictionary;
+	var mKeys:Array<K>;
+	var mI:Int;
+	var mS:Int;
 	
 	public function new(f:HashMap<K, T>)
 	{
-		_f = f;
+		mF = f;
 		reset();
 	}
 	
 	inline public function reset():Itr<T>
 	{
-		_map = __map(_f);
-		_keys = untyped __keys__(_map);
-		_i = 0;
-		_s = _keys.length;
+		mMap = mF.mMap;
+		mKeys = untyped __keys__(mMap);
+		mI = 0;
+		mS = mKeys.length;
 		return this;
 	}
 	
 	inline public function hasNext():Bool
 	{
-		return _i < _s;
+		return mI < mS;
 	}
 	
 	inline public function next():T
 	{
-		return untyped _map[_keys[_i++]];
+		return untyped mMap[mKeys[mI++]];
 	}
 	
 	inline public function remove()
 	{
 		#if debug
-		assert(_i > 0, "call next() before removing an element");
+		assert(mI > 0, "call next() before removing an element");
 		#end
 		
-		_f.remove(untyped _map[_keys[_i - 1]]);
-	}
-	
-	inline function __map(f:HashMapFriend<K, T>)
-	{
-		return f._map;
+		mF.remove(untyped mMap[mKeys[mI - 1]]);
 	}
 }

@@ -1,6 +1,4 @@
-﻿package;
-
-import de.polygonal.ds.BinaryTreeNode;
+﻿import de.polygonal.ds.BinaryTreeNode;
 
 class TestBinaryTree extends haxe.unit.TestCase
 {

@@ -1,10 +1,9 @@
-﻿package;
-
-import de.polygonal.ds.ArrayConvert;
+﻿import de.polygonal.ds.ArrayConvert;
 import de.polygonal.ds.Compare;
 import de.polygonal.ds.DA;
 import de.polygonal.ds.ListSet;
 
+@:access(de.polygonal.ds.DA)
 class TestDA extends haxe.unit.TestCase
 {
 	function testGetSet()
@@ -54,19 +53,19 @@ class TestDA extends haxe.unit.TestCase
 		l.pushBack(1);
 		l.pushBack(2);
 		l.clear();
-		assertEquals(0, untyped l.__get(0));
-		assertEquals(1, untyped l.__get(1));
-		assertEquals(2, untyped l.__get(2));
+		assertEquals(0, l._get(0));
+		assertEquals(1, l._get(1));
+		assertEquals(2, l._get(2));
 		l.pack();
 		
 		#if (cpp && generic)
-		assertEquals(0, untyped l.__get(0));
-		assertEquals(0, untyped l.__get(1));
-		assertEquals(0, untyped l.__get(2));
+		assertEquals(0, l._get(0));
+		assertEquals(0, l._get(1));
+		assertEquals(0, l._get(2));
 		#else
-		assertEquals(#if (flash9 || flash10) 0 #else null #end, untyped l.__get(0));
-		assertEquals(#if (flash9 || flash10) 0 #else null #end, untyped l.__get(1));
-		assertEquals(#if (flash9 || flash10) 0 #else null #end, untyped l.__get(2));
+		assertEquals(#if (flash9 || flash10) 0 #else null #end, l._get(0));
+		assertEquals(#if (flash9 || flash10) 0 #else null #end, l._get(1));
+		assertEquals(#if (flash9 || flash10) 0 #else null #end, l._get(2));
 		#end
 	}
 	

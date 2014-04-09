@@ -1,6 +1,4 @@
-﻿package;
-
-import de.polygonal.core.math.random.ParkMiller;
+﻿import de.polygonal.core.math.random.ParkMiller;
 import de.polygonal.ds.DA;
 import de.polygonal.ds.DLL;
 import de.polygonal.ds.IntHashSet;

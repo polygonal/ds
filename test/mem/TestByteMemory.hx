@@ -1,4 +1,4 @@
-﻿package test.mem;
+﻿package mem;
 
 import de.polygonal.ds.mem.ByteMemory;
 import de.polygonal.ds.Vector;
@@ -200,7 +200,7 @@ class TestByteMemory extends haxe.unit.TestCase
 	
 	function checkBytesData(v:BytesData, min = -1, max = -1)
 	{
-		#if (flash && !flash8)
+		#if flash
 		v.position = 0;
 		
 		if (min == -1) min = 0;

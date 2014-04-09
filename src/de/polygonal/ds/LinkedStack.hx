@@ -20,12 +20,6 @@ package de.polygonal.ds;
 
 import de.polygonal.ds.error.Assert.assert;
 
-private typedef LinkedStackFriend<T> =
-{
-	private var _head:LinkedStackNode<T>;
-	private function _removeNode(x:LinkedStackNode<T>):Void;
-}
-
 /**
  * <p>A stack based on a linked list.</p>
  * <p>A stack is a linear list for which all insertions and deletions (and usually all accesses) are made at one end of the list.</p>
@@ -59,16 +53,16 @@ class LinkedStack<T> implements Stack<T>
 	 */
 	public var reuseIterator:Bool;
 	
-	var _head:LinkedStackNode<T>;
+	var mHead:LinkedStackNode<T>;
 	
-	var _top:Int;
-	var _reservedSize:Int;
-	var _poolSize:Int;
+	var mTop:Int;
+	var mReservedSize:Int;
+	var mPoolSize:Int;
 	
-	var _headPool:LinkedStackNode<T>;
-	var _tailPool:LinkedStackNode<T>;
+	var mHeadPool:LinkedStackNode<T>;
+	var mTailPool:LinkedStackNode<T>;
 	
-	var _iterator:LinkedStackIterator<T>;
+	var mIterator:LinkedStackIterator<T>;
 	
 	/**
 	 * @param reservedSize if &gt; 0, this stack maintains an object pool of node objects.<br/>
@@ -90,20 +84,20 @@ class LinkedStack<T> implements Stack<T>
 		this.maxSize = -1;
 		#end
 		
-		_reservedSize = reservedSize;
-		_top          = 0;
-		_poolSize     = 0;
-		_head         = null;
-		_iterator     = null;
+		mReservedSize = reservedSize;
+		mTop          = 0;
+		mPoolSize     = 0;
+		mHead         = null;
+		mIterator     = null;
 		
 		if (reservedSize > 0)
 		{
-			_headPool = _tailPool = new LinkedStackNode<T>(cast null);
+			mHeadPool = mTailPool = new LinkedStackNode<T>(cast null);
 		}
 		else
 		{
-			_headPool = null;
-			_tailPool = null;
+			mHeadPool = null;
+			mTailPool = null;
 		}
 		
 		key = HashKey.next();
@@ -119,9 +113,9 @@ class LinkedStack<T> implements Stack<T>
 	inline public function top():T
 	{
 		#if debug
-		assert(_top > 0, "stack is empty");
+		assert(mTop > 0, "stack is empty");
 		#end
-		return _head.val;
+		return mHead.val;
 	}
 	
 	/**
@@ -136,10 +130,10 @@ class LinkedStack<T> implements Stack<T>
 			assert(size() < maxSize, 'size equals max size ($maxSize)');
 		#end
 		
-		var node = _getNode(x);
-		node.next = _head;
-		_head = node;
-		_top++;
+		var node = getNode(x);
+		node.next = mHead;
+		mHead = node;
+		mTop++;
 	}
 	
 	/**
@@ -151,14 +145,14 @@ class LinkedStack<T> implements Stack<T>
 	inline public function pop():T
 	{
 		#if debug
-		assert(_top > 0, "stack is empty");
+		assert(mTop > 0, "stack is empty");
 		#end
 		
-		_top--;
-		var node = _head;
-		_head = _head.next;
+		mTop--;
+		var node = mHead;
+		mHead = mHead.next;
 		
-		return _putNode(node);
+		return putNode(node);
 	}
 	
 	/**
@@ -170,15 +164,15 @@ class LinkedStack<T> implements Stack<T>
 	inline public function dup()
 	{
 		#if debug
-		assert(_top > 0, "stack is empty");
+		assert(mTop > 0, "stack is empty");
 		if (maxSize != -1)
 			assert(size() < maxSize, 'size equals max size ($maxSize)');
 		#end
 		
-		var node = _getNode(_head.val);
-		node.next = _head;
-		_head = node;
-		_top++;
+		var node = getNode(mHead.val);
+		node.next = mHead;
+		mHead = node;
+		mTop++;
 	}
 	
 	/**
@@ -189,12 +183,12 @@ class LinkedStack<T> implements Stack<T>
 	inline public function exchange()
 	{
 		#if debug
-		assert(_top > 1, "size() < 2");
+		assert(mTop > 1, "size() < 2");
 		#end
 		
-		var tmp = _head.val;
-		_head.val = _head.next.val;
-		_head.next.val = tmp;
+		var tmp = mHead.val;
+		mHead.val = mHead.next.val;
+		mHead.next.val = tmp;
 	}
 	
 	/**
@@ -212,18 +206,18 @@ class LinkedStack<T> implements Stack<T>
 	inline public function rotRight(n:Int)
 	{
 		#if debug
-		assert(_top >= n, "size() < n");
+		assert(mTop >= n, "size() < n");
 		#end
 		
-		var node = _head;
+		var node = mHead;
 		for (i in 0...n - 2)
 			node = node.next;
 		
 		var bot = node.next;
 		node.next = bot.next;
 		
-		bot.next = _head;
-		_head = bot;
+		bot.next = mHead;
+		mHead = bot;
 	}
 	
 	/**
@@ -241,13 +235,13 @@ class LinkedStack<T> implements Stack<T>
 	inline public function rotLeft(n:Int)
 	{
 		#if debug
-		assert(_top >= n, "size() < n");
+		assert(mTop >= n, "size() < n");
 		#end
 		
-		var top = _head;
-		_head = _head.next;
+		var top = mHead;
+		mHead = mHead.next;
 		
-		var node = _head;
+		var node = mHead;
 		for (i in 0...n - 2)
 			node = node.next;
 		
@@ -265,11 +259,11 @@ class LinkedStack<T> implements Stack<T>
 	inline public function get(i:Int):T
 	{
 		#if debug
-		assert(_top > 0, "stack is empty");
-		assert(i >= 0 && i < _top, 'i index out of range ($i)');
+		assert(mTop > 0, "stack is empty");
+		assert(i >= 0 && i < mTop, 'i index out of range ($i)');
 		#end
 		
-		var node = _head;
+		var node = mHead;
 		i = size() - i;
 		while (--i > 0) node = node.next;
 		return node.val;
@@ -285,11 +279,11 @@ class LinkedStack<T> implements Stack<T>
 	inline public function set(i:Int, x:T)
 	{
 		#if debug
-		assert(_top > 0, "stack is empty");
-		assert(i >= 0 && i < _top, 'i index out of range ($i)');
+		assert(mTop > 0, "stack is empty");
+		assert(i >= 0 && i < mTop, 'i index out of range ($i)');
 		#end
 		
-		var node = _head;
+		var node = mHead;
 		i = size() - i;
 		while (--i > 0) node = node.next;
 		node.val = x;
@@ -307,13 +301,13 @@ class LinkedStack<T> implements Stack<T>
 	inline public function swp(i:Int, j:Int)
 	{
 		#if debug
-		assert(_top > 0, "stack is empty");
-		assert(i >= 0 && i < _top, 'i index out of range ($i)');
-		assert(j >= 0 && j < _top, 'j index out of range ($j)');
+		assert(mTop > 0, "stack is empty");
+		assert(i >= 0 && i < mTop, 'i index out of range ($i)');
+		assert(j >= 0 && j < mTop, 'j index out of range ($j)');
 		assert(i != j, 'i index equals j index ($i)');
 		#end
 		
-		var node = _head;
+		var node = mHead;
 		
 		if (i < j)
 		{
@@ -322,7 +316,7 @@ class LinkedStack<T> implements Stack<T>
 			i ^= j;
 		}
 		
-		var k = _top - 1;
+		var k = mTop - 1;
 		while (k > i)
 		{
 			node = node.next;
@@ -351,13 +345,13 @@ class LinkedStack<T> implements Stack<T>
 	inline public function cpy(i:Int, j:Int)
 	{
 		#if debug
-		assert(_top > 0, "stack is empty");
-		assert(i >= 0 && i < _top, 'i index out of range ($i)');
-		assert(j >= 0 && j < _top, 'j index out of range ($j)');
+		assert(mTop > 0, "stack is empty");
+		assert(i >= 0 && i < mTop, 'i index out of range ($i)');
+		assert(j >= 0 && j < mTop, 'j index out of range ($j)');
 		assert(i != j, 'i index equals j index ($i)');
 		#end
 		
-		var node = _head;
+		var node = mHead;
 		
 		if (i < j)
 		{
@@ -366,7 +360,7 @@ class LinkedStack<T> implements Stack<T>
 			i ^= j;
 		}
 		
-		var k = _top - 1;
+		var k = mTop - 1;
 		while (k > i)
 		{
 			node = node.next;
@@ -406,7 +400,7 @@ class LinkedStack<T> implements Stack<T>
 			n = size();
 		
 		if (args == null) args = [];
-		var node = _head;
+		var node = mHead;
 		for (i in 0...n)
 		{
 			node.val = Type.createInstance(C, args);
@@ -436,7 +430,7 @@ class LinkedStack<T> implements Stack<T>
 		else
 			n = size();
 		
-		var node = _head;
+		var node = mHead;
 		for (i in 0...n)
 		{
 			node.val = x;
@@ -455,7 +449,7 @@ class LinkedStack<T> implements Stack<T>
 	 */
 	public function shuffle(rval:DA<Float> = null)
 	{
-		var s = _top;
+		var s = mTop;
 		
 		if (rval == null)
 		{
@@ -464,12 +458,12 @@ class LinkedStack<T> implements Stack<T>
 			{
 				s--;
 				var i = Std.int(m.random() * s);
-				var node1 = _head;
+				var node1 = mHead;
 				for (j in 0...s) node1 = node1.next;
 				
 				var t = node1.val;
 				
-				var node2 = _head;
+				var node2 = mHead;
 				for (j in 0...i) node2 = node2.next;
 				
 				node1.val = node2.val;
@@ -487,12 +481,12 @@ class LinkedStack<T> implements Stack<T>
 			{
 				s--;
 				var i = Std.int(rval.get(k++) * s);
-				var node1 = _head;
+				var node1 = mHead;
 				for (j in 0...s) node1 = node1.next;
 				
 				var t = node1.val;
 				
-				var node2 = _head;
+				var node2 = mHead;
 				for (j in 0...i) node2 = node2.next;
 				
 				node1.val = node2.val;
@@ -523,8 +517,8 @@ class LinkedStack<T> implements Stack<T>
 		var s = '{ LinkedStack size: ${size()} }';
 		if (isEmpty()) return s;
 		s += "\n[ top\n";
-		var node = _head;
-		var i = _top - 1;
+		var node = mHead;
+		var i = mTop - 1;
 		while (i >= 0)
 		{
 			s += '  $i -> ${Std.string(node.val)}\n';
@@ -546,7 +540,7 @@ class LinkedStack<T> implements Stack<T>
 	 */
 	public function free()
 	{
-		var node = _head;
+		var node = mHead;
 		while (node != null)
 		{
 			var next = node.next;
@@ -555,9 +549,9 @@ class LinkedStack<T> implements Stack<T>
 			node = next;
 		}
 		
-		_head = null;
+		mHead = null;
 		
-		var node = _headPool;
+		var node = mHeadPool;
 		while (node != null)
 		{
 			var next = node.next;
@@ -566,8 +560,8 @@ class LinkedStack<T> implements Stack<T>
 			node = next;
 		}
 		
-		_headPool = _tailPool = null;
-		_iterator = null;
+		mHeadPool = mTailPool = null;
+		mIterator = null;
 	}
 	
 	/**
@@ -576,7 +570,7 @@ class LinkedStack<T> implements Stack<T>
 	 */
 	public function contains(x:T):Bool
 	{
-		var node = _head;
+		var node = mHead;
 		while (node != null)
 		{
 			if (node.val == x)
@@ -596,8 +590,8 @@ class LinkedStack<T> implements Stack<T>
 		if (isEmpty()) return false;
 		
 		var found = false;
-		var node0 = _head;
-		var node1 = _head.next;
+		var node0 = mHead;
+		var node1 = mHead.next;
 		
 		while (node1 != null)
 		{
@@ -606,9 +600,9 @@ class LinkedStack<T> implements Stack<T>
 				found = true;
 				var node2 = node1.next;
 				node0.next = node2;
-				_putNode(node1);
+				putNode(node1);
 				node1 = node2;
-				_top--;
+				mTop--;
 			}
 			else
 			{
@@ -617,13 +611,13 @@ class LinkedStack<T> implements Stack<T>
 			}
 		}
 		
-		if (_head.val == x)
+		if (mHead.val == x)
 		{
 			found = true;
-			var head1 = _head.next;
-			_putNode(_head);
-			_head = head1;
-			_top--;
+			var head1 = mHead.next;
+			putNode(mHead);
+			mHead = head1;
+			mTop--;
 		}
 		
 		return found;
@@ -636,38 +630,38 @@ class LinkedStack<T> implements Stack<T>
 	 */
 	public function clear(purge = false)
 	{
-		if (_top == 0) return;
+		if (mTop == 0) return;
 		
-		if (purge || _reservedSize > 0)
+		if (purge || mReservedSize > 0)
 		{
-			var node = _head;
+			var node = mHead;
 			while (node != null)
 			{
 				var next = node.next;
-				_putNode(node);
+				putNode(node);
 				node = next;
 			}
 		}
 		
-		_head.next = null;
-		_head.val = cast null;
-		_top = 0;
+		mHead.next = null;
+		mHead.val = cast null;
+		mTop = 0;
 	}
 	
 	/**
 	 * Returns a new <em>LinkedStackIterator</em> object to iterate over all elements contained in this stack.<br/>
 	 * Preserves the natural order of the stack (First-In-Last-Out).
-	 * @see <a href="http://haxe.org/ref/iterators" target="_blank">http://haxe.org/ref/iterators</a>
+	 * @see <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
 	 */
 	public function iterator():Itr<T>
 	{
 		if (reuseIterator)
 		{
-			if (_iterator == null)
+			if (mIterator == null)
 				return new LinkedStackIterator<T>(this);
 			else
-				_iterator.reset();
-			return _iterator;
+				mIterator.reset();
+			return mIterator;
 		}
 		else
 			return new LinkedStackIterator<T>(this);
@@ -679,7 +673,7 @@ class LinkedStack<T> implements Stack<T>
 	 */
 	inline public function isEmpty():Bool
 	{
-		return _top == 0;
+		return mTop == 0;
 	}
 	
 	/**
@@ -688,7 +682,7 @@ class LinkedStack<T> implements Stack<T>
 	 */
 	inline public function size():Int
 	{
-		return _top;
+		return mTop;
 	}
 	
 	/**
@@ -699,10 +693,10 @@ class LinkedStack<T> implements Stack<T>
 	{
 		var a:Array<T> = ArrayUtil.alloc(size());
 		ArrayUtil.fill(a, cast null, size());
-		var node = _head;
-		for (i in 0..._top)
+		var node = mHead;
+		for (i in 0...mTop)
 		{
-			a[_top - i - 1] = node.val;
+			a[mTop - i - 1] = node.val;
 			node = node.next;
 		}
 		return a;
@@ -715,10 +709,10 @@ class LinkedStack<T> implements Stack<T>
 	inline public function toVector():Vector<T>
 	{
 		var v = new Vector<T>(size());
-		var node = _head;
-		for (i in 0..._top)
+		var node = mHead;
+		for (i in 0...mTop)
 		{
-			v[_top - i - 1] = node.val;
+			v[mTop - i - 1] = node.val;
 			node = node.next;
 		}
 		return v;
@@ -733,16 +727,16 @@ class LinkedStack<T> implements Stack<T>
 	 */
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{
-		var copy = new LinkedStack<T>(_reservedSize, maxSize);
-		if (_top == 0) return copy;
+		var copy = new LinkedStack<T>(mReservedSize, maxSize);
+		if (mTop == 0) return copy;
 		
-		var copy = new LinkedStack<T>(_reservedSize, maxSize);
-		copy._top = _top;
+		var copy = new LinkedStack<T>(mReservedSize, maxSize);
+		copy.mTop = mTop;
 		
 		if (assign)
 		{
-			var srcNode = _head;
-			var dstNode = copy._head = new LinkedStackNode<T>(srcNode.val);
+			var srcNode = mHead;
+			var dstNode = copy.mHead = new LinkedStackNode<T>(srcNode.val);
 			
 			srcNode = srcNode.next;
 			while (srcNode != null)
@@ -754,14 +748,14 @@ class LinkedStack<T> implements Stack<T>
 		else
 		if (copier == null)
 		{
-			var srcNode = _head;
+			var srcNode = mHead;
 			
 			#if debug
 			assert(Std.is(srcNode.val, Cloneable), 'element is not of type Cloneable (${srcNode.val})');
 			#end
 			
 			var c = cast(srcNode.val, Cloneable<Dynamic>);
-			var dstNode = copy._head = new LinkedStackNode<T>(c.clone());
+			var dstNode = copy.mHead = new LinkedStackNode<T>(c.clone());
 			
 			srcNode = srcNode.next;
 			while (srcNode != null)
@@ -778,8 +772,8 @@ class LinkedStack<T> implements Stack<T>
 		}
 		else
 		{
-			var srcNode = _head;
-			var dstNode = copy._head = new LinkedStackNode<T>(copier(srcNode.val));
+			var srcNode = mHead;
+			var dstNode = copy.mHead = new LinkedStackNode<T>(copier(srcNode.val));
 			
 			srcNode = srcNode.next;
 			while (srcNode != null)
@@ -792,48 +786,48 @@ class LinkedStack<T> implements Stack<T>
 		return copy;
 	}
 	
-	inline function _getNode(x:T)
+	inline function getNode(x:T)
 	{
-		if (_reservedSize == 0 || _poolSize == 0)
+		if (mReservedSize == 0 || mPoolSize == 0)
 			return new LinkedStackNode<T>(x);
 		else
 		{
-			var n = _headPool;
-			_headPool = _headPool.next;
-			_poolSize--;
+			var n = mHeadPool;
+			mHeadPool = mHeadPool.next;
+			mPoolSize--;
 			
 			n.val = x;
 			return n;
 		}
 	}
 	
-	inline function _putNode(x:LinkedStackNode<T>):T
+	inline function putNode(x:LinkedStackNode<T>):T
 	{
 		var val = x.val;
 		
-		if (_reservedSize > 0 && _poolSize < _reservedSize)
+		if (mReservedSize > 0 && mPoolSize < mReservedSize)
 		{
-			_tailPool = _tailPool.next = x;
+			mTailPool = mTailPool.next = x;
 			x.next = null;
 			x.val = cast null;
-			_poolSize++;
+			mPoolSize++;
 		}
 		return val;
 	}
 	
-	inline function _removeNode(x:LinkedStackNode<T>)
+	inline function removeNode(x:LinkedStackNode<T>)
 	{
-		var n = _head;
+		var n = mHead;
 		if (x == n)
-			_head = x.next;
+			mHead = x.next;
 		else
 		{
 			while (n.next != x) n = n.next;
 			n.next = x.next;
 		}
 		
-		_putNode(x);
-		_top--;
+		putNode(x);
+		mTop--;
 	}
 }
 
@@ -865,61 +859,45 @@ private
 #if generic
 @:generic
 #end
+@:access(de.polygonal.ds.LinkedStack)
 class LinkedStackIterator<T> implements de.polygonal.ds.Itr<T>
 {
-	var _f:LinkedStack<T>;
-	var _walker:LinkedStackNode<T>;
-	var _hook:LinkedStackNode<T>;
+	var mF:LinkedStack<T>;
+	var mWalker:LinkedStackNode<T>;
+	var mHook:LinkedStackNode<T>;
 	
 	public function new(f:LinkedStack<T>)
 	{
-		_f = f;
+		mF = f;
 		reset();
 	}
 	
 	inline public function reset():Itr<T>
 	{
-		_walker = __head(_f);
-		_hook = null;
+		mWalker = mF.mHead;
+		mHook = null;
 		return this;
 	}
 	
 	inline public function hasNext():Bool
 	{
-		return _walker != null;
+		return mWalker != null;
 	}
 	
 	inline public function next():T
 	{
-		var x = _walker.val;
-		_hook = _walker;
-		_walker = _walker.next;
+		var x = mWalker.val;
+		mHook = mWalker;
+		mWalker = mWalker.next;
 		return x;
 	}
 	
 	inline public function remove()
 	{
 		#if debug
-		assert(_hook != null, "call next() before removing an element");
+		assert(mHook != null, "call next() before removing an element");
 		#end
 		
-		#if flash
-		__remove(_f, _hook);
-		#else
-		var f:LinkedStackFriend<T> = _f;
-		f._removeNode(_hook);
-		#end
+		mF.removeNode(mHook);
 	}
-	
-	inline function __head(f:LinkedStackFriend<T>)
-	{
-		return f._head;
-	}
-	
-	#if flash
-	inline function __remove(f:LinkedStackFriend<T>, x:LinkedStackNode<T>)
-	{
-		return f._removeNode(x);
-	}
-	#end
 }

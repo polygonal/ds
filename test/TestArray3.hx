@@ -1,6 +1,4 @@
-﻿package;
-
-import de.polygonal.ds.Array3;
+﻿import de.polygonal.ds.Array3;
 import de.polygonal.ds.ListSet;
 import de.polygonal.ds.Set;
 

@@ -1,12 +1,11 @@
-﻿package;
-
-import de.polygonal.ds.ArrayConvert;
+﻿import de.polygonal.ds.ArrayConvert;
 import de.polygonal.ds.Compare;
 import de.polygonal.ds.DA;
 import de.polygonal.ds.ListSet;
 import de.polygonal.ds.SLL;
 import de.polygonal.ds.SLLNode;
 
+@:access(de.polygonal.ds.SLL)
 class TestSLL extends haxe.unit.TestCase
 {
 	function testCircular()
@@ -182,16 +181,16 @@ class TestSLL extends haxe.unit.TestCase
 		
 		for (i in 0...10) l.append(i);
 		for (i in 0...10) l.removeHead();
-		assertEquals(10, untyped l._poolSize);
+		assertEquals(10, l.mPoolSize);
 		
 		for (i in 0...10) l.append(i);
-		assertEquals(0, untyped l._poolSize);
+		assertEquals(0, l.mPoolSize);
 		
 		for (i in 0...10) l.removeTail();
-		assertEquals(10, untyped l._poolSize);
+		assertEquals(10, l.mPoolSize);
 		
 		for (i in 0...10) l.prepend(i);
-		assertEquals(0, untyped l._poolSize);
+		assertEquals(0, l.mPoolSize);
 		
 		assertEquals(10, l.size());
 		assertTrue(l.head != null);
@@ -199,7 +198,7 @@ class TestSLL extends haxe.unit.TestCase
 		for (i in 0...10)
 			l.head.unlink();
 		
-		assertEquals(10, untyped l._poolSize);
+		assertEquals(10, l.mPoolSize);
 		assertEquals(0, l.size());
 		assertTrue(l.head == null);
 	}
@@ -1119,13 +1118,13 @@ class TestSLL extends haxe.unit.TestCase
 		assertEquals(list.size(), 0);
 		assertEquals(list.head, null);
 		assertEquals(list.tail, null);
-		assertEquals(10, untyped list._poolSize);
+		assertEquals(10, list.mPoolSize);
 		
 		for (i in 0...10) list.append(i);
 		for (i in 0...10) list.removeHead();
-		assertEquals(10, untyped list._poolSize);
+		assertEquals(10, list.mPoolSize);
 		for (i in 0...10) list.append(i);
-		assertEquals(0, untyped list._poolSize);
+		assertEquals(0, list.mPoolSize);
 	}
 	
 	function testAppend()

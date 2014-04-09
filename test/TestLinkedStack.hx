@@ -1,10 +1,9 @@
-﻿package;
-
-import de.polygonal.ds.ArrayedStack;
+﻿import de.polygonal.ds.ArrayedStack;
 import de.polygonal.ds.LinkedStack;
 import de.polygonal.ds.ListSet;
 import de.polygonal.ds.Stack;
 
+@:access(de.polygonal.ds.LinkedStack)
 class TestLinkedStack extends haxe.unit.TestCase
 {
 	function testPool()
@@ -14,13 +13,13 @@ class TestLinkedStack extends haxe.unit.TestCase
 		for (i in 0...10) l.push(i);
 		for (i in 0...10) l.pop();
 		
-		assertEquals(10, untyped l._poolSize);
+		assertEquals(10, l.mPoolSize);
 		
 		for (i in 0...10) l.push(i);
-		assertEquals(0, untyped l._poolSize);
+		assertEquals(0, l.mPoolSize);
 		
 		for (i in 0...10) l.pop();
-		assertEquals(10, untyped l._poolSize);
+		assertEquals(10, l.mPoolSize);
 	}
 	
 	function testCpy()
@@ -497,7 +496,7 @@ class TestLinkedStack extends haxe.unit.TestCase
 			
 			while (!l.isEmpty()) assertTrue(set.remove(l.pop()));
 			assertTrue(set.isEmpty());
-			assertEquals(null, untyped l._head);
+			assertEquals(null, l.mHead);
 		}
 		
 		var l = new de.polygonal.ds.LinkedStack<Int>();
@@ -510,7 +509,7 @@ class TestLinkedStack extends haxe.unit.TestCase
 			itr.remove();
 		}
 		assertTrue(l.isEmpty());
-		assertEquals(null, untyped l._head);
+		assertEquals(null, l.mHead);
 	}
 	
 	function testClone1()
@@ -521,11 +520,11 @@ class TestLinkedStack extends haxe.unit.TestCase
 		var c:LinkedStack<Int> = cast l.clone(true);
 		
 		#if generic
-		var node1:Dynamic = untyped l._head;
-		var node2:Dynamic = untyped c._head;
+		var node1:Dynamic = l.mHead;
+		var node2:Dynamic = c.mHead;
 		#else
-		var node1:LinkedStackNode<Int> = untyped l._head;
-		var node2:LinkedStackNode<Int> = untyped c._head;
+		var node1:LinkedStackNode<Int> = l.mHead;
+		var node2:LinkedStackNode<Int> = c.mHead;
 		#end
 		
 		while (node1 != null)
@@ -549,11 +548,11 @@ class TestLinkedStack extends haxe.unit.TestCase
 		var c:LinkedStack<Int> = cast l.clone(true);
 		
 		#if generic
-		var node1:Dynamic = untyped l._head;
-		var node2:Dynamic = untyped c._head;
+		var node1:Dynamic = l.mHead;
+		var node2:Dynamic = c.mHead;
 		#else
-		var node1:LinkedStackNode<Int> = untyped l._head;
-		var node2:LinkedStackNode<Int> = untyped c._head;
+		var node1:LinkedStackNode<Int> = l.mHead;
+		var node2:LinkedStackNode<Int> = c.mHead;
 		#end
 		while (node1 != null)
 		{
@@ -579,11 +578,11 @@ class TestLinkedStack extends haxe.unit.TestCase
 		var c:LinkedStack<Int> = cast l.clone(true);
 		
 		#if generic
-		var node1:Dynamic = untyped l._head;
-		var node2:Dynamic = untyped c._head;
+		var node1:Dynamic = l.mHead;
+		var node2:Dynamic = c.mHead;
 		#else
-		var node1:LinkedStackNode<Int> = untyped l._head;
-		var node2:LinkedStackNode<Int> = untyped c._head;
+		var node1:LinkedStackNode<Int> = l.mHead;
+		var node2:LinkedStackNode<Int> = c.mHead;
 		#end
 		while (node1 != null)
 		{

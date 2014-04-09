@@ -24,14 +24,14 @@ using de.polygonal.ds.Bits;
 private
 #end
 /**
- * <p>Grants access to the private <code>_bits</code> field storing the bit field.</p>
+ * <p>Grants access to the private <code>mBits</code> field storing the bit field.</p>
  */
 typedef BitField =
 {
 	/**
 	 * The bit field. 
 	 */
-	private var _bits:Int;
+	private var mBits:Int;
 }
 
 /**
@@ -44,7 +44,7 @@ class BitFlags
 	 */
 	inline public static function getf(x:BitField, mask:Int):Int
 	{
-		return x._bits.getBits(mask);
+		return x.mBits.getBits(mask);
 	}
 	
 	/**
@@ -52,7 +52,7 @@ class BitFlags
 	 */
 	inline public static function hasf(x:BitField, mask:Int):Bool
 	{
-		return x._bits.hasBits(mask);
+		return x.mBits.hasBits(mask);
 	}
 	
 	/**
@@ -60,7 +60,7 @@ class BitFlags
 	 */
 	inline public static function incf(x:BitField, mask:Int):Bool
 	{
-		return x._bits.incBits(mask);
+		return x.mBits.incBits(mask);
 	}
 	
 	/**
@@ -68,7 +68,7 @@ class BitFlags
 	 */
 	inline public static function setf(x:BitField, mask:Int)
 	{
-		x._bits = x._bits.setBits(mask);
+		x.mBits = x.mBits.setBits(mask);
 	}
 	
 	/**
@@ -76,7 +76,7 @@ class BitFlags
 	 */
 	inline public static function clrf(x:BitField, mask:Int)
 	{
-		x._bits = x._bits.clrBits(mask);
+		x.mBits = x.mBits.clrBits(mask);
 	}
 	
 	/**
@@ -84,7 +84,7 @@ class BitFlags
 	 */
 	inline public static function invf(x:BitField, mask:Int)
 	{
-		x._bits = x._bits.invBits(mask);
+		x.mBits = x.mBits.invBits(mask);
 	}
 	
 	/**
@@ -92,7 +92,7 @@ class BitFlags
 	 */
 	inline public static function nulf(x:BitField)
 	{
-		x._bits = 0;
+		x.mBits = 0;
 	}
 	
 	/**
@@ -100,7 +100,7 @@ class BitFlags
 	 */
 	inline public static function cpyf(x:BitField, other:BitField)
 	{
-		x._bits = other._bits;
+		x.mBits = other.mBits;
 	}
 	
 	/**
@@ -109,9 +109,9 @@ class BitFlags
 	 */
 	inline public static function swpf(x:BitField, i:Int, j:Int)
 	{
-		var b = x._bits;
+		var b = x.mBits;
 		var t = ((b >> i) ^ (b >> j)) & 0x01;
-		x._bits = b ^ ((t << i) | (t << j));
+		x.mBits = b ^ ((t << i) | (t << j));
 	}
 	
 	/**

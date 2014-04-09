@@ -20,12 +20,6 @@ package de.polygonal.ds.pooling;
 
 import de.polygonal.ds.error.Assert.assert;
 
-private typedef ObjectPoolFriend<T> =
-{
-	private var _pool:Array<T>;
-	private var _size:Int;
-}
-
 /**
  *<p>A fixed sized, arrayed object pool.</p>
  */
@@ -39,21 +33,21 @@ class ObjectPool<T> implements Hashable
 	public var key:Int;
 	
 	#if alchemy
-	var _next:de.polygonal.ds.mem.IntMemory;
+	var mNext:de.polygonal.ds.mem.IntMemory;
 	#else
-	var _next:Vector<Int>;
+	var mNext:Vector<Int>;
 	#end
 	
-	var _pool:Array<T>;
-	var _size:Int;
-	var _free:Int;
+	var mPool:Array<T>;
+	var mSize:Int;
+	var mFree:Int;
 	
-	var _lazy:Bool;
-	var _lazyConstructor:Void->T;
+	var mLazy:Bool;
+	var mLazyConstructor:Void->T;
 	
 	#if debug
-	var _usage:de.polygonal.ds.BitVector;
-	var _count:Int;
+	var mUsage:de.polygonal.ds.BitVector;
+	var mCount:Int;
 	#end
 	
 	/** 
@@ -62,13 +56,13 @@ class ObjectPool<T> implements Hashable
 	 */
 	public function new(x:Int)
 	{
-		_size = x;
-		_free = -1;
+		mSize = x;
+		mFree = -1;
 		
 		key = HashKey.next();
 		
 		#if debug
-		_count = 0;
+		mCount = 0;
 		#end
 	}
 	
@@ -78,23 +72,23 @@ class ObjectPool<T> implements Hashable
 	 */
 	public function free()
 	{
-		if (_pool == null) return;
+		if (mPool == null) return;
 		
-		for (i in 0..._size) _pool[i] = null;
-		_pool = null;
+		for (i in 0...mSize) mPool[i] = null;
+		mPool = null;
 		
 		#if alchemy
-		_next.free();
+		mNext.free();
 		#end
 		
-		_next = null;
-		_lazyConstructor = null;
+		mNext = null;
+		mLazyConstructor = null;
 		
 		#if debug
-		if (_usage != null)
+		if (mUsage != null)
 		{
-			_usage.free();
-			_usage = null;
+			mUsage.free();
+			mUsage = null;
 		}
 		#end
 	}
@@ -104,7 +98,7 @@ class ObjectPool<T> implements Hashable
 	 */
 	inline public function isEmpty():Bool
 	{
-		return _free == -1;
+		return mFree == -1;
 	}
 	
 	/**
@@ -112,7 +106,7 @@ class ObjectPool<T> implements Hashable
 	 */
 	inline public function size():Int
 	{
-		return _size;
+		return mSize;
 	}
 	
 	/**
@@ -129,10 +123,10 @@ class ObjectPool<T> implements Hashable
 	public function countUnusedObjects():Int
 	{
 		var c = 0;
-		var i = _free;
+		var i = mFree;
 		while (i != -1)
 		{
-			i = __getNext(i);
+			i = getNext(i);
 			c++;
 		}
 		
@@ -147,15 +141,15 @@ class ObjectPool<T> implements Hashable
 	inline public function next():Int
 	{
 		#if debug
-		assert(_count < _size && _free != -1, "pool exhausted");
-		++_count;
+		assert(mCount < mSize && mFree != -1, "pool exhausted");
+		++mCount;
 		#end
 		
-		var id = _free;
-		_free = __getNext(id);
+		var id = mFree;
+		mFree = getNext(id);
 		
 		#if debug
-		_usage.set(id);
+		mUsage.set(id);
 		#end
 		
 		return id;
@@ -169,16 +163,16 @@ class ObjectPool<T> implements Hashable
 	inline public function get(id:Int):T
 	{
 		#if debug
-		assert(_usage.has(id), 'id $id is not used');
+		assert(mUsage.has(id), 'id $id is not used');
 		#end
 		
-		if (_lazy)
+		if (mLazy)
 		{
-			if (_pool[id] == null)
-				_pool[id] = _lazyConstructor();
+			if (mPool[id] == null)
+				mPool[id] = mLazyConstructor();
 		}
 		
-		return _pool[id];
+		return mPool[id];
 	}
 	
 	/**
@@ -188,14 +182,14 @@ class ObjectPool<T> implements Hashable
 	inline public function put(id:Int)
 	{
 		#if debug
-		assert(_usage.has(id), 'id $id is not used');
-		assert(_count > 0, "pool is full");
-		_usage.clr(id);
-		--_count;
+		assert(mUsage.has(id), 'id $id is not used');
+		assert(mCount > 0, "pool is full");
+		mUsage.clr(id);
+		--mCount;
 		#end
 		
-		__setNext(id, _free);
-		_free = id;
+		setNext(id, mFree);
+		mFree = id;
 	}
 	
 	/**
@@ -208,54 +202,54 @@ class ObjectPool<T> implements Hashable
 	 */
 	public function allocate(lazy:Bool, C:Class<T> = null, fabricate:Void->T = null, factory:Factory<T> = null)
 	{
-		_lazy = lazy;
+		mLazy = lazy;
 		
 		#if alchemy
-		_next = new de.polygonal.ds.mem.IntMemory(_size, "ObjectPool._next");
+		mNext = new de.polygonal.ds.mem.IntMemory(mSize, "ObjectPool.mNext");
 		#else
-		_next = new Vector<Int>(_size);
+		mNext = new Vector<Int>(mSize);
 		#end
 		
-		for (i in 0..._size - 1) __setNext(i, i + 1);
-		__setNext(_size - 1, -1);
-		_free = 0;
-		_pool = de.polygonal.ds.ArrayUtil.alloc(_size);
+		for (i in 0...mSize - 1) setNext(i, i + 1);
+		setNext(mSize - 1, -1);
+		mFree = 0;
+		mPool = de.polygonal.ds.ArrayUtil.alloc(mSize);
 		
 		#if debug
 		assert(C != null || fabricate != null || factory != null, "invalid arguments");
 		#end
 		
-		if (_lazy)
+		if (mLazy)
 		{
 			if (C != null)
-				_lazyConstructor = function() return Type.createInstance(C, []);
+				mLazyConstructor = function() return Type.createInstance(C, []);
 			else
 			if (fabricate != null)
-				_lazyConstructor = function() return fabricate();
+				mLazyConstructor = function() return fabricate();
 			else
 			if (factory != null)
-				_lazyConstructor = function() return factory.create();
+				mLazyConstructor = function() return factory.create();
 		}
 		else
 		{
 			if (C != null)
-				for (i in 0..._size) _pool[i] = Type.createInstance(C, []);
+				for (i in 0...mSize) mPool[i] = Type.createInstance(C, []);
 			else
 			if (fabricate != null)
-				for (i in 0..._size) _pool[i] = fabricate();
+				for (i in 0...mSize) mPool[i] = fabricate();
 			else
 			if (factory != null)
-				for (i in 0..._size) _pool[i] = factory.create();
+				for (i in 0...mSize) mPool[i] = factory.create();
 		}
 		
 		#if debug
-		_usage = new de.polygonal.ds.BitVector(_size);
+		mUsage = new de.polygonal.ds.BitVector(mSize);
 		#end
 	}
 	
 	/**
 	 * Returns a new <em>ObjectPoolIterator</em> object to iterate over all pooled objects, regardless if an object is used or not.<br/>
-	 * @see <a href="http://haxe.org/ref/iterators" target="_blank">http://haxe.org/ref/iterators</a>
+	 * @see <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
 	 */
 	public function iterator():Itr<T>
 	{
@@ -269,36 +263,36 @@ class ObjectPool<T> implements Hashable
 	public function toString():String
 	{
 		#if debug
-		var s = '{ ObjectPool used/total: $_count/$_size }';
+		var s = '{ ObjectPool used/total: $mCount/$mSize }';
 		if (size() == 0) return s;
 		s += "\n[\n";
 		
 		for (i in 0...size())
 		{
-			var t = Std.string(_pool[i]);
+			var t = Std.string(mPool[i]);
 			s += Printf.format("  %4d -> {%s}\n", [i, t]);
 		}
 		s += "]";
 		return s;
 		#else
-		return '{ ObjectPool used/total: ${countUsedObjects()}/$_size }';
+		return '{ ObjectPool used/total: ${countUsedObjects()}/$mSize }';
 		#end
 	}
 	
-	inline function __getNext(i:Int)
+	inline function getNext(i:Int)
 	{
 		#if alchemy
-		return _next.get(i);
+		return mNext.get(i);
 		#else
-		return _next[i];
+		return mNext[i];
 		#end
 	}
-	inline function __setNext(i:Int, x:Int)
+	inline function setNext(i:Int, x:Int)
 	{
 		#if alchemy
-		_next.set(i, x);
+		mNext.set(i, x);
 		#else
-		_next[i] = x;
+		mNext[i] = x;
 		#end
 	}
 }
@@ -309,48 +303,40 @@ private
 #if generic
 @:generic
 #end
+@:access(de.polygonal.ds.pooling.ObjectPool)
 class ObjectPoolIterator<T> implements de.polygonal.ds.Itr<T>
 {
-	var _f:ObjectPoolFriend<T>;
-	var _a:Array<T>;
-	var _s:Int;
-	var _i:Int;
+	var mF:ObjectPool<T>;
+	var mA:Array<T>;
+	var mS:Int;
+	var mI:Int;
 	
-	public function new(f:ObjectPoolFriend<T>)
+	public function new(f:ObjectPool<T>)
 	{
-		_f = f;
+		mF = f;
 		reset();
 	}
 
 	inline public function reset():Itr<T>
 	{
-		_a = __pool(_f);
-		_s = __size(_f);
-		_i = 0;
+		mA = mF.mPool;
+		mS = mF.mSize;
+		mI = 0;
 		return this;
 	}
 	
 	inline public function hasNext():Bool
 	{
-		return _a != null && _i < _s;
+		return mA != null && mI < mS;
 	}
 	
 	inline public function next():T
 	{
-		return _a[_i++];
+		return mA[mI++];
 	}
 	
 	inline public function remove()
 	{
 		throw "unsupported operation";
-	}
-	
-	inline function __pool<T>(f:ObjectPoolFriend<T>)
-	{
-		return _f._pool;
-	}
-	inline function __size<T>(f:ObjectPoolFriend<T>)
-	{
-		return f._size;
 	}
 }

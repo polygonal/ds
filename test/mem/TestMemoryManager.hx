@@ -1,4 +1,4 @@
-﻿package test.mem;
+﻿package mem;
 
 import de.polygonal.core.math.Mathematics;
 import de.polygonal.core.math.random.Random;
@@ -6,6 +6,7 @@ import de.polygonal.ds.mem.ByteMemory;
 import de.polygonal.ds.mem.MemoryAccess;
 import de.polygonal.ds.mem.MemoryManager;
 
+@:access(de.polygonal.ds.mem.MemoryAccess)
 class TestMemoryManager extends haxe.unit.TestCase
 {
 	function new()
@@ -18,9 +19,9 @@ class TestMemoryManager extends haxe.unit.TestCase
 	{
 		//initial allocation, exact fit
 		var m = new ByteMemory(1024);
-		assertEquals(0, MemoryManager.bytesFree());
-		assertEquals(1024, MemoryManager.bytesUsed());
-		assertEquals(1024, MemoryManager.bytesTotal());
+		assertEquals(0, MemoryManager.instance.bytesFree);
+		assertEquals(1024, MemoryManager.instance.bytesUsed);
+		assertEquals(1024, MemoryManager.instance.bytesTotal);
 		m.free();
 		MemoryManager.free();
 	}
@@ -29,9 +30,9 @@ class TestMemoryManager extends haxe.unit.TestCase
 	{
 		//initial allocation, fits in bucket
 		var m = new ByteMemory(1024 - 10);
-		assertEquals(10, MemoryManager.bytesFree());
-		assertEquals(1014, MemoryManager.bytesUsed());
-		assertEquals(1024, MemoryManager.bytesTotal());
+		assertEquals(10, MemoryManager.instance.bytesFree);
+		assertEquals(1014, MemoryManager.instance.bytesUsed);
+		assertEquals(1024, MemoryManager.instance.bytesTotal);
 		m.free();
 		MemoryManager.free();
 	}
@@ -40,9 +41,9 @@ class TestMemoryManager extends haxe.unit.TestCase
 	{
 		//initial allocation, doesn't fit in bucket
 		var m = new ByteMemory(1024 + 10);
-		assertEquals(2048 - 1024 - 10, MemoryManager.bytesFree());
-		assertEquals(1024 + 10, MemoryManager.bytesUsed());
-		assertEquals(1024 * 2, MemoryManager.bytesTotal());
+		assertEquals(2048 - 1024 - 10, MemoryManager.instance.bytesFree);
+		assertEquals(1024 + 10, MemoryManager.instance.bytesUsed);
+		assertEquals(1024 * 2, MemoryManager.instance.bytesTotal);
 		m.free();
 		MemoryManager.free();
 	}
@@ -58,9 +59,9 @@ class TestMemoryManager extends haxe.unit.TestCase
 		checkBytes(m1);
 		checkBytes(m2);
 		
-		assertEquals(0, MemoryManager.bytesFree());
-		assertEquals(1024 * 2, MemoryManager.bytesUsed());
-		assertEquals(1024 * 2, MemoryManager.bytesTotal());
+		assertEquals(0, MemoryManager.instance.bytesFree);
+		assertEquals(1024 * 2, MemoryManager.instance.bytesUsed);
+		assertEquals(1024 * 2, MemoryManager.instance.bytesTotal);
 		checkBytes(m1);
 		checkBytes(m2);
 		m1.free();
@@ -75,9 +76,9 @@ class TestMemoryManager extends haxe.unit.TestCase
 		fillBytes(m1);
 		var m2 = new ByteMemory(1024 + 10);
 		fillBytes(m2);
-		assertEquals(1024 * 3 - 1024 * 2 - 20, MemoryManager.bytesFree());
-		assertEquals(1024 * 2 + 20, MemoryManager.bytesUsed());
-		assertEquals(1024 * 3, MemoryManager.bytesTotal());
+		assertEquals(1024 * 3 - 1024 * 2 - 20, MemoryManager.instance.bytesFree);
+		assertEquals(1024 * 2 + 20, MemoryManager.instance.bytesUsed);
+		assertEquals(1024 * 3, MemoryManager.instance.bytesTotal);
 		checkBytes(m1);
 		checkBytes(m2);
 		m1.free();
@@ -92,9 +93,9 @@ class TestMemoryManager extends haxe.unit.TestCase
 		fillBytes(m1);
 		var m2 = new ByteMemory(1024 - 10);
 		fillBytes(m2);
-		assertEquals(20, MemoryManager.bytesFree());
-		assertEquals(1024 * 2 - 20, MemoryManager.bytesUsed());
-		assertEquals(1024 * 2, MemoryManager.bytesTotal());
+		assertEquals(20, MemoryManager.instance.bytesFree);
+		assertEquals(1024 * 2 - 20, MemoryManager.instance.bytesUsed);
+		assertEquals(1024 * 2, MemoryManager.instance.bytesTotal);
 		checkBytes(m1);
 		checkBytes(m2);
 		m1.free();
@@ -209,18 +210,18 @@ class TestMemoryManager extends haxe.unit.TestCase
 		
 		mem2.free();
 		
-		assertEquals(1024 - 200, MemoryManager.bytesFree());
-		assertEquals(1024, MemoryManager.bytesTotal());
-		assertEquals(200, MemoryManager.bytesUsed());
+		assertEquals(1024 - 200, MemoryManager.instance.bytesFree);
+		assertEquals(1024, MemoryManager.instance.bytesTotal);
+		assertEquals(200, MemoryManager.instance.bytesUsed);
 		
 		mem1.resize(300);
 		
 		checkBytes(mem1, 100);
 		checkZeroBytes(mem1, 100);
 		checkBytes(mem3);
-		assertEquals(1024 - 300 - 100, MemoryManager.bytesFree());
-		assertEquals(1024, MemoryManager.bytesTotal());
-		assertEquals(300 + 100, MemoryManager.bytesUsed());
+		assertEquals(1024 - 300 - 100, MemoryManager.instance.bytesFree);
+		assertEquals(1024, MemoryManager.instance.bytesTotal);
+		assertEquals(300 + 100, MemoryManager.instance.bytesUsed);
 		
 		mem3.resize(724);
 		
@@ -253,7 +254,7 @@ class TestMemoryManager extends haxe.unit.TestCase
 		for (i in 0...10)
 		{
 			#if debug
-			if (untyped a[i]._memory == null) continue;
+			if (a[i].mMemory == null) continue;
 			checkBytes(a[i]);
 			#end
 		}
@@ -268,7 +269,7 @@ class TestMemoryManager extends haxe.unit.TestCase
 		for (i in 1...10)
 		{
 			#if debug
-			if (untyped a[i]._memory == null) continue;
+			if (a[i].mMemory == null) continue;
 			checkBytes(a[i]);
 			#end
 		}
@@ -276,7 +277,7 @@ class TestMemoryManager extends haxe.unit.TestCase
 		for (i in 0...10)
 		{
 			#if debug
-			if (untyped a[i]._memory == null) continue;
+			if (a[i].mMemory == null) continue;
 			a[i].free();
 			#end
 		}
@@ -346,8 +347,8 @@ class TestMemoryManager extends haxe.unit.TestCase
 		
 		checkBytes(mem);
 		
-		assertEquals(768, MemoryManager.bytesFree());
-		assertEquals(256, MemoryManager.bytesUsed());
+		assertEquals(768, MemoryManager.instance.bytesFree);
+		assertEquals(256, MemoryManager.instance.bytesUsed);
 		
 		mem.free();
 		MemoryManager.free();
@@ -365,8 +366,8 @@ class TestMemoryManager extends haxe.unit.TestCase
 		checkBytes(mem1);
 		checkBytes(mem2);
 		
-		assertEquals(256, MemoryManager.bytesFree());
-		assertEquals(768, MemoryManager.bytesUsed());
+		assertEquals(256, MemoryManager.instance.bytesFree);
+		assertEquals(768, MemoryManager.instance.bytesUsed);
 		
 		mem1.free();
 		mem2.free();
@@ -385,14 +386,14 @@ class TestMemoryManager extends haxe.unit.TestCase
 		fillBytes(m3);
 		
 		m2.free();
-		MemoryManager.pack();
+		MemoryManager.instance.pack();
 		
 		checkBytes(m1);
 		checkBytes(m3);
 		
-		assertEquals(0, MemoryManager.bytesFree());
-		assertEquals(2048, MemoryManager.bytesUsed());
-		assertEquals(2048, MemoryManager.bytesTotal());
+		assertEquals(0, MemoryManager.instance.bytesFree);
+		assertEquals(2048, MemoryManager.instance.bytesUsed);
+		assertEquals(2048, MemoryManager.instance.bytesTotal);
 		
 		var m2 = new ByteMemory(1024);
 		fillBytes(m2);
@@ -400,9 +401,9 @@ class TestMemoryManager extends haxe.unit.TestCase
 		checkBytes(m2);
 		checkBytes(m3);
 		
-		assertEquals(0, MemoryManager.bytesFree());
-		assertEquals(1024 * 3, MemoryManager.bytesUsed());
-		assertEquals(1024 * 3, MemoryManager.bytesTotal());
+		assertEquals(0, MemoryManager.instance.bytesFree);
+		assertEquals(1024 * 3, MemoryManager.instance.bytesUsed);
+		assertEquals(1024 * 3, MemoryManager.instance.bytesTotal);
 		
 		MemoryManager.free();
 	}
@@ -414,11 +415,11 @@ class TestMemoryManager extends haxe.unit.TestCase
 		var m2 = new ByteMemory(1024);
 		fillBytes(m2);
 		
-		MemoryManager.pack();
+		MemoryManager.instance.pack();
 		
-		assertEquals(0, MemoryManager.bytesFree());
-		assertEquals(2048, MemoryManager.bytesUsed());
-		assertEquals(2048, MemoryManager.bytesTotal());
+		assertEquals(0, MemoryManager.instance.bytesFree);
+		assertEquals(2048, MemoryManager.instance.bytesUsed);
+		assertEquals(2048, MemoryManager.instance.bytesTotal);
 		
 		MemoryManager.free();
 	}
@@ -430,11 +431,11 @@ class TestMemoryManager extends haxe.unit.TestCase
 		var m2 = new ByteMemory(1024);
 		fillBytes(m2);
 		
-		MemoryManager.pack();
+		MemoryManager.instance.pack();
 		
-		assertEquals(0, MemoryManager.bytesFree());
-		assertEquals(2048, MemoryManager.bytesUsed());
-		assertEquals(2048, MemoryManager.bytesTotal());
+		assertEquals(0, MemoryManager.instance.bytesFree);
+		assertEquals(2048, MemoryManager.instance.bytesUsed);
+		assertEquals(2048, MemoryManager.instance.bytesTotal);
 		
 		MemoryManager.free();
 	}
@@ -447,7 +448,7 @@ class TestMemoryManager extends haxe.unit.TestCase
 		fillBytes(m2);
 		m1.free();
 		
-		MemoryManager.defrag();
+		MemoryManager.instance.defrag();
 		checkBytes(m2);
 		MemoryManager.free();
 	}
@@ -459,7 +460,7 @@ class TestMemoryManager extends haxe.unit.TestCase
 		var m2 = new ByteMemory(100);
 		fillBytes(m2);
 		m1.free();
-		MemoryManager.defrag();
+		MemoryManager.instance.defrag();
 		checkBytes(m2);
 		MemoryManager.free();
 	}
@@ -471,7 +472,7 @@ class TestMemoryManager extends haxe.unit.TestCase
 		var m2 = new ByteMemory(200);
 		fillBytes(m2);
 		m1.free();
-		MemoryManager.defrag();
+		MemoryManager.instance.defrag();
 		checkBytes(m2);
 		MemoryManager.free();
 	}
@@ -490,7 +491,7 @@ class TestMemoryManager extends haxe.unit.TestCase
 			var m = a.shift();
 			
 			m.free();
-			MemoryManager.defrag();
+			MemoryManager.instance.defrag();
 			for (t in a) checkBytes(t);
 		}
 		
@@ -511,7 +512,7 @@ class TestMemoryManager extends haxe.unit.TestCase
 			var m = a.shift();
 			
 			m.free();
-			MemoryManager.defrag();
+			MemoryManager.instance.defrag();
 			for (t in a) checkBytes(t);
 		}
 		
@@ -532,7 +533,7 @@ class TestMemoryManager extends haxe.unit.TestCase
 			var m = a.shift();
 			
 			m.free();
-			MemoryManager.defrag();
+			MemoryManager.instance.defrag();
 			for (t in a) checkBytes(t);
 		}
 		
@@ -553,7 +554,7 @@ class TestMemoryManager extends haxe.unit.TestCase
 			var m = a.shift();
 			
 			m.free();
-			MemoryManager.defrag();
+			MemoryManager.instance.defrag();
 			for (t in a) checkBytes(t);
 		}
 		

@@ -9,7 +9,7 @@ furnished to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all copies or
 substantial portions of the Software.
- 
+
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
 NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
 NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -19,14 +19,6 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 package de.polygonal.ds;
 
 import de.polygonal.ds.error.Assert.assert;
-
-private typedef ArrayedDequeFriend<T> =
-{
-	private var _head:Int;
-	private var _blockSize:Int;
-	private var _blockSizeShift:Int;
-	private var _blocks:Array<Array<T>>;
-}
 
 /**
  * <p>A deque ("double-ended queue") is a linear list for which all insertions and deletions (and usually all accesses) are made at ends of the list.</p>
@@ -56,22 +48,22 @@ class ArrayedDeque<T> implements Deque<T>
 	 */
 	public var reuseIterator:Bool;
 	
-	var _blockSize:Int;
-	var _blockSizeMinusOne:Int;
-	var _blockSizeShift:Int;
-	var _head:Int;
-	var _tail:Int;
-	var _tailBlockIndex:Int;
-	var _poolSize:Int;
-	var _poolCapacity:Int;
+	var mBlockSize:Int;
+	var mBlockSizeMinusOne:Int;
+	var mBlockSizeShift:Int;
+	var mHead:Int;
+	var mTail:Int;
+	var mTailBlockIndex:Int;
+	var mPoolSize:Int;
+	var mPoolCapacity:Int;
 	
-	var _blocks:Array<Array<T>>;
-	var _headBlock:Array<T>;
-	var _tailBlock:Array<T>;
-	var _headBlockNext:Array<T>;
-	var _tailBlockPrev:Array<T>;
-	var _blockPool:Array<Array<T>>;
-	var _iterator:ArrayedDequeIterator<T>;
+	var mBlocks:Array<Array<T>>;
+	var mHeadBlock:Array<T>;
+	var mTailBlock:Array<T>;
+	var mHeadBlockNext:Array<T>;
+	var mTailBlockPrev:Array<T>;
+	var mBlockPool:Array<Array<T>>;
+	var mIterator:ArrayedDequeIterator<T>;
 	
 	/**
 	 * @param blockSize a block represents a contiguous piece of memory; whenever the deque runs out of space an additional block with a capacity of <code>blockSize</code> elements is allocated and added to the existing blocks.<br/>
@@ -97,22 +89,22 @@ class ArrayedDeque<T> implements Deque<T>
 		this.maxSize = -1;
 		#end
 		
-		_blockSize         = blockSize;
-		_blockSizeMinusOne = blockSize - 1;
-		_blockSizeShift    = Bits.ntz(blockSize);
-		_head              = 0;
-		_tail              = 1;
-		_tailBlockIndex    = 0;
-		_poolSize          = 0;
-		_poolCapacity      = blockPoolCapacity;
-		_blocks            = new Array();
-		_blocks[0]         = ArrayUtil.alloc(blockSize);
-		_headBlock         = _blocks[0];
-		_tailBlock         = _headBlock;
-		_headBlockNext     = null;
-		_tailBlockPrev     = null;
-		_blockPool         = new Array<Array<T>>();
-		_iterator          = null;
+		mBlockSize         = blockSize;
+		mBlockSizeMinusOne = blockSize - 1;
+		mBlockSizeShift    = Bits.ntz(blockSize);
+		mHead              = 0;
+		mTail              = 1;
+		mTailBlockIndex    = 0;
+		mPoolSize          = 0;
+		mPoolCapacity      = blockPoolCapacity;
+		mBlocks            = new Array();
+		mBlocks[0]         = ArrayUtil.alloc(blockSize);
+		mHeadBlock         = mBlocks[0];
+		mTailBlock         = mHeadBlock;
+		mHeadBlockNext     = null;
+		mTailBlockPrev     = null;
+		mBlockPool         = new Array<Array<T>>();
+		mIterator          = null;
 		key                = HashKey.next();
 		reuseIterator      = false;
 	}
@@ -128,7 +120,7 @@ class ArrayedDeque<T> implements Deque<T>
 		assert(size() > 0, "deque is empty");
 		#end
 		
-		return (_head == _blockSizeMinusOne) ? _headBlockNext[0] : _headBlock[_head + 1];
+		return (mHead == mBlockSizeMinusOne) ? mHeadBlockNext[0] : mHeadBlock[mHead + 1];
 	}
 	
 	/**
@@ -143,8 +135,8 @@ class ArrayedDeque<T> implements Deque<T>
 			assert(size() < maxSize, 'size equals max size ($maxSize)');
 		#end
 		
-		_headBlock[_head--] = x;
-		if (_head == -1) _unshiftBlock();
+		mHeadBlock[mHead--] = x;
+		if (mHead == -1) unshiftBlock();
 	}
 	
 	/**
@@ -158,13 +150,13 @@ class ArrayedDeque<T> implements Deque<T>
 		assert(size() > 0, "deque is empty");
 		#end
 		
-		if (_head == _blockSizeMinusOne)
+		if (mHead == mBlockSizeMinusOne)
 		{
-			_shiftBlock();
-			return _headBlock[0];
+			shiftBlock();
+			return mHeadBlock[0];
 		}
 		else
-			return _headBlock[++_head];
+			return mHeadBlock[++mHead];
 	}
 	
 	/**
@@ -178,7 +170,7 @@ class ArrayedDeque<T> implements Deque<T>
 		assert(size() > 0, "deque is empty");
 		#end
 		
-		return (_tail == 0) ? (_tailBlockPrev[_blockSizeMinusOne]) : _tailBlock[_tail - 1];
+		return (mTail == 0) ? (mTailBlockPrev[mBlockSizeMinusOne]) : mTailBlock[mTail - 1];
 	}
 	
 	/**
@@ -193,9 +185,9 @@ class ArrayedDeque<T> implements Deque<T>
 			assert(size() < maxSize, 'size equals max size ($maxSize)');
 		#end
 		
-		_tailBlock[_tail++] = x;
-		if (_tail == _blockSize)
-			_pushBlock();
+		mTailBlock[mTail++] = x;
+		if (mTail == mBlockSize)
+			pushBlock();
 	}
 	
 	/**
@@ -209,13 +201,13 @@ class ArrayedDeque<T> implements Deque<T>
 		assert(size() > 0, "deque is empty");
 		#end
 		
-		if (_tail == 0)
+		if (mTail == 0)
 		{
-			_popBlock();
-			return _tailBlock[_blockSizeMinusOne];
+			popBlock();
+			return mTailBlock[mBlockSizeMinusOne];
 		}
 		else
-			return _tailBlock[--_tail];
+			return mTailBlock[--mTail];
 	}
 	
 	/**
@@ -231,9 +223,9 @@ class ArrayedDeque<T> implements Deque<T>
 		assert(i < size(), 'index out of range ($i)');
 		#end
 		
-		var c = (_head + 1) + i;
-		var b = (c >> _blockSizeShift);
-		return _blocks[b][c - (b << _blockSizeShift)];
+		var c = (mHead + 1) + i;
+		var b = (c >> mBlockSizeShift);
+		return mBlocks[b][c - (b << mBlockSizeShift)];
 	}
 	
 	/**
@@ -245,10 +237,10 @@ class ArrayedDeque<T> implements Deque<T>
 	{
 		for (i in 0...size())
 		{
-			var c = (_head + 1) + i;
-			var b = (c >> _blockSizeShift);
+			var c = (mHead + 1) + i;
+			var b = (c >> mBlockSizeShift);
 			
-			if (_blocks[b][c - (b << _blockSizeShift)] == x)
+			if (mBlocks[b][c - (b << mBlockSizeShift)] == x)
 				return i;
 		}
 		return -1;
@@ -267,9 +259,9 @@ class ArrayedDeque<T> implements Deque<T>
 		assert(i < size(), 'index out of range ($i)');
 		#end
 		
-		var c = _tail - 1 - i;
-		var b = c >> _blockSizeShift;
-		return _blocks[_tailBlockIndex + b][M.abs(b << _blockSizeShift) + c];
+		var c = mTail - 1 - i;
+		var b = c >> mBlockSizeShift;
+		return mBlocks[mTailBlockIndex + b][M.abs(b << mBlockSizeShift) + c];
 	}
 	
 	/**
@@ -281,9 +273,9 @@ class ArrayedDeque<T> implements Deque<T>
 	{
 		for (i in 0...size())
 		{
-			var c = _tail - 1 - i;
-			var b = c >> _blockSizeShift;
-			if (_blocks[_tailBlockIndex + b][M.abs(b << _blockSizeShift) + c] == x)
+			var c = mTail - 1 - i;
+			var b = c >> mBlockSizeShift;
+			if (mBlocks[mTailBlockIndex + b][M.abs(b << mBlockSizeShift) + c] == x)
 				return i;
 		}
 		return -1;
@@ -296,10 +288,10 @@ class ArrayedDeque<T> implements Deque<T>
 	 */
 	public function pack()
 	{
-		for (i in 0..._head + 1) _headBlock[i] = null;
-		for (i in _tail..._blockSize) _tailBlock[i] = null;
-		_poolSize = 0;
-		_blockPool = new Array<Array<T>>();
+		for (i in 0...mHead + 1) mHeadBlock[i] = null;
+		for (i in mTail...mBlockSize) mTailBlock[i] = null;
+		mPoolSize = 0;
+		mBlockPool = new Array<Array<T>>();
 	}
 	
 	/**
@@ -323,51 +315,51 @@ class ArrayedDeque<T> implements Deque<T>
 				assert(n < maxSize, 'n > max size ($maxSize)');
 			#end
 			
-			var i = _head + 1;
-			while (i < _blockSize)
-				_headBlock[i++] = Type.createInstance(C, args);
+			var i = mHead + 1;
+			while (i < mBlockSize)
+				mHeadBlock[i++] = Type.createInstance(C, args);
 			
-			var fullBlocks = _tailBlockIndex - 1;
+			var fullBlocks = mTailBlockIndex - 1;
 			for (i in 1...1 + fullBlocks)
 			{
-				var block = _blocks[i];
-				for (j in 0..._blockSize)
+				var block = mBlocks[i];
+				for (j in 0...mBlockSize)
 					block[j] = Type.createInstance(C, args);
 			}
 			
 			i = 0;
-			while (i < _tail)
-				_tailBlock[i++] = Type.createInstance(C, args);
+			while (i < mTail)
+				mTailBlock[i++] = Type.createInstance(C, args);
 			
 			for (i in 0...n - size())
 			{
-				_tailBlock[_tail++] = Type.createInstance(C, args);
-				if (_tail == _blockSize)
-					_pushBlock();
+				mTailBlock[mTail++] = Type.createInstance(C, args);
+				if (mTail == mBlockSize)
+					pushBlock();
 			}
 		}
 		else
 		{
-			var c = M.min(n, _blockSize - (_head + 1));
-			var i = _head + 1;
+			var c = M.min(n, mBlockSize - (mHead + 1));
+			var i = mHead + 1;
 			for (j in i...i + c)
-				_headBlock[j] = Type.createInstance(C, args);
+				mHeadBlock[j] = Type.createInstance(C, args);
 			n -= c;
 			
 			if (n == 0) return;
 			
 			var b = 1;
-			c = n >> _blockSizeShift;
-			for (i in 0...n >> _blockSizeShift)
+			c = n >> mBlockSizeShift;
+			for (i in 0...n >> mBlockSizeShift)
 			{
-				var block = _blocks[i + 1];
-				for (j in 0..._blockSize)
+				var block = mBlocks[i + 1];
+				for (j in 0...mBlockSize)
 					block[j] = Type.createInstance(C, args);
 				b++;
 			}
-			n -= c << _blockSizeShift;
+			n -= c << mBlockSizeShift;
 			
-			var block = _blocks[b];
+			var block = mBlocks[b];
 			for (i in 0...n) block[i] = Type.createInstance(C, args);
 		}
 	}
@@ -389,51 +381,51 @@ class ArrayedDeque<T> implements Deque<T>
 				assert(n < maxSize, 'n > max size ($maxSize)');
 			#end
 			
-			var i = _head + 1;
-			while (i < _blockSize)
-				_headBlock[i++] = x;
+			var i = mHead + 1;
+			while (i < mBlockSize)
+				mHeadBlock[i++] = x;
 			
-			var fullBlocks = _tailBlockIndex - 1;
+			var fullBlocks = mTailBlockIndex - 1;
 			for (i in 1...1 + fullBlocks)
 			{
-				var block = _blocks[i];
-				for (j in 0..._blockSize)
+				var block = mBlocks[i];
+				for (j in 0...mBlockSize)
 					block[j] = x;
 			}
 			
 			i = 0;
-			while (i < _tail)
-				_tailBlock[i++] = x;
+			while (i < mTail)
+				mTailBlock[i++] = x;
 			
 			for (i in 0...n - size())
 			{
-				_tailBlock[_tail++] = x;
-				if (_tail == _blockSize)
-					_pushBlock();
+				mTailBlock[mTail++] = x;
+				if (mTail == mBlockSize)
+					pushBlock();
 			}
 		}
 		else
 		{
-			var c = M.min(n, _blockSize - (_head + 1));
-			var i = _head + 1;
+			var c = M.min(n, mBlockSize - (mHead + 1));
+			var i = mHead + 1;
 			for (j in i...i + c)
-				_headBlock[j] = x;
+				mHeadBlock[j] = x;
 			n -= c;
 			
 			if (n == 0) return this;
 			
 			var b = 1;
-			c = n >> _blockSizeShift;
-			for (i in 0...n >> _blockSizeShift)
+			c = n >> mBlockSizeShift;
+			for (i in 0...n >> mBlockSizeShift)
 			{
-				var block = _blocks[i + 1];
-				for (j in 0..._blockSize)
+				var block = mBlocks[i + 1];
+				for (j in 0...mBlockSize)
 					block[j] = x;
 				b++;
 			}
-			n -= c << _blockSizeShift;
+			n -= c << mBlockSizeShift;
 			
-			var block = _blocks[b];
+			var block = mBlocks[b];
 			for (i in 0...n) block[i] = x;
 		}
 		
@@ -465,33 +457,33 @@ class ArrayedDeque<T> implements Deque<T>
 		s += "\n[ front\n";
 		
 		var i = 0;
-		if (_tailBlockIndex == 0)
+		if (mTailBlockIndex == 0)
 		{
-			for (j in _head + 1..._tail)
-				s += Printf.format("  %4d -> %s\n", [i++, Std.string(_headBlock[j])]);
+			for (j in mHead + 1...mTail)
+				s += Printf.format("  %4d -> %s\n", [i++, Std.string(mHeadBlock[j])]);
 		}
 		else
-		if (_tailBlockIndex == 1)
+		if (mTailBlockIndex == 1)
 		{
-			for (j in _head + 1..._blockSize)
-				s += Printf.format("  %4d -> %s\n", [i++, Std.string(_headBlock[j])]);
-			for (j in 0..._tail)
-				s += Printf.format("  %4d -> %s\n", [i++, Std.string(_tailBlock[j])]);
+			for (j in mHead + 1...mBlockSize)
+				s += Printf.format("  %4d -> %s\n", [i++, Std.string(mHeadBlock[j])]);
+			for (j in 0...mTail)
+				s += Printf.format("  %4d -> %s\n", [i++, Std.string(mTailBlock[j])]);
 		}
 		else
 		{
-			for (j in _head + 1..._blockSize)
-				s += Printf.format("  %4d -> %s\n", [i++, Std.string(_headBlock[j])]);
+			for (j in mHead + 1...mBlockSize)
+				s += Printf.format("  %4d -> %s\n", [i++, Std.string(mHeadBlock[j])]);
 			
-			for (j in 1..._tailBlockIndex)
+			for (j in 1...mTailBlockIndex)
 			{
-				var block = _blocks[j];
-				for (k in 0..._blockSize)
+				var block = mBlocks[j];
+				for (k in 0...mBlockSize)
 					s += Printf.format("  %4d -> %s\n", [i++, Std.string(block[k])]);
 			}
 			
-			for (j in 0..._tail)
-				s += Printf.format("  %4d -> %s\n", [i++, Std.string(_tailBlock[j])]);
+			for (j in 0...mTail)
+				s += Printf.format("  %4d -> %s\n", [i++, Std.string(mTailBlock[j])]);
 		}
 		s += "]";
 		return s;
@@ -508,18 +500,18 @@ class ArrayedDeque<T> implements Deque<T>
 	 */
 	public function free()
 	{
-		for (i in 0..._tailBlockIndex + 1)
+		for (i in 0...mTailBlockIndex + 1)
 		{
-			var block = _blocks[i];
-			for (j in 0..._blockSize) block[j] = null;
-			_blocks[i] = null;
+			var block = mBlocks[i];
+			for (j in 0...mBlockSize) block[j] = null;
+			mBlocks[i] = null;
 		}
-		_blocks        = null;
-		_headBlock     = null;
-		_headBlockNext = null;
-		_tailBlock     = null;
-		_tailBlockPrev = null;
-		_iterator      = null;
+		mBlocks        = null;
+		mHeadBlock     = null;
+		mHeadBlockNext = null;
+		mTailBlock     = null;
+		mTailBlockPrev = null;
+		mIterator      = null;
 	}
 	
 	/**
@@ -529,33 +521,33 @@ class ArrayedDeque<T> implements Deque<T>
 	public function contains(x:T):Bool
 	{
 		var i = 0;
-		if (_tailBlockIndex == 0)
+		if (mTailBlockIndex == 0)
 		{
-			for (j in _head + 1..._tail)
-				if (_headBlock[j] == x) return true;
+			for (j in mHead + 1...mTail)
+				if (mHeadBlock[j] == x) return true;
 		}
 		else
-		if (_tailBlockIndex == 1)
+		if (mTailBlockIndex == 1)
 		{
-			for (j in _head + 1..._blockSize)
-				if (_headBlock[j] == x) return true;
-			for (j in 0..._tail)
-				if (_tailBlock[j] == x) return true;
+			for (j in mHead + 1...mBlockSize)
+				if (mHeadBlock[j] == x) return true;
+			for (j in 0...mTail)
+				if (mTailBlock[j] == x) return true;
 		}
 		else
 		{
-			for (j in _head + 1..._blockSize)
-				if (_headBlock[j] == x) return true;
+			for (j in mHead + 1...mBlockSize)
+				if (mHeadBlock[j] == x) return true;
 			
-			for (j in 1..._tailBlockIndex)
+			for (j in 1...mTailBlockIndex)
 			{
-				var block = _blocks[j];
-				for (k in 0..._blockSize)
+				var block = mBlocks[j];
+				for (k in 0...mBlockSize)
 					if (block[k] == x) return true;
 			}
 			
-			for (j in 0..._tail)
-				if (_tailBlock[j] == x) return true;
+			for (j in 0...mTail)
+				if (mTailBlock[j] == x) return true;
 		}
 		
 		return false;
@@ -574,11 +566,11 @@ class ArrayedDeque<T> implements Deque<T>
 			var i =-1;
 			var b = 0;
 			
-			if (_tailBlockIndex == 0)
+			if (mTailBlockIndex == 0)
 			{
-				for (j in _head + 1..._tail)
+				for (j in mHead + 1...mTail)
 				{
-					if (_headBlock[j] == x)
+					if (mHeadBlock[j] == x)
 					{
 						i = j;
 						break;
@@ -586,11 +578,11 @@ class ArrayedDeque<T> implements Deque<T>
 				}
 			}
 			else
-			if (_tailBlockIndex == 1)
+			if (mTailBlockIndex == 1)
 			{
-				for (j in _head + 1..._blockSize)
+				for (j in mHead + 1...mBlockSize)
 				{
-					if (_headBlock[j] == x)
+					if (mHeadBlock[j] == x)
 					{
 						i = j;
 						break;
@@ -599,9 +591,9 @@ class ArrayedDeque<T> implements Deque<T>
 				
 				if (i == -1)
 				{
-					for (j in 0..._tail)
+					for (j in 0...mTail)
 					{
-						if (_tailBlock[j] == x)
+						if (mTailBlock[j] == x)
 						{
 							i = j;
 							b = 1;
@@ -612,9 +604,9 @@ class ArrayedDeque<T> implements Deque<T>
 			}
 			else
 			{
-				for (j in _head + 1..._blockSize)
+				for (j in mHead + 1...mBlockSize)
 				{
-					if (_headBlock[j] == x)
+					if (mHeadBlock[j] == x)
 					{
 						i = j;
 						break;
@@ -623,10 +615,10 @@ class ArrayedDeque<T> implements Deque<T>
 				
 				if (i == -1)
 				{
-					for (j in 1..._tailBlockIndex)
+					for (j in 1...mTailBlockIndex)
 					{
-						var block = _blocks[j];
-						for (k in 0..._blockSize)
+						var block = mBlocks[j];
+						for (k in 0...mBlockSize)
 						{
 							if (block[k] == x)
 							{
@@ -641,12 +633,12 @@ class ArrayedDeque<T> implements Deque<T>
 				
 				if (i == -1)
 				{
-					for (j in 0..._tail)
+					for (j in 0...mTail)
 					{
-						if (_tailBlock[j] == x)
+						if (mTailBlock[j] == x)
 						{
 							i = j;
-							b = _tailBlockIndex;
+							b = mTailBlockIndex;
 							break;
 						}
 					}
@@ -661,37 +653,37 @@ class ArrayedDeque<T> implements Deque<T>
 			
 			if (b == 0)
 			{
-				if (i == _head + 1)
-					_head++;
+				if (i == mHead + 1)
+					mHead++;
 				else
-				if (i == _tail - 1)
-					_tail--;
+				if (i == mTail - 1)
+					mTail--;
 				else
 				{
-					var block = _blocks[b];
-					while (i > _head + 1)
+					var block = mBlocks[b];
+					while (i > mHead + 1)
 					{
 						block[i] = block[i - 1];
 						i--;
 					}
-					_head++;
+					mHead++;
 				}
 			}
 			else
-			if (b == _tailBlockIndex)
+			if (b == mTailBlockIndex)
 			{
-				while (i < _tail)
+				while (i < mTail)
 				{
-					_tailBlock[i] = _tailBlock[i + 1];
+					mTailBlock[i] = mTailBlock[i + 1];
 					i++;
 				}
-				_tail--;
+				mTail--;
 			}
 			else
 			{
-				if (b <= _tailBlockIndex - b)
+				if (b <= mTailBlockIndex - b)
 				{
-					var block = _blocks[b];
+					var block = mBlocks[b];
 					while (i > 0)
 					{
 						block[i] = block[i - 1];
@@ -700,11 +692,11 @@ class ArrayedDeque<T> implements Deque<T>
 					
 					while (b > 1)
 					{
-						var prevBlock = _blocks[b - 1];
-						block[0] = prevBlock[_blockSizeMinusOne];
+						var prevBlock = mBlocks[b - 1];
+						block[0] = prevBlock[mBlockSizeMinusOne];
 						block = prevBlock;
 						
-						i = _blockSizeMinusOne;
+						i = mBlockSizeMinusOne;
 						while (i > 0)
 						{
 							block[i] = block[i - 1];
@@ -714,35 +706,35 @@ class ArrayedDeque<T> implements Deque<T>
 						b--;
 					}
 					
-					block[0] = _headBlock[_blockSizeMinusOne];
-					i = _blockSizeMinusOne;
-					var j = _head + 1;
+					block[0] = mHeadBlock[mBlockSizeMinusOne];
+					i = mBlockSizeMinusOne;
+					var j = mHead + 1;
 					while (i > j)
 					{
-						_headBlock[i] = _headBlock[i - 1];
+						mHeadBlock[i] = mHeadBlock[i - 1];
 						i--;
 					}
-					if (++_head == _blockSize) _shiftBlock();
+					if (++mHead == mBlockSize) shiftBlock();
 				}
 				else
 				{
-					var block = _blocks[b];
+					var block = mBlocks[b];
 					
-					while (i < _blockSize - 1)
+					while (i < mBlockSize - 1)
 					{
 						block[i] = block[i + 1];
 						i++;
 					}
 					
-					var j = _tailBlockIndex - 1;
+					var j = mTailBlockIndex - 1;
 					while (b < j)
 					{
-						var nextBlock = _blocks[b + 1];
-						block[_blockSizeMinusOne] = nextBlock[0];
+						var nextBlock = mBlocks[b + 1];
+						block[mBlockSizeMinusOne] = nextBlock[0];
 						block = nextBlock;
 						
 						i = 0;
-						while (i < _blockSizeMinusOne)
+						while (i < mBlockSizeMinusOne)
 						{
 							block[i] = block[i + 1];
 							i++;
@@ -751,15 +743,15 @@ class ArrayedDeque<T> implements Deque<T>
 						b++;
 					}
 					
-					block[_blockSizeMinusOne] = _tailBlock[0];
+					block[mBlockSizeMinusOne] = mTailBlock[0];
 					i = 0;
-					var j = _tail - 1;
+					var j = mTail - 1;
 					while (i < j)
 					{
-						_tailBlock[i] = _tailBlock[i + 1];
+						mTailBlock[i] = mTailBlock[i + 1];
 						i++;
 					}
-					if (--_tail < 0) _popBlock();
+					if (--mTail < 0) popBlock();
 				}
 			}
 		}
@@ -776,44 +768,44 @@ class ArrayedDeque<T> implements Deque<T>
 	{
 		if (purge)
 		{
-			for (i in 0..._tailBlockIndex + 1)
+			for (i in 0...mTailBlockIndex + 1)
 			{
-				var block = _blocks[i];
-				for (j in 0..._blockSize) block[j] = null;
-				_blocks[i] = null;
+				var block = mBlocks[i];
+				for (j in 0...mBlockSize) block[j] = null;
+				mBlocks[i] = null;
 			}
-			_blocks    = new Array();
-			_blocks[0] = ArrayUtil.alloc(_blockSize);
-			_headBlock = _blocks[0];
+			mBlocks    = new Array();
+			mBlocks[0] = ArrayUtil.alloc(mBlockSize);
+			mHeadBlock = mBlocks[0];
 			
-			for (i in 0..._blockPool.length)
-				_blockPool[i] = null;
-			_blockPool = new Array<Array<T>>();
-			_poolSize = 0;
+			for (i in 0...mBlockPool.length)
+				mBlockPool[i] = null;
+			mBlockPool = new Array<Array<T>>();
+			mPoolSize = 0;
 		}
 		
-		_head           = 0;
-		_tail           = 1;
-		_tailBlockIndex = 0;
-		_tailBlock      = _headBlock;
-		_headBlockNext  = null;
-		_tailBlockPrev  = null;
+		mHead           = 0;
+		mTail           = 1;
+		mTailBlockIndex = 0;
+		mTailBlock      = mHeadBlock;
+		mHeadBlockNext  = null;
+		mTailBlockPrev  = null;
 	}
 	
 	/**
 	 * Returns a new <em>ArrayedDequeIterator</em> object to iterate over all elements contained in this deque.<br/>
 	 * Preserves the natural order of a deque.
-	 * @see <a href="http://haxe.org/ref/iterators" target="_blank">http://haxe.org/ref/iterators</a>
+	 * @see <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
 	 */
 	public function iterator():Itr<T>
 	{
 		if (reuseIterator)
 		{
-			if (_iterator == null)
-				_iterator = new ArrayedDequeIterator<T>(this);
+			if (mIterator == null)
+				mIterator = new ArrayedDequeIterator<T>(this);
 			else
-				_iterator.reset();
-			return _iterator;
+				mIterator.reset();
+			return mIterator;
 		}
 		else
 			return new ArrayedDequeIterator<T>(this);
@@ -825,10 +817,10 @@ class ArrayedDeque<T> implements Deque<T>
 	 */
 	inline public function isEmpty():Bool
 	{
-		if (_tailBlockIndex == 0)
-			return (_tail - _head) == 1;
+		if (mTailBlockIndex == 0)
+			return (mTail - mHead) == 1;
 		else
-			return _head == _blockSizeMinusOne && _tail == 0;
+			return mHead == mBlockSizeMinusOne && mTail == 0;
 	}
 	
 	/**
@@ -837,7 +829,7 @@ class ArrayedDeque<T> implements Deque<T>
 	 */
 	inline public function size():Int
 	{
-		return (_blockSize - (_head + 1)) + ((_tailBlockIndex - 1) << _blockSizeShift) + _tail;
+		return (mBlockSize - (mHead + 1)) + ((mTailBlockIndex - 1) << mBlockSizeShift) + mTail;
 	}
 	
 	/**
@@ -847,25 +839,25 @@ class ArrayedDeque<T> implements Deque<T>
 	{
 		var a:Array<T> = ArrayUtil.alloc(size());
 		var i = 0;
-		if (_tailBlockIndex == 0)
+		if (mTailBlockIndex == 0)
 		{
-			for (j in _head + 1..._tail) a[i++] = _headBlock[j];
+			for (j in mHead + 1...mTail) a[i++] = mHeadBlock[j];
 		}
 		else
-		if (_tailBlockIndex == 1)
+		if (mTailBlockIndex == 1)
 		{
-			for (j in _head + 1..._blockSize) a[i++] = _headBlock[j];
-			for (j in 0..._tail) a[i++] = _tailBlock[j];
+			for (j in mHead + 1...mBlockSize) a[i++] = mHeadBlock[j];
+			for (j in 0...mTail) a[i++] = mTailBlock[j];
 		}
 		else
 		{
-			for (j in _head + 1..._blockSize) a[i++] = _headBlock[j];
-			for (j in 1..._tailBlockIndex)
+			for (j in mHead + 1...mBlockSize) a[i++] = mHeadBlock[j];
+			for (j in 1...mTailBlockIndex)
 			{
-				var block = _blocks[j];
-				for (k in 0..._blockSize) a[i++] = block[k];
+				var block = mBlocks[j];
+				for (k in 0...mBlockSize) a[i++] = block[k];
 			}
-			for (j in 0..._tail) a[i++] = _tailBlock[j];
+			for (j in 0...mTail) a[i++] = mTailBlock[j];
 		}
 		return a;
 	}
@@ -877,25 +869,25 @@ class ArrayedDeque<T> implements Deque<T>
 	{
 		var v = new Vector<T>(size());
 		var i = 0;
-		if (_tailBlockIndex == 0)
+		if (mTailBlockIndex == 0)
 		{
-			for (j in _head + 1..._tail) v[i++] = _headBlock[j];
+			for (j in mHead + 1...mTail) v[i++] = mHeadBlock[j];
 		}
 		else
-		if (_tailBlockIndex == 1)
+		if (mTailBlockIndex == 1)
 		{
-			for (j in _head + 1..._blockSize) v[i++] = _headBlock[j];
-			for (j in 0..._tail) v[i++] = _tailBlock[j];
+			for (j in mHead + 1...mBlockSize) v[i++] = mHeadBlock[j];
+			for (j in 0...mTail) v[i++] = mTailBlock[j];
 		}
 		else
 		{
-			for (j in _head + 1..._blockSize) v[i++] = _headBlock[j];
-			for (j in 1..._tailBlockIndex)
+			for (j in mHead + 1...mBlockSize) v[i++] = mHeadBlock[j];
+			for (j in 1...mTailBlockIndex)
 			{
-				var block = _blocks[j];
-				for (k in 0..._blockSize) v[i++] = block[k];
+				var block = mBlocks[j];
+				for (k in 0...mBlockSize) v[i++] = block[k];
 			}
-			for (j in 0..._tail) v[i++] = _tailBlock[j];
+			for (j in 0...mTail) v[i++] = mTailBlock[j];
 		}
 		return v;
 	}
@@ -909,165 +901,165 @@ class ArrayedDeque<T> implements Deque<T>
 	 */
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{
-		var copy = Type.createEmptyInstance(ArrayedDeque);
-		copy._blockSize         = _blockSize;
-		copy._blockSizeMinusOne = _blockSizeMinusOne;
-		copy._head              = _head;
-		copy._tail              = _tail;
-		copy._tailBlockIndex    = _tailBlockIndex;
-		copy._blockSizeShift    = _blockSizeShift;
-		copy._poolSize          = 0;
-		copy._poolCapacity      = 0;
-		copy.key                = HashKey.next();
-		copy.maxSize            = M.INT32_MAX;
+		var c = Type.createEmptyInstance(ArrayedDeque);
+		c.mBlockSize         = mBlockSize;
+		c.mBlockSizeMinusOne = mBlockSizeMinusOne;
+		c.mHead              = mHead;
+		c.mTail              = mTail;
+		c.mTailBlockIndex    = mTailBlockIndex;
+		c.mBlockSizeShift    = mBlockSizeShift;
+		c.mPoolSize          = 0;
+		c.mPoolCapacity      = 0;
+		c.key                = HashKey.next();
+		c.maxSize            = M.INT32_MAX;
 		
-		var blocks = copy._blocks = ArrayUtil.alloc(_tailBlockIndex + 1);
-		for (i in 0..._tailBlockIndex + 1)
-			blocks[i] = ArrayUtil.alloc(_blockSize);
-		copy._headBlock = blocks[0];
-		copy._tailBlock = blocks[_tailBlockIndex];
-		if (_tailBlockIndex > 0)
+		var blocks = c.mBlocks = ArrayUtil.alloc(mTailBlockIndex + 1);
+		for (i in 0...mTailBlockIndex + 1)
+			blocks[i] = ArrayUtil.alloc(mBlockSize);
+		c.mHeadBlock = blocks[0];
+		c.mTailBlock = blocks[mTailBlockIndex];
+		if (mTailBlockIndex > 0)
 		{
-			copy._headBlockNext = blocks[1];
-			copy._tailBlockPrev = blocks[_tailBlockIndex - 1];
+			c.mHeadBlockNext = blocks[1];
+			c.mTailBlockPrev = blocks[mTailBlockIndex - 1];
 		}
 		
 		if (assign)
 		{
-			if (_tailBlockIndex == 0)
-				_copy(_headBlock, copy._headBlock, _head + 1, _tail);
+			if (mTailBlockIndex == 0)
+				copy(mHeadBlock, c.mHeadBlock, mHead + 1, mTail);
 			else
-			if (_tailBlockIndex == 1)
+			if (mTailBlockIndex == 1)
 			{
-				_copy(_headBlock, copy._headBlock, _head + 1, _blockSize);
-				_copy(_tailBlock, copy._tailBlock, 0, _tail);
+				copy(mHeadBlock, c.mHeadBlock, mHead + 1, mBlockSize);
+				copy(mTailBlock, c.mTailBlock, 0, mTail);
 			}
 			else
 			{
-				_copy(_headBlock, copy._headBlock, _head + 1, _blockSize);
-				for (j in 1..._tailBlockIndex)
-					_copy(_blocks[j], blocks[j], 0, _blockSize);
-				_copy(_tailBlock, copy._tailBlock, 0, _tail);
+				copy(mHeadBlock, c.mHeadBlock, mHead + 1, mBlockSize);
+				for (j in 1...mTailBlockIndex)
+					copy(mBlocks[j], blocks[j], 0, mBlockSize);
+				copy(mTailBlock, c.mTailBlock, 0, mTail);
 			}
 		}
 		else
 		{
 			if (copier != null)
 			{
-				if (_tailBlockIndex == 0)
-					_copyCopier(copier, _headBlock, copy._headBlock, _head + 1, _tail);
+				if (mTailBlockIndex == 0)
+					copyCopier(copier, mHeadBlock, c.mHeadBlock, mHead + 1, mTail);
 				else
-				if (_tailBlockIndex == 1)
+				if (mTailBlockIndex == 1)
 				{
-					_copyCopier(copier,_headBlock, copy._headBlock, _head + 1, _blockSize);
-					_copyCopier(copier,_tailBlock, copy._tailBlock, 0, _tail);
+					copyCopier(copier,mHeadBlock, c.mHeadBlock, mHead + 1, mBlockSize);
+					copyCopier(copier,mTailBlock, c.mTailBlock, 0, mTail);
 				}
 				else
 				{
-					_copyCopier(copier,_headBlock, copy._headBlock, _head + 1, _blockSize);
-					for (j in 1..._tailBlockIndex)
-						_copyCopier(copier,_blocks[j], blocks[j], 0, _blockSize);
-					_copyCopier(copier, _tailBlock, copy._tailBlock, 0, _tail);
+					copyCopier(copier,mHeadBlock, c.mHeadBlock, mHead + 1, mBlockSize);
+					for (j in 1...mTailBlockIndex)
+						copyCopier(copier,mBlocks[j], blocks[j], 0, mBlockSize);
+					copyCopier(copier, mTailBlock, c.mTailBlock, 0, mTail);
 				}
 			}
 			else
 			{
-				if (_tailBlockIndex == 0)
-					_copyCloneable(_headBlock, copy._headBlock, _head + 1, _tail);
+				if (mTailBlockIndex == 0)
+					copyCloneable(mHeadBlock, c.mHeadBlock, mHead + 1, mTail);
 				else
-				if (_tailBlockIndex == 1)
+				if (mTailBlockIndex == 1)
 				{
-					_copyCloneable(_headBlock, copy._headBlock, _head + 1, _blockSize);
-					_copyCloneable(_tailBlock, copy._tailBlock, 0, _tail);
+					copyCloneable(mHeadBlock, c.mHeadBlock, mHead + 1, mBlockSize);
+					copyCloneable(mTailBlock, c.mTailBlock, 0, mTail);
 				}
 				else
 				{
-					_copyCloneable(_headBlock, copy._headBlock, _head + 1, _blockSize);
-					for (j in 1..._tailBlockIndex)
-						_copyCloneable(_blocks[j], blocks[j], 0, _blockSize);
-					_copyCloneable(_tailBlock, copy._tailBlock, 0, _tail);
+					copyCloneable(mHeadBlock, c.mHeadBlock, mHead + 1, mBlockSize);
+					for (j in 1...mTailBlockIndex)
+						copyCloneable(mBlocks[j], blocks[j], 0, mBlockSize);
+					copyCloneable(mTailBlock, c.mTailBlock, 0, mTail);
 				}
 			}
 		}
 		
-		return copy;
+		return c;
 	}
 	
-	function _shiftBlock()
+	function shiftBlock()
 	{
-		_putBlock(_blocks[0]);
-		_blocks.shift();
-		_head      = 0;
-		_headBlock = _headBlockNext;
-		_tailBlock = _blocks[--_tailBlockIndex];
-		if (_tailBlockIndex > 0)
+		putBlock(mBlocks[0]);
+		mBlocks.shift();
+		mHead      = 0;
+		mHeadBlock = mHeadBlockNext;
+		mTailBlock = mBlocks[--mTailBlockIndex];
+		if (mTailBlockIndex > 0)
 		{
-			_headBlockNext = _blocks[1];
-			_tailBlockPrev = _blocks[_tailBlockIndex - 1];
+			mHeadBlockNext = mBlocks[1];
+			mTailBlockPrev = mBlocks[mTailBlockIndex - 1];
 		}
 		else
 		{
-			_headBlockNext = null;
-			_tailBlockPrev = null;
+			mHeadBlockNext = null;
+			mTailBlockPrev = null;
 		}
 	}
 	
-	function _unshiftBlock()
+	function unshiftBlock()
 	{
-		_blocks.unshift(_getBlock());
-		_head          = _blockSizeMinusOne;
-		_headBlock     = _blocks[0];
-		_headBlockNext = _blocks[1];
-		_tailBlockPrev = _blocks[_tailBlockIndex++];
-		_tailBlock     = _blocks[_tailBlockIndex];
+		mBlocks.unshift(getBlock());
+		mHead          = mBlockSizeMinusOne;
+		mHeadBlock     = mBlocks[0];
+		mHeadBlockNext = mBlocks[1];
+		mTailBlockPrev = mBlocks[mTailBlockIndex++];
+		mTailBlock     = mBlocks[mTailBlockIndex];
 	}
 	
-	function _popBlock()
+	function popBlock()
 	{
-		_putBlock(_blocks.pop());
-		_tailBlockIndex--;
-		_tailBlock = _tailBlockPrev;
-		_tail      = _blockSizeMinusOne;
-		if (_tailBlockIndex > 0)
-			_tailBlockPrev = _blocks[_tailBlockIndex - 1];
+		putBlock(mBlocks.pop());
+		mTailBlockIndex--;
+		mTailBlock = mTailBlockPrev;
+		mTail      = mBlockSizeMinusOne;
+		if (mTailBlockIndex > 0)
+			mTailBlockPrev = mBlocks[mTailBlockIndex - 1];
 		else
 		{
-			_headBlockNext = null;
-			_tailBlockPrev = null;
+			mHeadBlockNext = null;
+			mTailBlockPrev = null;
 		}
 	}
 	
-	function _pushBlock()
+	function pushBlock()
 	{
-		_blocks.push(_getBlock());
-		_tail          = 0;
-		_tailBlockPrev = _tailBlock;
-		_tailBlock     = _blocks[++_tailBlockIndex];
-		if (_tailBlockIndex == 1)
-			_headBlockNext = _blocks[1];
+		mBlocks.push(getBlock());
+		mTail          = 0;
+		mTailBlockPrev = mTailBlock;
+		mTailBlock     = mBlocks[++mTailBlockIndex];
+		if (mTailBlockIndex == 1)
+			mHeadBlockNext = mBlocks[1];
 	}
 	
-	inline function _getBlock():Array<T>
+	inline function getBlock():Array<T>
 	{
-		if (_poolSize > 0)
-			return _blockPool[--_poolSize];
+		if (mPoolSize > 0)
+			return mBlockPool[--mPoolSize];
 		else
-			return ArrayUtil.alloc(_blockSize);
+			return ArrayUtil.alloc(mBlockSize);
 	}
 	
-	inline function _putBlock(x:Array<T>)
+	inline function putBlock(x:Array<T>)
 	{
-		if (_poolSize < _poolCapacity)
-			_blockPool[_poolSize++] = x;
+		if (mPoolSize < mPoolCapacity)
+			mBlockPool[mPoolSize++] = x;
 	}
 	
-	inline function _copy(src:Array<T>, dst:Array<T>, min:Int, max:Int)
+	inline function copy(src:Array<T>, dst:Array<T>, min:Int, max:Int)
 	{
 		for (j in min...max)
 			dst[j] = src[j];
 	}
 	
-	inline function _copyCloneable(src:Array<T>, dst:Array<T>, min:Int, max:Int)
+	inline function copyCloneable(src:Array<T>, dst:Array<T>, min:Int, max:Int)
 	{
 		for (j in min...max)
 		{
@@ -1079,7 +1071,7 @@ class ArrayedDeque<T> implements Deque<T>
 		}
 	}
 	
-	inline function _copyCopier(copier:T->T, src:Array<T>, dst:Array<T>, min:Int, max:Int)
+	inline function copyCopier(copier:T->T, src:Array<T>, dst:Array<T>, min:Int, max:Int)
 	{
 		for (j in min...max)
 			dst[j] = copier(src[j]);
@@ -1089,46 +1081,47 @@ class ArrayedDeque<T> implements Deque<T>
 #if doc
 private
 #end
+@:access(de.polygonal.ds.ArrayedDeque)
 class ArrayedDequeIterator<T> implements de.polygonal.ds.Itr<T>
 {
-	var _f:ArrayedDeque<T>;
-	var _blocks:Array<Array<T>>;
-	var _block:Array<T>;
-	var _i:Int;
-	var _s:Int;
-	var _b:Int;
-	var _blockSize:Int;
+	var mF:ArrayedDeque<T>;
+	var mBlocks:Array<Array<T>>;
+	var mBlock:Array<T>;
+	var mI:Int;
+	var mS:Int;
+	var mB:Int;
+	var mBlockSize:Int;
 	
 	public function new(f:ArrayedDeque<T>)
 	{
-		_f = f;
+		mF = f;
 		reset();
 	}
 	
 	inline public function reset():Itr<T>
 	{
-		_blockSize = __blockSize(_f);
-		_blocks    = __blocks(_f);
-		_i         = __head(_f) + 1;
-		_b         = _i >> __blockSizeShift(_f);
-		_s         = _f.size();
-		_block     = _blocks[_b];
- 		_i        -= (_b << __blockSizeShift(_f));
+		mBlockSize = mF.mBlockSize;
+		mBlocks    = mF.mBlocks;
+		mI         = mF.mHead + 1;
+		mB         = mI >> mF.mBlockSizeShift;
+		mS         = mF.size();
+		mBlock     = mBlocks[mB];
+ 		mI        -= mB << mF.mBlockSizeShift;
 		return this;
 	}
 	
 	inline public function hasNext():Bool
 	{
-		return _s-- > 0;
+		return mS-- > 0;
 	}
 	
 	inline public function next():T
 	{
-		var x = _block[_i++];
-		if (_i == _blockSize)
+		var x = mBlock[mI++];
+		if (mI == mBlockSize)
 		{
-			_i = 0;
-			_block = _blocks[++_b];
+			mI = 0;
+			mBlock = mBlocks[++mB];
 		}
 		
 		return x;
@@ -1137,22 +1130,5 @@ class ArrayedDequeIterator<T> implements de.polygonal.ds.Itr<T>
 	inline public function remove()
 	{
 		throw "unsupported operation";
-	}
-	
-	inline function __head<T>(f:ArrayedDequeFriend<T>)
-	{
-		return f._head;
-	}
-	inline function __blockSize<T>(f:ArrayedDequeFriend<T>)
-	{
-		return f._blockSize;
-	}
-	inline function __blockSizeShift<T>(f:ArrayedDequeFriend<T>)
-	{
-		return f._blockSizeShift;
-	}
-	inline function __blocks<T>(f:ArrayedDequeFriend<T>)
-	{
-		return f._blocks;
 	}
 }

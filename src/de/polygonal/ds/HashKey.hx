@@ -25,7 +25,7 @@ import de.polygonal.ds.error.Assert.assert;
  */
 class HashKey
 {
-	static var _counter = 0;
+	static var mCounter = 0;
 	
 	/**
 	 * Returns the next integer in a list of unique, unsigned integer keys. 
@@ -33,12 +33,12 @@ class HashKey
 	inline public static function next():Int
 	{
 		#if debug
-		var x = _counter;
-		var y = ++_counter;
+		var x = mCounter;
+		var y = ++mCounter;
 		assert(x < y);
 		return x;
 		#else
-		return _counter++;
+		return mCounter++;
 		#end
 	}
 }

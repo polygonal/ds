@@ -1,6 +1,4 @@
-﻿package;
-
-import de.polygonal.ds.DLL;
+﻿import de.polygonal.ds.DLL;
 import de.polygonal.ds.ListSet;
 
 class TestDLLCircular extends haxe.unit.TestCase

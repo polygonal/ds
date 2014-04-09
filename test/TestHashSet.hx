@@ -1,5 +1,3 @@
-package;
-
 import de.polygonal.core.math.random.ParkMiller;
 import de.polygonal.ds.DA;
 import de.polygonal.ds.DLL;
@@ -376,7 +374,7 @@ class TestHashSet extends haxe.unit.TestCase
 		for (i in 0...s)
 		{
 			var item = new E(i);
-			untyped item.key = i * s;
+			item.key = i * s;
 			values.push(item);
 		}
 		
