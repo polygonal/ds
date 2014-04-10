@@ -2212,32 +2212,32 @@ class TreeNode<T> implements Collection<T>
 	
 	inline function incChildCount()
 	{
-		mExtraInfo = (mExtraInfo & 0x0000ffff) | ((numChildren() + 1) << 16);
+		mExtraInfo = (mExtraInfo & 0x0000FFFF) | ((numChildren() + 1) << 16);
 	}
 	
 	inline function decChildCount()
 	{
-		mExtraInfo = (mExtraInfo & 0x0000ffff) | ((numChildren() - 1) << 16);
+		mExtraInfo = (mExtraInfo & 0x0000FFFF) | ((numChildren() - 1) << 16);
 	}
 	
 	inline function setChildCount(x:Int)
 	{
-		mExtraInfo = (mExtraInfo & 0x0000ffff) | (x << 16);
+		mExtraInfo = (mExtraInfo & 0x0000FFFF) | (x << 16);
 	}
 	
 	inline function setTimeStamp(x:Int)
 	{
-		mExtraInfo = (mExtraInfo & 0xffff0000) | x;
+		mExtraInfo = (mExtraInfo & 0xFFFF0000) | x;
 	}
 	
 	inline function getTimeStamp():Int
 	{
-		return mExtraInfo & 0xffff;
+		return mExtraInfo & 0xFFFF;
 	}
 	
 	inline function incTimeStamp()
 	{
-		mExtraInfo = (mExtraInfo & 0xffff0000) | (getTimeStamp() + 1);
+		mExtraInfo = (mExtraInfo & 0xFFFF0000) | (getTimeStamp() + 1);
 	}
 }
 

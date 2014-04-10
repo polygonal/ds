@@ -34,7 +34,7 @@ extern class M
 	/**
 	 * Max value, signed integer.
 	 */
-	inline public static var INT32_MAX = 0x7fffffff;
+	inline public static var INT32_MAX = 0x7FFFFFFF;
 	
 	/**
 	 * Min value, signed short.

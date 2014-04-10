@@ -300,10 +300,10 @@ class Bits
 	{
 		x -= ((x >> 1) & 0x55555555);
 		x = (((x >> 2) & 0x33333333) + (x & 0x33333333));
-		x = (((x >> 4) + x) & 0x0f0f0f0f);
+		x = (((x >> 4) + x) & 0x0F0F0F0F);
 		x += (x >> 8);
 		x += (x >> 16);
-		return(x & 0x0000003f);
+		return(x & 0x0000003F);
 	}
 	
 	/**
@@ -395,9 +395,9 @@ class Bits
 		x = (((x >> 1) & y) | ((x & y) << 1));
 		y = 0x33333333;
 		x = (((x >> 2) & y) | ((x & y) << 2));
-		y = 0x0f0f0f0f;
+		y = 0x0F0F0F0F;
 		x = (((x >> 4) & y) | ((x & y) << 4));
-		y = 0x00ff00ff;
+		y = 0x00FF00FF;
 		x = (((x >> 8) & y) | ((x & y) << 8));
 		return((x >> 16) | (x << 16));
 	}
@@ -453,7 +453,7 @@ class Bits
 	 */
 	inline public static function unpackI16Lo(x:Int):Int
 	{
-		return (x & 0xffff) - 0x8000;
+		return (x & 0xFFFF) - 0x8000;
 	}
 	
 	/**
@@ -470,7 +470,7 @@ class Bits
 	 */
 	inline public static function unpackUI16Lo(x:Int):Int
 	{
-		return x & 0xffff;
+		return x & 0xFFFF;
 	}
 	
 	/**

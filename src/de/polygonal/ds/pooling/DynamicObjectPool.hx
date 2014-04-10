@@ -119,7 +119,7 @@ class DynamicObjectPool<T>
 	 * @param fabricate allocates objects by calling <code>fabricate()</code>.
 	 * @param factory allocates objects by using a <em>Factory</em> object (calling <code>factory</code>.<em>create()</em>).
 	 * @param capacity the maximum number of objects that are stored in this pool.<br/>
-	 * The default value of 0x7fffffff indicates that the size is unbound.
+	 * The default value of 0x7FFFFFFF indicates that the size is unbound.
 	 * @throws de.polygonal.ds.error.AssertError invalid arguments.
 	 */
 	public function new(C:Class<T> = null, fabricate:Void->T = null, factory:Factory<T> = null, capacity = M.INT32_MAX)
