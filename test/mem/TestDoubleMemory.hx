@@ -86,7 +86,7 @@ class TestDoubleMemory extends haxe.unit.TestCase
 		#if alchemy MemoryManager.free(); #end
 	}
 	
-	#if flash10
+	#if flash
 	function testToVector()
 	{
 		var b = new DoubleMemory(256);
@@ -122,7 +122,7 @@ class TestDoubleMemory extends haxe.unit.TestCase
 	}
 	#end
 	
-	#if (flash9 || cpp)
+	#if flash
 	function testToByteArray()
 	{
 		var b = new DoubleMemory(256);
@@ -171,7 +171,7 @@ class TestDoubleMemory extends haxe.unit.TestCase
 	}
 	#end
 	
-	#if (flash9 || cpp)
+	#if flash
 	function testToBytesData()
 	{
 		var b = new DoubleMemory(256);

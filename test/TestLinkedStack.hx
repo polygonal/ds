@@ -373,7 +373,7 @@ class TestLinkedStack extends haxe.unit.TestCase
 		
 		for (i in 0...5) l.push(i);
 		
-		#if flash10
+		#if flash
 		var a = l.toVector();
 		for (i in 0...a.length) assertEquals(i, a[i]);
 		#end

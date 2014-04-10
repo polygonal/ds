@@ -421,7 +421,7 @@ class TestArray2 extends haxe.unit.TestCase
 		assertEquals(out.length, a.size());
 	}
 	
-	#if flash10
+	#if flash
 	function testToVector()
 	{
 		var a = getStrArray();

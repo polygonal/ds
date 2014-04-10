@@ -63,9 +63,9 @@ class TestDA extends haxe.unit.TestCase
 		assertEquals(0, l._get(1));
 		assertEquals(0, l._get(2));
 		#else
-		assertEquals(#if (flash9 || flash10) 0 #else null #end, l._get(0));
-		assertEquals(#if (flash9 || flash10) 0 #else null #end, l._get(1));
-		assertEquals(#if (flash9 || flash10) 0 #else null #end, l._get(2));
+		assertEquals(#if flash 0 #else null #end, l._get(0));
+		assertEquals(#if flash 0 #else null #end, l._get(1));
+		assertEquals(#if flash 0 #else null #end, l._get(2));
 		#end
 	}
 	

@@ -91,7 +91,7 @@ class TestIntMemory extends haxe.unit.TestCase
 		#if alchemy MemoryManager.free(); #end
 	}
 	
-	#if flash10
+	#if flash
 	function testToVector()
 	{
 		var b = new IntMemory(256);
@@ -128,7 +128,7 @@ class TestIntMemory extends haxe.unit.TestCase
 	}
 	#end
 	
-	#if (flash9 || cpp)
+	#if flash
 	function testToByteArray()
 	{
 		var mem = new IntMemory(256);
@@ -178,7 +178,7 @@ class TestIntMemory extends haxe.unit.TestCase
 	}
 	#end
 	
-	#if (flash9 || cpp)
+	#if flash
 	function testToBytesData()
 	{
 		var mem = new IntMemory(256);
@@ -246,7 +246,7 @@ class TestIntMemory extends haxe.unit.TestCase
 			assertEquals((i + min) % 10, data.get(i));
 	}
 	
-	#if flash10
+	#if flash
 	function checkVector(data:flash.Vector<Int>, min = -1, max = -1)
 	{
 		if (min == -1) min = 0;
@@ -265,7 +265,7 @@ class TestIntMemory extends haxe.unit.TestCase
 		for (i in 0...max - min) assertEquals((i + min) % 10, data[i]);
 	}
 	
-	#if (flash9 || cpp)
+	#if flash
 	function checkByteArray(data:flash.utils.ByteArray, min = -1, max = -1)
 	{
 		data.position = 0;

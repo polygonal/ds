@@ -27,7 +27,7 @@ class TestBitMemory extends haxe.unit.TestCase
 		#end
 	}
 	
-	#if (flash9 || cpp)
+	#if flash
 	function testOfByteArray()
 	{
 		var b = new flash.utils.ByteArray();

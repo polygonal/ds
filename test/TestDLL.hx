@@ -792,7 +792,7 @@ class TestDLL extends haxe.unit.TestCase
 		var a:Array<Int> = list.toArray();
 		for (i in a) assertEquals(a[i], i);
 		
-		#if flash10
+		#if flash
 		var list = new DLL<Int>();
 		for (i in 0...10) list.append(i);
 		var a = list.toVector();

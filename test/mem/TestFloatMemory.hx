@@ -93,7 +93,7 @@ class TestFloatMemory extends haxe.unit.TestCase
 		b.free();
 		#if alchemy MemoryManager.free(); #end
 	}
-	#if flash10
+	#if flash
 	function testToVector()
 	{
 		var b = new FloatMemory(256);
@@ -130,7 +130,7 @@ class TestFloatMemory extends haxe.unit.TestCase
 	}
 	#end
 	
-	#if (flash9 || cpp)
+	#if flash
 	function testToByteArray()
 	{
 		var b = new FloatMemory(256);
@@ -178,7 +178,7 @@ class TestFloatMemory extends haxe.unit.TestCase
 	}
 	#end
 	
-	#if (flash9 || cpp)
+	#if flash
 	function testToBytesData()
 	{
 		var b = new FloatMemory(256);
@@ -206,7 +206,7 @@ class TestFloatMemory extends haxe.unit.TestCase
 	}
 	#end
 	
-	#if (flash9 || cpp)
+	#if flash
 	function testOfBytesData()
 	{
 		var output = new BytesOutput();
@@ -232,7 +232,7 @@ class TestFloatMemory extends haxe.unit.TestCase
 		for (i in 0...max - min) assertEquals((i + min) % 10, Std.int(m.get(i)));
 	}
 	
-	#if flash10
+	#if flash
 	function checkVector(data:flash.Vector<Float>, min = -1, max = -1)
 	{
 		if (min == -1) min = 0;
@@ -250,7 +250,7 @@ class TestFloatMemory extends haxe.unit.TestCase
 		for (i in 0...max - min) assertEquals((i + min) % 10, Std.int(data[i]));
 	}
 	
-	#if (flash9 || cpp)
+	#if flash
 	function checkByteArray(data:flash.utils.ByteArray, min = -1, max = -1)
 	{
 		data.position = 0;

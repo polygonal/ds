@@ -248,9 +248,9 @@ class TestArrayedStack extends haxe.unit.TestCase
 		
 		l.pack();
 		
-		assertEquals(#if (flash9||flash10) 0 #else null #end, l._get(0));
-		assertEquals(#if (flash9||flash10) 0 #else null #end, l._get(1));
-		assertEquals(#if (flash9||flash10) 0 #else null #end, l._get(2));
+		assertEquals(#if flash 0 #else null #end, l._get(0));
+		assertEquals(#if flash 0 #else null #end, l._get(1));
+		assertEquals(#if flash 0 #else null #end, l._get(2));
 	}
 	
 	function testPeek()
