@@ -9,7 +9,7 @@ furnished to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all copies or
 substantial portions of the Software.
- 
+
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
 NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
 NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -332,20 +332,20 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	 * {
 	 *     public var id:Int;
 	 *     public var position:Int; //don't touch!
-	 *     
+	 *
 	 *     public function new(id:Int) {
 	 *         this.id = id;
 	 *     }
-	 *     
+	 *
 	 *     public function compare(other:Foo):Int {
 	 *         return other.id - id;
 	 *     }
-	 *     
+	 *
 	 *     public function toString():String {
 	 *         return Std.string(id);
 	 *     }
 	 * }
-	 * 
+	 *
 	 * class Main
 	 * {
 	 *     static function main() {

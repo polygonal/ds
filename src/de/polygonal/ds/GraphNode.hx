@@ -9,7 +9,7 @@ furnished to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all copies or
 substantial portions of the Software.
- 
+
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
 NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
 NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -67,19 +67,19 @@ class GraphNode<T> implements Hashable
 	public var prev:GraphNode<T>;
 	
 	/**
-	 * The head of a a doubly linked list of <em>GraphArc</em> objects. 
+	 * The head of a a doubly linked list of <em>GraphArc</em> objects.
 	 */
 	public var arcList:GraphArc<T>;
 	
 	/**
-	 * True if the graph node was marked in a DFS/BFS traversal. 
+	 * True if the graph node was marked in a DFS/BFS traversal.
 	 */
 	public var marked:Bool;
 	
 	var mGraph:Graph<T>;
 	
 	/**
-	 * Creates a graph node storing the element <code>x</code>. 
+	 * Creates a graph node storing the element <code>x</code>.
 	 */
 	public function new(graph:Graph<T>, x:T)
 	{
@@ -146,7 +146,7 @@ class GraphNode<T> implements Hashable
 	 * @throws de.polygonal.ds.error.AssertError <code>target</code> is null (debug only).
 	 * @throws de.polygonal.ds.error.AssertError <code>target</code> equals this (debug only).
 	 */
-	inline public function getArc(target:GraphNode<T>):GraphArc<T>
+	public function getArc(target:GraphNode<T>):GraphArc<T>
 	{
 		#if debug
 		assert(target != null, "target is null");

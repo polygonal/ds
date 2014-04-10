@@ -9,7 +9,7 @@ furnished to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all copies or
 substantial portions of the Software.
- 
+
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
 NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
 NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -304,7 +304,7 @@ class DA<T> implements Collection<T>
 	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
 	 * @throws de.polygonal.ds.error.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
 	 */
-	inline public function insertAt(i:Int, x:T)
+	public function insertAt(i:Int, x:T)
 	{
 		#if debug
 		assert(size() < maxSize, 'size equals max size ($maxSize)');
@@ -331,7 +331,7 @@ class DA<T> implements Collection<T>
 	 * <o>n</o>
 	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
 	 */
-	inline public function removeAt(i:Int):T
+	public function removeAt(i:Int):T
 	{
 		#if debug
 		assert(i >= 0 && i < size(), 'the index $i is out of range ${size()}');
@@ -625,7 +625,7 @@ class DA<T> implements Collection<T>
 	 * @throws de.polygonal.ds.error.AssertError invalid <code>destination</code>, <code>source</code> or <code>n</code> value (debug only).
 	 * @see <a href="http://www.cplusplus.com/reference/clibrary/cstring/memmove/" target="mBlank">http://www.cplusplus.com/reference/clibrary/cstring/memmove/</a>
 	 */
-	inline public function memmove(destination:Int, source:Int, n:Int)
+	public function memmove(destination:Int, source:Int, n:Int)
 	{
 		#if debug
 		assert(destination >= 0 && source >= 0 && n >= 0, "destination >= 0 && source >= 0 && n >= 0");
@@ -763,7 +763,7 @@ class DA<T> implements Collection<T>
 	}
 	
 	/**
-	 * Returns true if this queue contains the element <code>x</code>. 
+	 * Returns true if this queue contains the element <code>x</code>.
 	 * <o>n</o>
 	 */
 	public function contains(x:T):Bool
@@ -817,7 +817,7 @@ class DA<T> implements Collection<T>
 	 * <o>1 or n if <code>purge</code> is true</o>
 	 * @param purge if true, elements are nullified upon removal.
 	 */
-	inline public function clear(purge = false)
+	public function clear(purge = false)
 	{
 		if (purge)
 			for (i in 0...mA.length)
@@ -845,7 +845,7 @@ class DA<T> implements Collection<T>
 	}
 	
 	/**
-	 * The total number of elements. 
+	 * The total number of elements.
 	 * <o>1</o>
 	 */
 	inline public function size():Int
@@ -1020,7 +1020,7 @@ class DA<T> implements Collection<T>
 			while (lo < hi)
 			{
 				while (cmp(pivot, _get(hi)) < 0 && lo < hi) hi--;
-				if (hi != lo) 
+				if (hi != lo)
 				{
 					_cpy(lo, hi);
 					lo++;
@@ -1087,7 +1087,7 @@ class DA<T> implements Collection<T>
 				#end
 				
 				while (pivot.compare(cast(_get(hi), Comparable<Dynamic>)) < 0 && lo < hi) hi--;
-				if (hi != lo) 
+				if (hi != lo)
 				{
 					_cpy(lo, hi);
 					lo++;

@@ -172,7 +172,7 @@ class TestByteMemory extends haxe.unit.TestCase
 		for (i in 0...max - min) assertEquals((i + min) % 10, m.get(i));
 	}
 	
-	function checkVector(v:Vector<Int>, min = -1, max = -1)
+	inline function checkVector(v:Vector<Int>, min = -1, max = -1)
 	{
 		if (min == -1) min = 0;
 		if (max == -1) max = v.length;

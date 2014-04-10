@@ -9,7 +9,7 @@ furnished to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all copies or
 substantial portions of the Software.
- 
+
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
 NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
 NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -38,7 +38,7 @@ class MemoryManager
 	static var mInstance:MemoryManager = null;
 	
 	/**
-	 * Releases all allocated memory and nullifies references for GC'ing used resources. 
+	 * Releases all allocated memory and nullifies references for GC'ing used resources.
 	 */
 	public static function free()
 	{
@@ -87,12 +87,12 @@ class MemoryManager
 	#end
 	
 	/**
-	 * Returns the total number of used bytes. 
+	 * Returns the total number of used bytes.
 	 */
 	public var bytesUsed:Int;
 	
 	/**
-	 * Returns the total number of allocated bytes. 
+	 * Returns the total number of allocated bytes.
 	 */
 	public var bytesTotal:Int;
 	
@@ -144,7 +144,7 @@ class MemoryManager
 	
 	#if (alchemy && flash)
 	/**
-	 * The byte array that is managed by this memory manager. 
+	 * The byte array that is managed by this memory manager.
 	 */
 	public var bytes(get_bytes, never):flash.utils.ByteArray;
 	inline function get_bytes():flash.utils.ByteArray return mBytes;
@@ -160,7 +160,7 @@ class MemoryManager
 		while (node != null)
 		{
 			if (!node.isEmpty) c++;
-			node = node.next; 
+			node = node.next;
 		}
 		return c;
 	}
@@ -235,7 +235,7 @@ class MemoryManager
 	#end
 	
 	/**
-	 * Allocates and assigns <code>numBytes</code> to be accessed by <code>access</code>. 
+	 * Allocates and assigns <code>numBytes</code> to be accessed by <code>access</code>.
 	 */
 	public function malloc(access:MemoryAccess, numBytes:Int)
 	{
@@ -274,7 +274,7 @@ class MemoryManager
 	}
 	
 	/**
-	 * Deallocates the memory used by <code>access</code>. 
+	 * Deallocates the memory used by <code>access</code>.
 	 */
 	public function dealloc(access:MemoryAccess)
 	{
@@ -315,7 +315,7 @@ class MemoryManager
 	}
 	
 	/**
-	 * Resizes <code>access</code> to match <code>numBytes</code>. 
+	 * Resizes <code>access</code> to match <code>numBytes</code>.
 	 */
 	public function realloc(access:MemoryAccess, numBytes:Int)
 	{
@@ -479,7 +479,7 @@ class MemoryManager
 	}
 	
 	/**
-	 * Releases unused memory. 
+	 * Releases unused memory.
 	 */
 	public function pack()
 	{
@@ -542,7 +542,7 @@ class MemoryManager
 	}
 	
 	/**
-	 * Performs a full defragmentation of the allocated memory. 
+	 * Performs a full defragmentation of the allocated memory.
 	 */
 	public function defrag()
 	{
@@ -653,11 +653,11 @@ class MemoryManager
 	{
 		//calculate #required buckets
 		var requiredBuckets = M.max(1, Math.ceil((bytesUsed + numBytes - bytesTotal) / mBlockSizeBytes));
-		var curBuckets      = bytesTotal >> mBlockSizeShift;
-		var maxBuckets      = requiredBuckets + curBuckets;
-		var requiredBytes   = maxBuckets << mBlockSizeShift;
-		var freeSpace       = requiredBytes - bytesTotal;
-		var rawOffset       = mBytesRaw;
+		var curBuckets = bytesTotal >> mBlockSizeShift;
+		var maxBuckets = requiredBuckets + curBuckets;
+		var requiredBytes = maxBuckets << mBlockSizeShift;
+		var freeSpace = requiredBytes - bytesTotal;
+		var rawOffset = mBytesRaw;
 		
 		#if alchemy
 		//copy "raw" bytes to the start of the byte array while "data" bytes go to the end of the byte array
@@ -857,14 +857,14 @@ private class MemorySegment
 		mWeakPointer = null;
 		#end
 		
-		prev         = null;
-		next         = null;
-		manager      = null;
-		mAccess      = null;
-		b            = -1;
-		e            = -1;
-		size         = -1;
-		offset       = -1;
+		prev = null;
+		next = null;
+		manager = null;
+		mAccess = null;
+		b = -1;
+		e = -1;
+		size = -1;
+		offset = -1;
 	}
 	
 	inline public function shiftLeft(x:Int)
@@ -996,7 +996,7 @@ private class MemorySegment
 	#if flash
 	var mWeakPointer:flash.utils.Dictionary;
 	public static var monitor:flash.utils.Timer;
-	public static var listenerCount = 0; 
+	public static var listenerCount = 0;
 	
 	function stopMonitor()
 	{
@@ -1010,7 +1010,7 @@ private class MemorySegment
 		}
 	}
 	
-	function checkPointer(e:flash.events.TimerEvent) 
+	function checkPointer(e:flash.events.TimerEvent)
 	{
 		var keys:Array<Dynamic> = untyped __keys__(mWeakPointer);
 		for (key in keys) return;

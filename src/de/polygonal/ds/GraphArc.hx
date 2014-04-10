@@ -9,7 +9,7 @@ furnished to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all copies or
 substantial portions of the Software.
- 
+
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
 NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
 NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -38,12 +38,12 @@ class GraphArc<T> implements Hashable
 	public var key:Int;
 	
 	/**
-	 * The node that this arc points to. 
+	 * The node that this arc points to.
 	 */
 	public var node:GraphNode<T>;
 	
 	/**
-	 * The weight (or cost) of this arc. 
+	 * The weight (or cost) of this arc.
 	 */
 	public var cost:Float;
 	
@@ -60,15 +60,15 @@ class GraphArc<T> implements Hashable
 	public var prev:GraphArc<T>;
 	
 	/**
-	 * Creates a graph arc pointing to <code>node</code> with a weight of <code>cost</code> . 
+	 * Creates a graph arc pointing to <code>node</code> with a weight of <code>cost</code> .
 	 */
 	public function new(node:GraphNode<T>, cost:Float)
 	{
 		this.node = node;
 		this.cost = cost;
-		next      = null;
-		prev      = null;
-		key       = HashKey.next();
+		next = null;
+		prev = null;
+		key = HashKey.next();
 	}
 	
 	/**
@@ -83,7 +83,7 @@ class GraphArc<T> implements Hashable
 	}
 	
 	/**
-	 * Returns the data of the node that this arc points to. 
+	 * Returns the data of the node that this arc points to.
 	 */
 	inline public function val():T
 	{

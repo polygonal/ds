@@ -9,7 +9,7 @@ furnished to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all copies or
 substantial portions of the Software.
- 
+
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
 NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
 NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -23,6 +23,8 @@ import de.polygonal.ds.error.Assert.assert;
 #if (alchemy && !flash)
 "DoubleMemory is only available when targeting flash"
 #end
+
+import flash.Vector;
 
 /**
  * <p>A chunk of fast "alchemy memory" for storing IEEE 754 double-precision floating point numbers.</p>
@@ -340,7 +342,7 @@ class DoubleMemory extends MemoryAccess
 	#end
 	
 	/**
-	 * Creates a deep copy of this object. 
+	 * Creates a deep copy of this object.
 	 */
 	public function clone():DoubleMemory
 	{
@@ -358,7 +360,7 @@ class DoubleMemory extends MemoryAccess
 	}
 	
 	/**
-	 * Sets all doubles to the value <code>x</code>. 
+	 * Sets all doubles to the value <code>x</code>.
 	 */
 	public function fill(x:Float):DoubleMemory
 	{

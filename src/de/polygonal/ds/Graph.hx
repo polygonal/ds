@@ -9,7 +9,7 @@ furnished to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all copies or
 substantial portions of the Software.
- 
+
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
 NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
 NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -112,7 +112,7 @@ class Graph<T> implements Collection<T>
 		reuseIterator = false;
 	}
 	
-	/** 
+	/**
 	 * The graph nodes stored as a doubly linked list of <em>GraphNode</em> objects.
 	 * <o>1</o>
 	 * @return the first node in a list of <em>GraphNode</em> objects or null if the graph is empty.
@@ -126,7 +126,7 @@ class Graph<T> implements Collection<T>
 	 * Finds and returns the node storing the element <code>x</code> or null if such a node does not exist.
 	 * <o>n</o>
 	 */
-	inline public function findNode(x:T):GraphNode<T>
+	public function findNode(x:T):GraphNode<T>
 	{
 		var found = false;
 		var n = mNodeList;
@@ -1333,7 +1333,7 @@ class Graph<T> implements Collection<T>
 	function dFSRecursiveProcess(node:GraphNode<T>, process:GraphNode<T>->Bool->Dynamic->Bool = null, preflight:Bool, userData:Dynamic):Bool
 	{
 		node.marked = true;
-		if (!process(node, false, userData))	
+		if (!process(node, false, userData))
 			return false;
 		
 		var a = node.arcList;

@@ -9,7 +9,7 @@ furnished to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all copies or
 substantial portions of the Software.
- 
+
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
 NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
 NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -50,7 +50,7 @@ class ObjectPool<T> implements Hashable
 	var mCount:Int;
 	#end
 	
-	/** 
+	/**
 	 * Creates an <em>ObjectPool</em> object capable of managing <code>x</code> pre-allocated objects.<br/>
 	 * Use <em>allocate()</em> to fill the pool.
 	 */
@@ -94,7 +94,7 @@ class ObjectPool<T> implements Hashable
 	}
 	
 	/**
-	 * Returns true if all objects are in use. 
+	 * Returns true if all objects are in use.
 	 */
 	inline public function isEmpty():Bool
 	{
@@ -102,7 +102,7 @@ class ObjectPool<T> implements Hashable
 	}
 	
 	/**
-	 * The total number of pre-allocated objects in the pool. 
+	 * The total number of pre-allocated objects in the pool.
 	 */
 	inline public function size():Int
 	{
@@ -110,7 +110,7 @@ class ObjectPool<T> implements Hashable
 	}
 	
 	/**
-	 * The total number of objects in use. 
+	 * The total number of objects in use.
 	 */
 	public function countUsedObjects():Int
 	{
@@ -118,7 +118,7 @@ class ObjectPool<T> implements Hashable
 	}
 	
 	/**
-	 * The total number of available objects. 
+	 * The total number of available objects.
 	 */
 	public function countUnusedObjects():Int
 	{
@@ -133,7 +133,7 @@ class ObjectPool<T> implements Hashable
 		return c;
 	}
 	
-	/** 
+	/**
 	 * Returns the id to the next free object.<br/>
 	 * After an id has been obtained, the corresponding object can be retrieved using <em>get(id)</em>.
 	 * @throws de.polygonal.ds.error.AssertError pool exhausted (debug only).

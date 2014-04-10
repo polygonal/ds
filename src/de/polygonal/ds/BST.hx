@@ -9,7 +9,7 @@ furnished to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all copies or
 substantial portions of the Software.
- 
+
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
 NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
 NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -50,10 +50,10 @@ class BST<T:Comparable<T>> implements Collection<T>
 	
 	public function new()
 	{
-		mRoot         = null;
-		mIterator     = null;
-		mSize         = 0;
-		key           = HashKey.next();
+		mRoot = null;
+		mIterator = null;
+		mSize = 0;
+		key = HashKey.next();
 		reuseIterator = false;
 	}
 	
@@ -221,20 +221,20 @@ class BST<T:Comparable<T>> implements Collection<T>
 	 * class Foo implements de.polygonal.ds.Comparable&lt;Foo&gt;
 	 * {
 	 *     var i:Int;
-	 *     
+	 *
 	 *     public function new(i:Int) {
 	 *         this.i = i;
 	 *     }
-	 *     
+	 *
 	 *     public function compare(other:Foo):Int {
 	 *         return other.i - i;
 	 *     }
-	 *     
+	 *
 	 *     public function toString():String {
 	 *         return "{Foo " + i + "}";
 	 *     }
 	 * }
-	 * 
+	 *
 	 * class Main
 	 * {
 	 *     static function main() {

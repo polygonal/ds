@@ -11,13 +11,13 @@ class TestLinkedQueue extends haxe.unit.TestCase
 		
 		for (i in 0...10) l.enqueue(i);
 		for (i in 0...10) l.dequeue();
-		assertEquals(10, l.mPoolSize);
+		assertEquals(10, untyped l.mPoolSize);
 		
 		for (i in 0...10) l.enqueue(i);
-		assertEquals(0, l.mPoolSize);
+		assertEquals(0, untyped l.mPoolSize);
 		
 		for (i in 0...10) l.dequeue();
-		assertEquals(10, l.mPoolSize);
+		assertEquals(10, untyped l.mPoolSize);
 	}
 	
 	function test()
@@ -71,11 +71,11 @@ class TestLinkedQueue extends haxe.unit.TestCase
 		assertTrue(l.isEmpty());
 		
 		#if generic
-		assertEquals(l.mHead, null);
-		assertEquals(l.mTail, null);
+		assertEquals(untyped l.mHead, null);
+		assertEquals(untyped untyped l.mTail, null);
 		#else
 		var h:LinkedQueueNode<Int> = l.mHead;
-		var t:LinkedQueueNode<Int> = l.mTail;
+		var t:LinkedQueueNode<Int> = untyped l.mTail;
 		assertEquals(h, null);
 		assertEquals(t, null);
 		#end
@@ -132,8 +132,8 @@ class TestLinkedQueue extends haxe.unit.TestCase
 			
 			while (!l.isEmpty()) assertTrue(set.remove(l.dequeue()));
 			assertTrue(set.isEmpty());
-			assertEquals(null, l.mHead);
-			assertEquals(null, l.mTail);
+			assertEquals(null, untyped l.mHead);
+			assertEquals(null, untyped l.mTail);
 		}
 		
 		var l = new de.polygonal.ds.LinkedQueue<Int>();
@@ -146,8 +146,8 @@ class TestLinkedQueue extends haxe.unit.TestCase
 			itr.remove();
 		}
 		assertTrue(l.isEmpty());
-		assertEquals(null, l.mHead);
-		assertEquals(null, l.mTail);
+		assertEquals(null, untyped l.mHead);
+		assertEquals(null, untyped l.mTail);
 	}
 	
 	#if debug

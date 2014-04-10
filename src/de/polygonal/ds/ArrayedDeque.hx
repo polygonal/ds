@@ -89,24 +89,24 @@ class ArrayedDeque<T> implements Deque<T>
 		this.maxSize = -1;
 		#end
 		
-		mBlockSize         = blockSize;
+		mBlockSize = blockSize;
 		mBlockSizeMinusOne = blockSize - 1;
-		mBlockSizeShift    = Bits.ntz(blockSize);
-		mHead              = 0;
-		mTail              = 1;
-		mTailBlockIndex    = 0;
-		mPoolSize          = 0;
-		mPoolCapacity      = blockPoolCapacity;
-		mBlocks            = new Array();
-		mBlocks[0]         = ArrayUtil.alloc(blockSize);
-		mHeadBlock         = mBlocks[0];
-		mTailBlock         = mHeadBlock;
-		mHeadBlockNext     = null;
-		mTailBlockPrev     = null;
-		mBlockPool         = new Array<Array<T>>();
-		mIterator          = null;
-		key                = HashKey.next();
-		reuseIterator      = false;
+		mBlockSizeShift = Bits.ntz(blockSize);
+		mHead = 0;
+		mTail = 1;
+		mTailBlockIndex = 0;
+		mPoolSize = 0;
+		mPoolCapacity = blockPoolCapacity;
+		mBlocks = new Array();
+		mBlocks[0] = ArrayUtil.alloc(blockSize);
+		mHeadBlock = mBlocks[0];
+		mTailBlock = mHeadBlock;
+		mHeadBlockNext = null;
+		mTailBlockPrev = null;
+		mBlockPool = new Array<Array<T>>();
+		mIterator = null;
+		key = HashKey.next();
+		reuseIterator = false;
 	}
 	
 	/**
@@ -506,16 +506,16 @@ class ArrayedDeque<T> implements Deque<T>
 			for (j in 0...mBlockSize) block[j] = null;
 			mBlocks[i] = null;
 		}
-		mBlocks        = null;
-		mHeadBlock     = null;
+		mBlocks = null;
+		mHeadBlock = null;
 		mHeadBlockNext = null;
-		mTailBlock     = null;
+		mTailBlock = null;
 		mTailBlockPrev = null;
-		mIterator      = null;
+		mIterator = null;
 	}
 	
 	/**
-	 * Returns true if this deque contains the element <code>x</code>. 
+	 * Returns true if this deque contains the element <code>x</code>.
 	 * <o>n</o>
 	 */
 	public function contains(x:T):Bool
@@ -774,7 +774,7 @@ class ArrayedDeque<T> implements Deque<T>
 				for (j in 0...mBlockSize) block[j] = null;
 				mBlocks[i] = null;
 			}
-			mBlocks    = new Array();
+			mBlocks = new Array();
 			mBlocks[0] = ArrayUtil.alloc(mBlockSize);
 			mHeadBlock = mBlocks[0];
 			
@@ -784,12 +784,12 @@ class ArrayedDeque<T> implements Deque<T>
 			mPoolSize = 0;
 		}
 		
-		mHead           = 0;
-		mTail           = 1;
+		mHead = 0;
+		mTail = 1;
 		mTailBlockIndex = 0;
-		mTailBlock      = mHeadBlock;
-		mHeadBlockNext  = null;
-		mTailBlockPrev  = null;
+		mTailBlock = mHeadBlock;
+		mHeadBlockNext = null;
+		mTailBlockPrev = null;
 	}
 	
 	/**
@@ -824,7 +824,7 @@ class ArrayedDeque<T> implements Deque<T>
 	}
 	
 	/**
-	 * The total number of elements. 
+	 * The total number of elements.
 	 * <o>1</o>
 	 */
 	inline public function size():Int
@@ -902,16 +902,16 @@ class ArrayedDeque<T> implements Deque<T>
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{
 		var c = Type.createEmptyInstance(ArrayedDeque);
-		c.mBlockSize         = mBlockSize;
+		c.mBlockSize = mBlockSize;
 		c.mBlockSizeMinusOne = mBlockSizeMinusOne;
-		c.mHead              = mHead;
-		c.mTail              = mTail;
-		c.mTailBlockIndex    = mTailBlockIndex;
-		c.mBlockSizeShift    = mBlockSizeShift;
-		c.mPoolSize          = 0;
-		c.mPoolCapacity      = 0;
-		c.key                = HashKey.next();
-		c.maxSize            = M.INT32_MAX;
+		c.mHead = mHead;
+		c.mTail = mTail;
+		c.mTailBlockIndex = mTailBlockIndex;
+		c.mBlockSizeShift = mBlockSizeShift;
+		c.mPoolSize = 0;
+		c.mPoolCapacity = 0;
+		c.key = HashKey.next();
+		c.maxSize = M.INT32_MAX;
 		
 		var blocks = c.mBlocks = ArrayUtil.alloc(mTailBlockIndex + 1);
 		for (i in 0...mTailBlockIndex + 1)
@@ -989,7 +989,7 @@ class ArrayedDeque<T> implements Deque<T>
 	{
 		putBlock(mBlocks[0]);
 		mBlocks.shift();
-		mHead      = 0;
+		mHead = 0;
 		mHeadBlock = mHeadBlockNext;
 		mTailBlock = mBlocks[--mTailBlockIndex];
 		if (mTailBlockIndex > 0)
@@ -1007,11 +1007,11 @@ class ArrayedDeque<T> implements Deque<T>
 	function unshiftBlock()
 	{
 		mBlocks.unshift(getBlock());
-		mHead          = mBlockSizeMinusOne;
-		mHeadBlock     = mBlocks[0];
+		mHead = mBlockSizeMinusOne;
+		mHeadBlock = mBlocks[0];
 		mHeadBlockNext = mBlocks[1];
 		mTailBlockPrev = mBlocks[mTailBlockIndex++];
-		mTailBlock     = mBlocks[mTailBlockIndex];
+		mTailBlock = mBlocks[mTailBlockIndex];
 	}
 	
 	function popBlock()
@@ -1019,7 +1019,7 @@ class ArrayedDeque<T> implements Deque<T>
 		putBlock(mBlocks.pop());
 		mTailBlockIndex--;
 		mTailBlock = mTailBlockPrev;
-		mTail      = mBlockSizeMinusOne;
+		mTail = mBlockSizeMinusOne;
 		if (mTailBlockIndex > 0)
 			mTailBlockPrev = mBlocks[mTailBlockIndex - 1];
 		else
@@ -1032,9 +1032,9 @@ class ArrayedDeque<T> implements Deque<T>
 	function pushBlock()
 	{
 		mBlocks.push(getBlock());
-		mTail          = 0;
+		mTail = 0;
 		mTailBlockPrev = mTailBlock;
-		mTailBlock     = mBlocks[++mTailBlockIndex];
+		mTailBlock = mBlocks[++mTailBlockIndex];
 		if (mTailBlockIndex == 1)
 			mHeadBlockNext = mBlocks[1];
 	}
@@ -1101,12 +1101,12 @@ class ArrayedDequeIterator<T> implements de.polygonal.ds.Itr<T>
 	inline public function reset():Itr<T>
 	{
 		mBlockSize = mF.mBlockSize;
-		mBlocks    = mF.mBlocks;
-		mI         = mF.mHead + 1;
-		mB         = mI >> mF.mBlockSizeShift;
-		mS         = mF.size();
-		mBlock     = mBlocks[mB];
- 		mI        -= mB << mF.mBlockSizeShift;
+		mBlocks = mF.mBlocks;
+		mI = mF.mHead + 1;
+		mB = mI >> mF.mBlockSizeShift;
+		mS = mF.size();
+		mBlock = mBlocks[mB];
+ 		mI -= mB << mF.mBlockSizeShift;
 		return this;
 	}
 	

@@ -9,7 +9,7 @@ furnished to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all copies or
 substantial portions of the Software.
- 
+
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
 NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
 NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -30,46 +30,46 @@ import de.polygonal.ds.error.Assert.assert;
  *     static function main() {
  *         new Main();
  *     }
- *     
+ *
  *     var mPool:de.polygonal.ds.pooling.DynamicObjectPool&lt;Point&gt;;
- *     
+ *
  *     public function new() {
  *         //setup the pool
  *         mPool = new de.polygonal.ds.pooling.DynamicObjectPool(Point);
- *         
+ *
  *         //setup an algorithm that runs every 100ms
  *         var timer = new haxe.Timer(100);
  *         timer.run = algorithm;
  *     }
- *     
+ *
  *     function algorithm() {
  *         //add two points together and store the result in c
  *         var a = getPoint(10, 10);
  *         var b = getPoint(20, 20);
  *         var c = addition(a, b);
- *         
+ *
  *         //at this point the pool has allocated three point objects;
  *         //we could call mPool.get() to create a new point, but instead we reuse the points we already have
  *         mPool.put(a);
  *         mPool.put(b);
  *         mPool.put(c);
- *         
+ *
  *         //now the same calculation doesn't allocate any objects
  *         var a = getPoint(10, 10);
  *         var b = getPoint(20, 20);
  *         var c = addition(a, b);
- *         
+ *
  *         //after we are done, call reclaim() to mark all objects as available for reuse in the next iteration
  *         mPool.reclaim();
  *     }
- *     
+ *
  *     inline function getPoint(x:Float, y:Float):Point {
  *         var p = mPool.get();
  *         p.x = x;
  *         p.y = y;
  *         return p;
  *     }
- *     
+ *
  *     inline function addition(a:Point, b:Point):Point {
  *         var sum = mPool.get();
  *         sum.x = a.x + b.x;
@@ -77,7 +77,7 @@ import de.polygonal.ds.error.Assert.assert;
  *         return sum;
  *     }
  * }
- * 
+ *
  * class Point
  * {
  *     public var x:Float;
@@ -124,18 +124,18 @@ class DynamicObjectPool<T>
 	 */
 	public function new(C:Class<T> = null, fabricate:Void->T = null, factory:Factory<T> = null, capacity = M.INT32_MAX)
 	{
-		mClass     = C;
-		mArgs      = new Array<Dynamic>();
+		mClass = C;
+		mArgs = new Array<Dynamic>();
 		mFabricate = fabricate;
-		mFactory   = factory;
-		mCapacity  = capacity;
-		mPool      = new Array<T>();
+		mFactory = factory;
+		mCapacity = capacity;
+		mPool = new Array<T>();
 		mAllocType = 0;
-		mTop       = 0;
-		mSize      = 0;
-		mOldSize   = 0;
-		mUsed      = 0;
-		mUsedMax   = 0;
+		mTop = 0;
+		mSize = 0;
+		mOldSize = 0;
+		mUsed = 0;
+		mUsedMax = 0;
 		
 		if (C         != null) mAllocType |= Bits.BIT_01;
 		if (fabricate != null) mAllocType |= Bits.BIT_02;
@@ -159,11 +159,11 @@ class DynamicObjectPool<T>
 	public function free()
 	{
 		for (i in 0...mSize) mPool[i] = null;
-		mClass     = null;
-		mArgs      = null;
+		mClass = null;
+		mArgs = null;
 		mFabricate = null;
-		mFactory   = null;
-		mPool      = null;
+		mFactory = null;
+		mPool = null;
 	}
 	
 	/**
@@ -184,7 +184,7 @@ class DynamicObjectPool<T>
 	}
 	
 	/**
-	 * The total number of objects in use. 
+	 * The total number of objects in use.
 	 */
 	inline public function used():Int
 	{

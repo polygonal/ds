@@ -9,7 +9,7 @@ furnished to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all copies or
 substantial portions of the Software.
- 
+
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
 NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
 NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -64,16 +64,16 @@ class HashMap<K, T> implements Map<K, T>
 	/**
 	 * @param weak if true, weak keys are used. A key/value pair is lost when no other object
 	 * besides this object holds a reference to the key. Default is false.
-	 * 
+	 *
 	 * @param maxSize the maximum allowed size of the stack.
 	 * The default value of -1 indicates that there is no upper limit.
 	 */
 	public function new(weak = false, maxSize = -1)
 	{
-		mMap          = new flash.utils.Dictionary(mWeak = weak);
-		mSize         = 0;
-		mIterator     = null;
-		key           = HashKey.next();
+		mMap = new flash.utils.Dictionary(mWeak = weak);
+		mSize = 0;
+		mIterator = null;
+		key = HashKey.next();
 		reuseIterator = false;
 		
 		#if debug
@@ -89,7 +89,7 @@ class HashMap<K, T> implements Map<K, T>
 	 * @return true if <code>key</code> was successfully remapped to <code>val</code>.
 	 * @throws de.polygonal.ds.error.AssertError <code>key</code>/<code>val</code> is null (debug only).
 	 */
-	inline public function remap(key:K, val:T):Bool
+	public function remap(key:K, val:T):Bool
 	{
 		#if debug
 		var x:Null<K> = key;
@@ -164,7 +164,7 @@ class HashMap<K, T> implements Map<K, T>
 	 * <o>n</o>
 	 * @throws de.polygonal.ds.error.AssertError <code>val</code> is null (debug only).
 	 */
-	inline public function has(val:T):Bool
+	public function has(val:T):Bool
 	{
 		#if debug
 		var x:Null<T> = val;
@@ -222,7 +222,7 @@ class HashMap<K, T> implements Map<K, T>
 	 * @throws de.polygonal.ds.error.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
 	 * @throws de.polygonal.ds.error.AssertError <code>key</code>/<code>val</code> is null (debug only).
 	 */
-	inline public function set(key:K, val:T):Bool
+	public function set(key:K, val:T):Bool
 	{
 		#if debug
 		var x:Null<K> = key;
@@ -251,7 +251,7 @@ class HashMap<K, T> implements Map<K, T>
 	 * @return true if <code>key</code> is successfully removed, false if <code>key</code> does not exist.
 	 * @throws de.polygonal.ds.error.AssertError <code>key</code> is null (debug only).
 	 */
-	inline public function clr(key:K):Bool
+	public function clr(key:K):Bool
 	{
 		#if debug
 		var x:Null<K> = key;
@@ -360,7 +360,7 @@ class HashMap<K, T> implements Map<K, T>
 	 * <o>n</o>
 	 * @param purge if true, elements are nullified upon removal.
 	 */
-	inline public function clear(purge = false)
+	public function clear(purge = false)
 	{
 		var a:Array<K> = untyped __keys__(mMap);
 		for (key in a) untyped __delete__(mMap, key);

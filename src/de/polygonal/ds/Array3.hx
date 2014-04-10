@@ -60,12 +60,12 @@ class Array3<T> implements Collection<T>
 		assert(width >= 2 && height >= 2 && depth >= 2, 'invalid size (width: $width, height: $height, depth: $depth)');
 		#end
 		
-		mW            = width;
-		mH            = height;
-		mD            = depth;
-		mA            = ArrayUtil.alloc(size());
-		mIterator     = null;
-		key           = HashKey.next();
+		mW = width;
+		mH = height;
+		mD = depth;
+		mA = ArrayUtil.alloc(size());
+		mIterator = null;
+		key = HashKey.next();
 		reuseIterator = false;
 	}
 	
@@ -468,9 +468,9 @@ class Array3<T> implements Collection<T>
 		var t = mA;
 		mA = ArrayUtil.alloc(width * height * depth);
 		
-		var minX = width  < mW ? width  : mW;
+		var minX = width < mW ? width : mW;
 		var minY = height < mH ? height : mH;
-		var zmin = depth  < mD ? depth  : mD;
+		var zmin = depth < mD ? depth : mD;
 		
 		for (z in 0...zmin)
 		{
@@ -598,7 +598,7 @@ class Array3<T> implements Collection<T>
 	}
 	
 	/**
-	 * Returns true if this three-dimensional array contains the element <code>x</code>. 
+	 * Returns true if this three-dimensional array contains the element <code>x</code>.
 	 * <o>n</o>
 	 */
 	public function contains(x:T):Bool
@@ -672,7 +672,7 @@ class Array3<T> implements Collection<T>
 	}
 	
 	/**
-	 * Unsupported operation - always returns false in release mode.
+	 * Unsupported operation - always returns false.
 	 */
 	public function isEmpty():Bool
 	{

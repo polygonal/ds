@@ -9,7 +9,7 @@ furnished to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all copies or
 substantial portions of the Software.
- 
+
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
 NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
 NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -29,7 +29,7 @@ private
 typedef BitField =
 {
 	/**
-	 * The bit field. 
+	 * The bit field.
 	 */
 	private var mBits:Int;
 }
@@ -40,7 +40,7 @@ typedef BitField =
 class BitFlags
 {
 	/**
-	 * Returns <code>x</code> AND <code>mask</code>. 
+	 * Returns <code>x</code> AND <code>mask</code>.
 	 */
 	inline public static function getf(x:BitField, mask:Int):Int
 	{
@@ -48,7 +48,7 @@ class BitFlags
 	}
 	
 	/**
-	 * Returns <code>x</code> AND <code>mask</code> != 0 
+	 * Returns <code>x</code> AND <code>mask</code> != 0
 	 */
 	inline public static function hasf(x:BitField, mask:Int):Bool
 	{
@@ -56,7 +56,7 @@ class BitFlags
 	}
 	
 	/**
-	 * Returns <code>x</code> AND <code>mask</code> == <code>mask</code> (<code>x</code> includes all <code>mask</code> bits). 
+	 * Returns <code>x</code> AND <code>mask</code> == <code>mask</code> (<code>x</code> includes all <code>mask</code> bits).
 	 */
 	inline public static function incf(x:BitField, mask:Int):Bool
 	{
@@ -64,7 +64,7 @@ class BitFlags
 	}
 	
 	/**
-	 * <code>x</code> = <code>x</code> | <code>mask</code>. 
+	 * <code>x</code> = <code>x</code> | <code>mask</code>.
 	 */
 	inline public static function setf(x:BitField, mask:Int)
 	{
@@ -72,7 +72,7 @@ class BitFlags
 	}
 	
 	/**
-	 * <code>x</code> = <code>x</code> AND ~<code>mask</code>. 
+	 * <code>x</code> = <code>x</code> AND ~<code>mask</code>.
 	 */
 	inline public static function clrf(x:BitField, mask:Int)
 	{
@@ -80,7 +80,7 @@ class BitFlags
 	}
 	
 	/**
-	 * <code>x</code> = <code>x</code> ^ <code>mask</code>. 
+	 * <code>x</code> = <code>x</code> ^ <code>mask</code>.
 	 */
 	inline public static function invf(x:BitField, mask:Int)
 	{
@@ -115,7 +115,7 @@ class BitFlags
 	}
 	
 	/**
-	 * Calls <code>setf(x, bits)</code> if <code>expr</code> is true or <code>clrf(x, bits)</code> if <code>expr</code> is false. 
+	 * Calls <code>setf(x, bits)</code> if <code>expr</code> is true or <code>clrf(x, bits)</code> if <code>expr</code> is false.
 	 */
 	inline public static function setfif(x:BitField, bits:Int, expr:Bool)
 	{

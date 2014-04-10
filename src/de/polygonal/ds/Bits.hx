@@ -9,7 +9,7 @@ furnished to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all copies or
 substantial portions of the Software.
- 
+
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
 NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
 NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -28,166 +28,166 @@ import haxe.macro.Context;
 /**
  * <p>Helper class for working with bit flags.</p>
  */
-class Bits 
+class Bits
 {
 	/**
-	 * 1 << 00 (0x00000001) 
+	 * 1 << 00 (0x00000001)
 	 */
 	inline public static var BIT_01 = 1 << 00;
 	/**
-	 * 1 << 01 (0x00000002) 
+	 * 1 << 01 (0x00000002)
 	 */
 	inline public static var BIT_02 = 1 << 01;
 	/**
-	 * 1 << 02 (0x00000004) 
+	 * 1 << 02 (0x00000004)
 	 */
 	inline public static var BIT_03 = 1 << 02;
 	/**
-	 * 1 << 03 (0x00000008) 
+	 * 1 << 03 (0x00000008)
 	 */
 	inline public static var BIT_04 = 1 << 03;
 	/**
-	 * 1 << 04 (0x00000010) 
+	 * 1 << 04 (0x00000010)
 	 */
 	inline public static var BIT_05 = 1 << 04;
 	/**
-	 * 1 << 05 (0x00000020) 
+	 * 1 << 05 (0x00000020)
 	 */
 	inline public static var BIT_06 = 1 << 05;
 	/**
-	 * 1 << 06 (0x00000040) 
+	 * 1 << 06 (0x00000040)
 	 */
 	inline public static var BIT_07 = 1 << 06;
 	/**
-	 * 1 << 07 (0x00000080) 
+	 * 1 << 07 (0x00000080)
 	 */
 	inline public static var BIT_08 = 1 << 07;
 	/**
-	 * 1 << 08 (0x00000100) 
+	 * 1 << 08 (0x00000100)
 	 */
 	inline public static var BIT_09 = 1 << 08;
 	/**
-	 * 1 << 09 (0x00000200) 
+	 * 1 << 09 (0x00000200)
 	 */
 	inline public static var BIT_10 = 1 << 09;
 	/**
-	 * 1 << 10 (0x00000400) 
+	 * 1 << 10 (0x00000400)
 	 */
 	inline public static var BIT_11 = 1 << 10;
 	/**
-	 * 1 << 11 (0x00000800) 
+	 * 1 << 11 (0x00000800)
 	 */
 	inline public static var BIT_12 = 1 << 11;
 	/**
-	 * 1 << 12 (0x00001000) 
+	 * 1 << 12 (0x00001000)
 	 */
 	inline public static var BIT_13 = 1 << 12;
 	/**
-	 * 1 << 13 (0x00002000) 
+	 * 1 << 13 (0x00002000)
 	 */
 	inline public static var BIT_14 = 1 << 13;
 	/**
-	 * 1 << 14 (0x00004000) 
+	 * 1 << 14 (0x00004000)
 	 */
 	inline public static var BIT_15 = 1 << 14;
 	/**
-	 * 1 << 15 (0x00008000) 
+	 * 1 << 15 (0x00008000)
 	 */
 	inline public static var BIT_16 = 1 << 15;
 	/**
-	 * 1 << 16 (0x00010000) 
+	 * 1 << 16 (0x00010000)
 	 */
 	inline public static var BIT_17 = 1 << 16;
 	/**
-	 * 1 << 17 (0x00020000) 
+	 * 1 << 17 (0x00020000)
 	 */
 	inline public static var BIT_18 = 1 << 17;
 	/**
-	 * 1 << 18 (0x00040000) 
+	 * 1 << 18 (0x00040000)
 	 */
 	inline public static var BIT_19 = 1 << 18;
 	/**
-	 * 1 << 19 (0x00080000) 
+	 * 1 << 19 (0x00080000)
 	 */
 	inline public static var BIT_20 = 1 << 19;
 	/**
-	 * 1 << 20 (0x00100000) 
+	 * 1 << 20 (0x00100000)
 	 */
 	inline public static var BIT_21 = 1 << 20;
 	/**
-	 * 1 << 21 (0x00200000) 
+	 * 1 << 21 (0x00200000)
 	 */
 	inline public static var BIT_22 = 1 << 21;
 	/**
-	 * 1 << 22 (0x00400000) 
+	 * 1 << 22 (0x00400000)
 	 */
 	inline public static var BIT_23 = 1 << 22;
 	/**
-	 * 1 << 23 (0x00800000) 
+	 * 1 << 23 (0x00800000)
 	 */
 	inline public static var BIT_24 = 1 << 23;
 	/**
-	 * 1 << 24 (0x01000000) 
+	 * 1 << 24 (0x01000000)
 	 */
 	inline public static var BIT_25 = 1 << 24;
 	/**
-	 * 1 << 25 (0x02000000) 
+	 * 1 << 25 (0x02000000)
 	 */
 	inline public static var BIT_26 = 1 << 25;
 	/**
-	 * 1 << 26 (0x04000000) 
+	 * 1 << 26 (0x04000000)
 	 */
 	inline public static var BIT_27 = 1 << 26;
 	/**
-	 * 1 << 27 (0x08000000) 
+	 * 1 << 27 (0x08000000)
 	 */
 	inline public static var BIT_28 = 1 << 27;
 	/**
-	 * 1 << 28 (0x10000000) 
+	 * 1 << 28 (0x10000000)
 	 */
 	inline public static var BIT_29 = 1 << 28;
 	/**
-	 * 1 << 29 (0x20000000) 
+	 * 1 << 29 (0x20000000)
 	 */
 	inline public static var BIT_30 = 1 << 29;
 	
 	/**
-	 * 1 << 30 (0x40000000) 
+	 * 1 << 30 (0x40000000)
 	 */
 	inline public static var BIT_31 = 1 << 30;
 	
 	/**
-	 * 1 << 31 (0x80000000) 
+	 * 1 << 31 (0x80000000)
 	 */
 	inline public static var BIT_32 = 1 << 31;
 	
 	/**
-	 * 0xFFFFFFFF 
+	 * 0xFFFFFFFF
 	 */
 	inline public static var ALL = -1;
 	
 	/**
-	 * Returns <code>x</code> AND <code>mask</code>. 
+	 * Returns <code>x</code> AND <code>mask</code>.
 	 */
 	inline public static function getBits(x:Int, mask:Int):Int { return x & mask; }
 	
 	/**
-	 * Returns true if <code>x</code> AND <code>mask</code> != 0. 
+	 * Returns true if <code>x</code> AND <code>mask</code> != 0.
 	 */
 	inline public static function hasBits(x:Int, mask:Int):Bool { return (x & mask) != 0; }
 	
 	/**
-	 * Returns true if <code>x</code> AND <code>mask</code> == <code>mask</code> (<code>x</code> includes all <code>mask</code> bits). 
+	 * Returns true if <code>x</code> AND <code>mask</code> == <code>mask</code> (<code>x</code> includes all <code>mask</code> bits).
 	 */
 	inline public static function incBits(x:Int, mask:Int):Bool { return (x & mask) == mask; }
 	
 	/**
-	 * Returns <code>x</code> OR <code>mask</code>. 
+	 * Returns <code>x</code> OR <code>mask</code>.
 	 */
 	inline public static function setBits(x:Int, mask:Int):Int { return x | mask; }
 	
 	/**
-	 * Returns <code>x</code> AND ~<code>mask</code>. 
+	 * Returns <code>x</code> AND ~<code>mask</code>.
 	 */
 	inline public static function clrBits(x:Int, mask:Int):Int
 	{
@@ -195,7 +195,7 @@ class Bits
 	}
 	
 	/**
-	 * Returns <code>x</code> ^ <code>mask</code>. 
+	 * Returns <code>x</code> ^ <code>mask</code>.
 	 */
 	inline public static function invBits(x:Int, mask:Int):Int { return x ^ mask; }
 	
@@ -268,9 +268,9 @@ class Bits
 		#if debug
 		assert
 		(
-			min < max  &&
+			min < max &&
 			min != max &&
-			min >= 0   &&
+			min >= 0 &&
 			min < 32,
 			'invalid range (min: $min, max: $max)'
 		);
@@ -281,7 +281,7 @@ class Bits
 	}
 	
 	/**
-	 * Constructs a mask of n bits. 
+	 * Constructs a mask of n bits.
 	 */
 	inline public static function mask(n:Int):Int
 	{
@@ -363,7 +363,7 @@ class Bits
 	}
 	
 	/**
-	 * Returns the most significant bit of <code>x</code>. 
+	 * Returns the most significant bit of <code>x</code>.
 	 */
 	inline public static function msb(x:Int):Int
 	{
@@ -376,12 +376,12 @@ class Bits
 	}
 	
 	/**
-	 * Bitwise rotates the integer <code>x</code> by <code>n</code> places to the left. 
+	 * Bitwise rotates the integer <code>x</code> by <code>n</code> places to the left.
 	 */
 	inline public static function rol(x:Int, n:Int) { return (x << n) | (x >>> (32 - n)); }
 	
 	/**
-	 * Bitwise rotates the integer <code>x</code> by <code>n</code> places to the right. 
+	 * Bitwise rotates the integer <code>x</code> by <code>n</code> places to the right.
 	 */
 	inline public static function ror(x:Int, n:Int) { return (x >>> n) | (x << (32 - n)); }
 	
@@ -403,7 +403,7 @@ class Bits
 	}
 	
 	/**
-	 * Flips the bytes within the WORD <code>x</code> (2 byte) to convert between little endian and big endian format. 
+	 * Flips the bytes within the WORD <code>x</code> (2 byte) to convert between little endian and big endian format.
 	 */
 	inline public static function flipWORD(x:Int):Int
 	{
@@ -411,7 +411,7 @@ class Bits
 	}
 	
 	/**
-	 * Flips the bytes within the DWORD <code>x</code> (4 byte) to convert between little endian and big endian format. 
+	 * Flips the bytes within the DWORD <code>x</code> (4 byte) to convert between little endian and big endian format.
 	 */
 	inline public static function flipDWORD(x:Int):Int
 	{
@@ -449,7 +449,7 @@ class Bits
 	}
 	
 	/**
-	 * Extracts a signed short from the lower 16 bits (LSB 0). 
+	 * Extracts a signed short from the lower 16 bits (LSB 0).
 	 */
 	inline public static function unpackI16Lo(x:Int):Int
 	{
@@ -457,7 +457,7 @@ class Bits
 	}
 	
 	/**
-	 * Extracts a signed short from the upper 16 bits (LSB 0). 
+	 * Extracts a signed short from the upper 16 bits (LSB 0).
 	 */
 	inline public static function unpackI16Hi(x:Int):Int
 	{
@@ -466,7 +466,7 @@ class Bits
 	
 	
 	/**
-	 * Extracts an unsigned short from the lower 16 bits (LSB 0). 
+	 * Extracts an unsigned short from the lower 16 bits (LSB 0).
 	 */
 	inline public static function unpackUI16Lo(x:Int):Int
 	{
@@ -474,7 +474,7 @@ class Bits
 	}
 	
 	/**
-	 * Extracts an unsigned short from the upper 16 bits (LSB 0). 
+	 * Extracts an unsigned short from the upper 16 bits (LSB 0).
 	 */
 	inline public static function unpackUI16Hi(x:Int):Int
 	{

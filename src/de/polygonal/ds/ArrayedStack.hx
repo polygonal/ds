@@ -9,7 +9,7 @@ furnished to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all copies or
 substantial portions of the Software.
- 
+
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
 NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
 NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -179,7 +179,6 @@ class ArrayedStack<T> implements Stack<T>
 		return _get(--mTop);
 	}
 	
-	//TODO implement
 	inline public function popMany(n:Int):T
 	{
 		#if debug
@@ -244,7 +243,7 @@ class ArrayedStack<T> implements Stack<T>
 	 * <o>n</o>
 	 * @throws de.polygonal.ds.error.AssertError <em>size()</em> >= <code>n</code> (debug only).
 	 */
-	inline public function rotRight(n:Int)
+	public function rotRight(n:Int)
 	{
 		#if debug
 		assert(mTop >= n, "size() < n");
@@ -273,7 +272,7 @@ class ArrayedStack<T> implements Stack<T>
 	 * <o>n</o>
 	 * @throws de.polygonal.ds.error.AssertError <em>size()</em> >= <code>n</code> (debug only).
 	 */
-	inline public function rotLeft(n:Int)
+	public function rotLeft(n:Int)
 	{
 		#if debug
 		assert(mTop >= n, "size() < n");
@@ -598,7 +597,7 @@ class ArrayedStack<T> implements Stack<T>
 	 * <o>1 or n if <code>purge</code> is true</o>
 	 * @param purge if true, elements are nullified upon removal.
 	 */
-	inline public function clear(purge = false)
+	public function clear(purge = false)
 	{
 		if (purge)
 		{

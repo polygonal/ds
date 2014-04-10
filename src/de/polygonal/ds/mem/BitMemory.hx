@@ -9,7 +9,7 @@ furnished to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all copies or
 substantial portions of the Software.
- 
+
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
 NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
 NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -216,12 +216,12 @@ class BitMemory extends MemoryAccess
 	#end
 	
 	/**
-	 * The size measured in bits. 
+	 * The size measured in bits.
 	 */
 	public var size(default, null):Int;
 	
 	/**
-	 * Creates a bit vector capable of storing a total of <code>size</code> bits. 
+	 * Creates a bit vector capable of storing a total of <code>size</code> bits.
 	 */
 	public function new(size:Int, name = "?")
 	{
@@ -243,7 +243,7 @@ class BitMemory extends MemoryAccess
 	#end
 	
 	/**
-	 * Creates a deep copy of this object. 
+	 * Creates a deep copy of this object.
 	 */
 	public function clone():BitMemory
 	{
@@ -305,7 +305,7 @@ class BitMemory extends MemoryAccess
 		var newBytes = ((size & (32 - 1)) > 0 ? ((size >> 5) + 1) : (size >> 5)) << 2;
 		
 		#if alchemy
-		super.resize(newBytes);	
+		super.resize(newBytes);
 		#else
 			var tmp = new Vector<Int>(newBytes >> 2);
 			for (i in 0...M.min(newSize, size)) tmp[i] = mData[i];

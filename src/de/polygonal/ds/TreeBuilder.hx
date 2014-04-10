@@ -9,7 +9,7 @@ furnished to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all copies or
 substantial portions of the Software.
- 
+
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
 NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
 NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -132,7 +132,7 @@ class TreeBuilder<T>
 	 * <o>n</o>
 	 * @throws de.polygonal.ds.error.AssertError invalid pointer (debug only).
 	 */
-	inline public function root()
+	public function root()
 	{
 		#if debug
 		assert(valid(), "invalid vertical pointer");
@@ -267,7 +267,7 @@ class TreeBuilder<T>
 	}
 	
 	/**
-	 * Returns true if the horizontal pointer is valid. 
+	 * Returns true if the horizontal pointer is valid.
 	 * <o>1</o>
 	 */
 	inline public function childValid():Bool
@@ -280,7 +280,7 @@ class TreeBuilder<T>
 	 * <o>1</o>
 	 * @throws de.polygonal.ds.error.AssertError invalid vertical pointer (debug only).
 	 */
-	inline public function appendChild(x:T):TreeNode<T>
+	public function appendChild(x:T):TreeNode<T>
 	{
 		#if debug
 		assert(valid(), "invalid vertical pointer");
@@ -295,7 +295,7 @@ class TreeBuilder<T>
 	 * <o>1</o>
 	 * @throws de.polygonal.ds.error.AssertError invalid vertical pointer (debug only).
 	 */
-	inline public function prependChild(x:T):TreeNode<T>
+	public function prependChild(x:T):TreeNode<T>
 	{
 		#if debug
 		assert(valid(), "invalid vertical pointer");
@@ -319,7 +319,7 @@ class TreeBuilder<T>
 	 * <o>1</o>
 	 * @throws de.polygonal.ds.error.AssertError invalid vertical pointer (debug only).
 	 */
-	inline public function insertBeforeChild(x:T):TreeNode<T>
+	public function insertBeforeChild(x:T):TreeNode<T>
 	{
 		#if debug
 		assert(valid(), "invalid vertical pointer");
@@ -349,7 +349,7 @@ class TreeBuilder<T>
 	 * <o>1</o>
 	 * @throws de.polygonal.ds.error.AssertError invalid vertical pointer (debug only).
 	 */
-	inline public function insertAfterChild(x:T):TreeNode<T>
+	public function insertAfterChild(x:T):TreeNode<T>
 	{
 		#if debug
 		assert(valid(), "invalid vertical pointer");
@@ -379,7 +379,7 @@ class TreeBuilder<T>
 	 * <o>1</o>
 	 * @return true if the child node was successfully removed.
 	 */
-	inline public function removeChild():Bool
+	public function removeChild():Bool
 	{
 		if (valid() && childValid())
 		{
@@ -401,19 +401,19 @@ class TreeBuilder<T>
 	}
 	
 	/**
-	 * Returns a string representing the current object. 
+	 * Returns a string representing the current object.
 	 */
 	public function toString():String
 	{
 		return "{ TreeBuilder V: " + (valid() ? mNode.val : cast null) + ", H: " + (childValid() ? mChild.val : cast null) + " }";
 	}
 	
-	inline function reset()
+	function reset()
 	{
 		if (valid()) mChild = mNode.children;
 	}
 	
-	inline function createChildNode(x:T, append:Bool)
+	function createChildNode(x:T, append:Bool)
 	{
 		if (append)
 			return new TreeNode<T>(x, mNode);
@@ -425,7 +425,7 @@ class TreeBuilder<T>
 		}
 	}
 	
-	inline function getTail(node:TreeNode<T>):TreeNode<T>
+	function getTail(node:TreeNode<T>):TreeNode<T>
 	{
 		var tail = node;
 		while (tail.hasNextSibling()) tail.next;

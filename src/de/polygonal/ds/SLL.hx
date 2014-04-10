@@ -9,7 +9,7 @@ furnished to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all copies or
 substantial portions of the Software.
- 
+
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
 NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
 NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -39,12 +39,12 @@ class SLL<T> implements Collection<T>
 	public var key:Int;
 	
 	/**
-	 * The head of this list or null if this list is empty. 
+	 * The head of this list or null if this list is empty.
 	 */
 	public var head:SLLNode<T>;
 	
 	/**
-	 * The tail of this list or null if this list is empty. 
+	 * The tail of this list or null if this list is empty.
 	 */
 	public var tail:SLLNode<T>;
 	
@@ -94,10 +94,10 @@ class SLL<T> implements Collection<T>
 		#end
 		
 		mReservedSize = reservedSize;
-		mSize         = 0;
-		mPoolSize     = 0;
-		mCircular     = false;
-		mIterator     = null;    
+		mSize = 0;
+		mPoolSize = 0;
+		mCircular = false;
+		mIterator = null;
 		
 		if (reservedSize > 0)
 		{
@@ -364,7 +364,7 @@ class SLL<T> implements Collection<T>
 	 * @throws de.polygonal.ds.error.AssertError list is empty (debug only).
 	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
 	 */
-	inline public function getNodeAt(i:Int):SLLNode<T>
+	public function getNodeAt(i:Int):SLLNode<T>
 	{
 		#if debug
 		assert(mSize > 0, "list is empty");
@@ -811,7 +811,7 @@ class SLL<T> implements Collection<T>
 	 * trace(list);</pre>
 	 * <pre class="console">
 	 * { SLL size: 4 }
- 	 * [ head 
+ 	 * [ head
 	 *   0
 	 *   1
 	 *   2
@@ -970,7 +970,7 @@ class SLL<T> implements Collection<T>
 	 * }
 	 * </pre>
 	 * @see <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
-	 * 
+	 *
 	 */
 	public function iterator():Itr<T>
 	{

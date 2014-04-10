@@ -9,7 +9,7 @@ furnished to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all copies or
 substantial portions of the Software.
- 
+
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
 NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
 NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -72,7 +72,7 @@ class HashSet<T:Hashable> implements Set<T>
 	 * This defines the space-time trade off of the set.
 	 * Increasing the <code>slotCount</code> reduces the computation time (read/write/access) of the set at the cost of increased memory use.
 	 * This value is fixed and can only be changed by calling <em>rehash()</em>, which rebuilds the set (expensive).
-	 * 
+	 *
 	 * @param capacity the initial physical space for storing the elements at the time the set is created.
 	 * This is also the minimum allowed size of the set and cannot be changed in the future.
 	 * If omitted, the initial <em>capacity</em> equals <code>slotCount</code>.
@@ -86,10 +86,10 @@ class HashSet<T:Hashable> implements Set<T>
 	 * Thus adding an element when <em>size()</em> equals <em>capacity</em> throws an error.
 	 * Otherwise the <em>capacity</em> is automatically adjusted.
 	 * Default is true.
-	 * 
+	 *
 	 * @param maxSize the maximum allowed size of this hash set.
 	 * The default value of -1 indicates that there is no upper limit.
-	 * 
+	 *
 	 * @throws de.polygonal.ds.error.AssertError <code>slotCount</code> is not a power of two (debug only).
 	 * @throws de.polygonal.ds.error.AssertError <code>capacity</code> is not a power of two (debug only).
 	 * @throws de.polygonal.ds.error.AssertError <code>capacity</code> is &lt; 2 (debug only).
@@ -197,12 +197,12 @@ class HashSet<T:Hashable> implements Set<T>
 	 *         super();
 	 *         this.value = value;
 	 *     }
-	 *     
+	 *
 	 *     public function toString():String {
 	 *         return "{ Foo value: " + value + " }";
 	 *     }
 	 * }
-	 * 
+	 *
 	 * class Main
 	 * {
 	 *     static function main()
@@ -318,7 +318,7 @@ class HashSet<T:Hashable> implements Set<T>
 	}
 	
 	/**
-	 * Same as <em>has()</em>. 
+	 * Same as <em>has()</em>.
 	 * <o>n</o>
 	 * @throws de.polygonal.ds.error.AssertError <code>x</code> is null (debug only).
 	 */
@@ -333,7 +333,7 @@ class HashSet<T:Hashable> implements Set<T>
 	 * @return true if <code>x</code> was successfully removed, false if <code>x</code> does not exist.
 	 * @throws de.polygonal.ds.error.AssertError <code>x</code> is null (debug only).
 	 */
-	inline public function remove(x:T):Bool
+	public function remove(x:T):Bool
 	{
 		var i = mH.get(_key(x));
 		if (i == IntIntHashTable.KEY_ABSENT)
@@ -360,7 +360,7 @@ class HashSet<T:Hashable> implements Set<T>
 	}
 	
 	/**
-	 * The total number of elements. 
+	 * The total number of elements.
 	 * <o>1</o>
 	 */
 	public function size():Int
@@ -411,7 +411,7 @@ class HashSet<T:Hashable> implements Set<T>
 	}
 	
 	/**
-	 * Returns true if the set is empty. 
+	 * Returns true if the set is empty.
 	 * <o>1</o>
 	 */
 	inline public function isEmpty():Bool

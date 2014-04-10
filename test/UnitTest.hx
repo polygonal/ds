@@ -19,8 +19,6 @@ class UnitTest extends TestRunner
 			#end
 		#end
 		
-		//spacing!
-		
 		add(new TestArray2());
 		add(new TestArray3());
 		add(new TestArrayedDeque());

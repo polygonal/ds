@@ -9,7 +9,7 @@ furnished to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all copies or
 substantial portions of the Software.
- 
+
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
 NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
 NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -32,17 +32,17 @@ import de.polygonal.ds.error.Assert.assert;
 class DLLNode<T>
 {
 	/**
-	 * The node's data. 
+	 * The node's data.
 	 */
 	public var val:T;
 	
 	/**
-	 * The next node in the list being referenced or null if this node has no next node. 
+	 * The next node in the list being referenced or null if this node has no next node.
 	 */
 	public var next:DLLNode<T>;
 	
 	/**
-	 * The previous node in the list being referenced or null if this node has no previous node. 
+	 * The previous node in the list being referenced or null if this node has no previous node.
 	 */
 	public var prev:DLLNode<T>;
 	
@@ -280,20 +280,11 @@ class DLLNode<T>
 	}
 	
 	/**
-	 * Returns a string representing the current object. 
+	 * Returns a string representing the current object.
 	 */
 	public function toString():String
 	{
 		return '{ DLLNode ${Std.string(val)} }';
-	}
-	
-	inline function _unlink():DLLNode<T>
-	{
-		var t = next;
-		if (hasPrev()) prev.next = next;
-		if (hasNext()) next.prev = prev;
-		next = prev = null;
-		return t;
 	}
 	
 	inline function insertAfter(node:DLLNode<T>)
@@ -310,5 +301,14 @@ class DLLNode<T>
 		node.prev = prev;
 		if (hasPrev()) prev.next = node;
 		prev = node;
+	}
+	
+	inline function _unlink():DLLNode<T>
+	{
+		var t = next;
+		if (hasPrev()) prev.next = next;
+		if (hasNext()) next.prev = prev;
+		next = prev = null;
+		return t;
 	}
 }

@@ -9,7 +9,7 @@ furnished to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all copies or
 substantial portions of the Software.
- 
+
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
 NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
 NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -30,7 +30,7 @@ interface Collection<T> extends Hashable
 	function free():Void;
 	
 	/**
-	 * Returns true if this collection contains the element <code>x</code>. 
+	 * Returns true if this collection contains the element <code>x</code>.
 	 */
 	function contains(x:T):Bool;
 	
@@ -57,7 +57,7 @@ interface Collection<T> extends Hashable
 	 * for (element in c) {
 	 *     trace(element);
 	 * }
-	 * 
+	 *
 	 * //ActionScript 3.0:
 	 * var c:Collection = new *(...);
 	 * var itr:Itr = c.iterator();
@@ -70,22 +70,22 @@ interface Collection<T> extends Hashable
 	function iterator():Itr<T>;
 	
 	/**
-	 * Returns true if this collection is empty. 
+	 * Returns true if this collection is empty.
 	 */
 	function isEmpty():Bool;
 	
 	/**
-	 * Returns the total number of elements in this collection. 
+	 * Returns the total number of elements in this collection.
 	 */
 	function size():Int;
 	
 	/**
-	 * Returns an array storing all elements in this collection. 
+	 * Returns an array storing all elements in this collection.
 	 */
 	function toArray():Array<T>;
 	
 	/**
-	 * Returns a Vector.&lt;T&gt; object storing all elements in this collection. 
+	 * Returns a Vector.&lt;T&gt; object storing all elements in this collection.
 	 */
 	function toVector():Vector<T>;
 	
@@ -96,26 +96,26 @@ interface Collection<T> extends Hashable
 	 * class Foo implements de.polygonal.ds.Cloneable&lt;Foo&gt;
 	 * {
 	 *     public var value:Int;
-	 *     
+	 *
 	 *     public function new(value:Int) {
 	 *         this.value = value;
 	 *     }
-	 *     
+	 *
 	 *     public function clone():Foo {
 	 *         return new Foo(value);
 	 *     }
 	 * }
-	 * 
+	 *
 	 * class Main
 	 * {
 	 *     var c:Collection&lt;Foo&gt; = new *&lt;Foo&gt;(...);
-	 * 
+	 *
 	 *     //shallow copy
 	 *     var clone = c.clone(true);
-	 * 
+	 *
 	 *     //deep copy
 	 *     var clone = c.clone(false);
-	 * 
+	 *
 	 *     //deep copy using a custom function to do the actual work
 	 *     var clone = c.clone(false, function(existingValue:Foo) { return new Foo(existingValue.value); })
 	 * }</pre>

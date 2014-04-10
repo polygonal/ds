@@ -9,7 +9,7 @@ furnished to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all copies or
 substantial portions of the Software.
- 
+
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
 NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
 NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -40,22 +40,22 @@ import flash.Memory;
 class IntIntHashTable implements Map<Int, Int>
 {
 	/**
-	 * Return code for a non-existing key. 
+	 * Return code for a non-existing key.
 	 */
 	inline public static var KEY_ABSENT = M.INT32_MIN;
 	
 	/**
-	 * Return code for a non-existing value. 
+	 * Return code for a non-existing value.
 	 */
 	inline public static var VAL_ABSENT = M.INT32_MIN;
 	
 	/**
-	 * Used internally. 
+	 * Used internally.
 	 */
 	inline public static var EMPTY_SLOT = -1;
 	
 	/**
-	 * Used internally. 
+	 * Used internally.
 	 */
 	inline public static var NULL_POINTER = -1;
 	
@@ -106,7 +106,7 @@ class IntIntHashTable implements Map<Int, Int>
 	 * This defines the space-time trade off of the hash table.
 	 * Increasing the <code>slotCount</code> reduces the computation time (read/write/access) of the hash table at the cost of increased memory use.
 	 * This value is fixed and can only be changed by calling <em>rehash()</em>, which rebuilds the hash table (expensive).
-	 * 
+	 *
 	 * @param capacity the initial physical space for storing the key/value pairs at the time the hash table is created.
 	 * This is also the minimum allowed size of the hash table and cannot be changed in the future. If omitted, the initial <em>capacity</em> equals <code>slotCount</code>.
 	 * The <em>capacity</em> is automatically adjusted according to the storage requirements based on two rules:
@@ -114,15 +114,15 @@ class IntIntHashTable implements Map<Int, Int>
 	 * <li>If the hash table runs out of space, the <em>capacity</em> is doubled (if <code>isResizable</code> is true).</li>
 	 * <li>If the size falls below a quarter of the current <em>capacity</em>, the <em>capacity</em> is cut in half while the minimum <em>capacity</em> can't fall below <code>capacity</code>.</li>
 	 * </ol>
-	 * 
+	 *
 	 * @param isResizable if false, the hash table is treated as fixed size table.
 	 * Thus adding a value when <em>size()</em> equals <em>capacity</em> throws an error.
 	 * Otherwise the <em>capacity</em> is automatically adjusted.
 	 * Default is true.
-	 * 
+	 *
 	 * @param maxSize the maximum allowed size of the stack.
 	 * The default value of -1 indicates that there is no upper limit.
-	 * 
+	 *
 	 * @throws de.polygonal.ds.error.AssertError <code>slotCount</code> is not a power of two (debug only).
 	 * @throws de.polygonal.ds.error.AssertError <code>capacity</code> is not a power of two (debug only).
 	 * @throws de.polygonal.ds.error.AssertError <code>capacity</code> is &lt; 2 (debug only).
@@ -144,12 +144,12 @@ class IntIntHashTable implements Map<Int, Int>
 		}
 		
 		mIsResizable = isResizable;
-		mFree        = 0;
-		mCapacity    = capacity;
-		mSize        = 0;
-		mMask        = slotCount - 1;
-		mSizeLevel   = 0;
-		mIterator    = null;
+		mFree = 0;
+		mCapacity = capacity;
+		mSize = 0;
+		mMask = slotCount - 1;
+		mSizeLevel = 0;
+		mIterator = null;
 		
 		#if debug
 		this.maxSize = (maxSize == -1) ? M.INT32_MAX : maxSize;
@@ -196,7 +196,7 @@ class IntIntHashTable implements Map<Int, Int>
 	}
 	
 	/**
-	 * The total number of allocated slots. 
+	 * The total number of allocated slots.
 	 */
 	inline public function getSlotCount():Int
 	{
@@ -651,7 +651,7 @@ class IntIntHashTable implements Map<Int, Int>
 	}
 	
 	/**
-	 * Creates and returns an unordered array of all keys. 
+	 * Creates and returns an unordered array of all keys.
 	 */
 	public function toKeyArray():Array<Int>
 	{
@@ -674,7 +674,7 @@ class IntIntHashTable implements Map<Int, Int>
 	}
 	
 	/**
-	 * Creates and returns an unordered dense array of all keys. 
+	 * Creates and returns an unordered dense array of all keys.
 	 */
 	public function toKeyDA():DA<Int>
 	{
@@ -741,7 +741,7 @@ class IntIntHashTable implements Map<Int, Int>
 	 * Returns true if this map contains a mapping for the value <code>val</code>.
 	 * @throws de.polygonal.ds.error.AssertError value 0x80000000 is reserved (debug only).
 	 */
-	inline public function has(val:Int):Bool
+	public function has(val:Int):Bool
 	{
 		#if debug
 		assert(val != VAL_ABSENT, "val 0x80000000 is reserved");
@@ -813,7 +813,7 @@ class IntIntHashTable implements Map<Int, Int>
 	/**
 	 * Counts the number of mappings for <code>key</code>.
 	 */
-	inline public function count(key:Int):Int
+	public function count(key:Int):Int
 	{
 		var c = 0;
 		var i = getHash(hashCode(key));
@@ -1072,7 +1072,7 @@ class IntIntHashTable implements Map<Int, Int>
 	}
 	
 	/**
-	 * Removes the first occurrence of <code>key</code>. 
+	 * Removes the first occurrence of <code>key</code>.
 	 * @return true if <code>key</code> is successfully removed.
 	 */
 	inline public function clr(key:Int):Bool
@@ -1186,7 +1186,7 @@ class IntIntHashTable implements Map<Int, Int>
 	}
 	
 	/**
-	 * Creates an <em>IntHashSet</em> object of the values in this map. 
+	 * Creates an <em>IntHashSet</em> object of the values in this map.
 	 */
 	public function toValSet():Set<Int>
 	{
@@ -1201,7 +1201,7 @@ class IntIntHashTable implements Map<Int, Int>
 	}
 	
 	/**
-	 * Creates an <em>IntHashSet</em> object of the keys in this map. 
+	 * Creates an <em>IntHashSet</em> object of the keys in this map.
 	 */
 	public function toKeySet():Set<Int>
 	{
@@ -1251,7 +1251,7 @@ class IntIntHashTable implements Map<Int, Int>
 	}
 	
 	/**
-	 * Same as <em>has()</em>. 
+	 * Same as <em>has()</em>.
 	 */
 	inline public function contains(val:Int):Bool
 	{
@@ -1263,7 +1263,7 @@ class IntIntHashTable implements Map<Int, Int>
 	 * @return true if <code>val</code> was removed, false if <code>val</code> does not exist.
 	 * @throws de.polygonal.ds.error.AssertError value 0x80000000 is reserved (debug only).
 	 */
-	inline public function remove(val:Int):Bool
+	public function remove(val:Int):Bool
 	{
 		#if debug
 		assert(val != KEY_ABSENT, "val 0x80000000 is reserved");
@@ -1294,7 +1294,7 @@ class IntIntHashTable implements Map<Int, Int>
 	}
 	
 	/**
-	 * The total number of key/value pairs. 
+	 * The total number of key/value pairs.
 	 */
 	inline public function size():Int
 	{
@@ -1361,7 +1361,7 @@ class IntIntHashTable implements Map<Int, Int>
 	}
 	
 	/**
-	 * Returns true if this hash table is empty. 
+	 * Returns true if this hash table is empty.
 	 */
 	inline public function isEmpty():Bool
 	{
@@ -1369,7 +1369,7 @@ class IntIntHashTable implements Map<Int, Int>
 	}
 	
 	/**
-	 * Returns an unordered array containing all values in this hash table. 
+	 * Returns an unordered array containing all values in this hash table.
 	 */
 	public function toArray():Array<Int>
 	{
@@ -1421,10 +1421,10 @@ class IntIntHashTable implements Map<Int, Int>
 		for (i in 0...Std.int(mNext.length)) c.mNext[i] = mNext[i];
 		#end
 		
-		c.mMask      = mMask;
-		c.mCapacity   = mCapacity;
-		c.mFree      = mFree;
-		c.mSize      = mSize;
+		c.mMask = mMask;
+		c.mCapacity = mCapacity;
+		c.mFree = mFree;
+		c.mSize = mSize;
 		c.mSizeLevel = mSizeLevel;
 		
 		return c;
@@ -1480,7 +1480,7 @@ class IntIntHashTable implements Map<Int, Int>
 		mSizeLevel--;
 		
 		var oldSize = mCapacity;
-		var newSize = oldSize >> 1; 
+		var newSize = oldSize >> 1;
 		mCapacity = newSize;
 		
 		#if (flash && alchemy)

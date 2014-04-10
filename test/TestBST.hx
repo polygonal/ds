@@ -356,7 +356,7 @@ class TestBST extends haxe.unit.TestCase
 		while (nodes.length > 0) bst.removeNode(nodes.pop());
 		
 		assertTrue(bst.isEmpty());
-		assertEquals(null, bst.mRoot);
+		assertEquals(null, untyped bst.mRoot);
 		
 		var data = [4, 5, 6];
 		var nodes = new Array();
@@ -367,7 +367,7 @@ class TestBST extends haxe.unit.TestCase
 			bst.removeNode(nodes.pop());
 		
 		assertTrue(bst.isEmpty());
-		assertEquals(null, bst.mRoot);
+		assertEquals(null, untyped bst.mRoot);
 	}
 }
 

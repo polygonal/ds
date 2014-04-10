@@ -9,7 +9,7 @@ furnished to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all copies or
 substantial portions of the Software.
- 
+
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
 NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
 NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -69,7 +69,7 @@ class LinkedDeque<T> implements Deque<T>
 	 * The default value of -1 indicates that there is no upper limit.
 	 * @throws de.polygonal.ds.error.AssertError reserved size is greater than allowed size (debug only).
 	 */
-	public function new(reservedSize = 0, maxSize = -1) 
+	public function new(reservedSize = 0, maxSize = -1)
 	{
 		#if debug
 		if (reservedSize > 0)
@@ -82,12 +82,12 @@ class LinkedDeque<T> implements Deque<T>
 		this.maxSize = -1;
 		#end
 		
-		mPoolSize     = 0;
+		mPoolSize = 0;
 		mReservedSize = reservedSize;
-		mSize         = 0;
-		mHead         = null;
-		mTail         = null;
-		mIterator     = null;
+		mSize = 0;
+		mHead = null;
+		mTail = null;
+		mIterator = null;
 		mHeadPool = mTailPool = new LinkedDequeNode<T>(cast null);
 		reuseIterator = false;
 	}
@@ -567,14 +567,14 @@ class LinkedDeque<T> implements Deque<T>
 	{
 		if (mSize == 0) return new LinkedDeque<T>(mReservedSize, maxSize);
 		
-		var copy           = new LinkedDeque<T>(mReservedSize, maxSize);
-		copy.key           = HashKey.next();
-		copy.maxSize       = maxSize;
-		copy.mSize         = mSize;
+		var copy = new LinkedDeque<T>(mReservedSize, maxSize);
+		copy.key = HashKey.next();
+		copy.maxSize = maxSize;
+		copy.mSize = mSize;
 		copy.mReservedSize = mReservedSize;
-		copy.mPoolSize     = mPoolSize;
-		copy.mHeadPool     = new LinkedDequeNode<T>(cast null);
-		copy.mTailPool     = new LinkedDequeNode<T>(cast null);
+		copy.mPoolSize = mPoolSize;
+		copy.mHeadPool = new LinkedDequeNode<T>(cast null);
+		copy.mTailPool = new LinkedDequeNode<T>(cast null);
 		
 		if (assign)
 		{
@@ -741,7 +741,7 @@ class LinkedDequeNode<T>
 	
 	public function new(x:T)
 	{
-		val  = x;
+		val = x;
 		next = null;
 		prev = null;
 	}

@@ -9,7 +9,7 @@ furnished to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all copies or
 substantial portions of the Software.
- 
+
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
 NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
 NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -24,7 +24,7 @@ package de.polygonal.ds;
 class Compare
 {
 	/**
-	 * Comparison function for sorting floats in descending order. 
+	 * Comparison function for sorting floats in descending order.
 	 */
 	public static function compareNumberFall<T>(a:Float, b:Float):Int
 	{
@@ -32,7 +32,7 @@ class Compare
 	}
 	
 	/**
-	 * Comparison function for sorting floats in ascending order. 
+	 * Comparison function for sorting floats in ascending order.
 	 */
 	public static function compareNumberRise<T>(a:Float, b:Float):Int
 	{
@@ -40,7 +40,7 @@ class Compare
 	}
 	
 	/**
-	 * Comparison function for sorting strings in case insensitive descending order. 
+	 * Comparison function for sorting strings in case insensitive descending order.
 	 */
 	public static function compareStringCaseInSensitiveFall(a:String, b:String):Int
 	{
@@ -63,7 +63,7 @@ class Compare
 	}
 	
 	/**
-	 * Comparison function for sorting strings in case insensitive ascending order. 
+	 * Comparison function for sorting strings in case insensitive ascending order.
 	 */
 	public static function compareStringCaseInSensitiveRise(a:String, b:String):Int
 	{
@@ -71,7 +71,7 @@ class Compare
 	}
 	
 	/**
-	 * Comparison function for sorting strings in case sensitive descending order. 
+	 * Comparison function for sorting strings in case sensitive descending order.
 	 */
 	public static function compareStringCaseSensitiveFall(a:String, b:String):Int
 	{
@@ -91,7 +91,7 @@ class Compare
 	}
 	
 	/**
-	 * Comparison function for sorting strings in case sensitive ascending order. 
+	 * Comparison function for sorting strings in case sensitive ascending order.
 	 */
 	public static function compareStringCaseSensitiveRise(a:String, b:String):Int
 	{
@@ -99,7 +99,7 @@ class Compare
 	}
 	
 	/**
-	 * Comparison function for sorting strings in lexiographic order. 
+	 * Comparison function for sorting strings in lexiographic order.
 	 */
 	public static function lexiographic(a:String, b:String):Int
 	{

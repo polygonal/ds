@@ -9,7 +9,7 @@ furnished to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all copies or
 substantial portions of the Software.
- 
+
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
 NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
 NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -23,6 +23,8 @@ import de.polygonal.ds.error.Assert.assert;
 #if (alchemy && !flash)
 "ShortMemory is only available when targeting flash"
 #end
+
+import flash.Vector;
 
 /**
  * <p>A chunk of "alchemy memory" for storing 16-bit signed integers.</p>
@@ -357,12 +359,12 @@ class ShortMemory extends MemoryAccess
 	#end
 	
 	/**
-	 * The size measured in bytes. 
+	 * The size measured in bytes.
 	 */
 	public var size(default, null):Int;
 	
 	/**
-	 * Creates a byte array capable of storing a total of <code>size</code> shorts. 
+	 * Creates a byte array capable of storing a total of <code>size</code> shorts.
 	 */
 	public function new(size:Int, name = "?")
 	{
@@ -383,7 +385,7 @@ class ShortMemory extends MemoryAccess
 	#end
 	
 	/**
-	 * Creates a deep copy of this object. 
+	 * Creates a deep copy of this object.
 	 */
 	public function clone():ShortMemory
 	{
@@ -401,7 +403,7 @@ class ShortMemory extends MemoryAccess
 	}
 	
 	/**
-	 * Sets all shorts to the value <code>x</code>. 
+	 * Sets all shorts to the value <code>x</code>.
 	 */
 	public function fill(x:Int):ShortMemory
 	{

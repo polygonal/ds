@@ -9,7 +9,7 @@ furnished to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all copies or
 substantial portions of the Software.
- 
+
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
 NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
 NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -23,6 +23,8 @@ import de.polygonal.ds.error.Assert.assert;
 #if (alchemy && !flash)
 "FloatMemory is only available when targeting flash"
 #end
+
+import flash.Vector;
 
 /**
  * <p>A chunk of "alchemy memory" for storing IEEE 754 single-precision floating point numbers.</p>
@@ -299,12 +301,12 @@ class FloatMemory extends MemoryAccess
 	#end
 	
 	/**
-	 * The size measured in floats. 
+	 * The size measured in floats.
 	 */
 	public var size(default, null):Int;
 	
 	/**
-	 * Creates a byte array capable of storing a total of <code>size</code> floats. 
+	 * Creates a byte array capable of storing a total of <code>size</code> floats.
 	 */
 	public function new(size:Int, name = "?")
 	{
@@ -325,7 +327,7 @@ class FloatMemory extends MemoryAccess
 	#end
 	
 	/**
-	 * Creates a deep copy of this object. 
+	 * Creates a deep copy of this object.
 	 */
 	public function clone():FloatMemory
 	{
@@ -343,7 +345,7 @@ class FloatMemory extends MemoryAccess
 	}
 	
 	/**
-	 * Sets all floats to the value <code>x</code>. 
+	 * Sets all floats to the value <code>x</code>.
 	 */
 	public function fill(x:Float):FloatMemory
 	{

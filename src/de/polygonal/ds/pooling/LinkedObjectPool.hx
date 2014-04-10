@@ -9,7 +9,7 @@ furnished to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all copies or
 substantial portions of the Software.
- 
+
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
 NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
 NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -52,7 +52,7 @@ class LinkedObjectPool<T> implements Hashable
 	var mFabricate:Void->T;
 	var mFactory:Factory<T>;
 	
-	/** 
+	/**
 	 * Creates a <em>LinkedObjectPool</em> object capable of managing <code>x</code> pre-allocated objects.<br/>
 	 * Use <em>allocate()</em> to fill the pool.<br/>
 	 * @param growable if true, new objects are allocated the first time an object is requested while the pool being empty.
@@ -87,7 +87,7 @@ class LinkedObjectPool<T> implements Hashable
 	}
 	
 	/**
-	 * The total number of pre-allocated objects in the pool. 
+	 * The total number of pre-allocated objects in the pool.
 	 */
 	inline public function getSize():Int
 	{
@@ -95,7 +95,7 @@ class LinkedObjectPool<T> implements Hashable
 	}
 	
 	/**
-	 * The number of used objects. 
+	 * The number of used objects.
 	 */
 	inline public function getUsageCount():Int
 	{
@@ -194,7 +194,7 @@ class LinkedObjectPool<T> implements Hashable
 	
 	/**
 	 * Removes all unused objects from the pool.<br/>
-	 * If the number of remaining used objects is smaller than the initial capacity defined in the constructor, new objects are created to refill the pool. 
+	 * If the number of remaining used objects is smaller than the initial capacity defined in the constructor, new objects are created to refill the pool.
 	 */
 	public function purge()
 	{

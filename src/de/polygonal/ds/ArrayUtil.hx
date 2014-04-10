@@ -9,7 +9,7 @@ furnished to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all copies or
 substantial portions of the Software.
- 
+
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
 NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
 NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -23,7 +23,7 @@ import de.polygonal.ds.error.Assert.assert;
 /**
  * <p>Various utility functions for working with arrays.</p>
  */
-class ArrayUtil 
+class ArrayUtil
 {
 	/**
 	 * Allocates an array with a length of <code>x</code>.
@@ -95,7 +95,7 @@ class ArrayUtil
 	 * @param k the number of elements to put into <code>dst</code>.
 	 * If omitted <code>k</code> is set to <code>dst</code>.length;
 	 */
-	inline public static function fill<T>(dst:Array<T>, x:T, k = -1)
+	public static function fill<T>(dst:Array<T>, x:T, k = -1)
 	{
 		if (k == -1) k = dst.length;
 		for (i in 0...k) dst[i] = x;
@@ -106,7 +106,7 @@ class ArrayUtil
 	 * @param k the number of elements to put into <code>dst</code>.
 	 * If omitted <code>k</code> is set to <code>dst</code>.length;
 	 */
-	inline public static function assign<T>(dst:Array<T>, C:Class<T>, args:Array<Dynamic> = null, k = -1)
+	public static function assign<T>(dst:Array<T>, C:Class<T>, args:Array<Dynamic> = null, k = -1)
 	{
 		if (k == -1) k = dst.length;
 		if (args == null) args = [];
@@ -119,7 +119,7 @@ class ArrayUtil
 	 * @throws de.polygonal.ds.error.AssertError invalid <code>destination</code>, <code>source</code> or <code>n</code> value (debug only).
 	 * @see <a href="ttp://www.cplusplus.com/reference/clibrary/cstring/memmove/" target="mBlank">ttp://www.cplusplus.com/reference/clibrary/cstring/memmove/</a>
 	 */
-	inline public static function memmove<T>(a:Array<T>, destination:Int, source:Int, n:Int)
+	public static function memmove<T>(a:Array<T>, destination:Int, source:Int, n:Int)
 	{
 		#if debug
 		assert(destination >= 0 && source >= 0 && n >= 0, "destination >= 0 && source >= 0 && n >= 0");
@@ -194,7 +194,7 @@ class ArrayUtil
 	 * @throws de.polygonal.ds.error.AssertError <code>a</code> is null (debug only).
 	 * @throws de.polygonal.ds.error.AssertError invalid min/max search boundaries (debug only).
 	 */
-	inline public static function bsearchInt(a:Array<Int>, x:Int, min:Int, max:Int):Int
+	public static function bsearchInt(a:Array<Int>, x:Int, min:Int, max:Int):Int
 	{
 		#if debug
 		assert(a != null, "a != null");
@@ -225,7 +225,7 @@ class ArrayUtil
 	 * @throws de.polygonal.ds.error.AssertError <code>a</code> is null (debug only).
 	 * @throws de.polygonal.ds.error.AssertError invalid min/max search boundaries (debug only).
 	 */
-	inline public static function bsearchFloat(a:Array<Float>, x:Float, min:Int, max:Int):Int
+	public static function bsearchFloat(a:Array<Float>, x:Float, min:Int, max:Int):Int
 	{
 		#if debug
 		assert(a != null, "a != null");
@@ -444,7 +444,7 @@ class ArrayUtil
 			while (lo < hi)
 			{
 				while (cmp(pivot, a[hi]) < 0 && lo < hi) hi--;
-				if (hi != lo) 
+				if (hi != lo)
 				{
 					a[lo] = a[hi];
 					lo++;

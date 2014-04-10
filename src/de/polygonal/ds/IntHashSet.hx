@@ -9,7 +9,7 @@ furnished to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all copies or
 substantial portions of the Software.
- 
+
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
 NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
 NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -32,12 +32,12 @@ import de.polygonal.ds.error.Assert.assert;
 class IntHashSet implements Set<Int>
 {
 	/**
-	 * Return code for a non-existing element. 
+	 * Return code for a non-existing element.
 	 */
 	inline public static var VAL_ABSENT = M.INT32_MIN;
 	
-	inline static var EMPTY_SLOT        = -1;
-	inline static var NULL_POINTER      = -1;
+	inline static var EMPTY_SLOT = -1;
+	inline static var NULL_POINTER = -1;
 	
 	/**
 	 * A unique identifier for this object.<br/>
@@ -85,7 +85,7 @@ class IntHashSet implements Set<Int>
 	 * This defines the space-time trade off of the set.
 	 * Increasing the <code>slotCount</code> reduces the computation time (read/write/access) of the set at the cost of increased memory use.
 	 * This value is fixed and can only be changed by calling <em>rehash()</em>, which rebuilds the set (expensive).
-	 * 
+	 *
 	 * @param capacity the initial physical space for storing the elements at the time the set is created.
 	 * This is also the minimum allowed size of the set and cannot be changed in the future.
 	 * If omitted, the initial <em>capacity</em> equals <code>slotCount</code>.
@@ -99,10 +99,10 @@ class IntHashSet implements Set<Int>
 	 * Thus adding an element when <em>size()</em> equals <em>capacity</em> throws an error.
 	 * Otherwise the <em>capacity</em> is automatically adjusted.
 	 * Default is true.
-	 * 
+	 *
 	 * @param maxSize the maximum allowed size of this hash set.
 	 * The default value of -1 indicates that there is no upper limit.
-	 * 
+	 *
 	 * @throws de.polygonal.ds.error.AssertError <code>slotCount</code> is not a power of two (debug only).
 	 * @throws de.polygonal.ds.error.AssertError <code>capacity</code> is not a power of two (debug only).
 	 * @throws de.polygonal.ds.error.AssertError <code>capacity</code> is &lt; 2 (debug only).
@@ -125,12 +125,12 @@ class IntHashSet implements Set<Int>
 			#end
 		}
 		
-		mFree      = 0;
-		mCapacity  = capacity;
-		mSize      = 0;
-		mMask      = slotCount - 1;
+		mFree = 0;
+		mCapacity = capacity;
+		mSize = 0;
+		mMask = slotCount - 1;
 		mSizeLevel = 0;
-		mIterator  = null;
+		mIterator = null;
 		
 		#if debug
 		this.maxSize = (maxSize == -1) ? M.INT32_MAX : maxSize;
@@ -177,7 +177,7 @@ class IntHashSet implements Set<Int>
 	}
 	
 	/**
-	 * The total number of allocated slots. 
+	 * The total number of allocated slots.
 	 */
 	inline public function getSlotCount():Int
 	{
@@ -810,10 +810,10 @@ class IntHashSet implements Set<Int>
 		for (i in 0...Std.int(mNext.length)) c.mNext[i] = mNext[i];
 		#end
 		
-		c.mMask      = mMask;
-		c.mCapacity   = mCapacity;
-		c.mFree      = mFree;
-		c.mSize      = mSize;
+		c.mMask = mMask;
+		c.mCapacity = mCapacity;
+		c.mFree = mFree;
+		c.mSize = mSize;
 		c.mSizeLevel = mSizeLevel;
 		
 		return c;
@@ -869,7 +869,7 @@ class IntHashSet implements Set<Int>
 		mSizeLevel--;
 		
 		var oldSize = mCapacity;
-		var newSize = oldSize >> 1; 
+		var newSize = oldSize >> 1;
 		mCapacity = newSize;
 		
 		#if (flash && alchemy)
@@ -949,8 +949,8 @@ class IntHashSet implements Set<Int>
 			while (j != NULL_POINTER)
 			{
 				tmp[e - 1] = e;
-				tmp[e++]   = getData(j    );
-				tmp[e++]   = NULL_POINTER;
+				tmp[e++] = getData(j    );
+				tmp[e++] = NULL_POINTER;
 				j = getData(j + 1);
 			}
 		}

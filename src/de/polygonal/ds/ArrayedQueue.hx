@@ -9,7 +9,7 @@ furnished to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all copies or
 substantial portions of the Software.
- 
+
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
 NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
 NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -77,11 +77,11 @@ class ArrayedQueue<T> implements Queue<T>
 	 * <li>If the <em>size()</em> falls below a quarter of the current <em>capacity</em>, the <em>capacity</em> is cut in half.</li>
 	 * <li>The minimum <em>capacity</em> equals <code>capacity</code>.</li>
 	 * </ol>
-	 * 
+	 *
 	 * @param isResizable if true, the <em>capacity</em> is automatically adjusted.<br/>
 	 * Otherwise <code>capacity</code> defines both the minimum and maximum allowed <em>capacity</em>.
 	 * Default is true.
-	 * 
+	 *
 	 * @param maxSize the maximum allowed size of this queue.<br/>
 	 * The default value of -1 indicates that there is no upper limit.
 	 * @throws de.polygonal.ds.error.AssertError reserved size is greater than allowed size (debug only).
@@ -100,13 +100,13 @@ class ArrayedQueue<T> implements Queue<T>
 		mT1 = 0;
 		#end
 		
-		mCapacity     = capacity;
-		mIsResizable  = isResizable;
-		mSizeLevel    = 0;
-		mSize         = mFront = 0;
-		mA            = ArrayUtil.alloc(mCapacity);
-		mIterator     = null;
-		key           = HashKey.next();
+		mCapacity = capacity;
+		mIsResizable = isResizable;
+		mSizeLevel = 0;
+		mSize = mFront = 0;
+		mA = ArrayUtil.alloc(mCapacity);
+		mIterator = null;
+		key = HashKey.next();
 		reuseIterator = false;
 	}
 	
@@ -414,7 +414,7 @@ class ArrayedQueue<T> implements Queue<T>
 	}
 	
 	/**
-	 * Returns a string representing the current object.<br/>  
+	 * Returns a string representing the current object.<br/>
 	 * Example:<br/>
 	 * <pre class="prettyprint">
 	 * var queue = new de.polygonal.ds.ArrayedQueue&lt;Int&gt;(4);
@@ -479,7 +479,7 @@ class ArrayedQueue<T> implements Queue<T>
 	}
 	
 	/**
-	 * Returns true if this queue contains the element <code>x</code>. 
+	 * Returns true if this queue contains the element <code>x</code>.
 	 * <o>n</o>
 	 */
 	public function contains(x:T):Bool
@@ -564,7 +564,7 @@ class ArrayedQueue<T> implements Queue<T>
 	 * <o>1 or n if <code>purge</code> is true</o>
 	 * @param purge if true, elements are nullified upon removal and <em>capacity</em> is set to the initial <em>capacity</em> defined in the constructor.
 	 */
-	inline public function clear(purge = false)
+	public function clear(purge = false)
 	{
 		if (purge)
 		{

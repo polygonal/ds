@@ -9,7 +9,7 @@ furnished to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all copies or
 substantial portions of the Software.
- 
+
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
 NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
 NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -41,7 +41,7 @@ class BitVector implements Hashable
 	var mBitSize:Int;
 	
 	/**
-	 * Creates a bit-vector capable of storing a total of <code>size</code> bits. 
+	 * Creates a bit-vector capable of storing a total of <code>size</code> bits.
 	 */
 	public function new(size:Int)
 	{
@@ -162,7 +162,7 @@ class BitVector implements Hashable
 	 * @throws de.polygonal.ds.error.AssertError max out of range (debug only).
 	 * <o>n</o>
 	 */
-	inline public function clrRange(min:Int, max:Int)
+	public function clrRange(min:Int, max:Int)
 	{
 		#if debug
 		assert(min >= 0 && min <= max && max < mBitSize, 'min/max out of range ($min/$max)');
@@ -189,7 +189,7 @@ class BitVector implements Hashable
 	 * @throws de.polygonal.ds.error.AssertError max out of range (debug only).
 	 * <o>n</o>
 	 */
-	inline public function setRange(min:Int, max:Int)
+	public function setRange(min:Int, max:Int)
 	{
 		#if debug
 		assert(min >= 0 && min <= max && max < mBitSize, 'min/max out of range ($min/$max)');

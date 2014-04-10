@@ -9,7 +9,7 @@ furnished to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all copies or
 substantial portions of the Software.
- 
+
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
 NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
 NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -39,12 +39,12 @@ class DLL<T> implements Collection<T>
 	public var key:Int;
 	
 	/**
-	 * The head of this list or null if this list is empty. 
+	 * The head of this list or null if this list is empty.
 	 */
 	public var head(default, null):DLLNode<T>;
 	
 	/**
-	 * The tail of this list or null if this list is empty. 
+	 * The tail of this list or null if this list is empty.
 	 */
 	public var tail(default, null):DLLNode<T>;
 	
@@ -94,10 +94,10 @@ class DLL<T> implements Collection<T>
 		#end
 		
 		mReservedSize = reservedSize;
-		mSize         = 0;
-		mPoolSize     = 0;
-		mCircular     = false;
-		mIterator     = null;
+		mSize = 0;
+		mPoolSize = 0;
+		mCircular = false;
+		mIterator = null;
 		
 		if (reservedSize > 0)
 		{
@@ -178,7 +178,7 @@ class DLL<T> implements Collection<T>
 		{
 			tail.next = node;
 			node.prev = tail;
-		}	
+		}
 		else
 			head = node;
 		tail = node;
@@ -207,7 +207,7 @@ class DLL<T> implements Collection<T>
 		{
 			tail.next = x;
 			x.prev = tail;
-		}	
+		}
 		else
 			head = x;
 		tail = x;
@@ -968,7 +968,7 @@ class DLL<T> implements Collection<T>
 	 * trace(dll);</pre>
 	 * <pre class="console">
 	 * { DLL size: 4, circular: false }
- 	 * [ head 
+ 	 * [ head
 	 *   0
 	 *   1
 	 *   2
@@ -1086,7 +1086,7 @@ class DLL<T> implements Collection<T>
 	
 	/**
 	 * Returns a new <em>DLLIterator</em> object to iterate over all elements contained in this doubly linked list.<br/>
-	 * Uses a <em>CircularDLLIterator</em> iterator object if <em>circular</em> is true. 
+	 * Uses a <em>CircularDLLIterator</em> iterator object if <em>circular</em> is true.
 	 * The elements are visited from head to tail.<br/>
 	 * If performance is crucial, use the following loop instead:<br/><br/>
 	 * <pre class="prettyprint">
@@ -1097,7 +1097,7 @@ class DLL<T> implements Collection<T>
 	 *     var element = node.val;
 	 *     node = node.next;
 	 * }
-	 * 
+	 *
 	 * //circular list:
 	 * var node = myDLL.head;
 	 * for (i in 0...list.size())
@@ -1107,7 +1107,7 @@ class DLL<T> implements Collection<T>
 	 * }
 	 * </pre>
 	 * @see <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
-	 * 
+	 *
 	 */
 	public function iterator():Itr<T>
 	{

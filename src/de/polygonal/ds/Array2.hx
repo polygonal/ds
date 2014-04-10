@@ -60,11 +60,11 @@ class Array2<T> implements Collection<T>
 		assert(width >= 2 && height >= 2, 'invalid size (width:$width, height:$height)');
 		#end
 		
-		mW            = width;
-		mH            = height;
-		mA            = ArrayUtil.alloc(size());
-		mIterator     = null;
-		key           = HashKey.next();
+		mW = width;
+		mH = height;
+		mA = ArrayUtil.alloc(size());
+		mIterator = null;
+		key = HashKey.next();
 		reuseIterator = false;
 	}
 	
@@ -433,12 +433,12 @@ class Array2<T> implements Collection<T>
 		var t = mA;
 		mA = ArrayUtil.alloc(width * height);
 		
-		var minX = width  < mW ? width  : mW;
+		var minX = width < mW ? width : mW;
 		var minY = height < mH ? height : mH;
 		
 		for (y in 0...minY)
 		{
-			var t1 = y *  width;
+			var t1 = y * width;
 			var t2 = y * mW;
 			for (x in 0...minX)
 				_set(t1 + x, t[t2 + x]);
@@ -968,7 +968,7 @@ class Array2<T> implements Collection<T>
 	}
 	
 	/**
-	 * Unsupported operation - always returns false in release mode.
+	 * Unsupported operation - always returns false.
 	 * <o>1</o>
 	 */
 	public function isEmpty():Bool

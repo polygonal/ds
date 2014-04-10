@@ -247,7 +247,7 @@ class TestShortMemory extends haxe.unit.TestCase
 	}
 	
 	#if flash
-	function checkVector(data:flash.Vector<Int>, min = -1, max = -1)
+	inline function checkVector(data:flash.Vector<Int>, min = -1, max = -1)
 	{
 		if (min == -1) min = 0;
 		if (max == -1) max = data.length;

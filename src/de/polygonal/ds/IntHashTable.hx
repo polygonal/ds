@@ -9,7 +9,7 @@ furnished to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all copies or
 substantial portions of the Software.
- 
+
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
 NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
 NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
@@ -80,7 +80,7 @@ class IntHashTable<T> implements Map<Int, T>
 	 * This defines the space-time trade off of the hash table.
 	 * Increasing the <code>slotCount</code> reduces the computation time (read/write/access) of the hash table at the cost of increased memory use.
 	 * This value is fixed and can only be changed by calling <em>rehash()</em>, which rebuilds the hash table (expensive).
-	 * 
+	 *
 	 * @param capacity the initial physical space for storing the key/value pairs at the time the hash table is created.
 	 * This is also the minimum allowed size of the hash table and cannot be changed in the future. If omitted, the initial <em>capacity</em> equals <code>slotCount</code>.
 	 * The <em>capacity</em> is automatically adjusted according to the storage requirements based on two rules:
@@ -88,15 +88,15 @@ class IntHashTable<T> implements Map<Int, T>
 	 * <li>If the hash table runs out of space, the <em>capacity</em> is doubled (if <code>isResizable</code> is true).</li>
 	 * <li>If the size falls below a quarter of the current <em>capacity</em>, the <em>capacity</em> is cut in half while the minimum <em>capacity</em> can't fall below <code>capacity</code>.</li>
 	 * </ol>
-	 * 
+	 *
 	 * @param isResizable if false, the hash table is treated as fixed size table.
 	 * Thus adding a value when <em>size()</em> equals <em>capacity</em> throws an error.
 	 * Otherwise the <em>capacity</em> is automatically adjusted.
 	 * Default is true.
-	 * 
+	 *
 	 * @param maxSize the maximum allowed size of the stack.
 	 * The default value of -1 indicates that there is no upper limit.
-	 * 
+	 *
 	 * @throws de.polygonal.ds.error.AssertError <code>slotCount</code> is not a power of two (debug only).
 	 * @throws de.polygonal.ds.error.AssertError <code>capacity</code> is not a power of two (debug only).
 	 * @throws de.polygonal.ds.error.AssertError <code>capacity</code> is &lt; 2 (debug only).
@@ -107,7 +107,7 @@ class IntHashTable<T> implements Map<Int, T>
 		
 		mIsResizable = isResizable;
 		
-		mH    = new IntIntHashTable(slotCount, capacity, isResizable, maxSize);
+		mH = new IntIntHashTable(slotCount, capacity, isResizable, maxSize);
 		mVals = ArrayUtil.alloc(capacity);
 		
 		#if debug
@@ -128,11 +128,11 @@ class IntHashTable<T> implements Map<Int, T>
 		
 		for (i in 0...capacity - 1) setNext(i, i + 1);
 		setNext(capacity - 1, IntIntHashTable.NULL_POINTER);
-		mFree      = 0;
-		mKey0      = 0;
-		mI0        = 0;
+		mFree = 0;
+		mKey0 = 0;
+		mI0 = 0;
 		mSizeLevel = 0;
-		mIterator  = null;
+		mIterator = null;
 		mTmpArr = [];
 		
 		key = HashKey.next();
@@ -151,7 +151,7 @@ class IntHashTable<T> implements Map<Int, T>
 	}
 	
 	/**
-	 * The total number of allocated slots. 
+	 * The total number of allocated slots.
 	 */
 	inline public function getSlotCount():Int
 	{
@@ -298,17 +298,17 @@ class IntHashTable<T> implements Map<Int, T>
 	 * <pre class="prettyprint">
 	 * class Foo extends de.polygonal.ds.HashableItem {
 	 *     var value:Int;
-	 *     
+	 *
 	 *     public function new(value:Int) {
 	 *         super();
 	 *         this.value = value;
 	 *     }
-	 *     
+	 *
 	 *     public function toString():String {
 	 *         return "{ Foo " + value + " }";
 	 *     }
 	 * }
-	 * 
+	 *
 	 * class Main
 	 * {
 	 *     static function main() {
