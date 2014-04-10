@@ -20,10 +20,10 @@ package de.polygonal.ds;
 
 typedef Vector<T> =
 #if flash
-	#if no_inline
-	flash.Vector<Dynamic>
-	#else
+	#if generic
 	flash.Vector<T>
+	#else
+	flash.Vector<Dynamic>
 	#end
 #else
 haxe.ds.Vector<T>
