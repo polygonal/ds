@@ -771,7 +771,7 @@ class Array2<T> implements Collection<T>
 	}
 	
 	/**
-	 * Shuffles the elements of this collection by using the Fisher-Yates algorithm.<
+	 * Shuffles the elements of this collection by using the Fisher-Yates algorithm.<br/>
 	 * <o>n</o>
 	 * @param rval a list of random double values in the range between 0 (inclusive) to 1 (exclusive) defining the new positions of the elements.
 	 * If omitted, random values are generated on-the-fly by calling <em>Math.random()</em>.
