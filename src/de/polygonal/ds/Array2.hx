@@ -25,7 +25,10 @@ import de.polygonal.ds.error.Assert.assert;
  * <p><o>Worst-case running time in Big O notation</o></p>
  */
 
-#if (generic && cpp)
+#if (flash && generic)
+#if no_inline
+"generic works only if compiled without -D no-inline"
+#end
 @:generic
 #end
 class Array2<T> implements Collection<T>
@@ -44,7 +47,7 @@ class Array2<T> implements Collection<T>
 	 */
 	public var reuseIterator:Bool;
 	
-	var mA:Array<T>;
+	var mA:Vector<T>;
 	var mW:Int;
 	var mH:Int;
 	var mIterator:Array2Iterator<T>;
@@ -62,7 +65,7 @@ class Array2<T> implements Collection<T>
 		
 		mW = width;
 		mH = height;
-		mA = ArrayUtil.alloc(size());
+		mA = new Vector(size());
 		mIterator = null;
 		key = HashKey.next();
 		reuseIterator = false;
@@ -402,7 +405,7 @@ class Array2<T> implements Collection<T>
 		
 		if (width == mW && height == mH) return;
 		var t = mA;
-		mA = ArrayUtil.alloc(width * height);
+		mA = new Vector(width * height);
 		
 		var minX = width < mW ? width : mW;
 		var minY = height < mH ? height : mH;
@@ -546,6 +549,8 @@ class Array2<T> implements Collection<T>
 		#end
 		
 		var t = size();
+		for (i in t...t + mH) mA[i] = cast null;
+		
 		var l = t + mH;
 		var i = mH - 1;
 		var j = mH;
@@ -577,9 +582,11 @@ class Array2<T> implements Collection<T>
 		assert(input.length >= getW(), "insufficient input values");
 		#end
 		
+		var y = size();
+		for (i in y...y + mW) mA[i] = cast null;
+		
 		mH++;
 		
-		var y = size();
 		while (y-- > mW)
 			_set(y, _get(y - mW));
 		
@@ -602,6 +609,8 @@ class Array2<T> implements Collection<T>
 		#end
 		
 		var t = size();
+		for (i in t...t + mH) mA[i] = cast null;
+		
 		var l = t + mH;
 		var i = mH - 1;
 		var j = mH;
@@ -730,7 +739,7 @@ class Array2<T> implements Collection<T>
 		}
 		else
 		{
-			var t = new Array<T>();
+			var t = new Vector(mW * mH);
 			for (y in 0...mH)
 				for (x in 0...mW)
 					t[x * mH + y] = get(x, y);
@@ -746,7 +755,7 @@ class Array2<T> implements Collection<T>
 	 * Useful for fast iteration or low-level operations.
 	 * <o>1</o>
 	 */
-	inline public function getArray():Array<T>
+	inline public function getVector():Vector<T>
 	{
 		return mA;
 	}
@@ -1045,7 +1054,7 @@ class Array2<T> implements Collection<T>
 	inline function _set(i:Int, x:T) mA[i] = x;
 }
 
-#if (generic && cpp)
+#if (flash && generic)
 @:generic
 #end
 #if doc
@@ -1055,7 +1064,7 @@ private
 class Array2Iterator<T> implements de.polygonal.ds.Itr<T>
 {
 	var mF:Array2<T>;
-	var mA:Array<T>;
+	var mA:Vector<T>;
 	var mI:Int;
 	var mS:Int;
 	

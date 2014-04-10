@@ -39,7 +39,7 @@ class ArrayConvert
 		#end
 		
 		var c = new Array2<T>(width, height);
-		var a = c.getArray();
+		var a = c.getVector();
 		for (i in 0...x.length) a[i] = x[i];
 		return c;
 	}

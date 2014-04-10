@@ -479,7 +479,8 @@ class TestArray2 extends haxe.unit.TestCase
 			itr.next();
 			itr.remove();
 		}
-		var arr = a.getArray();
+		
+		var arr = a.getVector();
 		for (i in arr)
 			assertEquals(i, null);
 	}
