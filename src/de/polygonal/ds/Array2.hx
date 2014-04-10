@@ -349,35 +349,6 @@ class Array2<T> implements Collection<T>
 	}
 	
 	/**
-	 * Copies all elements inside the rectangular region bounded by &#91;<code>minX</code>, <code>minY</code>&#93; and &#91;<code>maxX</code>, <code>maxY</code>&#93;
-	 * by reference to the <code>output</code> array.
-	 * <o>n</o>
-	 * @return a reference to the <code>output</code> array.
-	 */
-	public function getRect(minX:Int, minY:Int, maxX:Int, maxY:Int, output:Array<T>):Array<T>
-	{
-		if (minX < 0) minX = 0;
-		if (minY < 0) minY = 0;
-		if (maxX > mW - 1) maxX = mW - 1;
-		if (maxY > mH - 1) maxY = mH - 1;
-		
-		var y = minY, x, i = 0, offset, w = mW;
-		while (y <= maxY)
-		{
-			offset = y * w;
-			x = minX;
-			while (x <= maxX)
-			{
-				output[i++] = _get(offset + x);
-				x++;
-			}
-			y++;
-		}
-		
-		return output;
-	}
-	
-	/**
 	 * Replaces all existing elements with objects of type <code>C</code>.
 	 * <o>n</o>
 	 * @param C the class to instantiate for each element.
@@ -835,6 +806,39 @@ class Array2<T> implements Collection<T>
 				_set(i, t);
 			}
 		}
+	}
+	
+	/**
+	 * Copies all elements inside the rectangular region bounded by &#91;<code>minX</code>, <code>minY</code>&#93; and &#91;<code>maxX</code>, <code>maxY</code>&#93;
+	 * by reference to the <code>output</code> array.
+	 * <o>n</o>
+	 * @return a reference to the <code>output</code> array.
+	 * @throws de.polygonal.ds.error.AssertError <code>minX</code> or <code>minY</code> out of range (debug only).
+	 */
+	public function getRect(minX:Int, minY:Int, maxX:Int, maxY:Int, output:Array<T>):Array<T>
+	{
+		assert(minX <= maxX, 'minX index out of range ($minX)');
+		assert(minY <= maxY, 'minY index out of range ($minY)');
+		
+		if (minX < 0) minX = 0;
+		if (minY < 0) minY = 0;
+		if (maxX > mW - 1) maxX = mW - 1;
+		if (maxY > mH - 1) maxY = mH - 1;
+		
+		var y = minY, x, i = 0, offset, w = mW;
+		while (y <= maxY)
+		{
+			offset = y * w;
+			x = minX;
+			while (x <= maxX)
+			{
+				output[i++] = _get(offset + x);
+				x++;
+			}
+			y++;
+		}
+		
+		return output;
 	}
 	
 	/**

@@ -539,6 +539,27 @@ class TestArray2 extends haxe.unit.TestCase
 		a.walk(function(val, x, y):String return x + '.' + y);
 		return a;
 	}
+	
+	function testGetRect()
+	{
+		var a = getStrArray(10, 10);
+		
+		var output = a.getRect(-2, -2, 4, 4, []);
+		
+		var i = 0;
+		for (y in 0...5)
+			for (x in 0...5)
+				assertEquals(x + '.' + y, output[i++]);
+				
+		var a = getStrArray(3, 3);
+		
+		var output = a.getRect(0, 0, 0, 0, []);
+		assertEquals(1, output.length);
+		assertEquals("0.0", output[0]);
+		
+		var output = a.getRect(-1, -1, -1, -1, []);
+		assertEquals(0, output.length);
+	}
 }
 
 private class E
