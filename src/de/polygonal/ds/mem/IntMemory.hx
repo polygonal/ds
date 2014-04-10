@@ -24,7 +24,9 @@ import de.polygonal.ds.error.Assert.assert;
 "IntMemory is only available when targeting flash"
 #end
 
+#if flash
 import flash.Vector;
+#end
 
 /**
  * <p>A chunk of "alchemy memory" for storing 32-bit signed integers.</p>

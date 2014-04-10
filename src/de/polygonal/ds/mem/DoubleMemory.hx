@@ -24,7 +24,9 @@ import de.polygonal.ds.error.Assert.assert;
 "DoubleMemory is only available when targeting flash"
 #end
 
+#if flash
 import flash.Vector;
+#end
 
 /**
  * <p>A chunk of fast "alchemy memory" for storing IEEE 754 double-precision floating point numbers.</p>

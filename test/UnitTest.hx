@@ -54,7 +54,7 @@ class UnitTest extends TestRunner
 		add(new test.pooling.TestObjectPool());
 		add(new test.pooling.TestDynamicObjectPool());
 		
-		#if (flash && alchemy)
+		#if flash
 		add(new mem.TestMemoryManager());
 		run();
 		this.cases = new List<haxe.unit.TestCase>();

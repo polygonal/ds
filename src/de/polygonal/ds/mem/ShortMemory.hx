@@ -24,7 +24,9 @@ import de.polygonal.ds.error.Assert.assert;
 "ShortMemory is only available when targeting flash"
 #end
 
+#if flash
 import flash.Vector;
+#end
 
 /**
  * <p>A chunk of "alchemy memory" for storing 16-bit signed integers.</p>
@@ -39,7 +41,7 @@ class ShortMemory extends MemoryAccess
 	 * @param max index pointing to the last short.
 	 * @throws de.polygonal.ds.error.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
 	 */
-	#if (flash || cpp)
+	#if flash
 	public static function toByteArray(input:ShortMemory, min = -1, max = -1):flash.utils.ByteArray
 	{
 		#if debug
@@ -82,7 +84,7 @@ class ShortMemory extends MemoryAccess
 	 * @param min index pointing to the byte storing the last short.
 	 * @throws de.polygonal.ds.error.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
 	 */
-	#if (flash || cpp)
+	#if flash
 	public static function ofByteArray(input:flash.utils.ByteArray, min = -1, max = -1):ShortMemory
 	{
 		#if debug
