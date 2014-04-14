@@ -18,12 +18,45 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 */
 package de.polygonal.ds;
 
+#if flash
+abstract MockVector<T>(Array<T>)
+{
+	public inline function new(length:Int) this = new Array<T>();
+	
+	@:arrayAccess public inline function get(index:Int):Null<T> return this[index];
+	@:arrayAccess public inline function set(index:Int, val:T):T return this[index] = val;
+	
+	public var length(get, never):Int;
+	inline function get_length():Int return untyped this.length;
+
+	public static function blit<T>(src:MockVector<T>, srcPos:Int, dest:MockVector<T>, destPos:Int, len:Int) for (i in 0...len) dest[destPos + i] = src[srcPos + i];
+
+	public inline function toArray():Array<T>
+	{
+		var a = new Array<T>();
+		for (i in 0...length) a[i] = get(i);
+		return a;
+	}
+
+	public inline function toData():Array<T> return cast this;
+
+	static public inline function fromData<T>(data:Array<T>):MockVector<T> return cast data;
+
+	@:extern static public inline function fromArrayCopy<T>(array:Array<T>):MockVector<T>
+	{
+		var vec = new MockVector<T>(array.length);
+		for (i in 0...array.length) vec.set(i, array[i]);
+		return vec;
+	}
+}
+#end
+
 typedef Vector<T> =
 #if flash
 	#if generic
 	flash.Vector<T>
 	#else
-	flash.Vector<Dynamic>
+	MockVector<T>
 	#end
 #else
 haxe.ds.Vector<T>
