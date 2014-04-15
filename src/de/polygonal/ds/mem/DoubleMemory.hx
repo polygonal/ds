@@ -262,7 +262,7 @@ class DoubleMemory extends MemoryAccess
 		assert(max <= input.size, 'max out of range ($max)');
 		assert(max - min > 0, 'min equals max ($min)');
 		
-		#if flash
+		#if (debug && flash && generic)
 		if (output != null)
 			if (output.fixed)
 				assert(Std.int(output.length) >= max - min, "output vector is too small");
