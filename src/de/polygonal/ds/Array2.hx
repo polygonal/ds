@@ -26,9 +26,6 @@ import de.polygonal.ds.error.Assert.assert;
  */
 
 #if (flash && generic)
-#if no_inline
-"generic works only if compiled without -D no-inline"
-#end
 @:generic
 #end
 class Array2<T> implements Collection<T>
