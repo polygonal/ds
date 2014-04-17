@@ -25,7 +25,7 @@ import de.polygonal.ds.error.Assert.assert;
  * <p>A tree data structure in which each node has at most two child nodes.</p>
  * <p><o>Worst-case running time in Big O notation</o></p>
  */
-#if generic
+#if (flash && generic)
 @:generic
 #end
 class BinaryTreeNode<T> implements Collection<T>
@@ -850,7 +850,7 @@ class BinaryTreeNode<T> implements Collection<T>
 	}
 }
 
-#if generic
+#if (flash && generic)
 @:generic
 #end
 #if doc

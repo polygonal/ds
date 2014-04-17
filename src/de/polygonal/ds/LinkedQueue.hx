@@ -27,7 +27,7 @@ import de.polygonal.ds.error.Assert.assert;
  * <p>See <a href="http://lab.polygonal.de/2007/05/23/data-structures-example-the-queue-class/" target="mBlank">http://lab.polygonal.de/2007/05/23/data-structures-example-the-queue-class/</a></p>
  * <p><o>Worst-case running time in Big O notation</o></p>
  */
-#if generic
+#if (flash && generic)
 @:generic
 #end
 class LinkedQueue<T> implements Queue<T>
@@ -677,7 +677,7 @@ class LinkedQueue<T> implements Queue<T>
 	}
 }
 
-#if generic
+#if (flash && generic)
 @:generic
 #end
 #if doc
@@ -699,7 +699,7 @@ class LinkedQueueNode<T>
 	}
 }
 
-#if generic
+#if (flash && generic)
 @:generic
 #end
 #if doc

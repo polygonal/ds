@@ -26,7 +26,7 @@ import de.polygonal.ds.error.Assert.assert;
  * The vertical pointer moves up and down the tree using the node's <em>parent</em> field, while the horizontal pointer moves left/right over the children using the <em>prev</em> and <em>next</em> fields.</p>
  * <p><o>Worst-case running time in Big O notation</o></p>
  */
-#if generic
+#if (flash && generic)
 @:generic
 #end
 class TreeBuilder<T>

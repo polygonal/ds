@@ -27,7 +27,7 @@ import de.polygonal.ds.error.Assert.assert;
  * <p><o>Worst-case running time in Big O notation</o></p>
  * See <a href="http://lab.polygonal.de/?p=189" target="mBlank">http://lab.polygonal.de/?p=189</a></p>
  */
-#if (generic && cpp)
+#if (flash && generic)
 @:generic
 #end
 class ArrayedQueue<T> implements Queue<T>

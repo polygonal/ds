@@ -300,7 +300,7 @@ class ObjectPool<T> implements Hashable
 #if doc
 private
 #end
-#if generic
+#if (flash && generic)
 @:generic
 #end
 @:access(de.polygonal.ds.pooling.ObjectPool)

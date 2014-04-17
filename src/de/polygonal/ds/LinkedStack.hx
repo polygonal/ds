@@ -26,7 +26,7 @@ import de.polygonal.ds.error.Assert.assert;
  * <p>This is called a FIFO structure (First In, First Out).</p>
  * <p><o>Worst-case running time in Big O notation</o></p>
  */
-#if generic
+#if (flash && generic)
 @:generic
 #end
 class LinkedStack<T> implements Stack<T>
@@ -834,7 +834,7 @@ class LinkedStack<T> implements Stack<T>
 #if doc
 private
 #end
-#if generic
+#if (flash && generic)
 @:generic
 #end
 class LinkedStackNode<T>
@@ -856,7 +856,7 @@ class LinkedStackNode<T>
 #if doc
 private
 #end
-#if generic
+#if (flash && generic)
 @:generic
 #end
 @:access(de.polygonal.ds.LinkedStack)

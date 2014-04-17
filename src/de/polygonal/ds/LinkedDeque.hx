@@ -24,7 +24,7 @@ import de.polygonal.ds.error.Assert.assert;
  * <p>A deque ("double-ended queue") is a linear list for which all insertions and deletions (and usually all accesses) are made at the ends of the list.</p>
  * <p><o>Worst-case running time in Big O notation</o></p>
  */
-#if generic
+#if (flash && generic)
 @:generic
 #end
 class LinkedDeque<T> implements Deque<T>
@@ -727,7 +727,7 @@ class LinkedDeque<T> implements Deque<T>
 	}
 }
 
-#if generic
+#if (flash && generic)
 @:generic
 #end
 #if doc
@@ -752,7 +752,7 @@ class LinkedDequeNode<T>
 	}
 }
 
-#if generic
+#if (flash && generic)
 @:generic
 #end
 #if doc

@@ -25,7 +25,7 @@ import de.polygonal.ds.error.Assert.assert;
  * <p><em>GraphArc</em> objects are created and managed by the <em>Graph</em> class.</p>
  * <p><o>Worst-case running time in Big O notation</o></p>
  */
-#if generic
+#if (flash && generic)
 @:generic
 #end
 class GraphArc<T> implements Hashable

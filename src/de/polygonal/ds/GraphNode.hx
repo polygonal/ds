@@ -25,7 +25,7 @@ import de.polygonal.ds.error.Assert.assert;
  * <p><em>GraphNode</em> objects are created and managed by the <em>Graph</em> class.</p>
  * <p><o>Worst-case running time in Big O notation</o></p>
  */
-#if generic
+#if (flash && generic)
 @:generic
 #end
 class GraphNode<T> implements Hashable
@@ -290,7 +290,7 @@ class GraphNode<T> implements Hashable
 	}
 }
 
-#if generic
+#if (flash && generic)
 @:generic
 #end
 #if doc

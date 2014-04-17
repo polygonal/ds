@@ -297,7 +297,7 @@ class DynamicObjectPool<T>
 	}
 }
 
-#if generic
+#if (flash && generic)
 @:generic
 #end
 #if doc

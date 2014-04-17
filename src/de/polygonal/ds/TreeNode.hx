@@ -25,7 +25,7 @@ import de.polygonal.ds.error.Assert.assert;
  * <p>See <a href="http://lab.polygonal.de/?p=184" target="mBlank">http://lab.polygonal.de/?p=184</a></p>
  * <p><o>Worst-case running time in Big O notation</o></p>
  */
-#if generic
+#if (flash && generic)
 @:generic
 #end
 class TreeNode<T> implements Collection<T>
@@ -2241,7 +2241,7 @@ class TreeNode<T> implements Collection<T>
 	}
 }
 
-#if generic
+#if (flash && generic)
 @:generic
 #end
 #if doc
@@ -2294,7 +2294,7 @@ class TreeIterator<T> implements de.polygonal.ds.Itr<T>
 	}
 }
 
-#if generic
+#if (flash && generic)
 @:generic
 #end
 #if doc

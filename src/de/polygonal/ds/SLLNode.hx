@@ -26,7 +26,7 @@ import de.polygonal.ds.error.Assert.assert;
  * <p><em>SLLNode</em> objects are created and managed by the <em>SLL</em> class.</p>
  * <p><o>Worst-case running time in Big O notation</o></p>
  */
-#if generic
+#if (flash && generic)
 @:generic
 #end
 class SLLNode<T>

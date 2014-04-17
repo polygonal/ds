@@ -25,7 +25,7 @@ import de.polygonal.ds.error.Assert.assert;
  * <p>See <a href="http://lab.polygonal.de/?p=206" target="mBlank">http://lab.polygonal.de/?p=206</a></p>
  * <p><o>Worst-case running time in Big O notation</o></p>
  */
-#if generic
+#if (flash && generic)
 @:generic
 #end
 @:access(de.polygonal.ds.SLLNode)
@@ -1420,7 +1420,7 @@ class SLL<T> implements Collection<T>
 	}
 }
 
-#if generic
+#if (flash && generic)
 @:generic
 #end
 #if doc
@@ -1468,7 +1468,7 @@ class SLLIterator<T> implements de.polygonal.ds.Itr<T>
 	}
 }
 
-#if generic
+#if (flash && generic)
 @:generic
 #end
 #if doc

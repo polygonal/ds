@@ -24,7 +24,7 @@ import de.polygonal.ds.error.Assert.assert;
  * <p>A dynamic object pool based on a doubly linked list.</p>
  * <p>See <a href="http://lab.polygonal.de/2008/06/18/using-object-pools/" target="mBlank">http://lab.polygonal.de/2008/06/18/using-object-pools/</a>.</p>
  */
-#if generic
+#if (flash && generic)
 @:generic
 #end
 class LinkedObjectPool<T> implements Hashable
@@ -367,7 +367,7 @@ class LinkedObjectPool<T> implements Hashable
 	}
 }
 
-#if generic
+#if (flash && generic)
 @:generic
 #end
 #if doc
