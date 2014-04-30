@@ -819,7 +819,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 private
 #end
 @:access(de.polygonal.ds.HashTable)
-class HashTableKeyIterator<K, T> implements de.polygonal.ds.Itr<K>
+class HashTableKeyIterator<K:Hashable, T> implements de.polygonal.ds.Itr<K>
 {
 	var mF:HashTable<K, T>;
 	
@@ -867,7 +867,7 @@ class HashTableKeyIterator<K, T> implements de.polygonal.ds.Itr<K>
 private
 #end
 @:access(de.polygonal.ds.HashTable)
-class HashTableValIterator<K, T> implements de.polygonal.ds.Itr<T>
+class HashTableValIterator<K:Hashable, T> implements de.polygonal.ds.Itr<T>
 {
 	var mF:HashTable<K, T>;
 	

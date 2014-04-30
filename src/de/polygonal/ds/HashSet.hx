@@ -601,7 +601,7 @@ class HashSet<T:Hashable> implements Set<T>
 private
 #end
 @:access(de.polygonal.ds.HashSet)
-class HashSetIterator<T> implements de.polygonal.ds.Itr<T>
+class HashSetIterator<T:Hashable> implements de.polygonal.ds.Itr<T>
 {
 	var mF:HashSet<T>;
 	
