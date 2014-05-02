@@ -674,6 +674,27 @@ class IntIntHashTable implements Map<Int, Int>
 	}
 	
 	/**
+	 * Creates and returns an unordered vector of all keys.
+	 */
+	public function toKeyVector():Vector<Int>
+	{
+		var a = new Vector<Int>(size());
+		var j = 0;
+		for (i in 0...mCapacity)
+		{
+			#if (flash && alchemy)
+			var o = mData.getAddr(i * 3);
+			if (Memory.getI32(o + 4) != VAL_ABSENT)
+				a[j++] = Memory.getI32(o);
+			#else
+			if (getData((i * 3) + 1) != VAL_ABSENT)
+				a[j++] = getData(i * 3);
+			#end
+		}
+		return a;
+	}
+	
+	/**
 	 * Creates and returns an unordered dense array of all keys.
 	 */
 	public function toKeyDA():DA<Int>
