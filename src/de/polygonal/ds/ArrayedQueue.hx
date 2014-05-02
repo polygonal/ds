@@ -64,8 +64,8 @@ class ArrayedQueue<T> implements Queue<T>
 	var mIterator:ArrayedQueueIterator<T>;
 	
 	#if debug
-	var mT0:Int;
-	var mT1:Int;
+	var mOp0:Int;
+	var mOp1:Int;
 	#end
 	
 	/**
@@ -89,15 +89,15 @@ class ArrayedQueue<T> implements Queue<T>
 	public function new(capacity:Int, isResizable = true, maxSize = -1)
 	{
 		#if debug
-		mT0 = mT1 = 0;
+		mOp0 = mOp1 = 0;
 		this.maxSize = (maxSize == -1) ? M.INT32_MAX : maxSize;
 		#else
 		this.maxSize = -1;
 		#end
 		
 		#if debug
-		mT0 = 0;
-		mT1 = 0;
+		mOp0 = 0;
+		mOp1 = 0;
 		#end
 		
 		mCapacity = capacity;
@@ -150,7 +150,7 @@ class ArrayedQueue<T> implements Queue<T>
 		#if debug
 		if (maxSize != -1)
 			assert(mSize < maxSize, 'size equals max size ($maxSize)');
-		++mT1;
+		++mOp1;
 		#end
 		
 		if (mCapacity == mSize)
@@ -185,7 +185,7 @@ class ArrayedQueue<T> implements Queue<T>
 		#end
 		
 		#if debug
-		mT0 = ++mT1;
+		mOp0 = ++mOp1;
 		#end
 		
 		var x = _get(mFront++);
@@ -215,7 +215,7 @@ class ArrayedQueue<T> implements Queue<T>
 	inline public function dispose()
 	{
 		#if debug
-		assert(mT0 == mT1, "dispose() is only allowed directly after dequeue()");
+		assert(mOp0 == mOp1, "dispose() is only allowed directly after dequeue()");
 		#end
 		
 		_set((mFront == 0 ? mCapacity : mFront) - 1, cast null);

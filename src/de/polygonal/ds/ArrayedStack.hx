@@ -55,8 +55,8 @@ class ArrayedStack<T> implements Stack<T>
 	var mIterator:ArrayedStackIterator<T>;
 	
 	#if debug
-	var mT0:Int;
-	var mT1:Int;
+	var mOp0:Int;
+	var mOp1:Int;
 	#end
 	
 	/**
@@ -90,8 +90,8 @@ class ArrayedStack<T> implements Stack<T>
 		#end
 		
 		#if debug
-		mT0 = 0;
-		mT1 = 0;
+		mOp0 = 0;
+		mOp1 = 0;
 		#end
 	}
 	
@@ -154,7 +154,7 @@ class ArrayedStack<T> implements Stack<T>
 		#if debug
 		if (maxSize != -1)
 			assert(size() < maxSize, 'size equals max size ($maxSize)');
-		++mT1;
+		++mOp1;
 		#end
 		
 		_set(mTop++, x);
@@ -173,7 +173,7 @@ class ArrayedStack<T> implements Stack<T>
 		#end
 		
 		#if debug
-		mT0 = ++mT1;
+		mOp0 = ++mOp1;
 		#end
 		
 		return _get(--mTop);
@@ -186,7 +186,7 @@ class ArrayedStack<T> implements Stack<T>
 		#end
 		
 		#if debug
-		mT0 = ++mT1;
+		mOp0 = ++mOp1;
 		#end
 		
 		return _get(--mTop);
@@ -299,7 +299,7 @@ class ArrayedStack<T> implements Stack<T>
 	{
 		#if debug
 		assert(mTop > 0, "stack is empty");
-		assert(mT0 == mT1, "dispose() is only allowed directly after pop()");
+		assert(mOp0 == mOp1, "dispose() is only allowed directly after pop()");
 		#end
 		
 		_set(mTop, cast null);

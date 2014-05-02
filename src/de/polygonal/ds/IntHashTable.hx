@@ -67,7 +67,7 @@ class IntHashTable<T> implements Map<Int, T>
 	
 	var mFree:Int;
 	var mKey0:Int;
-	var mI0:Int;
+	var mIndex0:Int;
 	
 	var mSizeLevel:Int;
 	var mIsResizable:Bool;
@@ -130,7 +130,7 @@ class IntHashTable<T> implements Map<Int, T>
 		setNext(capacity - 1, IntIntHashTable.NULL_POINTER);
 		mFree = 0;
 		mKey0 = 0;
-		mI0 = 0;
+		mIndex0 = 0;
 		mSizeLevel = 0;
 		mIterator = null;
 		mTmpArr = [];
@@ -185,7 +185,7 @@ class IntHashTable<T> implements Map<Int, T>
 	inline public function getFront(key:Int):T
 	{
 		if (mKey0 == key)
-			return mVals[mI0];
+			return mVals[mIndex0];
 		else
 		{
 			var i = mH.getFront(key);
@@ -194,7 +194,7 @@ class IntHashTable<T> implements Map<Int, T>
 			else
 			{
 				mKey0 = key;
-				return mVals[mI0 = i];
+				return mVals[mIndex0 = i];
 			}
 		}
 	}
@@ -733,7 +733,7 @@ class IntHashTable<T> implements Map<Int, T>
 		c.mSizeLevel = mSizeLevel;
 		c.mFree = mFree;
 		c.mKey0 = mKey0;
-		c.mI0 = mI0;
+		c.mIndex0 = mIndex0;
 		
 		#if alchemy
 		c.mKeys = mKeys.clone();

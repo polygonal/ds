@@ -30,7 +30,6 @@ class ArrayConvert
 	 * @throws de.polygonal.ds.error.AssertError <code>x</code> is null (debug only).
 	 * @throws de.polygonal.ds.error.AssertError <code>x</code>.length &lt; <code>width</code> * <code>height</code> (debug only).
 	 */
-	#if !generic
 	public static function toArray2<T>(x:Array<T>, width:Int, height:Int):Array2<T>
 	{
 		#if debug
@@ -43,14 +42,12 @@ class ArrayConvert
 		for (i in 0...x.length) a[i] = x[i];
 		return c;
 	}
-	#end
 	
 	/**
 	 * Converts the array <code>x</code> to a three-dimensional array with dimensions <code>width</code>, <code>height</code> and <code>depth</code>.
 	 * @throws de.polygonal.ds.error.AssertError <code>x</code> is null (debug only).
 	 * @throws de.polygonal.ds.error.AssertError <code>x</code>.length &lt; <code>width</code> * <code>height</code> * <code>depth</code> (debug only).
 	 */
-	#if !generic
 	public static function toArray3<T>(x:Array<T>, width:Int, height:Int, depth:Int):Array3<T>
 	{
 		#if debug
@@ -63,7 +60,6 @@ class ArrayConvert
 		for (i in 0...x.length) a[i] = x[i];
 		return c;
 	}
-	#end
 	
 	/**
 	 * Converts the array <code>x</code> to an arrayed queue.<br/>

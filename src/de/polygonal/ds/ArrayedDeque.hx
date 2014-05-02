@@ -291,8 +291,8 @@ class ArrayedDeque<T> implements Deque<T>
 	 */
 	public function pack()
 	{
-		for (i in 0...mHead + 1) mHeadBlock[i] = null;
-		for (i in mTail...mBlockSize) mTailBlock[i] = null;
+		for (i in 0...mHead + 1) mHeadBlock[i] = cast null;
+		for (i in mTail...mBlockSize) mTailBlock[i] = cast null;
 		mPoolSize = 0;
 		mBlockPool = new Array<Array<T>>();
 	}
@@ -506,7 +506,7 @@ class ArrayedDeque<T> implements Deque<T>
 		for (i in 0...mTailBlockIndex + 1)
 		{
 			var block = mBlocks[i];
-			for (j in 0...mBlockSize) block[j] = null;
+			for (j in 0...mBlockSize) block[j] = cast null;
 			mBlocks[i] = null;
 		}
 		mBlocks = null;
@@ -774,7 +774,7 @@ class ArrayedDeque<T> implements Deque<T>
 			for (i in 0...mTailBlockIndex + 1)
 			{
 				var block = mBlocks[i];
-				for (j in 0...mBlockSize) block[j] = null;
+				for (j in 0...mBlockSize) block[j] = cast null;
 				mBlocks[i] = null;
 			}
 			mBlocks = new Array();
