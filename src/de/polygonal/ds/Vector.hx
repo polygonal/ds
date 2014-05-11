@@ -21,7 +21,11 @@ package de.polygonal.ds;
 #if flash
 abstract MockVector<T>(Array<T>)
 {
-	public inline function new(length:Int) this = new Array<T>();
+	public inline function new(length:Int)
+	{
+		this = new Array<T>();
+		untyped this.length = length;
+	}
 	
 	@:arrayAccess public inline function get(index:Int):Null<T> return this[index];
 	@:arrayAccess public inline function set(index:Int, val:T):T return this[index] = val;
