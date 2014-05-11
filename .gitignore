@@ -1,4 +1,5 @@
 bin/*
+!bin/swc
 build/*
 deploy/*
 sandbox/*
