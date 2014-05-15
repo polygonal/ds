@@ -109,6 +109,9 @@ class IntHashSet implements Set<Int>
 	 */
 	public function new(slotCount:Int, capacity = -1, isResizable = true, maxSize = -1)
 	{
+		if (slotCount == M.INT16_MIN) return;
+		assert(slotCount > 0);
+		
 		#if debug
 		assert(M.isPow2(slotCount), "slotCount is not a power of 2");
 		#end
@@ -793,7 +796,7 @@ class IntHashSet implements Set<Int>
 	 */
 	public function clone(assign:Bool = true, copier:Int->Int = null):Collection<Int>
 	{
-		var c:IntHashSet = Type.createEmptyInstance(IntHashSet);
+		var c = new IntHashSet(M.INT16_MIN);
 		c.key = HashKey.next();
 		c.maxSize = maxSize;
 		

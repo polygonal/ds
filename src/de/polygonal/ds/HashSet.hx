@@ -28,6 +28,9 @@ import de.polygonal.ds.error.Assert.assert;
  * <p>An array hash set for storing <em>Hashable</em> objects.</p>
  * <p><o>Worst-case running time in Big O notation</o></p>
  */
+#if (flash && generic)
+@:generic
+#end
 class HashSet<T:Hashable> implements Set<T>
 {
 	/**
@@ -54,7 +57,7 @@ class HashSet<T:Hashable> implements Set<T>
 	
 	var mH:IntIntHashTable;
 	
-	var mVals:Array<T>;
+	var mVals:Vector<T>;
 	
 	#if alchemy
 	var mNext:IntMemory;
@@ -96,12 +99,15 @@ class HashSet<T:Hashable> implements Set<T>
 	 */
 	public function new(slotCount:Int, capacity = -1, isResizable = true, maxSize = -1)
 	{
+		if (slotCount == M.INT16_MIN) return;
+		assert(slotCount > 0);
+		
 		if (capacity == -1) capacity = slotCount;
 		
 		mIsResizable = isResizable;
 		
 		mH = new IntIntHashTable(slotCount, capacity, mIsResizable, maxSize);
-		mVals = ArrayUtil.alloc(capacity);
+		mVals = new Vector<T>(capacity);
 		
 		#if debug
 		this.maxSize = (maxSize == -1) ? M.INT32_MAX : maxSize;
@@ -459,28 +465,29 @@ class HashSet<T:Hashable> implements Set<T>
 	 */
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{
-		var c:HashSet<T> = Type.createEmptyInstance(HashSet);
+		var c = new HashSet<T>(M.INT16_MIN);
 		
 		c.mIsResizable = mIsResizable;
 		c.maxSize = maxSize;
 		c.key = HashKey.next();
 		c.mH = cast mH.clone(false);
 		
+		var capacity = getCapacity();
+		
 		if (assign)
 		{
-			c.mVals = new Array<T>();
-			ArrayUtil.copy(mVals, c.mVals);
+			c.mVals = new Vector<T>(capacity);
+			for (i in 0...capacity) c.mVals[i] = mVals[i];
 		}
 		else
 		{
-			var tmp:Array<T> = ArrayUtil.alloc(getCapacity());
+			var tmp = new Vector<T>(capacity);
 			if (copier != null)
 			{
 				for (i in 0...getCapacity())
 				{
 					var v = mVals[i];
-					if (v != null)
-						tmp[i] = copier(v);
+					if (v != null) tmp[i] = copier(v);
 				}
 			}
 			else
@@ -532,8 +539,8 @@ class HashSet<T:Hashable> implements Set<T>
 		setNext(newSize - 1, IntIntHashTable.NULL_POINTER);
 		mFree = oldSize;
 		
-		var tmp:Array<T> = ArrayUtil.alloc(newSize);
-		ArrayUtil.copy(mVals, tmp, 0, oldSize);
+		var tmp = new Vector<T>(newSize);
+		for (i in 0...oldSize) tmp[i] = mVals[i];
 		mVals = tmp;
 		
 		mSizeLevel++;
@@ -556,7 +563,7 @@ class HashSet<T:Hashable> implements Set<T>
 		setNext(newSize - 1, IntIntHashTable.NULL_POINTER);
 		mFree = 0;
 		
-		var tmpVals:Array<T> = ArrayUtil.alloc(newSize);
+		var tmpVals = new Vector<T>(newSize);
 		
 		for (i in mH)
 		{
@@ -600,12 +607,15 @@ class HashSet<T:Hashable> implements Set<T>
 #if doc
 private
 #end
+#if (flash && generic)
+@:generic
+#end
 @:access(de.polygonal.ds.HashSet)
-class HashSetIterator<T> implements de.polygonal.ds.Itr<T>
+class HashSetIterator<T:Hashable> implements de.polygonal.ds.Itr<T>
 {
 	var mF:HashSet<T>;
 	
-	var mVals:Array<T>;
+	var mVals:Vector<T>;
 	
 	var mI:Int;
 	var mS:Int;

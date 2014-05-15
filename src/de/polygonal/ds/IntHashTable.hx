@@ -29,6 +29,9 @@ import de.polygonal.ds.error.Assert.assert;
  * <p>The implementation is based <em>IntIntHashTable</em>.</p>
  * <p><o>Amortized running time in Big O notation</o></p>
  */
+#if (flash && generic)
+@:generic
+#end
 class IntHashTable<T> implements Map<Int, T>
 {
 	/**
@@ -55,7 +58,7 @@ class IntHashTable<T> implements Map<Int, T>
 	
 	var mH:IntIntHashTable;
 	
-	var mVals:Array<T>;
+	var mVals:Vector<T>;
 	
 	#if alchemy
 	var mKeys:IntMemory;
@@ -103,12 +106,15 @@ class IntHashTable<T> implements Map<Int, T>
 	 */
 	public function new(slotCount:Int, capacity = -1, isResizable = true, maxSize = -1)
 	{
+		if (slotCount == M.INT16_MIN) return;
+		assert(slotCount > 0);
+		
 		if (capacity == -1) capacity = slotCount;
 		
 		mIsResizable = isResizable;
 		
 		mH = new IntIntHashTable(slotCount, capacity, isResizable, maxSize);
-		mVals = ArrayUtil.alloc(capacity);
+		mVals = new Vector<T>(capacity);
 		
 		#if debug
 		this.maxSize = (maxSize == -1) ? M.INT32_MAX : maxSize;
@@ -137,6 +143,11 @@ class IntHashTable<T> implements Map<Int, T>
 		
 		key = HashKey.next();
 		reuseIterator = false;
+	}
+	
+	function init()
+	{
+		
 	}
 	
 	/**
@@ -690,22 +701,24 @@ class IntHashTable<T> implements Map<Int, T>
 	 */
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{
-		var c:IntHashTable<T> = Type.createEmptyInstance(IntHashTable);
+		var c = new IntHashTable<T>(M.INT16_MIN);
 		c.key = HashKey.next();
 		c.maxSize = maxSize;
 		c.mH = cast mH.clone(false);
 		
+		var capacity = getCapacity();
+		
 		if (assign)
 		{
-			c.mVals = new Array<T>();
-			ArrayUtil.copy(mVals, c.mVals);
+			c.mVals = new Vector<T>(capacity);
+			for (i in 0...capacity) c.mVals[i] = mVals[i];
 		}
 		else
 		{
-			var tmp:Array<T> = ArrayUtil.alloc(getCapacity());
+			var tmp = new Vector<T>(capacity);
 			if (copier != null)
 			{
-				for (i in 0...getCapacity())
+				for (i in 0...capacity)
 				{
 					if (_hasKey(i))
 						tmp[i] = copier(mVals[i]);
@@ -769,9 +782,8 @@ class IntHashTable<T> implements Map<Int, T>
 		setNext(newSize - 1, IntIntHashTable.NULL_POINTER);
 		mFree = oldSize;
 		
-		var tmp:Array<T> = ArrayUtil.alloc(newSize);
-		ArrayUtil.copy(mVals, tmp, 0, oldSize);
-		mVals = tmp;
+		var tmp = new Vector<T>(newSize);
+		for (i in 0...oldSize) tmp[i] = mVals[i];
 		
 		mSizeLevel++;
 	}
@@ -796,7 +808,7 @@ class IntHashTable<T> implements Map<Int, T>
 		var tmpKeys = new Vector<Int>(newSize);
 		for (i in 0...newSize) tmpKeys[i] = IntIntHashTable.KEY_ABSENT;
 		
-		var tmpVals:Array<T> = ArrayUtil.alloc(newSize);
+		var tmpVals = new Vector<T>(newSize);
 		
 		for (i in mH)
 		{
@@ -872,15 +884,19 @@ class IntHashTable<T> implements Map<Int, T>
 	}
 }
 
+
 #if doc
 private
+#end
+#if (flash && generic)
+@:generic
 #end
 @:access(de.polygonal.ds.IntHashTable)
 class IntHashTableIterator<T> implements de.polygonal.ds.Itr<T>
 {
 	var mF:IntHashTable<T>;
 	
-	var mVals:Array<T>;
+	var mVals:Vector<T>;
 	
 	#if alchemy
 	var mKeys:IntMemory;

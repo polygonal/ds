@@ -29,6 +29,9 @@ import de.polygonal.ds.error.Assert.assert;
  * <p>The implementation is based on <em>IntIntHashTable</em>.</p>
  * <p><o>Worst-case running time in Big O notation</o></p>
  */
+#if (flash && generic)
+@:generic
+#end
 class HashTable<K:Hashable, T> implements Map<K, T>
 {
 	/**
@@ -47,8 +50,8 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	
 	var mH:IntIntHashTable;
 	
-	var mKeys:Array<K>;
-	var mVals:Array<T>;
+	var mKeys:Vector<K>;
+	var mVals:Vector<T>;
 	
 	#if alchemy
 	var mNext:IntMemory;
@@ -91,13 +94,16 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	 */
 	public function new(slotCount:Int, capacity = -1, isResizable = true, maxSize = -1)
 	{
+		if (slotCount == M.INT16_MIN) return;
+		assert(slotCount > 0);
+		
 		if (capacity == -1) capacity = slotCount;
 		
 		mIsResizable = isResizable;
 		
 		mH = new IntIntHashTable(slotCount, capacity, isResizable, maxSize);
-		mKeys = ArrayUtil.alloc(capacity);
-		mVals = ArrayUtil.alloc(capacity);
+		mKeys = new Vector<K>(capacity);
+		mVals = new Vector<T>(capacity);
 		
 		#if alchemy
 		mNext = new IntMemory(capacity, "HashTable.mNext");
@@ -671,19 +677,21 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	 */
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{
-		var c:HashTable<K, T> = Type.createEmptyInstance(HashTable);
+		var c = new HashTable<K, T>(M.INT16_MIN);
 		
 		c.key = HashKey.next();
 		c.mH = cast mH.clone(false);
 		
+		var capacity = getCapacity();
+		
 		if (assign)
 		{
-			c.mVals = new Array<T>();
-			ArrayUtil.copy(mVals, c.mVals);
+			c.mVals = new Vector<T>(capacity);
+			for (i in 0...capacity) c.mVals[i] = mVals[i];
 		}
 		else
 		{
-			var tmp:Array<T> = ArrayUtil.alloc(getCapacity());
+			var tmp = new Vector<T>(capacity);
 			if (copier != null)
 			{
 				for (i in 0...getCapacity())
@@ -721,9 +729,8 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		for (i in 0...Std.int(mNext.length)) c.mNext[i] = mNext[i];
 		#end
 		
-		c.mKeys = new Array<K>();
-		ArrayUtil.copy(mKeys, c.mKeys);
-		
+		c.mKeys = new Vector<K>(capacity);
+		for (i in 0...capacity) c.mKeys[i] = mKeys[i];
 		return c;
 	}
 	
@@ -739,16 +746,16 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		mNext = tmp;
 		#end
 		
-		var tmp:Array<K> = ArrayUtil.alloc(newSize);
-		ArrayUtil.copy(mKeys, tmp, 0, oldSize);
+		var tmp = new Vector<K>(newSize);
+		for (i in 0...oldSize) tmp[i] = mKeys[i];
 		mKeys = tmp;
 		
 		for (i in oldSize - 1...newSize - 1) setNext(i, i + 1);
 		setNext(newSize - 1, IntIntHashTable.NULL_POINTER);
 		mFree = oldSize;
 		
-		var tmp:Array<T> = ArrayUtil.alloc(newSize);
-		ArrayUtil.copy(mVals, tmp, 0, oldSize);
+		var tmp = new Vector<T>(newSize);
+		for (i in 0...oldSize) tmp[i] = mVals[i];
 		mVals = tmp;
 		
 		mSizeLevel++;
@@ -771,8 +778,8 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		setNext(newSize - 1, IntIntHashTable.NULL_POINTER);
 		mFree = 0;
 		
-		var tmpKeys:Array<K> = ArrayUtil.alloc(newSize);
-		var tmpVals:Array<T> = ArrayUtil.alloc(newSize);
+		var tmpKeys = new Vector<K>(newSize);
+		var tmpVals = new Vector<T>(newSize);
 		
 		for (i in mH)
 		{
@@ -818,12 +825,15 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 #if doc
 private
 #end
+#if (flash && generic)
+@:generic
+#end
 @:access(de.polygonal.ds.HashTable)
-class HashTableKeyIterator<K, T> implements de.polygonal.ds.Itr<K>
+class HashTableKeyIterator<K:Hashable, T> implements de.polygonal.ds.Itr<K>
 {
 	var mF:HashTable<K, T>;
 	
-	var mKeys:Array<K>;
+	var mKeys:Vector<K>;
 	
 	var mI:Int;
 	var mS:Int;
@@ -866,13 +876,16 @@ class HashTableKeyIterator<K, T> implements de.polygonal.ds.Itr<K>
 #if doc
 private
 #end
+#if (flash && generic)
+@:generic
+#end
 @:access(de.polygonal.ds.HashTable)
-class HashTableValIterator<K, T> implements de.polygonal.ds.Itr<T>
+class HashTableValIterator<K:Hashable, T> implements de.polygonal.ds.Itr<T>
 {
 	var mF:HashTable<K, T>;
 	
-	var mKeys:Array<K>;
-	var mVals:Array<T>;
+	var mKeys:Vector<K>;
+	var mVals:Vector<T>;
 	
 	var mI:Int;
 	var mS:Int;
