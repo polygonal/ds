@@ -259,16 +259,17 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	}
 	
 	/**
-	 * Creates and returns an unordered dense array of all keys.
+	 * Creates and returns an unordered vector of all keys.
 	 * <o>n</o>
 	 */
-	public function toKeyDA():DA<K>
+	public function toKeyVector():Vector<K>
 	{
-		var a = new DA<K>(size());
+		var a = new Vector<K>(size());
+		var j = 0;
 		for (i in 0...getCapacity())
 		{
 			if (mKeys[i] != null)
-				a.pushBack(mKeys[i]);
+				a[j++] = mKeys[i];
 		}
 		return a;
 	}
