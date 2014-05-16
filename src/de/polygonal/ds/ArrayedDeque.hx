@@ -907,7 +907,7 @@ class ArrayedDeque<T> implements Deque<T>
 	 */
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{
-		var c = new ArrayedDeque(M.INT16_MIN);
+		var c = new ArrayedDeque<T>(M.INT16_MIN);
 		c.mBlockSize = mBlockSize;
 		c.mBlockSizeMinusOne = mBlockSizeMinusOne;
 		c.mHead = mHead;
@@ -1086,6 +1086,9 @@ class ArrayedDeque<T> implements Deque<T>
 
 #if doc
 private
+#end
+#if (flash && generic)
+@:generic
 #end
 @:access(de.polygonal.ds.ArrayedDeque)
 class ArrayedDequeIterator<T> implements de.polygonal.ds.Itr<T>

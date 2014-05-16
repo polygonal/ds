@@ -24,7 +24,7 @@ import de.polygonal.ds.error.Assert.assert;
  * <p>A three-dimensional array based on a rectangular sequential array.</p>
  * <p><o>Worst-case running time in Big O notation</o></p>
  */
-#if (generic && cpp)
+#if (flash && generic)
 @:generic
 #end
 class Array3<T> implements Collection<T>
@@ -743,7 +743,7 @@ class Array3<T> implements Collection<T>
 	inline function _set(i:Int, x:T) mA[i] = x;
 }
 
-#if (generic && cpp)
+#if (flash && generic)
 @:generic
 #end
 #if doc

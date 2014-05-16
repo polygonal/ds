@@ -700,11 +700,11 @@ class ArrayedQueue<T> implements Queue<T>
 	inline function _set(i:Int, x:T) mA[i] = x;
 }
 
-#if (generic && cpp)
-@:generic
-#end
 #if doc
 private
+#end
+#if (flash && generic)
+@:generic
 #end
 @:access(de.polygonal.ds.ArrayedQueue)
 class ArrayedQueueIterator<T> implements de.polygonal.ds.Itr<T>
