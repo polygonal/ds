@@ -101,6 +101,8 @@ class IntIntHashTable implements Map<Int, Int>
 	var mSizeLevel:Int;
 	var mIterator:IntIntHashTableValIterator;
 	
+	var mTmpArray:Array<Int>;
+	
 	/**
 	 * @param slotCount the total number of slots into which the hashed keys are distributed.
 	 * This defines the space-time trade off of the hash table.
@@ -153,6 +155,7 @@ class IntIntHashTable implements Map<Int, Int>
 		mMask = slotCount - 1;
 		mSizeLevel = 0;
 		mIterator = null;
+		mTmpArray = [];
 		
 		#if debug
 		this.maxSize = (maxSize == -1) ? M.INT32_MAX : maxSize;
@@ -1274,6 +1277,7 @@ class IntIntHashTable implements Map<Int, Int>
 		mData = null;
 		mNext = null;
 		mIterator = null;
+		mTmpArray = null;
 	}
 	
 	/**
@@ -1296,7 +1300,7 @@ class IntIntHashTable implements Map<Int, Int>
 		#end
 		
 		var c = 0;
-		var keys = new Array<Int>();
+		var keys = mTmpArray;
 		for (i in 0...mCapacity)
 		{
 			#if (flash && alchemy)
@@ -1310,13 +1314,8 @@ class IntIntHashTable implements Map<Int, Int>
 			#end
 		}
 		
-		if (c > 0)
-		{
-			for (key in keys) clr(key);
-			return true;
-		}
-		else
-			return false;
+		for (i in 0...c) clr(keys[i]);
+		return c > 0;
 	}
 	
 	/**
