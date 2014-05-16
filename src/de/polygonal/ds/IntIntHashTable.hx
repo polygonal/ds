@@ -677,10 +677,12 @@ class IntIntHashTable implements Map<Int, Int>
 	}
 	
 	/**
-	 * Creates and returns an unordered vector of all keys.
+	 * Creates and returns an unordered vector of all keys or null if there are no keys.
 	 */
 	public function toKeyVector():Vector<Int>
 	{
+		if (isEmpty()) return null;
+		
 		var a = new Vector<Int>(size());
 		var j = 0;
 		for (i in 0...mCapacity)
