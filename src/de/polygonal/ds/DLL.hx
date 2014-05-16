@@ -904,7 +904,7 @@ class DLL<T> implements Collection<T>
 	 * If omitted, random values are generated on-the-fly by calling <em>Math.random()</em>.
 	 * @throws de.polygonal.ds.error.AssertError insufficient random values (debug only).
 	 */
-	public function shuffle(rval:DA<Float> = null)
+	public function shuffle(rval:Array<Float> = null)
 	{
 		var s = mSize;
 		if (rval == null)
@@ -929,14 +929,14 @@ class DLL<T> implements Collection<T>
 		else
 		{
 			#if debug
-			assert(rval.size() >= size(), "insufficient random values");
+			assert(rval.length >= size(), "insufficient random values");
 			#end
 			
 			var j = 0;
 			while (s > 1)
 			{
 				s--;
-				var i = Std.int(rval.get(j++) * s);
+				var i = Std.int(rval[j++] * s);
 				var node1 = head;
 				for (j in 0...s) node1 = node1.next;
 				

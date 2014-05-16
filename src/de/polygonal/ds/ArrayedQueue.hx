@@ -380,7 +380,7 @@ class ArrayedQueue<T> implements Queue<T>
 	 * If omitted, random values are generated on-the-fly by calling <em>Math.random()</em>.
 	 * @throws de.polygonal.ds.error.AssertError insufficient random values (debug only).
 	 */
-	public function shuffle(rval:DA<Float> = null)
+	public function shuffle(rval:Array<Float> = null)
 	{
 		var s = mSize;
 		if (rval == null)
@@ -398,14 +398,14 @@ class ArrayedQueue<T> implements Queue<T>
 		else
 		{
 			#if debug
-			assert(rval.size() >= mSize, "insufficient random values");
+			assert(rval.length >= mSize, "insufficient random values");
 			#end
 			
 			var j = 0;
 			while (s > 1)
 			{
 				s--;
-				var i = (Std.int(rval.get(j++) * s) + mFront) % mCapacity;
+				var i = (Std.int(rval[j++] * s) + mFront) % mCapacity;
 				var t = _get(s);
 				_set(s, _get(i));
 				_set(i, t);

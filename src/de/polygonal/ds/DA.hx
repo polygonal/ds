@@ -930,7 +930,7 @@ class DA<T> implements Collection<T>
 	 * If omitted, random values are generated on-the-fly by calling <em>Math.random()</em>.
 	 * @throws de.polygonal.ds.error.AssertError insufficient random values (debug only).
 	 */
-	public function shuffle(rval:DA<Float> = null)
+	public function shuffle(rval:Array<Float> = null)
 	{
 		var s = size();
 		if (rval == null)
@@ -947,13 +947,13 @@ class DA<T> implements Collection<T>
 		else
 		{
 			#if debug
-			assert(rval.size() >= size(), "insufficient random values");
+			assert(rval.length >= size(), "insufficient random values");
 			#end
 			
 			var j = 0;
 			while (--s > 1)
 			{
-				var i = Std.int(rval.get(j++) * s);
+				var i = Std.int(rval[j++] * s);
 				var t = _get(s);
 				_cpy(s, i);
 				_set(i, t);
