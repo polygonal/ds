@@ -43,7 +43,7 @@ class ArrayUtil
 		a[x - 1] = cast null;
 		#else
 		a = new Array<T>();
-		for (i in 0...x) a[i] = null;
+		for (i in 0...x) a[i] = cast null;
 		#end
 		return a;
 	}
