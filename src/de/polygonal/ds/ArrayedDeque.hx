@@ -81,6 +81,9 @@ class ArrayedDeque<T> implements Deque<T>
 	 */
 	public function new(blockSize = 64, blockPoolCapacity = 4, maxSize = -1)
 	{
+		if (blockSize == M.INT16_MIN) return;
+		assert(blockSize > 0);
+		
 		#if debug
 		assert(M.isPow2(blockSize), "blockSize is not a power of 2");
 		assert(blockSize >= 4, "blockSize is too small");
@@ -904,7 +907,7 @@ class ArrayedDeque<T> implements Deque<T>
 	 */
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{
-		var c = Type.createEmptyInstance(ArrayedDeque);
+		var c = new ArrayedDeque(M.INT16_MIN);
 		c.mBlockSize = mBlockSize;
 		c.mBlockSizeMinusOne = mBlockSizeMinusOne;
 		c.mHead = mHead;

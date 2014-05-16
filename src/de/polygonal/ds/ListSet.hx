@@ -238,7 +238,7 @@ class ListSet<T> implements Set<T>
 	 */
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{
-		var copy = Type.createEmptyInstance(ListSet);
+		var copy = new ListSet();
 		copy.key = HashKey.next();
 		copy.mA = cast mA.clone(assign, copier);
 		return copy;

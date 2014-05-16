@@ -129,6 +129,9 @@ class IntIntHashTable implements Map<Int, Int>
 	 */
 	public function new(slotCount:Int, capacity = -1, isResizable = true, maxSize = -1)
 	{
+		if (slotCount == M.INT16_MIN) return;
+		assert(slotCount > 0);
+		
 		#if debug
 		assert(M.isPow2(slotCount), "slotCount is not a power of 2");
 		#end
@@ -1425,7 +1428,7 @@ class IntIntHashTable implements Map<Int, Int>
 	 */
 	public function clone(assign:Bool = true, copier:Int->Int = null):Collection<Int>
 	{
-		var c:IntIntHashTable = Type.createEmptyInstance(IntIntHashTable);
+		var c = new IntIntHashTable(M.INT16_MIN);
 		c.key = HashKey.next();
 		c.maxSize = maxSize;
 		
