@@ -480,7 +480,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	/**
 	 * Returns a Vector.&lt;T&gt; object containing all elements in this priority queue.
 	 */
-	inline public function toVector():Vector<T>
+	public function toVector():Vector<T>
 	{
 		var v = new Vector<T>(size());
 		for (i in 1...mSize + 1) v[i - 1] = get(i);

@@ -529,7 +529,7 @@ class LinkedQueue<T> implements Queue<T>
 	 * Returns a Vector.&lt;T&gt; object containing all elements in this queue.<br/>
 	 * Preserves the natural order of this queue (First-In-First-Out).
 	 */
-	inline public function toVector():Vector<T>
+	public function toVector():Vector<T>
 	{
 		var v = new Vector<T>(size());
 		var i = 0;

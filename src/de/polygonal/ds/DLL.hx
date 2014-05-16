@@ -1171,7 +1171,7 @@ class DLL<T> implements Collection<T>
 	 * Returns a vector.&lt;T&gt; objec containing all elements in this doubly linked list.<br/>
 	 * Preserves the natural order of this linked list.
 	 */
-	inline public function toVector():Vector<T>
+	public function toVector():Vector<T>
 	{
 		var v = new Vector<T>(size());
 		var node = head;

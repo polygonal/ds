@@ -706,7 +706,7 @@ class LinkedStack<T> implements Stack<T>
 	 * Returns a Vector.&lt;T&gt; object containing all elements in this stack.<br/>
 	 * Preserves the natural order of this stack (First-In-Last-Out).
 	 */
-	inline public function toVector():Vector<T>
+	public function toVector():Vector<T>
 	{
 		var v = new Vector<T>(size());
 		var node = mHead;

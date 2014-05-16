@@ -443,7 +443,7 @@ class HashSet<T:Hashable> implements Set<T>
 	/**
 	 * Returns a Vector.&lt;T&gt; object containing all elements in this set.
 	 */
-	inline public function toVector():Vector<T>
+	public function toVector():Vector<T>
 	{
 		var v = new Vector<T>(size());
 		var j = 0;

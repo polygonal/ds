@@ -2108,7 +2108,7 @@ class TreeNode<T> implements Collection<T>
 	 * Returns a Vector.&lt;T&gt; object containing all elements in the tree rooted at this node.<br/>
 	 * The elements are collected using a preorder traversal.
 	 */
-	inline public function toVector():Vector<T>
+	public function toVector():Vector<T>
 	{
 		var v = new Vector<T>(size());
 		var i = 0;

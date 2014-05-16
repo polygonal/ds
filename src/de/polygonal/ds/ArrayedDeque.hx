@@ -871,7 +871,7 @@ class ArrayedDeque<T> implements Deque<T>
 	/**
 	 * Returns a Vector.&lt;T&gt; object containing all elements in this deque in the natural order.
 	 */
-	inline public function toVector():Vector<T>
+	public function toVector():Vector<T>
 	{
 		var v = new Vector<T>(size());
 		var i = 0;

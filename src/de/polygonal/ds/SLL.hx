@@ -1034,7 +1034,7 @@ class SLL<T> implements Collection<T>
 	 * Returns a vector.&lt;T&gt; objec containing all elements in this singly linked list.<br/>
 	 * The elements are ordered head-to-tail.
 	 */
-	inline public function toVector():Vector<T>
+	public function toVector():Vector<T>
 	{
 		var v = new Vector<T>(size());
 		var node = head;

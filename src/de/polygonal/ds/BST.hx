@@ -393,7 +393,7 @@ class BST<T:Comparable<T>> implements Collection<T>
 	 * Returns a Vector.&lt;T&gt; object containing all elements in this BST.<br/>
 	 * The elements are added by applying a preorder traversal.
 	 */
-	inline public function toVector():Vector<T>
+	public function toVector():Vector<T>
 	{
 		var v = new Vector<T>(size());
 		var i = 0;

@@ -224,7 +224,7 @@ class ListSet<T> implements Set<T>
 	/**
 	 * Returns a Vector.&lt;T&gt; object containing all elements in this set.
 	 */
-	inline public function toVector():Vector<T>
+	public function toVector():Vector<T>
 	{
 		return mA.toVector();
 	}

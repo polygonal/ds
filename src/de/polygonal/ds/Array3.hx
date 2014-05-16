@@ -695,7 +695,7 @@ class Array3<T> implements Collection<T>
 	 * Returns a Vector.&lt;T&gt; object containing all elements in this three-dimensional array.<br/>
 	 * Order: Row-major order (row-by-row).
 	 */
-	inline public function toVector():Vector<T>
+	public function toVector():Vector<T>
 	{
 		var v = new Vector<T>(size());
 		for (i in 0...size()) v[i] = _get(i);

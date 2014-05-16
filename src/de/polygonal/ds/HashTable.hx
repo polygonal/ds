@@ -654,7 +654,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	/**
 	 * Returns a Vector.&lt;T&gt; object containing all values in this hash table.
 	 */
-	inline public function toVector():Vector<T>
+	public function toVector():Vector<T>
 	{
 		var v = new Vector<T>(size());
 		var j = 0;

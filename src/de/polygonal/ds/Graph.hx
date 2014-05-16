@@ -1209,7 +1209,7 @@ class Graph<T> implements Collection<T>
 	/**
 	 * Returns an unordered Vector.&lt;T&gt; object containing all elements stored in the graph nodes of this graph.
 	 */
-	inline public function toVector():Vector<T>
+	public function toVector():Vector<T>
 	{
 		var v = new Vector<T>(size());
 		var node = mNodeList;
