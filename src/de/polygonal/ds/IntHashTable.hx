@@ -575,27 +575,15 @@ class IntHashTable<T> implements Map<Int, T>
 	 */
 	public function remove(x:T):Bool
 	{
-		var found = false;
-		var tmp = new Array<Int>();
+		var tmp = mTmpArr;
+		var c = 0;
 		for (i in 0...getCapacity())
-		{
 			if (_hasKey(i))
-			{
 				if (mVals[i] == x)
-				{
-					tmp.push(getKey(i));
-					found = true;
-				}
-			}
-		}
+					tmp[c++] = getKey(i);
 		
-		if (found)
-		{
-			for (key in tmp) clr(key);
-			return true;
-		}
-		else
-			return false;
+		for (i in 0...c) clr(tmp[i]);
+		return c > 0;
 	}
 	
 	/**
