@@ -24,10 +24,6 @@ import de.polygonal.ds.error.Assert.assert;
 "ShortMemory is only available when targeting flash"
 #end
 
-#if flash
-import flash.Vector;
-#end
-
 /**
  * <p>A chunk of "alchemy memory" for storing 16-bit signed integers.</p>
  */
@@ -265,7 +261,7 @@ class ShortMemory extends MemoryAccess
 		assert(max - min > 0, 'min equals max ($min)');
 		#end
 		
-		#if (debug && flash)
+		#if (debug && flash && generic)
 		if (output != null)
 			if (output.fixed)
 				assert(Std.int(output.length) >= max - min, "output vector is too small");

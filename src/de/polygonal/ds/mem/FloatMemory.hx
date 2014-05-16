@@ -24,10 +24,6 @@ import de.polygonal.ds.error.Assert.assert;
 "FloatMemory is only available when targeting flash"
 #end
 
-#if flash
-import flash.Vector;
-#end
-
 /**
  * <p>A chunk of "alchemy memory" for storing IEEE 754 single-precision floating point numbers.</p>
  */
