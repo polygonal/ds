@@ -572,14 +572,7 @@ class ArrayedStack<T> implements Stack<T>
 				{
 					var t = mTop - 1;
 					var p = i;
-					while (p < t)
-					{
-						#if cpp
-						_cpy(p, p + 1); p++;
-						#else
-						_cpy(p++, p);
-						#end
-					}
+					while (p < t) _cpy(p++, p);
 					_set(--mTop, cast null);
 					found = true;
 					break;
@@ -760,13 +753,7 @@ class ArrayedStackIterator<T> implements de.polygonal.ds.Itr<T>
 		else
 		{
 			while (i < top)
-			{
-				#if cpp
-				mA[i] = mA[i + 1]; i++;
-				#else
 				mA[i++] = mA[i];
-				#end
-			}
 			mF.mTop = top;
 		}
 	}

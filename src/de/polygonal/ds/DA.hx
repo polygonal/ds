@@ -312,14 +312,7 @@ class DA<T> implements Collection<T>
 		#end
 		
 		var p = mSize;
-		while (p > i)
-		{
-			#if cpp
-			_cpy(p, p - 1); p--;
-			#else
-			_cpy(p--, p);
-			#end
-		}
+		while (p > i) _cpy(p--, p);
 		
 		_set(i, x);
 		mSize++;
@@ -340,14 +333,7 @@ class DA<T> implements Collection<T>
 		var x = _get(i);
 		var k = size() - 1;
 		var p = i;
-		while (p < k)
-		{
-			#if cpp
-			_cpy(p, p + 1); p++;
-			#else
-			_cpy(p++, p);
-			#end
-		}
+		while (p < k) _cpy(p++, p);
 		mSize--;
 		return x;
 	}
