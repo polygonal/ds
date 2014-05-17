@@ -1006,6 +1006,125 @@ class IntIntHashTable implements Map<Int, Int>
 	}
 	
 	/**
+	 * Removes the first mapping from <code>key</code> to <code>val</code>.
+	 * @return true if <code>key</code> is successfully removed.
+	 */
+	public function clrPair(key:Int, val:Int):Bool
+	{
+		#if debug
+		assert(val != KEY_ABSENT, "val 0x80000000 is reserved");
+		#end
+		
+		var b = hashCode(key);
+		var i = getHash(b);
+		if (i == EMPTY_SLOT)
+			return false;
+		else
+		{
+			#if (flash && alchemy)
+			var o = mData.getAddr(i);
+			if (key == Memory.getI32(o) && val == Memory.getI32(o + 4))
+			#else
+			if (key == getData(i) && val == getData(i + 1))
+			#end
+			{
+				#if (flash && alchemy)
+				if (Memory.getI32(o + 8) == NULL_POINTER)
+				#else
+				if (getData(i + 2) == NULL_POINTER)
+				#end
+					setHash(b, EMPTY_SLOT);
+				else
+					setHash(b, getData(i + 2));
+				
+				var j = Std.int(i / 3);
+				setNext(j, mFree);
+				mFree = j;
+				
+				#if (flash && alchemy)
+				Memory.setI32(o + 4, VAL_ABSENT);
+				Memory.setI32(o + 8, NULL_POINTER);
+				#else
+				setData(i + 1, VAL_ABSENT);
+				setData(i + 2, NULL_POINTER);
+				#end
+				
+				mSize--;
+				
+				if (mSizeLevel > 0)
+					if (mSize == (mCapacity >> 2))
+						if (mIsResizable)
+							shrink();
+				
+				return true;
+			}
+			else
+			{
+				var exists = false;
+				
+				var i0 = i;
+				#if (flash && alchemy)
+				i = Memory.getI32(o + 8);
+				#else
+				i = getData(i + 2);
+				#end
+				
+				while (i != NULL_POINTER)
+				{
+					#if (flash && alchemy)
+					o = mData.getAddr(i);
+					if (Memory.getI32(o) == key && Memory.getI32(o + 4) == val)
+					{
+						exists = true;
+						break;
+					}
+					i0 = i;
+					i = Memory.getI32(o + 8);
+					#else
+					if (getData(i) == key && getData(i + 1) == val)
+					{
+						exists = true;
+						break;
+					}
+					i = getData((i0 = i) + 2);
+					#end
+				}
+				
+				if (exists)
+				{
+					setData(i0 + 2, getData(i + 2));
+					
+					var j = Std.int(i / 3);
+					setNext(j, mFree);
+					mFree = j;
+					
+					#if (flash && alchemy)
+					o = mData.getAddr(i + 1);
+					Memory.setI32(o    , VAL_ABSENT);
+					Memory.setI32(o + 4, NULL_POINTER);
+					#else
+					setData(i + 1, VAL_ABSENT);
+					setData(i + 2, NULL_POINTER);
+					#end
+					
+					--mSize;
+					
+					if (mSizeLevel > 0)
+						if (mSize == (mCapacity >> 2))
+							if (mIsResizable)
+								shrink();
+					
+					return true;
+				}
+				else
+					return false;
+			}
+		}
+		
+		return false;
+	}
+	
+	/**
 	 * Maps the value <code>val</code> to <code>key</code>.<br/>
 	 * The method allows duplicate keys.<br/>
 	 * <warn>To ensure unique keys either use <em>hasKey()</em> before <em>set()</em> or <em>setIfAbsent()</em></warn>
