@@ -766,7 +766,7 @@ class TestHashTable extends haxe.unit.TestCase
 		assertEquals(0, values.length);
 	}
 	
-	function testToKeyArrayToDA()
+	function testToKeyArrayOrVector()
 	{
 		var items = new DA<E>();
 		for (i in 0...8) items.pushBack(new E(i));
@@ -792,7 +792,7 @@ class TestHashTable extends haxe.unit.TestCase
 		
 		assertEquals(0, items.size());
 		items = tmp;
-		var a = h.toKeyDA();
+		var a = h.toKeyVector();
 		for (i in a)
 		{
 			for (j in 0...8)

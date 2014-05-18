@@ -3,6 +3,21 @@ import de.polygonal.ds.Cloneable;
 import de.polygonal.ds.Deque;
 import de.polygonal.ds.LinkedDeque;
 
+private class E implements Cloneable<E>
+{
+	public var id:Int;
+	
+	public function new(id:Int)
+	{
+		this.id = id;
+	}
+	
+	public function clone():E
+	{
+		return new E(id);
+	}
+}
+
 @:access(de.polygonal.ds.LinkedDeque)
 class TestLinkedDeque extends haxe.unit.TestCase
 {
@@ -284,8 +299,8 @@ class TestLinkedDeque extends haxe.unit.TestCase
 				assertTrue(set.remove(l.popBack()));
 			}
 			assertTrue(set.isEmpty());
-			assertEquals(null, untyped untyped l.mHead);
-			assertEquals(null, untyped l.mTail);
+			assertEquals(null, l.mHead);
+			assertEquals(null, l.mTail);
 		}
 		
 		var l = new de.polygonal.ds.LinkedDeque<Int>();
@@ -298,8 +313,8 @@ class TestLinkedDeque extends haxe.unit.TestCase
 			itr.remove();
 		}
 		assertTrue(l.isEmpty());
-		assertEquals(null, untyped untyped l.mHead);
-		assertEquals(null, untyped l.mTail);
+		assertEquals(null, l.mHead);
+		assertEquals(null, l.mTail);
 	}
 	
 	function testContains()
@@ -698,7 +713,7 @@ class TestLinkedDeque extends haxe.unit.TestCase
 		
 		assertEquals(d.size(), clone.size());
 		
-		var node:LinkedDequeNode<Int> = untyped clone.mHead;
+		var node:LinkedDequeNode<Int> = clone.mHead;
 		var i = 9;
 		while (node != null)
 		{
@@ -706,23 +721,23 @@ class TestLinkedDeque extends haxe.unit.TestCase
 			node = node.next;
 		}
 		
-		assertEquals(9, untyped clone.mHead.val);
-		assertEquals(0, untyped clone.mTail.val);
+		assertEquals(9, clone.mHead.val);
+		assertEquals(0, clone.mTail.val);
 		
 		var d = new LinkedDeque<Int>();
 		d.pushFront(0);
 		var clone:LinkedDeque<Int> = cast d.clone(true);
 		assertEquals(d.size(), clone.size());
-		assertEquals(untyped clone.mHead.val, 0);
-		assertEquals(untyped clone.mTail.val, 0);
+		assertEquals(clone.mHead.val, 0);
+		assertEquals(clone.mTail.val, 0);
 		
 		var d = new LinkedDeque<Int>();
 		d.pushFront(0);
 		d.pushFront(1);
 		var clone:LinkedDeque<Int> = cast d.clone(true);
 		assertEquals(d.size(), clone.size());
-		assertEquals(untyped clone.mHead.val, 1);
-		assertEquals(untyped clone.mTail.val, 0);
+		assertEquals(clone.mHead.val, 1);
+		assertEquals(clone.mTail.val, 0);
 	}
 	
 	function testClone2()
@@ -736,7 +751,7 @@ class TestLinkedDeque extends haxe.unit.TestCase
 		var clone:LinkedDeque<E> = cast d.clone(false);
 		assertEquals(d.size(), clone.size());
 		
-		var node:LinkedDequeNode<E> = untyped clone.mHead;
+		var node:LinkedDequeNode<E> = clone.mHead;
 		var i = 9;
 		while (node != null)
 		{
@@ -744,23 +759,23 @@ class TestLinkedDeque extends haxe.unit.TestCase
 			node = node.next;
 		}
 		
-		assertEquals(9, untyped clone.mHead.val.id);
-		assertEquals(0, untyped clone.mTail.val.id);
+		assertEquals(9, clone.mHead.val.id);
+		assertEquals(0, clone.mTail.val.id);
 		
 		var d = new LinkedDeque<E>();
 		d.pushFront(new E(0));
 		var clone:LinkedDeque<E> = cast d.clone(false);
 		assertEquals(d.size(), clone.size());
-		assertEquals(untyped clone.mHead.val.id, 0);
-		assertEquals(untyped clone.mTail.val.id, 0);
+		assertEquals(clone.mHead.val.id, 0);
+		assertEquals(clone.mTail.val.id, 0);
 		
 		var d = new LinkedDeque<E>();
 		d.pushFront(new E(0));
 		d.pushFront(new E(1));
 		var clone:LinkedDeque<E> = cast d.clone(false);
 		assertEquals(d.size(), clone.size());
-		assertEquals(untyped clone.mHead.val.id, 1);
-		assertEquals(untyped clone.mTail.val.id, 0);
+		assertEquals(clone.mHead.val.id, 1);
+		assertEquals(clone.mTail.val.id, 0);
 	}
 	
 	function testClone3()
@@ -774,7 +789,7 @@ class TestLinkedDeque extends haxe.unit.TestCase
 		var clone:LinkedDeque<E> = cast d.clone(false, function(x:E):E { return new E(x.id); } );
 		assertEquals(d.size(), clone.size());
 		
-		var node:LinkedDequeNode<E> = untyped clone.mHead;
+		var node:LinkedDequeNode<E> = clone.mHead;
 		var i = 9;
 		while (node != null)
 		{
@@ -782,23 +797,23 @@ class TestLinkedDeque extends haxe.unit.TestCase
 			node = node.next;
 		}
 		
-		assertEquals(9, untyped clone.mHead.val.id);
-		assertEquals(0, untyped clone.mTail.val.id);
+		assertEquals(9, clone.mHead.val.id);
+		assertEquals(0, clone.mTail.val.id);
 		
 		var d = new LinkedDeque<E>();
 		d.pushFront(new E(0));
 		var clone:LinkedDeque<E> = cast d.clone(false, function(x:E):E { return new E(x.id); } );
 		assertEquals(d.size(), clone.size());
-		assertEquals(untyped clone.mHead.val.id, 0);
-		assertEquals(untyped clone.mTail.val.id, 0);
+		assertEquals(clone.mHead.val.id, 0);
+		assertEquals(clone.mTail.val.id, 0);
 		
 		var d = new LinkedDeque<E>();
 		d.pushFront(new E(0));
 		d.pushFront(new E(1));
 		var clone:LinkedDeque<E> = cast d.clone(false, function(x:E):E { return new E(x.id); } );
 		assertEquals(d.size(), clone.size());
-		assertEquals(untyped clone.mHead.val.id, 1);
-		assertEquals(untyped clone.mTail.val.id, 0);
+		assertEquals(clone.mHead.val.id, 1);
+		assertEquals(clone.mTail.val.id, 0);
 	}
 	
 	function testFree()
@@ -981,20 +996,5 @@ class TestLinkedDeque extends haxe.unit.TestCase
 		assertEquals(1, d.size());
 		assertEquals(0, d.popBack());
 		assertEquals(0, d.size());
-	}
-}
-
-private class E implements Cloneable<E>
-{
-	public var id:Int;
-	
-	public function new(id:Int)
-	{
-		this.id = id;
-	}
-	
-	public function clone():E
-	{
-		return new E(id);
 	}
 }

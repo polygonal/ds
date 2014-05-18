@@ -2,6 +2,7 @@
 import de.polygonal.ds.DLL;
 import de.polygonal.ds.DLLNode;
 import de.polygonal.ds.ListSet;
+import de.polygonal.ds.Set;
 
 @:access(de.polygonal.ds.DLL)
 class TestDLL extends haxe.unit.TestCase
@@ -12,16 +13,16 @@ class TestDLL extends haxe.unit.TestCase
 		
 		for (i in 0...10) l.append(i);
 		for (i in 0...10) l.removeHead();
-		assertEquals(10, untyped untyped l.mPoolSize);
+		assertEquals(10, l.mPoolSize);
 		
 		for (i in 0...10) l.append(i);
-		assertEquals(0, untyped untyped l.mPoolSize);
+		assertEquals(0, l.mPoolSize);
 		
 		for (i in 0...10) l.removeTail();
-		assertEquals(10, untyped untyped l.mPoolSize);
+		assertEquals(10, l.mPoolSize);
 		
 		for (i in 0...10) l.prepend(i);
-		assertEquals(0, untyped untyped l.mPoolSize);
+		assertEquals(0, l.mPoolSize);
 		
 		assertEquals(10, l.size());
 		assertTrue(l.head != null);
@@ -29,7 +30,7 @@ class TestDLL extends haxe.unit.TestCase
 		for (i in 0...10)
 			l.head.unlink();
 		
-		assertEquals(10, untyped untyped l.mPoolSize);
+		assertEquals(10, l.mPoolSize);
 		assertEquals(0, l.size());
 		assertTrue(l.head == null);
 	}
@@ -221,16 +222,9 @@ class TestDLL extends haxe.unit.TestCase
 	{
 		var list = new DLL<Int>();
 		for (i in 0...10) list.append(i);
-		
 		list.shuffle(null);
-		
-		var s:de.polygonal.ds.Set<Int> = new ListSet<Int>();
-		
-		for (i in list)
-		{
-			assertTrue(s.set(i));
-		}
-		
+		var s:Set<Int> = new ListSet<Int>();
+		for (i in list) assertTrue(s.set(i));
 		assertEquals(10, s.size());
 	}
 	
@@ -818,13 +812,13 @@ class TestDLL extends haxe.unit.TestCase
 		assertEquals(list.size(), 0);
 		assertEquals(list.head, null);
 		assertEquals(list.tail, null);
-		assertEquals(10, untyped list.mPoolSize);
+		assertEquals(10, list.mPoolSize);
 		
 		for (i in 0...10) list.append(i);
 		for (i in 0...10) list.removeHead();
-		assertEquals(10, untyped list.mPoolSize);
+		assertEquals(10, list.mPoolSize);
 		for (i in 0...10) list.append(i);
-		assertEquals(0, untyped list.mPoolSize);
+		assertEquals(0, list.mPoolSize);
 	}
 	
 	function testAppend()

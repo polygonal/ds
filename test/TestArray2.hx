@@ -149,7 +149,7 @@ class TestArray2 extends haxe.unit.TestCase
 	function testAssign()
 	{
 		var a = new Array2<E>(_w, _h);
-		a.assign(E);
+		a.assign(E, [1]);
 		for (y in 0..._h)
 			for (x in 0..._w)
 				assertEquals(E, cast Type.getClass(a.get(x, y)));
@@ -275,41 +275,58 @@ class TestArray2 extends haxe.unit.TestCase
 	function testAppendRow()
 	{
 		var a = getIntArray(_w, _h - 1);
+		for (i in 0..._w) a.set(i, 0, i);
 		var input = new Array<Int>();
 		for (i in 0..._w) input.push(i);
 		a.appendRow(input);
 		assertEquals(a.getH(), _h);
+		for (x in 0..._w) assertEquals(x, a.get(x, 0));
 		for (x in 0..._w) assertEquals(x, a.get(x, _h - 1));
 	}
 	
 	function testAppendCol()
 	{
 		var a = getIntArray(_w - 1, _h);
+		for (i in 0..._h) a.set(0, i, i);
+		
 		var input = new Array<Int>();
 		for (i in 0..._h) input.push(i);
+		
 		a.appendCol(input);
+		
 		assertEquals(a.getW(), _w);
+		for (y in 0..._h) assertEquals(y, a.get(0, y));
 		for (y in 0..._h) assertEquals(y, a.get(_w - 1, y));
 	}
 	
 	function testPrependRow()
 	{
 		var a = getIntArray(_w, _h - 1);
+		
+		for (i in 0..._w) a.set(i, _h - 2, i);
+		
 		var input = new Array<Int>();
 		for (i in 0..._w) input.push(i);
 		a.prependRow(input);
 		assertEquals(a.getH(), _h);
+		
 		for (x in 0..._w) assertEquals(x, a.get(x, 0));
+		for (x in 0..._w) assertEquals(x, a.get(x, _h - 1));
 	}
 	
 	function testPrependCol()
 	{
 		var a = getIntArray(_w - 1, _h);
+		
+		for (i in 0..._h) a.set(_w - 2, i, i);
+		
 		var input = new Array<Int>();
 		for (i in 0..._h) input.push(i);
 		a.prependCol(input);
+		
 		assertEquals(a.getW(), _w);
 		for (y in 0..._h) assertEquals(y, a.get(0, y));
+		for (y in 0..._h) assertEquals(y, a.get(_w - 1, y));
 	}
 	
 	function testCopyRow()
@@ -496,8 +513,8 @@ class TestArray2 extends haxe.unit.TestCase
 		assertEquals(a.size(), counter);
 		var s = new ListSet<Int>();
 		for (i in a) assertTrue(s.set(i));
-		var rval = new DA<Float>();
-		for (i in 0...a.size()) rval.pushBack(Math.random());
+		var rval = [];
+		for (i in 0...a.size()) rval.push(Math.random());
 		a.shuffle(rval);
 		for (i in a) assertEquals(true, s.remove(i));
 	}

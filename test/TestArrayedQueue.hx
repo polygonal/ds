@@ -1,6 +1,7 @@
 ﻿import de.polygonal.ds.ArrayedQueue;
 import de.polygonal.ds.ListSet;
 import de.polygonal.ds.Queue;
+import de.polygonal.ds.Vector;
 
 @:access(de.polygonal.ds.ArrayedQueue)
 class TestArrayedQueue extends haxe.unit.TestCase
@@ -134,8 +135,10 @@ class TestArrayedQueue extends haxe.unit.TestCase
 			q.dispose();
 		}
 		
-		var a = q.mA;
+		var a:Vector<Int> = untyped q.mData;
+		
 		for (i in 0...16) assertEquals(#if (js||neko) null #else 0 #end, a[i]);
+		
 		var q = new ArrayedQueue<Int>(16);
 		for (i in 0...16) q.enqueue(i);
 		for (i in 0...10) q.dequeue();
@@ -147,7 +150,7 @@ class TestArrayedQueue extends haxe.unit.TestCase
 			q.dequeue();
 			q.dispose();
 		}
-		var a:Array<Int> = q.mA;
+		var a:Vector<Int> = untyped q.mData;
 		for (i in 0...16)
 			assertEquals(#if (js||neko) null #else 0 #end, a[i]);
 	}
@@ -407,10 +410,12 @@ class TestArrayedQueue extends haxe.unit.TestCase
 	
 	function testIterator()
 	{
-		var q:ArrayedQueue<Int> = new ArrayedQueue<Int>(_size);
+		var q = new ArrayedQueue<Int>(_size);
 		for (i in 0...10) q.enqueue(i);
 		var c = 0;
+		
 		var itr:de.polygonal.ds.ResettableIterator<Int> = cast q.iterator();
+		
 		for (val in itr) assertEquals(c++, val);
 		assertEquals(c, 10);
 		c = 0;

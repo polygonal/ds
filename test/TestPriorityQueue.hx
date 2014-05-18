@@ -26,7 +26,7 @@ class TestPriorityQueue extends haxe.unit.TestCase
 		pq.enqueue(b);
 		pq.enqueue(c);
 		
-		var a:Array<E> = pq.mA;
+		var a:Array<E> = pq.mData;
 		
 		assertEquals(null, a[0]);
 		assertEquals(1.  , a[1].priority);
@@ -56,14 +56,14 @@ class TestPriorityQueue extends haxe.unit.TestCase
 		pq.enqueue(new E(2));
 		pq.clear();
 		
-		var a:Array<E> = pq.mA;
+		var a:Array<E> = pq.mData;
 		assertEquals(null, a[0]);
 		assertEquals(2.  , a[1].priority);
 		assertEquals(0.  , a[2].priority);
 		assertEquals(1.  , a[3].priority);
 		pq.pack();
 		
-		var a:Array<E> = pq.mA;
+		var a:Array<E> = pq.mData;
 		assertEquals(null, a[0]);
 		assertEquals(null, a[1]);
 		assertEquals(null, a[2]);

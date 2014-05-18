@@ -27,7 +27,6 @@ class TestIntHashTable extends haxe.unit.TestCase
 		{
 			h.set(i, i);
 			assertEquals(i, h.getFront(i));
-			
 		}
 		for (i in 0...4)
 			assertEquals(i, h.getFront(i));
@@ -135,7 +134,7 @@ class TestIntHashTable extends haxe.unit.TestCase
 	
 	function testToKeySet()
 	{
-		var h = new IntHashTable(16);
+		var h = new IntHashTable<Int>(16);
 		h.set(0, 10);
 		h.set(1, 20);
 		h.set(2, 30);
@@ -151,7 +150,7 @@ class TestIntHashTable extends haxe.unit.TestCase
 	
 	function testToValSet()
 	{
-		var h = new IntHashTable(16, 16);
+		var h = new IntHashTable<Int>(16, 16);
 		h.set(0, 10);
 		h.set(1, 20);
 		h.set(2, 30);
@@ -676,10 +675,10 @@ class TestIntHashTable extends haxe.unit.TestCase
 	
 	function testClone()
 	{
-		var h = new IntHashTable<Null<Int>>(8);
+		var h = new IntHashTable<Int>(8);
 		for (i in 0...8) h.set(i, i);
 		
-		var c:IntHashTable<Null<Int>> = cast h.clone(true);
+		var c:IntHashTable<Int> = cast h.clone(true);
 		
 		var i = 0;
 		var l = new DLL<Int>();
@@ -881,7 +880,7 @@ class TestIntHashTable extends haxe.unit.TestCase
 	
 	function testIterator()
 	{
-		var h = new IntHashTable(8);
+		var h = new IntHashTable<Int>(8);
 		for (i in 0...8) h.set(i, i * 10);
 		
 		var set = new DA<Int>();
@@ -899,7 +898,7 @@ class TestIntHashTable extends haxe.unit.TestCase
 			assertTrue(set.contains(i * 10));
 		}
 		
-		var h = new IntHashTable(8);
+		var h = new IntHashTable<Int>(8);
 		var c = 0;
 		for (val in h)
 		{

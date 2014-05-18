@@ -929,6 +929,23 @@ class TestIntIntHashTable extends haxe.unit.TestCase
 		assertEquals(0, h.get(0));
 	}
 	
+	function testClrPair()
+	{
+		var values = [20, 30, 40];
+		
+		for (order in ArrayUtil.quickPerm(3))
+		{
+			var h = new IntIntHashTable(16);
+			for (i in values) h.set(10, i);
+			var size = 3;
+			for (i in order)
+			{
+				assertEquals(true, h.clrPair(10, values[i - 1]));
+				assertEquals(--size, h.size());
+			}
+		}
+	}
+	
 	/*function testBug1()
 	{
 		var hash:IntIntHashTable = new IntIntHashTable(8192, 512);
@@ -3518,7 +3535,6 @@ class TestIntIntHashTable extends haxe.unit.TestCase
 		return false;
 	}
 }
-
 
 class HashableFoo extends HashableItem
 {

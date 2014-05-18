@@ -6,12 +6,12 @@ class TestHeap extends haxe.unit.TestCase
 {
 	inline static var DEFAULT_SIZE = 100;
 	
-	var _size:Int;
+	var mSize:Int;
 	
 	function new(size = DEFAULT_SIZE)
 	{
 		super();
-		_size = size;
+		mSize = size;
 	}
 	
 	function testChange()
@@ -162,7 +162,7 @@ class TestHeap extends haxe.unit.TestCase
 		l.add(b);
 		l.add(c);
 		
-		var a:Array<E1> = l.mA;
+		var a:Array<E1> = l.mData;
 		
 		assertEquals(null, a[0]);
 		assertEquals(0   , a[1].ID);
@@ -193,7 +193,7 @@ class TestHeap extends haxe.unit.TestCase
 		
 		l.clear();
 		
-		var a:Array<E1> = l.mA;
+		var a:Array<E1> = l.mData;
 		
 		assertEquals(null, a[0]);
 		assertEquals(0, a[1].ID);
@@ -202,7 +202,7 @@ class TestHeap extends haxe.unit.TestCase
 		
 		l.pack();
 		
-		var a:Array<E1> = l.mA;
+		var a:Array<E1> = l.mData;
 		assertEquals(1, a.length);
 		assertEquals(null, a[0]);
 	}
@@ -291,7 +291,7 @@ class TestHeap extends haxe.unit.TestCase
 	{
 		var h = createHeap();
 		
-		var ids = uniqueRandomArray();
+		var ids = uniqueRandomDatarray();
 		var foo = new Array<E1>();
 		
 		for (i in 0...ids.length) foo[i] = new E1(ids[i]);
@@ -303,7 +303,7 @@ class TestHeap extends haxe.unit.TestCase
 		
 		for (i in 0...ids.length) h.add(foo[i]);
 		
-		assertEquals(h.size(), _size);
+		assertEquals(h.size(), mSize);
 	}
 	
 	function testRemove4()
@@ -503,10 +503,10 @@ class TestHeap extends haxe.unit.TestCase
 		assertEquals(10, a.length);
 	}
 	
-	function uniqueRandomArray():Array<Int>
+	function uniqueRandomDatarray():Array<Int>
 	{
 		var a = new Array<Int>();
-		for (i in 0..._size)
+		for (i in 0...mSize)
 			a.push(i);
 			
 		var m = Math;
@@ -524,7 +524,7 @@ class TestHeap extends haxe.unit.TestCase
 	
 	function createHeap():Heap<E1>
 	{
-		return new Heap<E1>(_size);
+		return new Heap<E1>(mSize);
 	}
 }
 
