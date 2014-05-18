@@ -52,7 +52,7 @@ class ArrayConvert
 		assert(x.length >= width * height * depth);
 		
 		var c = new Array3<T>(width, height, depth);
-		var a = c.getArray();
+		var a = c.getVector();
 		for (i in 0...x.length) a[i] = x[i];
 		return c;
 	}
