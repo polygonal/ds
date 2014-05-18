@@ -497,6 +497,10 @@ class Array2<T> implements Collection<T>
 		assert(input != null, "input is null");
 		assert(input.length >= getW(), "insufficient input values");
 		
+		var tmp = new Vector<T>(mW * (mH + 1));
+		VectorTools.blit(mData, 0, tmp, 0, mW * mH);
+		mData = tmp;
+		
 		var t = mW * mH++;
 		for (i in 0...mW) _set(t + i, input[i]);
 	}
@@ -511,10 +515,11 @@ class Array2<T> implements Collection<T>
 		assert(input != null, "input is null");
 		assert(input.length >= getH(), "insufficient input values");
 		
-		var t = size();
-		for (i in t...t + mH) mData[i] = cast null;
+		var tmp = new Vector<T>((mW + 1) * mH);
+		VectorTools.blit(mData, 0, tmp, 0, mW * mH);
+		mData = tmp;
 		
-		var l = t + mH;
+		var l = size() + mH;
 		var i = mH - 1;
 		var j = mH;
 		var x = mW;
@@ -543,18 +548,13 @@ class Array2<T> implements Collection<T>
 		assert(input != null, "input is null");
 		assert(input.length >= getW(), "insufficient input values");
 		
-		var y = size();
-		for (i in y...y + mW) mData[i] = cast null;
+		var tmp = new Vector<T>(mW * (mH + 1));
+		VectorTools.blit(mData, 0, tmp, mW, mW * mH);
+		mData = tmp;
 		
 		mH++;
 		
-		while (y-- > mW)
-			_set(y, _get(y - mW));
-		
-		y++;
-		
-		while (y-- > 0)
-			_set(y, input[y]);
+		for (i in 0...mW) _set(i, input[i]);
 	}
 	
 	/**
@@ -567,10 +567,11 @@ class Array2<T> implements Collection<T>
 		assert(input != null, "input is null");
 		assert(input.length >= getH(), "insufficient input values");
 		
-		var t = size();
-		for (i in t...t + mH) mData[i] = cast null;
+		var tmp = new Vector<T>((mW + 1) * mH);
+		VectorTools.blit(mData, 0, tmp, 0, mW * mH);
+		mData = tmp;
 		
-		var l = t + mH;
+		var l = size() + mH;
 		var i = mH - 1;
 		var j = mH;
 		var x = 0;
@@ -823,10 +824,12 @@ class Array2<T> implements Collection<T>
 		}
 		var s = '{ Array2 ${mW}x${mH} }';
 		s += "\n[\n";
+		
 		var offset, value;
+		var row = 0;
 		for (y in 0...mH)
 		{
-			s += "  ";
+			s += Printf.format("%- 4d: ", [row++]);
 			offset = y * mW;
 			for (x in 0...mW)
 				s += Printf.format("%" + l + "s%s", [Std.string(_get(offset + x)), x < mW - 1 ? ", " : ""]);
