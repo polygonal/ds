@@ -6,15 +6,15 @@ class TestArray3 extends haxe.unit.TestCase
 {
 	inline static var DEFAULT_SIZE = 10;
 	
-	var _w:Int;
-	var _h:Int;
-	var _d:Int;
+	var mW:Int;
+	var mH:Int;
+	var mD:Int;
 	
 	function new(w = DEFAULT_SIZE, h = DEFAULT_SIZE, d = DEFAULT_SIZE)
 	{
-		_w = w;
-		_h = h;
-		_d = d;
+		mW = w;
+		mH = h;
+		mD = d;
 		super();
 	}
 	
@@ -79,17 +79,17 @@ class TestArray3 extends haxe.unit.TestCase
 	
 	function testAssign()
 	{
-		var a = new Array3<Int>(_w, _h, _d);
+		var a = new Array3<Int>(mW, mH, mD);
 		a.fill(99);
-		for (z in 0..._d)
-			for (y in 0..._h)
-				for (x in 0..._w)
+		for (z in 0...mD)
+			for (y in 0...mH)
+				for (x in 0...mW)
 					assertEquals(99, a.get(x, y, z));
 	}
 	
 	function testIterator()
 	{
-		var a = new Array3<Int>(_w, _h, _d);
+		var a = new Array3<Int>(mW, mH, mD);
 		a.fill(99);
 		var c = 0;
 		for (val in a)
@@ -106,7 +106,7 @@ class TestArray3 extends haxe.unit.TestCase
 		}
 		assertEquals(c, a.size());
 		var s = new ListSet<String>();
-		var a = new Array3<String>(_w, _h, _d);
+		var a = new Array3<String>(mW, mH, mD);
 		a.walk(function(val:String, x:Int, y:Int, z:Int):String
 		{
 			var t = [x, y, z].join('.');
@@ -127,7 +127,7 @@ class TestArray3 extends haxe.unit.TestCase
 	
 	function testIteratorRemove()
 	{
-		var a = new Array3<String>(_w, _h, _d);
+		var a = new Array3<String>(mW, mH, mD);
 		a.fill('?');
 		
 		var itr = a.iterator();

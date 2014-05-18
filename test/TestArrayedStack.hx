@@ -7,11 +7,11 @@ class TestArrayedStack extends haxe.unit.TestCase
 {
 	inline static var DEFAULT_SIZE = 100;
 	
-	var _size:Int;
+	var mSize:Int;
 	
 	function new(size = DEFAULT_SIZE)
 	{
-		_size = size;
+		mSize = size;
 		super();
 	}
 	
@@ -402,17 +402,17 @@ class TestArrayedStack extends haxe.unit.TestCase
 		var stack = getStack();
 		for (i in 0...10) stack.push(i);
 		assertEquals(10, stack.size());
-		for (i in 0..._size - 10) stack.push(i);
+		for (i in 0...mSize - 10) stack.push(i);
 	}
 	
 	function testAssign()
 	{
-		var q = new ArrayedStack<E>(_size);
+		var q = new ArrayedStack<E>(mSize);
 		assertEquals(0, q.size());
-		q.assign(E, [0], _size);
+		q.assign(E, [0], mSize);
 		
-		assertEquals(_size, q.size());
-		for (i in 0..._size) assertEquals(E, cast Type.getClass(q.pop()));
+		assertEquals(mSize, q.size());
+		for (i in 0...mSize) assertEquals(E, cast Type.getClass(q.pop()));
 		
 		assertTrue(q.isEmpty());
 		q.assign(E, [0], 10);
@@ -420,9 +420,9 @@ class TestArrayedStack extends haxe.unit.TestCase
 		for (i in 0...10) assertEquals(E, cast Type.getClass(q.pop()));
 		
 		assertTrue(q.isEmpty());
-		q.assign(E, [5], _size);
-		assertEquals(_size, q.size());
-		for (i in 0..._size) assertEquals(5, q.pop().x);
+		q.assign(E, [5], mSize);
+		assertEquals(mSize, q.size());
+		for (i in 0...mSize) assertEquals(5, q.pop().x);
 		assertTrue(q.isEmpty());
 	}
 	
@@ -430,9 +430,9 @@ class TestArrayedStack extends haxe.unit.TestCase
 	{
 		var q = getStack();
 		assertEquals(0, q.size());
-		q.fill(99, _size);
-		assertEquals(_size, q.size());
-		for (i in 0..._size) assertEquals(99, q.pop());
+		q.fill(99, mSize);
+		assertEquals(mSize, q.size());
+		for (i in 0...mSize) assertEquals(99, q.pop());
 		
 		assertTrue(q.isEmpty());
 		q.fill(88, 10);
@@ -480,7 +480,7 @@ class TestArrayedStack extends haxe.unit.TestCase
 		if (size != -1)
 			return new de.polygonal.ds.ArrayedStack<Int>(size);
 		else
-			return new de.polygonal.ds.ArrayedStack<Int>(_size);
+			return new de.polygonal.ds.ArrayedStack<Int>(mSize);
 	}
 }
 

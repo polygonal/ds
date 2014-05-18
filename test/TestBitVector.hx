@@ -54,9 +54,6 @@ class TestBitVector extends haxe.unit.TestCase
 			byteCount++;
 			if (byteCount == 4)
 			{
-				#if (neko && !neko_v2)
-				byteIntCount = 7;
-				#end
 				byteCount = 0;
 			}
 			
@@ -176,13 +173,13 @@ class TestBitVector extends haxe.unit.TestCase
 	function testBucketSize()
 	{
 		var b = new BitVector(64);
-		assertEquals(b.bucketSize(), #if (neko && !neko_v2) 3 #else 2 #end);
+		assertEquals(b.bucketSize(), 2);
 		
 		var b = new BitVector(65);
 		assertEquals(b.bucketSize(), 3);
 		
 		b.resize(64);
-		assertEquals(b.bucketSize(), #if (neko && !neko_v2) 3 #else 2 #end);
+		assertEquals(b.bucketSize(), 2);
 		
 		b.resize(16);
 		assertEquals(b.bucketSize(), 1);
@@ -332,11 +329,7 @@ class TestBitVector extends haxe.unit.TestCase
 		var buckets = [];
 		var c = b.getBuckets(buckets);
 		
-		#if (neko && !neko_v2)
-		assertEquals(3, c); //31bit
-		#else
 		assertEquals(2, c);
-		#end
 		
 		assertEquals(-1, buckets[0]);
 		assertEquals(-1, buckets[1]);

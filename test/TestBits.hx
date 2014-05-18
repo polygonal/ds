@@ -8,20 +8,6 @@ class TestBits extends haxe.unit.TestCase
 {
 	function testReverse()
 	{
-		#if neko
-		var x = 0;
-		x = x.setBitAt(0);
-		x = x.setBitAt(1);
-		x = x.setBitAt(2);
-		x = x.reverse();
-		assertTrue(!x.hasBitAt(0));
-		assertTrue(!x.hasBitAt(1));
-		assertTrue(!x.hasBitAt(2));
-		
-		assertTrue(x.hasBitAt(27));
-		assertTrue(x.hasBitAt(28));
-		assertTrue(x.hasBitAt(29));
-		#else
 		var x = 0;
 		x = x.setBitAt(0);
 		x = x.setBitAt(1);
@@ -36,7 +22,6 @@ class TestBits extends haxe.unit.TestCase
 		assertTrue(x.hasBitAt(29));
 		assertTrue(x.hasBitAt(30));
 		assertTrue(x.hasBitAt(31));
-		#end
 	}
 	
 	function testMsb()

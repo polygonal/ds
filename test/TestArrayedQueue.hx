@@ -8,11 +8,11 @@ class TestArrayedQueue extends haxe.unit.TestCase
 {
 	inline static var DEFAULT_SIZE = 16;
 	
-	var _size:Int;
+	var mSize:Int;
 	
 	function new(size = DEFAULT_SIZE)
 	{
-		_size = size;
+		mSize = size;
 		super();
 	}
 	
@@ -191,7 +191,7 @@ class TestArrayedQueue extends haxe.unit.TestCase
 		assertEquals(q.get(2), 20);
 		assertEquals(3, q.size());
 		
-		var q = new ArrayedQueue<Int>(_size);
+		var q = new ArrayedQueue<Int>(mSize);
 		for (i in 0...16) q.enqueue(i);
 		for (i in 0...16) q.remove(i);
 		
@@ -231,13 +231,13 @@ class TestArrayedQueue extends haxe.unit.TestCase
 	
 	function testMaxSize()
 	{
-		var q:ArrayedQueue<Int> = new ArrayedQueue<Int>(_size);
-		assertEquals(_size, q.getCapacity());
+		var q:ArrayedQueue<Int> = new ArrayedQueue<Int>(mSize);
+		assertEquals(mSize, q.getCapacity());
 	}
 	
 	function testQueue()
 	{
-		var l:Queue<Int> = new ArrayedQueue<Int>(_size);
+		var l:Queue<Int> = new ArrayedQueue<Int>(mSize);
 		l.enqueue(1);
 		l.enqueue(2);
 		l.enqueue(3);
@@ -246,7 +246,7 @@ class TestArrayedQueue extends haxe.unit.TestCase
 	
 	function testPeek()
 	{
-		var q:ArrayedQueue<Int> = new ArrayedQueue<Int>(_size);
+		var q:ArrayedQueue<Int> = new ArrayedQueue<Int>(mSize);
 		for (i in 0...10)
 		{
 			q.enqueue(i);
@@ -256,7 +256,7 @@ class TestArrayedQueue extends haxe.unit.TestCase
 	
 	function testBack()
 	{
-		var q:ArrayedQueue<Int> = new ArrayedQueue<Int>(_size);
+		var q:ArrayedQueue<Int> = new ArrayedQueue<Int>(mSize);
 		for (i in 0...10)
 		{
 			q.enqueue(i);
@@ -266,18 +266,18 @@ class TestArrayedQueue extends haxe.unit.TestCase
 	
 	function testEnqueueDequeue()
 	{
-		var q:ArrayedQueue<Int> = new ArrayedQueue<Int>(_size);
+		var q:ArrayedQueue<Int> = new ArrayedQueue<Int>(mSize);
 		for (i in 0...10) q.enqueue(i);
 		for (i in 0...10) assertEquals(i, q.dequeue());
 	}
 	
 	function testAssign()
 	{
-		var q:ArrayedQueue<E> = new ArrayedQueue<E>(_size);
+		var q:ArrayedQueue<E> = new ArrayedQueue<E>(mSize);
 		assertEquals(0, q.size());
 		q.assign(E, [0]);
-		assertEquals(_size, q.size());
-		for (i in 0..._size) assertEquals(E, cast Type.getClass(q.dequeue()));
+		assertEquals(mSize, q.size());
+		for (i in 0...mSize) assertEquals(E, cast Type.getClass(q.dequeue()));
 		
 		assertTrue(q.isEmpty());
 		
@@ -301,11 +301,11 @@ class TestArrayedQueue extends haxe.unit.TestCase
 	
 	function testFill()
 	{
-		var q:ArrayedQueue<Int> = new ArrayedQueue<Int>(_size);
+		var q:ArrayedQueue<Int> = new ArrayedQueue<Int>(mSize);
 		assertEquals(0, q.size());
 		q.fill(99);
-		assertEquals(_size, q.size());
-		for (i in 0..._size) assertEquals(99, q.dequeue());
+		assertEquals(mSize, q.size());
+		for (i in 0...mSize) assertEquals(99, q.dequeue());
 		assertTrue(q.isEmpty());
 		q.fill(88, 10);
 		assertEquals(10, q.size());
@@ -315,7 +315,7 @@ class TestArrayedQueue extends haxe.unit.TestCase
 	
 	function testGetAtSetAt()
 	{
-		var q:ArrayedQueue<Int> = new ArrayedQueue<Int>(_size);
+		var q:ArrayedQueue<Int> = new ArrayedQueue<Int>(mSize);
 		for (i in 0...10) q.enqueue(i);
 		for (i in 0...10) assertEquals(i, q.get(i));
 		for (i in 0...10) q.set(i, 100 + i);
@@ -324,7 +324,7 @@ class TestArrayedQueue extends haxe.unit.TestCase
 	
 	function testSwp()
 	{
-		var q:ArrayedQueue<Int> = new ArrayedQueue<Int>(_size);
+		var q:ArrayedQueue<Int> = new ArrayedQueue<Int>(mSize);
 		for (i in 0...10) q.enqueue(i);
 		q.swp(0, 9);
 		assertEquals(9, q.get(0));
@@ -334,7 +334,7 @@ class TestArrayedQueue extends haxe.unit.TestCase
 	
 	function testCpy()
 	{
-		var q:ArrayedQueue<Int> = new ArrayedQueue<Int>(_size);
+		var q:ArrayedQueue<Int> = new ArrayedQueue<Int>(mSize);
 		for (i in 0...10) q.enqueue(i);
 		q.cpy(0, 1);
 		assertEquals(1, q.get(0));
@@ -344,8 +344,8 @@ class TestArrayedQueue extends haxe.unit.TestCase
 	
 	function testWalk()
 	{
-		var q:ArrayedQueue<Int> = new ArrayedQueue<Int>(_size);
-		for (i in 0..._size) q.enqueue(i);
+		var q:ArrayedQueue<Int> = new ArrayedQueue<Int>(mSize);
+		for (i in 0...mSize) q.enqueue(i);
 		
 		var process = function(val:Int, index:Int):Int
 		{
@@ -357,14 +357,14 @@ class TestArrayedQueue extends haxe.unit.TestCase
 	
 	function testContains()
 	{
-		var q:ArrayedQueue<Int> = new ArrayedQueue<Int>(_size);
+		var q:ArrayedQueue<Int> = new ArrayedQueue<Int>(mSize);
 		for (i in 0...10) q.enqueue(5);
 		assertEquals(true, q.contains(5));
 	}
 	
 	function testClear()
 	{
-		var q:ArrayedQueue<Int> = new ArrayedQueue<Int>(_size);
+		var q:ArrayedQueue<Int> = new ArrayedQueue<Int>(mSize);
 		for (i in 0...10) q.enqueue(5);
 		q.clear();
 		assertEquals(0, q.size());
@@ -387,22 +387,22 @@ class TestArrayedQueue extends haxe.unit.TestCase
 	
 	function testIsEmpty()
 	{
-		var q = new ArrayedQueue<Int>(_size);
+		var q = new ArrayedQueue<Int>(mSize);
 		assertEquals(true, q.isEmpty());
 		assertEquals(false, q.isFull());
-		for (i in 0..._size - 1) q.enqueue(i);
+		for (i in 0...mSize - 1) q.enqueue(i);
 		assertEquals(false, q.isEmpty());
 		assertEquals(false, q.isFull());
 		q.enqueue(0);
 		assertEquals(true, q.isFull());
 		assertEquals(false, q.isEmpty());
-		for (i in 0..._size - 1) q.dequeue();
+		for (i in 0...mSize - 1) q.dequeue();
 		assertEquals(false, q.isFull());
 		assertEquals(false, q.isEmpty());
 		q.dequeue();
 		assertEquals(true, q.isEmpty());
 		assertEquals(false, q.isFull());
-		var q:ArrayedQueue<Int> = new ArrayedQueue<Int>(_size);
+		var q:ArrayedQueue<Int> = new ArrayedQueue<Int>(mSize);
 		for (i in 0...10) q.enqueue(i);
 		q.clear();
 		assertEquals(true, q.isEmpty());
@@ -410,7 +410,7 @@ class TestArrayedQueue extends haxe.unit.TestCase
 	
 	function testIterator()
 	{
-		var q = new ArrayedQueue<Int>(_size);
+		var q = new ArrayedQueue<Int>(mSize);
 		for (i in 0...10) q.enqueue(i);
 		var c = 0;
 		
@@ -478,7 +478,7 @@ class TestArrayedQueue extends haxe.unit.TestCase
 	
 	function testToArray()
 	{
-		var q:ArrayedQueue<Int> = new ArrayedQueue<Int>(_size);
+		var q:ArrayedQueue<Int> = new ArrayedQueue<Int>(mSize);
 		for (i in 0...10) q.enqueue(i);
 		var a = q.toArray();
 		assertEquals(a.length, 10);
@@ -487,7 +487,7 @@ class TestArrayedQueue extends haxe.unit.TestCase
 	
 	function testShuffle()
 	{
-		var q:ArrayedQueue<Int> = new ArrayedQueue<Int>(_size);
+		var q:ArrayedQueue<Int> = new ArrayedQueue<Int>(mSize);
 		for (i in 0...10) q.enqueue(i);
 		var s:de.polygonal.ds.Set<Int> = new ListSet<Int>();
 		q.shuffle(null);
