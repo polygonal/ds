@@ -264,9 +264,7 @@ class HashSet<T:Hashable> implements Set<T>
 	 */
 	inline public function set(x:T):Bool
 	{
-		#if debug
 		assert(size() != maxSize, 'size equals max size ($maxSize)');
-		#end
 		
 		if ((size() == getCapacity()))
 		{
@@ -498,9 +496,7 @@ class HashSet<T:Hashable> implements Set<T>
 					var v = mVals[i];
 					if (v != null)
 					{
-						#if debug
 						assert(Std.is(v, Cloneable), 'element is not of type Cloneable ($v)');
-						#end
 						
 						c = untyped v;
 						tmp[i] = c.clone();
@@ -596,21 +592,19 @@ class HashSet<T:Hashable> implements Set<T>
 	
 	inline function _key(x:Hashable)
 	{
-		#if debug
 		assert(x != null, "element is null");
-		#end
 		
 		return x.key;
 	}
 }
 
-#if doc
-private
-#end
 #if (flash && generic)
 @:generic
 #end
 @:access(de.polygonal.ds.HashSet)
+#if doc
+private
+#end
 class HashSetIterator<T:Hashable> implements de.polygonal.ds.Itr<T>
 {
 	var mF:HashSet<T>;

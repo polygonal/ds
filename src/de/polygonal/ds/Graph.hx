@@ -161,8 +161,9 @@ class Graph<T> implements Collection<T>
 		#if debug
 		if (maxSize != -1)
 			assert(size() < maxSize, 'size equals max size ($maxSize)');
-		assert(mNodeSet.set(x), "node exists");
 		#end
+		
+		assert(mNodeSet.set(x), "node exists");
 		
 		mSize++;
 		
@@ -181,9 +182,7 @@ class Graph<T> implements Collection<T>
 	 */
 	public function removeNode(x:GraphNode<T>)
 	{
-		#if debug
 		assert(size() > 0, "graph is empty");
-		#end
 		
 		unlink(x);
 		
@@ -202,11 +201,9 @@ class Graph<T> implements Collection<T>
 	 */
 	public function addSingleArc(source:GraphNode<T>, target:GraphNode<T>, cost = 1.)
 	{
-		#if debug
 		assert(source != null, "source is null");
 		assert(target != null, "target is null");
 		assert(source != target, "source equals target");
-		#end
 		
 		var walker = mNodeList;
 		while (walker != null)
@@ -239,13 +236,11 @@ class Graph<T> implements Collection<T>
 	 */
 	public function addMutualArc(source:GraphNode<T>, target:GraphNode<T>, cost = 1.)
 	{
-		#if debug
 		assert(source != null, "source is null");
 		assert(target != null, "target is null");
 		assert(source != target, "source equals target");
 		assert(source.getArc(target) == null, "arc from source to target already exists");
 		assert(target.getArc(source) == null, "arc from target to source already exists");
-		#end
 		
 		var walker = mNodeList;
 		while (walker != null)
@@ -282,11 +277,9 @@ class Graph<T> implements Collection<T>
 	 */
 	public function unlink(node:GraphNode<T>):GraphNode<T>
 	{
-		#if debug
 		assert(mNodeList != null, "graph is empty");
 		assert(mNodeSet.has(node), "unknown node");
 		assert(node != null, "node is null");
-		#end
 		
 		var arc0 = node.arcList;
 		while (arc0 != null)
@@ -1253,9 +1246,7 @@ class Graph<T> implements Collection<T>
 			var c:Dynamic = null;
 			while (n != null)
 			{
-				#if debug
 				assert(Std.is(n.val, Cloneable), 'element is not of type Cloneable (${n.val})');
-				#end
 				
 				c = n.val;
 				var m = copy.addNode(copy.createNode(c.clone()));
@@ -1371,10 +1362,10 @@ class Graph<T> implements Collection<T>
 #if (flash && generic)
 @:generic
 #end
+@:access(de.polygonal.ds.Graph)
 #if doc
 private
 #end
-@:access(de.polygonal.ds.Graph)
 class GraphIterator<T> implements de.polygonal.ds.Itr<T>
 {
 	var mF:Graph<T>;
@@ -1413,10 +1404,10 @@ class GraphIterator<T> implements de.polygonal.ds.Itr<T>
 #if (flash && generic)
 @:generic
 #end
+@:access(de.polygonal.ds.Graph)
 #if doc
 private
 #end
-@:access(de.polygonal.ds.Graph)
 class GraphNodeIterator<T> implements de.polygonal.ds.Itr<GraphNode<T>>
 {
 	var mF:Graph<T>;
@@ -1455,10 +1446,10 @@ class GraphNodeIterator<T> implements de.polygonal.ds.Itr<GraphNode<T>>
 #if (flash && generic)
 @:generic
 #end
+@:access(de.polygonal.ds.Graph)
 #if doc
 private
 #end
-@:access(de.polygonal.ds.Graph)
 class GraphArcIterator<T> implements de.polygonal.ds.Itr<GraphArc<T>>
 {
 	var mF:Graph<T>;

@@ -119,9 +119,7 @@ class GraphNode<T> implements Hashable
 	 */
 	inline public function isConnected(target:GraphNode<T>):Bool
 	{
-		#if debug
 		assert(target != null, "target is null");
-		#end
 		
 		return getArc(target) != null;
 	}
@@ -133,9 +131,7 @@ class GraphNode<T> implements Hashable
 	 */
 	inline public function isMutuallyConnected(target:GraphNode<T>):Bool
 	{
-		#if debug
 		assert(target != null, "target is null");
-		#end
 		
 		return getArc(target) != null && target.getArc(this) != null;
 	}
@@ -148,10 +144,8 @@ class GraphNode<T> implements Hashable
 	 */
 	public function getArc(target:GraphNode<T>):GraphArc<T>
 	{
-		#if debug
 		assert(target != null, "target is null");
 		assert(target != this, "target equals this node");
-		#end
 		
 		var found = false;
 		var a = arcList;
@@ -179,10 +173,8 @@ class GraphNode<T> implements Hashable
 	 */
 	public function addArc(target:GraphNode<T>, cost = 1.)
 	{
-		#if debug
 		assert(target != this, "target is null");
 		assert(getArc(target) == null, "arc to target already exists");
-		#end
 		
 		var arc =
 		if (mGraph.borrowArc != null)
@@ -202,10 +194,8 @@ class GraphNode<T> implements Hashable
 	 */
 	public function removeArc(target:GraphNode<T>):Bool
 	{
-		#if debug
 		assert(target != this, "target is null");
 		assert(getArc(target) != null, "arc to target does not exist");
-		#end
 		
 		var arc = getArc(target);
 		if (arc != null)

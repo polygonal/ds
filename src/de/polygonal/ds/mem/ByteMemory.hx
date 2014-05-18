@@ -38,18 +38,14 @@ class ByteMemory extends MemoryAccess
 	#if flash
 	public static function toByteArray(input:ByteMemory, min = -1, max = -1):flash.utils.ByteArray
 	{
-		#if debug
 		assert(input != null, "invalid input");
-		#end
 		
 		if (min == -1) min = 0;
 		if (max == -1) max = input.size;
 		
-		#if debug
 		assert(min >= 0, 'min out of range ($min)');
 		assert(max <= input.size, 'max out of range ($max)');
 		assert(max - min > 0, 'min equals max ($min)');
-		#end
 		
 		var t = min;
 		min = input.getAddr(t);
@@ -74,19 +70,15 @@ class ByteMemory extends MemoryAccess
 	 */
 	public static function ofByteArray(input:flash.utils.ByteArray, min = -1, max = -1):ByteMemory
 	{
-		#if debug
 		assert(input != null, "invalid input");
-		#end
 		
 		if (min == -1) min = 0;
 		if (max == -1) max = input.length;
 		
 		input.position = min;
 		
-		#if debug
-		assert(min >= 0, "min >= 0");
+		assert(min >= 0);
 		assert(max <= Std.int(input.length), "max <= input.length");
-		#end
 		
 		var output = new ByteMemory(max - min, "ofByteArray");
 		for (i in min...max) output.set(i - min, input.readByte());
@@ -102,18 +94,14 @@ class ByteMemory extends MemoryAccess
 	 */
 	public static function toBytesData(input:ByteMemory, min = -1, max = -1):haxe.io.BytesData
 	{
-		#if debug
 		assert(input != null, "invalid input");
-		#end
 		
 		if (min == -1) min = 0;
 		if (max == -1) max = input.size;
 		
-		#if debug
 		assert(min >= 0, 'min out of range ($min)');
 		assert(max <= input.size, 'max out of range ($max)');
 		assert(max - min > 0, 'min equals max ($min)');
-		#end
 		
 		var output = new haxe.io.BytesBuffer();
 		for (i in 0...max - min) output.addByte(input.get(min + i));
@@ -127,19 +115,15 @@ class ByteMemory extends MemoryAccess
 	 */
 	public static function ofBytesData(input:haxe.io.BytesData, min = -1, max = -1):ByteMemory
 	{
-		#if debug
 		assert(input != null, "invalid input");
-		#end
 		
 		if (min == -1) min = 0;
 		
 		var bytes = haxe.io.Bytes.ofData(input);
 		if (max == -1) max = bytes.length;
 		
-		#if debug
-		assert(min >= 0, "min >= 0");
+		assert(min >= 0);
 		assert(max <= Std.int(bytes.length), "max <= input.length");
-		#end
 		
 		var output = new ByteMemory(max - min, "ofBytesData");
 		for (i in min...max) output.set(i - min, bytes.get(i));
@@ -153,18 +137,14 @@ class ByteMemory extends MemoryAccess
 	 */
 	public static function toArray(input:ByteMemory, min = -1, max = -1):Array<Int>
 	{
-		#if debug
 		assert(input != null, "invalid input");
-		#end
 		
 		if (min == -1) min = 0;
 		if (max == -1) max = input.size;
 		
-		#if debug
 		assert(min >= 0, 'min out of range ($min)');
 		assert(max <= input.size, 'max out of range ($max)');
 		assert(max - min > 0, 'min equals max ($min)');
-		#end
 		
 		var output = new Array();
 		
@@ -190,17 +170,13 @@ class ByteMemory extends MemoryAccess
 	 */
 	public static function ofArray(input:Array<Int>, min = -1, max = -1):ByteMemory
 	{
-		#if debug
 		assert(input != null, "invalid input");
-		#end
 		
 		if (min == -1) min = 0;
 		if (max == -1) max = input.length;
 		
-		#if debug
-		assert(min >= 0, "min >= 0");
+		assert(min >= 0);
 		assert(max <= Std.int(input.length), "max <= input.length");
-		#end
 		
 		var output = new ByteMemory(max - min, "ofArray");
 		for (i in min...max) output.set(i - min, input[i]);
@@ -216,18 +192,14 @@ class ByteMemory extends MemoryAccess
 	 */
 	public static function toVector(input:ByteMemory, min = -1, max = -1, output:Vector<Int> = null):Vector<Int>
 	{
-		#if debug
 		assert(input != null, "invalid input");
-		#end
 		
 		if (min == -1) min = 0;
 		if (max == -1) max = input.size;
 		
-		#if debug
 		assert(min >= 0, 'min out of range ($min)');
 		assert(max <= input.size, 'max out of range ($max)');
 		assert(max - min > 0, 'min equals max ($min)');
-		#end
 		
 		#if (debug && flash && generic)
 		if (output != null)
@@ -260,17 +232,13 @@ class ByteMemory extends MemoryAccess
 	 */
 	public static function ofVector(input:Vector<Int>, min = -1, max = -1):ByteMemory
 	{
-		#if debug
 		assert(input != null, "invalid input");
-		#end
 		
 		if (min == -1) min = 0;
 		if (max == -1) max = input.length;
 		
-		#if debug
-		assert(min >= 0, "min >= 0");
+		assert(min >= 0);
 		assert(max <= Std.int(input.length), "max <= input.length");
-		#end
 		
 		var output = new ByteMemory(max - min, "ofVector");
 		for (i in min...max) output.set(i - min, input[i]);
@@ -385,9 +353,7 @@ class ByteMemory extends MemoryAccess
 	 */
 	override public function resize(newSize:Int)
 	{
-		#if debug
 		assert(newSize >= 0, 'invalid size ($newSize)');
-		#end
 		
 		#if alchemy
 		super.resize(newSize);
@@ -450,9 +416,7 @@ class ByteMemory extends MemoryAccess
 	 */
 	inline public function swp(i:Int, j:Int)
 	{
-		#if debug
 		assert(i != j, 'i equals j ($i)');
-		#end
 		
 		#if (flash && alchemy)
 		var ai = getAddr(i);
@@ -472,10 +436,8 @@ class ByteMemory extends MemoryAccess
 	 */
 	inline public function getAddr(i:Int):Int
 	{
-		#if debug
 		assert(i >= 0 && i < size, 'segfault, index $i');
 		assert(mMemory != null, "memory deallocated");
-		#end
 		
 		#if alchemy
 		return offset + i;

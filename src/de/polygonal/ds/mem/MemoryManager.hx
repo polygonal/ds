@@ -108,11 +108,9 @@ class MemoryManager
 	
 	function new()
 	{
-		#if debug
-		assert(M.isPow2(BLOCK_SIZE_BYTES), "M.isPow2(BLOCK_SIZE_BYTES)");
-		assert(BLOCK_SIZE_BYTES >= 1024, "BLOCK_SIZE_BYTES >= 1024");
-		assert(RAW_BYTES >= 1024, "RAW_BYTES >= 1024");
-		#end
+		assert(M.isPow2(BLOCK_SIZE_BYTES));
+		assert(BLOCK_SIZE_BYTES >= 1024);
+		assert(RAW_BYTES >= 1024);
 		
 		mBlockSizeBytes = BLOCK_SIZE_BYTES;
 		mBlockSizeShift = Bits.ntz(mBlockSizeBytes);
@@ -199,12 +197,10 @@ class MemoryManager
 	#if (flash && alchemy)
 	public function memmove(destination:Int, source:Int, n:Int)
 	{
-		#if debug
-		assert(destination >= 0 && source >= 0 && n >= 0, "destination >= 0 && source >= 0 && n >= 0");
+		assert(destination >= 0 && source >= 0 && n >= 0);
 		assert(source < Std.int(mBytes.length), "source < Std.int(bytes.length)");
 		assert(destination + n <= Std.int(mBytes.length), "destination + n <= Std.int(bytes.length)");
 		assert(n <= Std.int(mBytes.length), "n <= Std.int(bytes.length)");
-		#end
 		
 		if (source == destination)
 			return;
@@ -241,13 +237,11 @@ class MemoryManager
 	{
 		mChanged = true;
 		
-		#if debug
 		//check upper limit
 		assert(bytesUsed + numBytes < MEMORY_LIMIT_BYTES, 'OOM (failed to allocate $numBytes bytes, ${bytesUsed} out of ${bytesTotal} bytes used)');
 		assert(numBytes > 0, "invalid numBytes");
 		assert(access != null, "invalid access");
 		assert(access.mMemory == null, "access already allocated");
-		#end
 		
 		//allocate more memory?
 		var bytesLeft = bytesTotal - bytesUsed;
@@ -278,10 +272,8 @@ class MemoryManager
 	 */
 	public function dealloc(access:MemoryAccess)
 	{
-		#if debug
 		assert(access != null, "invalid access");
 		assert(access.mMemory != null, "access already deallocated");
-		#end
 		
 		//resolve memory from access
 		var memory:MemorySegment = access.mMemory;
@@ -321,18 +313,14 @@ class MemoryManager
 	{
 		mChanged = true;
 		
-		#if debug
 		assert(access != null, "invalid access");
 		assert(numBytes > 0, "invalid numBytes");
 		assert(access.mMemory != null, "access already deallocated");
-		#end
 		
 		//resolve memory from access
 		var memory:MemorySegment = access.mMemory;
 		
-		#if debug
 		assert(!memory.isEmpty, "invalid access");
-		#end
 		
 		//early out; no change in size
 		if (numBytes == memory.size) return;
@@ -948,9 +936,6 @@ private class MemorySegment
 			}
 			else
 			{
-				#if debug
-				assert(x != null, "x != null");
-				#end
 				if (x == null)
 				{
 					monitor.removeEventListener(flash.events.TimerEvent.TIMER, checkPointer);

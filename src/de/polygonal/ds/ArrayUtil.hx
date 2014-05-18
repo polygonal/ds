@@ -31,9 +31,7 @@ class ArrayUtil
 	 */
 	inline public static function alloc<T>(x:Int):Array<T>
 	{
-		#if debug
-		assert(x >= 0, "x >= 0");
-		#end
+		assert(x >= 0);
 		
 		var a:Array<T>;
 		#if (flash || js)
@@ -77,13 +75,11 @@ class ArrayUtil
 	{
 		if (max == -1) max = src.length;
 		
-		#if debug
-		assert(src != null, "src != null");
-		assert(dst != null, "dst != null");
-		assert(min >= 0, "min >= 0");
-		assert(max <= src.length, "max <= src.length");
-		assert(min < max, "min < max");
-		#end
+		assert(src != null);
+		assert(dst != null);
+		assert(min >= 0);
+		assert(max <= src.length);
+		assert(min < max);
 		
 		var j = 0;
 		for (i in min...max) dst[j++] = src[i];
@@ -121,12 +117,10 @@ class ArrayUtil
 	 */
 	public static function memmove<T>(a:Array<T>, destination:Int, source:Int, n:Int)
 	{
-		#if debug
-		assert(destination >= 0 && source >= 0 && n >= 0, "destination >= 0 && source >= 0 && n >= 0");
-		assert(source < a.length, "source < a.length");
-		assert(destination + n <= a.length, "destination + n <= a.length");
-		assert(n <= a.length, "n <= a.length");
-		#end
+		assert(destination >= 0 && source >= 0 && n >= 0);
+		assert(source < a.length);
+		assert(destination + n <= a.length);
+		assert(n <= a.length);
 		
 		if (source == destination)
 			return;
@@ -164,12 +158,10 @@ class ArrayUtil
 	 */
 	public static function bsearchComparator<T>(a:Array<T>, x:T, min:Int, max:Int, comparator:T->T->Int):Int
 	{
-		#if debug
-		assert(a != null, "a != null");
-		assert(comparator != null, "comparator != null");
-		assert(min >= 0 && min < a.length, "min >= 0 && min < a.length");
-		assert(max < a.length, "max < a.length");
-		#end
+		assert(a != null);
+		assert(comparator != null);
+		assert(min >= 0 && min < a.length);
+		assert(max < a.length);
 		
 		var l = min, m, h = max + 1;
 		while (l < h)
@@ -196,11 +188,9 @@ class ArrayUtil
 	 */
 	public static function bsearchInt(a:Array<Int>, x:Int, min:Int, max:Int):Int
 	{
-		#if debug
-		assert(a != null, "a != null");
-		assert(min >= 0 && min < a.length, "min >= 0 && min < a.length");
-		assert(max < a.length, "max < a.length");
-		#end
+		assert(a != null);
+		assert(min >= 0 && min < a.length);
+		assert(max < a.length);
 		
 		var l = min, m, h = max + 1;
 		while (l < h)
@@ -227,11 +217,9 @@ class ArrayUtil
 	 */
 	public static function bsearchFloat(a:Array<Float>, x:Float, min:Int, max:Int):Int
 	{
-		#if debug
-		assert(a != null, "a != null");
-		assert(min >= 0 && min < a.length, "min >= 0 && min < a.length");
-		assert(max < a.length, "max < a.length");
-		#end
+		assert(a != null);
+		assert(min >= 0 && min < a.length);
+		assert(max < a.length);
 		
 		var l = min, m, h = max + 1;
 		while (l < h)
@@ -257,9 +245,7 @@ class ArrayUtil
 	 */
 	public static function shuffle<T>(a:Array<T>, rval:Array<Float> = null)
 	{
-		#if debug
-		assert(a != null, "a != null");
-		#end
+		assert(a != null);
 		
 		var s = a.length;
 		if (rval == null)
@@ -275,9 +261,7 @@ class ArrayUtil
 		}
 		else
 		{
-			#if debug
 			assert(rval.length >= a.length, "insufficient random values");
-			#end
 			
 			var j = 0;
 			while (--s > 1)
@@ -304,10 +288,8 @@ class ArrayUtil
 		var k = a.length;
 		if (k > 1)
 		{
-			#if debug
 			assert(first >= 0 && first <= k - 1 && first + count <= k, "first out of bound");
 			assert(count >= 0 && count <= k, "count out of bound");
-			#end
 			
 			if (useInsertionSort)
 				insertionSort(a, first, count, compare);
@@ -376,9 +358,7 @@ class ArrayUtil
 	 */
 	public static function split<T>(a:Array<T>, n:Int, k:Int):Array<Array<T>>
 	{
-		#if debug
 		assert(n % k == 0, "n is not a multiple of k");
-		#end
 		
 		var output = new Array<Array<T>>();
 		var b:Array<T> = null;

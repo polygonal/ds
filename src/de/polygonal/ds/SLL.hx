@@ -188,9 +188,7 @@ class SLL<T> implements Collection<T>
 	 */
 	inline public function appendNode(x:SLLNode<T>)
 	{
-		#if debug
 		assert(x.getList() == this, "node is not managed by this list");
-		#end
 		
 		if (valid(tail))
 			tail.next = x;
@@ -237,9 +235,7 @@ class SLL<T> implements Collection<T>
 	 */
 	public function prependNode(x:SLLNode<T>)
 	{
-		#if debug
 		assert(x.getList() == this, "node is not managed by this list");
-		#end
 		
 		if (valid(tail))
 			x.next = head;
@@ -264,9 +260,10 @@ class SLL<T> implements Collection<T>
 		#if debug
 		if (maxSize != -1)
 			assert(size() < maxSize, 'size equals max size ($maxSize)');
+		#end
+		
 		assert(valid(node), "node is null");
 		assert(node.getList() == this, "node is not managed by this list");
-		#end
 		
 		var t = getNode(x);
 		node.insertAfter(t);
@@ -292,9 +289,10 @@ class SLL<T> implements Collection<T>
 		#if debug
 		if (maxSize != -1)
 			assert(size() < maxSize, 'size equals max size ($maxSize)');
+		#end
+		
 		assert(valid(node), "node is null");
 		assert(node.getList() == this, "node is not managed by this list");
-		#end
 		
 		var t = getNode(x);
 		if (node == head)
@@ -320,11 +318,9 @@ class SLL<T> implements Collection<T>
 	 */
 	inline public function unlink(node:SLLNode<T>):SLLNode<T>
 	{
-		#if debug
 		assert(valid(node), "node is null");
 		assert(node.getList() == this, "node is not managed by this list");
 		assert(mSize > 0, "list is empty");
-		#end
 		
 		var hook = node.next;
 		
@@ -366,10 +362,8 @@ class SLL<T> implements Collection<T>
 	 */
 	public function getNodeAt(i:Int):SLLNode<T>
 	{
-		#if debug
 		assert(mSize > 0, "list is empty");
 		assert(i >= 0 || i < mSize, 'i index out of range ($i)');
-		#end
 		
 		var node = head;
 		for (j in 0...i) node = node.next;
@@ -383,9 +377,7 @@ class SLL<T> implements Collection<T>
 	 */
 	inline public function removeHead():T
 	{
-		#if debug
 		assert(mSize > 0, "list is empty");
-		#end
 		
 		var node = head;
 		if (mSize > 1)
@@ -411,9 +403,7 @@ class SLL<T> implements Collection<T>
 	 */
 	inline public function removeTail():T
 	{
-		#if debug
 		assert(mSize > 0, "list is empty");
-		#end
 		
 		var node = tail;
 		if (mSize > 1)
@@ -444,9 +434,7 @@ class SLL<T> implements Collection<T>
 	 */
 	inline public function shiftUp()
 	{
-		#if debug
 		assert(mSize > 0, "list is empty");
-		#end
 		
 		if (mSize > 1)
 		{
@@ -475,9 +463,7 @@ class SLL<T> implements Collection<T>
 	 */
 	inline public function popDown()
 	{
-		#if debug
 		assert(mSize > 0, "list is empty");
-		#end
 		
 		if (mSize > 1)
 		{
@@ -565,9 +551,10 @@ class SLL<T> implements Collection<T>
 		#if debug
 		if (maxSize != -1)
 			assert(size() + x.size() <= maxSize, 'size equals max size ($maxSize)');
+		#end
+		
 		assert(x != this, "x equals this list");
 		assert(x != null, "x is null");
-		#end
 		
 		if (valid(x.head))
 		{
@@ -605,10 +592,8 @@ class SLL<T> implements Collection<T>
 	 */
 	public function concat(x:SLL<T>):SLL<T>
 	{
-		#if debug
 		assert(x != null, "x is null");
 		assert(x != this, "x equals this list");
-		#end
 		
 		var c = new SLL<T>();
 		var node = head;
@@ -684,9 +669,7 @@ class SLL<T> implements Collection<T>
 	 */
 	public function assign(C:Class<T>, args:Array<Dynamic> = null, n = 0)
 	{
-		#if debug
-		assert(n >= 0, "n >= 0");
-		#end
+		assert(n >= 0);
 		
 		if (n > 0)
 		{
@@ -715,9 +698,7 @@ class SLL<T> implements Collection<T>
 	 */
 	public function fill(x:T, args:Array<Dynamic> = null, n = 0):SLL<T>
 	{
-		#if debug
-		assert(n >= 0, "n >= 0");
-		#end
+		assert(n >= 0);
 		
 		if (n > 0)
 		{
@@ -775,9 +756,7 @@ class SLL<T> implements Collection<T>
 		}
 		else
 		{
-			#if debug
 			assert(rval.length >= size(), "insufficient random values");
-			#end
 			
 			var j = 0;
 			while (s > 1)
@@ -1089,9 +1068,7 @@ class SLL<T> implements Collection<T>
 		{
 			var srcNode = head;
 			
-			#if debug
 			assert(Std.is(head.val, Cloneable), 'element is not of type Cloneable (${head.val})');
-			#end
 			
 			var c = cast(head.val, Cloneable<Dynamic>);
 			var dstNode = copy.head = new SLLNode<T>(c.clone(), copy);
@@ -1104,9 +1081,7 @@ class SLL<T> implements Collection<T>
 			srcNode = srcNode.next;
 			for (i in 1...mSize - 1)
 			{
-				#if debug
 				assert(Std.is(srcNode.val, Cloneable), 'element is not of type Cloneable (${srcNode.val})');
-				#end
 				
 				c = cast(srcNode.val, Cloneable<Dynamic>);
 				
@@ -1114,9 +1089,7 @@ class SLL<T> implements Collection<T>
 				srcNode = srcNode.next;
 			}
 			
-			#if debug
 			assert(Std.is(srcNode.val, Cloneable), 'element is not of type Cloneable (${srcNode.val})');
-			#end
 			
 			c = cast(srcNode.val, Cloneable<Dynamic>);
 			copy.tail = dstNode.next = new SLLNode<T>(c.clone(), copy);
@@ -1183,9 +1156,7 @@ class SLL<T> implements Collection<T>
 					}
 					else
 					{
-						#if debug
 						assert(Std.is(p.val, Comparable), 'element is not of type Comparable (${p.val})');
-						#end
 						
 						if (cast(p.val, Comparable<Dynamic>).compare(q.val) >= 0)
 						{
@@ -1302,9 +1273,7 @@ class SLL<T> implements Collection<T>
 			val = v[i];
 			j = i;
 			
-			#if debug
 			assert(Std.is(v[j - 1], Comparable), 'element is not of type Comparable (${v[j - 1]})');
-			#end
 			
 			while ((j > 0) && cast(v[j - 1], Comparable<Dynamic>).compare(val) < 0)
 			{
@@ -1385,9 +1354,7 @@ class SLL<T> implements Collection<T>
 			return new SLLNode<T>(x, this);
 		else
 		{
-			#if debug
 			assert(valid(mHeadPool.next), "mHeadPool.next != null");
-			#end
 			
 			var t = mHeadPool;
 			mHeadPool = mHeadPool.next;
@@ -1404,9 +1371,7 @@ class SLL<T> implements Collection<T>
 		
 		if (mReservedSize > 0 && mPoolSize < mReservedSize)
 		{
-			#if debug
-			assert(x.next == null, "x.next == null");
-			#end
+			assert(x.next == null);
 			
 			mTailPool = mTailPool.next = x;
 			x.val = cast null;
@@ -1460,9 +1425,7 @@ class SLLIterator<T> implements de.polygonal.ds.Itr<T>
 	
 	inline public function remove()
 	{
-		#if debug
 		assert(mHook != null, "call next() before removing an element");
-		#end
 		
 		mF.unlink(mHook);
 	}
@@ -1513,9 +1476,7 @@ class CircularSLLIterator<T> implements de.polygonal.ds.Itr<T>
 	
 	inline public function remove()
 	{
-		#if debug
 		assert(mI > 0, "call next() before removing an element");
-		#end
 		
 		mF.unlink(mHook);
 		mI--;

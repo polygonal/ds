@@ -100,9 +100,7 @@ class BitVector implements Hashable
 	 */
 	inline public function has(i:Int):Bool
 	{
-		#if debug
 		assert(i < capacity(), 'i index out of range ($i)');
-		#end
 		
 		return ((mBits[i >> 5] & (1 << (i & (32 - 1)))) >> (i & (32 - 1))) != 0;
 	}
@@ -114,9 +112,7 @@ class BitVector implements Hashable
 	 */
 	inline public function set(i:Int)
 	{
-		#if debug
 		assert(i < capacity(), 'i index out of range ($i)');
-		#end
 		
 		var p = i >> 5;
 		mBits[p] = mBits[p] | (1 << (i & (32 - 1)));
@@ -129,9 +125,7 @@ class BitVector implements Hashable
 	 */
 	inline public function clr(i:Int)
 	{
-		#if debug
 		assert(i < capacity(), 'i index out of range ($i)');
-		#end
 		
 		var p = i >> 5;
 		mBits[p] = mBits[p] & (~(1 << (i & (32 - 1))));
@@ -164,9 +158,7 @@ class BitVector implements Hashable
 	 */
 	public function clrRange(min:Int, max:Int)
 	{
-		#if debug
 		assert(min >= 0 && min <= max && max < mBitSize, 'min/max out of range ($min/$max)');
-		#end
 		
 		var current = min;
 		
@@ -191,9 +183,7 @@ class BitVector implements Hashable
 	 */
 	public function setRange(min:Int, max:Int)
 	{
-		#if debug
 		assert(min >= 0 && min <= max && max < mBitSize, 'min/max out of range ($min/$max)');
-		#end
 		
 		var current = min;
 		
@@ -226,9 +216,7 @@ class BitVector implements Hashable
 	 */
 	inline public function getBucketAt(i:Int):Int
 	{
-		#if debug
 		assert(i >= 0 && i < mArrSize, 'i index out of range ($i)');
-		#end
 		
 		return mBits[i];
 	}

@@ -68,17 +68,13 @@ class BitMemory extends MemoryAccess
 	#if flash
 	public static function ofByteArray(input:flash.utils.ByteArray, min = -1, max = -1):BitMemory
 	{
-		#if debug
 		assert(input != null, "invalid input");
-		#end
 		
 		if (min == -1) min = 0;
 		if (max == -1) max = input.length;
 		
-		#if debug
-		assert(min >= 0, "min >= 0");
+		assert(min >= 0);
 		assert(max <= Std.int(input.length), "max <= input.length");
-		#end
 		
 		var output = new BitMemory((max - min) << 3, "ofByteArray");
 		#if alchemy
@@ -137,9 +133,7 @@ class BitMemory extends MemoryAccess
 	 */
 	public static function ofBytesData(input:haxe.io.BytesData, min = -1, max = -1):BitMemory
 	{
-		#if debug
 		assert(input != null, "invalid input");
-		#end
 		
 		if (min == -1) min = 0;
 		if (max == -1) max =
@@ -149,16 +143,12 @@ class BitMemory extends MemoryAccess
 		input.length;
 		#end
 		
-		#if debug
-		assert(min >= 0, "min >= 0");
-		#end
+		assert(min >= 0);
 		
-		#if debug
 		#if neko
 		assert(max <= neko.NativeString.length(input), "max <= input.length");
 		#else
 		assert(max <= Std.int(input.length), "max <= input.length");
-		#end
 		#end
 		
 		var output = new BitMemory((max - min) << 3, "ofByteArray");
@@ -266,9 +256,7 @@ class BitMemory extends MemoryAccess
 	 */
 	public function fill(x:Int):BitMemory
 	{
-		#if debug
 		assert(x == 0 || x == 1, "x == 0 || x == 1");
-		#end
 		
 		#if alchemy
 		var offset = getAddr(0);
@@ -298,9 +286,7 @@ class BitMemory extends MemoryAccess
 	 */
 	override public function resize(newSize:Int)
 	{
-		#if debug
 		assert(newSize >= 0, 'invalid size ($newSize)');
-		#end
 		
 		var newBytes = ((size & (32 - 1)) > 0 ? ((size >> 5) + 1) : (size >> 5)) << 2;
 		
@@ -416,10 +402,8 @@ class BitMemory extends MemoryAccess
 	 */
 	inline public function getAddr(i:Int):Int
 	{
-		#if debug
 		assert(i >= 0 && i < size, 'segfault, index $i');
 		assert(mMemory != null, "memory deallocated");
-		#end
 		
 		#if alchemy
 		return offset + ((i >> 5) << 2);

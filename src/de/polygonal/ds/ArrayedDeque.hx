@@ -84,10 +84,8 @@ class ArrayedDeque<T> implements Deque<T>
 		if (blockSize == M.INT16_MIN) return;
 		assert(blockSize > 0);
 		
-		#if debug
 		assert(M.isPow2(blockSize), "blockSize is not a power of 2");
 		assert(blockSize >= 4, "blockSize is too small");
-		#end
 		
 		#if debug
 		this.maxSize = (maxSize == -1) ? M.INT32_MAX : maxSize;
@@ -122,9 +120,7 @@ class ArrayedDeque<T> implements Deque<T>
 	 */
 	inline public function front():T
 	{
-		#if debug
 		assert(size() > 0, "deque is empty");
-		#end
 		
 		return (mHead == mBlockSizeMinusOne) ? mHeadBlockNext[0] : mHeadBlock[mHead + 1];
 	}
@@ -152,9 +148,7 @@ class ArrayedDeque<T> implements Deque<T>
 	 */
 	inline public function popFront():T
 	{
-		#if debug
 		assert(size() > 0, "deque is empty");
-		#end
 		
 		if (mHead == mBlockSizeMinusOne)
 		{
@@ -172,9 +166,7 @@ class ArrayedDeque<T> implements Deque<T>
 	 */
 	inline public function back():T
 	{
-		#if debug
 		assert(size() > 0, "deque is empty");
-		#end
 		
 		return (mTail == 0) ? (mTailBlockPrev[mBlockSizeMinusOne]) : mTailBlock[mTail - 1];
 	}
@@ -203,9 +195,7 @@ class ArrayedDeque<T> implements Deque<T>
 	 */
 	public function popBack():T
 	{
-		#if debug
 		assert(size() > 0, "deque is empty");
-		#end
 		
 		if (mTail == 0)
 		{
@@ -225,9 +215,7 @@ class ArrayedDeque<T> implements Deque<T>
 	 */
 	public function getFront(i:Int):T
 	{
-		#if debug
 		assert(i < size(), 'index out of range ($i)');
-		#end
 		
 		var c = (mHead + 1) + i;
 		var b = (c >> mBlockSizeShift);
@@ -261,9 +249,7 @@ class ArrayedDeque<T> implements Deque<T>
 	 */
 	public function getBack(i:Int):T
 	{
-		#if debug
 		assert(i < size(), 'index out of range ($i)');
-		#end
 		
 		var c = mTail - 1 - i;
 		var b = c >> mBlockSizeShift;
@@ -1069,9 +1055,7 @@ class ArrayedDeque<T> implements Deque<T>
 	{
 		for (j in min...max)
 		{
-			#if debug
 			assert(Std.is(src[j], Cloneable), 'element is not of type Cloneable (${src[j]})');
-			#end
 			
 			dst[j] = src[j];
 		}
@@ -1084,13 +1068,13 @@ class ArrayedDeque<T> implements Deque<T>
 	}
 }
 
-#if doc
-private
-#end
 #if (flash && generic)
 @:generic
 #end
 @:access(de.polygonal.ds.ArrayedDeque)
+#if doc
+private
+#end
 class ArrayedDequeIterator<T> implements de.polygonal.ds.Itr<T>
 {
 	var mF:ArrayedDeque<T>;

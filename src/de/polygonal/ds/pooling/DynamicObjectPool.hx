@@ -141,9 +141,7 @@ class DynamicObjectPool<T>
 		if (fabricate != null) mAllocType |= Bits.BIT_02;
 		if (factory   != null) mAllocType |= Bits.BIT_03;
 		
-		#if debug
 		assert(Bits.ones(mAllocType) == 1, "invalid arguments");
-		#end
 		
 		key = HashKey.next();
 		
@@ -300,14 +298,14 @@ class DynamicObjectPool<T>
 #if (flash && generic)
 @:generic
 #end
+@:access(de.polygonal.ds.pooling.DynamicObjectPool)
 #if doc
 private
 #end
-@:access(de.polygonal.ds.pooling.DynamicObjectPool)
 class DynamicObjectPoolIterator<T> implements de.polygonal.ds.Itr<T>
 {
 	var mF:DynamicObjectPool<T>;
-	var mA:Array<T>;
+	var mData:Array<T>;
 	var mS:Int;
 	var mI:Int;
 	
@@ -319,7 +317,7 @@ class DynamicObjectPoolIterator<T> implements de.polygonal.ds.Itr<T>
 	
 	inline public function reset():Itr<T>
 	{
-		mA = mF.mPool;
+		mData = mF.mPool;
 		mS = mF.mSize;
 		mI = 0;
 		return this;
@@ -337,6 +335,6 @@ class DynamicObjectPoolIterator<T> implements de.polygonal.ds.Itr<T>
 	
 	inline public function next():T
 	{
-		return mA[mI++];
+		return mData[mI++];
 	}
 }

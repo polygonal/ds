@@ -40,18 +40,14 @@ class FloatMemory extends MemoryAccess
 	#if flash
 	public static function toByteArray(input:FloatMemory, min = -1, max = -1):flash.utils.ByteArray
 	{
-		#if debug
 		assert(input != null, "invalid input");
-		#end
 		
 		if (min == -1) min = 0;
 		if (max == -1) max = input.size;
 		
-		#if debug
 		assert(min >= 0, 'min out of range ($min)');
 		assert(max <= input.size, 'max out of range ($max)');
 		assert(max - min > 0, 'min equals max ($min)');
-		#end
 		
 		min = input.getAddr(min);
 		max = input.getAddr(max - 1);
@@ -82,17 +78,13 @@ class FloatMemory extends MemoryAccess
 	#if flash
 	public static function ofByteArray(input:flash.utils.ByteArray, min = -1, max = -1):FloatMemory
 	{
-		#if debug
 		assert(input != null, "invalid input");
-		#end
 		
 		if (min == -1) min = 0;
 		if (max == -1) max = input.length;
 		
-		#if debug
-		assert(min >= 0, "min >= 0");
+		assert(min >= 0);
 		assert(max <= Std.int(input.length), "max <= input.length");
-		#end
 		
 		input.position = min;
 		min >>= 2;
@@ -112,18 +104,14 @@ class FloatMemory extends MemoryAccess
 	 */
 	public static function toBytesData(input:FloatMemory, min = -1, max = -1):haxe.io.BytesData
 	{
-		#if debug
 		assert(input != null, "invalid input");
-		#end
 		
 		if (min == -1) min = 0;
 		if (max == -1) max = input.size;
 		
-		#if debug
 		assert(min >= 0, 'min out of range ($min)');
 		assert(max <= input.size, 'max out of range ($max)');
 		assert(max - min > 0, 'min equals max ($min)');
-		#end
 		
 		var output = new haxe.io.BytesOutput();
 		for (i in 0...max - min) output.writeFloat(input.get(min + i));
@@ -139,9 +127,7 @@ class FloatMemory extends MemoryAccess
 	 */
 	public static function ofBytesData(input:haxe.io.BytesData, min = -1, max = -1):FloatMemory
 	{
-		#if debug
 		assert(input != null, "invalid input");
-		#end
 		
 		if (min == -1) min = 0;
 		if (max == -1) max =
@@ -151,13 +137,12 @@ class FloatMemory extends MemoryAccess
 		input.length;
 		#end
 		
-		#if debug
-		assert(min >= 0, "min >= 0");
+		assert(min >= 0);
+		
 		#if neko
 		assert(max <= neko.NativeString.length(input), "max <= input.length");
 		#else
 		assert(max <= Std.int(input.length), "max <= input.length");
-		#end
 		#end
 		
 		var bytesInput = new haxe.io.BytesInput(haxe.io.Bytes.ofData(input), min);
@@ -178,9 +163,7 @@ class FloatMemory extends MemoryAccess
 	 */
 	public static function toArray(input:FloatMemory, min = -1, max = -1):Array<Float>
 	{
-		#if debug
 		assert(input != null, "invalid input");
-		#end
 		
 		if (min == -1) min = 0;
 		if (max == -1) max = input.size;
@@ -219,7 +202,7 @@ class FloatMemory extends MemoryAccess
 		if (min == -1) min = 0;
 		if (max == -1) max = input.length;
 		
-		assert(min >= 0, "min >= 0");
+		assert(min >= 0);
 		assert(max <= Std.int(input.length), "max <= input.length");
 		
 		var output = new FloatMemory(max - min, "ofArray");
@@ -285,7 +268,7 @@ class FloatMemory extends MemoryAccess
 		if (min == -1) min = 0;
 		if (max == -1) max = input.length;
 		
-		assert(min >= 0, "min >= 0");
+		assert(min >= 0);
 		assert(max <= Std.int(input.length), "max <= input.length");
 		
 		var output = new FloatMemory(max - min, "ofVector");

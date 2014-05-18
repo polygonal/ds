@@ -54,7 +54,7 @@ class ArrayedQueue<T> implements Queue<T>
 	 */
 	public var reuseIterator:Bool;
 	
-	var mA:Array<T>;
+	var mData:Vector<T>;
 	
 	var mSize:Int;
 	var mSizeLevel:Int;
@@ -104,7 +104,7 @@ class ArrayedQueue<T> implements Queue<T>
 		mIsResizable = isResizable;
 		mSizeLevel = 0;
 		mSize = mFront = 0;
-		mA = ArrayUtil.alloc(mCapacity);
+		mData = new Vector<T>(mCapacity);
 		mIterator = null;
 		key = HashKey.next();
 		reuseIterator = false;
@@ -118,9 +118,8 @@ class ArrayedQueue<T> implements Queue<T>
 	 */
 	inline public function peek():T
 	{
-		#if debug
 		assert(mSize > 0, "queue is empty");
-		#end
+		
 		return _get(mFront);
 	}
 	
@@ -132,9 +131,7 @@ class ArrayedQueue<T> implements Queue<T>
 	 */
 	inline public function back():T
 	{
-		#if debug
 		assert(mSize > 0, "queue is empty");
-		#end
 		
 		return _get((mSize - 1 + mFront) % mCapacity);
 	}
@@ -180,9 +177,7 @@ class ArrayedQueue<T> implements Queue<T>
 	 */
 	public function dequeue():T
 	{
-		#if debug
 		assert(mSize > 0, "queue is empty");
-		#end
 		
 		#if debug
 		mOp0 = ++mOp1;
@@ -214,9 +209,7 @@ class ArrayedQueue<T> implements Queue<T>
 	 */
 	inline public function dispose()
 	{
-		#if debug
 		assert(mOp0 == mOp1, "dispose() is only allowed directly after dequeue()");
-		#end
 		
 		_set((mFront == 0 ? mCapacity : mFront) - 1, cast null);
 	}
@@ -242,10 +235,8 @@ class ArrayedQueue<T> implements Queue<T>
 	 */
 	inline public function get(i:Int):T
 	{
-		#if debug
 		assert(mSize > 0, "queue is empty");
 		assert(i < mSize, 'i index out of range ($i)');
-		#end
 		
 		return _get((i + mFront) % mCapacity);
 	}
@@ -259,10 +250,8 @@ class ArrayedQueue<T> implements Queue<T>
 	 */
 	inline public function set(i:Int, x:T)
 	{
-		#if debug
 		assert(mSize > 0, "queue is empty");
 		assert(i < mSize, 'i index out of range ($i)');
-		#end
 		
 		_set((i + mFront) % mCapacity, x);
 	}
@@ -277,12 +266,10 @@ class ArrayedQueue<T> implements Queue<T>
 	 */
 	inline public function swp(i:Int, j:Int)
 	{
-		#if debug
 		assert(mSize > 0, "queue is empty");
 		assert(i < mSize, 'i index out of range ($i)');
 		assert(j < mSize, 'j index out of range ($j)');
 		assert(i != j, 'i index equals j index ($i)');
-		#end
 		
 		var t = get(i);
 		cpy(i, j);
@@ -299,12 +286,10 @@ class ArrayedQueue<T> implements Queue<T>
 	 */
 	inline public function cpy(i:Int, j:Int)
 	{
-		#if debug
 		assert(mSize > 0, "queue is empty");
 		assert(i < mSize, 'i index out of range ($i)');
 		assert(j < mSize, 'j index out of range ($j)');
 		assert(i != j, 'i index equals j index ($i)');
-		#end
 		
 		set(i, get(j));
 	}
@@ -319,14 +304,11 @@ class ArrayedQueue<T> implements Queue<T>
 	 */
 	public function assign(C:Class<T>, args:Array<Dynamic> = null, n = 0)
 	{
-		#if debug
-		assert(n >= 0, "n >= 0");
-		#end
+		assert(n >= 0);
 		
 		var k = n > 0 ? n : mCapacity;
-		#if debug
+		
 		assert(k <= mCapacity, 'n out of range ($n)');
-		#end
 		
 		if (args == null) args = [];
 		for (i in 0...k)
@@ -343,14 +325,11 @@ class ArrayedQueue<T> implements Queue<T>
 	 */
 	public function fill(x:T, n = 0):ArrayedQueue<T>
 	{
-		#if debug
-		assert(n >= 0, "n >= 0");
-		#end
+		assert(n >= 0);
 		
 		var k = n > 0 ? n : mCapacity;
-		#if debug
+		
 		assert(k <= mCapacity, 'n out of range ($n)');
-		#end
 		
 		for (i in 0...k)
 			_set((i + mFront) % mCapacity, x);
@@ -397,9 +376,7 @@ class ArrayedQueue<T> implements Queue<T>
 		}
 		else
 		{
-			#if debug
 			assert(rval.length >= mSize, "insufficient random values");
-			#end
 			
 			var j = 0;
 			while (s > 1)
@@ -473,8 +450,8 @@ class ArrayedQueue<T> implements Queue<T>
 	 */
 	public function free()
 	{
-		for (i in 0...mCapacity) mA[i] = cast null;
-		mA = null;
+		for (i in 0...mCapacity) mData[i] = cast null;
+		mData = null;
 		mIterator = null;
 	}
 	
@@ -575,7 +552,7 @@ class ArrayedQueue<T> implements Queue<T>
 			{
 				mCapacity >>= mSizeLevel;
 				mSizeLevel = 0;
-				mA = ArrayUtil.alloc(mCapacity);
+				mData = new Vector<T>(mCapacity);
 			}
 		}
 		mFront = mSize = 0;
@@ -653,7 +630,7 @@ class ArrayedQueue<T> implements Queue<T>
 		copy.mSizeLevel = mSizeLevel;
 		if (mCapacity == 0) return copy;
 		
-		var t = copy.mA;
+		var t = copy.mData;
 		if (assign)
 		{
 			for (i in 0...mSize)
@@ -665,9 +642,7 @@ class ArrayedQueue<T> implements Queue<T>
 			var c:Cloneable<Dynamic> = null;
 			for (i in 0...mSize)
 			{
-				#if debug
 				assert(Std.is(_get(i), Cloneable), 'element is not of type Cloneable (${_get(i)})');
-				#end
 				
 				c = cast(_get(i), Cloneable<Dynamic>);
 				t[i] = c.clone();
@@ -686,32 +661,32 @@ class ArrayedQueue<T> implements Queue<T>
 	
 	inline function _pack(newSize:Int)
 	{
-		var tmp:Array<T> = ArrayUtil.alloc(newSize);
+		var tmp = new Vector<T>(newSize);
 		for (i in 0...mSize)
 		{
 			tmp[i] = _get(mFront++);
 			if (mFront == mCapacity) mFront = 0;
 		}
-		mA = tmp;
+		mData = tmp;
 	}
 	
-	inline function _get(i:Int) return mA[i];
+	inline function _get(i:Int) return mData[i];
 	
-	inline function _set(i:Int, x:T) mA[i] = x;
+	inline function _set(i:Int, x:T) mData[i] = x;
 }
 
-#if doc
-private
-#end
 #if (flash && generic)
 @:generic
 #end
 @:access(de.polygonal.ds.ArrayedQueue)
+#if doc
+private
+#end
 class ArrayedQueueIterator<T> implements de.polygonal.ds.Itr<T>
 {
 	var mF:ArrayedQueue<T>;
 	
-	var mA:Array<T>;
+	var mData:Vector<T>;
 	var mFront:Int;
 	var mCapacity:Int;
 	var mSize:Int;
@@ -725,11 +700,14 @@ class ArrayedQueueIterator<T> implements de.polygonal.ds.Itr<T>
 	
 	inline public function reset():Itr<T>
 	{
-		mA = ArrayUtil.copy(mF.mA, new Array<T>());
 		mFront = mF.mFront;
 		mCapacity = mF.mCapacity;
 		mSize = mF.mSize;
 		mI = 0;
+		
+		var tmp = mF.mData;
+		mData = new Vector<T>(mCapacity);
+		for (i in 0...mCapacity) mData[i] = tmp[i];
 		return this;
 	}
 	
@@ -740,14 +718,13 @@ class ArrayedQueueIterator<T> implements de.polygonal.ds.Itr<T>
 	
 	inline public function next():T
 	{
-		return mA[(mI++ + mFront) % mCapacity];
+		return mData[(mI++ + mFront) % mCapacity];
 	}
 	
 	inline public function remove()
 	{
-		#if debug
 		assert(mI > 0, "call next() before removing an element");
-		#end
-		mF.remove(mA[((mI - 1) + mFront) % mCapacity]);
+		
+		mF.remove(mData[((mI - 1) + mFront) % mCapacity]);
 	}
 }

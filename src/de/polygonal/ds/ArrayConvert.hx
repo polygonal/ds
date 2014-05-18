@@ -32,10 +32,8 @@ class ArrayConvert
 	 */
 	public static function toArray2<T>(x:Array<T>, width:Int, height:Int):Array2<T>
 	{
-		#if debug
-		assert(x != null, "x != null");
-		assert(x.length >= width * height, "x.length >= width * height");
-		#end
+		assert(x != null);
+		assert(x.length >= width * height);
 		
 		var c = new Array2<T>(width, height);
 		var a = c.getVector();
@@ -50,10 +48,8 @@ class ArrayConvert
 	 */
 	public static function toArray3<T>(x:Array<T>, width:Int, height:Int, depth:Int):Array3<T>
 	{
-		#if debug
-		assert(x != null, "x != null");
-		assert(x.length >= width * height * depth, "x.length >= width * height * depth");
-		#end
+		assert(x != null);
+		assert(x.length >= width * height * depth);
 		
 		var c = new Array3<T>(width, height, depth);
 		var a = c.getArray();
@@ -69,10 +65,8 @@ class ArrayConvert
 	 */
 	public static function toArrayedQueue<T>(x:Array<T>):ArrayedQueue<T>
 	{
-		#if debug
-		assert(x != null, "x != null");
-		assert(x.length > 0, "x.length > 0");
-		#end
+		assert(x != null);
+		assert(x.length > 0);
 		
 		var k = x.length;
 		var c = new ArrayedQueue<T>(M.nextPow2(k));
@@ -88,10 +82,8 @@ class ArrayConvert
 	 */
 	public static function toArrayedStack<T>(x:Array<T>):ArrayedStack<T>
 	{
-		#if debug
-		assert(x != null, "x != null");
-		assert(x.length > 0, "x.length > 0");
-		#end
+		assert(x != null);
+		assert(x.length > 0);
 		
 		var c = new ArrayedStack<T>(x.length);
 		for (i in 0...x.length) c.push(x[i]);
@@ -106,10 +98,8 @@ class ArrayConvert
 	 */
 	public static function toSLL<T>(x:Array<T>):SLL<T>
 	{
-		#if debug
-		assert(x != null, "x != null");
-		assert(x.length > 0, "x.length > 0");
-		#end
+		assert(x != null);
+		assert(x.length > 0);
 		
 		var c = new SLL<T>();
 		for (i in 0...x.length) c.append(x[i]);
@@ -124,10 +114,8 @@ class ArrayConvert
 	 */
 	public static function toDLL<T>(x:Array<T>):DLL<T>
 	{
-		#if debug
-		assert(x != null, "x != null");
-		assert(x.length > 0, "x.length > 0");
-		#end
+		assert(x != null);
+		assert(x.length > 0);
 		
 		var c = new DLL<T>();
 		for (i in 0...x.length) c.append(x[i]);
@@ -142,10 +130,8 @@ class ArrayConvert
 	 */
 	public static function toLinkedQueue<T>(x:Array<T>):LinkedQueue<T>
 	{
-		#if debug
-		assert(x != null, "x != null");
-		assert(x.length > 0, "x.length > 0");
-		#end
+		assert(x != null);
+		assert(x.length > 0);
 		
 		var c = new LinkedQueue<T>();
 		for (i in 0...x.length) c.enqueue(x[i]);
@@ -160,10 +146,8 @@ class ArrayConvert
 	 */
 	public static function toLinkedStack<T>(x:Array<T>):LinkedStack<T>
 	{
-		#if debug
-		assert(x != null, "x != null");
-		assert(x.length > 0, "x.length > 0");
-		#end
+		assert(x != null);
+		assert(x.length > 0);
 		
 		var c = new LinkedStack<T>();
 		for (i in 0...x.length) c.push(x[i]);
@@ -178,10 +162,8 @@ class ArrayConvert
 	 */
 	public static function toDA<T>(x:Array<T>):DA<T>
 	{
-		#if debug
-		assert(x != null, "x != null");
-		assert(x.length > 0, "x.length > 0");
-		#end
+		assert(x != null);
+		assert(x.length > 0);
 		
 		var c = new DA<T>(x.length);
 		for (i in 0...x.length) c.pushBack(x[i]);

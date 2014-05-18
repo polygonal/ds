@@ -40,11 +40,11 @@ class ListSet<T> implements Set<T>
 	 */
 	public var reuseIterator:Bool;
 	
-	var mA:DA<T>;
+	var mData:DA<T>;
 	
 	public function new()
 	{
-		mA = new DA<T>();
+		mData = new DA<T>();
 		key = HashKey.next();
 		reuseIterator = false;
 	}
@@ -70,7 +70,7 @@ class ListSet<T> implements Set<T>
 		if (isEmpty()) return s;
 		s += "\n[\n";
 		for (i in 0...size())
-			s += '  ${Std.string(mA.get(i))}\n';
+			s += '  ${Std.string(mData.get(i))}\n';
 		s += "]";
 		return s;
 	}
@@ -85,7 +85,7 @@ class ListSet<T> implements Set<T>
 	 */
 	public function has(x:T):Bool
 	{
-		return mA.contains(x);
+		return mData.contains(x);
 	}
 	
 	/**
@@ -95,11 +95,11 @@ class ListSet<T> implements Set<T>
 	 */
 	public function set(x:T):Bool
 	{
-		if (mA.contains(x))
+		if (mData.contains(x))
 			return false;
 		else
 		{
-			mA.pushBack(x);
+			mData.pushBack(x);
 			return true;
 		}
 	}
@@ -129,9 +129,7 @@ class ListSet<T> implements Set<T>
 			{
 				for (val in x)
 				{
-					#if debug
 					assert(Std.is(val, Cloneable), 'element is not of type Cloneable ($val)');
-					#end
 					
 					set(untyped val.clone());
 				}
@@ -151,8 +149,8 @@ class ListSet<T> implements Set<T>
 	 */
 	public function free()
 	{
-		mA.free();
-		mA = null;
+		mData.free();
+		mData = null;
 	}
 	
 	/**
@@ -161,7 +159,7 @@ class ListSet<T> implements Set<T>
 	 */
 	public function contains(x:T):Bool
 	{
-		return mA.contains(x);
+		return mData.contains(x);
 	}
 	
 	/**
@@ -171,7 +169,7 @@ class ListSet<T> implements Set<T>
 	 */
 	public function remove(x:T):Bool
 	{
-		return mA.remove(x);
+		return mData.remove(x);
 	}
 	
 	/**
@@ -181,7 +179,7 @@ class ListSet<T> implements Set<T>
 	 */
 	public function clear(purge = false)
 	{
-		mA.clear(purge);
+		mData.clear(purge);
 	}
 	
 	/**
@@ -191,8 +189,8 @@ class ListSet<T> implements Set<T>
 	 */
 	public function iterator():Itr<T>
 	{
-		mA.reuseIterator = reuseIterator;
-		return mA.iterator();
+		mData.reuseIterator = reuseIterator;
+		return mData.iterator();
 	}
 	
 	/**
@@ -201,7 +199,7 @@ class ListSet<T> implements Set<T>
 	 */
 	public function isEmpty():Bool
 	{
-		return mA.isEmpty();
+		return mData.isEmpty();
 	}
 	
 	/**
@@ -210,7 +208,7 @@ class ListSet<T> implements Set<T>
 	 */
 	public function size():Int
 	{
-		return mA.size();
+		return mData.size();
 	}
 	
 	/**
@@ -218,7 +216,7 @@ class ListSet<T> implements Set<T>
 	 */
 	public function toArray():Array<T>
 	{
-		return mA.toArray();
+		return mData.toArray();
 	}
 	
 	/**
@@ -226,7 +224,7 @@ class ListSet<T> implements Set<T>
 	 */
 	public function toVector():Vector<T>
 	{
-		return mA.toVector();
+		return mData.toVector();
 	}
 	
 	/**
@@ -240,7 +238,7 @@ class ListSet<T> implements Set<T>
 	{
 		var copy = new ListSet();
 		copy.key = HashKey.next();
-		copy.mA = cast mA.clone(assign, copier);
+		copy.mData = cast mData.clone(assign, copier);
 		return copy;
 	}
 }

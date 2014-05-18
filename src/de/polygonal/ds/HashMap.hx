@@ -99,10 +99,9 @@ class HashMap<K, T> implements Map<K, T>
 		var x:Null<T> = untyped mMap[key];
 		if (x != null)
 		{
-			#if debug
 			x = val;
+			
 			assert(x != null, "null values are not allowed");
-			#end
 			
 			untyped mMap[key] = val;
 			return true;
@@ -235,9 +234,7 @@ class HashMap<K, T> implements Map<K, T>
 			return false;
 		else
 		{
-			#if debug
 			assert(size() < maxSize, 'size equals max size ($maxSize)');
-			#end
 			
 			untyped mMap[key] = val;
 			mSize++;
@@ -448,9 +445,7 @@ class HashMap<K, T> implements Map<K, T>
 		{
 			for (key in a)
 			{
-				#if debug
 				assert(Std.is(get(key), Cloneable), 'key is not of type Cloneable (${get(key)})');
-				#end
 				
 				var c:Cloneable<T> = cast get(key);
 				copy.set(key, get(key));
@@ -465,10 +460,10 @@ class HashMap<K, T> implements Map<K, T>
 	}
 }
 
+@:access(de.polygonal.ds.HashMap)
 #if doc
 private
 #end
-@:access(de.polygonal.ds.HashMap)
 class HashMapKeyIterator<K, T> implements de.polygonal.ds.Itr<K>
 {
 	var mF:HashMap<K, T>;
@@ -502,18 +497,16 @@ class HashMapKeyIterator<K, T> implements de.polygonal.ds.Itr<K>
 	
 	inline public function remove()
 	{
-		#if debug
 		assert(mI > 0, "call next() before removing an element");
-		#end
 		
 		mF.clr(mKeys[mI - 1]);
 	}
 }
 
+@:access(de.polygonal.ds.HashMap)
 #if doc
 private
 #end
-@:access(de.polygonal.ds.HashMap)
 class HashMapValIterator<K, T> implements de.polygonal.ds.Itr<T>
 {
 	var mF:HashMap<K, T>;
@@ -549,9 +542,7 @@ class HashMapValIterator<K, T> implements de.polygonal.ds.Itr<T>
 	
 	inline public function remove()
 	{
-		#if debug
 		assert(mI > 0, "call next() before removing an element");
-		#end
 		
 		mF.remove(untyped mMap[mKeys[mI - 1]]);
 	}

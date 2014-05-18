@@ -99,9 +99,7 @@ class LinkedDeque<T> implements Deque<T>
 	 */
 	inline public function front():T
 	{
-		#if debug
 		assert(size() > 0, "deque is empty");
-		#end
 		
 		return mHead.val;
 	}
@@ -133,9 +131,7 @@ class LinkedDeque<T> implements Deque<T>
 	 */
 	inline public function popFront():T
 	{
-		#if debug
 		assert(size() > 0, "deque is empty");
-		#end
 		
 		var node = mHead;
 		mHead = mHead.next;
@@ -153,9 +149,7 @@ class LinkedDeque<T> implements Deque<T>
 	 */
 	inline public function back():T
 	{
-		#if debug
 		assert(size() > 0, "deque is empty");
-		#end
 		
 		return mTail.val;
 	}
@@ -187,9 +181,7 @@ class LinkedDeque<T> implements Deque<T>
 	 */
 	inline public function popBack():T
 	{
-		#if debug
 		assert(size() > 0, "deque is empty");
-		#end
 		
 		var node = mTail;
 		mTail = mTail.prev;
@@ -209,9 +201,7 @@ class LinkedDeque<T> implements Deque<T>
 	 */
 	public function getFront(i:Int):T
 	{
-		#if debug
 		assert(i < size(), 'index out of range ($i)');
-		#end
 		
 		var node = mHead;
 		for (j in 0...i) node = node.next;
@@ -243,9 +233,7 @@ class LinkedDeque<T> implements Deque<T>
 	 */
 	public function getBack(i:Int):T
 	{
-		#if debug
 		assert(i < size(), 'index out of range ($i)');
-		#end
 		
 		var node = mTail;
 		for (j in 0...i) node = node.prev;
@@ -610,9 +598,7 @@ class LinkedDeque<T> implements Deque<T>
 		{
 			var srcNode = mHead;
 			
-			#if debug
 			assert(Std.is(mHead.val, Cloneable), 'element is not of type Cloneable (${mHead.val})');
-			#end
 			
 			var c:Cloneable<T> = untyped mHead.val;
 			var dstNode = copy.mHead = new LinkedDequeNode<T>(c.clone());
@@ -630,9 +616,8 @@ class LinkedDeque<T> implements Deque<T>
 				dstNode0 = dstNode;
 				var srcNode0 = srcNode;
 				
-				#if debug
 				assert(Std.is(srcNode.val, Cloneable), 'element is not of type Cloneable (${srcNode.val})');
-				#end
+				
 				c = untyped srcNode.val;
 				dstNode = dstNode.next = new LinkedDequeNode<T>(c.clone());
 				dstNode.prev = dstNode0;
@@ -641,9 +626,8 @@ class LinkedDeque<T> implements Deque<T>
 				srcNode = srcNode0.next;
 			}
 			
-			#if debug
 			assert(Std.is(srcNode.val, Cloneable), 'element is not of type Cloneable (${srcNode.val})');
-			#end
+			
 			c = untyped srcNode.val;
 			dstNode0 = dstNode;
 			copy.mTail = dstNode.next = new LinkedDequeNode<T>(c.clone());
@@ -730,9 +714,6 @@ class LinkedDeque<T> implements Deque<T>
 #if (flash && generic)
 @:generic
 #end
-#if doc
-private
-#end
 class LinkedDequeNode<T>
 {
 	public var val:T;
@@ -755,10 +736,10 @@ class LinkedDequeNode<T>
 #if (flash && generic)
 @:generic
 #end
+@:access(de.polygonal.ds.LinkedDeque)
 #if doc
 private
 #end
-@:access(de.polygonal.ds.LinkedDeque)
 class LinkedDequeIterator<T> implements de.polygonal.ds.Itr<T>
 {
 	var mF:LinkedDeque<T>;
@@ -793,9 +774,7 @@ class LinkedDequeIterator<T> implements de.polygonal.ds.Itr<T>
 	
 	inline public function remove()
 	{
-		#if debug
 		assert(mHook != null, "call next() before removing an element");
-		#end
 		
 		mF.removeNode(mHook);
 	}

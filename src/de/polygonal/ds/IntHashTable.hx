@@ -219,9 +219,7 @@ class IntHashTable<T> implements Map<Int, T>
 	 */
 	inline public function setIfAbsent(key:Int, val:T):Bool
 	{
-		#if debug
 		assert(key != IntIntHashTable.KEY_ABSENT, "key 0x80000000 is reserved");
-		#end
 		
 		if ((size() == getCapacity()))
 		{
@@ -443,10 +441,8 @@ class IntHashTable<T> implements Map<Int, T>
 	 */
 	public function set(key:Int, val:T):Bool
 	{
-		#if debug
 		assert(key != IntIntHashTable.KEY_ABSENT, "key 0x80000000 is reserved");
 		assert(size() < maxSize, 'size equals max size (${maxSize})');
-		#end
 		
 		invalidate();
 		if (size() == getCapacity())
@@ -719,9 +715,7 @@ class IntHashTable<T> implements Map<Int, T>
 				{
 					if (_hasKey(i))
 					{
-						#if debug
 						assert(Std.is(mVals[i], Cloneable), 'element is not of type Cloneable (${mVals[i]})');
-						#end
 						
 						c = untyped mVals[i];
 						tmp[i] = c.clone();
@@ -872,14 +866,13 @@ class IntHashTable<T> implements Map<Int, T>
 	}
 }
 
-
-#if doc
-private
-#end
 #if (flash && generic)
 @:generic
 #end
 @:access(de.polygonal.ds.IntHashTable)
+#if doc
+private
+#end
 class IntHashTableIterator<T> implements de.polygonal.ds.Itr<T>
 {
 	var mF:IntHashTable<T>;

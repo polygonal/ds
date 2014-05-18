@@ -74,9 +74,7 @@ class BST<T:Comparable<T>> implements Collection<T>
 	 */
 	public function insert(x:T):BinaryTreeNode<T>
 	{
-		#if debug
 		assert(x != null, "element is null");
-		#end
 		
 		mSize++;
 		if (mRoot == null)
@@ -126,10 +124,8 @@ class BST<T:Comparable<T>> implements Collection<T>
 	 */
 	public function find(x:T):BinaryTreeNode<T>
 	{
-		#if debug
 		assert(mRoot != null, "tree is empty");
 		assert(x != null, "element is null");
-		#end
 		
 		var node = mRoot;
 		while (node != null)
@@ -149,9 +145,7 @@ class BST<T:Comparable<T>> implements Collection<T>
 	 */
 	public function removeNode(x:BinaryTreeNode<T>):Bool
 	{
-		#if debug
 		assert(x != null, "element is null");
-		#end
 		
 		if (x.l == null || x.r == null)
 		{
@@ -304,9 +298,7 @@ class BST<T:Comparable<T>> implements Collection<T>
 	 */
 	public function remove(x:T):Bool
 	{
-		#if debug
 		assert(x != null, "element is null");
-		#end
 		
 		if (size() == 0) return false;
 		

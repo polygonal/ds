@@ -142,9 +142,7 @@ class LinkedObjectPool<T> implements Hashable
 	 */
 	inline public function put(o:T)
 	{
-		#if debug
 		assert(mUsageCount != 0, "object pool is full");
-		#end
 		
 		mUsageCount--;
 		mEmptyNode.val = o;
@@ -162,9 +160,7 @@ class LinkedObjectPool<T> implements Hashable
 	{
 		free();
 		
-		#if debug
 		assert(C != null || fabricate != null || factory != null, "invalid arguments");
-		#end
 		
 		var buffer = new Array<T>();
 		if (C != null)

@@ -115,9 +115,8 @@ class LinkedQueue<T> implements Queue<T>
 	 */
 	inline public function peek():T
 	{
-		#if debug
 		assert(mHead != null, "queue is empty");
-		#end
+		
 		return mHead.val;
 	}
 	
@@ -129,9 +128,8 @@ class LinkedQueue<T> implements Queue<T>
 	 */
 	inline public function back():T
 	{
-		#if debug
 		assert(mTail != null, "queue is empty");
-		#end
+		
 		return mTail.val;
 	}
 	
@@ -169,9 +167,7 @@ class LinkedQueue<T> implements Queue<T>
 	 */
 	inline public function dequeue():T
 	{
-		#if debug
 		assert(mHead != null, "queue is empty");
-		#end
 		
 		mSize--;
 		
@@ -197,9 +193,7 @@ class LinkedQueue<T> implements Queue<T>
 	 */
 	public function assign(C:Class<T>, args:Array<Dynamic> = null, n = 0)
 	{
-		#if debug
-		assert(n >= 0, "n >= 0");
-		#end
+		assert(n >= 0);
 		
 		if (n > 0)
 		{
@@ -228,9 +222,7 @@ class LinkedQueue<T> implements Queue<T>
 	 */
 	public function fill(x:T, n = 0):LinkedQueue<T>
 	{
-		#if debug
-		assert(n >= 0, "n >= 0");
-		#end
+		assert(n >= 0);
 		
 		if (n > 0)
 		{
@@ -283,9 +275,7 @@ class LinkedQueue<T> implements Queue<T>
 		}
 		else
 		{
-			#if debug
 			assert(rval.length >= size(), "insufficient random values");
-			#end
 			
 			var j = 0;
 			while (s > 1)
@@ -580,9 +570,8 @@ class LinkedQueue<T> implements Queue<T>
 			var node = mHead;
 			if (node != null)
 			{
-				#if debug
 				assert(Std.is(node.val, Cloneable), 'element is not of type Cloneable (${node.val})');
-				#end
+				
 				var c = cast(node.val, Cloneable<Dynamic>);
 				copy.mHead = copy.mTail = new LinkedQueueNode<T>(c.clone());
 				copy.mHead.next = copy.mTail;
@@ -593,9 +582,8 @@ class LinkedQueue<T> implements Queue<T>
 				node = node.next;
 				while (node != null)
 				{
-					#if debug
 					assert(Std.is(node.val, Cloneable), 'element is not of type Cloneable (${node.val})');
-					#end
+					
 					var c = cast(node.val, Cloneable<Dynamic>);
 					var t = new LinkedQueueNode<T>(c.clone());
 					copy.mTail = copy.mTail.next = t;
@@ -702,10 +690,10 @@ class LinkedQueueNode<T>
 #if (flash && generic)
 @:generic
 #end
+@:access(de.polygonal.ds.LinkedQueue)
 #if doc
 private
 #end
-@:access(de.polygonal.ds.LinkedQueue)
 class LinkedQueueIterator<T> implements de.polygonal.ds.Itr<T>
 {
 	var mF:LinkedQueue<T>;
@@ -740,9 +728,7 @@ class LinkedQueueIterator<T> implements de.polygonal.ds.Itr<T>
 	
 	inline public function remove()
 	{
-		#if debug
 		assert(mHook != null, "call next() before removing an element");
-		#end
 		
 		mF.removeNode(mHook);
 	}

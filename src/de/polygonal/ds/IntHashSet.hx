@@ -112,9 +112,7 @@ class IntHashSet implements Set<Int>
 		if (slotCount == M.INT16_MIN) return;
 		assert(slotCount > 0);
 		
-		#if debug
 		assert(M.isPow2(slotCount), "slotCount is not a power of 2");
-		#end
 		
 		mIsResizable = isResizable;
 		
@@ -122,10 +120,8 @@ class IntHashSet implements Set<Int>
 			capacity = slotCount;
 		else
 		{
-			#if debug
 			assert(capacity >= 2, "minimum capacity is 2");
 			assert(M.isPow2(slotCount), "capacity is not a power of 2");
-			#end
 		}
 		
 		mFree = 0;
@@ -227,9 +223,7 @@ class IntHashSet implements Set<Int>
 	 */
 	inline public function hasFront(x:Int):Bool
 	{
-		#if debug
 		assert(x != VAL_ABSENT, "value 0x80000000 is reserved");
-		#end
 		
 		var b = hashCode(x);
 		var i = getHash(b);
@@ -295,9 +289,7 @@ class IntHashSet implements Set<Int>
 	 */
 	public function rehash(slotCount:Int)
 	{
-		#if debug
 		assert(M.isPow2(slotCount), "slotCount is not a power of 2");
-		#end
 		
 		if (slotCount == getSlotCount()) return;
 		
@@ -375,9 +367,7 @@ class IntHashSet implements Set<Int>
 	 */
 	inline public function has(x:Int):Bool
 	{
-		#if debug
 		assert(x != VAL_ABSENT, "value 0x80000000 is reserved");
-		#end
 		
 		var i = getHash(hashCode(x));
 		if (i == EMPTY_SLOT)
@@ -434,10 +424,8 @@ class IntHashSet implements Set<Int>
 	 */
 	public function set(x:Int):Bool
 	{
-		#if debug
 		assert(x != VAL_ABSENT, "value 0x80000000 is reserved");
 		assert(size() < maxSize, 'size equals max size ($maxSize)');
-		#end
 		
 		var b = hashCode(x);
 		
@@ -1023,10 +1011,10 @@ class IntHashSet implements Set<Int>
 	}
 }
 
+@:access(de.polygonal.ds.IntHashSet)
 #if doc
 private
 #end
-@:access(de.polygonal.ds.IntHashSet)
 class IntHashSetIterator implements de.polygonal.ds.Itr<Int>
 {
 	var mF:IntHashSet;

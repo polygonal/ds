@@ -48,9 +48,7 @@ class MemoryAccess implements Hashable
 	
 	function new(bytes:Int, name = "?")
 	{
-		#if debug
-		assert(bytes > 0, "bytes > 0");
-		#end
+		assert(bytes > 0);
 		
 		this.bytes = bytes;
 		this.name = name;
@@ -76,9 +74,7 @@ class MemoryAccess implements Hashable
 	 */
 	public function free()
 	{
-		#if debug
 		assert(mMemory != null, "memory deallocated");
-		#end
 		
 		#if alchemy
 		MemoryManager.instance.dealloc(this);
@@ -106,10 +102,8 @@ class MemoryAccess implements Hashable
 	 */
 	public function resize(byteSize:Int)
 	{
-		#if debug
-		assert(byteSize > 0, "byteSize > 0");
+		assert(byteSize > 0);
 		assert(mMemory != null, "memory deallocated");
-		#end
 		
 		bytes = byteSize;
 		

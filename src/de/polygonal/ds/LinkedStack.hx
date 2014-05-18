@@ -112,9 +112,8 @@ class LinkedStack<T> implements Stack<T>
 	 */
 	inline public function top():T
 	{
-		#if debug
 		assert(mTop > 0, "stack is empty");
-		#end
+
 		return mHead.val;
 	}
 	
@@ -125,10 +124,8 @@ class LinkedStack<T> implements Stack<T>
 	 */
 	inline public function push(x:T)
 	{
-		#if debug
 		if (maxSize != -1)
 			assert(size() < maxSize, 'size equals max size ($maxSize)');
-		#end
 		
 		var node = getNode(x);
 		node.next = mHead;
@@ -144,9 +141,7 @@ class LinkedStack<T> implements Stack<T>
 	 */
 	inline public function pop():T
 	{
-		#if debug
 		assert(mTop > 0, "stack is empty");
-		#end
 		
 		mTop--;
 		var node = mHead;
@@ -163,8 +158,9 @@ class LinkedStack<T> implements Stack<T>
 	 */
 	inline public function dup()
 	{
-		#if debug
 		assert(mTop > 0, "stack is empty");
+		
+		#if debug
 		if (maxSize != -1)
 			assert(size() < maxSize, 'size equals max size ($maxSize)');
 		#end
@@ -182,9 +178,7 @@ class LinkedStack<T> implements Stack<T>
 	 */
 	inline public function exchange()
 	{
-		#if debug
 		assert(mTop > 1, "size() < 2");
-		#end
 		
 		var tmp = mHead.val;
 		mHead.val = mHead.next.val;
@@ -205,9 +199,7 @@ class LinkedStack<T> implements Stack<T>
 	 */
 	inline public function rotRight(n:Int)
 	{
-		#if debug
 		assert(mTop >= n, "size() < n");
-		#end
 		
 		var node = mHead;
 		for (i in 0...n - 2)
@@ -234,9 +226,7 @@ class LinkedStack<T> implements Stack<T>
 	 */
 	inline public function rotLeft(n:Int)
 	{
-		#if debug
 		assert(mTop >= n, "size() < n");
-		#end
 		
 		var top = mHead;
 		mHead = mHead.next;
@@ -258,10 +248,8 @@ class LinkedStack<T> implements Stack<T>
 	 */
 	inline public function get(i:Int):T
 	{
-		#if debug
 		assert(mTop > 0, "stack is empty");
 		assert(i >= 0 && i < mTop, 'i index out of range ($i)');
-		#end
 		
 		var node = mHead;
 		i = size() - i;
@@ -278,10 +266,8 @@ class LinkedStack<T> implements Stack<T>
 	 */
 	inline public function set(i:Int, x:T)
 	{
-		#if debug
 		assert(mTop > 0, "stack is empty");
 		assert(i >= 0 && i < mTop, 'i index out of range ($i)');
-		#end
 		
 		var node = mHead;
 		i = size() - i;
@@ -300,12 +286,10 @@ class LinkedStack<T> implements Stack<T>
 	 */
 	inline public function swp(i:Int, j:Int)
 	{
-		#if debug
 		assert(mTop > 0, "stack is empty");
 		assert(i >= 0 && i < mTop, 'i index out of range ($i)');
 		assert(j >= 0 && j < mTop, 'j index out of range ($j)');
 		assert(i != j, 'i index equals j index ($i)');
-		#end
 		
 		var node = mHead;
 		
@@ -344,12 +328,10 @@ class LinkedStack<T> implements Stack<T>
 	 */
 	inline public function cpy(i:Int, j:Int)
 	{
-		#if debug
 		assert(mTop > 0, "stack is empty");
 		assert(i >= 0 && i < mTop, 'i index out of range ($i)');
 		assert(j >= 0 && j < mTop, 'j index out of range ($j)');
 		assert(i != j, 'i index equals j index ($i)');
-		#end
 		
 		var node = mHead;
 		
@@ -385,9 +367,7 @@ class LinkedStack<T> implements Stack<T>
 	 */
 	public function assign(C:Class<T>, args:Array<Dynamic> = null, n = 0)
 	{
-		#if debug
-		assert(n >= 0, "n >= 0");
-		#end
+		assert(n >= 0);
 		
 		if (n > 0)
 		{
@@ -416,9 +396,7 @@ class LinkedStack<T> implements Stack<T>
 	 */
 	public function fill(x:T, n = 0):LinkedStack<T>
 	{
-		#if debug
-		assert(n >= 0, "n >= 0");
-		#end
+		assert(n >= 0);
 		
 		if (n > 0)
 		{
@@ -472,9 +450,7 @@ class LinkedStack<T> implements Stack<T>
 		}
 		else
 		{
-			#if debug
 			assert(rval.length >= size(), "insufficient random values");
-			#end
 			
 			var k = 0;
 			while (s > 1)
@@ -750,9 +726,7 @@ class LinkedStack<T> implements Stack<T>
 		{
 			var srcNode = mHead;
 			
-			#if debug
 			assert(Std.is(srcNode.val, Cloneable), 'element is not of type Cloneable (${srcNode.val})');
-			#end
 			
 			var c = cast(srcNode.val, Cloneable<Dynamic>);
 			var dstNode = copy.mHead = new LinkedStackNode<T>(c.clone());
@@ -760,9 +734,7 @@ class LinkedStack<T> implements Stack<T>
 			srcNode = srcNode.next;
 			while (srcNode != null)
 			{
-				#if debug
 				assert(Std.is(srcNode.val, Cloneable), 'element is not of type Cloneable (${srcNode.val})');
-				#end
 				
 				c = cast(srcNode.val, Cloneable<Dynamic>);
 				
@@ -831,11 +803,11 @@ class LinkedStack<T> implements Stack<T>
 	}
 }
 
-#if doc
-private
-#end
 #if (flash && generic)
 @:generic
+#end
+#if doc
+private
 #end
 class LinkedStackNode<T>
 {
@@ -853,13 +825,13 @@ class LinkedStackNode<T>
 	}
 }
 
-#if doc
-private
-#end
 #if (flash && generic)
 @:generic
 #end
 @:access(de.polygonal.ds.LinkedStack)
+#if doc
+private
+#end
 class LinkedStackIterator<T> implements de.polygonal.ds.Itr<T>
 {
 	var mF:LinkedStack<T>;
@@ -894,9 +866,7 @@ class LinkedStackIterator<T> implements de.polygonal.ds.Itr<T>
 	
 	inline public function remove()
 	{
-		#if debug
 		assert(mHook != null, "call next() before removing an element");
-		#end
 		
 		mF.removeNode(mHook);
 	}

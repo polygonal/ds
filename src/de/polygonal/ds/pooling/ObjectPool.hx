@@ -162,9 +162,7 @@ class ObjectPool<T> implements Hashable
 	 */
 	inline public function get(id:Int):T
 	{
-		#if debug
 		assert(mUsage.has(id), 'id $id is not used');
-		#end
 		
 		if (mLazy)
 		{
@@ -215,9 +213,7 @@ class ObjectPool<T> implements Hashable
 		mFree = 0;
 		mPool = de.polygonal.ds.ArrayUtil.alloc(mSize);
 		
-		#if debug
 		assert(C != null || fabricate != null || factory != null, "invalid arguments");
-		#end
 		
 		if (mLazy)
 		{
@@ -297,17 +293,17 @@ class ObjectPool<T> implements Hashable
 	}
 }
 
-#if doc
-private
-#end
 #if (flash && generic)
 @:generic
 #end
 @:access(de.polygonal.ds.pooling.ObjectPool)
+#if doc
+private
+#end
 class ObjectPoolIterator<T> implements de.polygonal.ds.Itr<T>
 {
 	var mF:ObjectPool<T>;
-	var mA:Array<T>;
+	var mData:Array<T>;
 	var mS:Int;
 	var mI:Int;
 	
@@ -319,7 +315,7 @@ class ObjectPoolIterator<T> implements de.polygonal.ds.Itr<T>
 
 	inline public function reset():Itr<T>
 	{
-		mA = mF.mPool;
+		mData = mF.mPool;
 		mS = mF.mSize;
 		mI = 0;
 		return this;
@@ -327,12 +323,12 @@ class ObjectPoolIterator<T> implements de.polygonal.ds.Itr<T>
 	
 	inline public function hasNext():Bool
 	{
-		return mA != null && mI < mS;
+		return mData != null && mI < mS;
 	}
 	
 	inline public function next():T
 	{
-		return mA[mI++];
+		return mData[mI++];
 	}
 	
 	inline public function remove()

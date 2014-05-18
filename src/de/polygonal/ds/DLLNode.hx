@@ -77,9 +77,7 @@ class DLLNode<T>
 	 */
 	inline public function isHead():Bool
 	{
-		#if debug
 		assert(mList != null, "node is not managed by a list");
-		#end
 		
 		return this == mList.head;
 	}
@@ -91,9 +89,7 @@ class DLLNode<T>
 	 */
 	inline public function isTail():Bool
 	{
-		#if debug
 		assert(mList != null, "node is not managed by a list");
-		#end
 		
 		return this == mList.tail;
 	}
@@ -123,9 +119,7 @@ class DLLNode<T>
 	 */
 	inline public function nextVal():T
 	{
-		#if debug
 		assert(hasNext(), "next node is null");
-		#end
 		
 		return next.val;
 	}
@@ -137,9 +131,7 @@ class DLLNode<T>
 	 */
 	inline public function prevVal():T
 	{
-		#if debug
 		assert(hasPrev(), "previous node is null");
-		#end
 		
 		return prev.val;
 	}
@@ -160,9 +152,7 @@ class DLLNode<T>
 	 */
 	inline public function unlink():DLLNode<T>
 	{
-		#if debug
-		assert(mList != null, "mList != null");
-		#end
+		assert(mList != null);
 		
 		return mList.unlink(this);
 	}
@@ -184,11 +174,9 @@ class DLLNode<T>
 	 */
 	inline public function prepend(node:DLLNode<T>):DLLNode<T>
 	{
-		#if debug
 		assert(node != null, "node is null");
 		assert(prev == null, "prev is not null");
 		assert(mList == null && node.mList == null, "node is managed by a list");
-		#end
 		
 		node.next = this;
 		prev = node;
@@ -212,11 +200,9 @@ class DLLNode<T>
 	 */
 	inline public function append(node:DLLNode<T>):DLLNode<T>
 	{
-		#if debug
 		assert(node != null, "node is null");
 		assert(next == null, "next is not null");
 		assert(mList == null && node.mList == null, "node is managed by a list");
-		#end
 		
 		next = node;
 		node.prev = this;
@@ -240,11 +226,9 @@ class DLLNode<T>
 	 */
 	inline public function prependTo(node:DLLNode<T>):DLLNode<T>
 	{
-		#if debug
 		assert(node != null, "node is null");
 		assert(mList == null && node.mList == null, "node is managed by a list");
 		assert(node.prev == null, "node.prev is not null");
-		#end
 		
 		next = node;
 		if (node != null) node.prev = this;
@@ -268,11 +252,9 @@ class DLLNode<T>
 	 */
 	inline public function appendTo(node:DLLNode<T>):DLLNode<T>
 	{
-		#if debug
 		assert(node != null, "node is null");
 		assert(mList == null && node.mList == null, "node is managed by a list");
 		assert(node.next == null, "node.next is not null");
-		#end
 		
 		prev = node;
 		if (node != null) node.next = this;

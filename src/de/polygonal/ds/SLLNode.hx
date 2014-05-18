@@ -71,9 +71,7 @@ class SLLNode<T>
 	 */
 	inline public function isHead():Bool
 	{
-		#if debug
 		assert(mList != null, "node is not managed by a list");
-		#end
 		
 		return this == mList.head;
 	}
@@ -85,9 +83,7 @@ class SLLNode<T>
 	 */
 	inline public function isTail():Bool
 	{
-		#if debug
 		assert(mList != null, "node is not managed by a list");
-		#end
 		
 		return this == mList.tail;
 	}
@@ -108,9 +104,7 @@ class SLLNode<T>
 	 */
 	inline public function nextVal():T
 	{
-		#if debug
 		assert(hasNext(), "invalid next node");
-		#end
 		
 		return next.val;
 	}
@@ -131,9 +125,7 @@ class SLLNode<T>
 	 */
 	inline public function unlink():SLLNode<T>
 	{
-		#if debug
-		assert(mList != null, "mList != null");
-		#end
+		assert(mList != null);
 		
 		return mList.unlink(this);
 	}

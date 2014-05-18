@@ -378,9 +378,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	 */
 	inline public function get(key:K):T
 	{
-		#if debug
-		assert(key != null, "key != null");
-		#end
+		assert(key != null);
 		
 		var i = mH.get(_key(key));
 		if (i == IntIntHashTable.KEY_ABSENT)
@@ -708,9 +706,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 				{
 					if (mKeys[i] != null)
 					{
-						#if debug
 						assert(Std.is(mVals[i], Cloneable), 'element is not of type Cloneable (${mVals[i]})');
-						#end
 						
 						c = untyped mVals[i];
 						tmp[i] = c.clone();
@@ -815,21 +811,19 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	
 	inline function _key(x:Hashable)
 	{
-		#if debug
 		assert(x != null, "key is null");
-		#end
 		
 		return x.key;
 	}
 }
 
-#if doc
-private
-#end
 #if (flash && generic)
 @:generic
 #end
 @:access(de.polygonal.ds.HashTable)
+#if doc
+private
+#end
 class HashTableKeyIterator<K:Hashable, T> implements de.polygonal.ds.Itr<K>
 {
 	var mF:HashTable<K, T>;
@@ -874,13 +868,13 @@ class HashTableKeyIterator<K:Hashable, T> implements de.polygonal.ds.Itr<K>
 	}
 }
 
-#if doc
-private
-#end
 #if (flash && generic)
 @:generic
 #end
 @:access(de.polygonal.ds.HashTable)
+#if doc
+private
+#end
 class HashTableValIterator<K:Hashable, T> implements de.polygonal.ds.Itr<T>
 {
 	var mF:HashTable<K, T>;

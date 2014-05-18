@@ -133,19 +133,14 @@ class IntIntHashTable implements Map<Int, Int>
 	{
 		if (slotCount == M.INT16_MIN) return;
 		assert(slotCount > 0);
-		
-		#if debug
 		assert(M.isPow2(slotCount), "slotCount is not a power of 2");
-		#end
 		
 		if (capacity == -1)
 			capacity = slotCount;
 		else
 		{
-			#if debug
 			assert(capacity >= 2, "minimum capacity is 2");
 			assert(M.isPow2(slotCount), "capacity is not a power of 2");
-			#end
 		}
 		
 		mIsResizable = isResizable;
@@ -315,9 +310,7 @@ class IntIntHashTable implements Map<Int, Int>
 	 */
 	inline public function setIfAbsent(key:Int, val:Int):Bool
 	{
-		#if debug
 		assert(val != KEY_ABSENT, "val 0x80000000 is reserved");
-		#end
 		
 		var b = hashCode(key);
 		
@@ -329,9 +322,7 @@ class IntIntHashTable implements Map<Int, Int>
 		#end
 		if (j == EMPTY_SLOT)
 		{
-			#if debug
 			assert(size() < maxSize, 'size equals max size ($maxSize)');
-			#end
 			
 			if (mSize == mCapacity)
 			{
@@ -444,9 +435,7 @@ class IntIntHashTable implements Map<Int, Int>
 	 */
 	public function rehash(slotCount:Int)
 	{
-		#if debug
 		assert(M.isPow2(slotCount), "slotCount is not a power of 2");
-		#end
 		
 		if (slotCount == getSlotCount()) return;
 		
@@ -772,9 +761,7 @@ class IntIntHashTable implements Map<Int, Int>
 	 */
 	public function has(val:Int):Bool
 	{
-		#if debug
 		assert(val != VAL_ABSENT, "val 0x80000000 is reserved");
-		#end
 		
 		var exists = false;
 		for (i in 0...getCapacity())
@@ -963,9 +950,7 @@ class IntIntHashTable implements Map<Int, Int>
 	 */
 	public function hasPair(key:Int, val:Int):Bool
 	{
-		#if debug
 		assert(val != KEY_ABSENT, "val 0x80000000 is reserved");
-		#end
 		
 		var i = getHash(hashCode(key));
 		if (i == EMPTY_SLOT)
@@ -1011,9 +996,7 @@ class IntIntHashTable implements Map<Int, Int>
 	 */
 	public function clrPair(key:Int, val:Int):Bool
 	{
-		#if debug
 		assert(val != KEY_ABSENT, "val 0x80000000 is reserved");
-		#end
 		
 		var b = hashCode(key);
 		var i = getHash(b);
@@ -1135,10 +1118,8 @@ class IntIntHashTable implements Map<Int, Int>
 	 */
 	inline public function set(key:Int, val:Int):Bool
 	{
-		#if debug
 		assert(val != KEY_ABSENT, "val 0x80000000 is reserved");
 		assert(size() < maxSize, 'size equals max size ($maxSize)');
-		#end
 		
 		if (mSize == mCapacity)
 		{
@@ -1225,7 +1206,6 @@ class IntIntHashTable implements Map<Int, Int>
 	 */
 	inline public function clr(key:Int):Bool
 	{
-		//TODO make sure all values are removed from key
 		var b = hashCode(key);
 		var i = getHash(b);
 		if (i == EMPTY_SLOT)
@@ -1414,9 +1394,7 @@ class IntIntHashTable implements Map<Int, Int>
 	 */
 	public function remove(val:Int):Bool
 	{
-		#if debug
 		assert(val != KEY_ABSENT, "val 0x80000000 is reserved");
-		#end
 		
 		var c = 0;
 		var keys = mTmpArray;
@@ -1796,10 +1774,10 @@ class IntIntHashTable implements Map<Int, Int>
 	}
 }
 
+@:access(de.polygonal.ds.IntIntHashTable)
 #if doc
 private
 #end
-@:access(de.polygonal.ds.IntIntHashTable)
 class IntIntHashTableValIterator implements de.polygonal.ds.Itr<Int>
 {
 	var mF:IntIntHashTable;
@@ -1864,10 +1842,10 @@ class IntIntHashTableValIterator implements de.polygonal.ds.Itr<Int>
 	}
 }
 
+@:access(de.polygonal.ds.IntIntHashTable)
 #if doc
 private
 #end
-@:access(de.polygonal.ds.IntIntHashTable)
 class IntIntHashTableKeyIterator implements de.polygonal.ds.Itr<Int>
 {
 	var mF:IntIntHashTable;

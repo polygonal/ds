@@ -26,6 +26,9 @@ import de.polygonal.ds.error.Assert.assert;
  * <p>This is called a LIFO structure (Last In, First Out).</p>
  * <p><o>Worst-case running time in Big O notation</o></p>
  */
+#if (flash && generic)
+@:generic
+#end
 class ArrayedStack<T> implements Stack<T>
 {
 	/**
@@ -50,7 +53,7 @@ class ArrayedStack<T> implements Stack<T>
 	 */
 	public var reuseIterator:Bool;
 	
-	var mA:Array<T>;
+	var mData:Array<T>;
 	var mTop:Int;
 	var mIterator:ArrayedStackIterator<T>;
 	
@@ -73,10 +76,10 @@ class ArrayedStack<T> implements Stack<T>
 			if (maxSize != -1)
 				assert(reservedSize <= maxSize, "reserved size is greater than allowed size");
 			#end
-			mA = ArrayUtil.alloc(reservedSize);
+			mData = ArrayUtil.alloc(reservedSize);
 		}
 		else
-			mA = new Array<T>();
+			mData = new Array<T>();
 		
 		mTop = 0;
 		mIterator = null;
@@ -102,12 +105,12 @@ class ArrayedStack<T> implements Stack<T>
 	 */
 	public function pack()
 	{
-		if (mA.length == size()) return;
+		if (mData.length == size()) return;
 		
-		var tmp = mA;
-		mA = ArrayUtil.alloc(size());
+		var tmp = mData;
+		mData = ArrayUtil.alloc(size());
 		for (i in 0...size()) _set(i, tmp[i]);
-		for (i in size()...tmp.length) tmp[i] = null;
+		for (i in size()...tmp.length) tmp[i] = cast null;
 	}
 	
 	/**
@@ -119,8 +122,8 @@ class ArrayedStack<T> implements Stack<T>
 	{
 		if (size() == x) return;
 		
-		var tmp = mA;
-		mA = ArrayUtil.alloc(x);
+		var tmp = mData;
+		mData = ArrayUtil.alloc(x);
 		
 		if (size() < x)
 		{
@@ -137,9 +140,7 @@ class ArrayedStack<T> implements Stack<T>
 	 */
 	inline public function top():T
 	{
-		#if debug
 		assert(mTop > 0, "stack is empty");
-		#end
 		
 		return _get(mTop - 1);
 	}
@@ -168,9 +169,7 @@ class ArrayedStack<T> implements Stack<T>
 	 */
 	inline public function pop():T
 	{
-		#if debug
 		assert(mTop > 0, "stack is empty");
-		#end
 		
 		#if debug
 		mOp0 = ++mOp1;
@@ -181,9 +180,7 @@ class ArrayedStack<T> implements Stack<T>
 	
 	inline public function popMany(n:Int):T
 	{
-		#if debug
 		assert(mTop > 0, "stack is empty");
-		#end
 		
 		#if debug
 		mOp0 = ++mOp1;
@@ -200,9 +197,7 @@ class ArrayedStack<T> implements Stack<T>
 	 */
 	inline public function dup()
 	{
-		#if debug
 		assert(mTop > 0, "stack is empty");
-		#end
 		
 		#if debug
 		if (maxSize != -1)
@@ -220,9 +215,7 @@ class ArrayedStack<T> implements Stack<T>
 	 */
 	inline public function exchange()
 	{
-		#if debug
 		assert(mTop > 1, "size() < 2");
-		#end
 		
 		var i = mTop - 1;
 		var j = i - 1;
@@ -245,9 +238,7 @@ class ArrayedStack<T> implements Stack<T>
 	 */
 	public function rotRight(n:Int)
 	{
-		#if debug
 		assert(mTop >= n, "size() < n");
-		#end
 		
 		var i = mTop - n;
 		var k = mTop - 1;
@@ -274,9 +265,7 @@ class ArrayedStack<T> implements Stack<T>
 	 */
 	public function rotLeft(n:Int)
 	{
-		#if debug
 		assert(mTop >= n, "size() < n");
-		#end
 		
 		var i = mTop - 1;
 		var k = mTop - n;
@@ -297,10 +286,8 @@ class ArrayedStack<T> implements Stack<T>
 	 */
 	inline public function dispose()
 	{
-		#if debug
 		assert(mTop > 0, "stack is empty");
 		assert(mOp0 == mOp1, "dispose() is only allowed directly after pop()");
-		#end
 		
 		_set(mTop, cast null);
 	}
@@ -314,10 +301,8 @@ class ArrayedStack<T> implements Stack<T>
 	 */
 	inline public function get(i:Int):T
 	{
-		#if debug
 		assert(mTop > 0, "stack is empty");
 		assert(i >= 0 && i < mTop, 'i index out of range ($i)');
-		#end
 		
 		return _get(i);
 	}
@@ -331,10 +316,8 @@ class ArrayedStack<T> implements Stack<T>
 	 */
 	inline public function set(i:Int, x:T)
 	{
-		#if debug
 		assert(mTop > 0, "stack is empty");
 		assert(i >= 0 && i < mTop, 'i index out of range ($i)');
-		#end
 		
 		_set(i, x);
 	}
@@ -350,12 +333,10 @@ class ArrayedStack<T> implements Stack<T>
 	 */
 	inline public function swp(i:Int, j:Int)
 	{
-		#if debug
 		assert(mTop > 0, "stack is empty");
 		assert(i >= 0 && i < mTop, 'i index out of range ($i)');
 		assert(j >= 0 && j < mTop, 'j index out of range ($j)');
 		assert(i != j, 'i index equals j index ($i)');
-		#end
 		
 		var t = _get(i);
 		cpy(i, j);
@@ -373,12 +354,10 @@ class ArrayedStack<T> implements Stack<T>
 	 */
 	inline public function cpy(i:Int, j:Int)
 	{
-		#if debug
 		assert(mTop > 0, "stack is empty");
 		assert(i >= 0 && i < mTop, 'i index out of range ($i)');
 		assert(j >= 0 && j < mTop, 'j index out of range ($j)');
 		assert(i != j, 'i index equals j index ($i)');
-		#end
 		
 		_set(i, _get(j));
 	}
@@ -393,9 +372,7 @@ class ArrayedStack<T> implements Stack<T>
 	 */
 	public function assign(C:Class<T>, args:Array<Dynamic> = null, n = 0)
 	{
-		#if debug
-		assert(n >= 0, "n >= 0");
-		#end
+		assert(n >= 0);
 		
 		if (n > 0)
 		{
@@ -421,9 +398,7 @@ class ArrayedStack<T> implements Stack<T>
 	 */
 	public function fill(x:T, n = 0):ArrayedStack<T>
 	{
-		#if debug
-		assert(n >= 0, "n >= 0");
-		#end
+		assert(n >= 0);
 		
 		if (n > 0)
 		{
@@ -476,9 +451,7 @@ class ArrayedStack<T> implements Stack<T>
 		}
 		else
 		{
-			#if debug
 			assert(rval.length >= size(), "insufficient random values");
-			#end
 			
 			var j = 0;
 			while (s > 1)
@@ -534,8 +507,8 @@ class ArrayedStack<T> implements Stack<T>
 	 */
 	public function free()
 	{
-		for (i in 0...mA.length) _set(i, cast null);
-		mA = null;
+		for (i in 0...mData.length) _set(i, cast null);
+		mData = null;
 		mIterator = null;
 	}
 	
@@ -594,7 +567,7 @@ class ArrayedStack<T> implements Stack<T>
 	{
 		if (purge)
 		{
-			for (i in 0...mA.length) _set(i, cast null);
+			for (i in 0...mData.length) _set(i, cast null);
 		}
 		mTop = 0;
 	}
@@ -671,7 +644,7 @@ class ArrayedStack<T> implements Stack<T>
 	{
 		var copy = new ArrayedStack<T>(size(), maxSize);
 		if (mTop == 0) return copy;
-		var t = copy.mA;
+		var t = copy.mData;
 		if (assign)
 		{
 			for (i in 0...mTop)
@@ -683,9 +656,7 @@ class ArrayedStack<T> implements Stack<T>
 			var c:Cloneable<T> = null;
 			for (i in 0...mTop)
 			{
-				#if debug
 				assert(Std.is(_get(i), Cloneable), 'element is not of type Cloneable (${_get(i)})');
-				#end
 				
 				c = untyped _get(i);
 				t[i] = c.clone();
@@ -700,21 +671,24 @@ class ArrayedStack<T> implements Stack<T>
 		return copy;
 	}
 	
-	inline function _get(i:Int) return mA[i];
+	inline function _get(i:Int) return mData[i];
 	
-	inline function _set(i:Int, x:T) mA[i] = x;
+	inline function _set(i:Int, x:T) mData[i] = x;
 	
-	inline function _cpy(i:Int, j:Int) mA[i] = mA[j];
+	inline function _cpy(i:Int, j:Int) mData[i] = mData[j];
 }
 
+#if (flash && generic)
+@:generic
+#end
+@:access(de.polygonal.ds.ArrayedStack)
 #if doc
 private
 #end
-@:access(de.polygonal.ds.ArrayedStack)
 class ArrayedStackIterator<T> implements de.polygonal.ds.Itr<T>
 {
 	var mF:ArrayedStack<T>;
-	var mA:Array<T>;
+	var mData:Array<T>;
 	var mI:Int;
 	
 	public function new(f:ArrayedStack<T>)
@@ -725,7 +699,7 @@ class ArrayedStackIterator<T> implements de.polygonal.ds.Itr<T>
 	
 	inline public function reset():Itr<T>
 	{
-		mA = mF.mA;
+		mData = mF.mData;
 		mI = mF.mTop - 1;
 		return this;
 	}
@@ -737,14 +711,12 @@ class ArrayedStackIterator<T> implements de.polygonal.ds.Itr<T>
 	
 	inline public function next():T
 	{
-		return mA[mI--];
+		return mData[mI--];
 	}
 	
 	inline public function remove()
 	{
-		#if debug
 		assert(mI != (mF.mTop - 1), "call next() before removing an element");
-		#end
 		
 		var i = mI + 1;
 		var top = mF.mTop - 1;
@@ -753,7 +725,7 @@ class ArrayedStackIterator<T> implements de.polygonal.ds.Itr<T>
 		else
 		{
 			while (i < top)
-				mA[i++] = mA[i];
+				mData[i++] = mData[i];
 			mF.mTop = top;
 		}
 	}

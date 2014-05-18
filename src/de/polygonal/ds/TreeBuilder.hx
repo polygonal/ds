@@ -40,9 +40,7 @@ class TreeBuilder<T>
 	 */
 	public function new(node:TreeNode<T>)
 	{
-		#if debug
 		assert(node != null, "node is null");
-		#end
 		
 		mNode = node;
 		childStart();
@@ -65,9 +63,7 @@ class TreeBuilder<T>
 	 */
 	inline public function getVal():T
 	{
-		#if debug
 		assert(valid(), "vertical pointer is null");
-		#end
 		
 		return mNode.val;
 	}
@@ -79,9 +75,7 @@ class TreeBuilder<T>
 	 */
 	inline public function setVal(x:T)
 	{
-		#if debug
 		assert(valid(), "vertical pointer is null");
-		#end
 		
 		mNode.val = x;
 	}
@@ -111,9 +105,7 @@ class TreeBuilder<T>
 	 */
 	inline public function getChildVal():T
 	{
-		#if debug
 		assert(childValid(), "invalid child node");
-		#end
 		
 		return mChild.val;
 	}
@@ -134,9 +126,7 @@ class TreeBuilder<T>
 	 */
 	public function root()
 	{
-		#if debug
 		assert(valid(), "invalid vertical pointer");
-		#end
 		
 		while (mNode.hasParent()) mNode = mNode.parent;
 		reset();
@@ -149,9 +139,7 @@ class TreeBuilder<T>
 	 */
 	inline public function up():Bool
 	{
-		#if debug
 		assert(valid(), "invalid vertical pointer");
-		#end
 		
 		if (mNode.hasParent())
 		{
@@ -170,9 +158,7 @@ class TreeBuilder<T>
 	 */
 	inline public function down():Bool
 	{
-		#if debug
 		assert(childValid(), "node has no children");
-		#end
 		
 		if (mChild != null)
 		{
@@ -282,9 +268,7 @@ class TreeBuilder<T>
 	 */
 	public function appendChild(x:T):TreeNode<T>
 	{
-		#if debug
 		assert(valid(), "invalid vertical pointer");
-		#end
 		
 		mChild = createChildNode(x, true);
 		return mChild;
@@ -297,9 +281,7 @@ class TreeBuilder<T>
 	 */
 	public function prependChild(x:T):TreeNode<T>
 	{
-		#if debug
 		assert(valid(), "invalid vertical pointer");
-		#end
 		
 		var childNode = createChildNode(x, false);
 		if (childValid())
@@ -321,9 +303,7 @@ class TreeBuilder<T>
 	 */
 	public function insertBeforeChild(x:T):TreeNode<T>
 	{
-		#if debug
 		assert(valid(), "invalid vertical pointer");
-		#end
 		
 		if (childValid())
 		{
@@ -351,9 +331,7 @@ class TreeBuilder<T>
 	 */
 	public function insertAfterChild(x:T):TreeNode<T>
 	{
-		#if debug
 		assert(valid(), "invalid vertical pointer");
-		#end
 		
 		if (childValid())
 		{

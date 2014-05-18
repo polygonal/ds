@@ -49,7 +49,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	 */
 	public var reuseIterator:Bool;
 	
-	var mA:Array<T>;
+	var mData:Array<T>;
 	var mSize:Int;
 	var mIterator:HeapIterator<T>;
 	
@@ -81,10 +81,10 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 			if (this.maxSize != -1)
 				assert(reservedSize <= this.maxSize, "reserved size is greater than allowed size");
 			#end
-			mA = ArrayUtil.alloc(reservedSize + 1);
+			mData = ArrayUtil.alloc(reservedSize + 1);
 		}
 		else
-			mA = new Array<T>();
+			mData = new Array<T>();
 		
 		set(0, cast null);
 		mSize = 0;
@@ -101,14 +101,14 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	 */
 	public function pack()
 	{
-		if (mA.length - 1 == size()) return;
+		if (mData.length - 1 == size()) return;
 		
 		#if (debug && flash)
 		mMap.clear();
 		#end
 		
-		var tmp = mA;
-		mA = ArrayUtil.alloc(size() + 1);
+		var tmp = mData;
+		mData = ArrayUtil.alloc(size() + 1);
 		set(0, cast null);
 		for (i in 1...size() + 1)
 		{
@@ -130,8 +130,8 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	{
 		if (size() == x) return;
 		
-		var tmp = mA;
-		mA = ArrayUtil.alloc(x + 1);
+		var tmp = mData;
+		mData = ArrayUtil.alloc(x + 1);
 		
 		set(0, cast null);
 		if (size() < x)
@@ -149,9 +149,8 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	 */
 	inline public function top():T
 	{
-		#if debug
 		assert(size() > 0, "heap is empty");
-		#end
+		
 		return get(1);
 	}
 	
@@ -163,9 +162,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	 */
 	public function bottom():T
 	{
-		#if debug
 		assert(size() > 0, "heap is empty");
-		#end
 		
 		if (mSize == 1) return get(1);
 		var a = get(1), b;
@@ -187,9 +184,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	 */
 	public function add(x:T)
 	{
-		#if debug
 		assert(x != null, "x is null");
-		#end
 		
 		#if (debug && flash)
 		assert(!mMap.hasKey(x), "x already exists");
@@ -212,9 +207,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	 */
 	public function pop():T
 	{
-		#if debug
 		assert(size() > 0, "heap is empty");
-		#end
 		
 		var x = get(1);
 		
@@ -278,7 +271,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 		
 		var a = ArrayUtil.alloc(mSize);
 		var h = ArrayUtil.alloc(mSize + 1);
-		ArrayUtil.copy(mA, h, 0, mSize + 1);
+		ArrayUtil.copy(mData, h, 0, mSize + 1);
 		
 		var k = mSize;
 		var j = 0;
@@ -410,8 +403,8 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	 */
 	public function free()
 	{
-		for (i in 0...mA.length) set(i, cast null);
-		mA = null;
+		for (i in 0...mData.length) set(i, cast null);
+		mData = null;
 		
 		if (mIterator != null)
 		{
@@ -432,9 +425,8 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	 */
 	inline public function contains(x:T):Bool
 	{
-		#if debug
 		assert(x != null, "x is null");
-		#end
+		
 		var position = x.position;
 		return (position > 0 && position <= mSize) && (get(position) == x);
 	}
@@ -451,9 +443,8 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 			return false;
 		else
 		{
-			#if debug
 			assert(x != null, "x is null");
-			#end
+			
 			#if (debug && flash)
 			assert(mMap.hasKey(x), "x does not exist");
 			mMap.clr(x);
@@ -486,7 +477,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 		
 		if (purge)
 		{
-			for (i in 1...mA.length) set(i, cast null);
+			for (i in 1...mData.length) set(i, cast null);
 		}
 		mSize = 0;
 	}
@@ -577,9 +568,8 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 			for (i in 1...mSize + 1)
 			{
 				var e = get(i);
-				#if debug
+				
 				assert(Std.is(e, Cloneable), 'element is not of type Cloneable (${get(i)})');
-				#end
 				
 				var c = untyped e.clone();
 				c.position = e.position;
@@ -682,44 +672,44 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	
 	inline function get(i:Int)
 	{
-		return mA[i];
+		return mData[i];
 	}
 	inline function set(i:Int, x:T)
 	{
-		mA[i] = x;
+		mData[i] = x;
 	}
 }
 
+@:access(de.polygonal.ds.Heap)
 #if doc
 private
 #end
-@:access(de.polygonal.ds.Heap)
 class HeapIterator<T:(Heapable<T>)> implements de.polygonal.ds.Itr<T>
 {
 	var mF:Heap<T>;
-	var mA:Array<T>;
+	var mData:Array<T>;
 	var mI:Int;
 	var mS:Int;
 	
 	public function new(f:Heap<T>)
 	{
 		mF = f;
-		mA = new Array<T>();
-		mA[0] = null;
+		mData = new Array<T>();
+		mData[0] = null;
 		reset();
 	}
 	
 	public function free()
 	{
-		mA = null;
+		mData = null;
 	}
 	
 	inline public function reset():Itr<T>
 	{
 		mS = mF.size() + 1;
 		mI = 1;
-		var a = mF.mA;
-		for (i in 1...mS) mA[i] = a[i];
+		var a = mF.mData;
+		for (i in 1...mS) mData[i] = a[i];
 		return this;
 	}
 	
@@ -730,15 +720,14 @@ class HeapIterator<T:(Heapable<T>)> implements de.polygonal.ds.Itr<T>
 	
 	inline public function next():T
 	{
-		return mA[mI++];
+		return mData[mI++];
 	}
 	
 	inline public function remove()
 	{
-		#if debug
 		assert(mI > 0, "call next() before removing an element");
-		#end
-		mF.remove(mA[mI - 1]);
+		
+		mF.remove(mData[mI - 1]);
 	}
 }
 

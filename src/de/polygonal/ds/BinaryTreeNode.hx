@@ -804,9 +804,7 @@ class BinaryTreeNode<T> implements Collection<T>
 				var n = stack[--top];
 				if (n.hasR())
 				{
-					#if debug
 					assert(Std.is(n.r.val, Cloneable), 'element is not of type Cloneable (${n.r.val})');
-					#end
 					
 					t = cast n.r.val;
 					c.setR(t.clone());
@@ -815,9 +813,7 @@ class BinaryTreeNode<T> implements Collection<T>
 				}
 				if (n.hasL())
 				{
-					#if debug
 					assert(Std.is(n.l.val, Cloneable), 'element is not of type Cloneable (${n.l.val})');
-					#end
 					
 					t = cast n.l.val;
 					c.setL(t.clone());
