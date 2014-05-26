@@ -1,14 +1,15 @@
 ﻿package mem;
 
-#if alchemy
-import de.polygonal.ds.mem.MemoryManager;
-#end
-
 import de.polygonal.ds.mem.ShortMemory;
+import de.polygonal.ds.Vector;
 import haxe.io.Bytes;
 import haxe.io.BytesData;
 import haxe.io.BytesInput;
 import haxe.io.BytesOutput;
+
+#if alchemy
+import de.polygonal.ds.mem.MemoryManager;
+#end
 
 class TestShortMemory extends haxe.unit.TestCase
 {
@@ -110,7 +111,7 @@ class TestShortMemory extends haxe.unit.TestCase
 		var b = new ShortMemory(256);
 		fillData(b);
 		
-		var output = new flash.Vector<Int>();
+		var output = new Vector<Int>(b.size);
 		var v = ShortMemory.toVector(b, -1, -1, output);
 		checkVector(v, 0, 256);
 		assertEquals(256, v.length);
@@ -126,7 +127,7 @@ class TestShortMemory extends haxe.unit.TestCase
 	
 	function testOfVector()
 	{
-		var v = new flash.Vector(256, true);
+		var v = new Vector(256);
 		for (i in 0...256) v[i] = i % 10;
 		
 		var b = ShortMemory.ofVector(v);
@@ -247,7 +248,7 @@ class TestShortMemory extends haxe.unit.TestCase
 	}
 	
 	#if flash
-	inline function checkVector(data:flash.Vector<Int>, min = -1, max = -1)
+	inline function checkVector(data:Vector<Int>, min = -1, max = -1)
 	{
 		if (min == -1) min = 0;
 		if (max == -1) max = data.length;

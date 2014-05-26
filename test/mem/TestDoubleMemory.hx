@@ -1,10 +1,12 @@
 ﻿package mem;
 
 import de.polygonal.ds.mem.DoubleMemory;
+import de.polygonal.ds.Vector;
 import haxe.io.Bytes;
 import haxe.io.BytesData;
 import haxe.io.BytesInput;
 import haxe.io.BytesOutput;
+
 #if alchemy
 import de.polygonal.ds.mem.MemoryManager;
 #end
@@ -106,7 +108,7 @@ class TestDoubleMemory extends haxe.unit.TestCase
 	
 	function testOfVector()
 	{
-		var v = new flash.Vector<Float>(256, true);
+		var v = new Vector<Float>(256);
 		for (i in 0...256) v[i] = i % 10;
 		
 		var b = DoubleMemory.ofVector(v);
@@ -230,7 +232,7 @@ class TestDoubleMemory extends haxe.unit.TestCase
 	}
 	
 	#if flash
-	inline function checkVector(data:flash.Vector<Float>, min = -1, max = -1)
+	inline function checkVector(data:Vector<Float>, min = -1, max = -1)
 	{
 		if (min == -1) min = 0;
 		if (max == -1) max = data.length;

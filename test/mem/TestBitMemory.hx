@@ -1,6 +1,5 @@
 ﻿package mem;
 
-import de.polygonal.core.fmt.NumberFormat;
 import de.polygonal.core.math.Limits;
 import de.polygonal.core.math.Mathematics;
 import de.polygonal.ds.Bits;

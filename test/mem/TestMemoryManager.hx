@@ -3,7 +3,6 @@
 import de.polygonal.core.math.Mathematics;
 import de.polygonal.core.math.random.Random;
 import de.polygonal.ds.mem.ByteMemory;
-import de.polygonal.ds.mem.MemoryAccess;
 import de.polygonal.ds.mem.MemoryManager;
 
 @:access(de.polygonal.ds.mem.MemoryAccess)
