@@ -21,14 +21,25 @@ package de.polygonal.ds;
 #if flash
 abstract MockVector<T>(Array<T>)
 {
-	public inline function new(length:Int)
+	public inline function new(length:Int, ?fixed:Bool) untyped
 	{
 		this = new Array<T>();
-		untyped this.length = length;
+		this.length = length;
+		
+		#if debug
+		this["fixed"] = fixed;
+		#end
 	}
 	
 	@:arrayAccess public inline function get(index:Int):Null<T> return this[index];
-	@:arrayAccess public inline function set(index:Int, val:T):T return this[index] = val;
+	@:arrayAccess public inline function set(index:Int, val:T):T
+	{
+		#if debug
+		if (index >= this.length) throw 'RangeError: The index $index is out of range ${this.length}';
+		#end
+		
+		return this[index] = val;
+	}
 	
 	public var length(get, never):Int;
 	inline function get_length():Int return untyped this.length;
