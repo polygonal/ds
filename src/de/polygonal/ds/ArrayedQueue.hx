@@ -343,7 +343,7 @@ class ArrayedQueue<T> implements Queue<T>
 	 * The function signature is: <em>process(oldValue, index):newValue</em>
 	 * <o>n</o>
 	 */
-	public function walk(process:T->Int->T)
+	public function iter(process:T->Int->T)
 	{
 		for (i in 0...mCapacity)
 		{

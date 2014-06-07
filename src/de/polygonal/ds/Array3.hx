@@ -409,7 +409,7 @@ class Array3<T> implements Collection<T>
 	 * The function signature is: <em>process(oldValue, xIndex, yIndex, zIndex):newValue</em>
 	 * <o>n</o>
 	 */
-	public function walk(process:T->Int->Int->Int->T)
+	public function iter(process:T->Int->Int->Int->T)
 	{
 		for (z in 0...mD)
 		{

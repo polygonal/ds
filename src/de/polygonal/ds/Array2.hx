@@ -18,13 +18,13 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 */
 package de.polygonal.ds;
 
+import de.polygonal.ds.Array2.Array2Cell;
 import de.polygonal.ds.error.Assert.assert;
 
 /**
  * <p>A two-dimensional array based on a rectangular sequential array.</p>
  * <p><o>Worst-case running time in Big O notation</o></p>
  */
-
 #if (flash && generic)
 @:generic
 #end
@@ -349,7 +349,7 @@ class Array2<T> implements Collection<T>
 	 * The function signature is: <em>process(oldValue, xIndex, yIndex):newValue</em>
 	 * <o>n</o>
 	 */
-	public function walk(process:T->Int->Int->T)
+	public function iter(process:T->Int->Int->T)
 	{
 		for (y in 0...mH)
 		{

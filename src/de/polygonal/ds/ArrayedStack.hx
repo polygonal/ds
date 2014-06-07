@@ -422,7 +422,7 @@ class ArrayedStack<T> implements Stack<T>
 	 * The function signature is: <em>process(oldValue, index):newValue</em>
 	 * <o>n</o>
 	 */
-	public function walk(process:T->Int->T)
+	public function iter(process:T->Int->T)
 	{
 		for (i in 0...mTop)
 			_set(i, process(_get(i), i));
