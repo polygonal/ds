@@ -48,7 +48,7 @@ class Graph<T> implements Collection<T>
 	 * <warn>This value should never be changed by the user.</warn>
 	 */
 	public var key:Int;
-	
+
 	/**
 	 * The maximum allowed size of this graph.<br/>
 	 * Once the maximum size is reached, adding an element will fail with an error (debug only).<br/>
@@ -56,46 +56,46 @@ class Graph<T> implements Collection<T>
 	 * <warn>Always equals -1 in release mode.</warn>
 	 */
 	public var maxSize:Int;
-	
+
 	/**
 	 * If true, automatically clears the mark-flag on all graph nodes prior to starting a new traversal.<br/>
 	 * Default is false;
 	 */
 	public var autoClearMarks:Bool;
-	
+
 	/**
 	 * If true, reuses the iterator object instead of allocating a new one when calling <code>iterator()</code>.<br/>
 	 * The default is false.<br/>
 	 * <warn>If true, nested iterations are likely to fail as only one iteration is allowed at a time.</warn>
 	 */
 	public var reuseIterator:Bool;
-	
+
 	/**
 	 * If specified, <code>borrowArc()</code> is called in order to create <em>GraphArc</em> objects.<br/>
 	 * Useful for pooling <em>GraphArc</em> objects.
 	 * Default is null.
 	 */
 	public var borrowArc:GraphNode<T>->Float->GraphArc<T>;
-	
+
 	/**
 	 * A function pointer responsible for returning <em>GraphArc</em> objects.<br/>
 	 * Required if <code>borrowArc</code> is specified.
 	 * Default is null.
 	 */
 	public var returnArc:GraphArc<T>->Void;
-	
+
 	var _nodeList:GraphNode<T>;
 	var _size:Int;
-	
+
 	var _stack:Array<GraphNode<T>>;
 	var _que:Array<GraphNode<T>>;
 	var _iterator:GraphIterator<T>;
-	
+
 	#if debug
 	var _busy:Bool;
 	var _nodeSet:Set<GraphNode<T>>;
 	#end
-	
+
 	/**
 	 * @param maxSize the maximum allowed size of this graph.<br/>
 	 * The default value of -1 indicates that there is no upper limit.
@@ -107,23 +107,23 @@ class Graph<T> implements Collection<T>
 		#else
 		this.maxSize = -1;
 		#end
-		
+
 		clear();
-		
+
 		_size = 0;
 		_iterator = null;
-		
+
 		#if debug
 		_busy = false;
 		_nodeSet = new ListSet<GraphNode<T>>();
 		#end
-		
+
 		autoClearMarks = false;
 		key = HashKey.next();
 		reuseIterator = false;
 	}
-	
-	/** 
+
+	/**
 	 * The graph nodes stored as a doubly linked list of <em>GraphNode</em> objects.
 	 * <o>1</o>
 	 * @return the first node in a list of <em>GraphNode</em> objects or null if the graph is empty.
@@ -132,7 +132,7 @@ class Graph<T> implements Collection<T>
 	{
 		return _nodeList;
 	}
-	
+
 	/**
 	 * Finds and returns the node storing the element <code>x</code> or null if such a node does not exist.
 	 * <o>n</o>
@@ -152,7 +152,7 @@ class Graph<T> implements Collection<T>
 		}
 		return found ? n : null;
 	}
-	
+
 	/**
 	 * Creates and returns a node object storing the element <code>x</code>.
 	 * <o>1</o>
@@ -161,7 +161,7 @@ class Graph<T> implements Collection<T>
 	{
 		return new GraphNode<T>(this, x);
 	}
-	
+
 	/**
 	 * Adds the node <code>x</code> to this graph.
 	 * <o>1</o>
@@ -174,16 +174,16 @@ class Graph<T> implements Collection<T>
 			assert(size() < maxSize, 'size equals max size ($maxSize)');
 		assert(_nodeSet.set(x), "node exists");
 		#end
-		
+
 		_size++;
-		
+
 		x.next = _nodeList;
 		if (x.next != null) x.next.prev = x;
 		_nodeList = x;
-		
+
 		return x;
 	}
-	
+
 	/**
 	 * Removes the node <code>x</code> from this graph.<br/>
 	 * This clears all outgoing and incoming arcs and removes <code>x</code> from the node list.
@@ -195,15 +195,15 @@ class Graph<T> implements Collection<T>
 		#if debug
 		assert(size() > 0, "graph is empty");
 		#end
-		
+
 		unlink(x);
-		
+
 		if (x.prev != null) x.prev.next = x.next;
 		if (x.next != null) x.next.prev = x.prev;
 		if (_nodeList == x) _nodeList = x.next;
 		_size--;
 	}
-	
+
 	/**
 	 * Creates an uni-directional link between two nodes with a weight of <code>cost</code> (default is 1.0).<br/>
 	 * This creates an arc pointing from the <code>source</code> node to the <code>target</code> node.
@@ -218,7 +218,7 @@ class Graph<T> implements Collection<T>
 		assert(target != null, "target is null");
 		assert(source != target, "source equals target");
 		#end
-		
+
 		var walker = _nodeList;
 		while (walker != null)
 		{
@@ -240,7 +240,7 @@ class Graph<T> implements Collection<T>
 			walker = walker.next;
 		}
 	}
-	
+
 	/**
 	 * Creates a bi-directional link between two nodes with a weight of <code>cost</code> (default is 1.0).<br/>
 	 * This creates two arcs - an arc that points from the <code>source</code> node to the <code>target</code> node and vice versa.
@@ -257,7 +257,7 @@ class Graph<T> implements Collection<T>
 		assert(source.getArc(target) == null, "arc from source to target already exists");
 		assert(target.getArc(source) == null, "arc from target to source already exists");
 		#end
-		
+
 		var walker = _nodeList;
 		while (walker != null)
 		{
@@ -273,7 +273,7 @@ class Graph<T> implements Collection<T>
 						walker.addArc(sourceNode, cost);
 						break;
 					}
-					
+
 					walker = walker.next;
 				}
 				break;
@@ -281,7 +281,7 @@ class Graph<T> implements Collection<T>
 			walker = walker.next;
 		}
 	}
-	
+
 	/**
 	 * Isolates <code>node</code> from this graph by unlinking it from all outgoing and incoming arcs.<br/>
 	 * The size remains unchanged as the node is not removed from the graph.
@@ -298,7 +298,7 @@ class Graph<T> implements Collection<T>
 		assert(_nodeSet.has(node), "unknown node");
 		assert(node != null, "node is null");
 		#end
-		
+
 		var arc0 = node.arcList;
 		while (arc0 != null)
 		{
@@ -307,7 +307,7 @@ class Graph<T> implements Collection<T>
 			while (arc1 != null)
 			{
 				var hook = arc1.next;
-				
+
 				if (arc1.node == node)
 				{
 					if (arc1.prev != null) arc1.prev.next = hook;
@@ -317,27 +317,27 @@ class Graph<T> implements Collection<T>
 					if (returnArc != null)
 						returnArc(arc1);
 				}
-				
+
 				arc1 = hook;
 			}
-			
+
 			var hook = arc0.next;
-			
+
 			if (arc0.prev != null) arc0.prev.next = hook;
 			if (hook != null) hook.prev = arc0.prev;
 			if (node.arcList == arc0) node.arcList = hook;
 			arc0.free();
 			if (returnArc != null)
 				returnArc(arc0);
-			
+
 			arc0 = hook;
 		}
-		
+
 		node.arcList = null;
-		
+
 		return node;
 	}
-	
+
 	/**
 	 * Clears the mark-flag on all graph nodes that were set in a BFS/DFS traversal.<br/>
 	 * <warn>Call this method to start a fresh traversal.</warn>
@@ -352,7 +352,7 @@ class Graph<T> implements Collection<T>
 			node = node.next;
 		}
 	}
-	
+
 	/**
 	 * Clears the parent pointers on all graph nodes.
 	 * <o>n</o>
@@ -366,7 +366,7 @@ class Graph<T> implements Collection<T>
 			node = node.next;
 		}
 	}
-	
+
 	/**
 	 * Performs an iterative depth-first search (DFS).
 	 * @param preflight if true, an extra traversal is performed before the actual traversal runs.
@@ -390,21 +390,21 @@ class Graph<T> implements Collection<T>
 	public function DFS(preflight = false, seed:GraphNode<T> = null, process:GraphNode<T>->Bool->Dynamic->Bool = null, userData:Dynamic = null, recursive = false)
 	{
 		if (_size == 0) return;
-		
+
 		#if debug
 		assert(_busy == false, "recursive call to iterative DFS");
 		_busy = true;
 		#end
-		
+
 		if (autoClearMarks) clearMarks();
-		
+
 		var c = 1;
-		
+
 		if (seed == null) seed = _nodeList;
 		_stack[0] = seed;
 		seed.parent = seed;
 		seed.depth = 0;
-		
+
 		if (preflight)
 		{
 			if (process == null)
@@ -427,24 +427,24 @@ class Graph<T> implements Collection<T>
 						#end
 						return;
 					}
-					
+
 					while (c > 0)
 					{
 						var n = _stack[--c];
 						if (n.marked) continue;
 						n.marked = true;
-						
+
 						v = n.val;
 						if (!v.visit(false, userData)) break;
-						
+
 						var a = n.arcList;
 						while (a != null)
 						{
 							v = n.val;
-							
+
 							a.node.parent = n;
 							a.node.depth = n.depth + 1;
-							
+
 							if (v.visit(true, userData))
 								_stack[c++] = a.node;
 							a = a.next;
@@ -469,22 +469,22 @@ class Graph<T> implements Collection<T>
 						#end
 						return;
 					}
-					
+
 					while (c > 0)
 					{
 						var n = _stack[--c];
-						
+
 						if (n.marked) continue;
 						n.marked = true;
-						
+
 						if (!process(n, false, userData)) break;
-						
+
 						var a = n.arcList;
 						while (a != null)
 						{
 							a.node.parent = n;
 							a.node.depth = n.depth + 1;
-							
+
 							if (process(a.node, true, userData))
 								_stack[c++] = a.node;
 							a = a.next;
@@ -507,10 +507,10 @@ class Graph<T> implements Collection<T>
 						var n = _stack[--c];
 						if (n.marked) continue;
 						n.marked = true;
-						
+
 						v = n.val;
 						if (!v.visit(false, userData)) break;
-						
+
 						var a = n.arcList;
 						while (a != null)
 						{
@@ -533,9 +533,9 @@ class Graph<T> implements Collection<T>
 						var n = _stack[--c];
 						if (n.marked) continue;
 						n.marked = true;
-						
+
 						if (!process(n, false, userData)) break;
-						
+
 						var a = n.arcList;
 						while (a != null)
 						{
@@ -548,12 +548,12 @@ class Graph<T> implements Collection<T>
 				}
 			}
 		}
-		
+
 		#if debug
 		_busy = false;
 		#end
 	}
-	
+
 	/**
 	 * Performs an iterative breadth-first search (BFS).
 	 * @param preflight if true, an extra traversal is performed before the actual traversal runs.
@@ -576,30 +576,30 @@ class Graph<T> implements Collection<T>
 	public function BFS(preflight = false, seed:GraphNode<T> = null, process:GraphNode<T>->Bool->Dynamic->Bool = null, userData:Dynamic = null)
 	{
 		if (_size == 0) return;
-		
+
 		#if debug
 		assert(_busy == false, "recursive call to iterative BFS");
 		_busy = true;
 		#end
-		
+
 		if (autoClearMarks) clearMarks();
-		
+
 		var front = 0;
 		var c = 1;
-		
+
 		if (seed == null) seed = _nodeList;
 		_que[0] = seed;
-		
+
 		seed.marked = true;
 		seed.parent = seed;
 		seed.depth = 0;
-		
+
 		if (preflight)
 		{
 			if (process == null)
 			{
 				var v:Dynamic = null;
-				
+
 				var n = _que[front];
 				v = n.val;
 				if (!v.visit(true, userData))
@@ -609,7 +609,7 @@ class Graph<T> implements Collection<T>
 					#end
 					return;
 				}
-				
+
 				while (c > 0)
 				{
 					n = _que[front];
@@ -633,7 +633,7 @@ class Graph<T> implements Collection<T>
 						m.marked = true;
 						m.parent = n;
 						m.depth = n.depth + 1;
-						
+
 						v = m.val;
 						if (v.visit(true, userData))
 							_que[c++ + front] = m;
@@ -653,7 +653,7 @@ class Graph<T> implements Collection<T>
 					#end
 					return;
 				}
-				
+
 				while (c > 0)
 				{
 					n = _que[front];
@@ -664,7 +664,7 @@ class Graph<T> implements Collection<T>
 						#end
 						return;
 					}
-					
+
 					var a = n.arcList;
 					while (a != null)
 					{
@@ -677,7 +677,7 @@ class Graph<T> implements Collection<T>
 						m.marked = true;
 						m.parent = n;
 						m.depth = n.depth + 1;
-						
+
 						if (process(m, true, userData))
 							_que[c++ + front] = m;
 						a = a.next;
@@ -715,7 +715,7 @@ class Graph<T> implements Collection<T>
 						m.marked = true;
 						m.parent = n;
 						m.depth = n.depth + 1;
-						
+
 						_que[c++ + front] = m;
 						a = a.next;
 					}
@@ -747,7 +747,7 @@ class Graph<T> implements Collection<T>
 						m.marked = true;
 						m.parent = n;
 						m.depth = n.depth + 1;
-						
+
 						_que[c++ + front] = m;
 						a = a.next;
 					}
@@ -756,12 +756,12 @@ class Graph<T> implements Collection<T>
 				}
 			}
 		}
-		
+
 		#if debug
 		_busy = false;
 		#end
 	}
-	
+
 	/**
 	 * Performs an iterative depth-limited breadth-first search (DLBFS).
 	 * @param maxDepth A <code>maxDepth</code> value of 1 means that only all direct neighbors of <code>seed</code> are visited.
@@ -785,36 +785,36 @@ class Graph<T> implements Collection<T>
 	public function DLBFS(maxDepth:Int, preflight = false, seed:GraphNode<T> = null, process:GraphNode<T>->Bool->Dynamic->Bool = null, userData:Dynamic = null)
 	{
 		if (_size == 0) return;
-		
+
 		#if debug
 		assert(_busy == false, "recursive call to iterative BFS");
 		_busy = true;
 		#end
-		
+
 		if (autoClearMarks) clearMarks();
-		
+
 		var front = 0;
 		var c = 1;
-		
+
 		var node = _nodeList;
 		while (node != null)
 		{
 			node.depth = 0;
 			node = node.next;
 		}
-		
+
 		if (seed == null) seed = _nodeList;
 		_que[0] = seed;
-		
+
 		seed.marked = true;
 		seed.parent = seed;
-		
+
 		if (preflight)
 		{
 			if (process == null)
 			{
 				var v:Dynamic = null;
-				
+
 				var n = _que[front];
 				v = n.val;
 				if (!v.visit(true, userData))
@@ -824,7 +824,7 @@ class Graph<T> implements Collection<T>
 					#end
 					return;
 				}
-				
+
 				while (c > 0)
 				{
 					n = _que[front];
@@ -870,7 +870,7 @@ class Graph<T> implements Collection<T>
 					#end
 					return;
 				}
-				
+
 				while (c > 0)
 				{
 					n = _que[front];
@@ -881,7 +881,7 @@ class Graph<T> implements Collection<T>
 						#end
 						return;
 					}
-					
+
 					var a = n.arcList;
 					while (a != null)
 					{
@@ -914,7 +914,7 @@ class Graph<T> implements Collection<T>
 				while (c > 0)
 				{
 					var n = _que[front];
-					
+
 					v = n.val;
 					if (!v.visit(false, userData))
 					{
@@ -937,7 +937,7 @@ class Graph<T> implements Collection<T>
 						m.parent = n.parent;
 						if (m.depth <= maxDepth)
 							_que[c++ + front] = m;
-						
+
 						a = a.next;
 					}
 					front++;
@@ -949,9 +949,9 @@ class Graph<T> implements Collection<T>
 				while (c > 0)
 				{
 					var n = _que[front];
-					
+
 					if (n.depth > maxDepth) continue;
-					
+
 					if (!process(n, false, userData))
 					{
 						#if debug
@@ -973,7 +973,7 @@ class Graph<T> implements Collection<T>
 						m.parent = n.parent;
 						if (m.depth <= maxDepth)
 							_que[c++ + front] = m;
-						
+
 						a = a.next;
 					}
 					front++;
@@ -981,12 +981,12 @@ class Graph<T> implements Collection<T>
 				}
 			}
 		}
-		
+
 		#if debug
 		_busy = false;
 		#end
 	}
-	
+
 	/**
 	 * Returns a string representing the current object.<br/>
 	 * Example:<br/>
@@ -1021,11 +1021,11 @@ class Graph<T> implements Collection<T>
 		s += "]";
 		return s;
 	}
-	
+
 	/*///////////////////////////////////////////////////////
 	// collection
 	///////////////////////////////////////////////////////*/
-	
+
 	/**
 	 * Destroys this object by explicitly nullifying all nodes, elements and pointers for GC'ing used resources.<br/>
 	 * Improves GC efficiency/performance (optional).
@@ -1037,7 +1037,7 @@ class Graph<T> implements Collection<T>
 		while (node != null)
 		{
 			var nextNode = node.next;
-			
+
 			var arc = node.arcList;
 			while (arc != null)
 			{
@@ -1046,24 +1046,24 @@ class Graph<T> implements Collection<T>
 				arc.node = null;
 				arc = nextArc;
 			}
-			
+
 			node.free();
 			node = nextNode;
 		}
-		
+
 		_nodeList = null;
-		
+
 		for (i in 0..._stack.length) _stack[i] = null; _stack = null;
 		for (i in 0..._que.length) _que[i] = null; _que = null;
-		
+
 		_iterator = null;
-		
+
 		#if debug
 		_nodeSet.free();
 		_nodeSet = null;
 		#end
 	}
-	
+
 	/**
 	 * Returns true if this graph contains a node storing the element <code>x</code>.
 	 * <o>n</o>
@@ -1080,7 +1080,7 @@ class Graph<T> implements Collection<T>
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Removes all nodes storing the element <code>x</code>.<br/>
 	 * Nodes and elements are nullified.
@@ -1094,7 +1094,7 @@ class Graph<T> implements Collection<T>
 		while (node != null)
 		{
 			var nextNode = node.next;
-			
+
 			if (node.val == x)
 			{
 				unlink(node);
@@ -1104,13 +1104,13 @@ class Graph<T> implements Collection<T>
 				found = true;
 				_size--;
 			}
-			
+
 			node = nextNode;
 		}
-		
+
 		return found;
 	}
-	
+
 	/**
 	 * Removes all elements.
 	 * <o>1 or n if <code>purge</code> is true</o>
@@ -1136,14 +1136,14 @@ class Graph<T> implements Collection<T>
 				node = hook;
 			}
 		}
-		
+
 		_nodeList = null;
 		_size = 0;
-		
+
 		_stack = new Array<GraphNode<T>>();
 		_que = new Array<GraphNode<T>>();
 	}
-	
+
 	/**
 	 * Returns a new <em>GraphIterator</em> object to iterate over all elements stored in the graph nodes of this graph.
 	 * The nodes are visited in a random order.
@@ -1162,7 +1162,7 @@ class Graph<T> implements Collection<T>
 		else
 			return new GraphIterator<T>(this);
 	}
-	
+
 	/**
 	 * Returns a new <em>GraphNodeIterator</em> object to iterate over all <em>GraphNode</em> objects in this graph.
 	 * The nodes are visited in a random order.
@@ -1172,7 +1172,7 @@ class Graph<T> implements Collection<T>
 	{
 		return new GraphNodeIterator<T>(this);
 	}
-	
+
 	/**
 	 * Returns a new <em>GraphArcIterator</em> object to iterate over all <em>GraphArc</em> objects in this graph.
 	 * The arcs are visited in a random order.
@@ -1182,7 +1182,7 @@ class Graph<T> implements Collection<T>
 	{
 		return new GraphArcIterator<T>(this);
 	}
-	
+
 	/**
 	 * The total number of elements in this graph.<br/>
 	 * Equals the number of graph nodes.
@@ -1192,7 +1192,7 @@ class Graph<T> implements Collection<T>
 	{
 		return _size;
 	}
-	
+
 	/**
 	 * Returns true if this graph is empty.
 	 * <o>1</o>
@@ -1201,7 +1201,7 @@ class Graph<T> implements Collection<T>
 	{
 		return _size == 0;
 	}
-	
+
 	/**
 	 * Returns an unordered array containing all elements stored in the graph nodes of this graph.
 	 */
@@ -1216,7 +1216,7 @@ class Graph<T> implements Collection<T>
 		}
 		return a;
 	}
-	
+
 	#if flash10
 	/**
 	 * Returns an unordered Vector.&lt;T&gt; object containing all elements stored in the graph nodes of this graph.
@@ -1233,7 +1233,7 @@ class Graph<T> implements Collection<T>
 		return a;
 	}
 	#end
-	
+
 	/**
 	 * Duplicates this graph. Supports shallow (structure only) and deep copies (structure & elements).
 	 * @param assign if true, the <code>copier</code> parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.<br/>
@@ -1245,11 +1245,11 @@ class Graph<T> implements Collection<T>
 	{
 		var copy = new Graph<T>(maxSize);
 		if (_nodeList == null) return copy;
-		
+
 		var t = new Array<GraphNode<T>>();
 		var i = 0;
 		var n = _nodeList;
-		
+
 		if (assign)
 		{
 			while (n != null)
@@ -1268,7 +1268,7 @@ class Graph<T> implements Collection<T>
 				#if debug
 				assert(Std.is(n.val, Cloneable), 'element is not of type Cloneable (${n.val})');
 				#end
-				
+
 				c = n.val;
 				var m = copy.addNode(copy.createNode(c.clone()));
 				t[i++] = m;
@@ -1284,7 +1284,7 @@ class Graph<T> implements Collection<T>
 				n = n.next;
 			}
 		}
-		
+
 		i = 0;
 		n = _nodeList;
 		while (n != null)
@@ -1298,31 +1298,31 @@ class Graph<T> implements Collection<T>
 			}
 			n = n.next;
 		}
-		
+
 		return copy;
 	}
-	
+
 	function _DFSRecursiveVisit(node:GraphNode<T>, preflight:Bool, userData:Dynamic):Bool
 	{
 		node.marked = true;
-		
+
 		var v:Dynamic = node.val;
 		if (!v.visit(false, userData)) return false;
-		
+
 		var a = node.arcList;
 		while (a != null)
 		{
 			var m = a.node;
-			
+
 			if (m.marked)
 			{
 				a = a.next;
 				continue;
 			}
-			
+
 			a.node.parent = node;
 			a.node.depth = node.depth + 1;
-			
+
 			if (preflight)
 			{
 				v = m.val;
@@ -1335,19 +1335,19 @@ class Graph<T> implements Collection<T>
 				if (!_DFSRecursiveVisit(m, false, userData))
 					return false;
 			}
-			
+
 			a = a.next;
 		}
-		
+
 		return true;
 	}
-	
-	function _DFSRecursiveProcess(node:GraphNode<T>, process:GraphNode<T>->Bool->Dynamic->Bool = null, preflight:Bool, userData:Dynamic):Bool
+
+	function _DFSRecursiveProcess(node:GraphNode<T>, process:GraphNode<T>->Bool->Dynamic->Bool = null, preflight:Bool=false, userData:Dynamic=null):Bool
 	{
 		node.marked = true;
-		if (!process(node, false, userData))	
+		if (!process(node, false, userData))
 			return false;
-		
+
 		var a = node.arcList;
 		while (a != null)
 		{
@@ -1357,10 +1357,10 @@ class Graph<T> implements Collection<T>
 				a = a.next;
 				continue;
 			}
-			
+
 			a.node.parent = node;
 			a.node.depth = node.depth + 1;
-			
+
 			if (preflight)
 			{
 				if (process(m, true, userData))
@@ -1372,10 +1372,10 @@ class Graph<T> implements Collection<T>
 				if (!_DFSRecursiveProcess(m, process, false, userData))
 						return false;
 			}
-			
+
 			a = a.next;
 		}
-		
+
 		return true;
 	}
 }
@@ -1395,36 +1395,36 @@ class GraphIterator<T> implements de.polygonal.ds.Itr<T>
 {
 	var _f:Graph<T>;
 	var _node:GraphNode<T>;
-	
+
 	public function new(f:Graph<T>)
 	{
 		_f = f;
 		reset();
 	}
-	
+
 	inline public function reset():Itr<T>
 	{
 		_node = __nodeList(_f);
 		return this;
 	}
-	
+
 	inline public function hasNext():Bool
 	{
 		return _node != null;
 	}
-	
+
 	inline public function next():T
 	{
 		var x = _node.val;
 		_node = _node.next;
 		return x;
 	}
-	
+
 	inline public function remove()
 	{
 		throw "unsupported operation";
 	}
-	
+
 	inline function __nodeList(f:GraphFriend<T>)
 	{
 		return f._nodeList;
@@ -1441,36 +1441,36 @@ class GraphNodeIterator<T> implements de.polygonal.ds.Itr<GraphNode<T>>
 {
 	var _f:Graph<T>;
 	var _node:GraphNode<T>;
-	
+
 	public function new(f:Graph<T>)
 	{
 		_f = f;
 		reset();
 	}
-	
+
 	inline public function reset():Itr<GraphNode<T>>
 	{
 		_node = __nodeList(_f);
 		return this;
 	}
-	
+
 	inline public function hasNext():Bool
 	{
 		return _node != null;
 	}
-	
+
 	inline public function next():GraphNode<T>
 	{
 		var x = _node;
 		_node = _node.next;
 		return x;
 	}
-	
+
 	inline public function remove()
 	{
 		throw "unsupported operation";
 	}
-	
+
 	inline function __nodeList(f:GraphFriend<T>)
 	{
 		return f._nodeList;
@@ -1488,44 +1488,44 @@ class GraphArcIterator<T> implements de.polygonal.ds.Itr<GraphArc<T>>
 	var _f:Graph<T>;
 	var _node:GraphNode<T>;
 	var _arc:GraphArc<T>;
-	
+
 	public function new(f:Graph<T>)
 	{
 		_f = f;
 		reset();
 	}
-	
+
 	inline public function reset():Itr<GraphArc<T>>
 	{
 		_node = __nodeList(_f);
 		_arc = _node.arcList;
 		return this;
 	}
-	
+
 	inline public function hasNext():Bool
 	{
 		return _arc != null && _node != null;
 	}
-	
+
 	inline public function next():GraphArc<T>
 	{
 		var x = _arc;
 		_arc = _arc.next;
-		
+
 		if (_arc == null)
 		{
 			_node = _node.next;
 			if (_node != null) _arc = _node.arcList;
 		}
-		
+
 		return x;
 	}
-	
+
 	inline public function remove()
 	{
 		throw "unsupported operation";
 	}
-	
+
 	inline function __nodeList(f:GraphFriend<T>)
 	{
 		return f._nodeList;

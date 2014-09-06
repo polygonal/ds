@@ -6,12 +6,12 @@ import de.polygonal.ds.Deque;
 class TestArrayedDeque extends haxe.unit.TestCase
 {
 	inline static var BLOCK_SIZE = 4;
-	
+
 	function new()
 	{
 		super();
 	}
-	
+
 	function testAdjacent()
 	{
 		//[x, x, x, h] [t, x, x, ]
@@ -28,7 +28,7 @@ class TestArrayedDeque extends haxe.unit.TestCase
 		assertEquals(3, d.getFront(0));
 		assertEquals(4, d.getBack(0));
 	}
-	
+
 	function testFill()
 	{
 		var d = createDequeInt();
@@ -61,7 +61,7 @@ class TestArrayedDeque extends haxe.unit.TestCase
 				assertEquals(99, d.getFront(i));
 		}
 	}
-	
+
 	function testClear()
 	{
 		var d = createDequeInt();
@@ -70,7 +70,7 @@ class TestArrayedDeque extends haxe.unit.TestCase
 		assertTrue(d.isEmpty());
 		assertEquals(0, d.size());
 	}
-	
+
 	function testIndexOf()
 	{
 		var d = createDequeInt();
@@ -83,7 +83,7 @@ class TestArrayedDeque extends haxe.unit.TestCase
 			assertEquals(i, d.indexOfBack(i));
 		}
 	}
-	
+
 	function testGetFront()
 	{
 		var d = createDequeInt();
@@ -115,7 +115,7 @@ class TestArrayedDeque extends haxe.unit.TestCase
 			}
 		}
 	}
-	
+
 	function testGetBack()
 	{
 		var d = createDequeInt();
@@ -147,7 +147,7 @@ class TestArrayedDeque extends haxe.unit.TestCase
 			}
 		}
 	}
-	
+
 	function testClone()
 	{
 		var s = 1;
@@ -168,7 +168,7 @@ class TestArrayedDeque extends haxe.unit.TestCase
 			assertEquals(s, z);
 			s++;
 		}
-		
+
 		var s = 1;
 		while (s < 20)
 		{
@@ -187,9 +187,9 @@ class TestArrayedDeque extends haxe.unit.TestCase
 			assertEquals(s, z);
 			s++;
 		}
-		
+
 		var copier = function(x:E) { return new E(x.x); }
-		
+
 		var s = 1;
 		while (s < 20)
 		{
@@ -209,7 +209,7 @@ class TestArrayedDeque extends haxe.unit.TestCase
 			s++;
 		}
 	}
-	
+
 	function testIterator()
 	{
 		var s = 1;
@@ -229,23 +229,23 @@ class TestArrayedDeque extends haxe.unit.TestCase
 			assertEquals(s, z);
 			s++;
 		}
-		
+
 		var d = createDequeInt(16);
 		d.pushBack(0);
 		d.pushBack(1);
 		d.pushBack(2);
 		d.pushBack(3);
 		d.pushBack(4);
-		
+
 		var values = [0, 1, 2, 3, 4];
 		for (e in d) assertEquals(values.shift(), e);
-		
+
 		d.pushFront(5);
-		
+
 		var values = [5, 0, 1, 2, 3, 4];
 		for (e in d) assertEquals(values.shift(), e);
 	}
-	
+
 	function testContains()
 	{
 		var s = 1;
@@ -260,7 +260,7 @@ class TestArrayedDeque extends haxe.unit.TestCase
 			s++;
 		}
 	}
-	
+
 	function testToArray()
 	{
 		//2
@@ -270,7 +270,7 @@ class TestArrayedDeque extends haxe.unit.TestCase
 		for (i in 0...a.length)
 			assertEquals(a[i], d.popFront());
 		assertEquals(2, a.length);
-		
+
 		//4
 		var d = createDequeInt();
 		for (i in 0...4) d.pushBack(i);
@@ -278,7 +278,7 @@ class TestArrayedDeque extends haxe.unit.TestCase
 		for (i in 0...a.length)
 			assertEquals(a[i], d.popFront());
 		assertEquals(4, a.length);
-		
+
 		//16
 		var d = createDequeInt();
 		for (i in 0...16) d.pushBack(i);
@@ -287,7 +287,7 @@ class TestArrayedDeque extends haxe.unit.TestCase
 			assertEquals(a[i], d.popFront());
 		assertEquals(16, a.length);
 	}
-	
+
 	function testRemoveCase1()
 	{
 		//work to back case2
@@ -296,7 +296,7 @@ class TestArrayedDeque extends haxe.unit.TestCase
 		d.pushBack(1);
 		d.pushBack(2);
 		d.pushBack(3);
-		
+
 		d.remove(2);
 		var c = 0;
 		var data = [0, 1, 3];
@@ -306,7 +306,7 @@ class TestArrayedDeque extends haxe.unit.TestCase
 			assertEquals(x, data.shift());
 		}
 		assertEquals(3, c);
-		
+
 		d.remove(3);
 		var c = 0;
 		var data = [0, 1];
@@ -316,7 +316,7 @@ class TestArrayedDeque extends haxe.unit.TestCase
 			assertEquals(x, data.shift());
 		}
 		assertEquals(2, c);
-		
+
 		//work to back case2
 		var d = createDequeInt();
 		for (i in 0...20)
@@ -330,7 +330,7 @@ class TestArrayedDeque extends haxe.unit.TestCase
 			assertEquals(x, data.shift());
 		}
 		assertEquals(19, c);
-		
+
 		//work to head case2
 		var d = createDequeInt(8);
 		d.pushBack(0);
@@ -351,14 +351,14 @@ class TestArrayedDeque extends haxe.unit.TestCase
 			assertEquals(x, data.shift());
 		}
 		assertEquals(8, c);
-		
+
 		var d = createDequeInt(8);
 		d.pushBack(0);
 		d.pushBack(1);
 		d.pushBack(2);
 		d.pushBack(3);
 		d.pushBack(4);
-		
+
 		d.remove(0); //block0, head++
 		assertEquals(4, d.size());
 		var i = 1;
@@ -369,7 +369,7 @@ class TestArrayedDeque extends haxe.unit.TestCase
 			assertEquals(x, i++);
 		}
 		assertEquals(4, c);
-		
+
 		d.remove(4); //block0, tail--
 		assertEquals(3, d.size());
 		var i = 1;
@@ -380,7 +380,7 @@ class TestArrayedDeque extends haxe.unit.TestCase
 			assertEquals(x, i++);
 		}
 		assertEquals(3, c);
-		
+
 		d.remove(2);
 		assertEquals(2, d.size());
 		var i = 1;
@@ -392,7 +392,7 @@ class TestArrayedDeque extends haxe.unit.TestCase
 			assertEquals(x, data.shift());
 		}
 		assertEquals(2, c);
-		
+
 		d.remove(1);
 		assertEquals(1, d.size());
 		var i = 1;
@@ -404,11 +404,11 @@ class TestArrayedDeque extends haxe.unit.TestCase
 			assertEquals(x, data.shift());
 		}
 		assertEquals(1, c);
-		
+
 		d.remove(3);
 		assertEquals(0, d.size());
 	}
-	
+
 	function testRemoveCase2()
 	{
 		var d = createDequeInt(4);
@@ -429,16 +429,16 @@ class TestArrayedDeque extends haxe.unit.TestCase
 		}
 		assertEquals(5, c);
 	}
-	
+
 	function testRemoveCase3()
 	{
 		//work to head
 		var d = createDequeInt();
 		for (i in 0...20)
 			d.pushBack(i);
-		
+
 		d.remove(16);
-		
+
 		var c = 0;
 		var data = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 17, 18, 19];
 		for (x in d)
@@ -447,14 +447,14 @@ class TestArrayedDeque extends haxe.unit.TestCase
 			assertEquals(x, data.shift());
 		}
 		assertEquals(19, c);
-		
+
 		//work to tail
 		var d = createDequeInt();
 		for (i in 0...20)
 			d.pushBack(i);
-		
+
 		d.remove(8);
-		
+
 		var c = 0;
 		var data = [0, 1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19];
 		for (x in d)
@@ -464,7 +464,7 @@ class TestArrayedDeque extends haxe.unit.TestCase
 		}
 		assertEquals(19, c);
 	}
-	
+
 	function testPushPopFront1()
 	{
 		var d = createDequeInt();
@@ -475,7 +475,7 @@ class TestArrayedDeque extends haxe.unit.TestCase
 		assertTrue(d.isEmpty());
 		assertEquals(0, d.size());
 	}
-	
+
 	function testPushPopFront2()
 	{
 		var d = createDequeInt();
@@ -483,7 +483,7 @@ class TestArrayedDeque extends haxe.unit.TestCase
 		assertEquals(1, d.front());
 		assertEquals(1, d.back());
 	}
-	
+
 	function testInterface()
 	{
 		//pushFront, popFront
@@ -506,12 +506,12 @@ class TestArrayedDeque extends haxe.unit.TestCase
 		for (i in 0...8)
 		{
 			assertEquals(j--, d.popFront());
-			
+
 			if (j > 0)
 				assertEquals(j, d.front());
 		}
 		assertEquals(0, d.size());
-		
+
 		//pushFront, popBack
 		var d = createDequeInt();
 		for (i in 0...8)
@@ -524,7 +524,7 @@ class TestArrayedDeque extends haxe.unit.TestCase
 		for (i in 0...8)
 		{
 			assertEquals(i, d.popBack());
-			
+
 			if (i < 7)
 			{
 				assertEquals(7, d.front());
@@ -532,7 +532,7 @@ class TestArrayedDeque extends haxe.unit.TestCase
 			}
 		}
 		assertEquals(0, d.size());
-		
+
 		//pushBack, popFront
 		var d = createDequeInt();
 		for (i in 0...8)
@@ -541,18 +541,18 @@ class TestArrayedDeque extends haxe.unit.TestCase
 			assertEquals(0, d.front());
 			assertEquals(i, d.back());
 		}
-		
+
 		for (i in 0...8)
 		{
 			assertEquals(i, d.popFront());
-			
+
 			if (i < 7)
 			{
 				assertEquals(i + 1, d.front());
 				assertEquals(7, d.back());
 			}
 		}
-		
+
 		//pushBack, popBack
 		var d = createDequeInt();
 		for (i in 0...8)
@@ -565,7 +565,7 @@ class TestArrayedDeque extends haxe.unit.TestCase
 		for (i in 0...8)
 		{
 			assertEquals(j--, d.popBack());
-			
+
 			if (i < 7)
 			{
 				assertEquals(0, d.front());
@@ -573,7 +573,7 @@ class TestArrayedDeque extends haxe.unit.TestCase
 			}
 		}
 	}
-	
+
 	function testFrontFill()
 	{
 		var d = createDequeInt(8);
@@ -589,7 +589,7 @@ class TestArrayedDeque extends haxe.unit.TestCase
 			assertEquals(5 - 1 - i, x);
 		}
 	}
-	
+
 	function testBackFill()
 	{
 		var d = createDequeInt(8);
@@ -599,7 +599,7 @@ class TestArrayedDeque extends haxe.unit.TestCase
 			assertEquals(i, d.back());
 			assertEquals(0, d.front());
 		}
-		
+
 		for (i in 0...5)
 		{
 			assertEquals(5 - i - 1, d.back());
@@ -607,12 +607,12 @@ class TestArrayedDeque extends haxe.unit.TestCase
 			assertEquals(5 - i - 1, x);
 		}
 	}
-	
+
 	function createDequeInt(size = BLOCK_SIZE)
 	{
 		return new ArrayedDeque<Int>(size);
 	}
-	
+
 	function createDequeFoo(size = BLOCK_SIZE)
 	{
 		return new ArrayedDeque<E>(size);
@@ -626,7 +626,7 @@ private class E implements de.polygonal.ds.Cloneable<E>
 	{
 		this.x = x;
 	}
-	
+
 	public function clone():E
 	{
 		return new E(x);
