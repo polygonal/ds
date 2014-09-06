@@ -39,177 +39,177 @@ import haxe.macro.Context;
 /**
  * <p>Helper class for working with bit flags.</p>
  */
-class Bits 
+class Bits
 {
 	/**
-	 * 1 << 00 (0x00000001) 
+	 * 1 << 00 (0x00000001)
 	 */
-	inline public static var BIT_01 = 1 << 00;
+	inline public static var BIT_01 = 1 << 0;
 	/**
-	 * 1 << 01 (0x00000002) 
+	 * 1 << 01 (0x00000002)
 	 */
-	inline public static var BIT_02 = 1 << 01;
+	inline public static var BIT_02 = 1 << 1;
 	/**
-	 * 1 << 02 (0x00000004) 
+	 * 1 << 02 (0x00000004)
 	 */
-	inline public static var BIT_03 = 1 << 02;
+	inline public static var BIT_03 = 1 << 2;
 	/**
-	 * 1 << 03 (0x00000008) 
+	 * 1 << 03 (0x00000008)
 	 */
-	inline public static var BIT_04 = 1 << 03;
+	inline public static var BIT_04 = 1 << 3;
 	/**
-	 * 1 << 04 (0x00000010) 
+	 * 1 << 04 (0x00000010)
 	 */
-	inline public static var BIT_05 = 1 << 04;
+	inline public static var BIT_05 = 1 << 4;
 	/**
-	 * 1 << 05 (0x00000020) 
+	 * 1 << 05 (0x00000020)
 	 */
-	inline public static var BIT_06 = 1 << 05;
+	inline public static var BIT_06 = 1 << 5;
 	/**
-	 * 1 << 06 (0x00000040) 
+	 * 1 << 06 (0x00000040)
 	 */
-	inline public static var BIT_07 = 1 << 06;
+	inline public static var BIT_07 = 1 << 6;
 	/**
-	 * 1 << 07 (0x00000080) 
+	 * 1 << 07 (0x00000080)
 	 */
-	inline public static var BIT_08 = 1 << 07;
+	inline public static var BIT_08 = 1 << 7;
 	/**
-	 * 1 << 08 (0x00000100) 
+	 * 1 << 08 (0x00000100)
 	 */
-	inline public static var BIT_09 = 1 << 08;
+	inline public static var BIT_09 = 1 << 8;
 	/**
-	 * 1 << 09 (0x00000200) 
+	 * 1 << 09 (0x00000200)
 	 */
-	inline public static var BIT_10 = 1 << 09;
+	inline public static var BIT_10 = 1 << 9;
 	/**
-	 * 1 << 10 (0x00000400) 
+	 * 1 << 10 (0x00000400)
 	 */
 	inline public static var BIT_11 = 1 << 10;
 	/**
-	 * 1 << 11 (0x00000800) 
+	 * 1 << 11 (0x00000800)
 	 */
 	inline public static var BIT_12 = 1 << 11;
 	/**
-	 * 1 << 12 (0x00001000) 
+	 * 1 << 12 (0x00001000)
 	 */
 	inline public static var BIT_13 = 1 << 12;
 	/**
-	 * 1 << 13 (0x00002000) 
+	 * 1 << 13 (0x00002000)
 	 */
 	inline public static var BIT_14 = 1 << 13;
 	/**
-	 * 1 << 14 (0x00004000) 
+	 * 1 << 14 (0x00004000)
 	 */
 	inline public static var BIT_15 = 1 << 14;
 	/**
-	 * 1 << 15 (0x00008000) 
+	 * 1 << 15 (0x00008000)
 	 */
 	inline public static var BIT_16 = 1 << 15;
 	/**
-	 * 1 << 16 (0x00010000) 
+	 * 1 << 16 (0x00010000)
 	 */
 	inline public static var BIT_17 = 1 << 16;
 	/**
-	 * 1 << 17 (0x00020000) 
+	 * 1 << 17 (0x00020000)
 	 */
 	inline public static var BIT_18 = 1 << 17;
 	/**
-	 * 1 << 18 (0x00040000) 
+	 * 1 << 18 (0x00040000)
 	 */
 	inline public static var BIT_19 = 1 << 18;
 	/**
-	 * 1 << 19 (0x00080000) 
+	 * 1 << 19 (0x00080000)
 	 */
 	inline public static var BIT_20 = 1 << 19;
 	/**
-	 * 1 << 20 (0x00100000) 
+	 * 1 << 20 (0x00100000)
 	 */
 	inline public static var BIT_21 = 1 << 20;
 	/**
-	 * 1 << 21 (0x00200000) 
+	 * 1 << 21 (0x00200000)
 	 */
 	inline public static var BIT_22 = 1 << 21;
 	/**
-	 * 1 << 22 (0x00400000) 
+	 * 1 << 22 (0x00400000)
 	 */
 	inline public static var BIT_23 = 1 << 22;
 	/**
-	 * 1 << 23 (0x00800000) 
+	 * 1 << 23 (0x00800000)
 	 */
 	inline public static var BIT_24 = 1 << 23;
 	/**
-	 * 1 << 24 (0x01000000) 
+	 * 1 << 24 (0x01000000)
 	 */
 	inline public static var BIT_25 = 1 << 24;
 	/**
-	 * 1 << 25 (0x02000000) 
+	 * 1 << 25 (0x02000000)
 	 */
 	inline public static var BIT_26 = 1 << 25;
 	/**
-	 * 1 << 26 (0x04000000) 
+	 * 1 << 26 (0x04000000)
 	 */
 	inline public static var BIT_27 = 1 << 26;
 	/**
-	 * 1 << 27 (0x08000000) 
+	 * 1 << 27 (0x08000000)
 	 */
 	inline public static var BIT_28 = 1 << 27;
 	/**
-	 * 1 << 28 (0x10000000) 
+	 * 1 << 28 (0x10000000)
 	 */
 	inline public static var BIT_29 = 1 << 28;
 	/**
-	 * 1 << 29 (0x20000000) 
+	 * 1 << 29 (0x20000000)
 	 */
 	inline public static var BIT_30 = 1 << 29;
-	
+
 	/**
-	 * 1 << 30 (0x40000000) 
+	 * 1 << 30 (0x40000000)
 	 */
 	inline public static var BIT_31 = 1 << 30;
-	
+
 	/**
-	 * 1 << 31 (0x80000000) 
+	 * 1 << 31 (0x80000000)
 	 */
 	inline public static var BIT_32 = 1 << 31;
-	
+
 	/**
-	 * 0xFFFFFFFF 
+	 * 0xFFFFFFFF
 	 */
 	inline public static var ALL = -1;
-	
+
 	/**
-	 * Returns <code>x</code> AND <code>mask</code>. 
+	 * Returns <code>x</code> AND <code>mask</code>.
 	 */
 	inline public static function getBits(x:Int, mask:Int):Int { return x & mask; }
-	
+
 	/**
-	 * Returns true if <code>x</code> AND <code>mask</code> != 0. 
+	 * Returns true if <code>x</code> AND <code>mask</code> != 0.
 	 */
 	inline public static function hasBits(x:Int, mask:Int):Bool { return (x & mask) != 0; }
-	
+
 	/**
-	 * Returns true if <code>x</code> AND <code>mask</code> == <code>mask</code> (<code>x</code> includes all <code>mask</code> bits). 
+	 * Returns true if <code>x</code> AND <code>mask</code> == <code>mask</code> (<code>x</code> includes all <code>mask</code> bits).
 	 */
 	inline public static function incBits(x:Int, mask:Int):Bool { return (x & mask) == mask; }
-	
+
 	/**
-	 * Returns <code>x</code> OR <code>mask</code>. 
+	 * Returns <code>x</code> OR <code>mask</code>.
 	 */
 	inline public static function setBits(x:Int, mask:Int):Int { return x | mask; }
-	
+
 	/**
-	 * Returns <code>x</code> AND ~<code>mask</code>. 
+	 * Returns <code>x</code> AND ~<code>mask</code>.
 	 */
 	inline public static function clrBits(x:Int, mask:Int):Int
 	{
 		return x & ~mask;
 	}
-	
+
 	/**
-	 * Returns <code>x</code> ^ <code>mask</code>. 
+	 * Returns <code>x</code> ^ <code>mask</code>.
 	 */
 	inline public static function invBits(x:Int, mask:Int):Int { return x ^ mask; }
-	
+
 	/**
 	 * Sets all <code>mask</code> bits in <code>x</code> if <code>expr</code> is true,
 	 * or clears all <code>mask</code> bits in <code>x</code> if <code>expr</code> is false. */
@@ -217,7 +217,7 @@ class Bits
 	{
 		return expr ? (x | mask) : (x & ~mask);
 	}
-	
+
 	/**
 	 * Returns true if the bit in <code>x</code> at index <code>i</code> (LSB 0) is 1.
 	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
@@ -227,10 +227,10 @@ class Bits
 		#if debug
 		assert(i >= 0 && i < 32, 'index out of range ($i)');
 		#end
-		
+
 		return (x & (1 << i)) != 0;
 	}
-	
+
 	/**
 	 * Sets the bit in <code>x</code> at index <code>i</code> (LSB 0) to 1.
 	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
@@ -240,10 +240,10 @@ class Bits
 		#if debug
 		assert(i >= 0 && i < 32, 'index out of range ($i)');
 		#end
-		
+
 		return x | (1 << i);
 	}
-	
+
 	/**
 	 * Sets the bit in <code>x</code> at index <code>i</code> (LSB 0) to 0.
 	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
@@ -253,10 +253,10 @@ class Bits
 		#if debug
 		assert(i >= 0 && i < 32, 'index out of range ($i)');
 		#end
-		
+
 		return x & ~(1 << i);
 	}
-	
+
 	/**
 	 * Flips the bit in <code>x</code> at index <code>i</code> (LSB 0).
 	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
@@ -266,10 +266,10 @@ class Bits
 		#if debug
 		assert(i >= 0 && i < 32, 'index out of range ($i)');
 		#end
-		
+
 		return x ^ (1 << i);
 	}
-	
+
 	/**
 	 * Sets all bits in <code>x</code> in the range &#091;0, 31&#093;.
 	 * @throws de.polygonal.ds.error.AssertError invalid range (debug only).
@@ -286,23 +286,23 @@ class Bits
 			'invalid range (min: $min, max: $max)'
 		);
 		#end
-		
+
 		for (i in min...max) x = setBits(x, 1 << i);
 		return x;
 	}
-	
+
 	/**
-	 * Constructs a mask of n bits. 
+	 * Constructs a mask of n bits.
 	 */
 	inline public static function mask(n:Int):Int
 	{
 		#if debug
 		assert(n >= 1 && n <= 32, "n >= 1 && n <= 32");
 		#end
-		
+
 		return (1 << n) - 1;
 	}
-	
+
 	/**
 	 * Counts the number of "1"-bits.<br/>
 	 * e.g. 00110111 has 5 bits set.
@@ -316,7 +316,7 @@ class Bits
 		x += (x >> 16);
 		return(x & 0x0000003f);
 	}
-	
+
 	/**
 	 * Counts the number of trailing 0's.<br/>
 	 * e.g. 16 (0x10 or b10000) has 4 trailing 0's.
@@ -353,7 +353,7 @@ class Bits
 		return n;
 		#end
 	}
-	
+
 	/**
 	 * Counts the number of leading 0's.<br/>
 	 * e.g. 16 (0x10 or b10000) has 27 leading 0's.
@@ -372,9 +372,9 @@ class Bits
 			return(32 - ones(x));
 		}
 	}
-	
+
 	/**
-	 * Returns the most significant bit of <code>x</code>. 
+	 * Returns the most significant bit of <code>x</code>.
 	 */
 	inline public static function msb(x:Int):Int
 	{
@@ -385,17 +385,17 @@ class Bits
 		x |= (x >> 16);
 		return(x & ~(x >>> 1));
 	}
-	
+
 	/**
-	 * Bitwise rotates the integer <code>x</code> by <code>n</code> places to the left. 
+	 * Bitwise rotates the integer <code>x</code> by <code>n</code> places to the left.
 	 */
 	inline public static function rol(x:Int, n:Int) { return (x << n) | (x >>> (32 - n)); }
-	
+
 	/**
-	 * Bitwise rotates the integer <code>x</code> by <code>n</code> places to the right. 
+	 * Bitwise rotates the integer <code>x</code> by <code>n</code> places to the right.
 	 */
 	inline public static function ror(x:Int, n:Int) { return (x >>> n) | (x << (32 - n)); }
-	
+
 	/**
 	 * Reverses <code>x</code>.<br/>
 	 * e.g. b111000 becomes b000111.
@@ -412,23 +412,23 @@ class Bits
 		x = (((x >> 8) & y) | ((x & y) << 8));
 		return((x >> 16) | (x << 16));
 	}
-	
+
 	/**
-	 * Flips the bytes within the WORD <code>x</code> (2 byte) to convert between little endian and big endian format. 
+	 * Flips the bytes within the WORD <code>x</code> (2 byte) to convert between little endian and big endian format.
 	 */
 	inline public static function flipWORD(x:Int):Int
 	{
 		return (x << 8 | x >> 8);
 	}
-	
+
 	/**
-	 * Flips the bytes within the DWORD <code>x</code> (4 byte) to convert between little endian and big endian format. 
+	 * Flips the bytes within the DWORD <code>x</code> (4 byte) to convert between little endian and big endian format.
 	 */
 	inline public static function flipDWORD(x:Int):Int
 	{
 		return (x << 24 | ((x << 8) & 0x00FF0000) | ((x >> 8) & 0x0000FF00) | x >> 24);
 	}
-	
+
 	/**
 	 * Packs two signed shorts into a single integer.
 	 * @param lo the short that is stored in the lower 16 bits (LSB 0).
@@ -440,10 +440,10 @@ class Bits
 		assert(lo >= M.INT16_MIN && lo <= M.INT16_MAX, "lo overflow");
 		assert(hi >= M.INT16_MIN && hi <= M.INT16_MAX, "hi overflow");
 		#end
-		
+
 		return ((hi + 0x8000) << 16) | (lo + 0x8000);
 	}
-	
+
 	/**
 	 * Packs two unsigned shorts into a single integer.
 	 * @param lo the short that is stored in the lower 16 bits (LSB 0).
@@ -455,37 +455,37 @@ class Bits
 		assert(lo >= 0 && lo <= M.UINT16_MAX, "lo overflow");
 		assert(hi >= 0 && hi <= M.UINT16_MAX, "hi overflow");
 		#end
-		
+
 		return (hi << 16) | lo;
 	}
-	
+
 	/**
-	 * Extracts a signed short from the lower 16 bits (LSB 0). 
+	 * Extracts a signed short from the lower 16 bits (LSB 0).
 	 */
 	inline public static function unpackI16Lo(x:Int):Int
 	{
 		return (x & 0xffff) - 0x8000;
 	}
-	
+
 	/**
-	 * Extracts a signed short from the upper 16 bits (LSB 0). 
+	 * Extracts a signed short from the upper 16 bits (LSB 0).
 	 */
 	inline public static function unpackI16Hi(x:Int):Int
 	{
 		return (x >>> 16) - 0x8000;
 	}
-	
-	
+
+
 	/**
-	 * Extracts an unsigned short from the lower 16 bits (LSB 0). 
+	 * Extracts an unsigned short from the lower 16 bits (LSB 0).
 	 */
 	inline public static function unpackUI16Lo(x:Int):Int
 	{
 		return x & 0xffff;
 	}
-	
+
 	/**
-	 * Extracts an unsigned short from the upper 16 bits (LSB 0). 
+	 * Extracts an unsigned short from the upper 16 bits (LSB 0).
 	 */
 	inline public static function unpackUI16Hi(x:Int):Int
 	{
