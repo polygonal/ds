@@ -543,7 +543,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 				var c = untyped e.clone();
 				c.position = e.position;
 				c.priority = e.priority;
-				copy.__set(i, untyped c);
+				copy.__set(i, cast c);
 				
 				#if (debug && flash)
 				copy._map.set(untyped c, true);
