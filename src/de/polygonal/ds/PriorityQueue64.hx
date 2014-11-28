@@ -188,7 +188,7 @@ class PriorityQueue64<T:(Prioritizable64)> implements Queue<T>
 			for (i in 2..._size + 1)
 			{
 				b = __get(i);
-				if (a.priority < b.priority) a = b;
+				if (Int64.compare(a.priority, b.priority)<0) a = b;
 			}
 		}
 		else
@@ -196,7 +196,7 @@ class PriorityQueue64<T:(Prioritizable64)> implements Queue<T>
 			for (i in 2..._size + 1)
 			{
 				b = __get(i);
-				if (a.priority > b.priority) a = b;
+				if (Int64.compare(a.priority, b.priority)<0) a = b;
 			}
 		}
 		return a;
@@ -275,7 +275,7 @@ class PriorityQueue64<T:(Prioritizable64)> implements Queue<T>
 			
 			if (_inverse)
 			{
-				if (priority < oldPriority)
+				if (Int64.compare(priority,oldPriority)<0)
 					_upheap(pos);
 				else
 				{
@@ -285,7 +285,7 @@ class PriorityQueue64<T:(Prioritizable64)> implements Queue<T>
 			}
 			else
 			{
-				if (priority > oldPriority)
+				if (Int64.compare(priority,oldPriority)<0)
 					_upheap(pos);
 				else
 				{
@@ -582,7 +582,7 @@ class PriorityQueue64<T:(Prioritizable64)> implements Queue<T>
 			while (parent > 0)
 			{
 				var parentVal = __get(parent);
-				if (p - Int64.toInt(parentVal.priority) < 0)
+				if (Int64.compare(p, parentVal.priority) < 0)
 				{
 					__set(index, parentVal);
 					parentVal.position = index;
@@ -598,7 +598,7 @@ class PriorityQueue64<T:(Prioritizable64)> implements Queue<T>
 			while (parent > 0)
 			{
 				var parentVal = __get(parent);
-				if (p - Int64.toInt(parentVal.priority) > 0)
+				if (Int64.compare(p, parentVal.priority) > 0)
 				{
 					__set(index, parentVal);
 					parentVal.position = index;
@@ -627,11 +627,11 @@ class PriorityQueue64<T:(Prioritizable64)> implements Queue<T>
 			while (child < _size)
 			{
 				if (child < _size - 1)
-					if (__get(child).priority - __get(child + 1).priority > 0)
+					if (Int64.compare(__get(child).priority, __get(child + 1).priority) > 0)
 						child++;
 				
 				childVal = __get(child);
-				if (p - childVal.priority > 0)
+				if (Int64.compare(p, childVal.priority) > 0)
 				{
 					__set(index, childVal);
 					childVal.position = index;
@@ -647,11 +647,11 @@ class PriorityQueue64<T:(Prioritizable64)> implements Queue<T>
 			while (child < _size)
 			{
 				if (child < _size - 1)
-					if (__get(child).priority - __get(child + 1).priority < 0)
+					if (Int64.compare(__get(child).priority,__get(child + 1).priority) < 0)
 						child++;
 				
 				childVal = __get(child);
-				if (p - childVal.priority < 0)
+				if (Int64.compare(p, childVal.priority) < 0)
 				{
 					__set(index, childVal);
 					childVal.position = index;
