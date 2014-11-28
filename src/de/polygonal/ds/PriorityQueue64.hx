@@ -30,8 +30,9 @@
 package de.polygonal.ds;
 
 import de.polygonal.ds.error.Assert.assert;
+import haxe.Int64;
 
-private typedef PriorityQueueFriend<T> =
+private typedef PriorityQueueFriend64<T> =
 {
 	private var _a:Array<T>;
 	private var _size:Int;
@@ -42,7 +43,7 @@ private typedef PriorityQueueFriend<T> =
  * Adds additional methods for removing and re-prioritizing elements.</p>
  * <p><o>Worst-case running time in Big O notation</o></p>
  */
-class PriorityQueue<T:(Prioritizable)> implements Queue<T>
+class PriorityQueue64<T:(Prioritizable64)> implements Queue<T>
 {
 	/**
 	 * A unique identifier for this object.<br/>
@@ -69,7 +70,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	var _a:Array<T>;
 	var _size:Int;
 	var _inverse:Bool;
-	var _iterator:PriorityQueueIterator<T>;
+	var _iterator:PriorityQueueIterator64<T>;
 	
 	#if (debug && flash)
 	var _map:HashMap<T, Bool>;
@@ -187,7 +188,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 			for (i in 2..._size + 1)
 			{
 				b = __get(i);
-				if (a.priority < b.priority) a = b;
+				if (Int64.compare(a.priority, b.priority)<0) a = b;
 			}
 		}
 		else
@@ -195,7 +196,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 			for (i in 2..._size + 1)
 			{
 				b = __get(i);
-				if (a.priority > b.priority) a = b;
+				if (Int64.compare(a.priority, b.priority)<0) a = b;
 			}
 		}
 		return a;
@@ -256,7 +257,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	 * @param priority the new priority.
 	 * @throws de.polygonal.ds.error.AssertError priority queue is empty or <code>x</code> does not exist (debug only).
 	 */
-	public function reprioritize(x:T, priority:Float)
+	public function reprioritize(x:T, priority:Int64)
 	{
 		#if debug
 		assert(size() > 0, "priority queue is empty");
@@ -274,7 +275,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 			
 			if (_inverse)
 			{
-				if (priority < oldPriority)
+				if (Int64.compare(priority,oldPriority)<0)
 					_upheap(pos);
 				else
 				{
@@ -284,7 +285,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 			}
 			else
 			{
-				if (priority > oldPriority)
+				if (Int64.compare(priority,oldPriority)<0)
 					_upheap(pos);
 				else
 				{
@@ -316,7 +317,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	 * class Main
 	 * {
 	 *     static function main() {
-	 *         var pq = new de.polygonal.ds.PriorityQueue&lt;Foo&gt;(4);
+	 *         var pq = new de.polygonal.ds.PriorityQueue64&lt;Foo&gt;(4);
 	 *         pq.enqueue(new Foo(5));
 	 *         pq.enqueue(new Foo(3));
 	 *         pq.enqueue(new Foo(0));
@@ -334,13 +335,13 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	 */
 	public function toString():String
 	{
-		var s = '{ PriorityQueue size: ${size()} }';
+		var s = '{ PriorityQueue64 size: ${size()} }';
 		if (isEmpty()) return s;
-		var tmp = new PriorityQueue<PQElementWrapper<T>>();
+		var tmp = new PriorityQueue64<PQElementWrapper64<T>>();
 		tmp._inverse = _inverse;
 		for (i in 1..._size + 1)
 		{
-			var w = new PQElementWrapper<T>(__get(i));
+			var w = new PQElementWrapper64<T>(__get(i));
 			tmp.__set(i, w);
 		}
 		tmp._size = _size;
@@ -448,7 +449,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	}
 	
 	/**
-	 * Returns a new <em>PriorityQueueIterator</em> object to iterate over all elements contained in this priority queue.<br/>
+	 * Returns a new <em>PriorityQueueIterator64</em> object to iterate over all elements contained in this priority queue.<br/>
 	 * The values are visited in an unsorted order.
 	 * @see <a href="http://haxe.org/ref/iterators" target="_blank">http://haxe.org/ref/iterators</a>
 	 */
@@ -457,13 +458,13 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 		if (reuseIterator)
 		{
 			if (_iterator == null)
-				return new PriorityQueueIterator<T>(this);
+				return new PriorityQueueIterator64<T>(this);
 			else
 				_iterator.reset();
 			return _iterator;
 		}
 		else
-			return new PriorityQueueIterator<T>(this);
+			return new PriorityQueueIterator64<T>(this);
 	}
 	
 	/**
@@ -516,7 +517,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	 */
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{
-		var copy = new PriorityQueue<T>(_inverse, size(), maxSize);
+		var copy = new PriorityQueue64<T>(_inverse, size(), maxSize);
 		if (_size == 0) return copy;
 		if (assign)
 		{
@@ -581,7 +582,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 			while (parent > 0)
 			{
 				var parentVal = __get(parent);
-				if (p - parentVal.priority < 0)
+				if (Int64.compare(p, parentVal.priority) < 0)
 				{
 					__set(index, parentVal);
 					parentVal.position = index;
@@ -597,7 +598,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 			while (parent > 0)
 			{
 				var parentVal = __get(parent);
-				if (p - parentVal.priority > 0)
+				if (Int64.compare(p, parentVal.priority) > 0)
 				{
 					__set(index, parentVal);
 					parentVal.position = index;
@@ -626,11 +627,11 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 			while (child < _size)
 			{
 				if (child < _size - 1)
-					if (__get(child).priority - __get(child + 1).priority > 0)
+					if (Int64.compare(__get(child).priority, __get(child + 1).priority) > 0)
 						child++;
 				
 				childVal = __get(child);
-				if (p - childVal.priority > 0)
+				if (Int64.compare(p, childVal.priority) > 0)
 				{
 					__set(index, childVal);
 					childVal.position = index;
@@ -646,11 +647,11 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 			while (child < _size)
 			{
 				if (child < _size - 1)
-					if (__get(child).priority - __get(child + 1).priority < 0)
+					if (Int64.compare(__get(child).priority,__get(child + 1).priority) < 0)
 						child++;
 				
 				childVal = __get(child);
-				if (p - childVal.priority < 0)
+				if (Int64.compare(p, childVal.priority) < 0)
 				{
 					__set(index, childVal);
 					childVal.position = index;
@@ -679,14 +680,14 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 #if doc
 private
 #end
-class PriorityQueueIterator<T:(Prioritizable)> implements de.polygonal.ds.Itr<T>
+class PriorityQueueIterator64<T:(Prioritizable64)> implements de.polygonal.ds.Itr<T>
 {
-	var _f:PriorityQueue<T>;
+	var _f:PriorityQueue64<T>;
 	var _a:Array<T>;
 	var _i:Int;
 	var _s:Int;
 	
-	public function new(f:PriorityQueue<T>)
+	public function new(f:PriorityQueue64<T>)
 	{
 		_f = f;
 		_a = new Array<T>();
@@ -727,15 +728,15 @@ class PriorityQueueIterator<T:(Prioritizable)> implements de.polygonal.ds.Itr<T>
 		_f.remove(_a[_i - 1]);
 	}
 	
-	inline function __a(f:PriorityQueueFriend<T>)
+	inline function __a(f:PriorityQueueFriend64<T>)
 	{
 		return f._a;
 	}
 }
 
-private class PQElementWrapper<T:(Prioritizable)> implements Prioritizable
+private class PQElementWrapper64<T:(Prioritizable64)> implements Prioritizable64
 {
-	public var priority:Float;
+	public var priority:Int64;
 	public var position:Int;
 	public var e:T;
 	
