@@ -118,6 +118,19 @@ class Array2<T> implements Collection<T>
 	}
 	
 	/**
+	 * Replaces the element that is stored in column `cell`.x and row `cell`.y with `val`.
+	 * <o>1</o>
+	 * @throws de.polygonal.ds.error.AssertError `cell` is null (debug only).
+	 * @throws de.polygonal.ds.error.AssertError `x`/`y` out of range (debug only).
+	 */
+	inline public function setAt(cell:Array2Cell, val:T)
+	{
+		assert(cell != null, "cell is null");
+		
+		return _set(getIndex(cell.x, cell.y), val);
+	}
+	
+	/**
 	 * Replaces the element at index <code>i</code> with the <code>x</code>.
 	 * <o>1</o>
 	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
