@@ -363,13 +363,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	{
 		var s = '{ Heap size: ${size()} }';
 		if (isEmpty()) return s;
-		var tmp = new Heap<HeapElementWrapper<T>>();
-		for (i in 1...mSize + 1)
-		{
-			var w = new HeapElementWrapper<T>(get(i));
-			tmp.set(i, w);
-		}
-		tmp.mSize = mSize;
+		var tmp:Heap<T> = Reflect.copy(this);
 		s += "\n[ front\n";
 		var i = 0;
 		while (tmp.size() > 0)
@@ -571,9 +565,9 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 				
 				assert(Std.is(e, Cloneable), 'element is not of type Cloneable (${get(i)})');
 				
-				var c = untyped e.clone();
+				var c:T = untyped e.clone();
 				c.position = e.position;
-				copy.set(i, untyped c);
+				copy.set(i, c);
 				
 				#if (debug && flash)
 				copy.mMap.set(untyped c, true);
@@ -731,24 +725,3 @@ class HeapIterator<T:(Heapable<T>)> implements de.polygonal.ds.Itr<T>
 	}
 }
 
-private class HeapElementWrapper<T:(Heapable<T>)> implements Heapable<HeapElementWrapper<T>>
-{
-	public var position:Int;
-	public var e:T;
-	
-	public function new(e:T)
-	{
-		this.e = e;
-		this.position = e.position;
-	}
-	
-	public function compare(other:HeapElementWrapper<T>):Int
-	{
-		return e.compare(other.e);
-	}
-	
-	public function toString():String
-	{
-		return Std.string(e);
-	}
-}
