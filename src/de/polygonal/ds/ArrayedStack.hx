@@ -21,39 +21,49 @@ package de.polygonal.ds;
 import de.polygonal.ds.error.Assert.assert;
 
 /**
- * <p>A dynamic arrayed stack.</p>
- * <p>A stack is a linear list for which all insertions and deletions (and usually all accesses) are made at one end of the list.</p>
- * <p>This is called a LIFO structure (Last In, First Out).</p>
- * <p><o>Worst-case running time in Big O notation</o></p>
- */
+	<h3>A dynamic arrayed stack.</h3>
+	
+	A stack is a linear list for which all insertions and deletions (and usually all accesses) are made at one end of the list.
+	
+	This is called a LIFO structure (Last In, First Out).
+	
+	<o>Worst-case running time in Big O notation</o>
+**/
 #if (flash && generic)
 @:generic
 #end
 class ArrayedStack<T> implements Stack<T>
 {
 	/**
-	 * A unique identifier for this object.<br/>
-	 * A hash table transforms this key into an index of an array element by using a hash function.<br/>
-	 * <warn>This value should never be changed by the user.</warn>
-	 */
+		A unique identifier for this object.
+		
+		A hash table transforms this key into an index of an array element by using a hash function.
+		
+		<warn>This value should never be changed by the user.</warn>
+	**/
 	public var key:Int;
 	
 	/**
-	 * The maximum allowed size of this stack.<br/>
-	 * Once the maximum size is reached, adding an element will fail with an error (debug only).<br/>
-	 * A value of -1 indicates that the size is unbound.<br/>
-	 * <warn>Always equals -1 in release mode.</warn>
-	 */
+		The maximum allowed size of this stack.
+		Once the maximum size is reached, adding an element will fail with an error (debug only).
+		A value of -1 indicates that the size is unbound.
+		
+		<warn>Always equals -1 in release mode.</warn>
+	**/
 	public var maxSize:Int;
 	
 	/**
-	 * If true, reuses the iterator object instead of allocating a new one when calling <code>iterator()</code>.<br/>
-	 * The default is false.<br/>
-	 * <warn>If true, nested iterations are likely to fail as only one iteration is allowed at a time.</warn>
-	 */
+		If true, reuses the iterator object instead of allocating a new one when calling `iterator()`.
+		The default is false.
+		
+		<warn>If true, nested iterations are likely to fail as only one iteration is allowed at a time.</warn>
+	**/
 	public var reuseIterator:Bool;
 	
-	var mData:Array<T>;
+	var mData:Vector<T>;
+	var mCapacity:Int;
+	var mInitialCapacity:Int;
+	var mShrinkCapacity:Int;
 	var mTop:Int;
 	var mIterator:ArrayedStackIterator<T>;
 	
@@ -63,23 +73,24 @@ class ArrayedStack<T> implements Stack<T>
 	#end
 	
 	/**
-	 * @param reservedSize the initial capacity of the internal container. See <em>reserve()</em>.
-	 * @param maxSize the maximum allowed size of this stack.<br/>
-	 * The default value of -1 indicates that there is no upper limit.
-	 * @throws de.polygonal.ds.error.AssertError reserved size is greater than allowed size (debug only).
-	 */
-	public function new(reservedSize = 0, maxSize = -1)
+		@param initialCapacity the initial capacity of the internal container. This is also the minimum internal stack size. See `reserve()`.
+		@param maxSize the maximum allowed size of this stack.
+		The default value of -1 indicates that there is no upper limit.
+		@throws de.polygonal.ds.error.AssertError initialCapacity is greater than allowed size (debug only).
+		@throws de.polygonal.ds.error.AssertError initialCapacity is below minimum capacity of 16 (debug only).
+	**/
+	public function new(initialCapacity = 64, maxSize = -1)
 	{
-		if (reservedSize > 0)
-		{
-			#if debug
-			if (maxSize != -1)
-				assert(reservedSize <= maxSize, "reserved size is greater than allowed size");
-			#end
-			mData = ArrayUtil.alloc(reservedSize);
-		}
-		else
-			mData = new Array<T>();
+		#if debug
+		if (maxSize != -1)
+			assert(initialCapacity <= maxSize, "initial capacity is greater than allowed size");
+		#end
+		
+		assert(initialCapacity >= 16, "initial capacity below minimum capacity (16)");
+		
+		mData = new Vector<T>(initialCapacity);
+		mCapacity = mInitialCapacity = initialCapacity;
+		mShrinkCapacity = mCapacity >> 2;
 		
 		mTop = 0;
 		mIterator = null;
@@ -99,45 +110,56 @@ class ArrayedStack<T> implements Stack<T>
 	}
 	
 	/**
-	 * For performance reasons the stack does nothing to ensure that empty locations contain null.<br/>
-	 * <em>pack()</em> therefore nullifies all obsolete references and shrinks the array to the actual size allowing the garbage collector to reclaim used memory.
-	 * <o>n</o>
-	 */
-	public function pack()
+		For performance reasons the stack does nothing to ensure that empty locations contain null;
+		`pack()` therefore nullifies all obsolete references and shrinks the array to the actual size allowing the garbage collector to reclaim used memory.
+		<o>n</o>
+	**/
+	public function shrinkToFit()
 	{
 		if (mData.length == size()) return;
 		
-		var tmp = mData;
-		mData = ArrayUtil.alloc(size());
-		for (i in 0...size()) _set(i, tmp[i]);
-		for (i in size()...tmp.length) tmp[i] = cast null;
+		trace('pack()!');
+		
+		trace('capacity $mCapacity initialCapacity $mInitialCapacity');
+		
+		while (mCapacity >> 1 > mTop)
+		{
+			trace('shrink to from $mCapacity to ${mCapacity >> 1}');
+			mCapacity >>= 1;
+		}
+		
+		trace(mCapacity);
+		
+		var tmp = VectorUtil.alloc(mCapacity);
+		VectorUtil.blit(mData, 0, tmp, 0, mCapacity);
+		mData = tmp;
 	}
 	
 	/**
-	 * Preallocates internal space for storing <code>x</code> elements.<br/>
-	 * This is useful if the expected size is known in advance - many platforms can optimize memory usage if an exact size is specified.
-	 * <o>n</o>
-	 */
+		Preallocates internal space for storing `x` elements.
+		
+		This is useful if the expected size is known in advance.
+		<o>n</o>
+	**/
 	public function reserve(x:Int)
 	{
 		if (size() == x) return;
 		
-		var tmp = mData;
-		mData = ArrayUtil.alloc(x);
+		var tmp = VectorUtil.alloc(x);
+		VectorUtil.blit(mData, 0, tmp, 0, mCapacity);
+		mData = tmp;
 		
-		if (size() < x)
-		{
-			for (i in 0...mTop)
-				_set(i, tmp[i]);
-		}
+		mCapacity = x;
+		mShrinkCapacity = mCapacity >> 2;
 	}
 	
 	/**
-	 * Returns the top element of this stack.<br/>
-	 * This is the "newest" element.
-	 * <o>1</o>
-	 * @throws de.polygonal.ds.error.AssertError stack is empty (debug only).
-	 */
+		Returns the top element of this stack.
+		
+		This is the "newest" element.
+		<o>1</o>
+		@throws de.polygonal.ds.error.AssertError stack is empty (debug only).
+	**/
 	inline public function top():T
 	{
 		assert(mTop > 0, "stack is empty");
@@ -146,10 +168,10 @@ class ArrayedStack<T> implements Stack<T>
 	}
 	
 	/**
-	 * Pushes the element <code>x</code> onto the stack.
-	 * <o>1</o>
-	 * @throws de.polygonal.ds.error.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
-	 */
+		Pushes the element `x` onto the stack.
+		<o>1</o>
+		@throws de.polygonal.ds.error.AssertError `size()` equals `maxSize` (debug only).
+	**/
 	inline public function push(x:T)
 	{
 		#if debug
@@ -158,15 +180,16 @@ class ArrayedStack<T> implements Stack<T>
 		++mOp1;
 		#end
 		
+		if (mTop == mCapacity) expand();
 		_set(mTop++, x);
 	}
 	
 	/**
-	 * Pops data off the stack.
-	 * <o>1</o>
-	 * @return the top element.
-	 * @throws de.polygonal.ds.error.AssertError stack is empty (debug only).
-	 */
+		Pops data off the stack.
+		<o>1</o>
+		@return the top element.
+		@throws de.polygonal.ds.error.AssertError stack is empty (debug only).
+	**/
 	inline public function pop():T
 	{
 		assert(mTop > 0, "stack is empty");
@@ -178,23 +201,12 @@ class ArrayedStack<T> implements Stack<T>
 		return _get(--mTop);
 	}
 	
-	inline public function popMany(n:Int):T
-	{
-		assert(mTop > 0, "stack is empty");
-		
-		#if debug
-		mOp0 = ++mOp1;
-		#end
-		
-		return _get(--mTop);
-	}
-	
 	/**
-	 * Pops the top element of the stack, and pushes it back twice, so that an additional copy of the former top item is now on top, with the original below it.
-	 * <o>1</o>
-	 * @throws de.polygonal.ds.error.AssertError stack is empty (debug only).
-	 * @throws de.polygonal.ds.error.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
-	 */
+		Pops the top element of the stack, and pushes it back twice, so that an additional copy of the former top item is now on top, with the original below it.
+		<o>1</o>
+		@throws de.polygonal.ds.error.AssertError stack is empty (debug only).
+		@throws de.polygonal.ds.error.AssertError `size()` equals `maxSize` (debug only).
+	**/
 	inline public function dup()
 	{
 		assert(mTop > 0, "stack is empty");
@@ -204,15 +216,16 @@ class ArrayedStack<T> implements Stack<T>
 			assert(size() < maxSize, 'size equals max size ($maxSize)');
 		#end
 		
+		if (mTop == mCapacity) expand();
 		_set(mTop, _get(mTop - 1));
 		mTop++;
 	}
 	
 	/**
-	 * Swaps the two topmost items on the stack.
-	 * <o>1</o>
-	 * @throws de.polygonal.ds.error.AssertError <em>size()</em> < 2 (debug only).
-	 */
+		Swaps the two topmost items on the stack.
+		<o>1</o>
+		@throws de.polygonal.ds.error.AssertError `size()` < 2 (debug only).
+	**/
 	inline public function exchange()
 	{
 		assert(mTop > 1, "size() < 2");
@@ -225,17 +238,18 @@ class ArrayedStack<T> implements Stack<T>
 	}
 	
 	/**
-	 * Moves the <code>n</code> topmost elements on the stack in a rotating fashion.<br/>
-	 * Example:
-	 * <pre>
-	 * top
-	 * |3|               |0|
-	 * |2|  rotate right |3|
-	 * |1|      -->      |2|
-	 * |0|               |1|</pre>
-	 * <o>n</o>
-	 * @throws de.polygonal.ds.error.AssertError <em>size()</em> >= <code>n</code> (debug only).
-	 */
+		Moves the `n` topmost elements on the stack in a rotating fashion.
+		
+		Example:
+		<pre>
+		top
+		|3|               |0|
+		|2|  rotate right |3|
+		|1|      -->      |2|
+		|0|               |1|</pre>
+		<o>n</o>
+		@throws de.polygonal.ds.error.AssertError `size()` >= `n` (debug only).
+	**/
 	public function rotRight(n:Int)
 	{
 		assert(mTop >= n, "size() < n");
@@ -252,17 +266,18 @@ class ArrayedStack<T> implements Stack<T>
 	}
 	
 	/**
-	 * Moves the <code>n</code> topmost elements on the stack in a rotating fashion.<br/>
-	 * Example:
-	 * <pre>
-	 * top
-	 * |3|              |2|
-	 * |2|  rotate left |1|
-	 * |1|      -->     |0|
-	 * |0|              |3|</pre>
-	 * <o>n</o>
-	 * @throws de.polygonal.ds.error.AssertError <em>size()</em> >= <code>n</code> (debug only).
-	 */
+		Moves the `n` topmost elements on the stack in a rotating fashion.
+		
+		Example:
+		<pre>
+		top
+		|3|              |2|
+		|2|  rotate left |1|
+		|1|      -->     |0|
+		|0|              |3|</pre>
+		<o>n</o>
+		@throws de.polygonal.ds.error.AssertError `size()` >= `n` (debug only).
+	**/
 	public function rotLeft(n:Int)
 	{
 		assert(mTop >= n, "size() < n");
@@ -279,11 +294,12 @@ class ArrayedStack<T> implements Stack<T>
 	}
 	
 	/**
-	 * Nullifies the last popped off element so it can be instantly garbage collected.<br/>
-	 * <warn>Use only directly after <em>pop()</em>.</warn>
-	 * <o>1</o>
-	 * @throws de.polygonal.ds.error.AssertError <em>pop()</em> wasn't directly called after <em>dequeue()</em>(debug only).
-	 */
+		Nullifies the last popped off element so it can be instantly garbage collected.
+		
+		<warn>Use only directly after `pop()`.</warn>
+		<o>1</o>
+		@throws de.polygonal.ds.error.AssertError `pop()` wasn't directly called after `dequeue()`(debug only).
+	**/
 	inline public function dispose()
 	{
 		assert(mTop > 0, "stack is empty");
@@ -293,12 +309,14 @@ class ArrayedStack<T> implements Stack<T>
 	}
 	
 	/**
-	 * Returns the element stored at index <code>i</code>.<br/>
-	 * An index of 0 indicates the bottommost element.<br/>
-	 * An index of <em>size()</em> - 1 indicates the topmost element.
-	 * <o>1</o>
-	 * @throws de.polygonal.ds.error.AssertError stack is empty or index out of range (debug only).
-	 */
+		Returns the element stored at index `i`.
+		
+		An index of 0 indicates the bottommost element.
+		
+		An index of `size()` - 1 indicates the topmost element.
+		<o>1</o>
+		@throws de.polygonal.ds.error.AssertError stack is empty or index out of range (debug only).
+	**/
 	inline public function get(i:Int):T
 	{
 		assert(mTop > 0, "stack is empty");
@@ -308,12 +326,14 @@ class ArrayedStack<T> implements Stack<T>
 	}
 	
 	/**
-	 * Replaces the element at index <code>i</code> with the element <code>x</code>.<br/>
-	 * An index of 0 indicates the bottommost element.<br/>
-	 * An index of <em>size()</em> - 1 indicates the topmost element.
-	 * <o>1</o>
-	 * @throws de.polygonal.ds.error.AssertError stack is empty or index out of range (debug only).
-	 */
+		Replaces the element at index `i` with the element `x`.
+		
+		An index of 0 indicates the bottommost element.
+		
+		An index of `size()` - 1 indicates the topmost element.
+		<o>1</o>
+		@throws de.polygonal.ds.error.AssertError stack is empty or index out of range (debug only).
+	**/
 	inline public function set(i:Int, x:T)
 	{
 		assert(mTop > 0, "stack is empty");
@@ -323,14 +343,16 @@ class ArrayedStack<T> implements Stack<T>
 	}
 	
 	/**
-	 * Swaps the element stored at <code>i</code> with the element stored at index <code>j</code>.<br/>
-	 * An index of 0 indicates the bottommost element.<br/>
-	 * An index of <em>size()</em> - 1 indicates the topmost element.
-	 * <o>1</o>
-	 * @throws de.polygonal.ds.error.AssertError stack is empty. (debug only).
-	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
-	 * @throws de.polygonal.ds.error.AssertError <code>i</code> equals <code>j</code> (debug only).
-	 */
+		Swaps the element stored at `i` with the element stored at index `j`.
+		
+		An index of 0 indicates the bottommost element.
+		
+		An index of `size()` - 1 indicates the topmost element.
+		<o>1</o>
+		@throws de.polygonal.ds.error.AssertError stack is empty. (debug only).
+		@throws de.polygonal.ds.error.AssertError index out of range (debug only).
+		@throws de.polygonal.ds.error.AssertError `i` equals `j` (debug only).
+	**/
 	inline public function swp(i:Int, j:Int)
 	{
 		assert(mTop > 0, "stack is empty");
@@ -344,14 +366,16 @@ class ArrayedStack<T> implements Stack<T>
 	}
 	
 	/**
-	 * Overwrites the element at index <code>i</code> with the element from index <code>j</code>.<br/>
-	 * An index of 0 indicates the bottommost element.<br/>
-	 * An index of <em>size()</em> - 1 indicates the topmost element.
-	 * <o>1</o>
-	 * @throws de.polygonal.ds.error.AssertError stack is empty. (debug only).
-	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
-	 * @throws de.polygonal.ds.error.AssertError <code>i</code> equals <code>j</code> (debug only).
-	 */
+		Overwrites the element at index `i` with the element from index `j`.
+		
+		An index of 0 indicates the bottommost element.
+		
+		An index of `size()` - 1 indicates the topmost element.
+		<o>1</o>
+		@throws de.polygonal.ds.error.AssertError stack is empty. (debug only).
+		@throws de.polygonal.ds.error.AssertError index out of range (debug only).
+		@throws de.polygonal.ds.error.AssertError `i` equals `j` (debug only).
+	**/
 	inline public function cpy(i:Int, j:Int)
 	{
 		assert(mTop > 0, "stack is empty");
@@ -363,14 +387,14 @@ class ArrayedStack<T> implements Stack<T>
 	}
 	
 	/**
-	 * Replaces up to <code>n</code> existing elements with objects of type <code>C</code>.
-	 * <o>n</o>
-	 * @param C the class to instantiate for each element.
-	 * @param args passes additional constructor arguments to the class <code>C</code>.
-	 * @param n the number of elements to replace. If 0, <code>n</code> is set to <em>size()</em>.
-	 * @throws de.polygonal.ds.error.AssertError <code>n</code> out of range (debug only).
-	 */
-	public function assign(C:Class<T>, args:Array<Dynamic> = null, n = 0)
+		Replaces up to `n` existing elements with objects of type `cl`.
+		<o>n</o>
+		@param cl the class to instantiate for each element.
+		@param args passes additional constructor arguments to the class `cl`.
+		@param n the number of elements to replace. If 0, `n` is set to `size()`.
+		@throws de.polygonal.ds.error.AssertError `n` out of range (debug only).
+	**/
+	public function assign(cl:Class<T>, args:Array<Dynamic> = null, n = 0)
 	{
 		assert(n >= 0);
 		
@@ -385,17 +409,17 @@ class ArrayedStack<T> implements Stack<T>
 			n = size();
 		
 		if (args == null) args = [];
-		for (i in 0...n) _set(i, Type.createInstance(C, args));
+		for (i in 0...n) _set(i, Type.createInstance(cl, args));
 		
 		mTop = n;
 	}
 	
 	/**
-	 * Replaces up to <code>n</code> existing elements with the instance of <code>x</code>.
-	 * <o>n</o>
-	 * @param n the number of elements to replace. If 0, <code>n</code> is set to <em>size()</em>.
-	 * @throws de.polygonal.ds.error.AssertError <code>n</code> out of range (debug only).
-	 */
+		Replaces up to `n` existing elements with the instance `x`.
+		<o>n</o>
+		@param n the number of elements to replace. If 0, `n` is set to `size()`.
+		@throws de.polygonal.ds.error.AssertError `n` out of range (debug only).
+	**/
 	public function fill(x:T, n = 0):ArrayedStack<T>
 	{
 		assert(n >= 0);
@@ -418,10 +442,11 @@ class ArrayedStack<T> implements Stack<T>
 	}
 	
 	/**
-	 * Invokes the <code>process</code> function for each element.<br/>
-	 * The function signature is: <em>process(oldValue, index):newValue</em>
-	 * <o>n</o>
-	 */
+		Invokes the `process` function for each element.
+		
+		The function signature is: `process(oldValue, index):newValue`
+		<o>n</o>
+	**/
 	public function iter(process:T->Int->T)
 	{
 		for (i in 0...mTop)
@@ -429,12 +454,12 @@ class ArrayedStack<T> implements Stack<T>
 	}
 	
 	/**
-	 * Shuffles the elements of this collection by using the Fisher-Yates algorithm.
-	 * <o>n</o>
-	 * @param rval a list of random double values in the range between 0 (inclusive) to 1 (exclusive) defining the new positions of the elements.
-	 * If omitted, random values are generated on-the-fly by calling <em>Math.random()</em>.
-	 * @throws de.polygonal.ds.error.AssertError insufficient random values (debug only).
-	 */
+		Shuffles the elements of this collection by using the Fisher-Yates algorithm.
+		<o>n</o>
+		@param rval a list of random double values in the range between 0 (inclusive) to 1 (exclusive) defining the new positions of the elements.
+		If omitted, random values are generated on-the-fly by calling `Math::random()`.
+		@throws de.polygonal.ds.error.AssertError insufficient random values (debug only).
+	**/
 	public function shuffle(rval:Array<Float> = null)
 	{
 		var s = mTop;
@@ -465,23 +490,24 @@ class ArrayedStack<T> implements Stack<T>
 	}
 	
 	/**
-	 * Returns a string representing the current object.<br/>
-	 * Example:<br/>
-	 * <pre class="prettyprint">
-	 * var stack = new de.polygonal.ds.ArrayedStack&lt;Int&gt;(4);
-	 * for (i in 0...4) {
-	 *     stack.push(i);
-	 * }
-	 * trace(stack);</pre>
-	 * <pre class="console">
-	 * { ArrayedStack size/max: 4/4 }
-	 * [ top
-	 *   3 -> 3
-	 *   2 -> 2
-	 *   1 -> 1
-	 *   0 -> 0
-	 * ]</pre>
-	 */
+		Returns a string representing the current object.
+		
+		Example:
+		<pre class="prettyprint">
+		var stack = new de.polygonal.ds.ArrayedStack<Int>(4);
+		for (i in 0...4) {
+		    stack.push(i);
+		}
+		trace(stack);</pre>
+		<pre class="console">
+		{ ArrayedStack size/max: 4/4 }
+		[ top
+		  3 -> 3
+		  2 -> 2
+		  1 -> 1
+		  0 -> 0
+		]</pre>
+	**/
 	public function toString():String
 	{
 		var s = '{ ArrayedStack size: ${size()} }';
@@ -501,10 +527,11 @@ class ArrayedStack<T> implements Stack<T>
 	///////////////////////////////////////////////////////*/
 	
 	/**
-	 * Destroys this object by explicitly nullifying all elements for GC'ing used resources.<br/>
-	 * Improves GC efficiency/performance (optional).
-	 * <o>n</o>
-	 */
+		Destroys this object by explicitly nullifying all elements for GC'ing used resources.
+		
+		Improves GC efficiency/performance (optional).
+		<o>n</o>
+	**/
 	public function free()
 	{
 		for (i in 0...mData.length) _set(i, cast null);
@@ -513,9 +540,9 @@ class ArrayedStack<T> implements Stack<T>
 	}
 	
 	/**
-	 * Returns true if this stack contains the element <code>x</code>.
-	 * <o>n</o>
-	 */
+		Returns true if this stack contains the element `x`.
+		<o>n</o>
+	**/
 	public function contains(x:T):Bool
 	{
 		for (i in 0...mTop)
@@ -527,14 +554,15 @@ class ArrayedStack<T> implements Stack<T>
 	}
 	
 	/**
-	 * Removes and nullifies all occurrences of the element <code>x</code>.
-	 * <o>n</o>
-	 * @return true if at least one occurrence of <code>x</code> was removed.
-	 */
+		Removes and nullifies all occurrences of the element `x`.
+		<o>n</o>
+		@return true if at least one occurrence of `x` was removed.
+	**/
 	public function remove(x:T):Bool
 	{
 		if (isEmpty()) return false;
 		
+		//var s = mTop;
 		var found = false;
 		while (mTop > 0)
 		{
@@ -559,24 +587,25 @@ class ArrayedStack<T> implements Stack<T>
 	}
 	
 	/**
-	 * Removes all elements.
-	 * <o>1 or n if <code>purge</code> is true</o>
-	 * @param purge if true, elements are nullified upon removal.
-	 */
+		Removes all elements.
+		<o>1 or n if `purge` is true</o>
+		@param purge if true, elements are nullified upon removal.
+	**/
 	public function clear(purge = false)
 	{
 		if (purge)
-		{
-			for (i in 0...mData.length) _set(i, cast null);
-		}
+			for (i in 0...mData.length)
+				_set(i, cast null);
 		mTop = 0;
 	}
 	
 	/**
-	 * Returns a new <em>ArrayedStackIterator</em> object to iterate over all elements contained in this stack.<br/>
-	 * Preserves the natural order of a stack (First-In-Last-Out).
-	 * @see <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
-	 */
+		Returns a new `ArrayedStackIterator` object to iterate over all elements contained in this stack.
+		
+		Preserves the natural order of a stack (First-In-Last-Out).
+		
+		See <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
+	**/
 	public function iterator():Itr<T>
 	{
 		if (reuseIterator)
@@ -592,27 +621,28 @@ class ArrayedStack<T> implements Stack<T>
 	}
 	
 	/**
-	 * Returns true if this stack is empty.
-	 * <o>1</o>
-	 */
+		Returns true if this stack is empty.
+		<o>1</o>
+	**/
 	inline public function isEmpty():Bool
 	{
 		return mTop == 0;
 	}
 	
 	/**
-	 * The total number of elements.
-	 * <o>1</o>
-	 */
+		The total number of elements.
+		<o>1</o>
+	**/
 	inline public function size():Int
 	{
 		return mTop;
 	}
 	
 	/**
-	 * Returns an array containing all elements in this stack.<br/>
-	 * Preserves the natural order of this stack (First-In-Last-Out).
-	 */
+		Returns an array containing all elements in this stack.
+		
+		Preserves the natural order of this stack (First-In-Last-Out).
+	**/
 	public function toArray():Array<T>
 	{
 		var a:Array<T> = ArrayUtil.alloc(size());
@@ -622,24 +652,25 @@ class ArrayedStack<T> implements Stack<T>
 	}
 	
 	/**
-	 * Returns a Vector.&lt;T&gt; object containing all elements in this stack.<br/>
-	 * Preserves the natural order of this stack (First-In-Last-Out).
-	 */
+		Returns a `Vector<T>` object containing all elements in this stack.
+		
+		Preserves the natural order of this stack (First-In-Last-Out).
+	**/
 	public function toVector():Vector<T>
 	{
-		var v = new Vector<T>(size());
+		var v = VectorUtil.alloc(size());
 		var i = mTop, j = 0;
 		while (i > 0) v[j++] = _get(--i);
 		return v;
 	}
 
 	/**
-	 * Duplicates this stack. Supports shallow (structure only) and deep copies (structure & elements).
-	 * @param assign if true, the <code>copier</code> parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.<br/>
-	 * If false, the <em>clone()</em> method is called on each element. <warn>In this case all elements have to implement <em>Cloneable</em>.</warn>
-	 * @param copier a custom function for copying elements. Replaces element.<em>clone()</em> if <code>assign</code> is false.
-	 * @throws de.polygonal.ds.error.AssertError element is not of type <em>Cloneable</em> (debug only).
-	 */
+		Duplicates this stack. Supports shallow (structure only) and deep copies (structure & elements).
+		@param assign if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
+		If false, the `clone()` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
+		@param copier a custom function for copying elements. Replaces element.`clone()` if `assign` is false.
+		@throws de.polygonal.ds.error.AssertError element is not of type `Cloneable` (debug only).
+	**/
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{
 		var copy = new ArrayedStack<T>(size(), maxSize);
@@ -671,6 +702,36 @@ class ArrayedStack<T> implements Stack<T>
 		return copy;
 	}
 	
+	function expand() 
+	{
+		var oldCapacity = mCapacity;
+		mCapacity <<= 1;
+		
+		var tmp = VectorUtil.alloc(mCapacity);
+		VectorUtil.blit(mData, 0, tmp, 0, oldCapacity);
+		mData = tmp;
+		
+		mShrinkCapacity = mCapacity >> 2;
+		
+		trace('ArrayedStack resized from $oldCapacity -> $mCapacity');
+	}
+	
+	function shrink()
+	{
+		if (mCapacity == mInitialCapacity) return;
+		
+		var oldCapacity = mCapacity;
+		mCapacity >>= 1;
+		
+		var tmp = VectorUtil.alloc(mCapacity);
+		VectorUtil.blit(mData, 0, tmp, 0, mCapacity);
+		mData = tmp;
+		
+		mShrinkCapacity = mCapacity >> 2;
+		
+		trace('ArrayedStack resized from $oldCapacity -> $mCapacity');
+	}
+	
 	inline function _get(i:Int) return mData[i];
 	
 	inline function _set(i:Int, x:T) mData[i] = x;
@@ -682,13 +743,11 @@ class ArrayedStack<T> implements Stack<T>
 @:generic
 #end
 @:access(de.polygonal.ds.ArrayedStack)
-#if doc
-private
-#end
+@:dox(hide)
 class ArrayedStackIterator<T> implements de.polygonal.ds.Itr<T>
 {
 	var mF:ArrayedStack<T>;
-	var mData:Array<T>;
+	var mData:Vector<T>;
 	var mI:Int;
 	
 	public function new(f:ArrayedStack<T>)

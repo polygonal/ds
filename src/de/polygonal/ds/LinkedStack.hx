@@ -21,36 +21,46 @@ package de.polygonal.ds;
 import de.polygonal.ds.error.Assert.assert;
 
 /**
- * <p>A stack based on a linked list.</p>
- * <p>A stack is a linear list for which all insertions and deletions (and usually all accesses) are made at one end of the list.</p>
- * <p>This is called a FIFO structure (First In, First Out).</p>
- * <p><o>Worst-case running time in Big O notation</o></p>
- */
+	<h3>A stack based on a linked list.</h3>
+	
+	A stack is a linear list for which all insertions and deletions (and usually all accesses) are made at one end of the list.
+	
+	This is called a FIFO structure (First In, First Out).
+	
+	<o>Worst-case running time in Big O notation</o>
+**/
 #if (flash && generic)
 @:generic
 #end
 class LinkedStack<T> implements Stack<T>
 {
 	/**
-	 * A unique identifier for this object.<br/>
-	 * A hash table transforms this key into an index of an array element by using a hash function.<br/>
-	 * <warn>This value should never be changed by the user.</warn>
-	 */
+		A unique identifier for this object.
+		
+		A hash table transforms this key into an index of an array element by using a hash function.
+		
+		<warn>This value should never be changed by the user.</warn>
+	**/
 	public var key:Int;
 	
 	/**
-	 * The maximum allowed size of this stack.<br/>
-	 * Once the maximum size is reached, adding an element will fail with an error (debug only).<br/>
-	 * A value of -1 indicates that the size is unbound.<br/>
-	 * <warn>Always equals -1 in release mode.</warn>
-	 */
+		The maximum allowed size of this stack.
+		
+		Once the maximum size is reached, adding an element will fail with an error (debug only).
+		
+		A value of -1 indicates that the size is unbound.
+		
+		<warn>Always equals -1 in release mode.</warn>
+	**/
 	public var maxSize:Int;
 	
 	/**
-	 * If true, reuses the iterator object instead of allocating a new one when calling <code>iterator()</code>.<br/>
-	 * The default is false.<br/>
-	 * <warn>If true, nested iterations are likely to fail as only one iteration is allowed at a time.</warn>
-	 */
+		If true, reuses the iterator object instead of allocating a new one when calling `iterator()`.
+		
+		The default is false.
+		
+		<warn>If true, nested iterations are likely to fail as only one iteration is allowed at a time.</warn>
+	**/
 	public var reuseIterator:Bool;
 	
 	var mHead:LinkedStackNode<T>;
@@ -65,12 +75,12 @@ class LinkedStack<T> implements Stack<T>
 	var mIterator:LinkedStackIterator<T>;
 	
 	/**
-	 * @param reservedSize if &gt; 0, this stack maintains an object pool of node objects.<br/>
-	 * Prevents frequent node allocation and thus increases performance at the cost of using more memory.
-	 * @param maxSize the maximum allowed size of the stack.<br/>
-	 * The default value of -1 indicates that there is no upper limit.
-	 * @throws de.polygonal.ds.error.AssertError reserved size is greater than allowed size (debug only).
-	 */
+		@param reservedSize if > 0, this stack maintains an object pool of node objects.
+		Prevents frequent node allocation and thus increases performance at the cost of using more memory.
+		@param maxSize the maximum allowed size of the stack.
+		The default value of -1 indicates that there is no upper limit.
+		@throws de.polygonal.ds.error.AssertError reserved size is greater than allowed size (debug only).
+	**/
 	public function new(reservedSize = 0, maxSize = -1)
 	{
 		#if debug
@@ -105,11 +115,12 @@ class LinkedStack<T> implements Stack<T>
 	}
 	
 	/**
-	 * Returns the top element of this stack.<br/>
-	 * This is the "newest" element.
-	 * <o>1</o>
-	 * @throws de.polygonal.ds.error.AssertError stack is empty (debug only).
-	 */
+		Returns the top element of this stack.
+		
+		This is the "newest" element.
+		<o>1</o>
+		@throws de.polygonal.ds.error.AssertError stack is empty (debug only).
+	**/
 	inline public function top():T
 	{
 		assert(mTop > 0, "stack is empty");
@@ -118,10 +129,10 @@ class LinkedStack<T> implements Stack<T>
 	}
 	
 	/**
-	 * Pushes the element <code>x</code> onto the stack.
-	 * <o>1</o>
-	 * @throws de.polygonal.ds.error.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
-	 */
+		Pushes the element `x` onto the stack.
+		<o>1</o>
+		@throws de.polygonal.ds.error.AssertError `size()` equals `maxSize` (debug only).
+	**/
 	inline public function push(x:T)
 	{
 		if (maxSize != -1)
@@ -134,11 +145,11 @@ class LinkedStack<T> implements Stack<T>
 	}
 	
 	/**
-	 * Pops data off the stack.
-	 * <o>1</o>
-	 * @return the top element.
-	 * @throws de.polygonal.ds.error.AssertError stack is empty (debug only).
-	 */
+		Pops data off the stack.
+		<o>1</o>
+		@return the top element.
+		@throws de.polygonal.ds.error.AssertError stack is empty (debug only).
+	**/
 	inline public function pop():T
 	{
 		assert(mTop > 0, "stack is empty");
@@ -151,11 +162,11 @@ class LinkedStack<T> implements Stack<T>
 	}
 	
 	/**
-	 * Pops the top element of the stack, and pushes it back twice, so that an additional copy of the former top item is now on top, with the original below it.
-	 * <o>1</o>
-	 * @throws de.polygonal.ds.error.AssertError stack is empty (debug only).
-	 * @throws de.polygonal.ds.error.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
-	 */
+		Pops the top element of the stack, and pushes it back twice, so that an additional copy of the former top item is now on top, with the original below it.
+		<o>1</o>
+		@throws de.polygonal.ds.error.AssertError stack is empty (debug only).
+		@throws de.polygonal.ds.error.AssertError `size()` equals `maxSize` (debug only).
+	**/
 	inline public function dup()
 	{
 		assert(mTop > 0, "stack is empty");
@@ -172,10 +183,10 @@ class LinkedStack<T> implements Stack<T>
 	}
 	
 	/**
-	 * Swaps the two topmost items on the stack.
-	 * <o>1</o>
-	 * @throws de.polygonal.ds.error.AssertError <em>size()</em> < 2 (debug only).
-	 */
+		Swaps the two topmost items on the stack.
+		<o>1</o>
+		@throws de.polygonal.ds.error.AssertError `size()` < 2 (debug only).
+	**/
 	inline public function exchange()
 	{
 		assert(mTop > 1, "size() < 2");
@@ -186,17 +197,18 @@ class LinkedStack<T> implements Stack<T>
 	}
 	
 	/**
-	 * Moves the <code>n</code> topmost elements on the stack in a rotating fashion.<br/>
-	 * Example:
-	 * <pre>
-	 * top
-	 * |3|               |0|
-	 * |2|  rotate right |3|
-	 * |1|      -->      |2|
-	 * |0|               |1|</pre>
-	 * <o>n</o>
-	 * @throws de.polygonal.ds.error.AssertError <em>size()</em> >= <code>n</code> (debug only).
-	 */
+		Moves the `n` topmost elements on the stack in a rotating fashion.
+		
+		Example:
+		<pre>
+		top
+		|3|               |0|
+		|2|  rotate right |3|
+		|1|      -->      |2|
+		|0|               |1|</pre>
+		<o>n</o>
+		@throws de.polygonal.ds.error.AssertError `size()` >= `n` (debug only).
+	**/
 	inline public function rotRight(n:Int)
 	{
 		assert(mTop >= n, "size() < n");
@@ -213,17 +225,18 @@ class LinkedStack<T> implements Stack<T>
 	}
 	
 	/**
-	 * Moves the <code>n</code> topmost elements on the stack in a rotating fashion.<br/>
-	 * Example:
-	 * <pre>
-	 * top
-	 * |3|              |2|
-	 * |2|  rotate left |1|
-	 * |1|      -->     |0|
-	 * |0|              |3|</pre>
-	 * <o>n</o>
-	 * @throws de.polygonal.ds.error.AssertError <em>size()</em> >= <code>n</code> (debug only).
-	 */
+		Moves the `n` topmost elements on the stack in a rotating fashion.
+		
+		Example:
+		<pre>
+		top
+		|3|              |2|
+		|2|  rotate left |1|
+		|1|      -->     |0|
+		|0|              |3|</pre>
+		<o>n</o>
+		@throws de.polygonal.ds.error.AssertError `size()` >= `n` (debug only).
+	**/
 	inline public function rotLeft(n:Int)
 	{
 		assert(mTop >= n, "size() < n");
@@ -240,12 +253,14 @@ class LinkedStack<T> implements Stack<T>
 	}
 	
 	/**
-	 * Returns the element stored at index <code>i</code>.<br/>
-	 * An index of 0 indicates the bottommost element.<br/>
-	 * An index of <em>size()</em> - 1 indicates the topmost element.
-	 * <o>n</o>
-	 * @throws de.polygonal.ds.error.AssertError stack is empty or index out of range (debug only).
-	 */
+		Returns the element stored at index `i`.
+		
+		An index of 0 indicates the bottommost element.
+		
+		An index of `size()` - 1 indicates the topmost element.
+		<o>n</o>
+		@throws de.polygonal.ds.error.AssertError stack is empty or index out of range (debug only).
+	**/
 	inline public function get(i:Int):T
 	{
 		assert(mTop > 0, "stack is empty");
@@ -258,12 +273,14 @@ class LinkedStack<T> implements Stack<T>
 	}
 	
 	/**
-	 * Replaces the element at index <code>i</code> with the element <code>x</code>.<br/>
-	 * An index of 0 indicates the bottommost element.<br/>
-	 * An index of <em>size()</em> - 1 indicates the topmost element.
-	 * <o>n</o>
-	 * @throws de.polygonal.ds.error.AssertError stack is empty or index out of range (debug only).
-	 */
+		Replaces the element at index `i` with the element `x`.
+		
+		An index of 0 indicates the bottommost element.
+		
+		An index of `size()` - 1 indicates the topmost element.
+		<o>n</o>
+		@throws de.polygonal.ds.error.AssertError stack is empty or index out of range (debug only).
+	**/
 	inline public function set(i:Int, x:T)
 	{
 		assert(mTop > 0, "stack is empty");
@@ -276,14 +293,16 @@ class LinkedStack<T> implements Stack<T>
 	}
 	
 	/**
-	 * Swaps the element stored at <code>i</code> with the element stored at index <code>j</code>.<br/>
-	 * An index of 0 indicates the bottommost element.<br/>
-	 * An index of <em>size()</em> - 1 indicates the topmost element.
-	 * <o>n</o>
-	 * @throws de.polygonal.ds.error.AssertError stack is empty. (debug only).
-	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
-	 * @throws de.polygonal.ds.error.AssertError <code>i</code> equals <code>j</code> (debug only).
-	 */
+		Swaps the element stored at `i` with the element stored at index `j`.
+		
+		An index of 0 indicates the bottommost element.
+		
+		An index of `size()` - 1 indicates the topmost element.
+		<o>n</o>
+		@throws de.polygonal.ds.error.AssertError stack is empty. (debug only).
+		@throws de.polygonal.ds.error.AssertError index out of range (debug only).
+		@throws de.polygonal.ds.error.AssertError `i` equals `j` (debug only).
+	**/
 	inline public function swp(i:Int, j:Int)
 	{
 		assert(mTop > 0, "stack is empty");
@@ -318,14 +337,16 @@ class LinkedStack<T> implements Stack<T>
 	}
 	
 	/**
-	 * Overwrites the element at index <code>i</code> with the element from index <code>j</code>.<br/>
-	 * An index of 0 indicates the bottommost element.<br/>
-	 * An index of <em>size()</em> - 1 indicates the topmost element.
-	 * <o>n</o>
-	 * @throws de.polygonal.ds.error.AssertError stack is empty. (debug only).
-	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
-	 * @throws de.polygonal.ds.error.AssertError <code>i</code> equals <code>j</code> (debug only).
-	 */
+		Overwrites the element at index `i` with the element from index `j`.
+		
+		An index of 0 indicates the bottommost element.
+		
+		An index of `size()` - 1 indicates the topmost element.
+		<o>n</o>
+		@throws de.polygonal.ds.error.AssertError stack is empty. (debug only).
+		@throws de.polygonal.ds.error.AssertError index out of range (debug only).
+		@throws de.polygonal.ds.error.AssertError `i` equals `j` (debug only).
+	**/
 	inline public function cpy(i:Int, j:Int)
 	{
 		assert(mTop > 0, "stack is empty");
@@ -358,14 +379,14 @@ class LinkedStack<T> implements Stack<T>
 	}
 	
 	/**
-	 * Replaces up to <code>n</code> existing elements with objects of type <code>C</code>.
-	 * <o>n</o>
-	 * @param C the class to instantiate for each element.
-	 * @param args passes additional constructor arguments to the class <code>C</code>.
-	 * @param n the number of elements to replace. If 0, <code>n</code> is set to <em>size()</em>.
-	 * @throws de.polygonal.ds.error.AssertError <code>n</code> out of range (debug only).
-	 */
-	public function assign(C:Class<T>, args:Array<Dynamic> = null, n = 0)
+		Replaces up to `n` existing elements with objects of type `cl`.
+		<o>n</o>
+		@param cl the class to instantiate for each element.
+		@param args passes additional constructor arguments to the class `cl`.
+		@param n the number of elements to replace. If 0, `n` is set to `size()`.
+		@throws de.polygonal.ds.error.AssertError `n` out of range (debug only).
+	**/
+	public function assign(cl:Class<T>, args:Array<Dynamic> = null, n = 0)
 	{
 		assert(n >= 0);
 		
@@ -383,17 +404,17 @@ class LinkedStack<T> implements Stack<T>
 		var node = mHead;
 		for (i in 0...n)
 		{
-			node.val = Type.createInstance(C, args);
+			node.val = Type.createInstance(cl, args);
 			node = node.next;
 		}
 	}
 	
 	/**
-	 * Replaces up to <code>n</code> existing elements with the instance of <code>x</code>.
-	 * <o>n</o>
-	 * @param n the number of elements to replace. If 0, <code>n</code> is set to <em>size()</em>.
-	 * @throws de.polygonal.ds.error.AssertError <code>n</code> out of range (debug only).
-	 */
+		Replaces up to `n` existing elements with the instance `x`.
+		<o>n</o>
+		@param n the number of elements to replace. If 0, `n` is set to `size()`.
+		@throws de.polygonal.ds.error.AssertError `n` out of range (debug only).
+	**/
 	public function fill(x:T, n = 0):LinkedStack<T>
 	{
 		assert(n >= 0);
@@ -419,12 +440,12 @@ class LinkedStack<T> implements Stack<T>
 	}
 	
 	/**
-	 * Shuffles the elements of this collection by using the Fisher-Yates algorithm.
-	 * <o>n</o>
-	 * @param rval a list of random double values in the range between 0 (inclusive) to 1 (exclusive) defining the new positions of the elements.
-	 * If omitted, random values are generated on-the-fly by calling <em>Math.random()</em>.
-	 * @throws de.polygonal.ds.error.AssertError insufficient random values (debug only).
-	 */
+		Shuffles the elements of this collection by using the Fisher-Yates algorithm.
+		<o>n</o>
+		@param rval a list of random double values in the range between 0 (inclusive) to 1 (exclusive) defining the new positions of the elements.
+		If omitted, random values are generated on-the-fly by calling `Math::random()`.
+		@throws de.polygonal.ds.error.AssertError insufficient random values (debug only).
+	**/
 	public function shuffle(rval:Array<Float> = null)
 	{
 		var s = mTop;
@@ -472,22 +493,23 @@ class LinkedStack<T> implements Stack<T>
 	}
 	
 	/**
-	 * Returns a string representing the current object.<br/>
-	 * Example:<br/>
-	 * <pre class="prettyprint">
-	 * var ls = new de.polygonal.ds.LinkedStack&lt;Int&gt;();
-	 * ls.push(0);
-	 * ls.push(1);
-	 * ls.push(2);
-	 * trace(ls);</pre>
-	 * <pre class="console">
-	 * {LinkedStack size: 3}
-	 * [ top
-	 *     0 -> 2
-	 *     1 -> 1
-	 *     2 -> 0
-	 * ]</pre>
-	 */
+		Returns a string representing the current object.
+		
+		Example:
+		<pre class="prettyprint">
+		var ls = new de.polygonal.ds.LinkedStack<Int>();
+		ls.push(0);
+		ls.push(1);
+		ls.push(2);
+		trace(ls);</pre>
+		<pre class="console">
+		{LinkedStack size: 3}
+		[ top
+		    0 -> 2
+		    1 -> 1
+		    2 -> 0
+		]</pre>
+	**/
 	public function toString():String
 	{
 		var s = '{ LinkedStack size: ${size()} }';
@@ -510,10 +532,11 @@ class LinkedStack<T> implements Stack<T>
 	///////////////////////////////////////////////////////*/
 	
 	/**
-	 * Destroys this object by explicitly nullifying all nodes, pointers and elements.<br/>
-	 * Improves GC efficiency/performance (optional).
-	 * <o>n</o>
-	 */
+		Destroys this object by explicitly nullifying all nodes, pointers and elements.
+		
+		Improves GC efficiency/performance (optional).
+		<o>n</o>
+	**/
 	public function free()
 	{
 		var node = mHead;
@@ -541,9 +564,9 @@ class LinkedStack<T> implements Stack<T>
 	}
 	
 	/**
-	 * Returns true if this stack contains the element <code>x</code>.
-	 * <o>n</o>
-	 */
+		Returns true if this stack contains the element `x`.
+		<o>n</o>
+	**/
 	public function contains(x:T):Bool
 	{
 		var node = mHead;
@@ -557,10 +580,10 @@ class LinkedStack<T> implements Stack<T>
 	}
 	
 	/**
-	 * Removes and nullifies all occurrences of the element <code>x</code>.
-	 * <o>n</o>
-	 * @return true if at least one occurrence of <code>x</code> was removed.
-	 */
+		Removes and nullifies all occurrences of the element `x`.
+		<o>n</o>
+		@return true if at least one occurrence of `x` was removed.
+	**/
 	public function remove(x:T):Bool
 	{
 		if (isEmpty()) return false;
@@ -600,10 +623,10 @@ class LinkedStack<T> implements Stack<T>
 	}
 	
 	/**
-	 * Removes all elements.
-	 * <o>1 or n if <code>purge</code> is true</o>
-	 * @param purge if true, elements are nullified upon removal.
-	 */
+		Removes all elements.
+		<o>1 or n if `purge` is true</o>
+		@param purge if true, elements are nullified upon removal.
+	**/
 	public function clear(purge = false)
 	{
 		if (mTop == 0) return;
@@ -625,10 +648,12 @@ class LinkedStack<T> implements Stack<T>
 	}
 	
 	/**
-	 * Returns a new <em>LinkedStackIterator</em> object to iterate over all elements contained in this stack.<br/>
-	 * Preserves the natural order of the stack (First-In-Last-Out).
-	 * @see <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
-	 */
+		Returns a new `LinkedStackIterator` object to iterate over all elements contained in this stack.
+		
+		Preserves the natural order of the stack (First-In-Last-Out).
+		
+		See <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
+	**/
 	public function iterator():Itr<T>
 	{
 		if (reuseIterator)
@@ -644,27 +669,28 @@ class LinkedStack<T> implements Stack<T>
 	}
 	
 	/**
-	 * Returns true if this stack is empty.
-	 * <o>1</o>
-	 */
+		Returns true if this stack is empty.
+		<o>1</o>
+	**/
 	inline public function isEmpty():Bool
 	{
 		return mTop == 0;
 	}
 	
 	/**
-	 * The total number of elements.
-	 * <o>1</o>
-	 */
+		The total number of elements.
+		<o>1</o>
+	**/
 	inline public function size():Int
 	{
 		return mTop;
 	}
 	
 	/**
-	 * Returns an array containing all elements in this stack.<br/>
-	 * Preserves the natural order of this stack (First-In-Last-Out).
-	 */
+		Returns an array containing all elements in this stack.
+		
+		Preserves the natural order of this stack (First-In-Last-Out).
+	**/
 	public function toArray():Array<T>
 	{
 		var a:Array<T> = ArrayUtil.alloc(size());
@@ -679,9 +705,10 @@ class LinkedStack<T> implements Stack<T>
 	}
 	
 	/**
-	 * Returns a Vector.&lt;T&gt; object containing all elements in this stack.<br/>
-	 * Preserves the natural order of this stack (First-In-Last-Out).
-	 */
+		Returns a `Vector<T>` object containing all elements in this stack.
+		
+		Preserves the natural order of this stack (First-In-Last-Out).
+	**/
 	public function toVector():Vector<T>
 	{
 		var v = new Vector<T>(size());
@@ -695,12 +722,12 @@ class LinkedStack<T> implements Stack<T>
 	}
 	
 	/**
-	 * Duplicates this stack. Supports shallow (structure only) and deep copies (structure & elements).
-	 * @param assign if true, the <code>copier</code> parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.<br/>
-	 * If false, the <em>clone()</em> method is called on each element. <warn>In this case all elements have to implement <em>Cloneable</em>.</warn>
-	 * @param copier a custom function for copying elements. Replaces element.<em>clone()</em> if <code>assign</code> is false.
-	 * @throws de.polygonal.ds.error.AssertError element is not of type <em>Cloneable</em> (debug only).
-	 */
+		Duplicates this stack. Supports shallow (structure only) and deep copies (structure & elements).
+		@param assign if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
+		If false, the `clone()` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
+		@param copier a custom function for copying elements. Replaces element.`clone()` if `assign` is false.
+		@throws de.polygonal.ds.error.AssertError element is not of type `Cloneable` (debug only).
+	**/
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{
 		var copy = new LinkedStack<T>(mReservedSize, maxSize);
@@ -806,9 +833,7 @@ class LinkedStack<T> implements Stack<T>
 #if (flash && generic)
 @:generic
 #end
-#if doc
-private
-#end
+@:dox(hide)
 class LinkedStackNode<T>
 {
 	public var val:T;
@@ -829,9 +854,7 @@ class LinkedStackNode<T>
 @:generic
 #end
 @:access(de.polygonal.ds.LinkedStack)
-#if doc
-private
-#end
+@:dox(hide)
 class LinkedStackIterator<T> implements de.polygonal.ds.Itr<T>
 {
 	var mF:LinkedStack<T>;

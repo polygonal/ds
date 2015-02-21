@@ -21,32 +21,41 @@ package de.polygonal.ds;
 import de.polygonal.ds.error.Assert.assert;
 
 /**
- * <p>A heap is a special kind of binary tree in which every node is greater than all of its children.</p>
- * <p>The implementation is based on an arrayed binary tree.</p>
- * <p><o>Worst-case running time in Big O notation</o></p>
- */
+	<h3>A heap is a special kind of binary tree in which every node is greater than all of its children.</h3>
+	
+	The implementation is based on an arrayed binary tree.
+	
+	<o>Worst-case running time in Big O notation</o>
+**/
 class Heap<T:(Heapable<T>)> implements Collection<T>
 {
 	/**
-	 * A unique identifier for this object.<br/>
-	 * A hash table transforms this key into an index of an array element by using a hash function.<br/>
-	 * <warn>This value should never be changed by the user.</warn>
-	 */
+		A unique identifier for this object.
+		
+		A hash table transforms this key into an index of an array element by using a hash function.
+		
+		<warn>This value should never be changed by the user.</warn>
+	**/
 	public var key:Int;
 	
 	/**
-	 * The maximum allowed size of this heap.<br/>
-	 * Once the maximum size is reached, adding an element will fail with an error (debug only).<br/>
-	 * A value of -1 indicates that the size is unbound.<br/>
-	 * <warn>Always equals -1 in release mode.</warn>
-	 */
+		The maximum allowed size of this heap.
+		
+		Once the maximum size is reached, adding an element will fail with an error (debug only).
+		
+		A value of -1 indicates that the size is unbound.
+		
+		<warn>Always equals -1 in release mode.</warn>
+	**/
 	public var maxSize:Int;
 	
 	/**
-	 * If true, reuses the iterator object instead of allocating a new one when calling <code>iterator()</code>.<br/>
-	 * The default is false.<br/>
-	 * <warn>If true, nested iterations are likely to fail as only one iteration is allowed at a time.</warn>
-	 */
+		If true, reuses the iterator object instead of allocating a new one when calling `iterator()`.
+		
+		The default is false.
+		
+		<warn>If true, nested iterations are likely to fail as only one iteration is allowed at a time.</warn>
+	**/
 	public var reuseIterator:Bool;
 	
 	var mData:Array<T>;
@@ -58,11 +67,11 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	#end
 	
 	/**
-	 * @param reservedSize the initial capacity of the internal container. See <em>reserve()</em>.
-	 * @param maxSize the maximum allowed size of this heap.<br/>
-	 * The default value of -1 indicates that there is no upper limit.
-	 * @throws de.polygonal.ds.error.AssertError <code>reservedSize</code> &gt; <code>maxSize</code> (debug only).
-	 */
+		@param reservedSize the initial capacity of the internal container. See `reserve()`.
+		@param maxSize the maximum allowed size of this heap.
+		The default value of -1 indicates that there is no upper limit.
+		@throws de.polygonal.ds.error.AssertError `reservedSize` > `maxSize` (debug only).
+	**/
 	public function new(reservedSize = 0, maxSize = -1)
 	{
 		#if debug
@@ -95,10 +104,10 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	}
 	
 	/**
-	 * For performance reasons the heap does nothing to ensure that empty locations contain null.<br/>
-	 * <em>pack()</em> therefore nullifies all obsolete references and shrinks the container to the actual size allowing the garbage collector to reclaim used memory.
-	 * <o>n</o>
-	 */
+		For performance reasons the heap does nothing to ensure that empty locations contain null; `pack()` therefore
+		nullifies all obsolete references and shrinks the container to the actual size allowing the garbage collector to reclaim used memory.
+		<o>n</o>
+	**/
 	public function pack()
 	{
 		if (mData.length - 1 == size()) return;
@@ -122,10 +131,11 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	}
 	
 	/**
-	 * Preallocates internal space for storing <code>x</code> elements.<br/>
-	 * This is useful if the expected size is known in advance - many platforms can optimize memory usage if an exact size is specified.
-	 * <o>n</o>
-	 */
+		Preallocates internal space for storing `x` elements.
+		
+		This is useful if the expected size is known in advance - many platforms can optimize memory usage if an exact size is specified.
+		<o>n</o>
+	**/
 	public function reserve(x:Int)
 	{
 		if (size() == x) return;
@@ -142,11 +152,12 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	}
 	
 	/**
-	 * Returns the item on top of the heap without removing it from the heap.<br/>
-	 * This is the smallest element (assuming ascending order).
-	 * <o>1</o>
-	 * @throws de.polygonal.ds.error.AssertError heap is empty (debug only).
-	 */
+		Returns the item on top of the heap without removing it from the heap.
+		
+		This is the smallest element (assuming ascending order).
+		<o>1</o>
+		@throws de.polygonal.ds.error.AssertError heap is empty (debug only).
+	**/
 	inline public function top():T
 	{
 		assert(size() > 0, "heap is empty");
@@ -155,11 +166,12 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	}
 	
 	/**
-	 * Returns the item on the bottom of the heap without removing it from the heap.<br/>
-	 * This is the largest element (assuming ascending order).
-	 * <o>n</o>
-	 * @throws de.polygonal.ds.error.AssertError heap is empty (debug only).
-	 */
+		Returns the item on the bottom of the heap without removing it from the heap.
+		
+		This is the largest element (assuming ascending order).
+		<o>n</o>
+		@throws de.polygonal.ds.error.AssertError heap is empty (debug only).
+	**/
 	public function bottom():T
 	{
 		assert(size() > 0, "heap is empty");
@@ -176,12 +188,12 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	}
 	
 	/**
-	 * Adds the element <code>x</code>.
-	 * <o>log n</o>
-	 * @throws de.polygonal.ds.error.AssertError heap is full (debug only).
-	 * @throws de.polygonal.ds.error.AssertError <code>x</code> is null or <code>x</code> already exists (debug only).
-	 * @throws de.polygonal.ds.error.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
-	 */
+		Adds the element `x`.
+		<o>log n</o>
+		@throws de.polygonal.ds.error.AssertError heap is full (debug only).
+		@throws de.polygonal.ds.error.AssertError `x` is null or `x` already exists (debug only).
+		@throws de.polygonal.ds.error.AssertError `size()` equals `maxSize` (debug only).
+	**/
 	public function add(x:T)
 	{
 		assert(x != null, "x is null");
@@ -200,11 +212,12 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	}
 	
 	/**
-	 * Removes the element on top of the heap.<br/>
-	 * This is the smallest element (assuming ascending order).
-	 * <o>log n</o>
-	 * @throws de.polygonal.ds.error.AssertError heap is empty (debug only).
-	 */
+		Removes the element on top of the heap.
+		
+		This is the smallest element (assuming ascending order).
+		<o>log n</o>
+		@throws de.polygonal.ds.error.AssertError heap is empty (debug only).
+	**/
 	public function pop():T
 	{
 		assert(size() > 0, "heap is empty");
@@ -222,10 +235,10 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	}
 	
 	/**
-	 * Replaces the item at the top of the heap with a new element <code>x</code>.
-	 * <o>log n</o>
-	 * @throws de.polygonal.ds.error.AssertError <code>x</code> already exists (debug only).
-	 */
+		Replaces the item at the top of the heap with a new element `x`.
+		<o>log n</o>
+		@throws de.polygonal.ds.error.AssertError `x` already exists (debug only).
+	**/
 	public function replace(x:T)
 	{
 		#if (debug && flash)
@@ -239,13 +252,14 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	}
 	
 	/**
-	 * Rebuilds the heap in case an existing element was modified.<br/>
-	 * This is faster than removing and readding an element.
-	 * <o>log n</o>
-	 * @param hint a value &gt;= 0 indicates that <code>x</code> is now smaller (ascending order) or bigger (descending order) and should be moved towards the root of the tree to rebuild the heap property.<br/>
-	 * Likewise, a value &lt; 0 indicates that <code>x</code> is now bigger (ascending order) or smaller (descending order) and should be moved towards the leaf nodes of the tree.<br/>
-	 * @throws de.polygonal.ds.error.AssertError <code>x</code> does not exist (debug only).
-	 */
+		Rebuilds the heap in case an existing element was modified.
+		
+		This is faster than removing and readding an element.
+		<o>log n</o>
+		@param hint a value >= 0 indicates that `x` is now smaller (ascending order) or bigger (descending order) and should be moved towards the root of the tree to rebuild the heap property.
+		Likewise, a value < 0 indicates that `x` is now bigger (ascending order) or smaller (descending order) and should be moved towards the leaf nodes of the tree.
+		@throws de.polygonal.ds.error.AssertError `x` does not exist (debug only).
+	**/
 	public function change(x:T, hint:Int)
 	{
 		#if (debug && flash)
@@ -262,9 +276,9 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	}
 	
 	/**
-	 * Returns a sorted array of all elements.<br/>
-	 * <o>n log n</o>
-	 */
+		Returns a sorted array of all elements.
+		<o>n log n</o>
+	**/
 	public function sort():Array<T>
 	{
 		if (isEmpty()) return new Array();
@@ -308,57 +322,55 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	}
 	
 	/**
-	 * Computes the height of the heap tree.
-	 * <o>1</o>
-	 */
+		Computes the height of the heap tree.
+		<o>1</o>
+	**/
 	public function height():Int
 	{
 		return 32 - Bits.nlz(mSize);
 	}
 	
 	/**
-	 * Returns a string representing the current object.<br/>
-	 * Prints out all elements in a sorted order.<br/>
-	 * Example:<br/>
-	 * <pre class="prettyprint">
-	 * class Foo implements de.polygonal.ds.Heapable&lt;Foo&gt;
-	 * {
-	 *     public var id:Int;
-	 *     public var position:Int; //don't touch!
-	 *
-	 *     public function new(id:Int) {
-	 *         this.id = id;
-	 *     }
-	 *
-	 *     public function compare(other:Foo):Int {
-	 *         return other.id - id;
-	 *     }
-	 *
-	 *     public function toString():String {
-	 *         return Std.string(id);
-	 *     }
-	 * }
-	 *
-	 * class Main
-	 * {
-	 *     static function main() {
-	 *         var h = new de.polygonal.ds.Heap&lt;Foo&gt;();
-	 *         h.add(new Foo(64));
-	 *         h.add(new Foo(13));
-	 *         h.add(new Foo(1));
-	 *         h.add(new Foo(37));
-	 *         trace(h);
-	 *     }
-	 * }</pre>
-	 * <pre class="console">
-	 * { Heap size: 4 }
-	 * [ front
-	 *   0 -> 1
-	 *   1 -> 13
-	 *   2 -> 37
-	 *   3 -> 64
-	 * ]</pre>
-	 */
+		Returns a string representing the current object.
+		Prints out all elements in a sorted order.
+		
+		Example:
+		<pre class="prettyprint">
+		class Foo implements de.polygonal.ds.Heapable<Foo>
+		{
+		    public var id:Int;
+		    public var position:Int; //don't touch!
+		    public function new(id:Int) {
+		        this.id = id;
+		    }
+		    public function compare(other:Foo):Int {
+		        return other.id - id;
+		    }
+		    public function toString():String {
+		        return Std.string(id);
+		    }
+		}
+		
+		class Main
+		{
+		    static function main() {
+		        var h = new de.polygonal.ds.Heap<Foo>();
+		        h.add(new Foo(64));
+		        h.add(new Foo(13));
+		        h.add(new Foo(1));
+		        h.add(new Foo(37));
+		        trace(h);
+		    }
+		}</pre>
+		<pre class="console">
+		{ Heap size: 4 }
+		[ front
+		  0 -> 1
+		  1 -> 13
+		  2 -> 37
+		  3 -> 64
+		]</pre>
+	**/
 	public function toString():String
 	{
 		var s = '{ Heap size: ${size()} }';
@@ -379,9 +391,9 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	}
 	
 	/**
-	 * Uses the Floyd algorithm (bottom-up) to repair the heap tree by restoring the heap property.
-	 * <o>n</o>
-	 */
+		Uses the Floyd algorithm (bottom-up) to repair the heap tree by restoring the heap property.
+		<o>n</o>
+	**/
 	public function repair()
 	{
 		var i = mSize >> 1;
@@ -397,10 +409,11 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	///////////////////////////////////////////////////////*/
 	
 	/**
-	 * Destroys this object by explicitly nullifying all elements for GC'ing used resources.<br/>
-	 * Improves GC efficiency/performance (optional).
-	 * <o>n</o>
-	 */
+		Destroys this object by explicitly nullifying all elements for GC'ing used resources.
+		
+		Improves GC efficiency/performance (optional).
+		<o>n</o>
+	**/
 	public function free()
 	{
 		for (i in 0...mData.length) set(i, cast null);
@@ -419,10 +432,10 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	}
 	
 	/**
-	 * Returns true if this heap contains the element <code>x</code>.
-	 * @throws de.polygonal.ds.error.AssertError <code>x</code> is invalid.
-	 * <o>1</o>
-	 */
+		Returns true if this heap contains the element `x`.
+		@throws de.polygonal.ds.error.AssertError `x` is invalid.
+		<o>1</o>
+	**/
 	inline public function contains(x:T):Bool
 	{
 		assert(x != null, "x is null");
@@ -432,11 +445,11 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	}
 	
 	/**
-	 * Removes the element <code>x</code>.
-	 * <o>2 * log n</o>
-	 * @throws de.polygonal.ds.error.AssertError <code>x</code> is invalid or does not exist (debug only).
-	 * @return true if <code>x</code> was removed.
-	 */
+		Removes the element `x`.
+		<o>2 * log n</o>
+		@throws de.polygonal.ds.error.AssertError `x` is invalid or does not exist (debug only).
+		@return true if `x` was removed.
+	**/
 	public function remove(x:T):Bool
 	{
 		if (isEmpty())
@@ -465,10 +478,10 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	}
 	
 	/**
-	 * Removes all elements.
-	 * <o>1 or n if <code>purge</code> is true</o>
-	 * @param purge if true, elements are nullified upon removal.
-	 */
+		Removes all elements.
+		<o>1 or n if `purge` is true</o>
+		@param purge if true, elements are nullified upon removal.
+	**/
 	inline public function clear(purge = false)
 	{
 		#if (debug && flash)
@@ -483,10 +496,12 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	}
 	
 	/**
-	 * Returns a new <em>HeapIterator</em> object to iterate over all elements contained in this heap.<br/>
-	 * The values are visited in an unsorted order.
-	 * @see <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
-	 */
+		Returns a new `HeapIterator` object to iterate over all elements contained in this heap.
+		
+		The values are visited in an unsorted order.
+		
+		See <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
+	**/
 	public function iterator():Itr<T>
 	{
 		if (reuseIterator)
@@ -502,26 +517,26 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	}
 	
 	/**
-	 * The total number of elements.
-	 * <o>1</o>
-	 */
+		The total number of elements.
+		<o>1</o>
+	**/
 	inline public function size():Int
 	{
 		return mSize;
 	}
 	
 	/**
-	 * Returns true if this heap is empty.
-	 * <o>1</o>
-	 */
+		Returns true if this heap is empty.
+		<o>1</o>
+	**/
 	inline public function isEmpty():Bool
 	{
 		return mSize == 0;
 	}
 	
 	/**
-	 * Returns an unordered array containing all elements in this heap.
-	 */
+		Returns an unordered array containing all elements in this heap.
+	**/
 	public function toArray():Array<T>
 	{
 		var a:Array<T> = ArrayUtil.alloc(size());
@@ -530,8 +545,8 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	}
 	
 	/**
-	 * Returns a Vector.&lt;T&gt; object containing all elements in this heap.
-	 */
+		Returns a `Vector<T>` object containing all elements in this heap.
+	**/
 	public function toVector():Vector<T>
 	{
 		var v = new Vector<T>(size());
@@ -540,13 +555,13 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	}
 	
 	/**
-	 * Duplicates this heap. Supports shallow (structure only) and deep copies (structure & elements).
-	 * @param assign if true, the <code>copier</code> parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.<br/>
-	 * If false, the <em>clone()</em> method is called on each element. <warn>In this case all elements have to implement <em>Cloneable</em>.</warn>
-	 * @param copier a custom function for copying elements. Replaces element.<em>clone()</em> if <code>assign</code> is false.
-	 * @throws de.polygonal.ds.error.AssertError element is not of type <em>Cloneable</em> (debug only).
-	 * <warn>If <code>assign</code> is true, only the copied version should be used from now on.</warn>
-	 */
+		Duplicates this heap. Supports shallow (structure only) and deep copies (structure & elements).
+		@param assign if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
+		If false, the `clone()` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
+		@param copier a custom function for copying elements. Replaces element.`clone()` if `assign` is false.
+		@throws de.polygonal.ds.error.AssertError element is not of type `Cloneable` (debug only).
+		<warn>If `assign` is true, only the copied version should be used from now on.</warn>
+	**/
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{
 		var copy = new Heap<T>(mSize, maxSize);
@@ -681,9 +696,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 }
 
 @:access(de.polygonal.ds.Heap)
-#if doc
-private
-#end
+@:dox(hide)
 class HeapIterator<T:(Heapable<T>)> implements de.polygonal.ds.Itr<T>
 {
 	var mF:Heap<T>;
@@ -731,6 +744,7 @@ class HeapIterator<T:(Heapable<T>)> implements de.polygonal.ds.Itr<T>
 	}
 }
 
+@:dox(hide)
 private class HeapElementWrapper<T:(Heapable<T>)> implements Heapable<HeapElementWrapper<T>>
 {
 	public var position:Int;

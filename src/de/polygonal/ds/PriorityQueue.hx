@@ -21,32 +21,41 @@ package de.polygonal.ds;
 import de.polygonal.ds.error.Assert.assert;
 
 /**
- * <p>A priority queue is heap data structure with a simplified API for managing prioritized data.</p>
- * Adds additional methods for removing and re-prioritizing elements.</p>
- * <p><o>Worst-case running time in Big O notation</o></p>
- */
+	<h3>A priority queue is heap but with a simplified API for managing prioritized data.</h3>
+	
+	Adds additional methods for removing and re-prioritizing elements.
+	
+	<o>Worst-case running time in Big O notation</o>
+**/
 class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 {
 	/**
-	 * A unique identifier for this object.<br/>
-	 * A hash table transforms this key into an index of an array element by using a hash function.<br/>
-	 * <warn>This value should never be changed by the user.</warn>
-	 */
+		A unique identifier for this object.
+		
+		A hash table transforms this key into an index of an array element by using a hash function.
+		
+		<warn>This value should never be changed by the user.</warn>
+	**/
 	public var key:Int;
 	
 	/**
-	 * The maximum allowed size of this priority queue.<br/>
-	 * Once the maximum size is reached, adding an element will fail with an error (debug only).<br/>
-	 * A value of -1 indicates that the size is unbound.<br/>
-	 * <warn>Always equals -1 in release mode.</warn>
-	 */
+		The maximum allowed size of this priority queue.
+		
+		Once the maximum size is reached, adding an element will fail with an error (debug only).
+		
+		A value of -1 indicates that the size is unbound.
+		
+		<warn>Always equals -1 in release mode.</warn>
+	**/
 	public var maxSize:Int;
 	
 	/**
-	 * If true, reuses the iterator object instead of allocating a new one when calling <code>iterator()</code>.<br/>
-	 * The default is false.<br/>
-	 * <warn>If true, nested iterations are likely to fail as only one iteration is allowed at a time.</warn>
-	 */
+		If true, reuses the iterator object instead of allocating a new one when calling `iterator()`.
+		
+		The default is false.
+		
+		<warn>If true, nested iterations are likely to fail as only one iteration is allowed at a time.</warn>
+	**/
 	public var reuseIterator:Bool;
 	
 	var mData:Array<T>;
@@ -59,12 +68,12 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	#end
 	
 	/**
-	 * @param inverse if true, the lower the number, the higher the priority.
-	 * By default a higher number means a higher priority.
-	 * @param reservedSize the initial capacity of the internal container. See <em>reserve()</em>.
-	 * @param maxSize the maximum allowed size of the priority queue.<br/>
-	 * The default value of -1 indicates that there is no upper limit.
-	 */
+		@param inverse if true, the lower the number, the higher the priority.
+		By default a higher number means a higher priority.
+		@param reservedSize the initial capacity of the internal container. See `reserve()`.
+		@param maxSize the maximum allowed size of the priority queue.
+		The default value of -1 indicates that there is no upper limit.
+	**/
 	public function new(inverse = false, reservedSize = 0, maxSize = -1)
 	{
 		#if debug
@@ -100,10 +109,10 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	}
 	
 	/**
-	 * For performance reasons the priority queue does nothing to ensure that empty locations contain null.<br/>
-	 * <em>pack()</em> therefore nullifies all obsolete references and shrinks the container to the actual size allowing the garbage collector to reclaim used memory.
-	 * <o>n</o>
-	 */
+		For performance reasons the priority queue does nothing to ensure that empty locations contain null;
+		`pack()` therefore nullifies all obsolete references and shrinks the container to the actual size allowing the garbage collector to reclaim used memory.
+		<o>n</o>
+	**/
 	public function pack()
 	{
 		if (mData.length - 1 == size()) return;
@@ -116,10 +125,11 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	}
 	
 	/**
-	 * Preallocates internal space for storing <code>x</code> elements.<br/>
-	 * This is useful if the expected size is known in advance - many platforms can optimize memory usage if an exact size is specified.
-	 * <o>n</o>
-	 */
+		Preallocates internal space for storing `x` elements.
+		
+		This is useful if the expected size is known in advance - many platforms can optimize memory usage if an exact size is specified.
+		<o>n</o>
+	**/
 	public function reserve(x:Int)
 	{
 		if (size() == x) return;
@@ -137,11 +147,12 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	}
 	
 	/**
-	 * Returns the front element.<br/>
-	 * This is the element with the highest priority.
-	 * <o>1</o>
-	 * @throws de.polygonal.ds.error.AssertError priority queue is empty (debug only).
-	 */
+		Returns the front element.
+		
+		This is the element with the highest priority.
+		<o>1</o>
+		@throws de.polygonal.ds.error.AssertError priority queue is empty (debug only).
+	**/
 	inline public function peek():T
 	{
 		assert(size() > 0, "priority queue is empty");
@@ -150,11 +161,12 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	}
 	
 	/**
-	 * Returns the rear element.<br/>
-	 * This is the element with the lowest priority.
-	 * <o>n</o>
-	 * @throws de.polygonal.ds.error.AssertError priority queue is empty (debug only).
-	 */
+		Returns the rear element.
+		
+		This is the element with the lowest priority.
+		<o>n</o>
+		@throws de.polygonal.ds.error.AssertError priority queue is empty (debug only).
+	**/
 	public function back():T
 	{
 		assert(size() > 0, "priority queue is empty");
@@ -181,11 +193,11 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	}
 	
 	/**
-	 * Enqueues the element <code>x</code>.
-	 * <o>log n</o>
-	 * @throws de.polygonal.ds.error.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
-	 * @throws de.polygonal.ds.error.AssertError <code>x</code> is null or <code>x</code> already exists (debug only).
-	 */
+		Enqueues the element `x`.
+		<o>log n</o>
+		@throws de.polygonal.ds.error.AssertError `size()` equals `maxSize` (debug only).
+		@throws de.polygonal.ds.error.AssertError `x` is null or `x` already exists (debug only).
+	**/
 	inline public function enqueue(x:T)
 	{
 		#if debug
@@ -205,10 +217,10 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	}
 	
 	/**
-	 * Dequeues the front element.
-	 * <o>log n</o>
-	 * @throws de.polygonal.ds.error.AssertError priority queue is empty (debug only).
-	 */
+		Dequeues the front element.
+		<o>log n</o>
+		@throws de.polygonal.ds.error.AssertError priority queue is empty (debug only).
+	**/
 	inline public function dequeue():T
 	{
 		assert(size() > 0, "priority queue is empty");
@@ -227,12 +239,12 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	}
 	
 	/**
-	 * Reprioritizes the element <code>x</code>.
-	 * <o>log n</o>
-	 * @param x the element to re-prioritize.
-	 * @param priority the new priority.
-	 * @throws de.polygonal.ds.error.AssertError priority queue is empty or <code>x</code> does not exist (debug only).
-	 */
+		Reprioritizes the element `x`.
+		<o>log n</o>
+		@param x the element to re-prioritize.
+		@param priority the new priority.
+		@throws de.polygonal.ds.error.AssertError priority queue is empty or `x` does not exist (debug only).
+	**/
 	public function reprioritize(x:T, priority:Float)
 	{
 		assert(size() > 0, "priority queue is empty");
@@ -271,42 +283,41 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	}
 	
 	/**
-	 * Returns a string representing the current object.<br/>
-	 * Example:<br/>
-	 * <pre class="prettyprint">
-	 * class Foo implements de.polygonal.ds.Prioritizable
-	 * {
-	 *     public var priority:Int;
-	 *     public var position:Int;
-	 *
-	 *     public function new(priority:Int) {
-	 *       this.priority = priority;
-	 *     }
-	 *
-	 *     public function toString():String {
-	 *       return Std.string(priority);
-	 *     }
-	 * }
-	 *
-	 * class Main
-	 * {
-	 *     static function main() {
-	 *         var pq = new de.polygonal.ds.PriorityQueue&lt;Foo&gt;(4);
-	 *         pq.enqueue(new Foo(5));
-	 *         pq.enqueue(new Foo(3));
-	 *         pq.enqueue(new Foo(0));
-	 *         trace(pq);
-	 *     }
-	 * }</pre>
-	 * <pre class="console">
-	 * { PriorityQueue size: 3 }
-	 * [ front
-	 *    0 -> 5
-	 *    1 -> 3
-	 *    2 -> 0
-	 * ]
-	 * </pre>
-	 */
+		Returns a string representing the current object.
+		
+		Example:
+		<pre class="prettyprint">
+		class Foo implements de.polygonal.ds.Prioritizable
+		{
+		    public var priority:Int;
+		    public var position:Int;
+		    public function new(priority:Int) {
+		      this.priority = priority;
+		    }
+		    public function toString():String {
+		      return Std.string(priority);
+		    }
+		}
+		
+		class Main
+		{
+		    static function main() {
+		        var pq = new de.polygonal.ds.PriorityQueue<Foo>(4);
+		        pq.enqueue(new Foo(5));
+		        pq.enqueue(new Foo(3));
+		        pq.enqueue(new Foo(0));
+		        trace(pq);
+		    }
+		}</pre>
+		<pre class="console">
+		{ PriorityQueue size: 3 }
+		[ front
+		   0 -> 5
+		   1 -> 3
+		   2 -> 0
+		]
+		</pre>
+	**/
 	public function toString():String
 	{
 		var s = '{ PriorityQueue size: ${size()} }';
@@ -332,10 +343,11 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	///////////////////////////////////////////////////////*/
 	
 	/**
-	 * Destroys this object by explicitly nullifying all elements for GC'ing used resources.<br/>
-	 * Improves GC efficiency/performance (optional).
-	 * <o>n</o>
-	 */
+		Destroys this object by explicitly nullifying all elements for GC'ing used resources.
+		
+		Improves GC efficiency/performance (optional).
+		<o>n</o>
+	**/
 	public function free()
 	{
 		for (i in 0...mData.length) set(i, cast null);
@@ -354,10 +366,10 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	}
 	
 	/**
-	 * Returns true if this priority queue contains the element <code>x</code>.
-	 * @throws de.polygonal.ds.error.AssertError <code>x</code> is invalid.
-	 * <o>1</o>
-	 */
+		Returns true if this priority queue contains the element `x`.
+		@throws de.polygonal.ds.error.AssertError `x` is invalid.
+		<o>1</o>
+	**/
 	inline public function contains(x:T):Bool
 	{
 		assert(x != null, "x is null");
@@ -367,11 +379,11 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	}
 	
 	/**
-	 * Removes the element <code>x</code>.
-	 * <o>n</o>
-	 * @return true if <code>x</code> was removed.
-	 * @throws de.polygonal.ds.error.AssertError <code>x</code> is invalid or does not exist (debug only).
-	 */
+		Removes the element `x`.
+		<o>n</o>
+		@return true if `x` was removed.
+		@throws de.polygonal.ds.error.AssertError `x` is invalid or does not exist (debug only).
+	**/
 	public function remove(x:T):Bool
 	{
 		if (isEmpty())
@@ -400,10 +412,10 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	}
 	
 	/**
-	 * Removes all elements.
-	 * <o>1 or n if <code>purge</code> is true</o>
-	 * @param purge if true, elements are nullified upon removal.
-	 */
+		Removes all elements.
+		<o>1 or n if `purge` is true</o>
+		@param purge if true, elements are nullified upon removal.
+	**/
 	inline public function clear(purge = false)
 	{
 		if (purge)
@@ -419,10 +431,12 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	}
 	
 	/**
-	 * Returns a new <em>PriorityQueueIterator</em> object to iterate over all elements contained in this priority queue.<br/>
-	 * The values are visited in an unsorted order.
-	 * @see <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
-	 */
+		Returns a new `PriorityQueueIterator` object to iterate over all elements contained in this priority queue.
+		
+		The values are visited in an unsorted order.
+		
+		See <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
+	**/
 	public function iterator():Itr<T>
 	{
 		if (reuseIterator)
@@ -438,26 +452,26 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	}
 	
 	/**
-	 * The total number of elements.
-	 * <o>1</o>
-	 */
+		The total number of elements.
+		<o>1</o>
+	**/
 	inline public function size():Int
 	{
 		return mSize;
 	}
 	
 	/**
-	 * Returns true if this priority queue is empty.
-	 * <o>1</o>
-	 */
+		Returns true if this priority queue is empty.
+		<o>1</o>
+	**/
 	inline public function isEmpty():Bool
 	{
 		return mSize == 0;
 	}
 	
 	/**
-	 * Returns an unordered array containing all elements in this priority queue.
-	 */
+		Returns an unordered array containing all elements in this priority queue.
+	**/
 	public function toArray():Array<T>
 	{
 		var a:Array<T> = ArrayUtil.alloc(size());
@@ -466,8 +480,8 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	}
 	
 	/**
-	 * Returns a Vector.&lt;T&gt; object containing all elements in this priority queue.
-	 */
+		Returns a `Vector<T>` object containing all elements in this priority queue.
+	**/
 	public function toVector():Vector<T>
 	{
 		var v = new Vector<T>(size());
@@ -476,13 +490,13 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	}
 	
 	/**
-	 * Duplicates this priority queue. Supports shallow (structure only) and deep copies (structure & elements).
-	 * @param assign if true, the <code>copier</code> parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.<br/>
-	 * If false, the <em>clone()</em> method is called on each element. <warn>In this case all elements have to implement <em>Cloneable</em>.</warn>
-	 * @param copier a custom function for copying elements. Replaces element.<em>clone()</em> if <code>assign</code> is false.
-	 * @throws de.polygonal.ds.error.AssertError element is not of type <em>Cloneable</em> (debug only).
-	 * <warn>If <code>assign</code> is true, only the copied version should be used from now on.</warn>
-	 */
+		Duplicates this priority queue. Supports shallow (structure only) and deep copies (structure & elements).
+		@param assign if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
+		If false, the `clone()` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
+		@param copier a custom function for copying elements. Replaces element.`clone()` if `assign` is false.
+		@throws de.polygonal.ds.error.AssertError element is not of type `Cloneable` (debug only).
+		<warn>If `assign` is true, only the copied version should be used from now on.</warn>
+	**/
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{
 		var copy = new PriorityQueue<T>(mInverse, size(), maxSize);
@@ -639,19 +653,17 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 }
 
 @:access(de.polygonal.ds.PriorityQueue)
-#if doc
-private
-#end
+@:dox(hide)
 class PriorityQueueIterator<T:(Prioritizable)> implements de.polygonal.ds.Itr<T>
 {
-	var mF:PriorityQueue<T>;
+	var mQue:PriorityQueue<T>;
 	var mData:Array<T>;
 	var mI:Int;
 	var mS:Int;
 	
-	public function new(f:PriorityQueue<T>)
+	public function new(que:PriorityQueue<T>)
 	{
-		mF = f;
+		mQue = que;
 		mData = new Array<T>();
 		mData[0] = null;
 		reset();
@@ -664,9 +676,9 @@ class PriorityQueueIterator<T:(Prioritizable)> implements de.polygonal.ds.Itr<T>
 	
 	inline public function reset():Itr<T>
 	{
-		mS = mF.size() + 1;
+		mS = mQue.size() + 1;
 		mI = 1;
-		var a = mF.mData;
+		var a = mQue.mData;
 		for (i in 1...mS) mData[i] = a[i];
 		return this;
 	}
@@ -685,10 +697,11 @@ class PriorityQueueIterator<T:(Prioritizable)> implements de.polygonal.ds.Itr<T>
 	{
 		assert(mI > 0, "call next() before removing an element");
 		
-		mF.remove(mData[mI - 1]);
+		mQue.remove(mData[mI - 1]);
 	}
 }
 
+@:dox(hide)
 private class PQElementWrapper<T:(Prioritizable)> implements Prioritizable
 {
 	public var priority:Float;

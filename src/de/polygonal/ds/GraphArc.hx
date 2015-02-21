@@ -21,47 +21,53 @@ package de.polygonal.ds;
 import de.polygonal.ds.error.Assert.assert;
 
 /**
- * <p>A graph arc represents an uni-directional link between two <em>GraphNode</em> objects.</p>
- * <p><em>GraphArc</em> objects are created and managed by the <em>Graph</em> class.</p>
- * <p><o>Worst-case running time in Big O notation</o></p>
- */
+	<h3>A graph arc represents an uni-directional link between two GraphNode objects.</h3>
+	
+	`GraphArc` objects are created and managed by the `Graph` class.
+	
+	<o>Worst-case running time in Big O notation</o>
+**/
 #if (flash && generic)
 @:generic
 #end
 class GraphArc<T> implements Hashable
 {
 	/**
-	 * A unique identifier for this object.<br/>
-	 * A hash table transforms this key into an index of an array element by using a hash function.<br/>
-	 * <warn>This value should never be changed by the user.</warn>
-	 */
+		A unique identifier for this object.
+		
+		A hash table transforms this key into an index of an array element by using a hash function.
+		
+		<warn>This value should never be changed by the user.</warn>
+	**/
 	public var key:Int;
 	
 	/**
-	 * The node that this arc points to.
-	 */
+		The node that this arc points to.
+	**/
 	public var node:GraphNode<T>;
 	
 	/**
-	 * The weight (or cost) of this arc.
-	 */
+		The weight (or cost) of this arc.
+	**/
 	public var cost:Float;
 	
 	/**
-	 * A reference to the next graph arc in the list.<br/>
-	 * The <em>GraphNode</em> class manages a doubly linked list of <em>GraphArc</em> objects.
-	 */
+		A reference to the next graph arc in the list.
+		
+		The `GraphNode` class manages a doubly linked list of `GraphArc` objects.
+	**/
 	public var next:GraphArc<T>;
 	
 	/**
-	 * A reference to the previous graph arc in the list.<br/>
-	 * The <em>GraphNode</em> class manages a doubly linked list of <em>GraphArc</em> objects.
-	 */
+		A reference to the previous graph arc in the list.
+		
+		The `GraphNode` class manages a doubly linked list of `GraphArc` objects.
+	**/
 	public var prev:GraphArc<T>;
 	
 	/**
-	 * Creates a graph arc pointing to <code>node</code> with a weight of <code>cost</code> .
-	 */
+		Creates a graph arc pointing to `node` with a weight of `cost` .
+	**/
 	public function new(node:GraphNode<T>, cost:Float)
 	{
 		this.node = node;
@@ -72,10 +78,11 @@ class GraphArc<T> implements Hashable
 	}
 	
 	/**
-	 * Destroys this object by explicitly nullifying the node and all pointers for GC'ing used resources.<br/>
-	 * Improves GC efficiency/performance (optional).
-	 * <o>1</o>
-	 */
+		Destroys this object by explicitly nullifying the node and all pointers for GC'ing used resources.
+		
+		Improves GC efficiency/performance (optional).
+		<o>1</o>
+	**/
 	public function free()
 	{
 		node = null;
@@ -83,8 +90,8 @@ class GraphArc<T> implements Hashable
 	}
 	
 	/**
-	 * Returns the data of the node that this arc points to.
-	 */
+		Returns the data of the node that this arc points to.
+	**/
 	inline public function val():T
 	{
 		return node.val;

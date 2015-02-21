@@ -21,15 +21,15 @@ package de.polygonal.ds;
 import de.polygonal.ds.error.Assert.assert;
 
 /**
- * <p>Generates unique, unsigned integer keys.</p>
- */
+	<h3>Generates unique, unsigned integer keys.</h3>
+**/
 class HashKey
 {
 	static var mCounter = 0;
 	
 	/**
-	 * Returns the next integer in a list of unique, unsigned integer keys.
-	 */
+		Returns the next integer in a list of unique, unsigned integer keys.
+	**/
 	inline public static function next():Int
 	{
 		#if debug

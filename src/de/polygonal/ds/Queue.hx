@@ -19,31 +19,35 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 package de.polygonal.ds;
 
 /**
- * <p>A queue is a First-In-First-Out (FIFO) data structure.</p>
- * <p>The first element added to the queue will be the first one to be removed.</p>
- * <p>The "opposite" of a queue is a stack.</p>
- */
+	<h3>A queue is a First-In-First-Out (FIFO) data structure.</h3>
+	
+	The first element added to the queue will be the first one to be removed.
+	
+	The "opposite" of a queue is a stack.
+**/
 interface Queue<T> extends Collection<T>
 {
 	/**
-	 * Inserts the element <code>x</code> at the back of the queue.
-	 */
+		Inserts the element `x` at the back of the queue.
+	**/
 	function enqueue(x:T):Void;
 	
 	/**
-	 * Removes and returns the element at the front of the queue.
-	 */
+		Removes and returns the element at the front of the queue.
+	**/
 	function dequeue():T;
 	
 	/**
-	 * Returns the element at the front of the queue.<br/>
-	 * This is the "oldest" element.
-	 */
+		Returns the element at the front of the queue.
+		
+		This is the "oldest" element.
+	**/
 	function peek():T;
 	
 	/**
-	 * Returns the element at the back of the queue.<br/>
-	 * This is the "newest" element.
-	 */
+		Returns the element at the back of the queue.
+		
+		This is the "newest" element.
+	**/
 	function back():T;
 }

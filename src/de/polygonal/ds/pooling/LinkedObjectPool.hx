@@ -21,19 +21,20 @@ package de.polygonal.ds.pooling;
 import de.polygonal.ds.error.Assert.assert;
 
 /**
- * <p>A dynamic object pool based on a doubly linked list.</p>
- * <p>See <a href="http://lab.polygonal.de/2008/06/18/using-object-pools/" target="mBlank">http://lab.polygonal.de/2008/06/18/using-object-pools/</a>.</p>
- */
+	A dynamic object pool based on a doubly linked list.
+	
+	See <a href="http://lab.polygonal.de/2008/06/18/using-object-pools/" target="mBlank">http://lab.polygonal.de/2008/06/18/using-object-pools/</a>.
+**/
 #if (flash && generic)
 @:generic
 #end
 class LinkedObjectPool<T> implements Hashable
 {
 	/**
-	 * A unique identifier for this object.<br/>
-	 * A hash table transforms this key into an index of an array element by using a hash function.<br/>
-	 * <warn>This value should never be changed by the user.</warn>
-	 */
+		A unique identifier for this object.
+		A hash table transforms this key into an index of an array element by using a hash function.
+		<warn>This value should never be changed by the user.</warn>
+	**/
 	public var key:Int;
 	
 	var mInitSize:Int;
@@ -48,15 +49,15 @@ class LinkedObjectPool<T> implements Hashable
 	
 	var mGrowable:Bool;
 	
-	var mC:Class<T>;
+	var mCl:Class<T>;
 	var mFabricate:Void->T;
 	var mFactory:Factory<T>;
 	
 	/**
-	 * Creates a <em>LinkedObjectPool</em> object capable of managing <code>x</code> pre-allocated objects.<br/>
-	 * Use <em>allocate()</em> to fill the pool.<br/>
-	 * @param growable if true, new objects are allocated the first time an object is requested while the pool being empty.
-	 */
+		Creates a `LinkedObjectPool` object capable of managing `x` pre-allocated objects.
+		Use `allocate()` to fill the pool.
+		@param growable if true, new objects are allocated the first time an object is requested while the pool being empty.
+	**/
 	public function new(x:Int, growable = false)
 	{
 		mInitSize = mCurrSize = x;
@@ -66,9 +67,9 @@ class LinkedObjectPool<T> implements Hashable
 	}
 	
 	/**
-	 * Destroys this object by explicitly nullifying all nodes, pointers and elements for GC'ing used resources.<br/>
-	 * Improves GC efficiency/performance (optional).
-	 */
+		Destroys this object by explicitly nullifying all nodes, pointers and elements for GC'ing used resources.
+		Improves GC efficiency/performance (optional).
+	**/
 	public function free()
 	{
 		var node = mHead;
@@ -81,40 +82,40 @@ class LinkedObjectPool<T> implements Hashable
 		}
 		mHead = mTail = mEmptyNode = mAllocNode = null;
 		
-		mC = null;
+		mCl = null;
 		mFabricate = null;
 		mFactory = null;
 	}
 	
 	/**
-	 * The total number of pre-allocated objects in the pool.
-	 */
+		The total number of pre-allocated objects in the pool.
+	**/
 	inline public function getSize():Int
 	{
 		return mCurrSize;
 	}
 	
 	/**
-	 * The number of used objects.
-	 */
+		The number of used objects.
+	**/
 	inline public function getUsageCount():Int
 	{
 		return mUsageCount;
 	}
 	
 	/**
-	 * The total number of unused thus wasted objects.<br/>
-	 * Use <em>purge()</em> to compact the pool.
-	 */
+		The total number of unused thus wasted objects.
+		Use `purge()` to compact the pool.
+	**/
 	inline public function getWasteCount():Int
 	{
 		return mCurrSize - mUsageCount;
 	}
 	
 	/**
-	 * Retrieves the next available object from the pool.
-	 * @throws de.polygonal.ds.error.AssertError object pool exhausted (debug only).
-	 */
+		Retrieves the next available object from the pool.
+		@throws de.polygonal.ds.error.AssertError object pool exhausted (debug only).
+	**/
 	inline public function get():T
 	{
 		if (mUsageCount == mCurrSize)
@@ -137,9 +138,9 @@ class LinkedObjectPool<T> implements Hashable
 	}
 	
 	/**
-	 * Recycles the object <code>o</code> so it can be reused by calling <em>get()</em>.
-	 * @throws de.polygonal.ds.error.AssertError object pool is full (debug only).
-	 */
+		Recycles the object `o` so it can be reused by calling `get()`.
+		@throws de.polygonal.ds.error.AssertError object pool is full (debug only).
+	**/
 	inline public function put(o:T)
 	{
 		assert(mUsageCount != 0, "object pool is full");
@@ -150,23 +151,23 @@ class LinkedObjectPool<T> implements Hashable
 	}
 	
 	/**
-	 * Allocates the pool.
-	 * @param C allocates objects by instantiating the class <code>C</code>.
-	 * @param fabricate allocates objects by calling <code>fabricate()</code>.
-	 * @param factory allocates objects by calling <code>factory</code>.<em>create()</em>.
-	 * @throws de.polygonal.ds.error.AssertError invalid arguments.
-	 */
-	public function allocate(C:Class<T> = null, fabricate:Void->T = null, factory:Factory<T> = null)
+		Allocates the pool.
+		@param cl allocates objects by instantiating the class `cl`.
+		@param fabricate allocates objects by calling `fabricate()`.
+		@param factory allocates objects by calling `factory`::`create()`.
+		@throws de.polygonal.ds.error.AssertError invalid arguments.
+	**/
+	public function allocate(cl:Class<T> = null, fabricate:Void->T = null, factory:Factory<T> = null)
 	{
 		free();
 		
-		assert(C != null || fabricate != null || factory != null, "invalid arguments");
+		assert(cl != null || fabricate != null || factory != null, "invalid arguments");
 		
 		var buffer = new Array<T>();
-		if (C != null)
+		if (cl != null)
 		{
 			for (i in 0...mInitSize)
-				buffer.push(Type.createInstance(C, []));
+				buffer.push(Type.createInstance(cl, []));
 		}
 		else
 		if (fabricate != null)
@@ -183,15 +184,15 @@ class LinkedObjectPool<T> implements Hashable
 		
 		fill(buffer);
 		
-		mC = C;
+		mCl = cl;
 		mFabricate = fabricate;
 		mFactory = factory;
 	}
 	
 	/**
-	 * Removes all unused objects from the pool.<br/>
-	 * If the number of remaining used objects is smaller than the initial capacity defined in the constructor, new objects are created to refill the pool.
-	 */
+		Removes all unused objects from the pool.
+		If the number of remaining used objects is smaller than the initial capacity defined in the constructor, new objects are created to refill the pool.
+	**/
 	public function purge()
 	{
 		if (mUsageCount == 0)
@@ -265,9 +266,9 @@ class LinkedObjectPool<T> implements Hashable
 	}
 	
 	/**
-	 * Returns a string representing the current object.<br/>
-	 * Prints out all object if compiled with the <em>-debug</em> directive.<br/>
-	 */
+		Returns a string representing the current object.
+		Prints out all object if compiled with the `-debug` directive.
+	**/
 	public function toString():String
 	{
 		#if debug
@@ -297,12 +298,12 @@ class LinkedObjectPool<T> implements Hashable
 		var n = mTail;
 		var t = mTail;
 		
-		if (mC != null)
+		if (mCl != null)
 		{
 			for (i in 0...mInitSize)
 			{
 				var node = new ObjNode<T>();
-				node.val = Type.createInstance(mC, []);
+				node.val = Type.createInstance(mCl, []);
 				t.next = node;
 				t = node;
 			}
@@ -366,9 +367,7 @@ class LinkedObjectPool<T> implements Hashable
 #if (flash && generic)
 @:generic
 #end
-#if doc
-private
-#end
+@:dox(hide)
 class ObjNode<T>
 {
 	public var next:ObjNode<T>;

@@ -19,29 +19,29 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 package de.polygonal.ds;
 
 /**
- * <p>Various comparison functions.</p>
- */
+	<h3>Various comparison functions.</h3>
+**/
 class Compare
 {
 	/**
-	 * Comparison function for sorting floats in descending order.
-	 */
+		Comparison function for sorting floats in descending order.
+	**/
 	public static function compareNumberFall<T>(a:Float, b:Float):Int
 	{
 		return Std.int(b - a);
 	}
 	
 	/**
-	 * Comparison function for sorting floats in ascending order.
-	 */
+		Comparison function for sorting floats in ascending order.
+	**/
 	public static function compareNumberRise<T>(a:Float, b:Float):Int
 	{
 		return Std.int(a - b);
 	}
 	
 	/**
-	 * Comparison function for sorting strings in case insensitive descending order.
-	 */
+		Comparison function for sorting strings in case insensitive descending order.
+	**/
 	public static function compareStringCaseInSensitiveFall(a:String, b:String):Int
 	{
 		a = a.toLowerCase();
@@ -63,16 +63,16 @@ class Compare
 	}
 	
 	/**
-	 * Comparison function for sorting strings in case insensitive ascending order.
-	 */
+		Comparison function for sorting strings in case insensitive ascending order.
+	**/
 	public static function compareStringCaseInSensitiveRise(a:String, b:String):Int
 	{
 		return compareStringCaseInSensitiveFall(b, a);
 	}
 	
 	/**
-	 * Comparison function for sorting strings in case sensitive descending order.
-	 */
+		Comparison function for sorting strings in case sensitive descending order.
+	**/
 	public static function compareStringCaseSensitiveFall(a:String, b:String):Int
 	{
 		if (a.length + b.length > 2)
@@ -91,16 +91,16 @@ class Compare
 	}
 	
 	/**
-	 * Comparison function for sorting strings in case sensitive ascending order.
-	 */
+		Comparison function for sorting strings in case sensitive ascending order.
+	**/
 	public static function compareStringCaseSensitiveRise(a:String, b:String):Int
 	{
 		return compareStringCaseSensitiveFall(b, a);
 	}
 	
 	/**
-	 * Comparison function for sorting strings in lexiographic order.
-	 */
+		Comparison function for sorting strings in lexiographic order.
+	**/
 	public static function lexiographic(a:String, b:String):Int
 	{
 		var ak = a.length;

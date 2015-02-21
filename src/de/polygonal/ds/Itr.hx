@@ -19,52 +19,58 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 package de.polygonal.ds;
 
 /**
- * <p>An iterator over a collection.</p>
- * Same as typedef <em>Iterator</em>&lt;T&gt; but augmented with a <em>reset()</em> method.
- */
+	<h3>An iterator over a collection.</h3>
+	
+	Same as typedef Iterator<T> but augmented with a reset() method.
+**/
 interface Itr<T>
 {
 	/**
-	 * Returns true if this iteration has more elements.
-	 * @see <a href="http://haxe.org/api/iterator" target="mBlank">http://haxe.org/api/iterator</a>
-	 */
+		Returns true if this iteration has more elements.
+		
+		See <a href="http://haxe.org/api/iterator" target="mBlank">http://haxe.org/api/iterator</a>
+	**/
 	function hasNext():Bool;
 	
 	/**
-	 * Returns the next element in this iteration.
-	 * @see <a href="http://haxe.org/api/iterator" target="mBlank">http://haxe.org/api/iterator</a>
-	 */
+		Returns the next element in this iteration.
+		
+		See <a href="http://haxe.org/api/iterator" target="mBlank">http://haxe.org/api/iterator</a>
+	**/
 	function next():T;
 	
 	/**
-	 * Removes the last element returned by the iterator from the collection.
-	 * Example:<br/>
-	 * <pre class="prettyprint">
-	 * var c:Collection&lt;String&gt; = new *&lt;String&gt;(...);
-	 * var itr = c.iterator();
-	 * while (itr.hasNext()) {
-	 *     var value = itr.next();
-	 *     itr.remove(); //removes value
-	 * }
-	 * trace(c.isEmpty()); //true
-	 * </pre>
-	 */
+		Removes the last element returned by the iterator from the collection.
+		
+		Example:
+		<pre class="prettyprint">
+		var c:Collection<String> = new Array2<String>(...);
+		var itr = c.iterator();
+		while (itr.hasNext()) {
+		    var value = itr.next();
+		    itr.remove(); //removes value
+		}
+		trace(c.isEmpty()); //true
+		</pre>
+	**/
 	function remove():Void;
 	
 	/**
-	 * Resets this iteration so the iterator points to the first element in the collection.<br/>
-	 * Improves performance if an iterator is frequently used.<br/>
-	 * Example:<br/>
-	 * <pre class="prettyprint">
-	 * var c:Collection&lt;String&gt; = new *&lt;String&gt;(...);
-	 * var itr = c.iterator();
-	 * for (i in 0...100) {
-	 *     itr.reset();
-	 *     for (element in itr) {
-	 *         trace(element);
-	 *     }
-	 * }
-	 * </pre>
-	 */
+		Resets this iteration so the iterator points to the first element in the collection.
+		
+		Improves performance if an iterator is frequently used.
+		
+		Example:
+		<pre class="prettyprint">
+		var c:Collection<String> = new Array2<String>(...);
+		var itr = c.iterator();
+		for (i in 0...100) {
+		    itr.reset();
+		    for (element in itr) {
+		        trace(element);
+		    }
+		}
+		</pre>
+	**/
 	function reset():Itr<T>;
 }

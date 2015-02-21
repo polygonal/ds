@@ -25,15 +25,15 @@ import de.polygonal.ds.error.Assert.assert;
 #end
 
 /**
- * <p>A bit-vector using fast "alchemy-memory" for data storage.</p>
- */
+	A bit-vector using fast "alchemy-memory" for data storage.
+**/
 class BitMemory extends MemoryAccess
 {
 	/**
-	 * Converts <code>input</code> to a <code>ByteArray</code> object.
-	 * <warn>The bytes are written in little endian format.</warn>
-	 * @throws de.polygonal.ds.error.AssertError memory deallocated (debug only).
-	 */
+		Converts `input` to a `ByteArray` object.
+		<warn>The bytes are written in little endian format.</warn>
+		@throws de.polygonal.ds.error.AssertError memory deallocated (debug only).
+	**/
 	#if flash
 	public static function toByteArray(input:BitMemory):flash.utils.ByteArray
 	{
@@ -61,10 +61,10 @@ class BitMemory extends MemoryAccess
 	#end
 	
 	/**
-	 * Converts <code>input</code> in the range &#091;<code>min</code>, <code>max</code>&#093; to a <em>ByteMemory</em> object.<br/>
-	 * If no range is specified, all <code>input</code> bytes are copied.
-	 * @throws de.polygonal.ds.error.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
-	 */
+		Converts `input` in the range [`min`, `max`] to a `ByteMemory` object.
+		If no range is specified, all `input` bytes are copied.
+		@throws de.polygonal.ds.error.AssertError invalid range, invalid `input` or memory deallocated (debug only).
+	**/
 	#if flash
 	public static function ofByteArray(input:flash.utils.ByteArray, min = -1, max = -1):BitMemory
 	{
@@ -99,10 +99,10 @@ class BitMemory extends MemoryAccess
 	#end
 	
 	/**
-	 * Converts <code>input</code> to a <code>BytesData</code> object.
-	 * <warn>The bytes are written in little endian format.</warn>
-	 * @throws de.polygonal.ds.error.AssertError memory deallocated (debug only).
-	 */
+		Converts `input` to a `BytesData` object.
+		<warn>The bytes are written in little endian format.</warn>
+		@throws de.polygonal.ds.error.AssertError memory deallocated (debug only).
+	**/
 	public static function toBytesData(input:BitMemory):haxe.io.BytesData
 	{
 		var output = new haxe.io.BytesOutput();
@@ -127,10 +127,10 @@ class BitMemory extends MemoryAccess
 	}
 	
 	/**
-	 * Converts <code>input</code> in the range &#091;<code>min</code>, <code>max</code>&#093; to a <em>ByteMemory</em> object.<br/>
-	 * If no range is specified, all <code>input</code> bytes are copied.
-	 * @throws de.polygonal.ds.error.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
-	 */
+		Converts `input` in the range [`min`, `max`] to a `ByteMemory` object.
+		If no range is specified, all `input` bytes are copied.
+		@throws de.polygonal.ds.error.AssertError invalid range, invalid `input` or memory deallocated (debug only).
+	**/
 	public static function ofBytesData(input:haxe.io.BytesData, min = -1, max = -1):BitMemory
 	{
 		assert(input != null, "invalid input");
@@ -190,9 +190,9 @@ class BitMemory extends MemoryAccess
 	}
 	
 	/**
-	 * Converts <code>input</code> to a <em>BitVector</em> object.
-	 * @throws de.polygonal.ds.error.AssertError memory deallocated (debug only).
-	 */
+		Converts `input` to a `BitVector` object.
+		@throws de.polygonal.ds.error.AssertError memory deallocated (debug only).
+	**/
 	public static function toBitVector(input:BitMemory):BitVector
 	{
 		var bytes = toBytesData(input);
@@ -206,13 +206,13 @@ class BitMemory extends MemoryAccess
 	#end
 	
 	/**
-	 * The size measured in bits.
-	 */
+		The size measured in bits.
+	**/
 	public var size(default, null):Int;
 	
 	/**
-	 * Creates a bit vector capable of storing a total of <code>size</code> bits.
-	 */
+		Creates a bit vector capable of storing a total of `size` bits.
+	**/
 	public function new(size:Int, name = "?")
 	{
 		super(((size & (32 - 1)) > 0 ? ((size >> 5) + 1) : (size >> 5)) << 2, name);
@@ -233,8 +233,8 @@ class BitMemory extends MemoryAccess
 	#end
 	
 	/**
-	 * Creates a deep copy of this object.
-	 */
+		Creates a deep copy of this object.
+	**/
 	public function clone():BitMemory
 	{
 		var c = new BitMemory(size, name);
@@ -251,9 +251,9 @@ class BitMemory extends MemoryAccess
 	}
 	
 	/**
-	 * Sets all bits to the value <code>x</code>.
-	 * @throws de.polygonal.ds.error.AssertError <code>x</code> is not 0 or 1 (debug only).
-	 */
+		Sets all bits to the value `x`.
+		@throws de.polygonal.ds.error.AssertError `x` is not 0 or 1 (debug only).
+	**/
 	public function fill(x:Int):BitMemory
 	{
 		assert(x == 0 || x == 1, "x == 0 || x == 1");
@@ -280,10 +280,10 @@ class BitMemory extends MemoryAccess
 	}
 	
 	/**
-	 * Adjusts the size of this object so it's capable of storing <code>newSize</code> bits.
-	 * @throws de.polygonal.ds.error.AssertError invalid size (debug only).
-	 * @throws de.polygonal.ds.error.AssertError memory was already deallocated (debug only).
-	 */
+		Adjusts the size of this object so it's capable of storing `newSize` bits.
+		@throws de.polygonal.ds.error.AssertError invalid size (debug only).
+		@throws de.polygonal.ds.error.AssertError memory was already deallocated (debug only).
+	**/
 	override public function resize(newSize:Int)
 	{
 		assert(newSize >= 0, 'invalid size ($newSize)');
@@ -302,10 +302,10 @@ class BitMemory extends MemoryAccess
 	}
 	
 	/**
-	 * Returns true if the bit at index <code>i</code> is 1.
-	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
-	 * @throws de.polygonal.ds.error.AssertError memory deallocated (debug only).
-	 */
+		Returns true if the bit at index `i` is 1.
+		@throws de.polygonal.ds.error.AssertError index out of range (debug only).
+		@throws de.polygonal.ds.error.AssertError memory deallocated (debug only).
+	**/
 	inline public function has(i:Int):Bool
 	{
 		#if alchemy
@@ -316,10 +316,10 @@ class BitMemory extends MemoryAccess
 	}
 	
 	/**
-	 * Returns 1 if the bit at index <code>i</code> is set, otherwise zero.
-	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
-	 * @throws de.polygonal.ds.error.AssertError memory deallocated (debug only).
-	 */
+		Returns 1 if the bit at index `i` is set, otherwise zero.
+		@throws de.polygonal.ds.error.AssertError index out of range (debug only).
+		@throws de.polygonal.ds.error.AssertError memory deallocated (debug only).
+	**/
 	inline public function get(i:Int):Int
 	{
 		#if alchemy
@@ -330,10 +330,10 @@ class BitMemory extends MemoryAccess
 	}
 	
 	/**
-	 * Sets the bit at index <code>i</code> to 1.
-	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
-	 * @throws de.polygonal.ds.error.AssertError memory deallocated (debug only).
-	 */
+		Sets the bit at index `i` to 1.
+		@throws de.polygonal.ds.error.AssertError index out of range (debug only).
+		@throws de.polygonal.ds.error.AssertError memory deallocated (debug only).
+	**/
 	inline public function set(i:Int)
 	{
 		var idx = getAddr(i);
@@ -345,10 +345,10 @@ class BitMemory extends MemoryAccess
 	}
 	
 	/**
-	 * Sets the bit at index <code>i</code> to 0.
-	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
-	 * @throws de.polygonal.ds.error.AssertError memory deallocated (debug only).
-	 */
+		Sets the bit at index `i` to 0.
+		@throws de.polygonal.ds.error.AssertError index out of range (debug only).
+		@throws de.polygonal.ds.error.AssertError memory deallocated (debug only).
+	**/
 	inline public function clr(i:Int)
 	{
 		var idx = getAddr(i);
@@ -360,9 +360,9 @@ class BitMemory extends MemoryAccess
 	}
 	
 	/**
-	 * Sets all bits to 0.
-	 * @throws de.polygonal.ds.error.AssertError memory deallocated (debug only).
-	 */
+		Sets all bits to 0.
+		@throws de.polygonal.ds.error.AssertError memory deallocated (debug only).
+	**/
 	inline public function clrAll()
 	{
 		#if alchemy
@@ -373,9 +373,9 @@ class BitMemory extends MemoryAccess
 	}
 	
 	/**
-	 * Sets all bits to 1.
-	 * @throws de.polygonal.ds.error.AssertError memory deallocated (debug only).
-	 */
+		Sets all bits to 1.
+		@throws de.polygonal.ds.error.AssertError memory deallocated (debug only).
+	**/
 	inline public function setAll()
 	{
 		#if alchemy
@@ -386,20 +386,20 @@ class BitMemory extends MemoryAccess
 	}
 	
 	/**
-	 * Sets the bit at index <code>i</code> to 1 if <code>cond</code> is true or clears the bit at index <code>i</code> if <code>cond</code> is false.
-	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
-	 * @throws de.polygonal.ds.error.AssertError memory deallocated (debug only).
-	 */
+		Sets the bit at index `i` to 1 if `cond` is true or clears the bit at index `i` if `cond` is false.
+		@throws de.polygonal.ds.error.AssertError index out of range (debug only).
+		@throws de.polygonal.ds.error.AssertError memory deallocated (debug only).
+	**/
 	inline public function ofBool(i:Int, cond:Bool)
 	{
 		cond ? set(i) : clr(i);
 	}
 	
 	/**
-	 * Returns the memory byte offset for the byte storing the bit at index <code>i</code>.
-	 * @throws de.polygonal.ds.error.AssertError segmentation fault (debug only).
-	 * @throws de.polygonal.ds.error.AssertError memory deallocated (debug only).
-	 */
+		Returns the memory byte offset for the byte storing the bit at index `i`.
+		@throws de.polygonal.ds.error.AssertError segmentation fault (debug only).
+		@throws de.polygonal.ds.error.AssertError memory deallocated (debug only).
+	**/
 	inline public function getAddr(i:Int):Int
 	{
 		assert(i >= 0 && i < size, 'segfault, index $i');
@@ -420,24 +420,25 @@ class BitMemory extends MemoryAccess
 	#end
 	
 	/**
-	 * Returns a string representing the current object.<br/>
-	 * Prints out all elements if compiled with the <em>-debug</em> directive.<br/>
-	 * Example:<br/>
-	 * <pre class="prettyprint">
-	 * var mem = new de.polygonal.ds.mem.BitMemory(32);
-	 * for (i in 0...16) {
-	 *     mem.set(i);
-	 * }
-	 * for (i in 16...32) {
-	 *     mem.clr(i);
-	 * }
-	 * trace(mem);</pre>
-	 * <pre class="console">
-	 * { BitMemory size: 32 }
-	 * [
-	 *   0 -> 11111111111111110000000000000000
-	 * ]</pre>
-	 */
+		Returns a string representing the current object.
+		Prints out all elements if compiled with the `-debug` directive.
+		
+		Example:
+		<pre class="prettyprint">
+		var mem = new de.polygonal.ds.mem.BitMemory(32);
+		for (i in 0...16) {
+		    mem.set(i);
+		}
+		for (i in 16...32) {
+		    mem.clr(i);
+		}
+		trace(mem);</pre>
+		<pre class="console">
+		{ BitMemory size: 32 }
+		[
+		  0 -> 11111111111111110000000000000000
+		]</pre>
+	**/
 	public function toString():String
 	{
 		#if debug

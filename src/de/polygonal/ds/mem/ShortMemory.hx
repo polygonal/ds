@@ -25,18 +25,18 @@ import de.polygonal.ds.error.Assert.assert;
 #end
 
 /**
- * <p>A chunk of "alchemy memory" for storing 16-bit signed integers.</p>
- */
+	A chunk of "alchemy memory" for storing 16-bit signed integers.
+**/
 class ShortMemory extends MemoryAccess
 {
 	/**
-	 * Converts <code>input</code> in the range &#091;<code>min</code>, <code>max</code>&#093; to a byte array.<br/>
-	 * If no range is specified, all <code>input</code> bytes are copied.<br/>
-	 * <warn>The bytes are written in little endian format.</warn>
-	 * @param min index pointing to the first short.
-	 * @param max index pointing to the last short.
-	 * @throws de.polygonal.ds.error.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
-	 */
+		Converts `input` in the range [`min`, `max`] to a byte array.
+		If no range is specified, all `input` bytes are copied.
+		<warn>The bytes are written in little endian format.</warn>
+		@param min index pointing to the first short.
+		@param max index pointing to the last short.
+		@throws de.polygonal.ds.error.AssertError invalid range, invalid `input` or memory deallocated (debug only).
+	**/
 	#if flash
 	public static function toByteArray(input:ShortMemory, min = -1, max = -1):flash.utils.ByteArray
 	{
@@ -70,12 +70,12 @@ class ShortMemory extends MemoryAccess
 	#end
 	
 	/**
-	 * Converts <code>input</code> in the range &#091;<code>min</code>, <code>max</code>&#093; to a <em>ShortMemory</em> object.<br/>
-	 * If no range is specified, all <code>input</code> bytes are copied.
-	 * @param min index pointing to the byte storing the first short.
-	 * @param min index pointing to the byte storing the last short.
-	 * @throws de.polygonal.ds.error.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
-	 */
+		Converts `input` in the range [`min`, `max`] to a `ShortMemory` object.
+		If no range is specified, all `input` bytes are copied.
+		@param min index pointing to the byte storing the first short.
+		@param min index pointing to the byte storing the last short.
+		@throws de.polygonal.ds.error.AssertError invalid range, invalid `input` or memory deallocated (debug only).
+	**/
 	#if flash
 	public static function ofByteArray(input:flash.utils.ByteArray, min = -1, max = -1):ShortMemory
 	{
@@ -97,13 +97,13 @@ class ShortMemory extends MemoryAccess
 	#end
 	
 	/**
-	 * Converts <code>input</code> in the range &#091;<code>min</code>, <code>max</code>&#093; to a byte array.<br/>
-	 * If no range is specified, all <code>input</code> bytes are copied.<br/>
-	 * <warn>The bytes are written in little endian format.</warn>
-	 * @param min index pointing to the first short.
-	 * @param max index pointing to the last short.
-	 * @throws de.polygonal.ds.error.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
-	 */
+		Converts `input` in the range [`min`, `max`] to a byte array.
+		If no range is specified, all `input` bytes are copied.
+		<warn>The bytes are written in little endian format.</warn>
+		@param min index pointing to the first short.
+		@param max index pointing to the last short.
+		@throws de.polygonal.ds.error.AssertError invalid range, invalid `input` or memory deallocated (debug only).
+	**/
 	public static function toBytesData(input:ShortMemory, min = -1, max = -1):haxe.io.BytesData
 	{
 		assert(input != null, "invalid input");
@@ -122,12 +122,12 @@ class ShortMemory extends MemoryAccess
 	}
 	
 	/**
-	 * Converts <code>input</code> in the range &#091;<code>min</code>, <code>max</code>&#093; to a <em>ShortMemory</em> object.<br/>
-	 * If no range is specified, all <code>input</code> bytes are copied.
-	 * @param min index pointing to the byte storing the first short.
-	 * @param min index pointing to the byte storing the last short.
-	 * @throws de.polygonal.ds.error.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
-	 */
+		Converts `input` in the range [`min`, `max`] to a `ShortMemory` object.
+		If no range is specified, all `input` bytes are copied.
+		@param min index pointing to the byte storing the first short.
+		@param min index pointing to the byte storing the last short.
+		@throws de.polygonal.ds.error.AssertError invalid range, invalid `input` or memory deallocated (debug only).
+	**/
 	public static function ofBytesData(input:haxe.io.BytesData, min = -1, max = -1):ShortMemory
 	{
 		assert(input != null, "invalid input");
@@ -158,12 +158,12 @@ class ShortMemory extends MemoryAccess
 	}
 	
 	/**
-	 * Converts <code>input</code> in the range &#091;<code>min</code>, <code>max</code>&#093; to an array.<br/>
-	 * If no range is specified, all <code>input</code> bytes are copied.
-	 * @param min index pointing to the first short.
-	 * @param max index pointing to the last short.
-	 * @throws de.polygonal.ds.error.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
-	 */
+		Converts `input` in the range [`min`, `max`] to an array.
+		If no range is specified, all `input` bytes are copied.
+		@param min index pointing to the first short.
+		@param max index pointing to the last short.
+		@throws de.polygonal.ds.error.AssertError invalid range, invalid `input` or memory deallocated (debug only).
+	**/
 	public static function toArray(input:ShortMemory, min = -1, max = -1):Array<Int>
 	{
 		assert(input != null, "invalid input");
@@ -193,12 +193,12 @@ class ShortMemory extends MemoryAccess
 	}
 	
 	/**
-	 * Converts <code>input</code> in the range &#091;<code>min</code>, <code>max</code>&#093; to a <em>ShortMemory</em> object.<br/>
-	 * If no range is specified, all <code>input</code> values are copied.
-	 * @param min index pointing to the first short.
-	 * @param max index pointing to the last short.
-	 * @throws de.polygonal.ds.error.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
-	 */
+		Converts `input` in the range [`min`, `max`] to a `ShortMemory` object.
+		If no range is specified, all `input` values are copied.
+		@param min index pointing to the first short.
+		@param max index pointing to the last short.
+		@throws de.polygonal.ds.error.AssertError invalid range, invalid `input` or memory deallocated (debug only).
+	**/
 	public static function ofArray(input:Array<Int>, min = -1, max = -1):ShortMemory
 	{
 		assert(input != null, "invalid input");
@@ -216,13 +216,13 @@ class ShortMemory extends MemoryAccess
 	}
 	
 	/**
-	 * Converts <code>input</code> in the range &#091;<code>min</code>, <code>max</code>&#093; to a vector object.<br/>
-	 * If no range is specified, all <code>input</code> bytes are copied.
-	 * @param min index pointing to the first short.
-	 * @param max index pointing to the last short.
-	 * @param output the <code>Vector</code> object to write into. If null, a new Vector object is created on-the-fly.
-	 * @throws de.polygonal.ds.error.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
-	 */
+		Converts `input` in the range [`min`, `max`] to a vector object.
+		If no range is specified, all `input` bytes are copied.
+		@param min index pointing to the first short.
+		@param max index pointing to the last short.
+		@param output the `Vector` object to write into. If null, a new Vector object is created on-the-fly.
+		@throws de.polygonal.ds.error.AssertError invalid range, invalid `input` or memory deallocated (debug only).
+	**/
 	public static function toVector(input:ShortMemory, min = -1, max = -1, output:Vector<Int> = null):Vector<Int>
 	{
 		assert(input != null, "invalid input");
@@ -259,12 +259,12 @@ class ShortMemory extends MemoryAccess
 	}
 	
 	/**
-	 * Converts <code>input</code> in the range &#091;<code>min</code>, <code>max</code>&#093; to a vector object.<br/>
-	 * If no range is specified, all <code>input</code> bytes are copied.
-	 * @param min index pointing to the first short.
-	 * @param max index pointing to the last short.
-	 * @throws de.polygonal.ds.error.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
-	 */
+		Converts `input` in the range [`min`, `max`] to a vector object.
+		If no range is specified, all `input` bytes are copied.
+		@param min index pointing to the first short.
+		@param max index pointing to the last short.
+		@throws de.polygonal.ds.error.AssertError invalid range, invalid `input` or memory deallocated (debug only).
+	**/
 	public static function toUnsignedVector(input:ShortMemory, min = -1, max = -1):Vector<UInt>
 	{
 		assert(input != null, "invalid input");
@@ -295,12 +295,12 @@ class ShortMemory extends MemoryAccess
 	}
 	
 	/**
-	 * Converts <code>input</code> in the range &#091;<code>min</code>, <code>max</code>&#093; to a <em>ShortMemory</em> object.<br/>
-	 * If no range is specified, all <code>input</code> values are copied.
-	 * @param min index pointing to the first short.
-	 * @param max index pointing to the last short.
-	 * @throws de.polygonal.ds.error.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
-	 */
+		Converts `input` in the range [`min`, `max`] to a `ShortMemory` object.
+		If no range is specified, all `input` values are copied.
+		@param min index pointing to the first short.
+		@param max index pointing to the last short.
+		@throws de.polygonal.ds.error.AssertError invalid range, invalid `input` or memory deallocated (debug only).
+	**/
 	public static function ofVector(input:Vector<Int>, min = -1, max = -1):ShortMemory
 	{
 		assert(input != null, "invalid input");
@@ -322,13 +322,13 @@ class ShortMemory extends MemoryAccess
 	#end
 	
 	/**
-	 * The size measured in bytes.
-	 */
+		The size measured in bytes.
+	**/
 	public var size(default, null):Int;
 	
 	/**
-	 * Creates a byte array capable of storing a total of <code>size</code> shorts.
-	 */
+		Creates a byte array capable of storing a total of `size` shorts.
+	**/
 	public function new(size:Int, name = "?")
 	{
 		super(size << 1, name);
@@ -348,8 +348,8 @@ class ShortMemory extends MemoryAccess
 	#end
 	
 	/**
-	 * Creates a deep copy of this object.
-	 */
+		Creates a deep copy of this object.
+	**/
 	public function clone():ShortMemory
 	{
 		var c = new ShortMemory(bytes >> 1, name);
@@ -366,8 +366,8 @@ class ShortMemory extends MemoryAccess
 	}
 	
 	/**
-	 * Sets all shorts to the value <code>x</code>.
-	 */
+		Sets all shorts to the value `x`.
+	**/
 	public function fill(x:Int):ShortMemory
 	{
 		#if alchemy
@@ -394,10 +394,10 @@ class ShortMemory extends MemoryAccess
 	}
 	
 	/**
-	 * Adjusts the size of this object so it's capable of storing <code>newSize</code> shorts.
-	 * @throws de.polygonal.ds.error.AssertError invalid size (debug only).
-	 * @throws de.polygonal.ds.error.AssertError memory was already deallocated (debug only).
-	 */
+		Adjusts the size of this object so it's capable of storing `newSize` shorts.
+		@throws de.polygonal.ds.error.AssertError invalid size (debug only).
+		@throws de.polygonal.ds.error.AssertError memory was already deallocated (debug only).
+	**/
 	override public function resize(newSize:Int)
 	{
 		assert(newSize >= 0, 'invalid size ($newSize)');
@@ -414,10 +414,10 @@ class ShortMemory extends MemoryAccess
 	}
 	
 	/**
-	 * Returns the short at index <code>i</code>.
-	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
-	 * @throws de.polygonal.ds.error.AssertError memory deallocated (debug only).
-	 */
+		Returns the short at index `i`.
+		@throws de.polygonal.ds.error.AssertError index out of range (debug only).
+		@throws de.polygonal.ds.error.AssertError memory deallocated (debug only).
+	**/
 	inline public function get(i:Int):Int
 	{
 		#if alchemy
@@ -428,10 +428,10 @@ class ShortMemory extends MemoryAccess
 	}
 	
 	/**
-	 * Replaces the short at the index <code>i</code> with the short <code>x</code>.
-	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
-	 * @throws de.polygonal.ds.error.AssertError memory deallocated (debug only).
-	 */
+		Replaces the short at the index `i` with the short `x`.
+		@throws de.polygonal.ds.error.AssertError index out of range (debug only).
+		@throws de.polygonal.ds.error.AssertError memory deallocated (debug only).
+	**/
 	inline public function set(i:Int, x:Int)
 	{
 		#if alchemy
@@ -442,10 +442,10 @@ class ShortMemory extends MemoryAccess
 	}
 	
 	/**
-	 * Swaps the short at index <code>i</code> with the short at index <code>j</code>.
-	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
-	 * @throws de.polygonal.ds.error.AssertError <code>i</code> equals <code>j</code> (debug only).
-	 */
+		Swaps the short at index `i` with the short at index `j`.
+		@throws de.polygonal.ds.error.AssertError index out of range (debug only).
+		@throws de.polygonal.ds.error.AssertError `i` equals `j` (debug only).
+	**/
 	inline public function swp(i:Int, j:Int)
 	{
 		assert(i != j, 'i equals j ($i)');
@@ -462,10 +462,10 @@ class ShortMemory extends MemoryAccess
 	}
 	
 	/**
-	 * Returns the memory byte offset of the first byte storing the short at index <code>i</code>.
-	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
-	 * @throws de.polygonal.ds.error.AssertError memory deallocated (debug only).
-	 */
+		Returns the memory byte offset of the first byte storing the short at index `i`.
+		@throws de.polygonal.ds.error.AssertError index out of range (debug only).
+		@throws de.polygonal.ds.error.AssertError memory deallocated (debug only).
+	**/
 	inline public function getAddr(i:Int):Int
 	{
 		assert(i >= 0 && i < size, 'segfault, index $i');
@@ -486,24 +486,25 @@ class ShortMemory extends MemoryAccess
 	#end
 	
 	/**
-	 * Returns a string representing the current object.<br/>
-	 * Prints out all elements if compiled with the <em>-debug</em> directive.<br/>
-	 * Example:<br/>
-	 * <pre class="prettyprint">
-	 * var mem = new new de.polygonal.ds.mem.ShortMemory(4);
-	 * for (i in 0...4) {
-	 *     mem.set(i, i);
-	 * }
-	 * trace(mem);</pre>
-	 * <pre class="console">
-	 * { ShortMemory size: 4 }
-	 * [
-	 *   0 -> 0
-	 *   1 -> 1
-	 *   2 -> 2
-	 *   3 -> 3
-	 * ]</pre>
-	 */
+		Returns a string representing the current object.
+		Prints out all elements if compiled with the `-debug` directive.
+		
+		Example:
+		<pre class="prettyprint">
+		var mem = new new de.polygonal.ds.mem.ShortMemory(4);
+		for (i in 0...4) {
+		    mem.set(i, i);
+		}
+		trace(mem);</pre>
+		<pre class="console">
+		{ ShortMemory size: 4 }
+		[
+		  0 -> 0
+		  1 -> 1
+		  2 -> 2
+		  3 -> 3
+		]</pre>
+	**/
 	public function toString():String
 	{
 		#if debug

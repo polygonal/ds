@@ -19,22 +19,22 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 package de.polygonal.ds;
 
 /**
- * <p>An object that can be cloned by calling object.<em>clone()</em>.</p>
- * <p>Example:</p>
- * <pre class="prettyprint">
- * class Foo implements de.polygonal.ds.Cloneable&lt;Foo&gt;
- * {
- *     public function new() {}
- *
- *     public function clone():Foo {
- *         return new Foo();
- *     }
- * }</pre>
- */
+	<h3>An object that can be cloned by calling object::clone().</h3>
+	
+	Example:
+	<pre class="prettyprint">
+	class Foo implements de.polygonal.ds.Cloneable<Foo>
+	{
+	    public function new() {}
+	    public function clone():Foo {
+	        return new Foo();
+	    }
+	}</pre>
+**/
 interface Cloneable<T>
 {
 	/**
-	 * Returns a copy of this object.
-	 */
+		Returns a copy of this object.
+	**/
 	function clone():T;
 }

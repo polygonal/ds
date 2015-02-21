@@ -21,37 +21,40 @@ package de.polygonal.ds;
 import de.polygonal.ds.error.Assert.assert;
 
 /**
- * <p>A doubly linked list node.</p>
- * <p>Each node wraps an element and stores a reference to the next and previous list node.</p>
- * <p><em>DLLNode</em> objects are created and managed by the <em>DLL</em> class.</p>
- * <p><o>Worst-case running time in Big O notation</o></p>
- */
+	<h3>A doubly linked list node.</h3>
+	
+	Each node wraps an element and stores a reference to the next and previous list node.
+	
+	`DLLNode` objects are created and managed by the `DLL` class.
+	
+	<o>Worst-case running time in Big O notation</o>
+**/
 #if (flash && generic)
 @:generic
 #end
 class DLLNode<T>
 {
 	/**
-	 * The node's data.
-	 */
+		The node's data.
+	**/
 	public var val:T;
 	
 	/**
-	 * The next node in the list being referenced or null if this node has no next node.
-	 */
+		The next node in the list being referenced or null if this node has no next node.
+	**/
 	public var next:DLLNode<T>;
 	
 	/**
-	 * The previous node in the list being referenced or null if this node has no previous node.
-	 */
+		The previous node in the list being referenced or null if this node has no previous node.
+	**/
 	public var prev:DLLNode<T>;
 	
 	var mList:DLL<T>;
 	
 	/**
-	 * @param x the element to store in this node.
-	 * @param list the list storing this node.
-	 */
+		@param x the element to store in this node.
+		@param list the list storing this node.
+	**/
 	public function new(x:T, list:DLL<T>)
 	{
 		val = x;
@@ -59,10 +62,11 @@ class DLLNode<T>
 	}
 	
 	/**
-	 * Destroys this object by explicitly nullifying all pointers and elements for GC'ing used resources.<br/>
-	 * Improves GC efficiency/performance (optional).
-	 * <o>1</o>
-	 */
+		Destroys this object by explicitly nullifying all pointers and elements for GC'ing used resources.
+		
+		Improves GC efficiency/performance (optional).
+		<o>1</o>
+	**/
 	public function free()
 	{
 		val = cast null;
@@ -71,10 +75,10 @@ class DLLNode<T>
 	}
 	
 	/**
-	 * Returns true if this node is the head of a list.
-	 * <o>1</o>
-	 * @throws de.polygonal.ds.error.AssertError node is not managed by a list (debug only).
-	 */
+		Returns true if this node is the head of a list.
+		<o>1</o>
+		@throws de.polygonal.ds.error.AssertError node is not managed by a list (debug only).
+	**/
 	inline public function isHead():Bool
 	{
 		assert(mList != null, "node is not managed by a list");
@@ -83,10 +87,10 @@ class DLLNode<T>
 	}
 	
 	/**
-	 * Returns true if this node is the tail of a list.
-	 * <o>1</o>
-	 * @throws de.polygonal.ds.error.AssertError node is not managed by a list (debug only).
-	 */
+		Returns true if this node is the tail of a list.
+		<o>1</o>
+		@throws de.polygonal.ds.error.AssertError node is not managed by a list (debug only).
+	**/
 	inline public function isTail():Bool
 	{
 		assert(mList != null, "node is not managed by a list");
@@ -95,28 +99,28 @@ class DLLNode<T>
 	}
 	
 	/**
-	 * Returns true if this node points to a next node.
-	 * <o>1</o>
-	 */
+		Returns true if this node points to a next node.
+		<o>1</o>
+	**/
 	inline public function hasNext():Bool
 	{
 		return next != null;
 	}
 	
 	/**
-	 * Returns true if this node points to a previous node.
-	 * <o>1</o>
-	 */
+		Returns true if this node points to a previous node.
+		<o>1</o>
+	**/
 	inline public function hasPrev():Bool
 	{
 		return prev != null;
 	}
 	
 	/**
-	 * Returns the element of the next node.
-	 * <o>1</o>
-	 * @throws de.polygonal.ds.error.AssertError next node is null (debug only).
-	 */
+		Returns the element of the next node.
+		<o>1</o>
+		@throws de.polygonal.ds.error.AssertError next node is null (debug only).
+	**/
 	inline public function nextVal():T
 	{
 		assert(hasNext(), "next node is null");
@@ -125,10 +129,10 @@ class DLLNode<T>
 	}
 	
 	/**
-	 * Returns the element of the previous node.
-	 * <o>1</o>
-	 * @throws de.polygonal.ds.error.AssertError previous node is null (debug only).
-	 */
+		Returns the element of the previous node.
+		<o>1</o>
+		@throws de.polygonal.ds.error.AssertError previous node is null (debug only).
+	**/
 	inline public function prevVal():T
 	{
 		assert(hasPrev(), "previous node is null");
@@ -137,19 +141,19 @@ class DLLNode<T>
 	}
 	
 	/**
-	 * The list that owns this node or null if this node is not part of a list.
-	 * <o>1</o>
-	 */
+		The list that owns this node or null if this node is not part of a list.
+		<o>1</o>
+	**/
 	inline public function getList():DLL<T>
 	{
 		return mList;
 	}
 	
 	/**
-	 * Unlinks this node from its list and returns node.<em>next</em>.
-	 * <o>1</o>
-	 * @throws de.polygonal.ds.error.AssertError list is null (debug only).
-	 */
+		Unlinks this node from its list and returns node.`next`.
+		<o>1</o>
+		@throws de.polygonal.ds.error.AssertError list is null (debug only).
+	**/
 	inline public function unlink():DLLNode<T>
 	{
 		assert(mList != null);
@@ -158,20 +162,22 @@ class DLLNode<T>
 	}
 	
 	/**
-	 * Prepends <code>node</code> to this node assuming this is the <warn>head</warn> node of a list.<br/>
-	 * Useful for updating a list which is not managed by a <em>DLL</em> object.<br/>
-	 * Example:<br/>
-	 * <pre class="prettyprint">
-	 * var a = new DLLNode&lt;Int&gt;(0, null);
-	 * var b = new DLLNode&lt;Int&gt;(1, null);
-	 * var head = b.prepend(a);
-	 * trace(head.val); //0
-	 * trace(head.nextVal()); //1</pre>
-	 * <o>1</o>
-	 * @return the list's new head node.
-	 * @throws de.polygonal.ds.error.AssertError <code>node</code> is null or managed by a list.
-	 * @throws de.polygonal.ds.error.AssertError <code>node</code>.<em>prev</em> exists (debug only).
-	 */
+		Prepends `node` to this node assuming this is the <warn>head</warn> node of a list.
+		
+		Useful for updating a list which is not managed by a `DLL` object.
+		
+		Example:
+		<pre class="prettyprint">
+		var a = new DLLNode<Int>(0, null);
+		var b = new DLLNode<Int>(1, null);
+		var head = b.prepend(a);
+		trace(head.val); //0
+		trace(head.nextVal()); //1</pre>
+		<o>1</o>
+		@return the list's new head node.
+		@throws de.polygonal.ds.error.AssertError `node` is null or managed by a list.
+		@throws de.polygonal.ds.error.AssertError `node`::`prev` exists (debug only).
+	**/
 	inline public function prepend(node:DLLNode<T>):DLLNode<T>
 	{
 		assert(node != null, "node is null");
@@ -184,20 +190,22 @@ class DLLNode<T>
 	}
 	
 	/**
-	 * Appends <code>node</code> to this node assuming this is the <warn>tail</warn> node of a list.<br/>
-	 * Useful for updating a list which is not managed by a <em>DLL</em> object.<br/>
-	 * Example:<br/>
-	 * <pre class="prettyprint">
-	 * var a = new DLLNode&lt;Int&gt;(0, null);
-	 * var b = new DLLNode&lt;Int&gt;(1, null);
-	 * var tail = a.append(b);
-	 * trace(tail.val); //1
-	 * trace(tail.prevVal()); //0</pre>
-	 * <o>1</o>
-	 * @return the list's new tail node.
-	 * @throws de.polygonal.ds.error.AssertError <code>node</code> is null or managed by a list.
-	 * @throws de.polygonal.ds.error.AssertError <code>node</code>.<em>next</em> exists (debug only).
-	 */
+		Appends `node` to this node assuming this is the <warn>tail</warn> node of a list.
+		
+		Useful for updating a list which is not managed by a `DLL` object.
+		
+		Example:
+		<pre class="prettyprint">
+		var a = new DLLNode<Int>(0, null);
+		var b = new DLLNode<Int>(1, null);
+		var tail = a.append(b);
+		trace(tail.val); //1
+		trace(tail.prevVal()); //0</pre>
+		<o>1</o>
+		@return the list's new tail node.
+		@throws de.polygonal.ds.error.AssertError `node` is null or managed by a list.
+		@throws de.polygonal.ds.error.AssertError `node`::`next` exists (debug only).
+	**/
 	inline public function append(node:DLLNode<T>):DLLNode<T>
 	{
 		assert(node != null, "node is null");
@@ -210,20 +218,22 @@ class DLLNode<T>
 	}
 	
 	/**
-	 * Prepends this node to <code>node</code> assuming <code>node</code> is the <warn>head</warn> node of a list.<br/>
-	 * Useful for updating a list which is not managed by a <em>DLL</em> object.
-	 * Example:<br/>
-	 * <pre class="prettyprint">
-	 * var a = new DLLNode&lt;Int&gt;(0, null);
-	 * var b = new DLLNode&lt;Int&gt;(1, null);
-	 * var head = a.prependTo(b);
-	 * trace(head.val); //0
-	 * trace(head.nextVal()); //1</pre>
-	 * <o>1</o>
-	 * @return the list's new head node.
-	 * @throws de.polygonal.ds.error.AssertError <code>node</code> is null or managed by a list (debug only).
-	 * @throws de.polygonal.ds.error.AssertError <code>node</code>.<em>prev</em> exists (debug only).
-	 */
+		Prepends this node to `node` assuming `node` is the <warn>head</warn> node of a list.
+		
+		Useful for updating a list which is not managed by a `DLL` object.
+		
+		Example:
+		<pre class="prettyprint">
+		var a = new DLLNode<Int>(0, null);
+		var b = new DLLNode<Int>(1, null);
+		var head = a.prependTo(b);
+		trace(head.val); //0
+		trace(head.nextVal()); //1</pre>
+		<o>1</o>
+		@return the list's new head node.
+		@throws de.polygonal.ds.error.AssertError `node` is null or managed by a list (debug only).
+		@throws de.polygonal.ds.error.AssertError `node`::`prev` exists (debug only).
+	**/
 	inline public function prependTo(node:DLLNode<T>):DLLNode<T>
 	{
 		assert(node != null, "node is null");
@@ -236,20 +246,22 @@ class DLLNode<T>
 	}
 	
 	/**
-	 * Appends this node to <code>node</code> assuming <code>node</code> is the <warn>tail</warn> node of a list.<br/>
-	 * Useful for updating a list which is not managed by a <em>DLL</em> object.<br/>
-	 * Example:<br/>
-	 * <pre class="prettyprint">
-	 * var a = new DLLNode&lt;Int&gt;(0, null);
-	 * var b = new DLLNode&lt;Int&gt;(1, null);
-	 * var tail = b.appendTo(a);
-	 * trace(tail.val); //1
-	 * trace(tail.prevVal()); //0</pre>
-	 * <o>1</o>
-	 * @return the list's new tail node.
-	 * @throws de.polygonal.ds.error.AssertError <code>node</code> is null or managed by a list (debug only).
-	 * @throws de.polygonal.ds.error.AssertError <code>node</code>.<em>next</em> exists (debug only).
-	 */
+		Appends this node to `node` assuming `node` is the <warn>tail</warn> node of a list.
+		
+		Useful for updating a list which is not managed by a `DLL` object.
+		
+		Example:
+		<pre class="prettyprint">
+		var a = new DLLNode<Int>(0, null);
+		var b = new DLLNode<Int>(1, null);
+		var tail = b.appendTo(a);
+		trace(tail.val); //1
+		trace(tail.prevVal()); //0</pre>
+		<o>1</o>
+		@return the list's new tail node.
+		@throws de.polygonal.ds.error.AssertError `node` is null or managed by a list (debug only).
+		@throws de.polygonal.ds.error.AssertError `node`::`next` exists (debug only).
+	**/
 	inline public function appendTo(node:DLLNode<T>):DLLNode<T>
 	{
 		assert(node != null, "node is null");
@@ -262,8 +274,8 @@ class DLLNode<T>
 	}
 	
 	/**
-	 * Returns a string representing the current object.
-	 */
+		Returns a string representing the current object.
+	**/
 	public function toString():String
 	{
 		return '{ DLLNode ${Std.string(val)} }';

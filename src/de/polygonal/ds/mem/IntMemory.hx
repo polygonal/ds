@@ -25,18 +25,18 @@ import de.polygonal.ds.error.Assert.assert;
 #end
 
 /**
- * <p>A chunk of "alchemy memory" for storing 32-bit signed integers.</p>
- */
+	A chunk of "alchemy memory" for storing 32-bit signed integers.
+**/
 class IntMemory extends MemoryAccess
 {
 	/**
-	 * Converts <code>input</code> in the range &#091;<code>min</code>, <code>max</code>&#093; to a byte array.
-	 * If no range is specified, all <code>input</code> bytes are copied.<br/>
-	 * <warn>The bytes are written in little endian format.</warn>
- 	 * @param min index pointing to the first integer.
-	 * @param max index pointing to the last integer.
-	 * @throws de.polygonal.ds.error.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
-	 */
+		Converts `input` in the range [`min`, `max`] to a byte array.
+		If no range is specified, all `input` bytes are copied.
+		<warn>The bytes are written in little endian format.</warn>
+			@param min index pointing to the first integer.
+		@param max index pointing to the last integer.
+		@throws de.polygonal.ds.error.AssertError invalid range, invalid `input` or memory deallocated (debug only).
+	**/
 	#if flash
 	public static function toByteArray(input:IntMemory, min = -1, max = -1):flash.utils.ByteArray
 	{
@@ -70,12 +70,12 @@ class IntMemory extends MemoryAccess
 	#end
 	
 	/**
-	 * Converts <code>input</code> in the range &#091;<code>min</code>, <code>max</code>&#093; to an <em>IntMemory</em> object.
-	 * If no range is specified, all <code>input</code> bytes are copied.
-	 * @param min index pointing to the byte storing the first integer.
-	 * @param min index pointing to the byte storing the last integer.
-	 * @throws de.polygonal.ds.error.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
-	 */
+		Converts `input` in the range [`min`, `max`] to an `IntMemory` object.
+		If no range is specified, all `input` bytes are copied.
+		@param min index pointing to the byte storing the first integer.
+		@param min index pointing to the byte storing the last integer.
+		@throws de.polygonal.ds.error.AssertError invalid range, invalid `input` or memory deallocated (debug only).
+	**/
 	#if flash
 	public static function ofByteArray(input:flash.utils.ByteArray, min = -1, max = -1):IntMemory
 	{
@@ -97,13 +97,13 @@ class IntMemory extends MemoryAccess
 	#end
 	
 	/**
-	 * Converts <code>input</code> in the range &#091;<code>min</code>, <code>max</code>&#093; to a <code>BytesData</code> object.<br/>
-	 * If no range is specified, all <code>input</code> bytes are copied.<br/>
-	 * <warn>The bytes are written in little endian format.</warn>
- 	 * @param min index pointing to the first integer.
-	 * @param max index pointing to the last integer.
-	 * @throws de.polygonal.ds.error.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
-	 */
+		Converts `input` in the range [`min`, `max`] to a `BytesData` object.
+		If no range is specified, all `input` bytes are copied.
+		<warn>The bytes are written in little endian format.</warn>
+			@param min index pointing to the first integer.
+		@param max index pointing to the last integer.
+		@throws de.polygonal.ds.error.AssertError invalid range, invalid `input` or memory deallocated (debug only).
+	**/
 	public static function toBytesData(input:IntMemory, min = -1, max = -1):haxe.io.BytesData
 	{
 		assert(input != null, "invalid input");
@@ -127,12 +127,12 @@ class IntMemory extends MemoryAccess
 	}
 	
 	/**
-	 * Converts <code>input</code> in the range &#091;<code>min</code>, <code>max</code>&#093; to an <em>IntMemory</em> object.
-	 * If no range is specified, all <code>input</code> bytes are copied.
-	 * @param min index pointing to the byte storing the first integer.
-	 * @param min index pointing to the byte storing the last integer.
-	 * @throws de.polygonal.ds.error.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
-	 */
+		Converts `input` in the range [`min`, `max`] to an `IntMemory` object.
+		If no range is specified, all `input` bytes are copied.
+		@param min index pointing to the byte storing the first integer.
+		@param min index pointing to the byte storing the last integer.
+		@throws de.polygonal.ds.error.AssertError invalid range, invalid `input` or memory deallocated (debug only).
+	**/
 	public static function ofBytesData(input:haxe.io.BytesData, min = -1, max = -1):IntMemory
 	{
 		assert(input != null, "invalid input");
@@ -162,12 +162,12 @@ class IntMemory extends MemoryAccess
 	}
 	
 	/**
-	 * Converts <code>input</code> in the range &#091;<code>min</code>, <code>max</code>&#093; to an array.
-	 * If no range is specified, all <code>input</code> bytes are copied.
- 	 * @param min index pointing to the first integer.
-	 * @param max index pointing to the last integer.
-	 * @throws de.polygonal.ds.error.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
-	 */
+		Converts `input` in the range [`min`, `max`] to an array.
+		If no range is specified, all `input` bytes are copied.
+			@param min index pointing to the first integer.
+		@param max index pointing to the last integer.
+		@throws de.polygonal.ds.error.AssertError invalid range, invalid `input` or memory deallocated (debug only).
+	**/
 	public static function toArray(input:IntMemory, min = -1, max = -1):Array<Int>
 	{
 		assert(input != null, "invalid input");
@@ -197,12 +197,12 @@ class IntMemory extends MemoryAccess
 	}
 	
 	/**
-	 * Converts <code>input</code> in the range &#091;<code>min</code>, <code>max</code>&#093; to an <em>IntMemory</em> object.
-	 * If no range is specified, all <code>input</code> values are copied.
- 	 * @param min index pointing to the first integer.
-	 * @param max index pointing to the last integer.
-	 * @throws de.polygonal.ds.error.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
-	 */
+		Converts `input` in the range [`min`, `max`] to an `IntMemory` object.
+		If no range is specified, all `input` values are copied.
+			@param min index pointing to the first integer.
+		@param max index pointing to the last integer.
+		@throws de.polygonal.ds.error.AssertError invalid range, invalid `input` or memory deallocated (debug only).
+	**/
 	public static function ofArray(input:Array<Int>, min = -1, max = -1):IntMemory
 	{
 		assert(input != null, "invalid input");
@@ -219,13 +219,13 @@ class IntMemory extends MemoryAccess
 	}
 	
 	/**
-	 * Converts <code>input</code> in the range &#091;<code>min</code>, <code>max</code>&#093; to a vector object
-	 * If no range is specified, all <code>input</code> bytes are copied.
- 	 * @param min index pointing to the first integer.
-	 * @param max index pointing to the last integer.
-	 * @param output the <code>Vector</code> object to write into. If null, a new Vector object is created on-the-fly.
-	 * @throws de.polygonal.ds.error.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
-	 */
+		Converts `input` in the range [`min`, `max`] to a vector object
+		If no range is specified, all `input` bytes are copied.
+			@param min index pointing to the first integer.
+		@param max index pointing to the last integer.
+		@param output the `Vector` object to write into. If null, a new Vector object is created on-the-fly.
+		@throws de.polygonal.ds.error.AssertError invalid range, invalid `input` or memory deallocated (debug only).
+	**/
 	public static function toVector(input:IntMemory, min = -1, max = -1, output:Vector<Int> = null):Vector<Int>
 	{
 		assert(input != null, "invalid input");
@@ -262,12 +262,12 @@ class IntMemory extends MemoryAccess
 	}
 	
 	/**
-	 * Converts <code>input</code> in the range &#091;<code>min</code>, <code>max</code>&#093; to a vector object.
-	 * If no range is specified, all <code>input</code> bytes are copied.
- 	 * @param min index pointing to the first integer.
-	 * @param max index pointing to the last integer.
-	 * @throws de.polygonal.ds.error.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
-	 */
+		Converts `input` in the range [`min`, `max`] to a vector object.
+		If no range is specified, all `input` bytes are copied.
+			@param min index pointing to the first integer.
+		@param max index pointing to the last integer.
+		@throws de.polygonal.ds.error.AssertError invalid range, invalid `input` or memory deallocated (debug only).
+	**/
 	public static function toUnsignedVector(input:IntMemory, min = -1, max = -1):Vector<UInt>
 	{
 		assert(input != null, "invalid input");
@@ -298,12 +298,12 @@ class IntMemory extends MemoryAccess
 	}
 	
 	/**
-	 * Converts <code>input</code> in the range &#091;<code>min</code>, <code>max</code>&#093; to an <em>IntMemory</em> object.
-	 * If no range is specified, all <code>input</code> values are copied.
- 	 * @param min index pointing to the first integer.
-	 * @param max index pointing to the last integer.
-	 * @throws de.polygonal.ds.error.AssertError invalid range, invalid <code>input</code> or memory deallocated (debug only).
-	 */
+		Converts `input` in the range [`min`, `max`] to an `IntMemory` object.
+		If no range is specified, all `input` values are copied.
+			@param min index pointing to the first integer.
+		@param max index pointing to the last integer.
+		@throws de.polygonal.ds.error.AssertError invalid range, invalid `input` or memory deallocated (debug only).
+	**/
 	public static function ofVector(input:Vector<Int>, min = -1, max = -1):IntMemory
 	{
 		assert(input != null, "invalid input");
@@ -325,13 +325,13 @@ class IntMemory extends MemoryAccess
 	#end
 	
 	/**
-	 * The size measured in integers.
-	 */
+		The size measured in integers.
+	**/
 	public var size(default, null):Int;
 	
 	/**
-	 * Creates a byte array capable of storing a total of <code>size</code> integers.
-	 */
+		Creates a byte array capable of storing a total of `size` integers.
+	**/
 	public function new(size:Int, name = "?")
 	{
 		super(size << 2, name);
@@ -351,8 +351,8 @@ class IntMemory extends MemoryAccess
 	#end
 	
 	/**
-	 * Creates a deep copy of this object.
-	 */
+		Creates a deep copy of this object.
+	**/
 	public function clone():IntMemory
 	{
 		var c = new IntMemory(bytes >> 2, name);
@@ -369,8 +369,8 @@ class IntMemory extends MemoryAccess
 	}
 	
 	/**
-	 * Sets all integers to the value <code>x</code>.
-	 */
+		Sets all integers to the value `x`.
+	**/
 	public function fill(x:Int):IntMemory
 	{
 		#if alchemy
@@ -390,10 +390,10 @@ class IntMemory extends MemoryAccess
 	}
 	
 	/**
-	 * Adjusts the size of this object so it's capable of storing <code>newSize</code> integers.
-	 * @throws de.polygonal.ds.error.AssertError invalid size (debug only).
-	 * @throws de.polygonal.ds.error.AssertError memory was already deallocated (debug only).
-	 */
+		Adjusts the size of this object so it's capable of storing `newSize` integers.
+		@throws de.polygonal.ds.error.AssertError invalid size (debug only).
+		@throws de.polygonal.ds.error.AssertError memory was already deallocated (debug only).
+	**/
 	override public function resize(newSize:Int)
 	{
 		assert(newSize >= 0, 'invalid size ($newSize)');
@@ -410,10 +410,10 @@ class IntMemory extends MemoryAccess
 	}
 	
 	/**
-	 * Returns the integer at index <code>i</code>.
-	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
-	 * @throws de.polygonal.ds.error.AssertError memory deallocated (debug only).
-	 */
+		Returns the integer at index `i`.
+		@throws de.polygonal.ds.error.AssertError index out of range (debug only).
+		@throws de.polygonal.ds.error.AssertError memory deallocated (debug only).
+	**/
 	inline public function get(i:Int):Int
 	{
 		#if alchemy
@@ -424,10 +424,10 @@ class IntMemory extends MemoryAccess
 	}
 	
 	/**
-	 * Replaces the integer at the index <code>i</code> with the integer <code>x</code>.
-	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
-	 * @throws de.polygonal.ds.error.AssertError memory deallocated (debug only).
-	 */
+		Replaces the integer at the index `i` with the integer `x`.
+		@throws de.polygonal.ds.error.AssertError index out of range (debug only).
+		@throws de.polygonal.ds.error.AssertError memory deallocated (debug only).
+	**/
 	inline public function set(i:Int, x:Int)
 	{
 		#if alchemy
@@ -438,10 +438,10 @@ class IntMemory extends MemoryAccess
 	}
 	
 	/**
-	 * Swaps the integer at index <code>i</code> with the integer at index <code>j</code>.
-	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
-	 * @throws de.polygonal.ds.error.AssertError <code>i</code> equals <code>j</code> (debug only).
-	 */
+		Swaps the integer at index `i` with the integer at index `j`.
+		@throws de.polygonal.ds.error.AssertError index out of range (debug only).
+		@throws de.polygonal.ds.error.AssertError `i` equals `j` (debug only).
+	**/
 	inline public function swp(i:Int, j:Int)
 	{
 		assert(i != j, 'i equals j ($i)');
@@ -458,10 +458,10 @@ class IntMemory extends MemoryAccess
 	}
 	
 	/**
-	 * Returns the memory byte offset of the first byte storing the integer at index <code>i</code>.
-	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
-	 * @throws de.polygonal.ds.error.AssertError memory deallocated (debug only).
-	 */
+		Returns the memory byte offset of the first byte storing the integer at index `i`.
+		@throws de.polygonal.ds.error.AssertError index out of range (debug only).
+		@throws de.polygonal.ds.error.AssertError memory deallocated (debug only).
+	**/
 	inline public function getAddr(i:Int):Int
 	{
 		assert(i >= 0 && i < size, 'segfault, index $i');
@@ -482,24 +482,25 @@ class IntMemory extends MemoryAccess
 	#end
 	
 	/**
-	 * Returns a string representing the current object.<br/>
-	 * Prints out all elements if compiled with the <em>-debug</em> directive.<br/>
-	 * Example:<br/>
-	 * <pre class="prettyprint">
-	 * var mem = new new de.polygonal.ds.mem.IntMemory(4);
-	 * for (i in 0...4) {
-	 *     mem.set(i, i);
-	 * }
-	 * trace(mem);</pre>
-	 * <pre class="console">
-	 * { IntMemory size: 4 }
-	 * [
-	 *   0 -> 0
-	 *   1 -> 1
-	 *   2 -> 2
-	 *   3 -> 3
-	 * ]</pre>
-	 */
+		Returns a string representing the current object.
+		Prints out all elements if compiled with the `-debug` directive.
+		
+		Example:
+		<pre class="prettyprint">
+		var mem = new new de.polygonal.ds.mem.IntMemory(4);
+		for (i in 0...4) {
+		    mem.set(i, i);
+		}
+		trace(mem);</pre>
+		<pre class="console">
+		{ IntMemory size: 4 }
+		[
+		  0 -> 0
+		  1 -> 1
+		  2 -> 2
+		  3 -> 3
+		]</pre>
+	**/
 	public function toString():String
 	{
 		#if debug

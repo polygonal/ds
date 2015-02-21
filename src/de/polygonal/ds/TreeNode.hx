@@ -21,51 +21,56 @@ package de.polygonal.ds;
 import de.polygonal.ds.error.Assert.assert;
 
 /**
- * <p>A tree structure.</p>
- * <p>See <a href="http://lab.polygonal.de/?p=184" target="mBlank">http://lab.polygonal.de/?p=184</a></p>
- * <p><o>Worst-case running time in Big O notation</o></p>
- */
+	<h3>A tree structure.</h3>
+	
+	See <a href="http://lab.polygonal.de/?p=184" target="mBlank">http://lab.polygonal.de/?p=184</a>
+	
+	<o>Worst-case running time in Big O notation</o>
+**/
 #if (flash && generic)
 @:generic
 #end
 class TreeNode<T> implements Collection<T>
 {
 	/**
-	 * A unique identifier for this object.<br/>
-	 * A hash table transforms this key into an index of an array element by using a hash function.<br/>
-	 * <warn>This value should never be changed by the user.</warn>
-	 */
+		A unique identifier for this object.
+		
+		A hash table transforms this key into an index of an array element by using a hash function.
+		
+		<warn>This value should never be changed by the user.</warn>
+	**/
 	public var key:Int;
 	
 	/**
-	 * The node's data.
-	 */
+		The node's data.
+	**/
 	public var val:T;
 	
 	/**
-	 * The node's parent or null if this node is a root node.
-	 */
+		The node's parent or null if this node is a root node.
+	**/
 	public var parent:TreeNode<T>;
 	
 	/**
-	 * The node's children or null if this node has no children.<br/>
-	 * This is a doubly linked list of <em>TreeNode</em> objects and <em>children</em> points to the first child.<br/>
-	 */
+		The node's children or null if this node has no children.
+		
+		This is a doubly linked list of `TreeNode` objects and `children` points to the first child.
+	**/
 	public var children:TreeNode<T>;
 	
 	/**
-	 * The node's previous sibling or null if such a sibling does not exist.
-	 */
+		The node's previous sibling or null if such a sibling does not exist.
+	**/
 	public var prev:TreeNode<T>;
 	
 	/**
-	 * The node's next sibling or null if such a sibling does not exist.
-	 */
+		The node's next sibling or null if such a sibling does not exist.
+	**/
 	public var next:TreeNode<T>;
 	
 	var mTail:TreeNode<T>;
-	var mNextInStack:TreeNode<T>;
 	var mPrevInStack:TreeNode<T>;
+	var mNextInStack:TreeNode<T>;
 	var mExtraInfo:Int;
 	
 	#if debug
@@ -73,10 +78,10 @@ class TreeNode<T> implements Collection<T>
 	#end
 	
 	/**
-	 * Creates a <em>TreeNode</em> object storing the element <code>x</code>.<br/>
-	 * @param x the element to store in this node.
-	 * @param parent if specified, this node is appended to the children of <em>parent</em>.
-	 */
+		Creates a `TreeNode` object storing the element `x`.
+		@param x the element to store in this node.
+		@param parent if specified, this node is appended to the children of `parent`.
+	**/
 	public function new(x:T, parent:TreeNode<T> = null)
 	{
 		this.val = x;
@@ -116,38 +121,41 @@ class TreeNode<T> implements Collection<T>
 	}
 	
 	/**
-	 * Returns true if this node is the root node of this tree.<br/>
-	 * A root node has no parent node.
-	 * <o>1</o>
-	 */
+		Returns true if this node is the root node of this tree.
+		
+		A root node has no parent node.
+		<o>1</o>
+	**/
 	inline public function isRoot():Bool
 	{
 		return parent == null;
 	}
 	
 	/**
-	 * Returns true if this node is a leaf node of this tree.<br/>
-	 * A leaf node has no children.
-	 * <o>1</o>
-	 */
+		Returns true if this node is a leaf node of this tree.
+		
+		A leaf node has no children.
+		<o>1</o>
+	**/
 	inline public function isLeaf():Bool
 	{
 		return children == null;
 	}
 	
 	/**
-	 * Returns true is this node is a child node of this tree.<br/>
-	 * A child node has a parent node.
-	 * <o>1</o>
-	 */
+		Returns true is this node is a child node of this tree.
+		
+		A child node has a parent node.
+		<o>1</o>
+	**/
 	inline public function isChild():Bool
 	{
 		return valid(parent);
 	}
 	
 	/**
-	 * Returns true if this node is an ancestor of <code>x</code>.
-	 */
+		Returns true if this node is an ancestor of `x`.
+	**/
 	public function isAncestor(x:TreeNode<T>):Bool
 	{
 		var n = x.parent;
@@ -160,8 +168,8 @@ class TreeNode<T> implements Collection<T>
 	}
 	
 	/**
-	 * Returns true if this node is an descendant of <code>x</code>.
-	 */
+		Returns true if this node is an descendant of `x`.
+	**/
 	public function isDescendant(x:TreeNode<T>):Bool
 	{
 		var n = parent;
@@ -174,27 +182,27 @@ class TreeNode<T> implements Collection<T>
 	}
 	
 	/**
-	 * Returns true if this node has a parent node.
-	 * <o>1</o>
-	 */
+		Returns true if this node has a parent node.
+		<o>1</o>
+	**/
 	inline public function hasParent():Bool
 	{
 		return isChild();
 	}
 	
 	/**
-	 * Returns true if this node has at least one child node.
-	 * <o>1</o>
-	 */
+		Returns true if this node has at least one child node.
+		<o>1</o>
+	**/
 	inline public function hasChildren():Bool
 	{
 		return valid(children);
 	}
 	
 	/**
-	 * Returns true if this node has at least one sibling.
-	 * <o>1</o>
-	 */
+		Returns true if this node has at least one sibling.
+		<o>1</o>
+	**/
 	inline public function hasSiblings():Bool
 	{
 		if (valid(parent))
@@ -204,46 +212,47 @@ class TreeNode<T> implements Collection<T>
 	}
 	
 	/**
-	 * Returns true if this node has a sibling to its right (<em>next</em> != null).
-	 * <o>1</o>
-	 */
+		Returns true if this node has a sibling to its right (`next` != null).
+		<o>1</o>
+	**/
 	inline public function hasNextSibling():Bool
 	{
 		return valid(next);
 	}
 	
 	/**
-	 * Returns true if this node has a sibling to its left (<em>prev</em> != null).
-	 * <o>1</o>
-	 */
+		Returns true if this node has a sibling to its left (`prev` != null).
+		<o>1</o>
+	**/
 	inline public function hasPrevSibling():Bool
 	{
 		return valid(prev);
 	}
 	
 	/**
-	 * Returns the leftmost sibling of this node.
-	 * <o>1</o>
-	 */
+		Returns the leftmost sibling of this node.
+		<o>1</o>
+	**/
 	inline public function getFirstSibling():TreeNode<T>
 	{
 		return parent != null ? parent.children : null;
 	}
 	
 	/**
-	 * Returns the rightmost sibling of this node.
-	 * <o>1</o>
-	 */
+		Returns the rightmost sibling of this node.
+		<o>1</o>
+	**/
 	inline public function getLastSibling():TreeNode<T>
 	{
 		return parent != null ? parent.mTail : null;
 	}
 	
 	/**
-	 * Returns the sibling index of this node.<br/>
-	 * The first sibling equals index 0, the last sibling equals index <em>numChildren()</em> - 1.
-	 * <o>n</o>
-	 */
+		Returns the sibling index of this node.
+		
+		The first sibling equals index 0, the last sibling equals index `numChildren()` - 1.
+		<o>n</o>
+	**/
 	inline public function getSiblingIndex():Int
 	{
 		var c = 0;
@@ -257,12 +266,12 @@ class TreeNode<T> implements Collection<T>
 	}
 	
 	/**
-	 * Swaps the child <code>a</code> with child <code>b</code> by swapping their values.
-	 * @throws de.polygonal.ds.error.AssertError <code>a</code> and <code>b</code> are not siblings (debug only).
-	 * @throws de.polygonal.ds.error.AssertError <code>a</code> equals <code>b</code> (debug only).
-	 * @return this node.
-	 * <o>1</o>
-	 */
+		Swaps the child `a` with child `b` by swapping their values.
+		@throws de.polygonal.ds.error.AssertError `a` and `b` are not siblings (debug only).
+		@throws de.polygonal.ds.error.AssertError `a` equals `b` (debug only).
+		@return this node.
+		<o>1</o>
+	**/
 	public function swapChildren(a:TreeNode<T>, b:TreeNode<T>):TreeNode<T>
 	{
 		assert(a.parent == b.parent, "a and b are not siblings");
@@ -274,13 +283,13 @@ class TreeNode<T> implements Collection<T>
 	}
 	
 	/**
-	 * Swaps the child at index <code>i</code> with the child at index <code>j</code> by swapping their values.
-	 * @throws de.polygonal.ds.error.AssertError index <code>i</code> out of range (debug only).
-	 * @throws de.polygonal.ds.error.AssertError index <code>j</code> out of range (debug only).
-	 * @throws de.polygonal.ds.error.AssertError <code>i</code> equals <code>j</code> (debug only).
-	 * @return this node.
-	 * <o>1</o>
-	 */
+		Swaps the child at index `i` with the child at index `j` by swapping their values.
+		@throws de.polygonal.ds.error.AssertError index `i` out of range (debug only).
+		@throws de.polygonal.ds.error.AssertError index `j` out of range (debug only).
+		@throws de.polygonal.ds.error.AssertError `i` equals `j` (debug only).
+		@return this node.
+		<o>1</o>
+	**/
 	public function swapChildrenAt(i:Int, j:Int):TreeNode<T>
 	{
 		assert(i >= 0 && i < numChildren(), 'the index i ($i) is out of range ${numChildren()}');
@@ -319,11 +328,11 @@ class TreeNode<T> implements Collection<T>
 	}
 	
 	/**
-	 * Removes the child at index <code>i</code> and returns the child.
-	 * @throws de.polygonal.ds.error.AssertError index <code>i</code> is out of range (debug only).
-	 * @return this node.
-	 * <o>n</o>
-	 */
+		Removes the child at index `i` and returns the child.
+		@throws de.polygonal.ds.error.AssertError index `i` is out of range (debug only).
+		@return this node.
+		<o>n</o>
+	**/
 	public function removeChildAt(i:Int):TreeNode<T>
 	{
 		assert(i >= 0 && i < numChildren(), 'the index $i is out of range ${numChildren()}');
@@ -342,12 +351,13 @@ class TreeNode<T> implements Collection<T>
 	}
 	
 	/**
-	 * Removes <code>n</code> children starting at the specified index <code>i</code> in the range &#091;<code>i</code>, <code>i</code> + <code>n</code>&#093;.<br/>
-	 * If <code>n</code> is -1, <code>n</code> is set to <code>numChildren()</code> - <code>i</code>.
-	 * @throws de.polygonal.ds.error.AssertError <code>i</code> or <code>n</code> out of range (debug only).
-	 * @return this node.
-	 * <o>n</o>
-	 */
+		Removes `n` children starting at the specified index `i` in the range [`i`, `i` + `n`].
+		
+		If `n` is -1, `n` is set to `numChildren()` - `i`.
+		@throws de.polygonal.ds.error.AssertError `i` or `n` out of range (debug only).
+		@return this node.
+		<o>n</o>
+	**/
 	public function removeChildren(i = 0, n = -1):TreeNode<T>
 	{
 		if (n == -1) n = numChildren() - i;
@@ -377,11 +387,11 @@ class TreeNode<T> implements Collection<T>
 	}
 	
 	/**
-	 * Changes the index of the child <code>x</code> to <code>i</code>.
-	 * @throws de.polygonal.ds.error.AssertError index <code>i</code> is out of range (debug only).
-	 * @return this node.
-	 * <o>n</o>
-	 */
+		Changes the index of the child `x` to `i`.
+		@throws de.polygonal.ds.error.AssertError index `i` is out of range (debug only).
+		@return this node.
+		<o>n</o>
+	**/
 	public function setChildIndex(x:TreeNode<T>, i:Int):TreeNode<T>
 	{
 		assert(i >= 0 && i < numChildren(), 'the index $i is out of range ${numChildren()}');
@@ -425,18 +435,18 @@ class TreeNode<T> implements Collection<T>
 	}
 	
 	/**
-	 * The total number of child nodes (non-recursive).
-	 * <o>1</o>
-	 */
+		The total number of child nodes (non-recursive).
+		<o>1</o>
+	**/
 	inline public function numChildren():Int
 	{
 		return mExtraInfo >>> 16;
 	}
 	
 	/**
-	 * Counts the total number of siblings (excluding this).
-	 * <o>n</o>
-	 */
+		Counts the total number of siblings (excluding this).
+		<o>n</o>
+	**/
 	inline public function numSiblings():Int
 	{
 		if (hasParent())
@@ -446,9 +456,9 @@ class TreeNode<T> implements Collection<T>
 	}
 	
 	/**
-	 * Counts the total number of preceding siblings (excluding this).
-	 * <o>n</o>
-	 */
+		Counts the total number of preceding siblings (excluding this).
+		<o>n</o>
+	**/
 	inline public function numPrevSiblings():Int
 	{
 		var c = 0;
@@ -463,9 +473,9 @@ class TreeNode<T> implements Collection<T>
 	}
 	
 	/**
-	 * Counts the total number of succeeding siblings (excluding this).
-	 * <o>n</o>
-	 */
+		Counts the total number of succeeding siblings (excluding this).
+		<o>n</o>
+	**/
 	inline public function numNextSiblings():Int
 	{
 		var c = 0;
@@ -479,11 +489,13 @@ class TreeNode<T> implements Collection<T>
 	}
 	
 	/**
-	 * Calculates the depth of this node within this tree.<br/>
-	 * The depth is defined as the length of the path from the root node to this node.<br/>
-	 * The root node is at depth 0.
-	 * <o>n</o>
-	 */
+		Calculates the depth of this node within this tree.
+		
+		The depth is defined as the length of the path from the root node to this node.
+		
+		The root node is at depth 0.
+		<o>n</o>
+	**/
 	public function depth():Int
 	{
 		if (isRoot())
@@ -502,11 +514,13 @@ class TreeNode<T> implements Collection<T>
 	}
 	
 	/**
-	 * Calculates the height of this tree, assuming this is the root node of this tree.<br/>
-	 * The height is defined as the length of the path from the root node to the deepest node in the tree.<br/>
-	 * A tree with one node has a height of one.
-	 * <o>n</o>
-	 */
+		Calculates the height of this tree, assuming this is the root node of this tree.
+		
+		The height is defined as the length of the path from the root node to the deepest node in the tree.
+		
+		A tree with one node has a height of one.
+		<o>n</o>
+	**/
 	public function height():Int
 	{
 		var h = 0;
@@ -520,9 +534,9 @@ class TreeNode<T> implements Collection<T>
 	}
 	
 	/**
-	 * Returns the root node of this tree.
-	 * <o>n</o>
-	 */
+		Returns the root node of this tree.
+		<o>n</o>
+	**/
 	inline public function getRoot():TreeNode<T>
 	{
 		var n = this;
@@ -531,28 +545,28 @@ class TreeNode<T> implements Collection<T>
 	}
 	
 	/**
-	 * Returns the leftmost child of this node or null if this node is a leaf node.
-	 * <o>1</o>
-	 */
+		Returns the leftmost child of this node or null if this node is a leaf node.
+		<o>1</o>
+	**/
 	inline public function getFirstChild():TreeNode<T>
 	{
 		return children;
 	}
 	
 	/**
-	 * Returns the rightmost child of this node or null if this node is a leaf node.
-	 * <o>1</o>
-	 */
+		Returns the rightmost child of this node or null if this node is a leaf node.
+		<o>1</o>
+	**/
 	inline public function getLastChild():TreeNode<T>
 	{
 		return mTail;
 	}
 	
 	/**
-	 * Returns the child at index <code>i</code> or null if the node has no children.
-	 * @throws de.polygonal.ds.error.AssertError child index out of range (debug only).
-	 * <o>n</o>
-	 */
+		Returns the child at index `i` or null if the node has no children.
+		@throws de.polygonal.ds.error.AssertError child index out of range (debug only).
+		<o>n</o>
+	**/
 	inline public function getChildAt(i:Int):TreeNode<T>
 	{
 		if (hasChildren())
@@ -568,8 +582,8 @@ class TreeNode<T> implements Collection<T>
 	}
 	
 	/**
-	 * Returns the child index of this node.
-	 */
+		Returns the child index of this node.
+	**/
 	inline public function getChildIndex():Int
 	{
 		var i = 0;
@@ -583,10 +597,10 @@ class TreeNode<T> implements Collection<T>
 	}
 	
 	/**
-	 * Unlinks this node.<br/>
-	 * <o>1</o>
-	 * @return a subtree rooted at this node.
-	 */
+		Unlinks this node.
+		<o>1</o>
+		@return a subtree rooted at this node.
+	**/
 	public function unlink():TreeNode<T>
 	{
 		if (parent != null)
@@ -609,11 +623,11 @@ class TreeNode<T> implements Collection<T>
 	}
 	
 	/**
-	 * Unlinks <code>x</code> and appends <code>x</code> as a child to this node.
-	 * @throws de.polygonal.ds.error.AssertError <code>x</code> is null (debug only).
-	 * @return this node.
-	 * <o>1</o>
-	 */
+		Unlinks `x` and appends `x` as a child to this node.
+		@throws de.polygonal.ds.error.AssertError `x` is null (debug only).
+		@return this node.
+		<o>1</o>
+	**/
 	public function appendNode(x:TreeNode<T>):TreeNode<T>
 	{
 		assert(x != null, "x is null");
@@ -639,10 +653,10 @@ class TreeNode<T> implements Collection<T>
 	}
 	
 	/**
-	 * Unlinks <code>x</code> and prepends <code>x</code> as a child of this node.
-	 * @return this node.
-	 * <o>1</o>
-	 */
+		Unlinks `x` and prepends `x` as a child of this node.
+		@return this node.
+		<o>1</o>
+	**/
 	public function prependNode(x:TreeNode<T>):TreeNode<T>
 	{
 		x.unlink();
@@ -665,11 +679,11 @@ class TreeNode<T> implements Collection<T>
 	}
 	
 	/**
-	 * Unlinks <code>x</code> and appends <code>x</code> to the specified code>child</code> node.
-	 * <o>1</o>
-	 * @throws de.polygonal.ds.error.AssertError <code>child</code> node is not a child of this node (debug only).
-	 * @return this node.
-	 */
+		Unlinks `x` and appends `x` to the specified code>child` node.
+		<o>1</o>
+		@throws de.polygonal.ds.error.AssertError `child` node is not a child of this node (debug only).
+		@return this node.
+	**/
 	public function insertAfterChild(child:TreeNode<T>, x:TreeNode<T>):TreeNode<T>
 	{
 		assert(child.parent == this, "given child node is not a child of this node");
@@ -699,11 +713,11 @@ class TreeNode<T> implements Collection<T>
 	}
 	
 	/**
-	 * Unlinks <code>x</code> and prepends <code>x</code> to the specified child <code>node</code>.
-	 * <o>1</o>
-	 * @throws de.polygonal.ds.error.AssertError <code>child</code> node is not a child of this node (debug only).
-	 * @return this node.
-	 */
+		Unlinks `x` and prepends `x` to the specified child `node`.
+		<o>1</o>
+		@throws de.polygonal.ds.error.AssertError `child` node is not a child of this node (debug only).
+		@return this node.
+	**/
 	public function insertBeforeChild(child:TreeNode<T>, x:TreeNode<T>):TreeNode<T>
 	{
 		assert(child.parent == this, "given child node is not a child of this node");
@@ -732,11 +746,11 @@ class TreeNode<T> implements Collection<T>
 	}
 	
 	/**
-	 * Unlinks <code>x</code> and inserts <code>x</code> at the index position <code>i</code>.
-	 * @throws de.polygonal.ds.error.AssertError index <code>i</code> out of range (debug only).
-	 * @return this node.
-	 * <o>1</o>
-	 */
+		Unlinks `x` and inserts `x` at the index position `i`.
+		<o>1</o>
+		@throws de.polygonal.ds.error.AssertError index `i` out of range (debug only).
+		@return this node.
+	**/
 	public function insertChildAt(x:TreeNode<T>, i:Int):TreeNode<T>
 	{
 		assert(i >= 0 && i <= numChildren(), 'index $i out of range');
@@ -753,10 +767,10 @@ class TreeNode<T> implements Collection<T>
 	}
 	
 	/**
-	 * Successively swaps this node with previous siblings until it reached the head of the sibling list.
-	 * @return this node.
-	 * <o>1</o>
-	 */
+		Successively swaps this node with previous siblings until it reached the head of the sibling list.
+		@return this node.
+		<o>1</o>
+	**/
 	public function setFirst():TreeNode<T>
 	{
 		if (hasSiblings())
@@ -770,10 +784,10 @@ class TreeNode<T> implements Collection<T>
 	}
 	
 	/**
-	 * Successively swaps this node with next siblings until it reached the tail of the sibling list.
-	 * @return this node.
-	 * <o>1</o>
-	 */
+		Successively swaps this node with next siblings until it reached the tail of the sibling list.
+		@return this node.
+		<o>1</o>
+	**/
 	public function setLast():TreeNode<T>
 	{
 		if (hasSiblings())
@@ -787,10 +801,10 @@ class TreeNode<T> implements Collection<T>
 	}
 	
 	/**
-	 * Recursively finds the first occurrence of the node storing the element <code>x</code> in this tree.
-	 * <o>n</o>
-	 * @return the node storing the element <code>x</code> or null if such a node does not exist.
-	 */
+		Recursively finds the first occurrence of the node storing the element `x` in this tree.
+		<o>n</o>
+		@return the node storing the element `x` or null if such a node does not exist.
+	**/
 	public function find(x:T):TreeNode<T>
 	{
 		var top = this;
@@ -816,29 +830,30 @@ class TreeNode<T> implements Collection<T>
 	}
 	
 	/**
-	 * Performs a recursive preorder traversal.<br/>
-	 * A preorder traversal performs the following steps:<br/>
-	 * <ul>
-	 * <li>Visit the node.</li>
-	 * <li>Traverse the left subtree of the node.</li>
-	 * <li>Traverse the right subtree of the node.</li>
-	 * </ul><br/>
-	 * @param process a function that is invoked on every traversed node.<br/>
-	 * The first argument holds a reference to the current node, the second arguments stores the preflight flag and the third argument stores custom data specified by the <code>userData</code> parameter (default is null).
-	 * Once <code>process</code> returns false, the traversal stops immediately and no further nodes are examined.<br/>
-	 * If omitted, element.<em>visit()</em> is used instead.<br/>
-	 * @param preflight if true, an extra traversal is performed before the actual traversal runs.
-	 * The first pass visits all elements and calls element.<em>visit()</em> with the <code>preflight</code> parameter set to true.
-	 * In this pass the return value determines whether the element (and all its children) will be processed (true) or
-	 * excluded (false) from the final traversal, which is the second pass (<code>preflight</code> parameter set to false).<br/>
-	 * The same applies when using a <code>process</code> function.<br/>
-	 * <warn>In this case all elements have to implement <em>Visitable</em>.</warn>
-	 * @param iterative if true, an iterative traversal is used (default traversal style is recursive).
-	 * @param userData custom data that is passed to every visited node via <code>process</code> or element.<em>visit()</em>. If omitted, null is used.
-	 * @return this node.
-	 */
-	
-	public function preorder(process:TreeNode<T>->Bool->Dynamic->Bool = null, preflight = false, iterative = false, userData:Dynamic = null):TreeNode<T>
+		Performs a recursive preorder traversal.
+		
+		A preorder traversal performs the following steps:
+		
+		1. Visit the node
+		2. Traverse the left subtree of the node
+		3. Traverse the right subtree of the node
+		
+		@param process a function that is invoked on every traversed node.
+		The first argument holds a reference to the current node, the second arguments stores the preflight flag and the third argument stores custom data specified by the `userData` parameter (default is null).
+		Once `process` returns false, the traversal stops immediately and no further nodes are examined.
+		If omitted, element.`visit()` is used instead.
+		@param userData custom data that is passed to every visited node via `process` or element.`visit()`. If omitted, null is used.
+		@param preflight if true, an extra traversal is performed before the actual traversal runs.
+		The first pass visits all elements and calls element.`visit()` with the `preflight` parameter set to true.
+		In this pass the return value determines whether the element (and all its children) will be processed (true) or
+		excluded (false) from the final traversal, which is the second pass (`preflight` parameter set to false).
+		The same applies when using a `process` function.
+		<warn>In this case all elements have to implement `Visitable`.</warn>
+		@param iterative if true, an iterative traversal is used (default traversal style is recursive).
+		@return this node.
+	**/
+	public function preorder(process:TreeNode<T>->Bool->Dynamic->Bool = null,
+		userData:Dynamic = null, preflight:Bool = false, iterative:Bool = false):TreeNode<T>
 	{
 		if (parent == null && children == null)
 		{
@@ -1074,23 +1089,23 @@ class TreeNode<T> implements Collection<T>
 	}
 	
 	/**
-	 * Performs a recursive postorder traversal.<br/>
-	 * A preorder traversal performs the following steps:<br/>
-	  * <ul>
-	 * <li>Traverse the left subtree of the node.</li>
-	 * <li>Traverse the right subtree of the node.</li>
-	 * <li>Visit the node.</li>
-	 * </ul><br/>
-	 * @param process a function that is invoked on every traversed node.<br/>
-	 * The first argument holds a reference to the current node, while the second argument stores custom data specified by the <code>userData</code> parameter (default is null).
-	 * Once <code>process</code> returns false, the traversal stops immediately and no further nodes are examined.<br/>
-	 * If omitted, element.<em>visit()</em> is used instead.<br/>
-	 * <warn>In this case all elements have to implement <em>Visitable</em>.</warn>
-	 * @param iterative if true, an iterative traversal is used (default traversal style is recursive).
-	 * @param userData custom data that is passed to every visited node via <code>process</code> or element.<em>visit()</em>. If omitted, null is used.
-	 * @return this node.
-	 */
-	public function postorder(process:TreeNode<T>->Dynamic->Bool = null, iterative = false, userData:Dynamic = null):TreeNode<T>
+		Performs a recursive postorder traversal.
+		A postorder traversal performs the following steps:
+		
+		1. Traverse the left subtree of the node
+		2. Traverse the right subtree of the node
+		3. Visit the node
+		
+		@param process a function that is invoked on every traversed node.
+		The first argument holds a reference to the current node, while the second argument stores custom data specified by the `userData` parameter (default is null).
+		Once `process` returns false, the traversal stops immediately and no further nodes are examined.
+		If omitted, element.`visit()` is used instead.
+		<warn>In this case all elements have to implement `Visitable`.</warn>
+		@param userData custom data that is passed to every visited node via `process` or element.`visit()`. If omitted, null is used.
+		@param iterative if true, an iterative traversal is used (default traversal style is recursive).
+		@return this node.
+	**/
+	public function postorder(process:TreeNode<T>->Dynamic->Bool = null, userData:Dynamic = null, iterative = false):TreeNode<T>
 	{
 		if (parent == null && children == null)
 		{
@@ -1253,16 +1268,16 @@ class TreeNode<T> implements Collection<T>
 	}
 	
 	/**
-	 * Performs a queue-based, iterative level-order traversal.<br/>
-	 * In a level-order traversal all nodes of a tree are processed by depth: first the root, then the children of the root, etc.
-	 * @param process a function that is invoked on every traversed node.<br/>
-	 * The first argument holds a reference to the current node, while the second argument stores custom data specified by the <code>userData</code> parameter (default is null).
-	 * Once <code>process</code> returns false, the traversal stops immediately and no further nodes are examined.<br/>
-	 * If omitted, element.<em>visit()</em> is used instead.<br/>
-	 * <warn>In this case all elements have to implement <em>Visitable</em>.</warn>
-	 * @param userData custom data that is passed to every visited node via <code>process</code> or element.<em>visit()</em>. If omitted, null is used.
-	 * @return this node.
-	 */
+		Performs a queue-based, iterative level-order traversal.
+		In a level-order traversal all nodes of a tree are processed by depth: first the root, then the children of the root, etc.
+		@param process a function that is invoked on every traversed node.
+		The first argument holds a reference to the current node, while the second argument stores custom data specified by the `userData` parameter (default is null).
+		Once `process` returns false, the traversal stops immediately and no further nodes are examined.
+		If omitted, element.`visit()` is used instead.
+		<warn>In this case all elements have to implement `Visitable`.</warn>
+		@param userData custom data that is passed to every visited node via `process` or element.`visit()`. If omitted, null is used.
+		@return this node.
+	**/
 	public function levelorder(process:TreeNode<T>->Dynamic->Bool = null, userData:Dynamic = null):TreeNode<T>
 	{
 		if (children == null)
@@ -1330,16 +1345,16 @@ class TreeNode<T> implements Collection<T>
 	}
 	
 	/**
-	 * Sorts the children of this node using the merge sort algorithm.
-	 * <o>n log n for merge sort and n&sup2; for insertion sort</o>
-	 * @param compare a comparison function.<br/>
-	 * If null, the elements are compared using element.<em>compare()</em>.<br/>
-	 * <warn>In this case all elements have to implement <em>Comparable</em>.</warn>
-	 * @param useInsertionSort if true, the dense array is sorted using the insertion sort algorithm.
-	 * This is faster for nearly sorted lists.
-	 * @throws de.polygonal.ds.error.AssertError element does not implement <em>Comparable</em> (debug only).
-	 * @return this node.
-	 */
+		Sorts the children of this node using the merge sort algorithm.
+		<o>n log n for merge sort and n&sup2; for insertion sort</o>
+		@param compare a comparison function.
+		If null, the elements are compared using element.`compare()`.
+		<warn>In this case all elements have to implement `Comparable`.</warn>
+		@param useInsertionSort if true, the dense array is sorted using the insertion sort algorithm.
+		This is faster for nearly sorted lists.
+		@throws de.polygonal.ds.error.AssertError element does not implement `Comparable` (debug only).
+		@return this node.
+	**/
 	public function sort(compare:T->T->Int, useInsertionSort = false):TreeNode<T>
 	{
 		if (hasChildren())
@@ -1354,23 +1369,24 @@ class TreeNode<T> implements Collection<T>
 	}
 	
 	/**
-	 * Returns a string representing the current object.<br/>
-	 * Example:<br/>
-	 * <pre class="prettyprint">
-	 * var root = new de.polygonal.ds.TreeNode&lt;Int&gt;(0); //create the root of the tree
-	 * var builder = new de.polygonal.ds.TreeBuilder&lt;Int&gt;(root);
-	 * builder.appendChild(1);
-	 * builder.down();
-	 * builder.appendChild(2);
-	 * builder.up();
-	 * builder.appendChild(3);
-	 * trace(root);</pre>
-	 * <pre class="console">
-	 * {TreeNode (root), children: 2, depth:0, value: 0}
-	 * +---{TreeNode (child), children: 1, depth:1, value: 1}
-	 * |   +---{TreeNode (leaf+child), depth:2, value: 2}
-	 * +---{TreeNode (leaf+child), depth:1, value: 3}</pre>
-	 */
+		Returns a string representing the current object.
+		
+		Example:
+		<pre class="prettyprint">
+		var root = new de.polygonal.ds.TreeNode<Int>(0); //create the root of the tree
+		var builder = new de.polygonal.ds.TreeBuilder<Int>(root);
+		builder.appendChild(1);
+		builder.down();
+		builder.appendChild(2);
+		builder.up();
+		builder.appendChild(3);
+		trace(root);</pre>
+		<pre class="console">
+		{TreeNode (root), children: 2, depth:0, value: 0}
+		+---{TreeNode (child), children: 1, depth:1, value: 1}
+		|   +---{TreeNode (leaf+child), depth:2, value: 2}
+		+---{TreeNode (leaf+child), depth:1, value: 3}</pre>
+	**/
 	public function toString():String
 	{
 		if (children == null)
@@ -1394,19 +1410,21 @@ class TreeNode<T> implements Collection<T>
 	}
 	
 	/**
-	 * Creates and returns a <em>TreeBuilder</em> object pointing to this node.
-	 * <o>1</o>
-	 */
+		Creates and returns a `TreeBuilder` object pointing to this node.
+		<o>1</o>
+	**/
 	public function getBuilder():TreeBuilder<T>
 	{
 		return new TreeBuilder<T>(this);
 	}
 	
 	/**
-	 * Returns a new <em>ChildTreeIterator</em> object to iterate over all direct children (excluding this node).<br/>
-	 * <warn>In contrast to <code>iterator()</code>, this method is not recursive</warn>
-	 * @see <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
-	 */
+		Returns a new `ChildTreeIterator` object to iterate over all direct children (excluding this node).
+		
+		<warn>In contrast to `iterator()`, this method is not recursive.</warn>
+		
+		See <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
+	**/
 	public function childIterator():Itr<T>
 	{
 		return new ChildTreeIterator<T>(this);
@@ -1828,12 +1846,14 @@ class TreeNode<T> implements Collection<T>
 	}
 	
 	/**
-	 * Serializes this tree.
-	 * The tree can be rebuild by calling <em>unserialize()</em>.
-	 * @see <a href="http://eli.thegreenplace.net/2011/09/29/an-interesting-tree-serialization-algorithm-from-dwarf/" target="mBlank">An interesting tree serialization algorithm from DWARF</a>
-	 * @param node the root of the tree.
-	 * @return a flattened tree.
-	 */
+		Serializes this tree.
+		
+		The tree can be rebuild by calling `unserialize()`.
+		
+		See <a href="http://eli.thegreenplace.net/2011/09/29/an-interesting-tree-serialization-algorithm-from-dwarf/" target="mBlank">An interesting tree serialization algorithm from DWARF</a>
+		@param node the root of the tree.
+		@return a flattened tree.
+	**/
 	public function serialize(node:TreeNode<T> = null, list:Array<{v: T, c:Bool}> = null):Array<{v: T, c:Bool}>
 	{
 		if (node == null) node = this;
@@ -1848,7 +1868,7 @@ class TreeNode<T> implements Collection<T>
 				serialize(c, list);
 				c = c.next;
 			}
-            list.push(null);
+			list.push(null);
 		}
 		else
 			list.push({v: node.val, c: false});
@@ -1857,16 +1877,18 @@ class TreeNode<T> implements Collection<T>
 	}
 	
 	/**
-	 * Unserializes a given <code>list</code> into a TreeNode structure.<br/>
-	 * First create a dummy node which will be the root of the unserialized tree, then call <code>unserialize()</code>.
-	 * Example:<br/>
-	 * <pre class="prettyprint">
-	 * var root = new de.polygonal.ds.TreeNode&lt;String&gt;(null);
-	 * root.unserialize(mySerializedTree);
-	 * </pre>
-	 * @param list the flattened tree
-	 * @return the root of the tree.
-	 */
+		Unserializes a given `list` into a TreeNode structure.
+		
+		First create a dummy node which will be the root of the unserialized tree, then call `unserialize()`.
+		
+		Example:
+		<pre class="prettyprint">
+		var root = new de.polygonal.ds.TreeNode<String>(null);
+		root.unserialize(mySerializedTree);
+		</pre>
+		@param list the flattened tree
+		@return the root of the tree.
+	**/
 	public function unserialize(list:Array<{v: T, c:Bool}>):TreeNode<T>
 	{
 		var root = this;
@@ -1895,10 +1917,11 @@ class TreeNode<T> implements Collection<T>
 	///////////////////////////////////////////////////////*/
 	
 	/**
-	 * Destroys this object by explicitly nullifying all nodes, pointers and elements for GC'ing used resources.<br/>
-	 * Improves GC efficiency/performance (optional).
-	 * <o>n</o>
-	 */
+		Destroys this object by explicitly nullifying all nodes, pointers and elements for GC'ing used resources.
+		
+		Improves GC efficiency/performance (optional).
+		<o>n</o>
+	**/
 	public function free()
 	{
 		if (hasChildren())
@@ -1923,9 +1946,9 @@ class TreeNode<T> implements Collection<T>
 	}
 	
 	/**
-	 * Returns true if this tree contains the element <code>x</code>.
-	 * <o>n</o>
-	 */
+		Returns true if this tree contains the element `x`.
+		<o>n</o>
+	**/
 	public function contains(x:T):Bool
 	{
 		var top = this;
@@ -1950,11 +1973,12 @@ class TreeNode<T> implements Collection<T>
 	}
 	
 	/**
-	 * Runs a recursive preorder traversal that removes all nodes storing the element <code>x</code>.<br/>
-	 * Tree nodes are not rearranged, so if a node stores <code>x</code>, the complete subtree rooted at that node is unlinked.
-	 * <o>n</o>
-	  * @return true if at least one occurrence of <code>x</code> was removed.
-	 */
+		Runs a recursive preorder traversal that removes all nodes storing the element `x`.
+		
+		Tree nodes are not rearranged, so if a node stores `x`, the complete subtree rooted at that node is unlinked.
+		<o>n</o>
+		@return true if at least one occurrence of `x` was removed.
+	**/
 	public function remove(x:T):Bool
 	{
 		var found = false;
@@ -1976,10 +2000,10 @@ class TreeNode<T> implements Collection<T>
 	}
 	
 	/**
-	 * Removes all child nodes.
-	 * <o>1 or n if <code>purge</code> is true</o>
-	 * @param purge if true, recursively nullifies this subtree.
-	 */
+		Removes all child nodes.
+		<o>1 or n if `purge` is true</o>
+		@param purge if true, recursively nullifies this subtree.
+	**/
 	public function clear(purge = false)
 	{
 		if (purge)
@@ -2005,19 +2029,21 @@ class TreeNode<T> implements Collection<T>
 	}
 	
 	/**
-	 * Returns a new <em>TreeIterator</em> object to iterate over all elements contained in the nodes of this subtree (including this node).<br/>
-	 * The elements are visited by using a preorder traversal.
-	 * @see <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
-	 */
+		Returns a new `TreeIterator` object to iterate over all elements contained in the nodes of this subtree (including this node).
+		
+		The elements are visited by using a preorder traversal.
+		
+		See <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
+	**/
 	public function iterator():Itr<T>
 	{
 		return new TreeIterator<T>(this);
 	}
 	
 	/**
-	 * The total number of nodes in the tree rooted at this node.
-	 * <o>n</o>
-	 */
+		The total number of nodes in the tree rooted at this node.
+		<o>n</o>
+	**/
 	public function size():Int
 	{
 		var c = 1;
@@ -2031,18 +2057,19 @@ class TreeNode<T> implements Collection<T>
 	}
 	
 	/**
-	 * Returns true if this tree is empty.
-	 * <o>1</o>
-	 */
+		Returns true if this tree is empty.
+		<o>1</o>
+	**/
 	public function isEmpty():Bool
 	{
 		return !hasChildren();
 	}
 	
 	/**
-	 * Returns an array containing all elements in the tree rooted at this node.<br/>
-	 * The elements are collected using a preorder traversal.
-	 */
+		Returns an array containing all elements in the tree rooted at this node.
+		
+		The elements are collected using a preorder traversal.
+	**/
 	public function toArray():Array<T>
 	{
 		var a:Array<T> = ArrayUtil.alloc(size());
@@ -2052,9 +2079,10 @@ class TreeNode<T> implements Collection<T>
 	}
 	
 	/**
-	 * Returns a Vector.&lt;T&gt; object containing all elements in the tree rooted at this node.<br/>
-	 * The elements are collected using a preorder traversal.
-	 */
+		Returns a `Vector<T>` object containing all elements in the tree rooted at this node.
+		
+		The elements are collected using a preorder traversal.
+	**/
 	public function toVector():Vector<T>
 	{
 		var v = new Vector<T>(size());
@@ -2064,12 +2092,12 @@ class TreeNode<T> implements Collection<T>
 	}
 	
 	/**
-	 * Duplicates this subtree. Supports shallow (structure only) and deep copies (structure & elements).
-	 * @param assign if true, the <code>copier</code> parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.<br/>
-	 * If false, the <em>clone()</em> method is called on each element. <warn>In this case all elements have to implement <em>Cloneable</em>.</warn>
-	 * @param copier a custom function for copying elements. Replaces element.<em>clone()</em> if <code>assign</code> is false.
-	 * @throws de.polygonal.ds.error.AssertError element is not of type <em>Cloneable</em> (debug only).
-	 */
+		Duplicates this subtree. Supports shallow (structure only) and deep copies (structure & elements).
+		@param assign if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
+		If false, the `clone()` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
+		@param copier a custom function for copying elements. Replaces element.`clone()` if `assign` is false.
+		@throws de.polygonal.ds.error.AssertError element is not of type `Cloneable` (debug only).
+	**/
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{
 		var stack = new Array<TreeNode<T>>();
@@ -2189,9 +2217,7 @@ class TreeNode<T> implements Collection<T>
 #if (flash && generic)
 @:generic
 #end
-#if doc
-private
-#end
+@:dox(hide)
 class TreeIterator<T> implements de.polygonal.ds.Itr<T>
 {
 	var mNode:TreeNode<T>;
@@ -2242,9 +2268,7 @@ class TreeIterator<T> implements de.polygonal.ds.Itr<T>
 #if (flash && generic)
 @:generic
 #end
-#if doc
-private
-#end
+@:dox(hide)
 class ChildTreeIterator<T> implements de.polygonal.ds.Itr<T>
 {
 	var mF:TreeNode<T>;

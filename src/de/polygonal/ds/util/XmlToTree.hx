@@ -16,38 +16,31 @@ NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FO
 DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT
 OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
-package de.polygonal.ds;
+package de.polygonal.ds.util;
 
 import haxe.ds.StringMap;
 
 /**
- * <p>Helper class for converting xml data to various trees.</p>
- */
-class XmlConvert
+	<h3>A helper class for converting an xml string into a TreeNode data structure</h3>
+**/
+class XmlToTree
 {
-	/**
-	 * Converts <code>xmlData</code> to a <code>TreeNode<code> structure.
-	 */
-	public static function toTreeNode(xmlData:String):TreeNode<XmlNodeData>
+	 /**
+		 Converts `xmlStr` to a `Treenode` structure.
+	 **/
+	public static function toTreeNode(xmlStr:String):TreeNode<XmlNode>
 	{
 		var stack = new Array<Dynamic>();
 		var top = 1;
 		
-		var xml = Xml.parse(xmlData).firstElement();
+		var xml = Xml.parse(xmlStr).firstElement();
 		
-		var info = new XmlNodeData(xml.nodeName);
-		var tree = new TreeNode<XmlNodeData>(info);
+		var info = new XmlNode(xml.nodeName);
+		var tree = new TreeNode<XmlNode>(info);
 		info.treeNode = tree;
 		
 		for (attr in xml.attributes())
-		{
-			if (attr != null)
-			{
-				if (info.attributes == null)
-					info.attributes = new StringMap<String>();
-				info.attributes.set(attr, xml.get(attr));
-			}
-		}
+			Reflect.setField(info.attributes, attr, xml.get(attr));
 		
 		stack.push(xml);
 		stack.push(tree);
@@ -56,24 +49,17 @@ class XmlConvert
 		{
 			--top;
 			
-			var t:TreeNode<XmlNodeData> = stack.pop();
+			var t:TreeNode<XmlNode> = stack.pop();
 			var e:Xml = stack.pop();
 			
 			for (i in e)
 			{
 				if (i.nodeType == Xml.Element)
 				{
-					var info = new XmlNodeData(i.nodeName);
+					var info = new XmlNode(i.nodeName);
 					
 					for (attr in i.attributes())
-					{
-						if (attr != null)
-						{
-							if (info.attributes == null)
-								info.attributes = new StringMap<String>();
-							info.attributes.set(attr, i.get(attr));
-						}
-					}
+						Reflect.setField(info.attributes, attr, i.get(attr));
 					
 					var firstChild = i.firstChild();
 					if (firstChild != null)
@@ -82,12 +68,12 @@ class XmlConvert
 						{
 							case Xml.CData, Xml.PCData:
 								if (~/\S/.match(firstChild.nodeValue))
-									info.value = firstChild.nodeValue;
+									info.data = firstChild.nodeValue;
 							default:
 						}
 					}
 					
-					var node = new TreeNode<XmlNodeData>(info);
+					var node = new TreeNode<XmlNode>(info);
 					info.treeNode = node;
 					t.appendNode(node);
 					
@@ -103,26 +89,71 @@ class XmlConvert
 }
 
 /**
- * An object containing the data of an xml node.
- */
-class XmlNodeData
+	<h3>An object containing the data of an xml node.</h3>
+**/
+class XmlNode implements Dynamic<String>
 {
-	public var treeNode:TreeNode<XmlNodeData>;
+	/**
+		Node element name.
+	**/
 	public var name:String;
-	public var value:String;
-	public var attributes:StringMap<String>;
+	
+	/**
+		PCDATA or CDATA (if any).
+	**/
+	public var data:String;
+	
+	/**
+		The `TreeNode` instance storing this node.
+	**/
+	public var treeNode:TreeNode<XmlNode>;
+	
+	var mAttributes:Dynamic;
 	
 	public function new(name:String)
 	{
 		this.name = name;
-		this.value = null;
-		attributes = null;
+		mAttributes = {};
 	}
 	
-	public function toString():String
+	public function firstChild():XmlNode
 	{
-		if (value != null)
-			return name + ":" + value;
-		return name;
+		if (treeNode.hasChildren())
+			return treeNode.getFirstChild().val;
+		return null;
+	}
+	
+	public function numChildren():Int
+	{
+		return treeNode.numChildren();
+	}
+	
+	public function firstDescendantByName(name:String):XmlNode
+	{
+		return Lambda.find(treeNode, function(e) return e.name == name);
+	}
+	
+	public function descendantsByName(name:String):Iterator<XmlNode>
+	{
+		return Lambda.filter(treeNode, function(e) return e.name == name).iterator();
+	}
+	
+	public function childrenByName(name:String):Iterator<XmlNode>
+	{
+		var a = [];
+		for (i in treeNode.childIterator())
+			if (i.name == name)
+				a.push(i);
+		return a.iterator();
+	}
+	
+	public function exists(name:String):Bool return Reflect.hasField(mAttributes, name);
+	
+	public function resolve(name:String):String
+	{
+		if (Reflect.hasField(mAttributes, name))
+			return Reflect.field(mAttributes, name);
+		else
+			return null;
 	}
 }

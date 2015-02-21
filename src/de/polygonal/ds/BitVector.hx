@@ -24,16 +24,19 @@ import haxe.ds.Vector;
 using de.polygonal.ds.Bits;
 
 /**
- * <p>An array data structure that compactly stores individual bits (Boolean values).</p>
- * <p><o>Worst-case running time in Big O notation</o></p>
- */
+	<h3>An array data structure that compactly stores individual bits (boolean values).</h3>
+	
+	<o>Worst-case running time in Big O notation</o>
+**/
 class BitVector implements Hashable
 {
 	/**
-	 * A unique identifier for this object.<br/>
-	 * A hash table transforms this key into an index of an array element by using a hash function.<br/>
-	 * <warn>This value should never be changed by the user.</warn>
-	 */
+		A unique identifier for this object.
+		
+		A hash table transforms this key into an index of an array element by using a hash function.
+		
+		<warn>This value should never be changed by the user.</warn>
+	**/
 	public var key:Int;
 	
 	var mBits:Vector<Int>;
@@ -41,8 +44,8 @@ class BitVector implements Hashable
 	var mBitSize:Int;
 	
 	/**
-	 * Creates a bit-vector capable of storing a total of <code>size</code> bits.
-	 */
+		Creates a bit-vector capable of storing a total of `size` bits.
+	**/
 	public function new(size:Int)
 	{
 		mBits = null;
@@ -55,27 +58,27 @@ class BitVector implements Hashable
 	}
 	
 	/**
-	 * Destroys this object by explicitly nullifying the array storing the bits.
-	 * <o>1</o>
-	 */
+		Destroys this object by explicitly nullifying the array storing the bits.
+		<o>1</o>
+	**/
 	public function free()
 	{
 		mBits = null;
 	}
 	
 	/**
-	 * The exact number of bits that the bit-vector can store.
-	 * <o>1</o>
-	 */
+		The exact number of bits that the bit-vector can store.
+		<o>1</o>
+	**/
 	inline public function capacity():Int
 	{
 		return mBitSize;
 	}
 	
 	/**
-	 * The total number of bits set to 1.
-	 * <o>n</o>
-	 */
+		The total number of bits set to one.
+		<o>n</o>
+	**/
 	inline public function size():Int
 	{
 		var c = 0;
@@ -85,19 +88,19 @@ class BitVector implements Hashable
 	}
 	
 	/**
-	 * The total number of 32-bit integers allocated for storing the bits.
-	 * <o>1</o>
-	 */
+		The total number of 32-bit integers allocated for storing the bits.
+		<o>1</o>
+	**/
 	inline public function bucketSize():Int
 	{
 		return mArrSize;
 	}
 	
 	/**
-	 * Returns true if the bit at index <code>i</code> is 1.
-	 * <o>1</o>
-	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
-	 */
+		Returns true if the bit at index `i` is 1.
+		<o>1</o>
+		@throws de.polygonal.ds.error.AssertError index out of range (debug only).
+	**/
 	inline public function has(i:Int):Bool
 	{
 		assert(i < capacity(), 'i index out of range ($i)');
@@ -106,10 +109,10 @@ class BitVector implements Hashable
 	}
 	
 	/**
-	 * Sets the bit at index <code>i</code> to 1.
-	 * <o>1</o>
-	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
-	 */
+		Sets the bit at index `i` to one.
+		<o>1</o>
+		@throws de.polygonal.ds.error.AssertError index out of range (debug only).
+	**/
 	inline public function set(i:Int)
 	{
 		assert(i < capacity(), 'i index out of range ($i)');
@@ -119,10 +122,10 @@ class BitVector implements Hashable
 	}
 	
 	/**
-	 * Sets the bit at index <code>i</code> to 0.
-	 * <o>1</o>
-	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
-	 */
+		Sets the bit at index `i` to zero.
+		<o>1</o>
+		@throws de.polygonal.ds.error.AssertError index out of range (debug only).
+	**/
 	inline public function clr(i:Int)
 	{
 		assert(i < capacity(), 'i index out of range ($i)');
@@ -132,30 +135,31 @@ class BitVector implements Hashable
 	}
 	
 	/**
-	 * Sets all bits in the bit-vector to 0.
-	 * <o>n</o>
-	 */
+		Sets all bits in the bit-vector to zero.
+		<o>n</o>
+	**/
 	inline public function clrAll()
 	{
 		for (i in 0...mArrSize) mBits[i] = 0;
 	}
 	
 	/**
-	 * Sets all bits in the bit-vector to 1.
-	 * <o>n</o>
-	 */
+		Sets all bits in the bit-vector to one.
+		<o>n</o>
+	**/
 	inline public function setAll()
 	{
 		for (i in 0...mArrSize) mBits[i] = -1;
 	}
 	
 	/**
-	 * Clears all bits in the range <arg>&#091;min, max)</arg>.
-	 * This is faster than clearing individual bits by using the <code>clr</code> method.
-	 * @throws de.polygonal.ds.error.AssertError min out of range (debug only).
-	 * @throws de.polygonal.ds.error.AssertError max out of range (debug only).
-	 * <o>n</o>
-	 */
+		Clears all bits in the range [`min`, `max`).
+		
+		This is faster than clearing individual bits by using the `clr` method.
+		@throws de.polygonal.ds.error.AssertError min out of range (debug only).
+		@throws de.polygonal.ds.error.AssertError max out of range (debug only).
+		<o>n</o>
+	**/
 	public function clrRange(min:Int, max:Int)
 	{
 		assert(min >= 0 && min <= max && max < mBitSize, 'min/max out of range ($min/$max)');
@@ -175,12 +179,13 @@ class BitVector implements Hashable
 	}
 	
 	/**
-	 * Sets all bits in the range <arg>&#091;min, max)</arg>.
-	 * This is faster than setting individual bits by using the <code>set</code> method.
-	 * @throws de.polygonal.ds.error.AssertError min out of range (debug only).
-	 * @throws de.polygonal.ds.error.AssertError max out of range (debug only).
-	 * <o>n</o>
-	 */
+		Sets all bits in the range [`min`, `max`).
+		
+		This is faster than setting individual bits by using the `set` method.
+		@throws de.polygonal.ds.error.AssertError min out of range (debug only).
+		@throws de.polygonal.ds.error.AssertError max out of range (debug only).
+		<o>n</o>
+	**/
 	public function setRange(min:Int, max:Int)
 	{
 		assert(min >= 0 && min <= max && max < mBitSize, 'min/max out of range ($min/$max)');
@@ -200,20 +205,21 @@ class BitVector implements Hashable
 	}
 	
 	/**
-	 * Sets the bit at index <code>i</code> to 1 if <code>cond</code> is true or clears the bit at index <code>i</code> if <code>cond</code> is false.
-	 * <o>1</o>
-	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only) (debug only).
-	 */
+		Sets the bit at index `i` to one if `cond` is true or clears the bit at index `i` if `cond` is false.
+		<o>1</o>
+		@throws de.polygonal.ds.error.AssertError index out of range (debug only) (debug only).
+	**/
 	inline public function ofBool(i:Int, cond:Bool)
 	{
 		cond ? set(i) : clr(i);
 	}
 	
 	/**
-	 * Returns the bucket at index <code>i</code>.<br/>
-	 * A bucket is a 32-bit integer for storing the bit flags.
-	 * @throws de.polygonal.ds.error.AssertError <code>i</code> out of range (debug only).
-	 */
+		Returns the bucket at index `i`.
+		
+		A bucket is a 32-bit integer for storing the bit flags.
+		@throws de.polygonal.ds.error.AssertError `i` out of range (debug only).
+	**/
 	inline public function getBucketAt(i:Int):Int
 	{
 		assert(i >= 0 && i < mArrSize, 'i index out of range ($i)');
@@ -222,10 +228,11 @@ class BitVector implements Hashable
 	}
 	
 	/**
-	 * Writes all buckets to <code>output</code>.
-	 * A bucket is a 32-bit integer for storing the bit flags.
-	 * @return the total number of buckets.
-	 */
+		Writes all buckets to `output`.
+		
+		A bucket is a 32-bit integer for storing the bit flags.
+		@return the total number of buckets.
+	**/
 	inline public function getBuckets(output:Array<Int>):Int
 	{
 		var t = mBits;
@@ -234,10 +241,11 @@ class BitVector implements Hashable
 	}
 	
 	/**
-	 * Resizes the bit-vector to <code>x</code> bits.<br/>
-	 * Preserves existing values if the new size &gt; old size.
-	 * <o>n</o>
-	 */
+		Resizes the bit-vector to `x` bits.
+		
+		Preserves existing values if the new size > old size.
+		<o>n</o>
+	**/
 	public function resize(x:Int)
 	{
 		if (mBitSize == x) return;
@@ -276,11 +284,12 @@ class BitVector implements Hashable
 	}
 	
 	/**
-	 * Writes the data in this bit-vector to a byte array.<br/>
-	 * The number of bytes equals <em>bucketSize()</em> * 4 and the number of bits equals <em>capacity()</em>.
-	 * <o>n</o>
-	 * @param bigEndian the byte order (default is little endian)
-	 */
+		Writes the data in this bit-vector to a byte array.
+		
+		The number of bytes equals `bucketSize()` * 4 and the number of bits equals `capacity()`.
+		<o>n</o>
+		@param bigEndian the byte order (default is little endian)
+	**/
 	public function toBytes(bigEndian = false):haxe.io.BytesData
 	{
 		#if flash
@@ -299,12 +308,13 @@ class BitVector implements Hashable
 	}
 	
 	/**
-	 * Copies the bits from <code>bytes</code> into this bit vector.<br/>
-	 * The bit-vector is resized to the size of <code>bytes</code>.
-	 * <o>n</o>
-	 * @param bigEndian the input byte order (default is little endian)
-	 * @throws de.polygonal.ds.error.AssertError <code>input</code> is null (debug only).
-	 */
+		Copies the bits from `bytes` into this bit vector.
+		
+		The bit-vector is resized to the size of `bytes`.
+		<o>n</o>
+		@param bigEndian the input byte order (default is little endian)
+		@throws de.polygonal.ds.error.AssertError `input` is null (debug only).
+	**/
 	public function ofBytes(bytes:haxe.io.BytesData, bigEndian = false)
 	{
 		#if flash
@@ -354,23 +364,24 @@ class BitVector implements Hashable
 	}
 	
 	/**
-	 * Returns a string representing the current object.<br/>
-	 * Example:<br/>
-	 * <pre class="prettyprint">
-	 * var bv = new de.polygonal.ds.BitVector(40);
-	 * for (i in 0...bv.capacity()) {
-	 *     if (i & 1 == 0) {
-	 *         bv.set(i);
-	 *     }
-	 * }
-	 * trace(bv);</pre>
-	 * <pre class="console">
-	 * { BitVector set/all: 20/40 }
-	 * [
-	 *   0 -> b01010101010101010101010101010101
-	 *   1 -> b00000000000000000000000001010101
-	 * ]</pre>
-	 */
+		Returns a string representing the current object.
+		
+		Example:
+		<pre class="prettyprint">
+		var bv = new de.polygonal.ds.BitVector(40);
+		for (i in 0...bv.capacity()) {
+		    if (i & 1 == 0) {
+		        bv.set(i);
+		    }
+		}
+		trace(bv);</pre>
+		<pre class="console">
+		{ BitVector set/all: 20/40 }
+		[
+		  0 -> b01010101010101010101010101010101
+		  1 -> b00000000000000000000000001010101
+		]</pre>
+	**/
 	public function toString():String
 	{
 		var s = '{ BitVector set/all: ${size()}/${capacity()} }';
@@ -383,9 +394,9 @@ class BitVector implements Hashable
 	}
 	
 	/**
-	 * Creates a copy of this bit vector.
-	 * <o>n</o>
-	 */
+		Creates a copy of this bit vector.
+		<o>n</o>
+	**/
 	public function clone():BitVector
 	{
 		var copy = new BitVector(mBitSize);

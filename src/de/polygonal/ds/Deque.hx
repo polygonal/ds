@@ -19,37 +19,37 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 package de.polygonal.ds;
 
 /**
- * <p>A double-ended queue that supports fast element insertion and removal at both ends.</p>
- */
+	<h3>A double-ended queue that supports fast element insertion and removal at both ends.</h3>
+**/
 interface Deque<T> extends Collection<T>
 {
 	/**
-	 * Returns the first element of the deque.
-	 */
+		Returns the first element of the deque.
+	**/
 	function front():T;
 	
 	/**
-	 * Inserts the element <code>x</code> at the front of the deque.
-	 */
+		Inserts the element `x` at the front of the deque.
+	**/
 	function pushFront(x:T):Void;
 	
 	/**
-	 * Removes and returns the element at the beginning of the deque.
-	 */
+		Removes and returns the element at the beginning of the deque.
+	**/
 	function popFront():T;
 	
 	/**
-	 * Returns the last element of the deque.
-	 */
+		Returns the last element of the deque.
+	**/
 	function back():T;
 	
 	/**
-	 * Inserts the element <code>x</code> at the back of the deque.
-	 */
+		Inserts the element `x` at the back of the deque.
+	**/
 	function pushBack(x:T):Void;
 	
 	/**
-	 * Deletes the element at the end of the deque.
-	 */
+		Deletes the element at the end of the deque.
+	**/
 	function popBack():T;
 }

@@ -19,16 +19,19 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 package de.polygonal.ds;
 
 /**
- * <p>An abstract object that provides an unique integer key.</p>
- * <p>Can be added to a <em>HashSet</em> or used as a key in a <em>HashTable</em> object.</p>
- */
+	<h3>An abstract object that provides an unique integer key.</h3>
+	
+	Can be inserted into a `HashSet` or used as a key in a `HashTable` object.
+**/
 class HashableItem implements Hashable
 {
 	/**
-	 * A unique, unsigned 32-bit integer key.<br/>
-	 * A hash table transforms this key into an index of an array element by using a hash function.<br/>
-	 * <warn>This value should never be changed by the user.</warn>
-	 */
+		A unique, unsigned 32-bit integer key.
+		
+		A hash table transforms this key into an index of an array element by using a hash function.
+		
+		<warn>This value should never be changed by the user.</warn>
+	**/
 	public var key:Int;
 	
 	function new()

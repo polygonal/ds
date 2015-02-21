@@ -25,10 +25,12 @@ import de.polygonal.ds.error.Assert.assert;
 #end
 
 /**
- * <p>Manages fast "alchemy memory".</p>
- * <p>See <a href="http://lab.polygonal.de/2009/03/14/a-little-alchemy-in-hx3ds/" target="_blank">http://lab.polygonal.de/2009/03/14/a-little-alchemy-in-hx3ds/</a>.</p>
- * <p>See <a href="http://lab.polygonal.de/2010/03/15/memorymanager-revisited/" target="_blank">http://lab.polygonal.de/2010/03/15/memorymanager-revisited/</a>
- */
+	<h3>Manages fast "alchemy memory".</h3>
+	
+	See <a href="http://lab.polygonal.de/2009/03/14/a-little-alchemy-in-hx3ds/" target="_blank">http://lab.polygonal.de/2009/03/14/a-little-alchemy-in-hx3ds/</a>.
+	
+	See <a href="http://lab.polygonal.de/2010/03/15/memorymanager-revisited/" target="_blank">http://lab.polygonal.de/2010/03/15/memorymanager-revisited/</a>
+**/
 @:access(de.polygonal.ds.mem.MemorySegment)
 @:access(de.polygonal.ds.mem.MemoryAccess)
 class MemoryManager
@@ -38,8 +40,8 @@ class MemoryManager
 	static var mInstance:MemoryManager = null;
 	
 	/**
-	 * Releases all allocated memory and nullifies references for GC'ing used resources.
-	 */
+		Releases all allocated memory and nullifies references for GC'ing used resources.
+	**/
 	public static function free()
 	{
 		if (mInstance != null) mInstance._free();
@@ -47,53 +49,53 @@ class MemoryManager
 	}
 	
 	/**
-	 * The total number of bytes that are preallocated prior to the first call to <em>malloc()</em>.<br/>
-	 * Default is 0 bytes.
-	 */
+		The total number of bytes that are preallocated prior to the first call to `malloc()`.
+		Default is 0 bytes.
+	**/
 	public static var RESERVE_BYTES = 0;
 	
 	/**
-	 * The total number bytes that the user is allowed to allocate (1 MiB equals 1.048.576 bytes).<br/>
-	 * This should be used as a safe upper limit for detecting memory leaks during development.<br/>
-	 * The default value is 64 MiB.
-	 */
+		The total number bytes that the user is allowed to allocate (1 MiB equals 1.048.576 bytes).
+		This should be used as a safe upper limit for detecting memory leaks during development.
+		The default value is 64 MiB.
+	**/
 	public static var MEMORY_LIMIT_BYTES = 64 << 20;
 	
 	/**
-	 * The minimum block size for allocating additional memory on the fly.<br/>
-	 * The default value is 64 KiB. The minimum value is 1024 bytes or 1 KiB.<br/>
-	 * <warn>Changing this value has no effect after memory has been allocated for the first time.</warn>
-	 */
+		The minimum block size for allocating additional memory on the fly.
+		The default value is 64 KiB. The minimum value is 1024 bytes or 1 KiB.
+		<warn>Changing this value has no effect after memory has been allocated for the first time.</warn>
+	**/
 	public static var BLOCK_SIZE_BYTES = 1024 << 6;
 	
 	/**
-	 * A reserved, fixed portion of bytes at the beginning of the byte array which can be used as a temporary buffer or for doing math tricks.<br/>
-	 * <warn>Changing this value has no effect after memory has been allocated for the first time.</warn>
-	 */
+		A reserved, fixed portion of bytes at the beginning of the byte array which can be used as a temporary buffer or for doing math tricks.
+		<warn>Changing this value has no effect after memory has been allocated for the first time.</warn>
+	**/
 	public static var RAW_BYTES = 1024;
 	
 	#if flash
 	/**
-	 * If true, allocated memory will be automatically freed when the reference to a <em>MemoryAccess</em> object is garbage collected.
-	 */
+		If true, allocated memory will be automatically freed when the reference to a `MemoryAccess` object is garbage collected.
+	**/
 	public static var AUTO_RECLAIM_MEMORY = false;
 	
 	/**
-	 * The update rate in seconds for the weak reference monitor that detects GCed <em>MemoryAccess</em> objects.<br/>
-	 * A smaller value requires more CPU time but releases memory earlier.<br/>
-	 * The default value is 0.25 seconds.
-	 */
+		The update rate in seconds for the weak reference monitor that detects GCed `MemoryAccess` objects.
+		A smaller value requires more CPU time but releases memory earlier.
+		The default value is 0.25 seconds.
+	**/
 	public static var AUTO_RECLAIM_INTERVAL = 0.25;
 	#end
 	
 	/**
-	 * Returns the total number of used bytes.
-	 */
+		Returns the total number of used bytes.
+	**/
 	public var bytesUsed:Int;
 	
 	/**
-	 * Returns the total number of allocated bytes.
-	 */
+		Returns the total number of allocated bytes.
+	**/
 	public var bytesTotal:Int;
 	
 	#if alchemy
@@ -142,15 +144,15 @@ class MemoryManager
 	
 	#if (alchemy && flash)
 	/**
-	 * The byte array that is managed by this memory manager.
-	 */
+		The byte array that is managed by this memory manager.
+	**/
 	public var bytes(get_bytes, never):flash.utils.ByteArray;
 	inline function get_bytes():flash.utils.ByteArray return mBytes;
 	#end
 	
 	/**
-	 * The total number of <em>ArrayAccess</em> objects that have access to the heap.
-	 */
+		The total number of `ArrayAccess` objects that have access to the heap.
+	**/
 	public function size():Int
 	{
 		var c = 0;
@@ -183,17 +185,18 @@ class MemoryManager
 	}
 	
 	/**
-	 * Returns the total number of free bytes (allocated but unused).
-	 */
+		Returns the total number of free bytes (allocated but unused).
+	**/
 	public var bytesFree(get_bytesFree, never):Int;
 	inline function get_bytesFree():Int return bytesTotal - bytesUsed;
 	
 	/**
-	 * Copies <code>n</code> bytes from the location pointed by the index <code>source</code> to the location pointed by the index <code>destination</code>.<br/>
-	 * Copying takes place as if an intermediate buffer was used, allowing the destination and source to overlap.
-	 * @throws de.polygonal.ds.error.AssertError invalid <code>destination</code>, <code>source</code> or <code>n</code> value (debug only).
-	 * @see <a href="http://www.cplusplus.com/reference/clibrary/cstring/memmove/" target="_blank">http://www.cplusplus.com/reference/clibrary/cstring/memmove/</a>
-	 */
+		Copies `n` bytes from the location pointed by the index `source` to the location pointed by the index `destination`.
+		
+		Copying takes place as if an intermediate buffer was used, allowing the destination and source to overlap.
+		@throws de.polygonal.ds.error.AssertError invalid `destination`, `source` or `n` value (debug only).
+		See <a href="http://www.cplusplus.com/reference/clibrary/cstring/memmove/" target="_blank">http://www.cplusplus.com/reference/clibrary/cstring/memmove/</a>
+	**/
 	#if (flash && alchemy)
 	public function memmove(destination:Int, source:Int, n:Int)
 	{
@@ -231,8 +234,8 @@ class MemoryManager
 	#end
 	
 	/**
-	 * Allocates and assigns <code>numBytes</code> to be accessed by <code>access</code>.
-	 */
+		Allocates and assigns `numBytes` to be accessed by `access`.
+	**/
 	public function malloc(access:MemoryAccess, numBytes:Int)
 	{
 		mChanged = true;
@@ -268,8 +271,8 @@ class MemoryManager
 	}
 	
 	/**
-	 * Deallocates the memory used by <code>access</code>.
-	 */
+		Deallocates the memory used by `access`.
+	**/
 	public function dealloc(access:MemoryAccess)
 	{
 		assert(access != null, "invalid access");
@@ -307,8 +310,8 @@ class MemoryManager
 	}
 	
 	/**
-	 * Resizes <code>access</code> to match <code>numBytes</code>.
-	 */
+		Resizes `access` to match `numBytes`.
+	**/
 	public function realloc(access:MemoryAccess, numBytes:Int)
 	{
 		mChanged = true;
@@ -467,8 +470,8 @@ class MemoryManager
 	}
 	
 	/**
-	 * Releases unused memory.
-	 */
+		Releases unused memory.
+	**/
 	public function pack()
 	{
 		mChanged = true;
@@ -530,8 +533,8 @@ class MemoryManager
 	}
 	
 	/**
-	 * Performs a full defragmentation of the allocated memory.
-	 */
+		Performs a full defragmentation of the allocated memory.
+	**/
 	public function defrag()
 	{
 		mChanged = true;

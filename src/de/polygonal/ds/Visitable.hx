@@ -19,16 +19,16 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 package de.polygonal.ds;
 
 /**
- * <p>An object that can be visited in a traversal.</p>
- */
+	<h3>An object that can be visited in a traversal by calling visit().</h3>
+**/
 interface Visitable
 {
 	/**
-	 * @param preflight if true, an extra traversal is performed before the actual traversal runs.<br/>
-	 * The first pass visits all elements and calls element.<em>visit()</em> with the <code>preflight</code> parameter set to true.
-	 * In this pass the return value determines whether the element (and all its children (tree) or neighbors (graph)) will be processed (true) or
-	 * excluded (false) from the final traversal, which is the second pass (<code>preflight</code> parameter set to false).<br/>
-	 * @param userData custom data passed to every visited element. Default is null.
-	 */
+		@param preflight if true, an extra traversal is performed before the actual traversal runs.
+		The first pass visits all elements and calls element.`visit()` with the `preflight` parameter set to true.
+		In this pass the return value determines whether the element (and all its children (tree) or neighbors (graph)) will be processed (true) or
+		excluded (false) from the final traversal, which is the second pass (`preflight` parameter set to false).
+		@param userData custom data passed to every visited element. Default is null.
+	**/
 	function visit(preflight:Bool, userData:Dynamic):Bool;
 }

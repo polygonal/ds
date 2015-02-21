@@ -19,6 +19,7 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 package de.polygonal.ds;
 
 #if flash
+@:dox(hide)
 abstract MockVector<T>(Array<T>)
 {
 	public inline function new(length:Int, ?fixed:Bool) untyped
@@ -66,6 +67,9 @@ abstract MockVector<T>(Array<T>)
 }
 #end
 
+/**
+	<h3>Unifies haxe.ds.Vector<T> and flash.Vector<T>.</h3>
+**/
 typedef Vector<T> =
 #if flash
 	#if generic

@@ -25,35 +25,44 @@ import de.polygonal.ds.mem.IntMemory;
 import de.polygonal.ds.error.Assert.assert;
 
 /**
- * <p>An array hash table for mapping integer keys to generic elements.</p>
- * <p>The implementation is based <em>IntIntHashTable</em>.</p>
- * <p><o>Amortized running time in Big O notation</o></p>
- */
+	<h3>An array hash table for mapping integer keys to generic elements.</h3>
+	
+	The implementation is based `IntIntHashTable`.
+	
+	<o>Amortized running time in Big O notation</o>
+**/
 #if (flash && generic)
 @:generic
 #end
 class IntHashTable<T> implements Map<Int, T>
 {
 	/**
-	 * A unique identifier for this object.<br/>
-	 * A hash table transforms this key into an index of an array element by using a hash function.<br/>
-	 * <warn>This value should never be changed by the user.</warn>
-	 */
+		A unique identifier for this object.
+		
+		A hash table transforms this key into an index of an array element by using a hash function.
+		
+		<warn>This value should never be changed by the user.</warn>
+	**/
 	public var key:Int;
 	
 	/**
-	 * The maximum allowed size of this hash table.<br/>
-	 * Once the maximum size is reached, adding an element will fail with an error (debug only).<br/>
-	 * A value of -1 indicates that the size is unbound.<br/>
-	 * <warn>Always equals -1 in release mode.</warn>
-	 */
+		The maximum allowed size of this hash table.
+		
+		Once the maximum size is reached, adding an element will fail with an error (debug only).
+		
+		A value of -1 indicates that the size is unbound.
+		
+		<warn>Always equals -1 in release mode.</warn>
+	**/
 	public var maxSize:Int;
 	
 	/**
-	 * If true, reuses the iterator object instead of allocating a new one when calling <code>iterator()</code>.<br/>
-	 * The default is false.<br/>
-	 * <warn>If true, nested iterations are likely to fail as only one iteration is allowed at a time.</warn>
-	 */
+		If true, reuses the iterator object instead of allocating a new one when calling `iterator()`.
+		
+		The default is false.
+		
+		<warn>If true, nested iterations are likely to fail as only one iteration is allowed at a time.</warn>
+	**/
 	public var reuseIterator:Bool;
 	
 	var mH:IntIntHashTable;
@@ -79,31 +88,31 @@ class IntHashTable<T> implements Map<Int, T>
 	var mTmpArr:Array<Int>;
 	
 	/**
-	 * @param slotCount the total number of slots into which the hashed keys are distributed.
-	 * This defines the space-time trade off of the hash table.
-	 * Increasing the <code>slotCount</code> reduces the computation time (read/write/access) of the hash table at the cost of increased memory use.
-	 * This value is fixed and can only be changed by calling <em>rehash()</em>, which rebuilds the hash table (expensive).
-	 *
-	 * @param capacity the initial physical space for storing the key/value pairs at the time the hash table is created.
-	 * This is also the minimum allowed size of the hash table and cannot be changed in the future. If omitted, the initial <em>capacity</em> equals <code>slotCount</code>.
-	 * The <em>capacity</em> is automatically adjusted according to the storage requirements based on two rules:
-	 * <ol>
-	 * <li>If the hash table runs out of space, the <em>capacity</em> is doubled (if <code>isResizable</code> is true).</li>
-	 * <li>If the size falls below a quarter of the current <em>capacity</em>, the <em>capacity</em> is cut in half while the minimum <em>capacity</em> can't fall below <code>capacity</code>.</li>
-	 * </ol>
-	 *
-	 * @param isResizable if false, the hash table is treated as fixed size table.
-	 * Thus adding a value when <em>size()</em> equals <em>capacity</em> throws an error.
-	 * Otherwise the <em>capacity</em> is automatically adjusted.
-	 * Default is true.
-	 *
-	 * @param maxSize the maximum allowed size of the stack.
-	 * The default value of -1 indicates that there is no upper limit.
-	 *
-	 * @throws de.polygonal.ds.error.AssertError <code>slotCount</code> is not a power of two (debug only).
-	 * @throws de.polygonal.ds.error.AssertError <code>capacity</code> is not a power of two (debug only).
-	 * @throws de.polygonal.ds.error.AssertError <code>capacity</code> is &lt; 2 (debug only).
-	 */
+		@param slotCount the total number of slots into which the hashed keys are distributed.
+		This defines the space-time trade off of the hash table.
+		Increasing the `slotCount` reduces the computation time (read/write/access) of the hash table at the cost of increased memory use.
+		This value is fixed and can only be changed by calling `rehash()`, which rebuilds the hash table (expensive).
+		
+		@param capacity the initial physical space for storing the key/value pairs at the time the hash table is created.
+		This is also the minimum allowed size of the hash table and cannot be changed in the future. If omitted, the initial `capacity` equals `slotCount`.
+		The `capacity` is automatically adjusted according to the storage requirements based on two rules:
+		<ul>
+		<li>If the hash table runs out of space, the `capacity` is doubled (if `isResizable` is true).</li>
+		<li>If the size falls below a quarter of the current `capacity`, the `capacity` is cut in half while the minimum `capacity` can't fall below `capacity`.</li>
+		</ul>
+		
+		@param isResizable if false, the hash table is treated as fixed size table.
+		Thus adding a value when `size()` equals `capacity` throws an error.
+		Otherwise the `capacity` is automatically adjusted.
+		Default is true.
+		
+		@param maxSize the maximum allowed size of the stack.
+		The default value of -1 indicates that there is no upper limit.
+		
+		@throws de.polygonal.ds.error.AssertError `slotCount` is not a power of two (debug only).
+		@throws de.polygonal.ds.error.AssertError `capacity` is not a power of two (debug only).
+		@throws de.polygonal.ds.error.AssertError `capacity` is < 2 (debug only).
+	**/
 	public function new(slotCount:Int, capacity = -1, isResizable = true, maxSize = -1)
 	{
 		if (slotCount == M.INT16_MIN) return;
@@ -151,48 +160,55 @@ class IntHashTable<T> implements Map<Int, T>
 	}
 	
 	/**
-	 * The load factor measure the "denseness" of a hash table and is proportional to the time cost to look up an entry.<br/>
-	 * E.g. assuming that the keys are perfectly distributed, a load factor of 4.0 indicates that each slot stores 4 keys, which have to be sequentially searched in order to find a value.<br/>
-	 * A high load factor thus indicates poor performance.
-	 * If the load factor gets too high, additional slots can be allocated by calling <em>rehash()</em>.
-	 */
+		The load factor measure the "denseness" of a hash table and is proportional to the time cost to look up an entry.
+		
+		E.g. assuming that the keys are perfectly distributed, a load factor of 4.0 indicates that each slot stores 4 keys, which have to be sequentially searched in order to find a value.
+		
+		A high load factor thus indicates poor performance.
+		
+		If the load factor gets too high, additional slots can be allocated by calling `rehash()`.
+	**/
 	inline public function getLoadFactor():Float
 	{
 		return mH.getLoadFactor();
 	}
 	
 	/**
-	 * The total number of allocated slots.
-	 */
+		The total number of allocated slots.
+	**/
 	inline public function getSlotCount():Int
 	{
 		return mH.getSlotCount();
 	}
 	
 	/**
-	 * The size of the allocated storage space for the key/value pairs.<br/>
-	 * If more space is required to accomodate new elements, the <em>capacity</em> is doubled every time <em>size()</em> grows beyond <em>capacity</em>, and split in half when <em>size()</em> is a quarter of <em>capacity</em>.
-	 * The <em>capacity</em> never falls below the initial size defined in the constructor.
-	 */
+		The size of the allocated storage space for the key/value pairs.
+		
+		If more space is required to accomodate new elements, the `capacity` is doubled every time `size()` grows beyond `capacity`, and split in half when `size()` is a quarter of `capacity`.
+		
+		The `capacity` never falls below the initial size defined in the constructor.
+	**/
 	inline public function getCapacity():Int
 	{
 		return mH.getCapacity();
 	}
 	
 	/**
-	 * Counts the total number of collisions.<br/>
-	 * A collision occurs when two distinct keys are hashed into the same slot.
-	 */
+		Counts the total number of collisions.
+		
+		A collision occurs when two distinct keys are hashed into the same slot.
+	**/
 	public function getCollisionCount():Int
 	{
 		return mH.getCollisionCount();
 	}
 	
 	/**
-	 * Returns the value that is mapped to <code>key</code> or null if <code>key</code> does not exist.<br/>
-	 * Uses move-to-front-on-access which reduces access time when similar keys are frequently queried.
-	 * <o>1</o>
-	 */
+		Returns the value that is mapped to `key` or null if `key` does not exist.
+		
+		Uses move-to-front-on-access which reduces access time when similar keys are frequently queried.
+		<o>1</o>
+	**/
 	inline public function getFront(key:Int):T
 	{
 		if (mKey0 == key)
@@ -211,12 +227,12 @@ class IntHashTable<T> implements Map<Int, T>
 	}
 	
 	/**
-	 * Maps <code>val</code> to <code>key</code> in this map, but only if <code>key</code> does not exist yet.<br/>
-	 * <o>1</o>
-	 * @return true if <code>key</code> was mapped to <code>val</code> for the first time.
-	 * @throws de.polygonal.ds.error.AssertError out of space - hash table is full but not resizable.
-	 * @throws de.polygonal.ds.error.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
-	 */
+		Maps `val` to `key` in this map, but only if `key` does not exist yet.
+		<o>1</o>
+		@return true if `key` was mapped to `val` for the first time.
+		@throws de.polygonal.ds.error.AssertError out of space - hash table is full but not resizable.
+		@throws de.polygonal.ds.error.AssertError `size()` equals `maxSize` (debug only).
+	**/
 	inline public function setIfAbsent(key:Int, val:T):Bool
 	{
 		assert(key != IntIntHashTable.KEY_ABSENT, "key 0x80000000 is reserved");
@@ -256,21 +272,22 @@ class IntHashTable<T> implements Map<Int, T>
 	}
 	
 	/**
-	 * Redistributes all keys over <code>slotCount</code>.<br/>
-	 * This is an expensive operations as the hash table is rebuild from scratch.
-	 * <o>n</o>
-	 * @throws de.polygonal.ds.error.AssertError <code>slotCount</code> is not a power of two (debug only).
-	 */
+		Redistributes all keys over `slotCount`.
+		
+		This is an expensive operations as the hash table is rebuild from scratch.
+		<o>n</o>
+		@throws de.polygonal.ds.error.AssertError `slotCount` is not a power of two (debug only).
+	**/
 	public function rehash(slotCount:Int)
 	{
 		mH.rehash(slotCount);
 	}
 	
 	/**
-	 * Remaps the first occurrence of <code>key</code> to a new value <code>val</code>.
-	 * <o>1</o>
-	 * @return true if <code>val</code> was successfully remapped to <code>key</code>.
-	 */
+		Remaps the first occurrence of `key` to a new value `val`.
+		<o>1</o>
+		@return true if `val` was successfully remapped to `key`.
+	**/
 	inline public function remap(key:Int, val:T):Bool
 	{
 		var i = mH.get(key);
@@ -284,57 +301,56 @@ class IntHashTable<T> implements Map<Int, T>
 	}
 	
 	/**
-	 * Creates and returns an unordered array of all keys.
-	 * <o>n</o>
-	 */
+		Creates and returns an unordered array of all keys.
+		<o>n</o>
+	**/
 	public function toKeyArray():Array<Int>
 	{
 		return mH.toKeyArray();
 	}
 	
 	/**
-	 * Creates and returns an unordered dense array of all keys.
-	 * <o>n</o>
-	 */
+		Creates and returns an unordered dense array of all keys.
+		<o>n</o>
+	**/
 	public function toKeyDA():DA<Int>
 	{
 		return mH.toKeyDA();
 	}
 	
 	/**
-	 * Returns a string representing the current object.<br/>
-	 * Example:<br/>
-	 * <pre class="prettyprint">
-	 * class Foo extends de.polygonal.ds.HashableItem {
-	 *     var value:Int;
-	 *
-	 *     public function new(value:Int) {
-	 *         super();
-	 *         this.value = value;
-	 *     }
-	 *
-	 *     public function toString():String {
-	 *         return "{ Foo " + value + " }";
-	 *     }
-	 * }
-	 *
-	 * class Main
-	 * {
-	 *     static function main() {
-	 *         var hash = new de.polygonal.ds.IntHashTable&lt;Foo&gt;(16);
-	 *         for (i in 0...4) hash.set(i, new Foo(i));
-	 *         trace(hash);
-	 *     }
-	 * }</pre>
-	 * <pre class="console">
-	 * { IntHashTable size/capacity: 4/16, load factor: 0.25 }
-	 * [
-	 *    0 -> { Foo 0 }
-	 *    1 -> { Foo 1 }
-	 *    2 -> { Foo 2 }
-	 *    3 -> { Foo 3 }
-	 * ]</pre>
-	 */
+		Returns a string representing the current object.
+		
+		Example:
+		<pre class="prettyprint">
+		class Foo extends de.polygonal.ds.HashableItem {
+		    var value:Int;
+		    public function new(value:Int) {
+		        super();
+		        this.value = value;
+		    }
+		    public function toString():String {
+		        return "{ Foo " + value + " }";
+		    }
+		}
+		
+		class Main
+		{
+		    static function main() {
+		        var hash = new de.polygonal.ds.IntHashTable<Foo>(16);
+		        for (i in 0...4) hash.set(i, new Foo(i));
+		        trace(hash);
+		    }
+		}</pre>
+		<pre class="console">
+		{ IntHashTable size/capacity: 4/16, load factor: 0.25 }
+		[
+		   0 -> { Foo 0 }
+		   1 -> { Foo 1 }
+		   2 -> { Foo 2 }
+		   3 -> { Foo 3 }
+		]</pre>
+	**/
 	public function toString():String
 	{
 		var s = Printf.format("{ IntHashTable size/capacity: %d/%d, load factor: %.2f }", [size(), getCapacity(), getLoadFactor()]);
@@ -361,9 +377,9 @@ class IntHashTable<T> implements Map<Int, T>
 	///////////////////////////////////////////////////////*/
 	
 	/**
-	 * Returns true if this map contains a mapping for the value <code>val</code>.
-	 * <o>n</o>
-	 */
+		Returns true if this map contains a mapping for the value `val`.
+		<o>n</o>
+	**/
 	inline public function has(val:T):Bool
 	{
 		var exists = false;
@@ -382,27 +398,27 @@ class IntHashTable<T> implements Map<Int, T>
 	}
 	
 	/**
-	 * Returns true if this map contains <code>key</code>.
-	 * <o>1</o>
-	 */
+		Returns true if this map contains `key`.
+		<o>1</o>
+	**/
 	inline public function hasKey(key:Int):Bool
 	{
 		return mH.hasKey(key);
 	}
 	
 	/**
-	 * Counts the number of mappings for <code>key</code>.
-	 * <o>n</o>
-	 */
+		Counts the number of mappings for `key`.
+		<o>n</o>
+	**/
 	public function count(key:Int):Int
 	{
 		return mH.count(key);
 	}
 	
 	/**
-	 * Returns the first value that is mapped to <code>key</code> or null if <code>key</code> does not exist.
-	 * <o>1</o>
-	 */
+		Returns the first value that is mapped to `key` or null if `key` does not exist.
+		<o>1</o>
+	**/
 	inline public function get(key:Int):T
 	{
 		var i = mH.get(key);
@@ -413,9 +429,9 @@ class IntHashTable<T> implements Map<Int, T>
 	}
 	
 	/**
-	 * Stores all values that are mapped to <code>key</code> in <code>values</code> or returns 0 if <code>key</code> does not exist.
-	 * @return the total number of values mapped to <code>key</code>.
-	 */
+		Stores all values that are mapped to `key` in `values` or returns 0 if `key` does not exist.
+		@return the total number of values mapped to `key`.
+	**/
 	public function getAll(key:Int, values:Array<T>):Int
 	{
 		var i = mH.get(key);
@@ -430,15 +446,17 @@ class IntHashTable<T> implements Map<Int, T>
 	}
 	
 	/**
-	 * Maps the value <code>val</code> to <code>key</code>.<br/>
-	 * The method allows duplicate keys.<br/>
-	 * <warn>To ensure unique keys either use <em>hasKey()</em> before <em>set()</em> or <em>setIfAbsent()</em></warn>
-	 * <o>1</o>
-	 * @return true if <code>key</code> was added for the first time, false if another instance of <code>key</code> was inserted.
-	 * @throws de.polygonal.ds.error.AssertError out of space - hash table is full but not resizable.
-	 * @throws de.polygonal.ds.error.AssertError key 0x80000000 is reserved (debug only).
-	 * @throws de.polygonal.ds.error.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
-	 */
+		Maps the value `val` to `key`.
+		
+		The method allows duplicate keys.
+		
+		<warn>To ensure unique keys either use `hasKey()` before `set()` or `setIfAbsent()`</warn>
+		<o>1</o>
+		@return true if `key` was added for the first time, false if another instance of `key` was inserted.
+		@throws de.polygonal.ds.error.AssertError out of space - hash table is full but not resizable.
+		@throws de.polygonal.ds.error.AssertError key 0x80000000 is reserved (debug only).
+		@throws de.polygonal.ds.error.AssertError `size()` equals `maxSize` (debug only).
+	**/
 	public function set(key:Int, val:T):Bool
 	{
 		assert(key != IntIntHashTable.KEY_ABSENT, "key 0x80000000 is reserved");
@@ -458,10 +476,10 @@ class IntHashTable<T> implements Map<Int, T>
 	}
 	
 	/**
-	 * Removes the first occurrence of <code>key</code>.
-	 * <o>1</o>
-	 * @return true if <code>key</code> is successfully removed.
-	 */
+		Removes the first occurrence of `key`.
+		<o>1</o>
+		@return true if `key` is successfully removed.
+	**/
 	public function clr(key:Int):Bool
 	{
 		var i = mH.get(key);
@@ -492,9 +510,9 @@ class IntHashTable<T> implements Map<Int, T>
 	}
 	
 	/**
-	 * Creates a <em>ListSet</em> object of the values in this map.
-	 * <o>n</o>
-	 */
+		Creates a `ListSet` object of the values in this map.
+		<o>n</o>
+	**/
 	public function toValSet():Set<T>
 	{
 		var s = new ListSet<T>();
@@ -508,20 +526,22 @@ class IntHashTable<T> implements Map<Int, T>
 	}
 	
 	/**
-	 * Creates a <em>ListSet</em> object of the keys in this map.
-	 * <o>n</o>
-	 */
+		Creates a `ListSet` object of the keys in this map.
+		<o>n</o>
+	**/
 	public function toKeySet():Set<Int>
 	{
 		return mH.toKeySet();
 	}
 	
 	/**
-	 * Returns a new <em>IntIntHashTableKeyIterator</em> object to iterate over all keys stored in this map.
-	 * The keys are visited in a random order.
-	 * <o>n</o>
-	 * @see <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
-	 */
+		Returns a new `IntIntHashTableKeyIterator` object to iterate over all keys stored in this map.
+		
+		The keys are visited in a random order.
+		
+		See <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
+		<o>n</o>
+	**/
 	public function keys():Itr<Int>
 	{
 		return mH.keys();
@@ -532,10 +552,11 @@ class IntHashTable<T> implements Map<Int, T>
 	///////////////////////////////////////////////////////*/
 	
 	/**
-	 * Destroys this object by explicitly nullifying all key/values.<br/>
-	 * <warn>If "alchemy memory" is used, always call this method when the life cycle of this object ends to prevent a memory leak.</warn>
-	 * <o>n</o>
-	 */
+		Destroys this object by explicitly nullifying all key/values.
+		
+		<warn>If "alchemy memory" is used, always call this method when the life cycle of this object ends to prevent a memory leak.</warn>
+		<o>n</o>
+	**/
 	public function free()
 	{
 		for (i in 0...size()) mVals[i] = null;
@@ -556,19 +577,19 @@ class IntHashTable<T> implements Map<Int, T>
 	}
 	
 	/**
-	 * Same as <em>has()</em>.
-	 * <o>1</o>
-	 */
+		Same as `has()`.
+		<o>1</o>
+	**/
 	public function contains(val:T):Bool
 	{
 		return has(val);
 	}
 
 	/**
-	 * Removes all occurrences of the value <code>val</code>.
-	 * <o>n</o>
-	 * @return true if <code>val</code> was removed, false if <code>val</code> does not exist.
-	 */
+		Removes all occurrences of the value `val`.
+		<o>n</o>
+		@return true if `val` was removed, false if `val` does not exist.
+	**/
 	public function remove(x:T):Bool
 	{
 		var tmp = mTmpArr;
@@ -583,10 +604,10 @@ class IntHashTable<T> implements Map<Int, T>
 	}
 	
 	/**
-	 * Removes all key/value pairs.<br/>
-	 * <o>n</o>
-	 * @param purge if true, nullifies references of all values and shrinks the hash table to the initial capacity defined in the constructor.
-	 */
+		Removes all key/value pairs.
+		<o>n</o>
+		@param purge if true, nullifies references of all values and shrinks the hash table to the initial capacity defined in the constructor.
+	**/
 	public function clear(purge = false)
 	{
 		mH.clear(purge);
@@ -609,10 +630,12 @@ class IntHashTable<T> implements Map<Int, T>
 	}
 
 	/**
-	 * Returns a new <em>IntHashTableIterator</em> object to iterate over all values contained in this hash table.<br/>
-	 * The values are visited in a random order.
-	 * @see <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
-	 */
+		Returns a new `IntHashTableIterator` object to iterate over all values contained in this hash table.
+		
+		The values are visited in a random order.
+		
+		See <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
+	**/
 	public function iterator():Itr<T>
 	{
 		if (reuseIterator)
@@ -628,26 +651,26 @@ class IntHashTable<T> implements Map<Int, T>
 	}
 	
 	/**
-	 * Returns true if this hash table is empty.
-	 * <o>1</o>
-	 */
+		Returns true if this hash table is empty.
+		<o>1</o>
+	**/
 	inline public function isEmpty():Bool
 	{
 		return mH.isEmpty();
 	}
 	
 	/**
-	 * The total number of key/value pairs.
-	 * <o>1</o>
-	 */
+		The total number of key/value pairs.
+		<o>1</o>
+	**/
 	inline public function size():Int
 	{
 		return mH.size();
 	}
 	
 	/**
-	 * Returns an unordered array containing all values in this hash table.
-	 */
+		Returns an unordered array containing all values in this hash table.
+	**/
 	public function toArray():Array<T>
 	{
 		var a:Array<T> = ArrayUtil.alloc(size());
@@ -661,8 +684,8 @@ class IntHashTable<T> implements Map<Int, T>
 	}
 	
 	/**
-	 * Returns an unordered Vector.&lt;T&gt; object containing all values in this hash table.
-	 */
+		Returns an unordered `Vector<T>` object containing all values in this hash table.
+	**/
 	public function toVector():Vector<T>
 	{
 		var v = new Vector<T>(size());
@@ -677,12 +700,12 @@ class IntHashTable<T> implements Map<Int, T>
 	}
 	
 	/**
-	 * Duplicates this hash table. Supports shallow (structure only) and deep copies (structure & elements).
-	 * @param assign if true, the <code>copier</code> parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.<br/>
-	 * If false, the <em>clone()</em> method is called on each element. <warn>In this case all elements have to implement <em>Cloneable</em>.</warn>
-	 * @param copier a custom function for copying elements. Replaces element.<em>clone()</em> if <code>assign</code> is false.
-	 * @throws de.polygonal.ds.error.AssertError element is not of type <em>Cloneable</em> (debug only).
-	 */
+		Duplicates this hash table. Supports shallow (structure only) and deep copies (structure & elements).
+		@param assign if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
+		If false, the `clone()` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
+		@param copier a custom function for copying elements. Replaces element.`clone()` if `assign` is false.
+		@throws de.polygonal.ds.error.AssertError element is not of type `Cloneable` (debug only).
+	**/
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{
 		var c = new IntHashTable<T>(M.INT16_MIN);
@@ -870,9 +893,7 @@ class IntHashTable<T> implements Map<Int, T>
 @:generic
 #end
 @:access(de.polygonal.ds.IntHashTable)
-#if doc
-private
-#end
+@:dox(hide)
 class IntHashTableIterator<T> implements de.polygonal.ds.Itr<T>
 {
 	var mF:IntHashTable<T>;

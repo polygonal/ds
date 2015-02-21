@@ -21,15 +21,15 @@ package de.polygonal.ds;
 import de.polygonal.ds.error.Assert.assert;
 
 /**
- * <p>Helper class for converting arrays to various collections.</p>
- */
+	<h3>Helper class for converting arrays to various collections.</h3>
+**/
 class ArrayConvert
 {
 	/**
-	 * Converts the array <code>x</code> to a two-dimensional array with dimensions <code>width</code> and <code>height</code>.
-	 * @throws de.polygonal.ds.error.AssertError <code>x</code> is null (debug only).
-	 * @throws de.polygonal.ds.error.AssertError <code>x</code>.length &lt; <code>width</code> * <code>height</code> (debug only).
-	 */
+		Converts the array `x` to a two-dimensional array with dimensions `width` and `height`.
+		@throws de.polygonal.ds.error.AssertError `x` is null (debug only).
+		@throws de.polygonal.ds.error.AssertError `x`::length < `width` * `height` (debug only).
+	**/
 	public static function toArray2<T>(x:Array<T>, width:Int, height:Int):Array2<T>
 	{
 		assert(x != null);
@@ -42,10 +42,10 @@ class ArrayConvert
 	}
 	
 	/**
-	 * Converts the array <code>x</code> to a three-dimensional array with dimensions <code>width</code>, <code>height</code> and <code>depth</code>.
-	 * @throws de.polygonal.ds.error.AssertError <code>x</code> is null (debug only).
-	 * @throws de.polygonal.ds.error.AssertError <code>x</code>.length &lt; <code>width</code> * <code>height</code> * <code>depth</code> (debug only).
-	 */
+		Converts the array `x` to a three-dimensional array with dimensions `width`, `height` and `depth`.
+		@throws de.polygonal.ds.error.AssertError `x` is null (debug only).
+		@throws de.polygonal.ds.error.AssertError `x`::length < `width` * `height` * `depth` (debug only).
+	**/
 	public static function toArray3<T>(x:Array<T>, width:Int, height:Int, depth:Int):Array3<T>
 	{
 		assert(x != null);
@@ -58,11 +58,11 @@ class ArrayConvert
 	}
 	
 	/**
-	 * Converts the array <code>x</code> to an arrayed queue.<br/>
-	 * The size of the queue is the nearest power of 2 of a.length.
-	 * @throws de.polygonal.ds.error.AssertError <code>x</code> is null (debug only).
-	 * @throws de.polygonal.ds.error.AssertError <code>x</code> is empty (debug only).
-	 */
+		Converts the array `x` to an arrayed queue.
+		The size of the queue is the nearest power of 2 of `x`::length.
+		@throws de.polygonal.ds.error.AssertError `x` is null (debug only).
+		@throws de.polygonal.ds.error.AssertError `x` is empty (debug only).
+	**/
 	public static function toArrayedQueue<T>(x:Array<T>):ArrayedQueue<T>
 	{
 		assert(x != null);
@@ -75,11 +75,11 @@ class ArrayConvert
 	}
 	
 	/**
-	 * Converts the array <code>x</code> to an arrayed stack.<br/>
-	 * The size of the stack equals <code>x</code>.length.
-	 * @throws de.polygonal.ds.error.AssertError <code>x</code> is null (debug only).
-	 * @throws de.polygonal.ds.error.AssertError <code>x</code> is empty (debug only).
-	 */
+		Converts the array `x` to an arrayed stack.
+		The size of the stack equals `x`::length.
+		@throws de.polygonal.ds.error.AssertError `x` is null (debug only).
+		@throws de.polygonal.ds.error.AssertError `x` is empty (debug only).
+	**/
 	public static function toArrayedStack<T>(x:Array<T>):ArrayedStack<T>
 	{
 		assert(x != null);
@@ -91,11 +91,11 @@ class ArrayConvert
 	}
 	
 	/**
-	 * Converts the array <code>x</code> to a singly linked list.<br/>
-	 * The size of the linked list equals <code>x</code>.length.
-	 * @throws de.polygonal.ds.error.AssertError <code>x</code> is null (debug only).
-	 * @throws de.polygonal.ds.error.AssertError <code>x</code> is empty (debug only).
-	 */
+		Converts the array `x` to a singly linked list.
+		The size of the linked list equals `x`::length.
+		@throws de.polygonal.ds.error.AssertError `x` is null (debug only).
+		@throws de.polygonal.ds.error.AssertError `x` is empty (debug only).
+	**/
 	public static function toSLL<T>(x:Array<T>):SLL<T>
 	{
 		assert(x != null);
@@ -107,11 +107,11 @@ class ArrayConvert
 	}
 	
 	/**
-	 * Converts the array <code>x</code> to a doubly linked list.<br/>
-	 * The size of the linked list equals <code>x</code>.length.
-	 * @throws de.polygonal.ds.error.AssertError <code>x</code> is null (debug only).
-	 * @throws de.polygonal.ds.error.AssertError <code>x</code> is empty (debug only).
-	 */
+		Converts the array `x` to a doubly linked list.
+		The size of the linked list equals `x`::length.
+		@throws de.polygonal.ds.error.AssertError `x` is null (debug only).
+		@throws de.polygonal.ds.error.AssertError `x` is empty (debug only).
+	**/
 	public static function toDLL<T>(x:Array<T>):DLL<T>
 	{
 		assert(x != null);
@@ -123,11 +123,11 @@ class ArrayConvert
 	}
 	
 	/**
-	 * Converts the array <code>x</code> to a linked queue.<br/>
-	 * The size of the queue equals <code>x</code>.length.
-	 * @throws de.polygonal.ds.error.AssertError <code>x</code> is null (debug only).
-	 * @throws de.polygonal.ds.error.AssertError <code>x</code> is empty (debug only).
-	 */
+		Converts the array `x` to a linked queue.
+		The size of the queue equals `x`::length.
+		@throws de.polygonal.ds.error.AssertError `x` is null (debug only).
+		@throws de.polygonal.ds.error.AssertError `x` is empty (debug only).
+	**/
 	public static function toLinkedQueue<T>(x:Array<T>):LinkedQueue<T>
 	{
 		assert(x != null);
@@ -139,11 +139,11 @@ class ArrayConvert
 	}
 	
 	/**
-	 * Converts the array <code>x</code> to a linked stack.<br/>
-	 * The size of the stack equals <code>x</code>.length.
-	 * @throws de.polygonal.ds.error.AssertError <code>x</code> is null (debug only).
-	 * @throws de.polygonal.ds.error.AssertError <code>x</code> is empty (debug only).
-	 */
+		Converts the array `x` to a linked stack.
+		The size of the stack equals `x`::length.
+		@throws de.polygonal.ds.error.AssertError `x` is null (debug only).
+		@throws de.polygonal.ds.error.AssertError `x` is empty (debug only).
+	**/
 	public static function toLinkedStack<T>(x:Array<T>):LinkedStack<T>
 	{
 		assert(x != null);
@@ -155,11 +155,11 @@ class ArrayConvert
 	}
 	
 	/**
-	 * Converts the array <code>x</code> to a dense array.<br/>
-	 * The size of the dense array equals <code>x</code>.length.
-	 * @throws de.polygonal.ds.error.AssertError <code>x</code> is null (debug only).
-	 * @throws de.polygonal.ds.error.AssertError <code>x</code> is empty (debug only).
-	 */
+		Converts the array `x` to a dense array.
+		The size of the dense array equals `x`::length.
+		@throws de.polygonal.ds.error.AssertError `x` is null (debug only).
+		@throws de.polygonal.ds.error.AssertError `x` is empty (debug only).
+	**/
 	public static function toDA<T>(x:Array<T>):DA<T>
 	{
 		assert(x != null);

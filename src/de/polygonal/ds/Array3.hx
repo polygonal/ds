@@ -21,26 +21,31 @@ package de.polygonal.ds;
 import de.polygonal.ds.error.Assert.assert;
 
 /**
- * <p>A three-dimensional array based on a rectangular sequential array.</p>
- * <p><o>Worst-case running time in Big O notation</o></p>
- */
+	<h3>A three-dimensional array based on a rectangular sequential array.</h3>
+	
+	<o>Worst-case running time in Big O notation</o>
+**/
 #if (flash && generic)
 @:generic
 #end
 class Array3<T> implements Collection<T>
 {
 	/**
-	 * A unique identifier for this object.<br/>
-	 * A hash table transforms this key into an index of an array element by using a hash function.<br/>
-	 * <warn>This value should never be changed by the user.</warn>
-	 */
+		A unique identifier for this object.
+		
+		A hash table transforms this key into an index of an array element by using a hash function.
+		
+		<warn>This value should never be changed by the user.</warn>
+	**/
 	public var key:Int;
 	
 	/**
-	 * If true, reuses the iterator object instead of allocating a new one when calling <code>iterator()</code>.<br/>
-	 * The default is false.<br/>
-	 * <warn>If true, nested iterations are likely to fail as only one iteration is allowed at a time.</warn>
-	 */
+		If true, reuses the iterator object instead of allocating a new one when calling `iterator()`.
+		
+		The default is false.
+		
+		<warn>If true, nested iterations are likely to fail as only one iteration is allowed at a time.</warn>
+	**/
 	public var reuseIterator:Bool;
 	
 	var mData:Vector<T>;
@@ -50,10 +55,11 @@ class Array3<T> implements Collection<T>
 	var mIterator:Array3Iterator<T>;
 	
 	/**
-	 * Creates a three-dimensional array with dimensions <code>width</code>, <code>height</code> and <code>depth</code>.<br/>
-	 * The minimum size is 2x2x2.
-	 * @throws de.polygonal.ds.error.AssertError invalid <code>width</code>, <code>height</code> or <code>depth</code> (debug only).
-	 */
+		Creates a three-dimensional array with dimensions `width`, `height` and `depth`.
+		
+		The minimum size is 2x2x2.
+		@throws de.polygonal.ds.error.AssertError invalid `width`, `height` or `depth` (debug only).
+	**/
 	public function new(width:Int, height:Int, depth:Int)
 	{
 		assert(width >= 2 && height >= 2 && depth >= 2, 'invalid size (width: $width, height: $height, depth: $depth)');
@@ -68,10 +74,10 @@ class Array3<T> implements Collection<T>
 	}
 	
 	/**
-	 * Returns the element that is stored in column <code>x</code>, row <code>y</code> and layer <code>z</code>.
-	 * <o>1</o>
-	 * @throws de.polygonal.ds.error.AssertError <code>x</code>/<code>y</code>/<code>z</code> out of range (debug only).
-	 */
+		Returns the element that is stored in column `x`, row `y` and layer `z`.
+		<o>1</o>
+		@throws de.polygonal.ds.error.AssertError `x`/`y`/`z` out of range (debug only).
+	**/
 	inline public function get(x:Int, y:Int, z:Int):T
 	{
 		assert(x >= 0 && x < getW(), 'x index out of range ($x)');
@@ -82,20 +88,20 @@ class Array3<T> implements Collection<T>
 	}
 	
 	/**
-	 * Returns the element that is stored in column cell.<code>x</code>, row cell.<code>y</code> and layer cell.<code>z</code>.
-	 * <o>1</o>
-	 * @throws de.polygonal.ds.error.AssertError <code>x</code>/<code>y</code>/<code>z</code> out of range (debug only).
-	 */
+		Returns the element that is stored in column cell.`x`, row cell.`y` and layer cell.`z`.
+		<o>1</o>
+		@throws de.polygonal.ds.error.AssertError `x`/`y`/`z` out of range (debug only).
+	**/
 	inline public function getAt(cell:Array3Cell):T
 	{
 		return _get(getIndex(cell.x, cell.y, cell.z));
 	}
 	
 	/**
-	 * Replaces the element at column <code>x</code>, row <code>y</code> and layer <code>z</code> with <code>val</code>.
-	 * <o>1</o>
-	 * @throws de.polygonal.ds.error.AssertError <code>x</code>/<code>y</code>/<code>z</code> out of range (debug only).
-	 */
+		Replaces the element at column `x`, row `y` and layer `z` with `val`.
+		<o>1</o>
+		@throws de.polygonal.ds.error.AssertError `x`/`y`/`z` out of range (debug only).
+	**/
 	inline public function set(x:Int, y:Int, z:Int, val:T)
 	{
 		assert(x >= 0 && x < getW(), 'x index out of range ($x)');
@@ -106,79 +112,83 @@ class Array3<T> implements Collection<T>
 	}
 	
 	/**
-	 * The width (#columns).
-	 * <o>1</o>
-	 */
+		The width (#columns).
+		<o>1</o>
+	**/
 	inline public function getW():Int
 	{
 		return mW;
 	}
 	
 	/**
-	 * Sets the width to <code>x</code>.<br/>
-	 * The minimum value is 2.
-	 * <o>1</o>
-	 * @throws de.polygonal.ds.error.AssertError invalid width (debug only).
-	 */
+		Sets the width to `x`.
+		
+		The minimum value is 2.
+		<o>1</o>
+		@throws de.polygonal.ds.error.AssertError invalid width (debug only).
+	**/
 	inline public function setW(x:Int)
 	{
 		resize(x, mH, mD);
 	}
 	
 	/**
-	 * The height (#rows).
-	 * <o>1</o>
-	 */
+		The height (#rows).
+		<o>1</o>
+	**/
 	inline public function getH():Int
 	{
 		return mH;
 	}
 	
 	/**
-	 * Sets the height to <code>x</code>.<br/>
-	 * The minimum value is 2.
-	 * <o>1</o>
-	 * @throws de.polygonal.ds.error.AssertError invalid height (debug only).
-	 */
+		Sets the height to `x`.
+		
+		The minimum value is 2.
+		<o>1</o>
+		@throws de.polygonal.ds.error.AssertError invalid height (debug only).
+	**/
 	inline public function setH(x:Int)
 	{
 		resize(mW, x, mD);
 	}
 	
 	/**
-	 * The depth (#layers).
-	 * <o>1</o>
-	 */
+		The depth (#layers).
+		<o>1</o>
+	**/
 	inline public function getD():Int
 	{
 		return mD;
 	}
 	
 	/**
-	 * Sets the depth to <code>x</code>.<br/>
-	 * The minimum value is 2.
-	 * <o>1</o>
-	 * @throws de.polygonal.ds.error.AssertError invalid height (debug only).
-	 */
+		Sets the depth to `x`.
+		
+		The minimum value is 2.
+		<o>1</o>
+		@throws de.polygonal.ds.error.AssertError invalid height (debug only).
+	**/
 	inline public function setD(x:Int)
 	{
 		resize(mW, mH, x);
 	}
 	
 	/**
-	 * Computes an index into the linear array from the <code>x</code>, <code>y</code> and <code>z</code> index.
-	 * <o>1</o>
-	 */
+		Computes an index into the linear array from the `x`, `y` and `z` index.
+		<o>1</o>
+	**/
 	inline public function getIndex(x:Int, y:Int, z:Int):Int
 	{
 		return (z * mW * mH) + (y * mW) + x;
 	}
 	
 	/**
-	 * Returns the index of the first occurrence of the element <code>x</code> or returns -1 if element <code>x</code> does not exist.<br/>
-	 * The index is in the range &#091;0, size() - 1&#093;.
-	 * <o>n</o>
-	 */
+		Returns the index of the first occurrence of the element `x` or returns -1 if element `x` does not exist.
+		
+		The index is in the range [0, `size()` - 1].
+		<o>n</o>
+	**/
 	inline public function indexOf(x:T):Int
 	{
 		var i = 0;
@@ -193,20 +203,20 @@ class Array3<T> implements Collection<T>
 	}
 	
 	/**
-	 * Returns true if <code>x</code>, <code>y</code> and <code>z</code> are valid.
-	 */
+		Returns true if `x`, `y` and `z` are valid.
+	**/
 	inline public function inRange(x:Int, y:Int, z:Int):Bool
 	{
 		return x >= 0 && x < mW && y >= 0 && y < mH && z >= 0 && z < mD;
 	}
 	
 	/**
-	 * Returns the cell coordinates of the first occurrence of the element <code>x</code> or null if element <code>x</code> does not exist.
-	 * <o>n</o>
-	 * @param cell stores the result.
-	 * @return a reference to <code>cell</code>.
-	 * @throws de.polygonal.ds.error.AssertError <code>cell</code> is null (debug only).
-	 */
+		Returns the cell coordinates of the first occurrence of the element `x` or null if element `x` does not exist.
+		<o>n</o>
+		@param cell stores the result.
+		@return a reference to `cell`.
+		@throws de.polygonal.ds.error.AssertError `cell` is null (debug only).
+	**/
 	inline public function cellOf(x:T, cell:Array3Cell):Array3Cell
 	{
 		assert(cell != null);
@@ -219,13 +229,13 @@ class Array3<T> implements Collection<T>
 	}
 	
 	/**
-	 * Transforms the index <code>i</code> into <code>cell</code> coordinates.
-	 * <o>1</o>
-	 * @param cell stores the result.
-	 * @return a reference to <code>cell</code>.
-	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
-	 * @throws de.polygonal.ds.error.AssertError <code>cell</code> is null (debug only).
-	 */
+		Transforms the index `i` into `cell` coordinates.
+		<o>1</o>
+		@param cell stores the result.
+		@return a reference to `cell`.
+		@throws de.polygonal.ds.error.AssertError index out of range (debug only).
+		@throws de.polygonal.ds.error.AssertError `cell` is null (debug only).
+	**/
 	inline public function indexToCell(i:Int, cell:Array3Cell):Array3Cell
 	{
 		assert(i >= 0 && i < size(), 'index out of range ($i)');
@@ -240,10 +250,10 @@ class Array3<T> implements Collection<T>
 	}
 	
 	/**
-	 * Computes an array index into the linear array from the <code>cell</code> coordinates.
-	 * <o>1</o>
-	 * @throws de.polygonal.ds.error.AssertError <code>cell</code> index out of range or <code>cell</code> is null (debug only).
-	 */
+		Computes an array index into the linear array from the `cell` coordinates.
+		<o>1</o>
+		@throws de.polygonal.ds.error.AssertError `cell` index out of range or `cell` is null (debug only).
+	**/
 	inline public function cellToIndex(cell:Array3Cell):Int
 	{
 		assert(cell != null);
@@ -255,13 +265,13 @@ class Array3<T> implements Collection<T>
 	}
 	
 	/**
-	 * Copies all elements stored in layer <code>z</code> by reference into a two-dimensional array.
-	 * <o>n</o>
-	 * @param output stores the "slice" of this three-dimensional array.
-	 * @return a reference to <code>output</code>.
-	 * @throws de.polygonal.ds.error.AssertError <code>z</code> out of range (debug only).
-	 * @throws de.polygonal.ds.error.AssertError invalid layer or <code>output</code> is null or <code>output</code> too small (debug only).
-	 */
+		Copies all elements stored in layer `z` by reference into a two-dimensional array.
+		<o>n</o>
+		@param output stores the "slice" of this three-dimensional array.
+		@return a reference to `output`.
+		@throws de.polygonal.ds.error.AssertError `z` out of range (debug only).
+		@throws de.polygonal.ds.error.AssertError invalid layer or `output` is null or `output` too small (debug only).
+	**/
 	public function getLayer(z:Int, output:Array2<T>):Array2<T>
 	{
 		assert(z >= 0 && z < getD(), 'z index out of range ($z)');
@@ -276,11 +286,11 @@ class Array3<T> implements Collection<T>
 	}
 	
 	/**
-	 * Copies all elements stored in row <code>y</code> and layer <code>z</code> by reference into the <code>output</code> array.<br/>
-	 * <o>n</o>
-	 * @return a reference to the <code>output</code> array.
-	 * @throws de.polygonal.ds.error.AssertError <code>x</code>/<code>y</code> out of range or <code>output</code> is null (debug only).
-	 */
+		Copies all elements stored in row `y` and layer `z` by reference to the `output` array.
+		<o>n</o>
+		@return a reference to the `output` array.
+		@throws de.polygonal.ds.error.AssertError `x`/`y` out of range or `output` is null (debug only).
+	**/
 	public function getRow(z:Int, y:Int, output:Array<T>):Array<T>
 	{
 		assert(y >= 0 && y < getH(), 'y index out of range ($y)');
@@ -293,11 +303,11 @@ class Array3<T> implements Collection<T>
 	}
 	
 	/**
-	 * Overwrites all elements in row <code>y</code> and layer <code>z</code> with the elements stored in the <code>input</code> array.
-	 * <o>n</o>
-	 * @throws de.polygonal.ds.error.AssertError <code>z</code>/<code>y</code> out of range (debug only).
-	 * @throws de.polygonal.ds.error.AssertError <code>input</code> is null or insufficient input values (debug only).
-	 */
+		Overwrites all elements in row `y` and layer `z` with the elements stored in the `input` array.
+		<o>n</o>
+		@throws de.polygonal.ds.error.AssertError `z`/`y` out of range (debug only).
+		@throws de.polygonal.ds.error.AssertError `input` is null or insufficient input values (debug only).
+	**/
 	public function setRow(z:Int, y:Int, input:Array<T>)
 	{
 		assert(y >= 0 && y < getH(), 'y index out of range ($y)');
@@ -310,12 +320,12 @@ class Array3<T> implements Collection<T>
 	}
 	
 	/**
-	 * Copies all elements stored in column <code>x</code> and layer <code>z</code> by reference into the <code>output</code> array.
-	 * <o>n</o>
-	 * @return a reference to the <code>output</code> array.
-	 * @throws de.polygonal.ds.error.AssertError <code>z</code>/<code>x</code> out of range (debug only).
-	 * @throws de.polygonal.ds.error.AssertError <code>output</code> is null (debug only).
-	 */
+		Copies all elements stored in column `x` and layer `z` by reference to the `output` array.
+		<o>n</o>
+		@return a reference to the `output` array.
+		@throws de.polygonal.ds.error.AssertError `z`/`x` out of range (debug only).
+		@throws de.polygonal.ds.error.AssertError `output` is null (debug only).
+	**/
 	inline public function getCol(z:Int, x:Int, output:Array<T>):Array<T>
 	{
 		assert(x >= 0 && x < getW(), 'x index out of range (${x})');
@@ -328,11 +338,11 @@ class Array3<T> implements Collection<T>
 	}
 
 	/**
-	 * Overwrites all elements in column <code>x</code> and layer <code>z</code> with the elements stored in the <code>input</code> array.
-	 * <o>n</o>
-	 * @throws de.polygonal.ds.error.AssertError <code>z</code>/<code>x</code> out of range (debug only).
-	 * @throws de.polygonal.ds.error.AssertError <code>input</code> is null or insufficient input values (debug only).
-	 */
+		Overwrites all elements in column `x` and layer `z` with the elements stored in the `input` array.
+		<o>n</o>
+		@throws de.polygonal.ds.error.AssertError `z`/`x` out of range (debug only).
+		@throws de.polygonal.ds.error.AssertError `input` is null or insufficient input values (debug only).
+	**/
 	public function setCol(z:Int, x:Int, input:Array<T>)
 	{
 		assert(x >= 0 && x < getW(), 'x index out of range ($x)');
@@ -345,12 +355,12 @@ class Array3<T> implements Collection<T>
 	}
 	
 	/**
-	 * Copies all elements stored in the pile at column <code>x</code> and row <code>y</code> by reference into the <code>output</code> array.
-	 * <o>n</o>
-	 * @return a reference to the <code>output</code> array.
-	 * @throws de.polygonal.ds.error.AssertError <code>x</code>/<code>y</code> out of range (debug only).
-	 * @throws de.polygonal.ds.error.AssertError <code>output</code> is null (debug only).
-	 */
+		Copies all elements stored in the pile at column `x` and row `y` by reference to the `output` array.
+		<o>n</o>
+		@return a reference to the `output` array.
+		@throws de.polygonal.ds.error.AssertError `x`/`y` out of range (debug only).
+		@throws de.polygonal.ds.error.AssertError `output` is null (debug only).
+	**/
 	inline public function getPile(x:Int, y:Int, output:Array<T>):Array<T>
 	{
 		assert(x >= 0 && x < getW(), 'x index out of range ($x)');
@@ -364,11 +374,11 @@ class Array3<T> implements Collection<T>
 	}
 	
 	/**
-	 * Overwrites all elements in column <code>x</code> and row <code>y</code> with the elements stored in the <code>input</code> array.
-	 * <o>n</o>
-	 * @throws de.polygonal.ds.error.AssertError <code>x</code>/<code>y</code> out of range (debug only).
-	 * @throws de.polygonal.ds.error.AssertError <code>input</code> is null or insufficient input values (debug only).
-	 */
+		Overwrites all elements in column `x` and row `y` with the elements stored in the `input` array.
+		<o>n</o>
+		@throws de.polygonal.ds.error.AssertError `x`/`y` out of range (debug only).
+		@throws de.polygonal.ds.error.AssertError `input` is null or insufficient input values (debug only).
+	**/
 	public function setPile(x:Int, y:Int, input:Array<T>)
 	{
 		assert(x >= 0 && x < getW(), 'x index out of range ($x)');
@@ -383,21 +393,21 @@ class Array3<T> implements Collection<T>
 	}
 	
 	/**
-	 * Replaces all existing elements with objects of type <code>C</code>.
-	 * <o>n</o>
-	 * @param C the class to instantiate for each element.
-	 * @param args passes additional constructor arguments to the class <code>C</code>.
-	 */
-	public function assign(C:Class<T>, args:Array<Dynamic> = null)
+		Replaces all existing elements with objects of type `cl`.
+		<o>n</o>
+		@param cl the class to instantiate for each element.
+		@param args passes additional constructor arguments to the class `cl`.
+	**/
+	public function assign(cl:Class<T>, args:Array<Dynamic> = null)
 	{
 		if (args == null) args = [];
-		for (i in 0...size()) _set(i, Type.createInstance(C, args));
+		for (i in 0...size()) _set(i, Type.createInstance(cl, args));
 	}
 	
 	/**
-	 * Replaces all existing elements with the instance of <code>x</code>.
-	 * <o>n</o>
-	 */
+		Replaces all existing elements with the instance `x`.
+		<o>n</o>
+	**/
 	public function fill(x:T):Array3<T>
 	{
 		for (i in 0...size()) _set(i, x);
@@ -405,10 +415,11 @@ class Array3<T> implements Collection<T>
 	}
 	
 	/**
-	 * Invokes the <code>process</code> function for each element.<br/>
-	 * The function signature is: <em>process(oldValue, xIndex, yIndex, zIndex):newValue</em>
-	 * <o>n</o>
-	 */
+		Invokes the `process` function for each element.
+		
+		The function signature is: `process(oldValue, xIndex, yIndex, zIndex):newValue`
+		<o>n</o>
+	**/
 	public function iter(process:T->Int->Int->Int->T)
 	{
 		for (z in 0...mD)
@@ -425,13 +436,13 @@ class Array3<T> implements Collection<T>
 	}
 	
 	/**
-	 * Resizes this three-dimensional array.
-	 * <o>n</o>
-	 * @param width the new width (minimum is 2).
-	 * @param height the new height (minimum is 2).
-	 * @param depth the new depth (minimum is 2).
-	 * @throws de.polygonal.ds.error.AssertError invalid dimensions (debug only).
-	 */
+		Resizes this three-dimensional array.
+		<o>n</o>
+		@param width the new width (minimum is 2).
+		@param height the new height (minimum is 2).
+		@param depth the new depth (minimum is 2).
+		@throws de.polygonal.ds.error.AssertError invalid dimensions (debug only).
+	**/
 	public function resize(width:Int, height:Int, depth:Int)
 	{
 		assert(width >= 2 && height >= 2 && depth >= 1, 'invalid size (width:$width, height:$height, depth: $depth)');
@@ -465,11 +476,11 @@ class Array3<T> implements Collection<T>
 	}
 	
 	/**
-	 * Swaps the element at column/row/layer <code>x0</code>, <code>y0</code>, <code>z0</code> with the element at column/row/layer <code>x1</code>, <code>y1</code>, <code>z1</code>.
-	 * <o>1</o>
-	 * @throws de.polygonal.ds.error.AssertError <code>x0</code>/<code>y0</code>/<code>z0</code> or <code>x1</code>/<code>y1</code>/<code>z1</code> out of range (debug only).
-	 * @throws de.polygonal.ds.error.AssertError <code>x0</code>, <code>y0</code>, <code>z0</code> equals <code>x1</code>, <code>y1</code>, <code>z1</code> (debug only).
-	 */
+		Swaps the element at column/row/layer `x0`, `y0`, `z0` with the element at column/row/layer `x1`, `y1`, `z1`.
+		<o>1</o>
+		@throws de.polygonal.ds.error.AssertError `x0`/`y0`/`z0` or `x1`/`y1`/`z1` out of range (debug only).
+		@throws de.polygonal.ds.error.AssertError `x0`, `y0`, `z0` equals `x1`, `y1`, `z1` (debug only).
+	**/
 	inline public function swap(x0:Int, y0:Int, z0:Int, x1:Int, y1:Int, z1:Int)
 	{
 		assert(x0 >= 0 && x0 < getW(), 'x0 index out of range ($x0)');
@@ -488,22 +499,23 @@ class Array3<T> implements Collection<T>
 	}
 	
 	/**
-	 * Grants access to the rectangular sequential array storing the elements of this three-dimensional array.<br/>
-	 * Useful for fast iteration or low-level operations.
-	 * <o>1</o>
-	 */
+		Grants access to the rectangular sequential array storing the elements of this three-dimensional array.
+		
+		Useful for fast iteration or low-level operations.
+		<o>1</o>
+	**/
 	inline public function getVector():Vector<T>
 	{
 		return mData;
 	}
 	
 	/**
-	 * Shuffles the elements of this collection by using the Fisher-Yates algorithm.<br/>
-	 * <o>n</o>
-	 * @param rval a list of random double values in the range between 0 (inclusive) to 1 (exclusive) defining the new positions of the elements.
-	 * If omitted, random values are generated on-the-fly by calling <em>Math.random()</em>.
-	 * @throws de.polygonal.ds.error.AssertError insufficient random values (debug only).
-	 */
+		Shuffles the elements of this collection by using the Fisher-Yates algorithm.
+		<o>n</o>
+		@param rval a list of random double values in the range between 0 (inclusive) to 1 (exclusive) defining the new positions of the elements.
+		If omitted, random values are generated on-the-fly by calling `Math::random()`.
+		@throws de.polygonal.ds.error.AssertError insufficient random values (debug only).
+	**/
 	public function shuffle(rval:Array<Float> = null)
 	{
 		var s = size();
@@ -534,16 +546,17 @@ class Array3<T> implements Collection<T>
 	}
 	
 	/**
-	 * Returns a string representing the current object.<br/>
-	 * Use <em>getLayer()</em> to print the elements at a specific layer.<br/>
-	 * Example:<br/>
-	 * <pre class="prettyprint">
-	 * var array3 = new de.polygonal.ds.Array3&lt;String&gt;(4, 4, 3);
-	 * trace(array3);</pre>
-	 * <pre class="console">
-	 * { Array3 4x4x3 }
-	 * </pre>
-	 */
+		Returns a string representing the current object.
+		Use `getLayer()` to print the elements of a specific layer.
+		
+		Example:
+		<pre class="prettyprint">
+		var array3 = new de.polygonal.ds.Array3<String>(4, 4, 3);
+		trace(array3);</pre>
+		<pre class="console">
+		{ Array3 4x4x3 }
+		</pre>
+	**/
 	public function toString():String
 	{
 		return '{ Array3 ${getW()}x${getH()}x${getD()} }';
@@ -554,10 +567,11 @@ class Array3<T> implements Collection<T>
 	///////////////////////////////////////////////////////*/
 	
 	/**
-	 * Destroys this object by explicitly nullifying all elements for GC'ing used resources.<br/>
-	 * Improves GC efficiency/performance (optional).
-	 * <o>n</o>
-	 */
+		Destroys this object by explicitly nullifying all elements for GC'ing used resources.
+		
+		Improves GC efficiency/performance (optional).
+		<o>n</o>
+	**/
 	public function free()
 	{
 		for (i in 0...size()) _set(i, cast null);
@@ -566,9 +580,9 @@ class Array3<T> implements Collection<T>
 	}
 	
 	/**
-	 * Returns true if this three-dimensional array contains the element <code>x</code>.
-	 * <o>n</o>
-	 */
+		Returns true if this three-dimensional array contains the element `x`.
+		<o>n</o>
+	**/
 	public function contains(x:T):Bool
 	{
 		for (i in 0...size())
@@ -580,11 +594,12 @@ class Array3<T> implements Collection<T>
 	}
 	
 	/**
-	 * Nullifies all occurrences of <code>x</code>.<br/>
-	 * The size is not altered.
-	 * <o>n</o>
-	 * @return true if at least one occurrence of <code>x</code> is nullified.
-	 */
+		Nullifies all occurrences of `x`.
+		
+		The size is not altered.
+		<o>n</o>
+		@return true if at least one occurrence of `x` is nullified.
+	**/
 	public function remove(x:T):Bool
 	{
 		var found = false;
@@ -601,20 +616,23 @@ class Array3<T> implements Collection<T>
 	}
 	
 	/**
-	 * Clears this three-dimensional array by nullifying all elements.<br/>
-	 * The <code>purge</code> parameter has no effect.
-	 * <o>1 or n if <code>purge</code> is true</o>
-	 */
+		Clears this three-dimensional array by nullifying all elements.
+		
+		The `purge` parameter has no effect.
+		<o>1 or n if `purge` is true</o>
+	**/
 	inline public function clear(purge = false)
 	{
 		for (i in 0...size()) _set(i, cast null);
 	}
 	
 	/**
-	 * Returns a new <em>Array3Iterator</em> object to iterate over all elements contained in this three-dimensional array.<br/>
-	 * Order: Row-major order (layer-by-layer, row-by-row).
-	 * @see <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
-	 */
+		Returns a new `Array3Iterator` object to iterate over all elements contained in this three-dimensional array.
+		
+		Order: Row-major order (layer-by-layer, row-by-row).
+		
+		See <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
+	**/
 	public function iterator():Itr<T>
 	{
 		if (reuseIterator)
@@ -630,27 +648,29 @@ class Array3<T> implements Collection<T>
 	}
 	
 	/**
-	 * The number of elements in this three-dimensional array.<br/>
-	 * Always equals <em>getW()</em> * <em>getH()</em> * <em>getD()</em>.
-	 * <o>1</o>
-	 */
+		The number of elements in this three-dimensional array.
+		
+		Always equals `getW()` * `getH()` * `getD()`.
+		<o>1</o>
+	**/
 	inline public function size():Int
 	{
 		return mW * mH * mD;
 	}
 	
 	/**
-	 * Unsupported operation - always returns false.
-	 */
+		Unsupported operation - always returns false.
+	**/
 	public function isEmpty():Bool
 	{
 		return false;
 	}
 	
 	/**
-	 * Returns an array containing all elements in this three-dimensional array.<br/>
-	 * Order: Row-major order (layer-by-layer, row-by-row).
-	 */
+		Returns an array containing all elements in this three-dimensional array.
+		
+		Order: Row-major order (layer-by-layer, row-by-row).
+	**/
 	public function toArray():Array<T>
 	{
 		var a:Array<T> = ArrayUtil.alloc(size());
@@ -660,9 +680,10 @@ class Array3<T> implements Collection<T>
 	}
 	
 	/**
-	 * Returns a Vector.&lt;T&gt; object containing all elements in this three-dimensional array.<br/>
-	 * Order: Row-major order (row-by-row).
-	 */
+		Returns a `Vector<T>` object containing all elements in this three-dimensional array.
+		
+		Order: Row-major order (row-by-row).
+	**/
 	public function toVector():Vector<T>
 	{
 		var v = new Vector<T>(size());
@@ -671,12 +692,13 @@ class Array3<T> implements Collection<T>
 	}
 	
 	/**
-	 * Duplicates this three-dimensional array. Supports shallow (structure only) and deep copies (structure & elements).
-	 * @param assign if true, the <code>copier</code> parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.<br/>
-	 * If false, the <em>clone()</em> method is called on each element. <warn>In this case all elements have to implement <em>Cloneable</em>.</warn>
-	 * @param copier a custom function for copying elements. Replaces element.<em>clone()</em> if <code>assign</code> is false.
-	 * @throws de.polygonal.ds.error.AssertError element is not of type <em>Cloneable</em> (debug only).
-	 */
+		Duplicates this three-dimensional array. Supports shallow (structure only) and deep copies (structure & elements).
+		@param assign if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
+		If false, the `clone()` method is called on each element.
+		<warn>In this case all elements have to implement `Cloneable`.</warn>
+		@param copier a custom function for copying elements. Replaces element.`clone()` if `assign` is false.
+		@throws de.polygonal.ds.error.AssertError element is not of type `Cloneable` (debug only).
+	**/
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{
 		var copy = new Array3<T>(getW(), getH(), getD());
@@ -714,9 +736,7 @@ class Array3<T> implements Collection<T>
 @:generic
 #end
 @:access(de.polygonal.ds.Array3)
-#if doc
-private
-#end
+@:dox(hide)
 class Array3Iterator<T> implements de.polygonal.ds.Itr<T>
 {
 	var mF:Array3<T>;
@@ -758,23 +778,23 @@ class Array3Iterator<T> implements de.polygonal.ds.Itr<T>
 }
 
 /**
- * <p>Stores the x,y,z position of a three-dimensional cell.</p>
- */
+	<h3>Stores the x,y,z position of a three-dimensional cell.</h3>
+**/
 class Array3Cell
 {
 	/**
-	 * The column index.
-	 */
+		The column index.
+	**/
 	public var x:Int;
 	
 	/**
-	 * The row index.
-	 */
+		The row index.
+	**/
 	public var y:Int;
 	
 	/**
-	 * The depth index.
-	 */
+		The depth index.
+	**/
 	public var z:Int;
 	
 	public function new(x = 0, y = 0, z = 0)

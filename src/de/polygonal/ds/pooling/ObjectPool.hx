@@ -21,15 +21,15 @@ package de.polygonal.ds.pooling;
 import de.polygonal.ds.error.Assert.assert;
 
 /**
- *<p>A fixed sized, arrayed object pool.</p>
- */
+	A fixed sized, arrayed object pool.
+**/
 class ObjectPool<T> implements Hashable
 {
 	/**
-	 * A unique identifier for this object.<br/>
-	 * A hash table transforms this key into an index of an array element by using a hash function.<br/>
-	 * <warn>This value should never be changed by the user.</warn>
-	 */
+		A unique identifier for this object.
+		A hash table transforms this key into an index of an array element by using a hash function.
+		<warn>This value should never be changed by the user.</warn>
+	**/
 	public var key:Int;
 	
 	#if alchemy
@@ -51,9 +51,9 @@ class ObjectPool<T> implements Hashable
 	#end
 	
 	/**
-	 * Creates an <em>ObjectPool</em> object capable of managing <code>x</code> pre-allocated objects.<br/>
-	 * Use <em>allocate()</em> to fill the pool.
-	 */
+		Creates an `ObjectPool` object capable of managing `x` pre-allocated objects.
+		Use `allocate()` to fill the pool.
+	**/
 	public function new(x:Int)
 	{
 		mSize = x;
@@ -67,9 +67,9 @@ class ObjectPool<T> implements Hashable
 	}
 	
 	/**
-	 * Destroys this object by explicitly nullifying all objects for GC'ing used resources.<br/>
-	 * Improves GC efficiency/performance (optional).
-	 */
+		Destroys this object by explicitly nullifying all objects for GC'ing used resources.
+		Improves GC efficiency/performance (optional).
+	**/
 	public function free()
 	{
 		if (mPool == null) return;
@@ -94,32 +94,32 @@ class ObjectPool<T> implements Hashable
 	}
 	
 	/**
-	 * Returns true if all objects are in use.
-	 */
+		Returns true if all objects are in use.
+	**/
 	inline public function isEmpty():Bool
 	{
 		return mFree == -1;
 	}
 	
 	/**
-	 * The total number of pre-allocated objects in the pool.
-	 */
+		The total number of pre-allocated objects in the pool.
+	**/
 	inline public function size():Int
 	{
 		return mSize;
 	}
 	
 	/**
-	 * The total number of objects in use.
-	 */
+		The total number of objects in use.
+	**/
 	public function countUsedObjects():Int
 	{
 		return size() - countUnusedObjects();
 	}
 	
 	/**
-	 * The total number of available objects.
-	 */
+		The total number of available objects.
+	**/
 	public function countUnusedObjects():Int
 	{
 		var c = 0;
@@ -134,10 +134,10 @@ class ObjectPool<T> implements Hashable
 	}
 	
 	/**
-	 * Returns the id to the next free object.<br/>
-	 * After an id has been obtained, the corresponding object can be retrieved using <em>get(id)</em>.
-	 * @throws de.polygonal.ds.error.AssertError pool exhausted (debug only).
-	 */
+		Returns the id to the next free object.
+		After an id has been obtained, the corresponding object can be retrieved using `get(id)`.
+		@throws de.polygonal.ds.error.AssertError pool exhausted (debug only).
+	**/
 	inline public function next():Int
 	{
 		#if debug
@@ -156,10 +156,10 @@ class ObjectPool<T> implements Hashable
 	}
 	
 	/**
-	 * Returns the object that is mapped to <code>id</code>.<br/>
-	 * Call <em>next()</em> to request an <code>id</code> first.
-	 * @throws de.polygonal.ds.error.AssertError invalid <code>id</code> or object linked to <code>id</code> is not used.
-	 */
+		Returns the object that is mapped to `id`.
+		Call `next()` to request an `id` first.
+		@throws de.polygonal.ds.error.AssertError invalid `id` or object linked to `id` is not used.
+	**/
 	inline public function get(id:Int):T
 	{
 		assert(mUsage.has(id), 'id $id is not used');
@@ -174,9 +174,9 @@ class ObjectPool<T> implements Hashable
 	}
 	
 	/**
-	 * Puts the object mapped to <code>id</code> back into the pool.
-	 * @throws de.polygonal.ds.error.AssertError pool is full or object linked to <code>id</code> is not used (debug only).
-	 */
+		Puts the object mapped to `id` back into the pool.
+		@throws de.polygonal.ds.error.AssertError pool is full or object linked to `id` is not used (debug only).
+	**/
 	inline public function put(id:Int)
 	{
 		#if debug
@@ -191,14 +191,14 @@ class ObjectPool<T> implements Hashable
 	}
 	
 	/**
-	 * Allocates the pool.
-	 * @param lazy if true, objects are allocated on-the-fly until the pool is full.
-	 * @param C allocates objects by instantiating the class <code>C</code>.
-	 * @param fabricate allocates objects by calling <code>fabricate()</code>.
-	 * @param factory allocates objects by using a <em>Factory</em> object (calling <code>factory</code>.<em>create()</em>).
-	 * @throws de.polygonal.ds.error.AssertError invalid arguments.
-	 */
-	public function allocate(lazy:Bool, C:Class<T> = null, fabricate:Void->T = null, factory:Factory<T> = null)
+		Allocates the pool.
+		@param lazy if true, objects are allocated on-the-fly until the pool is full.
+		@param cl allocates objects by instantiating the class `cl`.
+		@param fabricate allocates objects by calling `fabricate()`.
+		@param factory allocates objects by using a `Factory` object (calling `factory`::`create()`).
+		@throws de.polygonal.ds.error.AssertError invalid arguments.
+	**/
+	public function allocate(lazy:Bool, cl:Class<T> = null, fabricate:Void->T = null, factory:Factory<T> = null)
 	{
 		mLazy = lazy;
 		
@@ -213,12 +213,12 @@ class ObjectPool<T> implements Hashable
 		mFree = 0;
 		mPool = de.polygonal.ds.ArrayUtil.alloc(mSize);
 		
-		assert(C != null || fabricate != null || factory != null, "invalid arguments");
+		assert(cl != null || fabricate != null || factory != null, "invalid arguments");
 		
 		if (mLazy)
 		{
-			if (C != null)
-				mLazyConstructor = function() return Type.createInstance(C, []);
+			if (cl != null)
+				mLazyConstructor = function() return Type.createInstance(cl, []);
 			else
 			if (fabricate != null)
 				mLazyConstructor = function() return fabricate();
@@ -228,8 +228,8 @@ class ObjectPool<T> implements Hashable
 		}
 		else
 		{
-			if (C != null)
-				for (i in 0...mSize) mPool[i] = Type.createInstance(C, []);
+			if (cl != null)
+				for (i in 0...mSize) mPool[i] = Type.createInstance(cl, []);
 			else
 			if (fabricate != null)
 				for (i in 0...mSize) mPool[i] = fabricate();
@@ -244,18 +244,19 @@ class ObjectPool<T> implements Hashable
 	}
 	
 	/**
-	 * Returns a new <em>ObjectPoolIterator</em> object to iterate over all pooled objects, regardless if an object is used or not.<br/>
-	 * @see <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
-	 */
+		Returns a new `ObjectPoolIterator` object to iterate over all pooled objects, regardless if an object is used or not.
+		
+		See <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
+	**/
 	public function iterator():Itr<T>
 	{
 		return new ObjectPoolIterator<T>(this);
 	}
 	
 	/**
-	 * Returns a string representing the current object.<br/>
-	 * Prints out all object if compiled with the <em>-debug</em> directive.<br/>
-	 */
+		Returns a string representing the current object.
+		Prints out all object if compiled with the `-debug` directive.
+	**/
 	public function toString():String
 	{
 		#if debug
@@ -297,9 +298,7 @@ class ObjectPool<T> implements Hashable
 @:generic
 #end
 @:access(de.polygonal.ds.pooling.ObjectPool)
-#if doc
-private
-#end
+@:dox(hide)
 class ObjectPoolIterator<T> implements de.polygonal.ds.Itr<T>
 {
 	var mF:ObjectPool<T>;

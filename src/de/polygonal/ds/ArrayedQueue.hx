@@ -21,37 +21,48 @@ package de.polygonal.ds;
 import de.polygonal.ds.error.Assert.assert;
 
 /**
- * <p>An arrayed queue based on an arrayed circular queue.</p>
- * <p>A queue is a linear list for which all insertions are made at one end of the list; all deletions (and usually all accesses) are made at the other end.</p>
- * <p>This is called a FIFO structure (First In, First Out).</p>
- * <p><o>Worst-case running time in Big O notation</o></p>
- * See <a href="http://lab.polygonal.de/?p=189" target="mBlank">http://lab.polygonal.de/?p=189</a></p>
- */
+	<h3>An arrayed queue based on an arrayed circular queue.</h3>
+	
+	A queue is a linear list for which all insertions are made at one end of the list; all deletions (and usually all accesses) are made at the other end.
+	
+	This is called a FIFO structure (First In, First Out).
+	
+	See <a href="http://lab.polygonal.de/?p=189" target="mBlank">http://lab.polygonal.de/?p=189</a>
+		
+	<o>Worst-case running time in Big O notation</o>
+**/
 #if (flash && generic)
 @:generic
 #end
 class ArrayedQueue<T> implements Queue<T>
 {
 	/**
-	 * A unique identifier for this object.<br/>
-	 * A hash table transforms this key into an index of an array element by using a hash function.<br/>
-	 * <warn>This value should never be changed by the user.</warn>
-	 */
+		A unique identifier for this object.
+		
+		A hash table transforms this key into an index of an array element by using a hash function.
+		
+		<warn>This value should never be changed by the user.</warn>
+	**/
 	public var key:Int;
 	
 	/**
-	 * The maximum allowed size of this queque.<br/>
-	 * Once the maximum size is reached, adding an element will fail with an error (debug only).
-	 * A value of -1 indicates that the size is unbound.<br/>
-	 * <warn>Always equals -1 in release mode.</warn>
-	 */
+		The maximum allowed size of this queque.
+		
+		Once the maximum size is reached, adding an element will fail with an error (debug only).
+		
+		A value of -1 indicates that the size is unbound.
+		
+		<warn>Always equals -1 in release mode.</warn>
+	**/
 	public var maxSize:Int;
 	
 	/**
-	 * If true, reuses the iterator object instead of allocating a new one when calling <code>iterator()</code>.<br/>
-	 * The default is false.<br/>
-	 * <warn>If true, nested iterations are likely to fail as only one iteration is allowed at a time.</warn>
-	 */
+		If true, reuses the iterator object instead of allocating a new one when calling `iterator()`.
+		
+		The default is false.
+		
+		<warn>If true, nested iterations are likely to fail as only one iteration is allowed at a time.</warn>
+	**/
 	public var reuseIterator:Bool;
 	
 	var mData:Vector<T>;
@@ -69,23 +80,22 @@ class ArrayedQueue<T> implements Queue<T>
 	#end
 	
 	/**
-	 * @param capacity the initial physical space for storing the elements at the time the queue is created.
-	 * This is also the minimum size of this queue.
-	 * The <em>capacity</em> is automatically adjusted according to the storage requirements based on three rules:
-	 * <ol>
-	 * <li>If this queue runs out of space, the <em>capacity</em> is doubled (if <code>isResizable</code> is true).</li>
-	 * <li>If the <em>size()</em> falls below a quarter of the current <em>capacity</em>, the <em>capacity</em> is cut in half.</li>
-	 * <li>The minimum <em>capacity</em> equals <code>capacity</code>.</li>
-	 * </ol>
-	 *
-	 * @param isResizable if true, the <em>capacity</em> is automatically adjusted.<br/>
-	 * Otherwise <code>capacity</code> defines both the minimum and maximum allowed <em>capacity</em>.
-	 * Default is true.
-	 *
-	 * @param maxSize the maximum allowed size of this queue.<br/>
-	 * The default value of -1 indicates that there is no upper limit.
-	 * @throws de.polygonal.ds.error.AssertError reserved size is greater than allowed size (debug only).
-	 */
+		@param capacity the initial physical space for storing the elements at the time the queue is created.
+		This is also the minimum size of this queue.
+		The `capacity` is automatically adjusted according to the storage requirements based on three rules:
+		<ul>
+		<li>If this queue runs out of space, the `capacity` is doubled (if `isResizable` is true)</li>
+		<li>If the `size()` falls below a quarter of the current `capacity`, the `capacity` is cut in half</li>
+		<li>The minimum `capacity` equals `capacity`</li>
+		</ul>
+		@param isResizable if true, the `capacity` is automatically adjusted.
+		Otherwise `capacity` defines both the minimum and maximum allowed `capacity`.
+		Default is true.
+		
+		@param maxSize the maximum allowed size of this queue.
+		The default value of -1 indicates that there is no upper limit.
+		@throws de.polygonal.ds.error.AssertError reserved size is greater than allowed size (debug only).
+	**/
 	public function new(capacity:Int, isResizable = true, maxSize = -1)
 	{
 		#if debug
@@ -111,11 +121,12 @@ class ArrayedQueue<T> implements Queue<T>
 	}
 	
 	/**
-	 * Returns the front element.<br/>
-	 * This is the "oldest" element.
-	 * <o>1</o>
-	 * @throws de.polygonal.ds.error.AssertError queue is empty (debug only).
-	 */
+		Returns the front element.
+		
+		This is the "oldest" element.
+		<o>1</o>
+		@throws de.polygonal.ds.error.AssertError queue is empty (debug only).
+	**/
 	inline public function peek():T
 	{
 		assert(mSize > 0, "queue is empty");
@@ -124,11 +135,12 @@ class ArrayedQueue<T> implements Queue<T>
 	}
 	
 	/**
-	 * Returns the rear element.<br/>
-	 * This is the "newest" element.
-	 * <o>1</o>
-	 * @throws de.polygonal.ds.error.AssertError queue is empty (debug only).
-	 */
+		Returns the rear element.
+		
+		This is the "newest" element.
+		<o>1</o>
+		@throws de.polygonal.ds.error.AssertError queue is empty (debug only).
+	**/
 	inline public function back():T
 	{
 		assert(mSize > 0, "queue is empty");
@@ -137,11 +149,11 @@ class ArrayedQueue<T> implements Queue<T>
 	}
 	
 	/**
-	 * Enqueues the element <code>x</code>.
-	 * <o>1</o>
-	 * @throws de.polygonal.ds.error.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
-	 * @throws de.polygonal.ds.error.AssertError out of space - queue is full but not resizable.
-	 */
+		Enqueues the element `x`.
+		<o>1</o>
+		@throws de.polygonal.ds.error.AssertError `size()` equals `maxSize` (debug only).
+		@throws de.polygonal.ds.error.AssertError out of space - queue is full but not resizable.
+	**/
 	public function enqueue(x:T)
 	{
 		#if debug
@@ -170,11 +182,12 @@ class ArrayedQueue<T> implements Queue<T>
 	}
 	
 	/**
-	 * Dequeues and returns the front element.<br/>
-	 * To allow instant garbage collection of the dequeued element call <em>dequeue()</em> followed by <em>dispose()</em>.
-	 * <o>1</o>
-	 * @throws de.polygonal.ds.error.AssertError queue is empty (debug only).
-	 */
+		Dequeues and returns the front element.
+		
+		To allow instant garbage collection of the dequeued element call `dequeue()` followed by `dispose()`.
+		<o>1</o>
+		@throws de.polygonal.ds.error.AssertError queue is empty (debug only).
+	**/
 	public function dequeue():T
 	{
 		assert(mSize > 0, "queue is empty");
@@ -202,11 +215,12 @@ class ArrayedQueue<T> implements Queue<T>
 	}
 	
 	/**
-	 * Nullifies the last dequeued element so it can be garbage collected.<br/>
-	 * <warn>Use only directly after <em>dequeue()</em>.</warn>
-	 * <o>1</o>
-	 * @throws de.polygonal.ds.error.AssertError <em>dispose()</em> wasn't directly called after <em>dequeue()</em>(debug only).
-	 */
+		Nullifies the last dequeued element so it can be garbage collected.
+		
+		<warn>Use only directly after `dequeue()`.</warn>
+		<o>1</o>
+		@throws de.polygonal.ds.error.AssertError `dispose()` wasn't directly called after `dequeue()`(debug only).
+	**/
 	inline public function dispose()
 	{
 		assert(mOp0 == mOp1, "dispose() is only allowed directly after dequeue()");
@@ -215,10 +229,10 @@ class ArrayedQueue<T> implements Queue<T>
 	}
 	
 	/**
-	 * For performance reasons the queue does nothing to ensure that empty locations contain null.<br/>
-	 * <em>pack()</em> therefore nullifies all obsolete references.
-	 * <o>n</o>
-	 */
+		For performance reasons the queue does nothing to ensure that empty locations contain null;
+		`pack()` therefore nullifies all obsolete references.
+		<o>n</o>
+	**/
 	public function pack()
 	{
 		var i = mFront + mSize;
@@ -227,12 +241,13 @@ class ArrayedQueue<T> implements Queue<T>
 	}
 	
 	/**
-	 * Returns the element at index <code>i</code>.<br/>
-	 * The index is measured relative to the index of the front element (= 0).
-	 * <o>1</o>
-	 * @throws de.polygonal.ds.error.AssertError queue is empty (debug only).
-	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
-	 */
+		Returns the element at index `i`.
+		
+		The index is measured relative to the index of the front element (= 0).
+		<o>1</o>
+		@throws de.polygonal.ds.error.AssertError queue is empty (debug only).
+		@throws de.polygonal.ds.error.AssertError index out of range (debug only).
+	**/
 	inline public function get(i:Int):T
 	{
 		assert(mSize > 0, "queue is empty");
@@ -242,12 +257,13 @@ class ArrayedQueue<T> implements Queue<T>
 	}
 	
 	/**
-	 * Replaces the element at index <code>i</code> with the element <code>x</code>.<br/>
-	 * The index is measured relative to the index of the front element (= 0).
-	 * <o>1</o>
-	 * @throws de.polygonal.ds.error.AssertError queue is empty (debug only).
-	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
-	 */
+		Replaces the element at index `i` with the element `x`.
+		
+		The index is measured relative to the index of the front element (= 0).
+		<o>1</o>
+		@throws de.polygonal.ds.error.AssertError queue is empty (debug only).
+		@throws de.polygonal.ds.error.AssertError index out of range (debug only).
+	**/
 	inline public function set(i:Int, x:T)
 	{
 		assert(mSize > 0, "queue is empty");
@@ -257,13 +273,14 @@ class ArrayedQueue<T> implements Queue<T>
 	}
 	
 	/**
-	 * Swaps the element at index <code>i</code> with the element at index <code>j</code>.<br/>
-	 * The index is measured relative to the index of the front element (= 0).
-	 * <o>1</o>
-	 * @throws de.polygonal.ds.error.AssertError queue is empty (debug only).
-	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
-	 * @throws de.polygonal.ds.error.AssertError <code>i</code> equals <code>j</code> (debug only).
-	 */
+		Swaps the element at index `i` with the element at index `j`.
+		
+		The index is measured relative to the index of the front element (= 0).
+		<o>1</o>
+		@throws de.polygonal.ds.error.AssertError queue is empty (debug only).
+		@throws de.polygonal.ds.error.AssertError index out of range (debug only).
+		@throws de.polygonal.ds.error.AssertError `i` equals `j` (debug only).
+	**/
 	inline public function swp(i:Int, j:Int)
 	{
 		assert(mSize > 0, "queue is empty");
@@ -277,13 +294,14 @@ class ArrayedQueue<T> implements Queue<T>
 	}
 	
 	/**
-	 * Replaces the element at index <code>i</code> with the element from index <code>j</code>.<br/>
-	 * The index is measured relative to the index of the front element (= 0).
-	 * <o>1</o>
-	 * @throws de.polygonal.ds.error.AssertError queue is empty (debug only).
-	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
-	 * @throws de.polygonal.ds.error.AssertError <code>i</code> equals <code>j</code> (debug only).
-	 */
+		Replaces the element at index `i` with the element from index `j`.
+		
+		The index is measured relative to the index of the front element (= 0).
+		<o>1</o>
+		@throws de.polygonal.ds.error.AssertError queue is empty (debug only).
+		@throws de.polygonal.ds.error.AssertError index out of range (debug only).
+		@throws de.polygonal.ds.error.AssertError `i` equals `j` (debug only).
+	**/
 	inline public function cpy(i:Int, j:Int)
 	{
 		assert(mSize > 0, "queue is empty");
@@ -295,14 +313,14 @@ class ArrayedQueue<T> implements Queue<T>
 	}
 	
 	/**
-	 * Replaces up to <code>n</code> existing elements with objects of type <code>C</code>.
-	 * <o>n</o>
-	 * @param C the class to instantiate for each element.
-	 * @param args passes additional constructor arguments to the class <code>C</code>.
-	 * @param n the number of elements to replace. If 0, <code>n</code> is set to <em>capacity</em>.
-	 * @throws de.polygonal.ds.error.AssertError <code>n</code> out of range (debug only).
-	 */
-	public function assign(C:Class<T>, args:Array<Dynamic> = null, n = 0)
+		Replaces up to `n` existing elements with objects of type `cl`.
+		<o>n</o>
+		@param cl the class to instantiate for each element.
+		@param args passes additional constructor arguments to the class `cl`.
+		@param n the number of elements to replace. If 0, `n` is set to `capacity`.
+		@throws de.polygonal.ds.error.AssertError `n` out of range (debug only).
+	**/
+	public function assign(cl:Class<T>, args:Array<Dynamic> = null, n = 0)
 	{
 		assert(n >= 0);
 		
@@ -312,17 +330,17 @@ class ArrayedQueue<T> implements Queue<T>
 		
 		if (args == null) args = [];
 		for (i in 0...k)
-			_set((i + mFront) % mCapacity, Type.createInstance(C, args));
+			_set((i + mFront) % mCapacity, Type.createInstance(cl, args));
 		
 		mSize = k;
 	}
 	
 	/**
-	 * Replaces up to <code>n</code> existing elements with the instance of <code>x</code>.
-	 * <o>n</o>
-	 * @param n the number of elements to replace. If 0, <code>n</code> is set to <em>capacity</em>.
-	 * @throws de.polygonal.ds.error.AssertError <code>n</code> out of range (debug only).
-	 */
+		Replaces up to `n` existing elements with the instance `x`.
+		<o>n</o>
+		@param n the number of elements to replace. If 0, `n` is set to `capacity`.
+		@throws de.polygonal.ds.error.AssertError `n` out of range (debug only).
+	**/
 	public function fill(x:T, n = 0):ArrayedQueue<T>
 	{
 		assert(n >= 0);
@@ -339,10 +357,11 @@ class ArrayedQueue<T> implements Queue<T>
 	}
 	
 	/**
-	 * Invokes the <code>process</code> function for each element.<br/>
-	 * The function signature is: <em>process(oldValue, index):newValue</em>
-	 * <o>n</o>
-	 */
+		Invokes the `process` function for each element.
+		
+		The function signature is: `process(oldValue, index):newValue`
+		<o>n</o>
+	**/
 	public function iter(process:T->Int->T)
 	{
 		for (i in 0...mCapacity)
@@ -353,12 +372,12 @@ class ArrayedQueue<T> implements Queue<T>
 	}
 	
 	/**
-	 * Shuffles the elements of this collection by using the Fisher-Yates algorithm.
-	 * <o>n</o>
-	 * @param rval a list of random double values in the range between 0 (inclusive) to 1 (exclusive) defining the new positions of the elements.
-	 * If omitted, random values are generated on-the-fly by calling <em>Math.random()</em>.
-	 * @throws de.polygonal.ds.error.AssertError insufficient random values (debug only).
-	 */
+		Shuffles the elements of this collection by using the Fisher-Yates algorithm.
+		<o>n</o>
+		@param rval a list of random double values in the range between 0 (inclusive) to 1 (exclusive) defining the new positions of the elements.
+		If omitted, random values are generated on-the-fly by calling `Math::random()`.
+		@throws de.polygonal.ds.error.AssertError insufficient random values (debug only).
+	**/
 	public function shuffle(rval:Array<Float> = null)
 	{
 		var s = mSize;
@@ -391,23 +410,24 @@ class ArrayedQueue<T> implements Queue<T>
 	}
 	
 	/**
-	 * Returns a string representing the current object.<br/>
-	 * Example:<br/>
-	 * <pre class="prettyprint">
-	 * var queue = new de.polygonal.ds.ArrayedQueue&lt;Int&gt;(4);
-	 * for (i in 0...queue.capacity) {
-	 *     queue.enqueue(i);
-	 * }
-	 * trace(queue);</pre>
-	 * <pre class="console">
-	 * { ArrayedQueue size/capacity: 4/4 }
-	 * [ front
-	 *   0 -> 0
-	 *   1 -> 1
-	 *   2 -> 2
-	 *   3 -> 3
-	 * ]</pre>
-	 */
+		Returns a string representing the current object.
+		
+		Example:
+		<pre class="prettyprint">
+		var queue = new de.polygonal.ds.ArrayedQueue<Int>(4);
+		for (i in 0...queue.capacity) {
+		    queue.enqueue(i);
+		}
+		trace(queue);</pre>
+		<pre class="console">
+		{ ArrayedQueue size/capacity: 4/4 }
+		[ front
+		  0 -> 0
+		  1 -> 1
+		  2 -> 2
+		  3 -> 3
+		]</pre>
+	**/
 	public function toString():String
 	{
 		var s = '{ ArrayedQueue size/capacity: $mSize/$mCapacity }';
@@ -420,20 +440,21 @@ class ArrayedQueue<T> implements Queue<T>
 	}
 	
 	/**
-	 * The size of the allocated storage space for the elements.<br/>
-	 * If more space is required to accomodate new elements, the <em>capacity</em> is doubled every time <em>size()</em> grows beyond <em>capacity</em>, and split in half when <em>size()</em> is a quarter of <em>capacity</em>.
-	 * The <em>capacity</em> never falls below the initial size defined in the constructor.
-	 * <o>1</o>
-	 */
+		The size of the allocated storage space for the elements.
+		
+		If more space is required to accomodate new elements, the `capacity` is doubled every time `size()` grows beyond `capacity`, and split in half when `size()` is a quarter of `capacity`.
+		The `capacity` never falls below the initial size defined in the constructor.
+		<o>1</o>
+	**/
 	inline public function getCapacity():Int
 	{
 		return mCapacity;
 	}
 	
 	/**
-	 * Returns true if this queue is full.
-	 * <o>1</o>
-	 */
+		Returns true if this queue is full.
+		<o>1</o>
+	**/
 	inline public function isFull():Bool
 	{
 		return mSize == mCapacity;
@@ -444,10 +465,11 @@ class ArrayedQueue<T> implements Queue<T>
 	///////////////////////////////////////////////////////*/
 	
 	/**
-	 * Destroys this object by explicitly nullifying all elements for GC'ing used resources.<br/>
-	 * Improves GC efficiency/performance (optional).
-	 * <o>n</o>
-	 */
+		Destroys this object by explicitly nullifying all elements for GC'ing used resources.
+		
+		Improves GC efficiency/performance (optional).
+		<o>n</o>
+	**/
 	public function free()
 	{
 		for (i in 0...mCapacity) mData[i] = cast null;
@@ -456,9 +478,9 @@ class ArrayedQueue<T> implements Queue<T>
 	}
 	
 	/**
-	 * Returns true if this queue contains the element <code>x</code>.
-	 * <o>n</o>
-	 */
+		Returns true if this queue contains the element `x`.
+		<o>n</o>
+	**/
 	public function contains(x:T):Bool
 	{
 		for (i in 0...mSize)
@@ -470,10 +492,10 @@ class ArrayedQueue<T> implements Queue<T>
 	}
 	
 	/**
-	 * Removes and nullifies all occurrences of the element <code>x</code>.
-	 * <o>n</o>
-	 * @return true if at least one occurrence of <code>x</code> was removed.
-	 */
+		Removes and nullifies all occurrences of the element `x`.
+		<o>n</o>
+		@return true if at least one occurrence of `x` was removed.
+	**/
 	public function remove(x:T):Bool
 	{
 		if (isEmpty()) return false;
@@ -537,10 +559,10 @@ class ArrayedQueue<T> implements Queue<T>
 	}
 	
 	/**
-	 * Removes all elements.
-	 * <o>1 or n if <code>purge</code> is true</o>
-	 * @param purge if true, elements are nullified upon removal and <em>capacity</em> is set to the initial <em>capacity</em> defined in the constructor.
-	 */
+		Removes all elements.
+		<o>1 or n if `purge` is true</o>
+		@param purge if true, elements are nullified upon removal and `capacity` is set to the initial `capacity` defined in the constructor.
+	**/
 	public function clear(purge = false)
 	{
 		if (purge)
@@ -559,10 +581,12 @@ class ArrayedQueue<T> implements Queue<T>
 	}
 	
 	/**
-	 * Returns a new <em>ArrayedQueueIterator</em> object to iterate over all elements contained in this queue.<br/>
-	 * Preserves the natural order of a queue (First-In-First-Out).
-	 * @see <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
-	 */
+		Returns a new `ArrayedQueueIterator` object to iterate over all elements contained in this queue.
+		
+		Preserves the natural order of a queue (First-In-First-Out).
+		
+		See <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
+	**/
 	public function iterator():Itr<T>
 	{
 		if (reuseIterator)
@@ -578,27 +602,28 @@ class ArrayedQueue<T> implements Queue<T>
 	}
 	
 	/**
-	 * The total number of elements.
-	 * <o>1</o>
-	 */
+		The total number of elements.
+		<o>1</o>
+	**/
 	inline public function size():Int
 	{
 		return mSize;
 	}
 	
 	/**
-	 * Returns true if this queue is empty.
-	 * <o>1</o>
-	 */
+		Returns true if this queue is empty.
+		<o>1</o>
+	**/
 	inline public function isEmpty():Bool
 	{
 		return mSize == 0;
 	}
 	
 	/**
-	 * Returns an array containing all elements in this queue.<br/>
-	 * Preserves the natural order of this queue (First-In-First-Out).
-	 */
+		Returns an array containing all elements in this queue.
+		
+		Preserves the natural order of this queue (First-In-First-Out).
+	**/
 	public function toArray():Array<T>
 	{
 		var a:Array<T> = ArrayUtil.alloc(mSize);
@@ -607,9 +632,10 @@ class ArrayedQueue<T> implements Queue<T>
 	}
 	
 	/**
-	 * Returns a Vector.&lt;T&gt; object containing all elements in this queue.<br/>
-	 * Preserves the natural order of this queue (First-In-First-Out).
-	 */
+		Returns a `Vector<T>` object containing all elements in this queue.
+		
+		Preserves the natural order of this queue (First-In-First-Out).
+	**/
 	public function toVector():Vector<T>
 	{
 		var v = new Vector<T>(mSize);
@@ -618,12 +644,12 @@ class ArrayedQueue<T> implements Queue<T>
 	}
 	
 	/**
-	 * Duplicates this queue. Supports shallow (structure only) and deep copies (structure & elements).
-	 * @param assign if true, the <code>copier</code> parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.<br/>
-	 * If false, the <em>clone()</em> method is called on each element. <warn>In this case all elements have to implement <em>Cloneable</em>.</warn>
-	 * @param copier a custom function for copying elements. Replaces element.<em>clone()</em> if <code>assign</code> is false.
-	 * @throws de.polygonal.ds.error.AssertError element is not of type <em>Cloneable</em> (debug only).
-	 */
+		Duplicates this queue. Supports shallow (structure only) and deep copies (structure & elements).
+		@param assign if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
+		If false, the `clone()` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
+		@param copier a custom function for copying elements. Replaces element.`clone()` if `assign` is false.
+		@throws de.polygonal.ds.error.AssertError element is not of type `Cloneable` (debug only).
+	**/
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{
 		var copy = new ArrayedQueue<T>(mCapacity, mIsResizable, maxSize);
@@ -679,9 +705,7 @@ class ArrayedQueue<T> implements Queue<T>
 @:generic
 #end
 @:access(de.polygonal.ds.ArrayedQueue)
-#if doc
-private
-#end
+@:dox(hide)
 class ArrayedQueueIterator<T> implements de.polygonal.ds.Itr<T>
 {
 	var mF:ArrayedQueue<T>;

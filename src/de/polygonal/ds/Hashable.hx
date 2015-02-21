@@ -19,14 +19,16 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 package de.polygonal.ds;
 
 /**
- * <p>An object that can be identified by an unique integer key.</p>
- */
+	<h3>An object that can be identified by an unique integer key.</h3>
+**/
 interface Hashable
 {
 	/**
-	 * A unique, unsigned 32-bit integer key.<br/>
-	 * A hash table transforms this key into an index of an array element by using a hash function.<br/>
-	 * <warn>This value should never be changed by the user.</warn>
-	 */
+		A unique, unsigned 32-bit integer key.
+		
+		A hash table transforms this key into an index of an array element by using a hash function.
+		
+		<warn>This value should never be changed by the user.</warn>
+	**/
 	var key:Int;
 }

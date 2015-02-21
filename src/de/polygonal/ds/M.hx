@@ -18,11 +18,12 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 */
 package de.polygonal.ds;
 
+@:dox(hide)
 extern class M
 {
 	/**
-	 * Min value, signed integer.
-	 */
+		Min value, signed integer.
+	**/
 	inline public static var INT32_MIN =
 	#if cpp
 	//warning: this decimal constant is unsigned only in ISO C90
@@ -32,50 +33,52 @@ extern class M
 	#end
 	
 	/**
-	 * Max value, signed integer.
-	 */
+		Max value, signed integer.
+	**/
 	inline public static var INT32_MAX = 0x7FFFFFFF;
 	
 	/**
-	 * Min value, signed short.
-	 */
+		Min value, signed short.
+	**/
 	inline public static var INT16_MIN =-0x8000;
 	
 	/**
-	 * Max value, signed short.
-	 */
+		Max value, signed short.
+	**/
 	inline public static var INT16_MAX = 0x7FFF;
 	
 	/**
-	 * Max value, unsigned short.
-	 */
+		Max value, unsigned short.
+	**/
 	inline public static var UINT16_MAX = 0xFFFF;
 	
 	/**
-	 * Returns true if <code>x</code> is a power of two.
-	 */
+		Returns true if `x` is a power of two.
+	**/
 	inline public static function isPow2(x:Int):Bool return x > 0 && (x & (x - 1)) == 0;
 	
 	/**
-	 * Returns min(<code>x</code>, <code>y</code>).
-	 */
+		Returns min(`x`, `y`).
+	**/
 	inline public static function min(x:Int, y:Int):Int return x < y ? x : y;
 	
 	/**
-	 * Returns max(<code>x</code>, <code>y</code>).
-	 */
+		Returns max(`x`, `y`).
+	**/
 	inline public static function max(x:Int, y:Int):Int return x > y ? x : y;
 	
 	/**
-	 * Returns the absolute value of <code>x</code>.
-	 */
+		Returns the absolute value of `x`.
+	**/
 	inline public static function abs(x:Int):Int return x < 0 ? -x : x;
 	
 	/**
-	 * Calculates the next highest power of 2 of <code>x</code>.<br/>
-	 * <code>x</code> must be in the range 0...(2^30)<br/>
-	 * Returns <code>x</code> if already a power of 2.
-	 */
+		Calculates the next highest power of 2 of `x`.
+		
+		`x` must be in the range 0...(2^30)
+		
+		Returns `x` if already a power of 2.
+	**/
 	inline public static function nextPow2(x:Int):Int
 	{
 		var t = x - 1;

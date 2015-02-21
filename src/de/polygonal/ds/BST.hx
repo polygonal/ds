@@ -21,27 +21,33 @@ package de.polygonal.ds;
 import de.polygonal.ds.error.Assert.assert;
 
 /**
- * <p>A binary search tree (BST).</p>
- * <p>A BST automatically arranges <em>BinaryTreeNode</em> objects so the resulting tree is a valid BST.</p>
- * <p><o>Worst-case running time in Big O notation</o></p>
- */
+	<h3>A binary search tree (BST).</h3>
+	
+	A BST automatically arranges `BinaryTreeNode` objects so the resulting tree is a valid BST.
+	
+	<o>Worst-case running time in Big O notation</o>
+**/
 #if generic
 @:generic
 #end
 class BST<T:Comparable<T>> implements Collection<T>
 {
 	/**
-	 * A unique identifier for this object.<br/>
-	 * A hash table transforms this key into an index of an array element by using a hash function.<br/>
-	 * <warn>This value should never be changed by the user.</warn>
-	 */
+		A unique identifier for this object.
+		
+		A hash table transforms this key into an index of an array element by using a hash function.
+		
+		<warn>This value should never be changed by the user.</warn>
+	**/
 	public var key:Int;
 	
 	/**
-	 * If true, reuses the iterator object instead of allocating a new one when calling <code>iterator()</code>.<br/>
-	 * The default is false.<br/>
-	 * <warn>If true, nested iterations are likely to fail as only one iteration is allowed at a time.</warn>
-	 */
+		If true, reuses the iterator object instead of allocating a new one when calling `iterator()`.
+		
+		The default is false.
+		
+		<warn>If true, nested iterations are likely to fail as only one iteration is allowed at a time.</warn>
+	**/
 	public var reuseIterator:Bool;
 	
 	var mSize:Int;
@@ -58,20 +64,20 @@ class BST<T:Comparable<T>> implements Collection<T>
 	}
 	
 	/**
-	 * The root node or null if no root exists.
-	 * <o>1</o>
-	 */
+		The root node or null if no root exists.
+		<o>1</o>
+	**/
 	public function root():BinaryTreeNode<T>
 	{
 		return mRoot;
 	}
 	
 	/**
-	 * Inserts the element <code>x</code> into the binary search tree.
-	 * <o>n</o>
-	 * @return the inserted node storing the element <code>x</code>.
-	 * @throws de.polygonal.ds.error.AssertError <code>x</code> is null (debug only).
-	 */
+		Inserts the element `x` into the binary search tree.
+		<o>n</o>
+		@return the inserted node storing the element `x`.
+		@throws de.polygonal.ds.error.AssertError `x` is null (debug only).
+	**/
 	public function insert(x:T):BinaryTreeNode<T>
 	{
 		assert(x != null, "element is null");
@@ -116,12 +122,12 @@ class BST<T:Comparable<T>> implements Collection<T>
 	}
 	
 	/**
-	 * Finds the node that stores the element <code>x</code>.
-	 * <o>n</o>
-	 * @return the node storing <code>x</code> or null if <code>x</code> does not exist.
-	 * @throws de.polygonal.ds.error.AssertError tree is empty (debug only).
-	 * @throws de.polygonal.ds.error.AssertError <code>x</code> is null (debug only).
-	 */
+		Finds the node that stores the element `x`.
+		<o>n</o>
+		@return the node storing `x` or null if `x` does not exist.
+		@throws de.polygonal.ds.error.AssertError tree is empty (debug only).
+		@throws de.polygonal.ds.error.AssertError `x` is null (debug only).
+	**/
 	public function find(x:T):BinaryTreeNode<T>
 	{
 		assert(mRoot != null, "tree is empty");
@@ -138,11 +144,11 @@ class BST<T:Comparable<T>> implements Collection<T>
 	}
 	
 	/**
-	 * Removes the node storing the element <code>x</code>.
-	 * <o>n</o>
-	 * @return true if <code>x</code> was successfully removed.
-	 * @throws de.polygonal.ds.error.AssertError <code>x</code> is invalid (debug only).
-	 */
+		Removes the node storing the element `x`.
+		<o>n</o>
+		@return true if `x` was successfully removed.
+		@throws de.polygonal.ds.error.AssertError `x` is invalid (debug only).
+	**/
 	public function removeNode(x:BinaryTreeNode<T>):Bool
 	{
 		assert(x != null, "element is null");
@@ -209,46 +215,43 @@ class BST<T:Comparable<T>> implements Collection<T>
 	}
 	
 	/**
-	 * Returns a string representing the current object.<br/>
-	 * Example:<br/>
-	 * <pre class="prettyprint">
-	 * class Foo implements de.polygonal.ds.Comparable&lt;Foo&gt;
-	 * {
-	 *     var i:Int;
-	 *
-	 *     public function new(i:Int) {
-	 *         this.i = i;
-	 *     }
-	 *
-	 *     public function compare(other:Foo):Int {
-	 *         return other.i - i;
-	 *     }
-	 *
-	 *     public function toString():String {
-	 *         return "{Foo " + i + "}";
-	 *     }
-	 * }
-	 *
-	 * class Main
-	 * {
-	 *     static function main() {
-	 *         var BST = new de.polygonal.ds.BST&lt;Foo&gt;();
-	 *         BST.insert(new Foo(1));
-	 *         BST.insert(new Foo(0));
-	 *         BST.insert(new Foo(2));
-	 *         BST.insert(new Foo(7));
-	 *         trace(BST);
-	 *     }
-	 * }</pre>
-	 * <pre class="console">
-	 * { BST size: 4 }
-	 * [
-	 *   {Foo 7}
-	 *   {Foo 2}
-	 *   {Foo 1}
-	 *   {Foo 0}
-	 * ]</pre>
-	 */
+		Returns a string representing the current object.
+		
+		Example:
+		<pre class="prettyprint">
+		class Foo implements de.polygonal.ds.Comparable<Foo>;
+		{
+		    var i:Int;
+		    public function new(i:Int) {
+		        this.i = i;
+		    }
+		    public function compare(other:Foo):Int {
+		        return other.i - i;
+		    }
+		    public function toString():String {
+		        return "{Foo " + i + "}";
+		    }
+		}
+		class Main
+		{
+		    static function main() {
+		        var BST = new de.polygonal.ds.BST<Foo>();
+		        BST.insert(new Foo(1));
+		        BST.insert(new Foo(0));
+		        BST.insert(new Foo(2));
+		        BST.insert(new Foo(7));
+		        trace(BST);
+		    }
+		}</pre>
+		<pre class="console">
+		{ BST size: 4 }
+		[
+		  {Foo 7}
+		  {Foo 2}
+		  {Foo 1}
+		  {Foo 0}
+		]</pre>
+	**/
 	public function toString():String
 	{
 		var s = '{ BST size: ${size()} }';
@@ -270,10 +273,11 @@ class BST<T:Comparable<T>> implements Collection<T>
 	///////////////////////////////////////////////////////*/
 	
 	/**
-	 * Destroys this object by explicitly nullifying all nodes, pointers and elements for GC'ing used resources.<br/>
-	 * Improves GC efficiency/performance (optional).
-	 * <o>n</o>
-	 */
+		Destroys this object by explicitly nullifying all nodes, pointers and elements for GC'ing used resources.
+		
+		Improves GC efficiency/performance (optional).
+		<o>n</o>
+	**/
 	public function free()
 	{
 		mRoot.free();
@@ -282,20 +286,20 @@ class BST<T:Comparable<T>> implements Collection<T>
 	}
 	
 	/**
-	 * Returns true if this BST contains the element <code>x</code>.
-	 * <o>n</o>
-	 */
+		Returns true if this BST contains the element `x`.
+		<o>n</o>
+	**/
 	inline public function contains(x:T):Bool
 	{
 		return mSize > 0 && (find(x) != null);
 	}
 	
 	/**
-	 * Removes all nodes containing the element <code>x</code>.
-	 * <o>n</o>
-	 * @return true if at least one occurrence of <code>x</code> is nullified.
-	 * @throws de.polygonal.ds.error.AssertError <code>x</code> is invalid (debug only).
-	 */
+		Removes all nodes containing the element `x`.
+		<o>n</o>
+		@return true if at least one occurrence of `x` is nullified.
+		@throws de.polygonal.ds.error.AssertError `x` is invalid (debug only).
+	**/
 	public function remove(x:T):Bool
 	{
 		assert(x != null, "element is null");
@@ -316,10 +320,10 @@ class BST<T:Comparable<T>> implements Collection<T>
 	}
 	
 	/**
-	 * Removes all elements.
-	 * <o>1 or n if <code>purge</code> is true</o>
-	 * @param purge if true, elements are nullified upon removal.
-	 */
+		Removes all elements.
+		<o>1 or n if `purge` is true</o>
+		@param purge if true, elements are nullified upon removal.
+	**/
 	public function clear(purge = false)
 	{
 		if (purge)
@@ -333,10 +337,12 @@ class BST<T:Comparable<T>> implements Collection<T>
 	}
 	
 	/**
-	 * Returns a new <em>BSTIterator</em> object to iterate over all elements contained in this BST.<br/>
-	 * The elements are visited by using a preorder traversal.
-	 * @see <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
-	 */
+		Returns a new `BSTIterator` object to iterate over all elements contained in this BST.
+		
+		The elements are visited by using a preorder traversal.
+		
+		See <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
+	**/
 	public function iterator():Itr<T>
 	{
 		if (reuseIterator)
@@ -352,27 +358,28 @@ class BST<T:Comparable<T>> implements Collection<T>
 	}
 	
 	/**
-	 * The total number of elements.
-	 * <o>n</o>
-	 */
+		The total number of elements.
+		<o>n</o>
+	**/
 	public function size():Int
 	{
 		return mSize;
 	}
 	
 	/**
-	 * Returns true if this BST is empty.
-	 * <o>1</o>
-	 */
+		Returns true if this BST is empty.
+		<o>1</o>
+	**/
 	public function isEmpty():Bool
 	{
 		return mSize == 0;
 	}
 	
 	/**
-	 * Returns an array containing all elements in this BST.<br/>
-	 * The elements are added by applying a preorder traversal.
-	 */
+		Returns an array containing all elements in this BST.
+		
+		The elements are added by applying a preorder traversal.
+	**/
 	public function toArray():Array<T>
 	{
 		var a:Array<T> = ArrayUtil.alloc(size());
@@ -382,9 +389,10 @@ class BST<T:Comparable<T>> implements Collection<T>
 	}
 	
 	/**
-	 * Returns a Vector.&lt;T&gt; object containing all elements in this BST.<br/>
-	 * The elements are added by applying a preorder traversal.
-	 */
+		Returns a `Vector<T>` object containing all elements in this BST.
+		
+		The elements are added by applying a preorder traversal.
+	**/
 	public function toVector():Vector<T>
 	{
 		var v = new Vector<T>(size());
@@ -394,12 +402,12 @@ class BST<T:Comparable<T>> implements Collection<T>
 	}
 	
 	/**
-	 * Duplicates this subtree. Supports shallow (structure only) and deep copies (structure & elements).
-	 * @param assign if true, the <code>copier</code> parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.<br/>
-	 * If false, the <em>clone()</em> method is called on each element. <warn>In this case all elements have to implement <em>Cloneable</em>.</warn>
-	 * @param copier a custom function for copying elements. Replaces element.<em>clone()</em> if <code>assign</code> is false.
-	 * @throws de.polygonal.ds.error.AssertError element is not of type <em>Cloneable</em> (debug only).
-	 */
+		Duplicates this subtree. Supports shallow (structure only) and deep copies (structure & elements).
+		@param assign if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
+		If false, the `clone()` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
+		@param copier a custom function for copying elements. Replaces element.`clone()` if `assign` is false.
+		@throws de.polygonal.ds.error.AssertError element is not of type `Cloneable` (debug only).
+	**/
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{
 		var copy = new BST<T>();
@@ -412,9 +420,7 @@ class BST<T:Comparable<T>> implements Collection<T>
 #if generic
 @:generic
 #end
-#if doc
-private
-#end
+@:dox(hide)
 class BSTIterator<T> implements de.polygonal.ds.Itr<T>
 {
 	var mNode:BinaryTreeNode<T>;

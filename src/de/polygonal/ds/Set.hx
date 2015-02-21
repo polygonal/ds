@@ -19,18 +19,18 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 package de.polygonal.ds;
 
 /**
- * <p>A collection that contains no duplicate elements.</p>
- */
+	<h3>A collection that contains no duplicate elements.</h3>
+**/
 interface Set<T> extends Collection<T>
 {
 	/**
-	 * Returns true if this set contains the element <code>x</code>.
-	 */
+		Returns true if this set contains the element `x`.
+	**/
 	function has(x:T):Bool;
 	
 	/**
-	 * Adds the element <code>x</code> to this set if possible.
-	 * @return false if <code>x</code> already exists.
-	 */
+		Adds the element `x` to this set if possible.
+		@return false if `x` already exists.
+	**/
 	function set(x:T):Bool;
 }

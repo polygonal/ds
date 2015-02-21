@@ -19,20 +19,23 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 package de.polygonal.ds;
 
 /**
- * <p>An prioritized object that can be inserted into a <em>PriorityQueue</em>.</p>
- */
+	<h3>An prioritized object that can be inserted into a PriorityQueue.</h3>
+**/
 interface Prioritizable
 {
 	/**
-	 * The priority of this object.<br/>
-	 * By default, a higher number equals a higher priority.<br/>
-	 * <warn>This value should never be changed by the user after being added to a priority queue - use <em>PriorityQueue#reprioritize()</em> instead.</warn>
-	 */
+		The priority of this object.
+		
+		By default, a higher number equals a higher priority.
+		
+		<warn>This value should never be changed by the user after being added to a priority queue - use `PriorityQueue#reprioritize()` instead.</warn>
+	**/
 	var priority:Float;
 	
 	/**
-	 * Tracks the position inside a binary heap.<br/>
-	 * <warn>This value should never be changed by the user.</warn>
-	 */
+		Tracks the position inside a binary heap.
+		
+		<warn>This value should never be changed by the user.</warn>
+	**/
 	var position:Int;
 }

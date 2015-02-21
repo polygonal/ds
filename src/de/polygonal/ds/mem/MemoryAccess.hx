@@ -21,25 +21,25 @@ package de.polygonal.ds.mem;
 import de.polygonal.ds.error.Assert.assert;
 
 /**
- * <p>Abstract class that grants read/write access to a chunk of fast "alchemy memory".</p>
- */
+	Abstract class that grants read/write access to a chunk of fast "alchemy memory".
+**/
 class MemoryAccess implements Hashable
 {
 	/**
-	 * A unique identifier for this object.<br/>
-	 * A hash table transforms this key into an index of an array element by using a hash function.<br/>
-	 * <warn>This value should never be changed by the user.</warn>
-	 */
+		A unique identifier for this object.
+		A hash table transforms this key into an index of an array element by using a hash function.
+		<warn>This value should never be changed by the user.</warn>
+	**/
 	public var key:Int;
 	
 	/**
-	 * The number of allocated bytes.
-	 */
+		The number of allocated bytes.
+	**/
 	public var bytes(default, null):Int;
 	
 	/**
-	 * The memory offset in bytes.
-	 */
+		The memory offset in bytes.
+	**/
 	public var offset(default, null):Int;
 	
 	public var name:String;
@@ -67,11 +67,11 @@ class MemoryAccess implements Hashable
 	}
 	
 	/**
-	 * Destroys this object by explicitly nullifying all pointers and instantly releases any memory that was allocated by this accessor.<br/>
-	 * <warn>Invoke this method when the life cycle of this object ends to prevent a memory leak.</warn><br/>
-	 * This is not optional if <em>MemoryManager.AUTO_RECLAIM_MEMORY</em> is true.
-	 * @throws de.polygonal.ds.error.AssertError memory was already deallocated (debug only).
-	 */
+		Destroys this object by explicitly nullifying all pointers and instantly releases any memory that was allocated by this accessor.
+		<warn>Invoke this method when the life cycle of this object ends to prevent a memory leak.</warn>
+		This is not optional if `MemoryManager.AUTO_RECLAIM_MEMORY` is true.
+		@throws de.polygonal.ds.error.AssertError memory was already deallocated (debug only).
+	**/
 	public function free()
 	{
 		assert(mMemory != null, "memory deallocated");
@@ -84,9 +84,9 @@ class MemoryAccess implements Hashable
 	}
 	
 	/**
-	 * Sets all bytes to 0.
-	 * @throws de.polygonal.ds.error.AssertError memory was already deallocated (debug only).
-	 */
+		Sets all bytes to 0.
+		@throws de.polygonal.ds.error.AssertError memory was already deallocated (debug only).
+	**/
 	public function clear()
 	{
 		#if alchemy
@@ -96,10 +96,10 @@ class MemoryAccess implements Hashable
 	}
 	
 	/**
-	 * Resizes the memory to <code>byteSize</code> bytes.
-	 * @throws de.polygonal.ds.error.AssertError bytes <= 0 (debug only).
-	 * @throws de.polygonal.ds.error.AssertError memory was already deallocated (debug only).
-	 */
+		Resizes the memory to `byteSize` bytes.
+		@throws de.polygonal.ds.error.AssertError bytes <= 0 (debug only).
+		@throws de.polygonal.ds.error.AssertError memory was already deallocated (debug only).
+	**/
 	public function resize(byteSize:Int)
 	{
 		assert(byteSize > 0);

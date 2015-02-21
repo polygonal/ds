@@ -21,23 +21,28 @@ package de.polygonal.ds;
 import de.polygonal.ds.error.Assert.assert;
 
 /**
- * <p>A simple set using an array.</p>
- * <p><o>Worst-case running time in Big O notation</o></p>
- */
+	<h3>A simple set using an array.</h3>
+	
+	<o>Worst-case running time in Big O notation</o>
+**/
 class ListSet<T> implements Set<T>
 {
 	/**
-	 * A unique identifier for this object.<br/>
-	 * A hash table transforms this key into an index of an array element by using a hash function.<br/>
-	 * <warn>This value should never be changed by the user.</warn>
-	 */
+		A unique identifier for this object.
+		
+		A hash table transforms this key into an index of an array element by using a hash function.
+		
+		<warn>This value should never be changed by the user.</warn>
+	**/
 	public var key:Int;
 	
 	/**
-	 * If true, reuses the iterator object instead of allocating a new one when calling <code>iterator()</code>.<br/>
-	 * The default is false.<br/>
-	 * <warn>If true, nested iterations are likely to fail as only one iteration is allowed at a time.</warn>
-	 */
+		If true, reuses the iterator object instead of allocating a new one when calling `iterator()`.
+		
+		The default is false.
+		
+		<warn>If true, nested iterations are likely to fail as only one iteration is allowed at a time.</warn>
+	**/
 	public var reuseIterator:Bool;
 	
 	var mData:DA<T>;
@@ -50,20 +55,21 @@ class ListSet<T> implements Set<T>
 	}
 	
 	/**
-	 * Returns a string representing the current object.<br/>
-	 * Example:<br/>
-	 * <pre class="prettyprint">
-	 * var set = new de.polygonal.ds.ListSet&lt;String&gt;();
-	 * set.set("val1");
-	 * set.set("val2");
-	 * trace(set);</pre>
-	 * <pre class="console">
-	 * { ListSet size: 2 }
-	 * [
-	 *   val1
-	 *   val2
-	 * ]</pre>
-	 */
+		Returns a string representing the current object.
+		
+		Example:
+		<pre class="prettyprint">
+		var set = new de.polygonal.ds.ListSet<String>();
+		set.set("val1");
+		set.set("val2");
+		trace(set);</pre>
+		<pre class="console">
+		{ ListSet size: 2 }
+		[
+		  val1
+		  val2
+		]</pre>
+	**/
 	public function toString():String
 	{
 		var s = '{ ListSet size: ${size()} }';
@@ -80,19 +86,19 @@ class ListSet<T> implements Set<T>
 	///////////////////////////////////////////////////////*/
 	
 	/**
-	 * Returns true if this set contains the element <code>x</code>.
-	 * <o>n</o>
-	 */
+		Returns true if this set contains the element `x`.
+		<o>n</o>
+	**/
 	public function has(x:T):Bool
 	{
 		return mData.contains(x);
 	}
 	
 	/**
-	 * Adds the element <code>x</code> to this set if possible.
-	 * <o>n</o>
-	 * @return true if <code>x</code> was added to this set, false if <code>x</code> already exists.
-	 */
+		Adds the element `x` to this set if possible.
+		<o>n</o>
+		@return true if `x` was added to this set, false if `x` already exists.
+	**/
 	public function set(x:T):Bool
 	{
 		if (mData.contains(x))
@@ -105,13 +111,13 @@ class ListSet<T> implements Set<T>
 	}
 	
 	/**
-	 * Adds all elements of the set <code>x</code> to this set.
-	 * <o>n</o>
-	 * @param assign if true, the <code>copier</code> parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.<br/>
-	 * If false, the <em>clone()</em> method is called on each element. <warn>In this case all elements have to implement <em>Cloneable</em>.</warn>
-	 * @param copier a custom function for copying elements. Replaces element.<em>clone()</em> if <code>assign</code> is false.
-	 * @throws de.polygonal.ds.error.AssertError element is not of type <em>Cloneable</em> (debug only).
-	 */
+		Adds all elements of the set `x` to this set.
+		<o>n</o>
+		@param assign if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
+		If false, the `clone()` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
+		@param copier a custom function for copying elements. Replaces element.`clone()` if `assign` is false.
+		@throws de.polygonal.ds.error.AssertError element is not of type `Cloneable` (debug only).
+	**/
 	public function merge(x:Set<T>, assign:Bool, copier:T->T = null)
 	{
 		if (assign)
@@ -143,10 +149,11 @@ class ListSet<T> implements Set<T>
 	///////////////////////////////////////////////////////*/
 	
 	/**
-	 * Destroys this object by explicitly nullifying all elements.<br/>
-	 * Improves GC efficiency/performance (optional).
-	 * <o>n</o>
-	 */
+		Destroys this object by explicitly nullifying all elements.
+		
+		Improves GC efficiency/performance (optional).
+		<o>n</o>
+	**/
 	public function free()
 	{
 		mData.free();
@@ -154,39 +161,41 @@ class ListSet<T> implements Set<T>
 	}
 	
 	/**
-	 * Same as <em>has()</em>.
-	 * <o>n</o>
-	 */
+		Same as `has()`.
+		<o>n</o>
+	**/
 	public function contains(x:T):Bool
 	{
 		return mData.contains(x);
 	}
 	
 	/**
-	 * Removes the element <code>x</code>.
-	 * <o>n</o>
-	 * @return true if <code>x</code> was successfully removed.
-	 */
+		Removes the element `x`.
+		<o>n</o>
+		@return true if `x` was successfully removed.
+	**/
 	public function remove(x:T):Bool
 	{
 		return mData.remove(x);
 	}
 	
 	/**
-	 * Removes all elements.
-	 * <o>1 or n if <code>purge</code> is true</o>
-	 * @param purge if true, nullifies references upon removal.
-	 */
+		Removes all elements.
+		<o>1 or n if `purge` is true</o>
+		@param purge if true, nullifies references upon removal.
+	**/
 	public function clear(purge = false)
 	{
 		mData.clear(purge);
 	}
 	
 	/**
-	 * Iterates over all elements contained in this set.<br/>
-	 * The elements are visited in a random order.
-	 * @see <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
-	 */
+		Iterates over all elements contained in this set.
+		
+		The elements are visited in a random order.
+		
+		See <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
+	**/
 	public function iterator():Itr<T>
 	{
 		mData.reuseIterator = reuseIterator;
@@ -194,46 +203,46 @@ class ListSet<T> implements Set<T>
 	}
 	
 	/**
-	 * Returns true if this set is empty.
-	 * <o>1</o>
-	 */
+		Returns true if this set is empty.
+		<o>1</o>
+	**/
 	public function isEmpty():Bool
 	{
 		return mData.isEmpty();
 	}
 	
 	/**
-	 * The total number of elements.
-	 * <o>1</o>
-	 */
+		The total number of elements.
+		<o>1</o>
+	**/
 	public function size():Int
 	{
 		return mData.size();
 	}
 	
 	/**
-	 * Returns an unordered array containing all elements in this set.
-	 */
+		Returns an unordered array containing all elements in this set.
+	**/
 	public function toArray():Array<T>
 	{
 		return mData.toArray();
 	}
 	
 	/**
-	 * Returns a Vector.&lt;T&gt; object containing all elements in this set.
-	 */
+		Returns a `Vector<T>` object containing all elements in this set.
+	**/
 	public function toVector():Vector<T>
 	{
 		return mData.toVector();
 	}
 	
 	/**
-	 * Duplicates this set. Supports shallow (structure only) and deep copies (structure & elements).
-	 * @param assign if true, the <code>copier</code> parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.<br/>
-	 * If false, the <em>clone()</em> method is called on each element. <warn>In this case all elements have to implement <em>Cloneable</em>.</warn>
-	 * @param copier a custom function for copying elements. Replaces element.<em>clone()</em> if <code>assign</code> is false.
-	 * @throws de.polygonal.ds.error.AssertError element is not of type <em>Cloneable</em> (debug only).
-	 */
+		Duplicates this set. Supports shallow (structure only) and deep copies (structure & elements).
+		@param assign if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
+		If false, the `clone()` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
+		@param copier a custom function for copying elements. Replaces element.`clone()` if `assign` is false.
+		@throws de.polygonal.ds.error.AssertError element is not of type `Cloneable` (debug only).
+	**/
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{
 		var copy = new ListSet();

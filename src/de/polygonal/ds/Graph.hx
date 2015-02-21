@@ -21,56 +21,71 @@ package de.polygonal.ds;
 import de.polygonal.ds.error.Assert.assert;
 
 /**
- * <p>A weighted graph.</p>
- * <p>A graph is composed of <em>GraphNode</em> and <em>GraphArc</em> objects.</p>
- * <p>See <a href="http://lab.polygonal.de/?p=185" target="mBlank">http://lab.polygonal.de/?p=185/</a></p>
- * <p><o>Worst-case running time in Big O notation</o></p>
- */
+	<h3>A weighted graph.</h3>
+	
+	A graph is composed of `GraphNode` and `GraphArc` objects.
+	
+	See <a href="http://lab.polygonal.de/?p=185" target="mBlank">http://lab.polygonal.de/?p=185/</a>
+		
+	<o>Worst-case running time in Big O notation</o>
+**/
 #if (flash && generic)
 @:generic
 #end
 class Graph<T> implements Collection<T>
 {
 	/**
-	 * A unique identifier for this object.<br/>
-	 * A hash table transforms this key into an index of an array element by using a hash function.<br/>
-	 * <warn>This value should never be changed by the user.</warn>
-	 */
+		A unique identifier for this object.
+		
+		A hash table transforms this key into an index of an array element by using a hash function.
+		
+		<warn>This value should never be changed by the user.</warn>
+	**/
 	public var key:Int;
 	
 	/**
-	 * The maximum allowed size of this graph.<br/>
-	 * Once the maximum size is reached, adding an element will fail with an error (debug only).<br/>
-	 * A value of -1 indicates that the size is unbound.<br/>
-	 * <warn>Always equals -1 in release mode.</warn>
-	 */
+		The maximum allowed size of this graph.
+		
+		Once the maximum size is reached, adding an element will fail with an error (debug only).
+		
+		A value of -1 indicates that the size is unbound.
+		
+		<warn>Always equals -1 in release mode.</warn>
+	**/
 	public var maxSize:Int;
 	
 	/**
-	 * If true, automatically clears the mark-flag on all graph nodes prior to starting a new traversal.<br/>
-	 * Default is false;
-	 */
+		If true, automatically clears the mark-flag on all graph nodes prior to starting a new traversal.
+		
+		Default is false.
+	**/
 	public var autoClearMarks:Bool;
 	
 	/**
-	 * If true, reuses the iterator object instead of allocating a new one when calling <code>iterator()</code>.<br/>
-	 * The default is false.<br/>
-	 * <warn>If true, nested iterations are likely to fail as only one iteration is allowed at a time.</warn>
-	 */
+		If true, reuses the iterator object instead of allocating a new one when calling `iterator()`.
+		
+		The default is false.
+		
+		<warn>If true, nested iterations are likely to fail as only one iteration is allowed at a time.</warn>
+	**/
 	public var reuseIterator:Bool;
 	
 	/**
-	 * If specified, <code>borrowArc()</code> is called in order to create <em>GraphArc</em> objects.<br/>
-	 * Useful for pooling <em>GraphArc</em> objects.
-	 * Default is null.
-	 */
+		If specified, `borrowArc()` is called in order to create `GraphArc` objects.
+		
+		Useful for pooling `GraphArc` objects.
+		
+		Default is null.
+	**/
 	public var borrowArc:GraphNode<T>->Float->GraphArc<T>;
 	
 	/**
-	 * A function pointer responsible for returning <em>GraphArc</em> objects.<br/>
-	 * Required if <code>borrowArc</code> is specified.
-	 * Default is null.
-	 */
+		A function pointer responsible for returning `GraphArc` objects.
+		
+		Required if `borrowArc` is specified.
+		
+		Default is null.
+	**/
 	public var returnArc:GraphArc<T>->Void;
 	
 	var mNodeList:GraphNode<T>;
@@ -86,9 +101,9 @@ class Graph<T> implements Collection<T>
 	#end
 	
 	/**
-	 * @param maxSize the maximum allowed size of this graph.<br/>
-	 * The default value of -1 indicates that there is no upper limit.
-	 */
+		@param maxSize the maximum allowed size of this graph.
+		The default value of -1 indicates that there is no upper limit.
+	**/
 	public function new(maxSize = -1)
 	{
 		#if debug
@@ -113,19 +128,19 @@ class Graph<T> implements Collection<T>
 	}
 	
 	/**
-	 * The graph nodes stored as a doubly linked list of <em>GraphNode</em> objects.
-	 * <o>1</o>
-	 * @return the first node in a list of <em>GraphNode</em> objects or null if the graph is empty.
-	 */
+		The graph nodes stored as a doubly linked list of `GraphNode` objects.
+		<o>1</o>
+		@return the first node in a list of `GraphNode` objects or null if the graph is empty.
+	**/
 	inline public function getNodeList():GraphNode<T>
 	{
 		return mNodeList;
 	}
 	
 	/**
-	 * Finds and returns the node storing the element <code>x</code> or null if such a node does not exist.
-	 * <o>n</o>
-	 */
+		Finds and returns the node storing the element `x` or null if such a node does not exist.
+		<o>n</o>
+	**/
 	public function findNode(x:T):GraphNode<T>
 	{
 		var found = false;
@@ -143,19 +158,19 @@ class Graph<T> implements Collection<T>
 	}
 	
 	/**
-	 * Creates and returns a node object storing the element <code>x</code>.
-	 * <o>1</o>
-	 */
+		Creates and returns a node object storing the element `x`.
+		<o>1</o>
+	**/
 	public function createNode(x:T):GraphNode<T>
 	{
 		return new GraphNode<T>(this, x);
 	}
 	
 	/**
-	 * Adds the node <code>x</code> to this graph.
-	 * <o>1</o>
-	 * @throws de.polygonal.ds.error.AssertError size() equals maxSize (debug only).
-	 */
+		Adds the node `x` to this graph.
+		<o>1</o>
+		@throws de.polygonal.ds.error.AssertError size() equals maxSize (debug only).
+	**/
 	public function addNode(x:GraphNode<T>):GraphNode<T>
 	{
 		#if debug
@@ -175,11 +190,12 @@ class Graph<T> implements Collection<T>
 	}
 	
 	/**
-	 * Removes the node <code>x</code> from this graph.<br/>
-	 * This clears all outgoing and incoming arcs and removes <code>x</code> from the node list.
-	 * <o>1</o>
-	 * @throws de.polygonal.ds.error.AssertError graph is empty (debug only).
-	 */
+		Removes the node `x` from this graph.
+		
+		This clears all outgoing and incoming arcs and removes `x` from the node list.
+		<o>1</o>
+		@throws de.polygonal.ds.error.AssertError graph is empty (debug only).
+	**/
 	public function removeNode(x:GraphNode<T>)
 	{
 		assert(size() > 0, "graph is empty");
@@ -193,12 +209,13 @@ class Graph<T> implements Collection<T>
 	}
 	
 	/**
-	 * Creates an uni-directional link between two nodes with a weight of <code>cost</code> (default is 1.0).<br/>
-	 * This creates an arc pointing from the <code>source</code> node to the <code>target</code> node.
-	 * <o>n</o>
-	 * @throws de.polygonal.ds.error.AssertError <code>source</code> or <code>target</code> is null (debug only).
-	 * @throws de.polygonal.ds.error.AssertError <code>source</code> equals <code>target</code> (debug only).
-	 */
+		Creates an uni-directional link between two nodes with a weight of `cost` (default is 1.0).
+		
+		This creates an arc pointing from the `source` node to the `target` node.
+		<o>n</o>
+		@throws de.polygonal.ds.error.AssertError `source` or `target` is null (debug only).
+		@throws de.polygonal.ds.error.AssertError `source` equals `target` (debug only).
+	**/
 	public function addSingleArc(source:GraphNode<T>, target:GraphNode<T>, cost = 1.)
 	{
 		assert(source != null, "source is null");
@@ -228,12 +245,13 @@ class Graph<T> implements Collection<T>
 	}
 	
 	/**
-	 * Creates a bi-directional link between two nodes with a weight of <code>cost</code> (default is 1.0).<br/>
-	 * This creates two arcs - an arc that points from the <code>source</code> node to the <code>target</code> node and vice versa.
-	 * <o>n</o>
-	 * @throws de.polygonal.ds.error.AssertError <code>source</code> or <code>target</code> is null (debug only).
-	 * @throws de.polygonal.ds.error.AssertError <code>source</code> equals <code>target</code> (debug only).
-	 */
+		Creates a bi-directional link between two nodes with a weight of `cost` (default is 1.0).
+		
+		This creates two arcs - an arc that points from the `source` node to the `target` node and vice versa.
+		<o>n</o>
+		@throws de.polygonal.ds.error.AssertError `source` or `target` is null (debug only).
+		@throws de.polygonal.ds.error.AssertError `source` equals `target` (debug only).
+	**/
 	public function addMutualArc(source:GraphNode<T>, target:GraphNode<T>, cost = 1.)
 	{
 		assert(source != null, "source is null");
@@ -267,14 +285,15 @@ class Graph<T> implements Collection<T>
 	}
 	
 	/**
-	 * Isolates <code>node</code> from this graph by unlinking it from all outgoing and incoming arcs.<br/>
-	 * The size remains unchanged as the node is not removed from the graph.
-	 * <o>(n&sup2; - n) / 2</o>
-	 * @return the disconnected graph node.
-	 * @throws de.polygonal.ds.error.AssertError <code>node</code> is null (debug only).
-	 * @throws de.polygonal.ds.error.AssertError graph is empty (debug only).
-	 * @throws de.polygonal.ds.error.AssertError <code>node</code> does not belong to this graph (debug only).
-	 */
+		Isolates `node` from this graph by unlinking it from all outgoing and incoming arcs.
+		
+		The size remains unchanged as the node is not removed from the graph.
+		<o>(n&sup2; - n) / 2</o>
+		@return the disconnected graph node.
+		@throws de.polygonal.ds.error.AssertError `node` is null (debug only).
+		@throws de.polygonal.ds.error.AssertError graph is empty (debug only).
+		@throws de.polygonal.ds.error.AssertError `node` does not belong to this graph (debug only).
+	**/
 	public function unlink(node:GraphNode<T>):GraphNode<T>
 	{
 		assert(mNodeList != null, "graph is empty");
@@ -321,10 +340,11 @@ class Graph<T> implements Collection<T>
 	}
 	
 	/**
-	 * Clears the mark-flag on all graph nodes that were set in a BFS/DFS traversal.<br/>
-	 * <warn>Call this method to start a fresh traversal.</warn>
-	 * <o>n</o>
-	 */
+		Clears the mark-flag on all graph nodes that were set in a BFS/DFS traversal.
+		
+		<warn>Call this method to start a fresh traversal.</warn>
+		<o>n</o>
+	**/
 	inline public function clearMarks()
 	{
 		var node = mNodeList;
@@ -336,9 +356,9 @@ class Graph<T> implements Collection<T>
 	}
 	
 	/**
-	 * Clears the parent pointers on all graph nodes.
-	 * <o>n</o>
-	 */
+		Clears the parent pointers on all graph nodes.
+		<o>n</o>
+	**/
 	inline public function clearParent()
 	{
 		var node = mNodeList;
@@ -350,25 +370,25 @@ class Graph<T> implements Collection<T>
 	}
 	
 	/**
-	 * Performs an iterative depth-first search (DFS).
-	 * @param preflight if true, an extra traversal is performed before the actual traversal runs.
-	 * The first pass visits all elements and calls element.<em>visit()</em> with the <code>preflight</code> parameter set to true.
-	 * In this pass the return value determines whether the element will be processed (true) or
-	 * excluded (false) from the final traversal, which is the second pass (<code>preflight</code> parameter set to false).
-	 * The same applies when using a <code>process</code> function.
-	 * @param seed the starting point of the traversal. If omitted, the first node in the list of graph nodes is used.
-	 * @param process a function that is invoked for every traversed node. The parameters are:
-	 * <ol>
-	 * <li>a reference to the visited node.</li>
-	 * <li>the <code>preflight</code> flag.</li>
-	 * <li>custom data specified by the <code>userData</code> parameter (default is null).</li>
-	 * </ol>
-	 * Once <code>process</code> returns false, the traversal stops immediately and no further nodes are examined (termination condition).<br/>
-	 * If omitted, element.<em>visit()</em> is used.
-	 * <warn>In this case the elements of all nodes have to implement <em>Visitable</em>.</warn><br/>
-	 * @param userData custom data that is passed to every visited node via <code>process</code> or element.<em>visit()</em>. If omitted, null is used.
-	 * @param recursive if true, performs a recursive traversal (default traversal style is iterative).
-	 */
+		Performs an iterative depth-first search (DFS).
+		@param preflight if true, an extra traversal is performed before the actual traversal runs.
+		The first pass visits all elements and calls element.`visit()` with the `preflight` parameter set to true.
+		In this pass the return value determines whether the element will be processed (true) or
+		excluded (false) from the final traversal, which is the second pass (`preflight` parameter set to false).
+		The same applies when using a `process` function.
+		@param seed the starting point of the traversal. If omitted, the first node in the list of graph nodes is used.
+		@param process a function that is invoked for every traversed node. The parameters are:
+		<ul>
+		<li>a reference to the visited node.</li>
+		<li>the `preflight` flag.</li>
+		<li>custom data specified by the `userData` parameter (default is null).</li>
+		</ul>
+		Once `process` returns false, the traversal stops immediately and no further nodes are examined (termination condition).
+		If omitted, element.`visit()` is used.
+		<warn>In this case the elements of all nodes have to implement `Visitable`.</warn>
+		@param userData custom data that is passed to every visited node via `process` or element.`visit()`. If omitted, null is used.
+		@param recursive if true, performs a recursive traversal (default traversal style is iterative).
+	**/
 	public function DFS(preflight = false, seed:GraphNode<T> = null, process:GraphNode<T>->Bool->Dynamic->Bool = null, userData:Dynamic = null, recursive = false)
 	{
 		if (mSize == 0) return;
@@ -537,24 +557,24 @@ class Graph<T> implements Collection<T>
 	}
 	
 	/**
-	 * Performs an iterative breadth-first search (BFS).
-	 * @param preflight if true, an extra traversal is performed before the actual traversal runs.
-	 * The first pass visits all elements and calls element.<em>visit()</em> with the <code>preflight</code> parameter set to true.
-	 * In this pass the return value determines whether the element will be processed (true) or
-	 * excluded (false) from the final traversal, which is the second pass (<code>preflight</code> parameter set to false).
-	 * The same applies when using a <code>process</code> function.
-	 * @param seed the starting point of the traversal. If omitted, the first node in the list of graph nodes is used.
-	 * @param process a function that is invoked for every traversed node. The parameters are:
-	 * <ol>
-	 * <li>a reference to the visited node.</li>
-	 * <li>the <code>preflight</code> flag.</li>
-	 * <li>custom data specified by the <code>userData</code> parameter (default is null).</li>
-	 * </ol>
-	 * Once <code>process</code> returns false, the traversal stops immediately and no further nodes are examined (termination condition).<br/>
-	 * If omitted, element.<em>visit()</em> is used.
-	 * <warn>In this case the elements of all nodes have to implement Visitable.</warn><br/>
-	 * @param userData custom data that is passed to every visited node via <code>process</code> or element.<em>visit()</em>. If omitted, null is used.
-	 */
+		Performs an iterative breadth-first search (BFS).
+		@param preflight if true, an extra traversal is performed before the actual traversal runs.
+		The first pass visits all elements and calls element.`visit()` with the `preflight` parameter set to true.
+		In this pass the return value determines whether the element will be processed (true) or
+		excluded (false) from the final traversal, which is the second pass (`preflight` parameter set to false).
+		The same applies when using a `process` function.
+		@param seed the starting point of the traversal. If omitted, the first node in the list of graph nodes is used.
+		@param process a function that is invoked for every traversed node. The parameters are:
+		<ul>
+		<li>a reference to the visited node.</li>
+		<li>the `preflight` flag.</li>
+		<li>custom data specified by the `userData` parameter (default is null).</li>
+		</ul>
+		Once `process` returns false, the traversal stops immediately and no further nodes are examined (termination condition).
+		If omitted, element.`visit()` is used.
+		<warn>In this case the elements of all nodes have to implement Visitable.</warn>
+		@param userData custom data that is passed to every visited node via `process` or element.`visit()`. If omitted, null is used.
+	**/
 	public function BFS(preflight = false, seed:GraphNode<T> = null, process:GraphNode<T>->Bool->Dynamic->Bool = null, userData:Dynamic = null)
 	{
 		if (mSize == 0) return;
@@ -745,25 +765,25 @@ class Graph<T> implements Collection<T>
 	}
 	
 	/**
-	 * Performs an iterative depth-limited breadth-first search (DLBFS).
-	 * @param maxDepth A <code>maxDepth</code> value of 1 means that only all direct neighbors of <code>seed</code> are visited.
-	 * @param preflight if true, an extra traversal is performed before the actual traversal runs.
-	 * The first pass visits all elements and calls element.<em>visit()</em> with the <code>preflight</code> parameter set to true.
-	 * In this pass the return value determines whether the element will be processed (true) or
-	 * excluded (false) from the final traversal, which is the second pass (<code>preflight</code> parameter set to false).
-	 * The same applies when using a <code>process</code> function.
-	 * @param seed the starting point of the traversal. If omitted, the first node in the list of graph nodes is used.
-	 * @param process a function that is invoked for every traversed node. The parameters are:
-	 * <ol>
-	 * <li>a reference to the visited node.</li>
-	 * <li>the <code>preflight</code> flag.</li>
-	 * <li>custom data specified by the <code>userData</code> parameter (default is null).</li>
-	 * </ol>
-	 * Once <code>process</code> returns false, the traversal stops immediately and no further nodes are examined (termination condition).<br/>
-	 * If omitted, element.<em>visit()</em> is used.
-	 * <warn>In this case the elements of all nodes have to implement Visitable.</warn><br/>
-	 * @param userData custom data that is passed to every visited node via <code>process</code> or element.<em>visit()</em>. If omitted, null is used.
-	 */
+		Performs an iterative depth-limited breadth-first search (DLBFS).
+		@param maxDepth A `maxDepth` value of 1 means that only all direct neighbors of `seed` are visited.
+		@param preflight if true, an extra traversal is performed before the actual traversal runs.
+		The first pass visits all elements and calls element.`visit()` with the `preflight` parameter set to true.
+		In this pass the return value determines whether the element will be processed (true) or
+		excluded (false) from the final traversal, which is the second pass (`preflight` parameter set to false).
+		The same applies when using a `process` function.
+		@param seed the starting point of the traversal. If omitted, the first node in the list of graph nodes is used.
+		@param process a function that is invoked for every traversed node. The parameters are:
+		<ul>
+		<li>a reference to the visited node.</li>
+		<li>the `preflight` flag.</li>
+		<li>custom data specified by the `userData` parameter (default is null).</li>
+		</ul>
+		Once `process` returns false, the traversal stops immediately and no further nodes are examined (termination condition).
+		If omitted, element.`visit()` is used.
+		<warn>In this case the elements of all nodes have to implement Visitable.</warn>
+		@param userData custom data that is passed to every visited node via `process` or element.`visit()`. If omitted, null is used.
+	**/
 	public function DLBFS(maxDepth:Int, preflight = false, seed:GraphNode<T> = null, process:GraphNode<T>->Bool->Dynamic->Bool = null, userData:Dynamic = null)
 	{
 		if (mSize == 0) return;
@@ -970,25 +990,26 @@ class Graph<T> implements Collection<T>
 	}
 	
 	/**
-	 * Returns a string representing the current object.<br/>
-	 * Example:<br/>
-	 * <pre class="prettyprint">
-	 * var graph = new de.polygonal.ds.Graph&lt;String&gt;();
-	 * var a = graph.addNode("a");
-	 * var b = graph.addNode("b");
-	 * var c = graph.addNode("c");
-	 * graph.addSingleArc(a, b, 1.0);
-	 * graph.addSingleArc(b, a, 1.0);
-	 * graph.addMutualArc(a, c, 1.0);
-	 * trace(graph);</pre>
-	 * <pre class="console">
-	 * { Graph size: 3 }
-	 * [
-	 *   {GraphNode, val: c, connected to: a}
-	 *   {GraphNode, val: b, connected to: a}
-	 *   {GraphNode, val: a, connected to: c,b}
-	 * ]</pre>
-	 */
+		Returns a string representing the current object.
+		
+		Example:
+		<pre class="prettyprint">
+		var graph = new de.polygonal.ds.Graph<String>();
+		var a = graph.addNode("a");
+		var b = graph.addNode("b");
+		var c = graph.addNode("c");
+		graph.addSingleArc(a, b, 1.0);
+		graph.addSingleArc(b, a, 1.0);
+		graph.addMutualArc(a, c, 1.0);
+		trace(graph);</pre>
+		<pre class="console">
+		{ Graph size: 3 }
+		[
+		  {GraphNode, val: c, connected to: a}
+		  {GraphNode, val: b, connected to: a}
+		  {GraphNode, val: a, connected to: c,b}
+		]</pre>
+	**/
 	public function toString():String
 	{
 		var s = '{ Graph size: ${size()} }';
@@ -1009,10 +1030,11 @@ class Graph<T> implements Collection<T>
 	///////////////////////////////////////////////////////*/
 	
 	/**
-	 * Destroys this object by explicitly nullifying all nodes, elements and pointers for GC'ing used resources.<br/>
-	 * Improves GC efficiency/performance (optional).
-	 * <o>n</o>
-	 */
+		Destroys this object by explicitly nullifying all nodes, elements and pointers for GC'ing used resources.
+		
+		Improves GC efficiency/performance (optional).
+		<o>n</o>
+	**/
 	public function free()
 	{
 		var node = mNodeList;
@@ -1047,9 +1069,9 @@ class Graph<T> implements Collection<T>
 	}
 	
 	/**
-	 * Returns true if this graph contains a node storing the element <code>x</code>.
-	 * <o>n</o>
-	 */
+		Returns true if this graph contains a node storing the element `x`.
+		<o>n</o>
+	**/
 	public function contains(x:T):Bool
 	{
 		var found = false;
@@ -1064,11 +1086,12 @@ class Graph<T> implements Collection<T>
 	}
 	
 	/**
-	 * Removes all nodes storing the element <code>x</code>.<br/>
-	 * Nodes and elements are nullified.
-	 * <o>n</o>
-	 * @return true if at least one node storing <code>x</code> was removed.
-	 */
+		Removes all nodes storing the element `x`.
+		
+		Nodes and elements are nullified.
+		<o>n</o>
+		@return true if at least one node storing `x` was removed.
+	**/
 	public function remove(x:T):Bool
 	{
 		var found = false;
@@ -1094,11 +1117,12 @@ class Graph<T> implements Collection<T>
 	}
 	
 	/**
-	 * Removes all elements.
-	 * <o>1 or n if <code>purge</code> is true</o>
-	 * @param purge if true, explicitly nullifies nodes and elements upon removal.<br/>
-	 * Improves GC efficiency/performance (optional).
-	 */
+		Removes all elements.
+		
+		<o>1 or n if `purge` is true</o>
+		@param purge if true, explicitly nullifies nodes and elements upon removal.
+		Improves GC efficiency/performance (optional).
+	**/
 	public function clear(purge = false)
 	{
 		if (purge)
@@ -1127,10 +1151,11 @@ class Graph<T> implements Collection<T>
 	}
 	
 	/**
-	 * Returns a new <em>GraphIterator</em> object to iterate over all elements stored in the graph nodes of this graph.
-	 * The nodes are visited in a random order.
-	 * @see <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
-	 */
+		Returns a new `GraphIterator` object to iterate over all elements stored in the graph nodes of this graph.
+		
+		The nodes are visited in a random order.
+		See <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
+	**/
 	public function iterator():Itr<T>
 	{
 		if (reuseIterator)
@@ -1146,47 +1171,50 @@ class Graph<T> implements Collection<T>
 	}
 	
 	/**
-	 * Returns a new <em>GraphNodeIterator</em> object to iterate over all <em>GraphNode</em> objects in this graph.
-	 * The nodes are visited in a random order.
-	 * @see <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
-	 */
+		Returns a new `GraphNodeIterator` object to iterate over all `GraphNode` objects in this graph.
+		
+		The nodes are visited in a random order.
+		See <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
+	**/
 	public function nodeIterator():Itr<GraphNode<T>>
 	{
 		return new GraphNodeIterator<T>(this);
 	}
 	
 	/**
-	 * Returns a new <em>GraphArcIterator</em> object to iterate over all <em>GraphArc</em> objects in this graph.
-	 * The arcs are visited in a random order.
-	 * @see <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
-	 */
+		Returns a new `GraphArcIterator` object to iterate over all `GraphArc` objects in this graph.
+		
+		The arcs are visited in a random order.
+		See <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
+	**/
 	public function arcIterator():Itr<GraphArc<T>>
 	{
 		return new GraphArcIterator<T>(this);
 	}
 	
 	/**
-	 * The total number of elements in this graph.<br/>
-	 * Equals the number of graph nodes.
-	 * <o>1</o>
-	 */
+		The total number of elements in this graph.
+		
+		Equals the number of graph nodes.
+		<o>1</o>
+	**/
 	inline public function size():Int
 	{
 		return mSize;
 	}
 	
 	/**
-	 * Returns true if this graph is empty.
-	 * <o>1</o>
-	 */
+		Returns true if this graph is empty.
+		<o>1</o>
+	**/
 	inline public function isEmpty():Bool
 	{
 		return mSize == 0;
 	}
 	
 	/**
-	 * Returns an unordered array containing all elements stored in the graph nodes of this graph.
-	 */
+		Returns an unordered array containing all elements stored in the graph nodes of this graph.
+	**/
 	public function toArray():Array<T>
 	{
 		var a:Array<T> = ArrayUtil.alloc(size());
@@ -1200,8 +1228,8 @@ class Graph<T> implements Collection<T>
 	}
 	
 	/**
-	 * Returns an unordered Vector.&lt;T&gt; object containing all elements stored in the graph nodes of this graph.
-	 */
+		Returns an unordered `Vector<T>` object containing all elements stored in the graph nodes of this graph.
+	**/
 	public function toVector():Vector<T>
 	{
 		var v = new Vector<T>(size());
@@ -1216,12 +1244,12 @@ class Graph<T> implements Collection<T>
 	}
 	
 	/**
-	 * Duplicates this graph. Supports shallow (structure only) and deep copies (structure & elements).
-	 * @param assign if true, the <code>copier</code> parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.<br/>
-	 * If false, the <em>clone()</em> method is called on each element. <warn>In this case all elements have to implement <em>Cloneable</em>.</warn>
-	 * @param copier a custom function for copying elements. Replaces element.<em>clone()</em> if <code>assign</code> is false.
-	 * @throws de.polygonal.ds.error.AssertError element is not of type <em>Cloneable</em> (debug only).
-	 */
+		Duplicates this graph. Supports shallow (structure only) and deep copies (structure & elements).
+		@param assign if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
+		If false, the `clone()` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
+		@param copier a custom function for copying elements. Replaces element.`clone()` if `assign` is false.
+		@throws de.polygonal.ds.error.AssertError element is not of type `Cloneable` (debug only).
+	**/
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{
 		var copy = new Graph<T>(maxSize);
@@ -1363,9 +1391,7 @@ class Graph<T> implements Collection<T>
 @:generic
 #end
 @:access(de.polygonal.ds.Graph)
-#if doc
-private
-#end
+@:dox(hide)
 class GraphIterator<T> implements de.polygonal.ds.Itr<T>
 {
 	var mF:Graph<T>;
@@ -1405,9 +1431,7 @@ class GraphIterator<T> implements de.polygonal.ds.Itr<T>
 @:generic
 #end
 @:access(de.polygonal.ds.Graph)
-#if doc
-private
-#end
+@:dox(hide)
 class GraphNodeIterator<T> implements de.polygonal.ds.Itr<GraphNode<T>>
 {
 	var mF:Graph<T>;
@@ -1447,9 +1471,7 @@ class GraphNodeIterator<T> implements de.polygonal.ds.Itr<GraphNode<T>>
 @:generic
 #end
 @:access(de.polygonal.ds.Graph)
-#if doc
-private
-#end
+@:dox(hide)
 class GraphArcIterator<T> implements de.polygonal.ds.Itr<GraphArc<T>>
 {
 	var mF:Graph<T>;

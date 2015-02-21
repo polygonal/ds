@@ -21,34 +21,43 @@ package de.polygonal.ds;
 import de.polygonal.ds.error.Assert.assert;
 
 /**
- * <p>A deque ("double-ended queue") is a linear list for which all insertions and deletions (and usually all accesses) are made at ends of the list.</p>
- * <p><o>Worst-case running time in Big O notation</o></p>
- */
+	<h3>A deque is a "double-ended queue".</h3>
+	
+	This is a linear list for which all insertions and deletions (and usually all accesses) are made at ends of the list.
+	
+	<o>Worst-case running time in Big O notation</o>
+**/
 #if (flash && generic)
 @:generic
 #end
 class ArrayedDeque<T> implements Deque<T>
 {
 	/**
-	 * A unique identifier for this object.<br/>
-	 * A hash table transforms this key into an index of an array element by using a hash function.<br/>
-	 * <warn>This value should never be changed by the user.</warn>
-	 */
+		A unique identifier for this object.
+		
+		A hash table transforms this key into an index of an array element by using a hash function.
+		
+		<warn>This value should never be changed by the user.</warn>
+	**/
 	public var key:Int;
 	
 	/**
-	 * The maximum allowed size of this deque.<br/>
-	 * Once the maximum size is reached, adding an element will fail with an error (debug only).
-	 * A value of -1 indicates that the size is unbound.<br/>
-	 * <warn>Always equals -1 in release mode.</warn>
-	 */
+		The maximum allowed size of this deque.
+		
+		Once the maximum size is reached, adding an element will fail with an error (debug only).
+		A value of -1 indicates that the size is unbound.
+		
+		<warn>Always equals -1 in release mode.</warn>
+	**/
 	public var maxSize:Int;
 	
 	/**
-	 * If true, reuses the iterator object instead of allocating a new one when calling <code>iterator()</code>.<br/>
-	 * The default is false.<br/>
-	 * <warn>If true, nested iterations are likely to fail as only one iteration is allowed at a time.</warn>
-	 */
+		If true, reuses the iterator object instead of allocating a new one when calling `iterator()`.
+		
+		The default is false.
+		
+		<warn>If true, nested iterations are likely to fail as only one iteration is allowed at a time.</warn>
+	**/
 	public var reuseIterator:Bool;
 	
 	var mBlockSize:Int;
@@ -69,16 +78,16 @@ class ArrayedDeque<T> implements Deque<T>
 	var mIterator:ArrayedDequeIterator<T>;
 	
 	/**
-	 * @param blockSize a block represents a contiguous piece of memory; whenever the deque runs out of space an additional block with a capacity of <code>blockSize</code> elements is allocated and added to the existing blocks.<br/>
-	 * The parameter affects the performance-memory trade-off: a large <code>blockSize</code> improves performances but wastes memory if the utilization is low; a small <code>blockSize</code> uses memory more efficiently but is slower due to frequent allocation of blocks.<br/>
-	 * The default value is 64; the minimum value is 4.<br/>
-	 * <warn><code>blockSize</code> has to be a power of two.</warn>
-	 * @param blockPoolSize the total number of blocks to reuse when blocks are removed or relocated (from front to back or vice-versa). This improves performances but uses more memory.<br/>
-	 * The default value is 4; a value of 0 disables block pooling.
-	 * @param maxSize the maximum allowed size of this deque.<br/>
-	 * The default value of -1 indicates that there is no upper limit.
-	 * @throws de.polygonal.ds.error.AssertError invalid <code>blockSize</code> (debug only).
-	 */
+		@param blockSize a block represents a contiguous piece of memory; whenever the deque runs out of space an additional block with a capacity of `blockSize` elements is allocated and added to the existing blocks.
+		The parameter affects the performance-memory trade-off: a large `blockSize` improves performances but wastes memory if the utilization is low; a small `blockSize` uses memory more efficiently but is slower due to frequent allocation of blocks.
+		The default value is 64; the minimum value is 4.
+		<warn>`blockSize` has to be a power of two.</warn>
+		@param blockPoolSize the total number of blocks to reuse when blocks are removed or relocated (from front to back or vice-versa). This improves performances but uses more memory.
+		The default value is 4; a value of 0 disables block pooling.
+		@param maxSize the maximum allowed size of this deque.
+		The default value of -1 indicates that there is no upper limit.
+		@throws de.polygonal.ds.error.AssertError invalid `blockSize` (debug only).
+	**/
 	public function new(blockSize = 64, blockPoolCapacity = 4, maxSize = -1)
 	{
 		if (blockSize == M.INT16_MIN) return;
@@ -114,10 +123,10 @@ class ArrayedDeque<T> implements Deque<T>
 	}
 	
 	/**
-	 * Returns the first element of this deque.
-	 * <o>1</o>
-	 * @throws de.polygonal.ds.error.AssertError deque is empty (debug only).
-	 */
+		Returns the first element of this deque.
+		<o>1</o>
+		@throws de.polygonal.ds.error.AssertError deque is empty (debug only).
+	**/
 	inline public function front():T
 	{
 		assert(size() > 0, "deque is empty");
@@ -126,10 +135,10 @@ class ArrayedDeque<T> implements Deque<T>
 	}
 	
 	/**
-	 * Inserts the element <code>x</code> at the front of this deque.
-	 * <o>1</o>
-	 * @throws de.polygonal.ds.error.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
-	 */
+		Inserts the element `x` at the front of this deque.
+		<o>1</o>
+		@throws de.polygonal.ds.error.AssertError `size()` equals `maxSize` (debug only).
+	**/
 	inline public function pushFront(x:T)
 	{
 		#if debug
@@ -142,10 +151,10 @@ class ArrayedDeque<T> implements Deque<T>
 	}
 	
 	/**
-	 * Removes and returns the element at the beginning of this deque.
-	 * <o>1</o>
-	 * @throws de.polygonal.ds.error.AssertError deque is empty (debug only).
-	 */
+		Removes and returns the element at the beginning of this deque.
+		<o>1</o>
+		@throws de.polygonal.ds.error.AssertError deque is empty (debug only).
+	**/
 	inline public function popFront():T
 	{
 		assert(size() > 0, "deque is empty");
@@ -160,10 +169,10 @@ class ArrayedDeque<T> implements Deque<T>
 	}
 	
 	/**
-	 * Returns the last element of the deque.
-	 * <o>1</o>
-	 * @throws de.polygonal.ds.error.AssertError deque is empty (debug only).
-	 */
+		Returns the last element of the deque.
+		<o>1</o>
+		@throws de.polygonal.ds.error.AssertError deque is empty (debug only).
+	**/
 	inline public function back():T
 	{
 		assert(size() > 0, "deque is empty");
@@ -172,10 +181,10 @@ class ArrayedDeque<T> implements Deque<T>
 	}
 	
 	/**
-	 * Inserts the element <code>x</code> at the back of the deque.
-	 * <o>1</o>
-	 * @throws de.polygonal.ds.error.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
-	 */
+		Inserts the element `x` at the back of the deque.
+		<o>1</o>
+		@throws de.polygonal.ds.error.AssertError `size()` equals `maxSize` (debug only).
+	**/
 	inline public function pushBack(x:T)
 	{
 		#if debug
@@ -189,10 +198,10 @@ class ArrayedDeque<T> implements Deque<T>
 	}
 	
 	/**
-	 * Deletes the element at the end of the deque.
-	 * <o>1</o>
-	 * @throws de.polygonal.ds.error.AssertError deque is empty (debug only).
-	 */
+		Deletes the element at the end of the deque.
+		<o>1</o>
+		@throws de.polygonal.ds.error.AssertError deque is empty (debug only).
+	**/
 	public function popBack():T
 	{
 		assert(size() > 0, "deque is empty");
@@ -201,18 +210,19 @@ class ArrayedDeque<T> implements Deque<T>
 		{
 			popBlock();
 			return mTailBlock[mBlockSizeMinusOne];
-		}
+		} 
 		else
 			return mTailBlock[--mTail];
 	}
 	
 	/**
-	 * Returns the element at index <code>i</code> relative to the front of this deque.<br/>
-	 * The front element is at index [0], the back element is at index <b>&#091;<em>size()</em> - 1&#093;</b>.
-	 * <o>1</o>
-	 * @throws de.polygonal.ds.error.AssertError deque is empty (debug only).
-	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
-	 */
+		Returns the element at index `i` relative to the front of this deque.
+		
+		The front element is at index [0], the back element is at index [`size()` - 1].
+		<o>1</o>
+		@throws de.polygonal.ds.error.AssertError deque is empty (debug only).
+		@throws de.polygonal.ds.error.AssertError index out of range (debug only).
+	**/
 	public function getFront(i:Int):T
 	{
 		assert(i < size(), 'index out of range ($i)');
@@ -223,10 +233,11 @@ class ArrayedDeque<T> implements Deque<T>
 	}
 	
 	/**
-	 * Returns the index of the first occurence of the element <code>x</code> or -1 if <code>x</code> does not exist.
-	 * The front element is at index [0], the back element is at index &#091;<em>size()</em> - 1&#093;.
-	 * <o>n</o>
-	 */
+		Returns the index of the first occurence of the element `x` or -1 if `x` does not exist.
+		
+		The front element is at index [0], the back element is at index [`size()` - 1].
+		<o>n</o>
+	**/
 	public function indexOfFront(x:T):Int
 	{
 		for (i in 0...size())
@@ -241,12 +252,13 @@ class ArrayedDeque<T> implements Deque<T>
 	}
 	
 	/**
-	 * Returns the element at index <code>i</code> relative to the back of this deque.<br/>
-	 * The back element is at index [0], the front element is at index &#091;<em>size()</em> - 1&#093;.
-	 * <o>1</o>
-	 * @throws de.polygonal.ds.error.AssertError deque is empty (debug only).
-	 * @throws de.polygonal.ds.error.AssertError index out of range (debug only).
-	 */
+		Returns the element at index `i` relative to the back of this deque.
+		
+		The back element is at index [0], the front element is at index [`size()` - 1].
+		<o>1</o>
+		@throws de.polygonal.ds.error.AssertError deque is empty (debug only).
+		@throws de.polygonal.ds.error.AssertError index out of range (debug only).
+	**/
 	public function getBack(i:Int):T
 	{
 		assert(i < size(), 'index out of range ($i)');
@@ -257,10 +269,11 @@ class ArrayedDeque<T> implements Deque<T>
 	}
 	
 	/**
-	 * Returns the index of the first occurence of the element <code>x</code> or -1 if <code>x</code> does not exist.
-	 * The back element is at index [0], the front element is at index &#091;<em>size()</em> - 1&#093;.
-	 * <o>n</o>
-	 */
+		Returns the index of the first occurence of the element `x` or -1 if `x` does not exist.
+		
+		The back element is at index [0], the front element is at index [`size()` - 1].
+		<o>n</o>
+	**/
 	public function indexOfBack(x:T):Int
 	{
 		for (i in 0...size())
@@ -275,9 +288,9 @@ class ArrayedDeque<T> implements Deque<T>
 	
 	
 	/**
-	 * Removes all superfluous blocks and overwrites elements stored in empty locations with null.
-	 * <o>n</o>
-	 */
+		Removes all superfluous blocks and overwrites elements stored in empty locations with null.
+		<o>n</o>
+	**/
 	public function pack()
 	{
 		for (i in 0...mHead + 1) mHeadBlock[i] = cast null;
@@ -287,15 +300,16 @@ class ArrayedDeque<T> implements Deque<T>
 	}
 	
 	/**
-	 * Replaces up to <code>n</code> existing elements with objects of type <code>C</code>.<br/>
-	 * If size() &lt; <code>n</code>, additional elements are added to the back of this deque.
-	 * <o>n</o>
-	 * @param C the class to instantiate for each element.
-	 * @param args passes additional constructor arguments to the class <code>C</code>.
-	 * @param n the number of elements to replace. If 0, <code>n</code> is set to <em>size()</em>.
-	 * @throws de.polygonal.ds.error.AssertError <code>n</code> &gt; <em>maxSize</em> (debug only).
-	 */
-	public function assign(C:Class<T>, args:Array<Dynamic> = null, n = 0)
+		Replaces up to `n` existing elements with objects of type `cl`.
+		
+		If `size()` < `n`, additional elements are added to the back of this deque.
+		<o>n</o>
+		@param cl the class to instantiate for each element.
+		@param args passes additional constructor arguments to the class `cl`.
+		@param n the number of elements to replace. If 0, `n` is set to `size()`.
+		@throws de.polygonal.ds.error.AssertError `n` > `maxSize` (debug only).
+	**/
+	public function assign(cl:Class<T>, args:Array<Dynamic> = null, n = 0)
 	{
 		if (n == 0) n = size();
 		if (n == 0) return;
@@ -309,23 +323,23 @@ class ArrayedDeque<T> implements Deque<T>
 			
 			var i = mHead + 1;
 			while (i < mBlockSize)
-				mHeadBlock[i++] = Type.createInstance(C, args);
+				mHeadBlock[i++] = Type.createInstance(cl, args);
 			
 			var fullBlocks = mTailBlockIndex - 1;
 			for (i in 1...1 + fullBlocks)
 			{
 				var block = mBlocks[i];
 				for (j in 0...mBlockSize)
-					block[j] = Type.createInstance(C, args);
+					block[j] = Type.createInstance(cl, args);
 			}
 			
 			i = 0;
 			while (i < mTail)
-				mTailBlock[i++] = Type.createInstance(C, args);
+				mTailBlock[i++] = Type.createInstance(cl, args);
 			
 			for (i in 0...n - size())
 			{
-				mTailBlock[mTail++] = Type.createInstance(C, args);
+				mTailBlock[mTail++] = Type.createInstance(cl, args);
 				if (mTail == mBlockSize)
 					pushBlock();
 			}
@@ -335,7 +349,7 @@ class ArrayedDeque<T> implements Deque<T>
 			var c = M.min(n, mBlockSize - (mHead + 1));
 			var i = mHead + 1;
 			for (j in i...i + c)
-				mHeadBlock[j] = Type.createInstance(C, args);
+				mHeadBlock[j] = Type.createInstance(cl, args);
 			n -= c;
 			
 			if (n == 0) return;
@@ -346,22 +360,23 @@ class ArrayedDeque<T> implements Deque<T>
 			{
 				var block = mBlocks[i + 1];
 				for (j in 0...mBlockSize)
-					block[j] = Type.createInstance(C, args);
+					block[j] = Type.createInstance(cl, args);
 				b++;
 			}
 			n -= c << mBlockSizeShift;
 			
 			var block = mBlocks[b];
-			for (i in 0...n) block[i] = Type.createInstance(C, args);
+			for (i in 0...n) block[i] = Type.createInstance(cl, args);
 		}
 	}
 	
 	/**
-	 * Replaces up to <code>n</code> existing elements with the instance of <code>x</code>.<br/>
-	 * If size() &lt; <code>n</code>, additional elements are added to the back of this deque.
-	 * <o>n</o>
-	 * @param n the number of elements to replace. If 0, <code>n</code> is set to <em>size()</em>.
-	 */
+		Replaces up to `n` existing elements with the instance `x`.
+		
+		If `size()` < `n`, additional elements are added to the back of this deque.
+		<o>n</o>
+		@param n the number of elements to replace. If 0, `n` is set to `size()`.
+	**/
 	public function fill(x:T, n = 0):ArrayedDeque<T>
 	{
 		if (n == 0) n = size();
@@ -425,23 +440,24 @@ class ArrayedDeque<T> implements Deque<T>
 	}
 	
 	/**
-	 * Returns a string representing the current object.<br/>
-	 * Example:<br/>
-	 * <pre class="prettyprint">
-	 * var deque = new de.polygonal.ds.ArrayedDeque&lt;Int&gt;();
-	 * for (i in 0...4) {
-	 *     deque.pushFront(i);
-	 * }
-	 * trace(deque);</pre>
-	 * <pre class="console">
-	 * { ArrayedDeque size: 4 }
-	 * [ front
-	 *   0 -> 3
-	 *   1 -> 2
-	 *   2 -> 1
-	 *   3 -> 0
-	 * ]</pre>
-	 */
+		Returns a string representing the current object.
+		
+		Example:
+		<pre class="prettyprint">
+		var deque = new de.polygonal.ds.ArrayedDeque<Int>();
+		for (i in 0...4) {
+		    deque.pushFront(i);
+		}
+		trace(deque);</pre>
+		<pre class="console">
+		{ ArrayedDeque size: 4 }
+		[ front
+		  0 -> 3
+		  1 -> 2
+		  2 -> 1
+		  3 -> 0
+		]</pre>
+	**/
 	public function toString():String
 	{
 		var s = '{ ArrayedDeque size: ${size()} }';
@@ -486,10 +502,11 @@ class ArrayedDeque<T> implements Deque<T>
 	///////////////////////////////////////////////////////*/
 	
 	/**
-	 * Destroys this object by explicitly nullifying all elements for GC'ing used resources.<br/>
-	 * Improves GC efficiency/performance (optional).
-	 * <o>n</o>
-	 */
+		Destroys this object by explicitly nullifying all elements for GC'ing used resources.
+		
+		Improves GC efficiency/performance (optional).
+		<o>n</o>
+	**/
 	public function free()
 	{
 		for (i in 0...mTailBlockIndex + 1)
@@ -507,9 +524,9 @@ class ArrayedDeque<T> implements Deque<T>
 	}
 	
 	/**
-	 * Returns true if this deque contains the element <code>x</code>.
-	 * <o>n</o>
-	 */
+		Returns true if this deque contains the element `x`.
+		<o>n</o>
+	**/
 	public function contains(x:T):Bool
 	{
 		var i = 0;
@@ -546,10 +563,10 @@ class ArrayedDeque<T> implements Deque<T>
 	}
 	
 	/**
-	 * Removes and nullifies all occurrences of the element <code>x</code>.
-	 * <o>n</o>
-	 * @return true if at least one occurrence of <code>x</code> was removed.
-	 */
+		Removes and nullifies all occurrences of the element `x`.
+		<o>n</o>
+		@return true if at least one occurrence of `x` was removed.
+	**/
 	public function remove(x:T):Bool
 	{
 		var found = false;
@@ -752,10 +769,10 @@ class ArrayedDeque<T> implements Deque<T>
 	}
 	
 	/**
-	 * Removes all elements.
-	 * <o>1 or n if <code>purge</code> is true</o>
-	 * @param purge if true, elements are nullified upon removal. This also removes all superfluous blocks and clears the pool.
-	 */
+		Removes all elements.
+		<o>1 or n if `purge` is true</o>
+		@param purge if true, elements are nullified upon removal. This also removes all superfluous blocks and clears the pool.
+	**/
 	public function clear(purge = false)
 	{
 		if (purge)
@@ -785,10 +802,12 @@ class ArrayedDeque<T> implements Deque<T>
 	}
 	
 	/**
-	 * Returns a new <em>ArrayedDequeIterator</em> object to iterate over all elements contained in this deque.<br/>
-	 * Preserves the natural order of a deque.
-	 * @see <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
-	 */
+		Returns a new `ArrayedDequeIterator` object to iterate over all elements contained in this deque.
+		
+		Preserves the natural order of a deque.
+		
+		See <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
+	**/
 	public function iterator():Itr<T>
 	{
 		if (reuseIterator)
@@ -804,9 +823,9 @@ class ArrayedDeque<T> implements Deque<T>
 	}
 	
 	/**
-	 * Returns true if this deque is empty.
-	 * <o>1</o>
-	 */
+		Returns true if this deque is empty.
+		<o>1</o>
+	**/
 	inline public function isEmpty():Bool
 	{
 		if (mTailBlockIndex == 0)
@@ -816,17 +835,17 @@ class ArrayedDeque<T> implements Deque<T>
 	}
 	
 	/**
-	 * The total number of elements.
-	 * <o>1</o>
-	 */
+		The total number of elements.
+		<o>1</o>
+	**/
 	inline public function size():Int
 	{
 		return (mBlockSize - (mHead + 1)) + ((mTailBlockIndex - 1) << mBlockSizeShift) + mTail;
 	}
 	
 	/**
-	 * Returns an array containing all elements in this deque in the natural order.
-	 */
+		Returns an array containing all elements in this deque in the natural order.
+	**/
 	public function toArray():Array<T>
 	{
 		var a:Array<T> = ArrayUtil.alloc(size());
@@ -855,8 +874,8 @@ class ArrayedDeque<T> implements Deque<T>
 	}
 	
 	/**
-	 * Returns a Vector.&lt;T&gt; object containing all elements in this deque in the natural order.
-	 */
+		Returns a `Vector<T>` object containing all elements in this deque in the natural order.
+	**/
 	public function toVector():Vector<T>
 	{
 		var v = new Vector<T>(size());
@@ -885,12 +904,12 @@ class ArrayedDeque<T> implements Deque<T>
 	}
 	
 	/**
-	 * Duplicates this deque. Supports shallow (structure only) and deep copies (structure & elements).
-	 * @param assign if true, the <code>copier</code> parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.<br/>
-	 * If false, the <em>clone()</em> method is called on each element. <warn>In this case all elements have to implement <em>Cloneable</em>.</warn>
-	 * @param copier a custom function for copying elements. Replaces element.<em>clone()</em> if <code>assign</code> is false.
-	 * @throws de.polygonal.ds.error.AssertError element is not of type <em>Cloneable</em> (debug only).
-	 */
+		Duplicates this deque. Supports shallow (structure only) and deep copies (structure & elements).
+		@param assign if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
+		If false, the `clone()` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
+		@param copier a custom function for copying elements. Replaces element.`clone()` if `assign` is false.
+		@throws de.polygonal.ds.error.AssertError element is not of type `Cloneable` (debug only).
+	**/
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{
 		var c = new ArrayedDeque<T>(M.INT16_MIN);
@@ -1072,9 +1091,7 @@ class ArrayedDeque<T> implements Deque<T>
 @:generic
 #end
 @:access(de.polygonal.ds.ArrayedDeque)
-#if doc
-private
-#end
+@:dox(hide)
 class ArrayedDequeIterator<T> implements de.polygonal.ds.Itr<T>
 {
 	var mF:ArrayedDeque<T>;
@@ -1099,7 +1116,7 @@ class ArrayedDequeIterator<T> implements de.polygonal.ds.Itr<T>
 		mB = mI >> mF.mBlockSizeShift;
 		mS = mF.size();
 		mBlock = mBlocks[mB];
- 		mI -= mB << mF.mBlockSizeShift;
+			mI -= mB << mF.mBlockSizeShift;
 		return this;
 	}
 	

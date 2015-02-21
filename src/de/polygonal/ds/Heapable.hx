@@ -19,13 +19,14 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 package de.polygonal.ds;
 
 /**
- * <p>An object that can be inserted into a <em>Heap</em>.</p>
- */
+	<h3>An object that can be inserted into a Heap.</h3>
+**/
 interface Heapable<T> extends Comparable<T>
 {
 	/**
-	 * Tracks the position inside a binary heap.<br/>
-	 * <warn>This value should never be changed by the user.</warn>
-	 */
+		Tracks the position inside a binary heap.
+		
+		<warn>This value should never be changed by the user.</warn>
+	**/
 	var position:Int;
 }

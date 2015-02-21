@@ -18,25 +18,27 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 */
 package de.polygonal.ds;
 
- /**
- * <p>A stack is a Last-In-First-Out (LIFO) data structure.</p>
- * <p>The last element added to the stack will be the first one to be removed.</p>
- * <p>The "opposite" of a stack is a queue.</p>
- */
+/**
+	<h3>A stack is a Last-In-First-Out (LIFO) data structure.</h3>
+	
+	The last element added to the stack will be the first one to be removed.
+	
+	The "opposite" of a stack is a queue.
+**/
 interface Stack<T> extends Collection<T>
 {
 	/**
-	 * Adds the element <code>x</code> to the top of the stack.
-	 */
+		Adds the element `x` to the top of the stack.
+	**/
 	function push(x:T):Void;
 	
 	/**
-	 * Removes and returns an element from the top of the stack.
-	 */
+		Removes and returns an element from the top of the stack.
+	**/
 	function pop():T;
 	
 	/**
-	 * Returns the element at the top of the stack.
-	 */
+		Returns the element at the top of the stack.
+	**/
 	function top():T;
 }

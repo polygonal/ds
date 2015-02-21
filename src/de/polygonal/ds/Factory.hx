@@ -19,12 +19,12 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 package de.polygonal.ds;
 
 /**
- * <p>An object that creates objects of type T.</p>
- */
+	<h3>An object that creates objects of type T.</h3>
+**/
 interface Factory<T>
 {
 	/**
-	 * Creates and returns a new object of type T.
-	 */
+		Creates and returns a new object of type T.
+	**/
 	function create():T;
 }

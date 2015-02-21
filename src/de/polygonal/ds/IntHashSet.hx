@@ -26,39 +26,47 @@ import flash.Memory;
 import de.polygonal.ds.error.Assert.assert;
 
 /**
- * <p>An array hash set for storing integers.</p>
- * <p><o>Amortized running time in Big O notation</o></p>
- */
+	<h3>An array hash set for storing integers.</h3>
+	
+	<o>Amortized running time in Big O notation</o>
+**/
 class IntHashSet implements Set<Int>
 {
 	/**
-	 * Return code for a non-existing element.
-	 */
+		Return code for a non-existing element.
+	**/
 	inline public static var VAL_ABSENT = M.INT32_MIN;
 	
 	inline static var EMPTY_SLOT = -1;
 	inline static var NULL_POINTER = -1;
 	
 	/**
-	 * A unique identifier for this object.<br/>
-	 * A hash table transforms this key into an index of an array element by using a hash function.<br/>
-	 * <warn>This value should never be changed by the user.</warn>
-	 */
+		A unique identifier for this object.
+		
+		A hash table transforms this key into an index of an array element by using a hash function.
+		
+		<warn>This value should never be changed by the user.</warn>
+	**/
 	public var key:Int;
 	
 	/**
-	 * The maximum allowed size of this hash set.<br/>
-	 * Once the maximum size is reached, adding an element will fail with an error (debug only).<br/>
-	 * A value of -1 indicates that the size is unbound.<br/>
-	 * <warn>Always equals -1 in release mode.</warn>
-	 */
+		The maximum allowed size of this hash set.
+		
+		Once the maximum size is reached, adding an element will fail with an error (debug only).
+		
+		A value of -1 indicates that the size is unbound.
+		
+		<warn>Always equals -1 in release mode.</warn>
+	**/
 	public var maxSize:Int;
 	
 	/**
-	 * If true, reuses the iterator object instead of allocating a new one when calling <code>iterator()</code>.<br/>
-	 * The default is false.<br/>
-	 * <warn>If true, nested iterations are likely to fail as only one iteration is allowed at a time.</warn>
-	 */
+		If true, reuses the iterator object instead of allocating a new one when calling `iterator()`.
+		
+		The default is false.
+		
+		<warn>If true, nested iterations are likely to fail as only one iteration is allowed at a time.</warn>
+	**/
 	public var reuseIterator:Bool;
 	
 	#if alchemy
@@ -81,32 +89,32 @@ class IntHashSet implements Set<Int>
 	var mIterator:IntHashSetIterator;
 	
 	/**
-	 * @param slotCount the total number of slots into which the hashed elements are distributed.
-	 * This defines the space-time trade off of the set.
-	 * Increasing the <code>slotCount</code> reduces the computation time (read/write/access) of the set at the cost of increased memory use.
-	 * This value is fixed and can only be changed by calling <em>rehash()</em>, which rebuilds the set (expensive).
-	 *
-	 * @param capacity the initial physical space for storing the elements at the time the set is created.
-	 * This is also the minimum allowed size of the set and cannot be changed in the future.
-	 * If omitted, the initial <em>capacity</em> equals <code>slotCount</code>.
-	 * The <em>capacity</em> is automatically adjusted according to the storage requirements based on two rules:
-	 * <ol>
-	 * <li>If the set runs out of space, the <em>capacity</em> is doubled (if <code>isResizable</code> is true).</li>
-	 * <li>If the <em>size()</em> falls below a quarter of the current <em>capacity</em>, the <em>capacity</em> is cut in half while the minimum <em>capacity</em> can't fall below <code>capacity</code>.</li>
-	 * </ol>
-	 *
-	 * @param isResizable if false, the hash set is created with a fixed size.
-	 * Thus adding an element when <em>size()</em> equals <em>capacity</em> throws an error.
-	 * Otherwise the <em>capacity</em> is automatically adjusted.
-	 * Default is true.
-	 *
-	 * @param maxSize the maximum allowed size of this hash set.
-	 * The default value of -1 indicates that there is no upper limit.
-	 *
-	 * @throws de.polygonal.ds.error.AssertError <code>slotCount</code> is not a power of two (debug only).
-	 * @throws de.polygonal.ds.error.AssertError <code>capacity</code> is not a power of two (debug only).
-	 * @throws de.polygonal.ds.error.AssertError <code>capacity</code> is &lt; 2 (debug only).
-	 */
+		@param slotCount the total number of slots into which the hashed elements are distributed.
+		This defines the space-time trade off of the set.
+		Increasing the `slotCount` reduces the computation time (read/write/access) of the set at the cost of increased memory use.
+		This value is fixed and can only be changed by calling `rehash()`, which rebuilds the set (expensive).
+		
+		@param capacity the initial physical space for storing the elements at the time the set is created.
+		This is also the minimum allowed size of the set and cannot be changed in the future.
+		If omitted, the initial `capacity` equals `slotCount`.
+		The `capacity` is automatically adjusted according to the storage requirements based on two rules:
+		<ul>
+		<li>If the set runs out of space, the `capacity` is doubled (if `isResizable` is true).</li>
+		<li>If the `size()` falls below a quarter of the current `capacity`, the `capacity` is cut in half while the minimum `capacity` can't fall below `capacity`.</li>
+		</ul>
+		
+		@param isResizable if false, the hash set is created with a fixed size.
+		Thus adding an element when `size()` equals `capacity` throws an error.
+		Otherwise the `capacity` is automatically adjusted.
+		Default is true.
+		
+		@param maxSize the maximum allowed size of this hash set.
+		The default value of -1 indicates that there is no upper limit.
+		
+		@throws de.polygonal.ds.error.AssertError `slotCount` is not a power of two (debug only).
+		@throws de.polygonal.ds.error.AssertError `capacity` is not a power of two (debug only).
+		@throws de.polygonal.ds.error.AssertError `capacity` is < 2 (debug only).
+	**/
 	public function new(slotCount:Int, capacity = -1, isResizable = true, maxSize = -1)
 	{
 		if (slotCount == M.INT16_MIN) return;
@@ -165,39 +173,45 @@ class IntHashSet implements Set<Int>
 	}
 	
 	/**
-	 * The load factor measure the "denseness" of a hash set and is proportional to the time cost to look up an entry.<br/>
-	 * E.g. assuming that the elements are perfectly distributed, a load factor of 4.0 indicates that each slot stores 4 elements, which have to be sequentially searched in order to find an element.<br/>
-	 * A high load factor thus indicates poor performance.
-	 * If the load factor gets too high, additional slots can be allocated by calling <em>rehash()</em>.
-	 */
+		The load factor measure the "denseness" of a hash set and is proportional to the time cost to look up an entry.
+		
+		E.g. assuming that the elements are perfectly distributed, a load factor of 4.0 indicates that each slot stores 4 elements, which have to be sequentially searched in order to find an element.
+		
+		A high load factor thus indicates poor performance.
+		
+		If the load factor gets too high, additional slots can be allocated by calling `rehash()`.
+	**/
 	inline public function getLoadFactor():Float
 	{
 		return size() / getSlotCount();
 	}
 	
 	/**
-	 * The total number of allocated slots.
-	 */
+		The total number of allocated slots.
+	**/
 	inline public function getSlotCount():Int
 	{
 		return mMask + 1;
 	}
 	
 	/**
-	 * The size of the allocated storage space for the elements.<br/>
-	 * If more space is required to accomodate new elements, the <em>capacity</em> is doubled every time <em>size()</em> grows beyond <em>capacity</em>, and split in half when <em>size()</em> is a quarter of <em>capacity</em>.
-	 * The <em>capacity</em> never falls below the initial size defined in the constructor.
-	 */
+		The size of the allocated storage space for the elements.
+		
+		If more space is required to accomodate new elements, the `capacity` is doubled every time `size()` grows beyond `capacity`, and split in half when `size()` is a quarter of `capacity`.
+		
+		The `capacity` never falls below the initial size defined in the constructor.
+	**/
 	inline public function getCapacity():Int
 	{
 		return mCapacity;
 	}
 	
 	/**
-	 * Counts the total number of collisions.<br/>
-	 * A collision occurs when two distinct elements are hashed into the same slot.
-	 * <o>n</o>
-	 */
+		Counts the total number of collisions.
+		
+		A collision occurs when two distinct elements are hashed into the same slot.
+		<o>n</o>
+	**/
 	public function getCollisionCount():Int
 	{
 		var c = 0, j;
@@ -216,11 +230,12 @@ class IntHashSet implements Set<Int>
 	}
 	
 	/**
-	 * Returns true if this set contains the element <code>x</code>.<br/>
-	 * Uses move-to-front-on-access which reduces access time when similar elements are frequently queried.
-	 * <o>1</o>
-	 * @throws de.polygonal.ds.error.AssertError value 0x80000000 is reserved (debug only).
-	 */
+		Returns true if this set contains the element `x`.
+		
+		Uses move-to-front-on-access which reduces access time when similar elements are frequently queried.
+		<o>1</o>
+		@throws de.polygonal.ds.error.AssertError value 0x80000000 is reserved (debug only).
+	**/
 	inline public function hasFront(x:Int):Bool
 	{
 		assert(x != VAL_ABSENT, "value 0x80000000 is reserved");
@@ -282,11 +297,12 @@ class IntHashSet implements Set<Int>
 	}
 	
 	/**
-	 * Redistributes all elements over <code>slotCount</code>.<br/>
-	 * This is an expensive operations as the set is rebuild from scratch.
-	 * <o>n</o>
-	 * @throws de.polygonal.ds.error.AssertError <code>slotCount</code> is not a power of two (debug only).
-	 */
+		Redistributes all elements over `slotCount`.
+		
+		This is an expensive operations as the set is rebuild from scratch.
+		<o>n</o>
+		@throws de.polygonal.ds.error.AssertError `slotCount` is not a power of two (debug only).
+	**/
 	public function rehash(slotCount:Int)
 	{
 		assert(M.isPow2(slotCount), "slotCount is not a power of 2");
@@ -326,23 +342,24 @@ class IntHashSet implements Set<Int>
 	}
 	
 	/**
-	 * Returns a string representing the current object.<br/>
-	 * Example:<br/>
-	 * <pre class="prettyprint">
-	 * var set = new de.polygonal.ds.IntHashSet(16);
-	 * for (i in 0...4) {
-	 *     set.set(i);
-	 * }
-	 * trace(set);</pre>
-	 * <pre class="console">
-	 * { IntHashSet size/capacity: 4/16, load factor: 0.25 }
-	 * [
-	 *   0
-	 *   1
-	 *   2
-	 *   3
-	 * ]</pre>
-	 */
+		Returns a string representing the current object.
+		
+		Example:
+		<pre class="prettyprint">
+		var set = new de.polygonal.ds.IntHashSet(16);
+		for (i in 0...4) {
+		    set.set(i);
+		}
+		trace(set);</pre>
+		<pre class="console">
+		{ IntHashSet size/capacity: 4/16, load factor: 0.25 }
+		[
+		  0
+		  1
+		  2
+		  3
+		]</pre>
+	**/
 	public function toString():String
 	{
 		var s = Printf.format("{ IntHashSet size/capacity: %d/%d, load factor: %.2f }", [size(), mCapacity, getLoadFactor()]);
@@ -361,10 +378,10 @@ class IntHashSet implements Set<Int>
 	///////////////////////////////////////////////////////*/
 	
 	/**
-	 * Returns true if this set contains the element <code>x</code>.
-	 * <o>1</o>
-	 * @throws de.polygonal.ds.error.AssertError value 0x80000000 is reserved (debug only).
-	 */
+		Returns true if this set contains the element `x`.
+		<o>1</o>
+		@throws de.polygonal.ds.error.AssertError value 0x80000000 is reserved (debug only).
+	**/
 	inline public function has(x:Int):Bool
 	{
 		assert(x != VAL_ABSENT, "value 0x80000000 is reserved");
@@ -415,13 +432,13 @@ class IntHashSet implements Set<Int>
 	}
 	
 	/**
-	 * Adds the element <code>x</code> to this set if possible.
-	 * <o>1</o>
-	 * @return true if <code>x</code> was added to this set, false if <code>x</code> already exists.
-	 * @throws de.polygonal.ds.error.AssertError value 0x80000000 is reserved (debug only).
-	 * @throws de.polygonal.ds.error.AssertError <em>size()</em> equals <em>maxSize</em> (debug only).
-	 * @throws de.polygonal.ds.error.AssertError hash set is full (if not resizable).
-	 */
+		Adds the element `x` to this set if possible.
+		<o>1</o>
+		@return true if `x` was added to this set, false if `x` already exists.
+		@throws de.polygonal.ds.error.AssertError value 0x80000000 is reserved (debug only).
+		@throws de.polygonal.ds.error.AssertError `size()` equals `maxSize` (debug only).
+		@throws de.polygonal.ds.error.AssertError hash set is full (if not resizable).
+	**/
 	public function set(x:Int):Bool
 	{
 		assert(x != VAL_ABSENT, "value 0x80000000 is reserved");
@@ -529,10 +546,11 @@ class IntHashSet implements Set<Int>
 	///////////////////////////////////////////////////////*/
 	
 	/**
-	 * Destroys this object by explicitly nullifying all elements.<br/>
-	 * Improves GC efficiency/performance (optional).
-	 * <o>n</o>
-	 */
+		Destroys this object by explicitly nullifying all elements.
+		
+		Improves GC efficiency/performance (optional).
+		<o>n</o>
+	**/
 	public function free()
 	{
 		#if (flash && alchemy)
@@ -548,19 +566,19 @@ class IntHashSet implements Set<Int>
 	}
 	
 	/**
-	 * Same as <em>has()</em>.
-	 * <o>1</o>
-	 */
+		Same as `has()`.
+		<o>1</o>
+	**/
 	inline public function contains(x:Int):Bool
 	{
 		return has(x);
 	}
 	
 	/**
-	 * Removes the element <code>x</code>.
-	 * <o>1</o>
-	 * @return true if <code>x</code> was successfully removed, false if <code>x</code> does not exist.
-	 */
+		Removes the element `x`.
+		<o>1</o>
+		@return true if `x` was successfully removed, false if `x` does not exist.
+	**/
 	inline public function remove(x:Int):Bool
 	{
 		var b = hashCode(x);
@@ -671,19 +689,19 @@ class IntHashSet implements Set<Int>
 	}
 	
 	/**
-	 * The total number of elements.
-	 * <o>1</o>
-	 */
+		The total number of elements.
+		<o>1</o>
+	**/
 	inline public function size():Int
 	{
 		return mSize;
 	}
 	
 	/**
-	 * Removes all elements.<br/>
-	 * <o>n</o>
-	 * @param purge If true, the hash set shrinks to the initial capacity defined in the constructor.
-	 */
+		Removes all elements.
+		<o>n</o>
+		@param purge If true, the hash set shrinks to the initial capacity defined in the constructor.
+	**/
 	public function clear(purge = false)
 	{
 		if (purge && mSizeLevel > 0)
@@ -721,10 +739,12 @@ class IntHashSet implements Set<Int>
 	}
 	
 	/**
-	 * Returns a new <em>IntHashSetIterator</em> object to iterate over all elements contained in this hash set.<br/>
-	 * The elements are visited in a random order.
-	 * @see <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
-	 */
+		Returns a new `IntHashSetIterator` object to iterate over all elements contained in this hash set.
+		
+		The elements are visited in a random order.
+		
+		See <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
+	**/
 	public function iterator():Itr<Int>
 	{
 		if (reuseIterator)
@@ -740,17 +760,17 @@ class IntHashSet implements Set<Int>
 	}
 	
 	/**
-	 * Returns true if the set is empty.
-	 * <o>1</o>
-	 */
+		Returns true if the set is empty.
+		<o>1</o>
+	**/
 	inline public function isEmpty():Bool
 	{
 		return mSize == 0;
 	}
 	
 	/**
-	 * Returns an unordered array containing all elements in this set.
-	 */
+		Returns an unordered array containing all elements in this set.
+	**/
 	public function toArray():Array<Int>
 	{
 		var a:Array<Int> = ArrayUtil.alloc(size());
@@ -764,8 +784,8 @@ class IntHashSet implements Set<Int>
 	}
 	
 	/**
-	 * Returns an unordered Vector.&lt;T&gt; object containing all elements in this set.
-	 */
+		Returns an unordered `Vector<T>` object containing all elements in this set.
+	**/
 	public function toVector():Vector<Int>
 	{
 		var v = new Vector<Int>(size());
@@ -779,9 +799,10 @@ class IntHashSet implements Set<Int>
 	}
 	
 	/**
-	 * Duplicates this hash set by creating a deep copy.<br/>
-	 * The <code>assign</code> and <code>copier</code> parameters are ignored.
-	 */
+		Duplicates this hash set by creating a deep copy.
+		
+		The `assign` and `copier` parameters are ignored.
+	**/
 	public function clone(assign:Bool = true, copier:Int->Int = null):Collection<Int>
 	{
 		var c = new IntHashSet(M.INT16_MIN);
@@ -1012,9 +1033,7 @@ class IntHashSet implements Set<Int>
 }
 
 @:access(de.polygonal.ds.IntHashSet)
-#if doc
-private
-#end
+@:dox(hide)
 class IntHashSetIterator implements de.polygonal.ds.Itr<Int>
 {
 	var mF:IntHashSet;

@@ -18,6 +18,9 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 */
 package de.polygonal.ds;
 
+/**
+	<h3>An iterator augmented with an additional reset() method.</h3>
+**/
 typedef ResettableIterator<T> =
 {> Iterator<T>,
 	public function reset():Void;

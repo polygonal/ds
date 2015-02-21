@@ -19,60 +19,64 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 package de.polygonal.ds;
 
 /**
- * <p>An object that maps keys to values.</p>
- * <p>This map allows duplicate keys.</p>
- */
+	<h3>An object that maps keys to values.</h3>
+	
+	<warn>This map allows duplicate keys.</warn>
+**/
 interface Map<K, T> extends Collection<T>
 {
 	/**
-	 * Returns true if this map contains a mapping for the element <code>x</code>.
-	 */
+		Returns true if this map contains a mapping for the element `x`.
+	**/
 	function has(x:T):Bool;
 	
 	/**
-	 * Returns true if this map contains <code>key</code>.
-	 */
+		Returns true if this map contains `key`.
+	**/
 	function hasKey(key:K):Bool;
 	
 	/**
-	 * Returns the element that is mapped to <code>key</code> or a special value (see implementation) indicating that <code>key</code> does not exist.
-	 */
+		Returns the element that is mapped to `key` or a special value (see implementation) indicating that `key` does not exist.
+	**/
 	function get(key:K):T;
 	
 	/**
-	 * Maps the element <code>x</code> to <code>key</code>.
-	 * @return true if <code>key</code> was added for the first time, false if this <code>key</code> is not unique.<br/>
-	 * Multiple keys are stored in a First-In-First-Out (FIFO) order - there is no way to access keys which were added after the first <code>key</code>,
-	 * other than removing the first <code>key</code> which unveals the second <code>key</code>.
-	 */
+		Maps the element `x` to `key`.
+		
+		Multiple keys are stored in a First-In-First-Out (FIFO) order - there is no way to access keys which were added after the first `key`,
+		other than removing the first `key` which unveals the second `key`.
+		@return true if `key` was added for the first time, false if this `key` is not unique.
+	**/
 	function set(key:K, x:T):Bool;
 	
 	/**
-	 * Removes a <code>key</code>/value pair.
-	 * @return true if <code>key</code> was successfully removed, false if <code>key</code> does not exist.
-	 */
+		Removes a `key`/value pair.
+		@return true if `key` was successfully removed, false if `key` does not exist.
+	**/
 	function clr(key:K):Bool;
 	
 	/**
-	 * Remaps the first occurrence of <code>key</code> to the element <code>x</code>.<br/>
-	 * This is faster than <em>clr</em>(<code>key</code>) followed by <em>set</em>(<code>key</code>, <code>x</code>).
-	 * @return true if the remapping was successful, false if <code>key</code> does not exist.
-	 */
+		Remaps the first occurrence of `key` to the element `x`.
+		
+		This is faster than `clr(key)` followed by `set(key, x)`.
+		@return true if the remapping was successful, false if `key` does not exist.
+	**/
 	function remap(key:K, x:T):Bool;
 	
 	/**
-	 * Returns a set view of the elements contained in this map.
-	 */
+		Returns a set view of the elements contained in this map.
+	**/
 	function toValSet():Set<T>;
 	
 	/**
-	 * Returns a set view of the keys contained in this map.
-	 */
+		Returns a set view of the keys contained in this map.
+	**/
 	function toKeySet():Set<K>;
 	
 	/**
-	 * Creates and returns an iterator over all keys in this map.
-	 * @see <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
-	 */
+		Creates and returns an iterator over all keys in this map.
+		
+		See <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
+	**/
 	function keys():Itr<K>;
 }

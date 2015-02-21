@@ -21,66 +21,73 @@ package de.polygonal.ds;
 import de.polygonal.ds.error.Assert.assert;
 
 /**
- * <p>A graph node manages a doubly linked list of <em>GraphArc</em> objects.</p>
- * <p><em>GraphNode</em> objects are created and managed by the <em>Graph</em> class.</p>
- * <p><o>Worst-case running time in Big O notation</o></p>
- */
+	<h3>A graph node manages a doubly linked list of GraphArc objects.</h3>
+	
+	`GraphNode` objects are created and managed by the `Graph` class.
+	
+	<o>Worst-case running time in Big O notation</o>
+**/
 #if (flash && generic)
 @:generic
 #end
 class GraphNode<T> implements Hashable
 {
 	/**
-	 * A unique identifier for this object.<br/>
-	 * A hash table transforms this key into an index of an array element by using a hash function.<br/>
-	 * <warn>This value should never be changed by the user.</warn>
-	 */
+		A unique identifier for this object.
+		
+		A hash table transforms this key into an index of an array element by using a hash function.
+		
+		<warn>This value should never be changed by the user.</warn>
+	**/
 	public var key:Int;
 	
 	/**
-	 * The node's data.
-	 */
+		The node's data.
+	**/
 	public var val:T;
 	
 	/**
-	 * The node's parent.<br/>
-	 * During a BFS/DFS traversal, <code>parent</code> points to the previously visited node or to
-	 * itself if the search originated at that node.
-	 */
+		The node's parent.
+		
+		During a BFS/DFS traversal, `parent` points to the previously visited node or to
+		itself if the search originated at that node.
+	**/
 	public var parent:GraphNode<T>;
 	
 	/**
-	 * The traversal depth (distance from the first traversed node).
-	 */
+		The traversal depth (distance from the first traversed node).
+	**/
 	public var depth:Int;
 	
 	/**
-	 * A reference to the next graph node in the list.<br/>
-	 * The <em>Graph</em> class manages a doubly linked list of <em>GraphNode</em> objects.
-	 */
+		A reference to the next graph node in the list.
+		
+		The `Graph` class manages a doubly linked list of `GraphNode` objects.
+	**/
 	public var next:GraphNode<T>;
 	
 	/**
-	 * A reference to the previous graph node in the list.<br/>
-	 * The <em>Graph</em> class manages a doubly linked list of <em>GraphNode</em> objects.
-	 */
+		A reference to the previous graph node in the list.
+		
+		The `Graph` class manages a doubly linked list of `GraphNode` objects.
+	**/
 	public var prev:GraphNode<T>;
 	
 	/**
-	 * The head of a a doubly linked list of <em>GraphArc</em> objects.
-	 */
+		The head of a a doubly linked list of `GraphArc` objects.
+	**/
 	public var arcList:GraphArc<T>;
 	
 	/**
-	 * True if the graph node was marked in a DFS/BFS traversal.
-	 */
+		True if the graph node was marked in a DFS/BFS traversal.
+	**/
 	public var marked:Bool;
 	
 	var mGraph:Graph<T>;
 	
 	/**
-	 * Creates a graph node storing the element <code>x</code>.
-	 */
+		Creates a graph node storing the element `x`.
+	**/
 	public function new(graph:Graph<T>, x:T)
 	{
 		val = x;
@@ -91,10 +98,11 @@ class GraphNode<T> implements Hashable
 	}
 	
 	/**
-	 * Destroys this object by explicitly nullifying the element and all pointers for GC'ing used resources.<br/>
-	 * Improves GC efficiency/performance (optional).
-	 * <o>1</o>
-	 */
+		Destroys this object by explicitly nullifying the element and all pointers for GC'ing used resources.
+		
+		Improves GC efficiency/performance (optional).
+		<o>1</o>
+	**/
 	public function free()
 	{
 		val = cast  null;
@@ -104,19 +112,19 @@ class GraphNode<T> implements Hashable
 	}
 	
 	/**
-	 * Returns a new <em>NodeValIterator</em> object to iterate over the elements stored in all nodes that are connected to this node by an outgoing arc.<br/>
-	 * @see <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
-	 */
+		Returns a new `NodeValIterator` object to iterate over the elements stored in all nodes that are connected to this node by an outgoing arc.
+		See <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
+	**/
 	public function iterator():Itr<T>
 	{
 		return new NodeValIterator<T>(this);
 	}
 	
 	/**
-	 * Returns true if this node is connected to the <code>target</code> node.
-	 * <o>n</o>
-	 * @throws de.polygonal.ds.error.AssertError <code>target</code> is null (debug only).
-	 */
+		Returns true if this node is connected to the `target` node.
+		<o>n</o>
+		@throws de.polygonal.ds.error.AssertError `target` is null (debug only).
+	**/
 	inline public function isConnected(target:GraphNode<T>):Bool
 	{
 		assert(target != null, "target is null");
@@ -125,10 +133,10 @@ class GraphNode<T> implements Hashable
 	}
 	
 	/**
-	 * Returns true if this node and the <code>target</code> node are pointing to each other.
-	 * <o>n</o>
-	 * @throws de.polygonal.ds.error.AssertError <code>target</code> is null (debug only).
-	 */
+		Returns true if this node and the `target` node are pointing to each other.
+		<o>n</o>
+		@throws de.polygonal.ds.error.AssertError `target` is null (debug only).
+	**/
 	inline public function isMutuallyConnected(target:GraphNode<T>):Bool
 	{
 		assert(target != null, "target is null");
@@ -137,11 +145,11 @@ class GraphNode<T> implements Hashable
 	}
 	
 	/**
-	 * Finds the arc that is pointing to the <code>target</code> node or returns null if such an arc does not exist.
-	 * <o>n</o>
-	 * @throws de.polygonal.ds.error.AssertError <code>target</code> is null (debug only).
-	 * @throws de.polygonal.ds.error.AssertError <code>target</code> equals this (debug only).
-	 */
+		Finds the arc that is pointing to the `target` node or returns null if such an arc does not exist.
+		<o>n</o>
+		@throws de.polygonal.ds.error.AssertError `target` is null (debug only).
+		@throws de.polygonal.ds.error.AssertError `target` equals this (debug only).
+	**/
 	public function getArc(target:GraphNode<T>):GraphArc<T>
 	{
 		assert(target != null, "target is null");
@@ -166,11 +174,11 @@ class GraphNode<T> implements Hashable
 	}
 	
 	/**
-	 * Adds an arc pointing from this node to the specified <code>target</code> node.
-	 * <o>1</o>
-	 * @param cost defines how "hard" it is to get from one node to the other. Default is 1.0.
-	 * @throws de.polygonal.ds.error.AssertError <code>target</code> is null or arc to <code>target</code> already exists (debug only).
-	 */
+		Adds an arc pointing from this node to the specified `target` node.
+		<o>1</o>
+		@param cost defines how "hard" it is to get from one node to the other. Default is 1.0.
+		@throws de.polygonal.ds.error.AssertError `target` is null or arc to `target` already exists (debug only).
+	**/
 	public function addArc(target:GraphNode<T>, cost = 1.)
 	{
 		assert(target != this, "target is null");
@@ -187,11 +195,11 @@ class GraphNode<T> implements Hashable
 	}
 	
 	/**
-	 * Removes the arc that is pointing to the specified <code>target</code> node.
-	 * <o>n</o>
-	 * @return true if the arc is successfully removed, false if such an arc does not exist.
-	 * @throws de.polygonal.ds.error.AssertError <code>target</code> (debug only).
-	 */
+		Removes the arc that is pointing to the specified `target` node.
+		<o>n</o>
+		@return true if the arc is successfully removed, false if such an arc does not exist.
+		@throws de.polygonal.ds.error.AssertError `target` (debug only).
+	**/
 	public function removeArc(target:GraphNode<T>):Bool
 	{
 		assert(target != this, "target is null");
@@ -213,9 +221,9 @@ class GraphNode<T> implements Hashable
 	}
 	
 	/**
-	 * Removes all outgoing arcs from this node.
-	 * <o>n</o>
-	 */
+		Removes all outgoing arcs from this node.
+		<o>n</o>
+	**/
 	public function removeSingleArcs()
 	{
 		var arc = arcList;
@@ -227,9 +235,9 @@ class GraphNode<T> implements Hashable
 	}
 	
 	/**
-	 * Remove all outgoing and incoming arcs from this node.
-	 * <o>n</o>
-	 */
+		Remove all outgoing and incoming arcs from this node.
+		<o>n</o>
+	**/
 	public function removeMutualArcs()
 	{
 		var arc = arcList;
@@ -243,9 +251,9 @@ class GraphNode<T> implements Hashable
 	}
 	
 	/**
-	 * Counts the total number of arcs.
-	 * <o>n</o>
-	 */
+		Counts the total number of arcs.
+		<o>n</o>
+	**/
 	public function getArcCount():Int
 	{
 		var c = 0;
@@ -259,8 +267,8 @@ class GraphNode<T> implements Hashable
 	}
 	
 	/**
-	 * Returns a string representing the current object.
-	 */
+		Returns a string representing the current object.
+	**/
 	public function toString():String
 	{
 		var t = new Array<String>();
@@ -283,9 +291,7 @@ class GraphNode<T> implements Hashable
 #if (flash && generic)
 @:generic
 #end
-#if doc
-private
-#end
+@:dox(hide)
 class NodeValIterator<T> implements de.polygonal.ds.Itr<T>
 {
 	var mNode:GraphNode<T>;
