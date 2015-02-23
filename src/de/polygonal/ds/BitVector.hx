@@ -26,7 +26,7 @@ using de.polygonal.ds.Bits;
 /**
 	<h3>An array data structure that compactly stores individual bits (boolean values).</h3>
 	
-	<o>Worst-case running time in Big O notation</o>
+	_<o>Worst-case running time in Big O notation</o>_
 **/
 class BitVector implements Hashable
 {
@@ -156,9 +156,9 @@ class BitVector implements Hashable
 		Clears all bits in the range [`min`, `max`).
 		
 		This is faster than clearing individual bits by using the `clr` method.
+		<o>n</o>
 		@throws de.polygonal.ds.error.AssertError min out of range (debug only).
 		@throws de.polygonal.ds.error.AssertError max out of range (debug only).
-		<o>n</o>
 	**/
 	public function clrRange(min:Int, max:Int)
 	{
@@ -182,9 +182,9 @@ class BitVector implements Hashable
 		Sets all bits in the range [`min`, `max`).
 		
 		This is faster than setting individual bits by using the `set` method.
+		<o>n</o>
 		@throws de.polygonal.ds.error.AssertError min out of range (debug only).
 		@throws de.polygonal.ds.error.AssertError max out of range (debug only).
-		<o>n</o>
 	**/
 	public function setRange(min:Int, max:Int)
 	{

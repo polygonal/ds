@@ -59,7 +59,8 @@ class ArrayConvert
 	
 	/**
 		Converts the array `x` to an arrayed queue.
-		The size of the queue is the nearest power of 2 of `x`::length.
+		
+		The size of the queue equals `x`::length.
 		@throws de.polygonal.ds.error.AssertError `x` is null (debug only).
 		@throws de.polygonal.ds.error.AssertError `x` is empty (debug only).
 	**/
@@ -76,6 +77,7 @@ class ArrayConvert
 	
 	/**
 		Converts the array `x` to an arrayed stack.
+		
 		The size of the stack equals `x`::length.
 		@throws de.polygonal.ds.error.AssertError `x` is null (debug only).
 		@throws de.polygonal.ds.error.AssertError `x` is empty (debug only).
@@ -92,6 +94,7 @@ class ArrayConvert
 	
 	/**
 		Converts the array `x` to a singly linked list.
+		
 		The size of the linked list equals `x`::length.
 		@throws de.polygonal.ds.error.AssertError `x` is null (debug only).
 		@throws de.polygonal.ds.error.AssertError `x` is empty (debug only).
@@ -108,6 +111,7 @@ class ArrayConvert
 	
 	/**
 		Converts the array `x` to a doubly linked list.
+		
 		The size of the linked list equals `x`::length.
 		@throws de.polygonal.ds.error.AssertError `x` is null (debug only).
 		@throws de.polygonal.ds.error.AssertError `x` is empty (debug only).
@@ -124,6 +128,7 @@ class ArrayConvert
 	
 	/**
 		Converts the array `x` to a linked queue.
+		
 		The size of the queue equals `x`::length.
 		@throws de.polygonal.ds.error.AssertError `x` is null (debug only).
 		@throws de.polygonal.ds.error.AssertError `x` is empty (debug only).
@@ -140,6 +145,7 @@ class ArrayConvert
 	
 	/**
 		Converts the array `x` to a linked stack.
+		
 		The size of the stack equals `x`::length.
 		@throws de.polygonal.ds.error.AssertError `x` is null (debug only).
 		@throws de.polygonal.ds.error.AssertError `x` is empty (debug only).
@@ -156,6 +162,7 @@ class ArrayConvert
 	
 	/**
 		Converts the array `x` to a dense array.
+		
 		The size of the dense array equals `x`::length.
 		@throws de.polygonal.ds.error.AssertError `x` is null (debug only).
 		@throws de.polygonal.ds.error.AssertError `x` is empty (debug only).

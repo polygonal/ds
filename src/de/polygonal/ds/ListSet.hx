@@ -23,7 +23,7 @@ import de.polygonal.ds.error.Assert.assert;
 /**
 	<h3>A simple set using an array.</h3>
 	
-	<o>Worst-case running time in Big O notation</o>
+	_<o>Worst-case running time in Big O notation</o>_
 **/
 class ListSet<T> implements Set<T>
 {

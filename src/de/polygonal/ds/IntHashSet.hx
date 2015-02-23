@@ -803,7 +803,7 @@ class IntHashSet implements Set<Int>
 		
 		The `assign` and `copier` parameters are ignored.
 	**/
-	public function clone(assign:Bool = true, copier:Int->Int = null):Collection<Int>
+	public function clone(assign = true, copier:Int->Int = null):Collection<Int>
 	{
 		var c = new IntHashSet(M.INT16_MIN);
 		c.key = HashKey.next();

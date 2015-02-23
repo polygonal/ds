@@ -23,7 +23,7 @@ import de.polygonal.ds.error.Assert.assert;
 /**
 	<h3>A three-dimensional array based on a rectangular sequential array.</h3>
 	
-	<o>Worst-case running time in Big O notation</o>
+	_<o>Worst-case running time in Big O notation</o>_
 **/
 #if (flash && generic)
 @:generic
@@ -203,7 +203,7 @@ class Array3<T> implements Collection<T>
 	}
 	
 	/**
-		Returns true if `x`, `y` and `z` are valid.
+		Returns true if `x`, `y` and `z` are valid indices.
 	**/
 	inline public function inRange(x:Int, y:Int, z:Int):Bool
 	{
@@ -213,40 +213,40 @@ class Array3<T> implements Collection<T>
 	/**
 		Returns the cell coordinates of the first occurrence of the element `x` or null if element `x` does not exist.
 		<o>n</o>
-		@param cell stores the result.
-		@return a reference to `cell`.
-		@throws de.polygonal.ds.error.AssertError `cell` is null (debug only).
+		@param output stores the result.
+		@return a reference to `output`.
+		@throws de.polygonal.ds.error.AssertError `output` is null (debug only).
 	**/
-	inline public function cellOf(x:T, cell:Array3Cell):Array3Cell
+	inline public function cellOf(x:T, output:Array3Cell):Array3Cell
 	{
-		assert(cell != null);
+		assert(output != null);
 		
 		var i = indexOf(x);
 		if (i == -1)
 			return null;
 		else
-			return indexToCell(i, cell);
+			return indexToCell(i, output);
 	}
 	
 	/**
 		Transforms the index `i` into `cell` coordinates.
 		<o>1</o>
-		@param cell stores the result.
-		@return a reference to `cell`.
+		@param output stores the result.
+		@return a reference to `output`.
 		@throws de.polygonal.ds.error.AssertError index out of range (debug only).
-		@throws de.polygonal.ds.error.AssertError `cell` is null (debug only).
+		@throws de.polygonal.ds.error.AssertError `output` is null (debug only).
 	**/
-	inline public function indexToCell(i:Int, cell:Array3Cell):Array3Cell
+	inline public function indexToCell(i:Int, output:Array3Cell):Array3Cell
 	{
 		assert(i >= 0 && i < size(), 'index out of range ($i)');
-		assert(cell != null, "cell is null");
+		assert(output != null, "output is null");
 		
 		var s = mW * mH;
 		var t = i % s;
-		cell.z = Std.int(i / s);
-		cell.y = Std.int(t / mW);
-		cell.x = t % mW;
-		return cell;
+		output.z = Std.int(i / s);
+		output.y = Std.int(t / mW);
+		output.x = t % mW;
+		return output;
 	}
 	
 	/**
@@ -659,7 +659,7 @@ class Array3<T> implements Collection<T>
 	}
 	
 	/**
-		Unsupported operation - always returns false.
+		<warn>Unsupported operation - always returns false.</warn>
 	**/
 	public function isEmpty():Bool
 	{

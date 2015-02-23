@@ -28,7 +28,6 @@ import de.polygonal.ds.error.Assert.assert;
 	<h3>Manages fast "alchemy memory".</h3>
 	
 	See <a href="http://lab.polygonal.de/2009/03/14/a-little-alchemy-in-hx3ds/" target="_blank">http://lab.polygonal.de/2009/03/14/a-little-alchemy-in-hx3ds/</a>.
-	
 	See <a href="http://lab.polygonal.de/2010/03/15/memorymanager-revisited/" target="_blank">http://lab.polygonal.de/2010/03/15/memorymanager-revisited/</a>
 **/
 @:access(de.polygonal.ds.mem.MemorySegment)
@@ -50,26 +49,32 @@ class MemoryManager
 	
 	/**
 		The total number of bytes that are preallocated prior to the first call to `malloc()`.
+		
 		Default is 0 bytes.
 	**/
 	public static var RESERVE_BYTES = 0;
 	
 	/**
 		The total number bytes that the user is allowed to allocate (1 MiB equals 1.048.576 bytes).
+		
 		This should be used as a safe upper limit for detecting memory leaks during development.
+		
 		The default value is 64 MiB.
 	**/
 	public static var MEMORY_LIMIT_BYTES = 64 << 20;
 	
 	/**
 		The minimum block size for allocating additional memory on the fly.
+		
 		The default value is 64 KiB. The minimum value is 1024 bytes or 1 KiB.
+		
 		<warn>Changing this value has no effect after memory has been allocated for the first time.</warn>
 	**/
 	public static var BLOCK_SIZE_BYTES = 1024 << 6;
 	
 	/**
 		A reserved, fixed portion of bytes at the beginning of the byte array which can be used as a temporary buffer or for doing math tricks.
+		
 		<warn>Changing this value has no effect after memory has been allocated for the first time.</warn>
 	**/
 	public static var RAW_BYTES = 1024;
@@ -82,7 +87,9 @@ class MemoryManager
 	
 	/**
 		The update rate in seconds for the weak reference monitor that detects GCed `MemoryAccess` objects.
+		
 		A smaller value requires more CPU time but releases memory earlier.
+		
 		The default value is 0.25 seconds.
 	**/
 	public static var AUTO_RECLAIM_INTERVAL = 0.25;
@@ -194,8 +201,9 @@ class MemoryManager
 		Copies `n` bytes from the location pointed by the index `source` to the location pointed by the index `destination`.
 		
 		Copying takes place as if an intermediate buffer was used, allowing the destination and source to overlap.
-		@throws de.polygonal.ds.error.AssertError invalid `destination`, `source` or `n` value (debug only).
+		
 		See <a href="http://www.cplusplus.com/reference/clibrary/cstring/memmove/" target="_blank">http://www.cplusplus.com/reference/clibrary/cstring/memmove/</a>
+		@throws de.polygonal.ds.error.AssertError invalid `destination`, `source` or `n` value (debug only).
 	**/
 	#if (flash && alchemy)
 	public function memmove(destination:Int, source:Int, n:Int)

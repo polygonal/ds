@@ -26,7 +26,7 @@ import haxe.macro.Context;
 #end
 
 /**
-	<h3>Helper class for working with bit flags.</h3>
+	<h3>Helper class for working with bits.</h3>
 **/
 class Bits
 {

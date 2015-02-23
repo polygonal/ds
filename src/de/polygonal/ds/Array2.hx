@@ -24,7 +24,7 @@ import de.polygonal.ds.error.Assert.assert;
 /**
 	<h3>A two-dimensional array based on a rectangular sequential array.</h3>
 	
-	<o>Worst-case running time in Big O notation</o>
+	_<o>Worst-case running time in Big O notation</o>_
 **/
 #if (flash && generic)
 @:generic
@@ -219,7 +219,7 @@ class Array2<T> implements Collection<T>
 	}
 	
 	/**
-		Returns true if `x` and `y` are valid.
+		Returns true if `x` and `y` are valid indices.
 	**/
 	inline public function inRange(x:Int, y:Int):Bool
 	{
@@ -229,37 +229,37 @@ class Array2<T> implements Collection<T>
 	/**
 		Returns the cell coordinates of the first occurrence of the element `x` or null if element `x` does not exist.
 		<o>n</o>
-		@param cell stores the result.
+		@param output stores the result.
 		@return a reference to `cell`.
 		@throws de.polygonal.ds.error.AssertError `cell` is null (debug only).
 	**/
-	inline public function cellOf(x:T, cell:Array2Cell):Array2Cell
+	inline public function cellOf(x:T, output:Array2Cell):Array2Cell
 	{
-		assert(cell != null);
+		assert(output != null);
 		
 		var i = indexOf(x);
 		if (i == -1)
 			return null;
 		else
-			return indexToCell(i, cell);
+			return indexToCell(i, output);
 	}
 	
 	/**
 		Transforms the index `i` into `cell` coordinates.
 		<o>1</o>
-		@param cell stores the result.
+		@param output stores the result.
 		@return a reference to `cell`.
 		@throws de.polygonal.ds.error.AssertError index out of range (debug only).
 		@throws de.polygonal.ds.error.AssertError `cell` is null (debug only).
 	**/
-	inline public function indexToCell(i:Int, cell:Array2Cell):Array2Cell
+	inline public function indexToCell(i:Int, output:Array2Cell):Array2Cell
 	{
 		assert(i >= 0 && i < size(), 'index out of range ($i)');
-		assert(cell != null, "cell is null");
+		assert(output != null, "output is null");
 		
-		cell.y = Std.int(i / mW);
-		cell.x = i % mW;
-		return cell;
+		output.y = Std.int(i / mW);
+		output.x = i % mW;
+		return output;
 	}
 	
 	/**
@@ -741,10 +741,10 @@ class Array2<T> implements Collection<T>
 	}
 	
 	/**
-		Copies all elements from the given nested two-dimensional array `a` into this two-dimensional array.
+		Copies all elements from the nested two-dimensional array `a` into this two-dimensional array.
 		@throws de.polygonal.ds.error.AssertError invalid dimensions of `a` (debug only).
 	**/
-	public function setNestedArray(a:Array<Array<T>>)
+	public function ofNestedArray(a:Array<Array<T>>)
 	{
 		assert(a.length == getH() && a[0] != null && a[0].length == getW(), "invalid input");
 		
@@ -964,7 +964,7 @@ class Array2<T> implements Collection<T>
 	}
 	
 	/**
-		Unsupported operation - always returns false.
+		<warn>Unsupported operation - always returns false.</warn>
 		<o>1</o>
 	**/
 	public function isEmpty():Bool

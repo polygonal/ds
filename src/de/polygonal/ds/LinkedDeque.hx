@@ -25,7 +25,7 @@ import de.polygonal.ds.error.Assert.assert;
 	
 	This is a linear list for which all insertions and deletions (and usually all accesses) are made at ends of the list.
 	
-	<o>Worst-case running time in Big O notation</o>
+	_<o>Worst-case running time in Big O notation</o>_
 **/
 #if (flash && generic)
 @:generic

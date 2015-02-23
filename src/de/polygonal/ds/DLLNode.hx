@@ -27,7 +27,7 @@ import de.polygonal.ds.error.Assert.assert;
 	
 	`DLLNode` objects are created and managed by the `DLL` class.
 	
-	<o>Worst-case running time in Big O notation</o>
+	_<o>Worst-case running time in Big O notation</o>_
 **/
 #if (flash && generic)
 @:generic
@@ -150,7 +150,7 @@ class DLLNode<T>
 	}
 	
 	/**
-		Unlinks this node from its list and returns node.`next`.
+		Unlinks this node from its list and returns `next`.
 		<o>1</o>
 		@throws de.polygonal.ds.error.AssertError list is null (debug only).
 	**/

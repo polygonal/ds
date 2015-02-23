@@ -19,7 +19,7 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 package de.polygonal.ds;
 
 /**
-	<h3>An object that can be visited in a traversal by calling visit().</h3>
+	<h3>An object that can be visited in a traversal by calling object::visit().</h3>
 **/
 interface Visitable
 {

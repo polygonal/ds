@@ -25,7 +25,7 @@ import de.polygonal.ds.error.Assert.assert;
 	
 	A BST automatically arranges `BinaryTreeNode` objects so the resulting tree is a valid BST.
 	
-	<o>Worst-case running time in Big O notation</o>
+	_<o>Worst-case running time in Big O notation</o>_
 **/
 #if generic
 @:generic

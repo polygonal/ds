@@ -27,7 +27,7 @@ import de.polygonal.ds.error.Assert.assert;
 	
 	This is called a LIFO structure (Last In, First Out).
 	
-	<o>Worst-case running time in Big O notation</o>
+	_<o>Worst-case running time in Big O notation</o>_
 **/
 #if (flash && generic)
 @:generic
@@ -45,7 +45,9 @@ class ArrayedStack<T> implements Stack<T>
 	
 	/**
 		The maximum allowed size of this stack.
+		
 		Once the maximum size is reached, adding an element will fail with an error (debug only).
+		
 		A value of -1 indicates that the size is unbound.
 		
 		<warn>Always equals -1 in release mode.</warn>
@@ -54,6 +56,7 @@ class ArrayedStack<T> implements Stack<T>
 	
 	/**
 		If true, reuses the iterator object instead of allocating a new one when calling `iterator()`.
+		
 		The default is false.
 		
 		<warn>If true, nested iterations are likely to fail as only one iteration is allowed at a time.</warn>

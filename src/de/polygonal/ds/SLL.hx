@@ -24,8 +24,8 @@ import de.polygonal.ds.error.Assert.assert;
 	<h3>A singly linked list.</h3>
 	
 	See <a href="http://lab.polygonal.de/?p=206" target="mBlank">http://lab.polygonal.de/?p=206</a>
-		
-	<o>Worst-case running time in Big O notation</o>
+	
+	_<o>Worst-case running time in Big O notation</o>_
 **/
 #if (flash && generic)
 @:generic

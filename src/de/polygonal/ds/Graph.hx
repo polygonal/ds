@@ -26,8 +26,8 @@ import de.polygonal.ds.error.Assert.assert;
 	A graph is composed of `GraphNode` and `GraphArc` objects.
 	
 	See <a href="http://lab.polygonal.de/?p=185" target="mBlank">http://lab.polygonal.de/?p=185/</a>
-		
-	<o>Worst-case running time in Big O notation</o>
+	
+	_<o>Worst-case running time in Big O notation</o>_
 **/
 #if (flash && generic)
 @:generic
@@ -572,7 +572,7 @@ class Graph<T> implements Collection<T>
 		</ul>
 		Once `process` returns false, the traversal stops immediately and no further nodes are examined (termination condition).
 		If omitted, element.`visit()` is used.
-		<warn>In this case the elements of all nodes have to implement Visitable.</warn>
+		<warn>In this case the elements of all nodes have to implement `Visitable`.</warn>
 		@param userData custom data that is passed to every visited node via `process` or element.`visit()`. If omitted, null is used.
 	**/
 	public function BFS(preflight = false, seed:GraphNode<T> = null, process:GraphNode<T>->Bool->Dynamic->Bool = null, userData:Dynamic = null)
@@ -781,7 +781,7 @@ class Graph<T> implements Collection<T>
 		</ul>
 		Once `process` returns false, the traversal stops immediately and no further nodes are examined (termination condition).
 		If omitted, element.`visit()` is used.
-		<warn>In this case the elements of all nodes have to implement Visitable.</warn>
+		<warn>In this case the elements of all nodes have to implement `Visitable`.</warn>
 		@param userData custom data that is passed to every visited node via `process` or element.`visit()`. If omitted, null is used.
 	**/
 	public function DLBFS(maxDepth:Int, preflight = false, seed:GraphNode<T> = null, process:GraphNode<T>->Bool->Dynamic->Bool = null, userData:Dynamic = null)
@@ -1154,6 +1154,7 @@ class Graph<T> implements Collection<T>
 		Returns a new `GraphIterator` object to iterate over all elements stored in the graph nodes of this graph.
 		
 		The nodes are visited in a random order.
+		
 		See <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
 	**/
 	public function iterator():Itr<T>
@@ -1174,6 +1175,7 @@ class Graph<T> implements Collection<T>
 		Returns a new `GraphNodeIterator` object to iterate over all `GraphNode` objects in this graph.
 		
 		The nodes are visited in a random order.
+		
 		See <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
 	**/
 	public function nodeIterator():Itr<GraphNode<T>>
@@ -1185,6 +1187,7 @@ class Graph<T> implements Collection<T>
 		Returns a new `GraphArcIterator` object to iterate over all `GraphArc` objects in this graph.
 		
 		The arcs are visited in a random order.
+		
 		See <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
 	**/
 	public function arcIterator():Itr<GraphArc<T>>

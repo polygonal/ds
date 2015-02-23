@@ -25,7 +25,7 @@ import de.polygonal.ds.error.Assert.assert;
 	
 	See <a href="http://lab.polygonal.de/?p=184" target="mBlank">http://lab.polygonal.de/?p=184</a>
 	
-	<o>Worst-case running time in Big O notation</o>
+	_<o>Worst-case running time in Big O notation</o>_
 **/
 #if (flash && generic)
 @:generic
@@ -267,10 +267,10 @@ class TreeNode<T> implements Collection<T>
 	
 	/**
 		Swaps the child `a` with child `b` by swapping their values.
+		<o>1</o>
 		@throws de.polygonal.ds.error.AssertError `a` and `b` are not siblings (debug only).
 		@throws de.polygonal.ds.error.AssertError `a` equals `b` (debug only).
 		@return this node.
-		<o>1</o>
 	**/
 	public function swapChildren(a:TreeNode<T>, b:TreeNode<T>):TreeNode<T>
 	{
@@ -284,11 +284,11 @@ class TreeNode<T> implements Collection<T>
 	
 	/**
 		Swaps the child at index `i` with the child at index `j` by swapping their values.
+		<o>1</o>
 		@throws de.polygonal.ds.error.AssertError index `i` out of range (debug only).
 		@throws de.polygonal.ds.error.AssertError index `j` out of range (debug only).
 		@throws de.polygonal.ds.error.AssertError `i` equals `j` (debug only).
 		@return this node.
-		<o>1</o>
 	**/
 	public function swapChildrenAt(i:Int, j:Int):TreeNode<T>
 	{
@@ -329,9 +329,9 @@ class TreeNode<T> implements Collection<T>
 	
 	/**
 		Removes the child at index `i` and returns the child.
+		<o>n</o>
 		@throws de.polygonal.ds.error.AssertError index `i` is out of range (debug only).
 		@return this node.
-		<o>n</o>
 	**/
 	public function removeChildAt(i:Int):TreeNode<T>
 	{
@@ -354,9 +354,9 @@ class TreeNode<T> implements Collection<T>
 		Removes `n` children starting at the specified index `i` in the range [`i`, `i` + `n`].
 		
 		If `n` is -1, `n` is set to `numChildren()` - `i`.
+		<o>n</o>
 		@throws de.polygonal.ds.error.AssertError `i` or `n` out of range (debug only).
 		@return this node.
-		<o>n</o>
 	**/
 	public function removeChildren(i = 0, n = -1):TreeNode<T>
 	{
@@ -388,9 +388,9 @@ class TreeNode<T> implements Collection<T>
 	
 	/**
 		Changes the index of the child `x` to `i`.
+		<o>n</o>
 		@throws de.polygonal.ds.error.AssertError index `i` is out of range (debug only).
 		@return this node.
-		<o>n</o>
 	**/
 	public function setChildIndex(x:TreeNode<T>, i:Int):TreeNode<T>
 	{
@@ -624,9 +624,9 @@ class TreeNode<T> implements Collection<T>
 	
 	/**
 		Unlinks `x` and appends `x` as a child to this node.
+		<o>1</o>
 		@throws de.polygonal.ds.error.AssertError `x` is null (debug only).
 		@return this node.
-		<o>1</o>
 	**/
 	public function appendNode(x:TreeNode<T>):TreeNode<T>
 	{
@@ -654,8 +654,8 @@ class TreeNode<T> implements Collection<T>
 	
 	/**
 		Unlinks `x` and prepends `x` as a child of this node.
-		@return this node.
 		<o>1</o>
+		@return this node.
 	**/
 	public function prependNode(x:TreeNode<T>):TreeNode<T>
 	{
@@ -768,8 +768,8 @@ class TreeNode<T> implements Collection<T>
 	
 	/**
 		Successively swaps this node with previous siblings until it reached the head of the sibling list.
-		@return this node.
 		<o>1</o>
+		@return this node.
 	**/
 	public function setFirst():TreeNode<T>
 	{
@@ -785,8 +785,8 @@ class TreeNode<T> implements Collection<T>
 	
 	/**
 		Successively swaps this node with next siblings until it reached the tail of the sibling list.
-		@return this node.
 		<o>1</o>
+		@return this node.
 	**/
 	public function setLast():TreeNode<T>
 	{

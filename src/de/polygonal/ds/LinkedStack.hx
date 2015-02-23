@@ -27,7 +27,7 @@ import de.polygonal.ds.error.Assert.assert;
 	
 	This is called a FIFO structure (First In, First Out).
 	
-	<o>Worst-case running time in Big O notation</o>
+	_<o>Worst-case running time in Big O notation</o>_
 **/
 #if (flash && generic)
 @:generic

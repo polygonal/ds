@@ -429,10 +429,10 @@ class IntHashTable<T> implements Map<Int, T>
 	}
 	
 	/**
-		Stores all values that are mapped to `key` in `values` or returns 0 if `key` does not exist.
+		Stores all values that are mapped to `key` in `output` or returns 0 if `key` does not exist.
 		@return the total number of values mapped to `key`.
 	**/
-	public function getAll(key:Int, values:Array<T>):Int
+	public function getAll(key:Int, output:Array<T>):Int
 	{
 		var i = mH.get(key);
 		if (i == IntIntHashTable.KEY_ABSENT)
@@ -440,7 +440,7 @@ class IntHashTable<T> implements Map<Int, T>
 		else
 		{
 			var c = mH.getAll(key, mTmpArr);
-			for (i in 0...c) values[i] = mVals[mTmpArr[i]];
+			for (i in 0...c) output[i] = mVals[mTmpArr[i]];
 			return c;
 		}
 	}

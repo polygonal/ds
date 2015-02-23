@@ -922,10 +922,10 @@ class IntIntHashTable implements Map<Int, Int>
 	}
 	
 	/**
-		Stores all values that are mapped to `key` in `values` or returns 0 if `key` does not exist.
+		Stores all values that are mapped to `key` in `output` or returns 0 if `key` does not exist.
 		@return the total number of values mapped to `key`.
 	**/
-	public function getAll(key:Int, values:Array<Int>):Int
+	public function getAll(key:Int, output:Array<Int>):Int
 	{
 		var i = getHash(hashCode(key));
 		if (i == EMPTY_SLOT)
@@ -936,23 +936,23 @@ class IntIntHashTable implements Map<Int, Int>
 			#if (flash && alchemy)
 			var o = mData.getAddr(i);
 			if (Memory.getI32(o) == key)
-				values[c++] = Memory.getI32(o + 4);
+				output[c++] = Memory.getI32(o + 4);
 			i = Memory.getI32(o + 8);
 			while (i != NULL_POINTER)
 			{
 				o = mData.getAddr(i);
 				if (Memory.getI32(o) == key)
-					values[c++] = Memory.getI32(o + 4);
+					output[c++] = Memory.getI32(o + 4);
 				i = Memory.getI32(o + 8);
 			}
 			#else
 			if (getData(i) == key)
-				values[c++] = getData(i + 1);
+				output[c++] = getData(i + 1);
 			i = getData(i + 2);
 			while (i != NULL_POINTER)
 			{
 				if (getData(i) == key)
-					values[c++] = getData(i + 1);
+					output[c++] = getData(i + 1);
 				i = getData(i + 2);
 			}
 			#end
@@ -1548,7 +1548,7 @@ class IntIntHashTable implements Map<Int, Int>
 		
 		The `assign` and `copier` parameters are ignored.
 	**/
-	public function clone(assign:Bool = true, copier:Int->Int = null):Collection<Int>
+	public function clone(assign = true, copier:Int->Int = null):Collection<Int>
 	{
 		var c = new IntIntHashTable(M.INT16_MIN);
 		c.key = HashKey.next();

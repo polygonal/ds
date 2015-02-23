@@ -25,7 +25,7 @@ import de.polygonal.ds.error.Assert.assert;
 	
 	`GraphNode` objects are created and managed by the `Graph` class.
 	
-	<o>Worst-case running time in Big O notation</o>
+	_<o>Worst-case running time in Big O notation</o>_
 **/
 #if (flash && generic)
 @:generic
@@ -113,6 +113,7 @@ class GraphNode<T> implements Hashable
 	
 	/**
 		Returns a new `NodeValIterator` object to iterate over the elements stored in all nodes that are connected to this node by an outgoing arc.
+		
 		See <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
 	**/
 	public function iterator():Itr<T>

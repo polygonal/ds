@@ -28,8 +28,8 @@ import de.polygonal.ds.error.Assert.assert;
 	This is called a FIFO structure (First In, First Out).
 	
 	See <a href="http://lab.polygonal.de/?p=189" target="mBlank">http://lab.polygonal.de/?p=189</a>
-		
-	<o>Worst-case running time in Big O notation</o>
+	
+	_<o>Worst-case running time in Big O notation</o>_
 **/
 #if (flash && generic)
 @:generic
@@ -91,7 +91,6 @@ class ArrayedQueue<T> implements Queue<T>
 		@param isResizable if true, the `capacity` is automatically adjusted.
 		Otherwise `capacity` defines both the minimum and maximum allowed `capacity`.
 		Default is true.
-		
 		@param maxSize the maximum allowed size of this queue.
 		The default value of -1 indicates that there is no upper limit.
 		@throws de.polygonal.ds.error.AssertError reserved size is greater than allowed size (debug only).
@@ -121,9 +120,7 @@ class ArrayedQueue<T> implements Queue<T>
 	}
 	
 	/**
-		Returns the front element.
-		
-		This is the "oldest" element.
+		Returns the front element. This is the "oldest" element.
 		<o>1</o>
 		@throws de.polygonal.ds.error.AssertError queue is empty (debug only).
 	**/

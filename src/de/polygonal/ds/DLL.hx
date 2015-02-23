@@ -24,8 +24,8 @@ import de.polygonal.ds.error.Assert.assert;
 	<h3>A doubly linked list.</h3>
 	
 	See <a href="http://lab.polygonal.de/?p=206" target="mBlank">http://lab.polygonal.de/?p=206</a>
-		
-	<o>Worst-case running time in Big O notation</o>
+	
+	_<o>Worst-case running time in Big O notation</o>_
 **/
 #if (flash && generic)
 @:generic
@@ -345,7 +345,7 @@ class DLL<T> implements Collection<T>
 	}
 	
 	/**
-		Unlinks `node` from this list and returns `node`::`next`;
+		Unlinks `node` from this list and returns `node`::`next`.
 		<o>1</o>
 		@throws de.polygonal.ds.error.AssertError list is empty (debug only).
 		@throws de.polygonal.ds.error.AssertError `node` is null or not managed by this list (debug only).

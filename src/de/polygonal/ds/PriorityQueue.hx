@@ -25,7 +25,7 @@ import de.polygonal.ds.error.Assert.assert;
 	
 	Adds additional methods for removing and re-prioritizing elements.
 	
-	<o>Worst-case running time in Big O notation</o>
+	_<o>Worst-case running time in Big O notation</o>_
 **/
 class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 {
@@ -367,8 +367,8 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	
 	/**
 		Returns true if this priority queue contains the element `x`.
-		@throws de.polygonal.ds.error.AssertError `x` is invalid.
 		<o>1</o>
+		@throws de.polygonal.ds.error.AssertError `x` is invalid.
 	**/
 	inline public function contains(x:T):Bool
 	{

@@ -23,7 +23,7 @@ import de.polygonal.ds.error.Assert.assert;
 /**
 	<h3>A dense, dynamic array.</h3>
 	
-	<o>Worst-case running time in Big O notation</o>
+	_<o>Worst-case running time in Big O notation</o>_
 **/
 #if (flash && generic)
 @:generic
@@ -130,7 +130,7 @@ class DA<T> implements Collection<T>
 	/**
 		Trims the dense array by cutting of `size()` - `x` elements.
 		
-		<warn>This only modifies the value of `size()`: to enable garbage collection of all cut off elements and to shrink the internal array to the new size, call `pack()` afterwards.</warn>
+		<warn>This only modifies the value of `size()`; to enable garbage collection of all cut off elements and to shrink the internal array to the new size, call `pack()` afterwards.</warn>
 		<o>1</o>
 		@param x the new size of this dense array.
 		@throws de.polygonal.ds.error.AssertError new size > current `size()` (debug only).
@@ -580,9 +580,10 @@ class DA<T> implements Collection<T>
 		Copies `n` elements from the location pointed by the index `source` to the location pointed by the index `destination`.
 		
 		Copying takes place as if an intermediate buffer was used, allowing the destination and source to overlap.
+		
+		See <a href="http://www.cplusplus.com/reference/clibrary/cstring/memmove/" target="mBlank">http://www.cplusplus.com/reference/clibrary/cstring/memmove/</a>
 		<o>n</o>
 		@throws de.polygonal.ds.error.AssertError invalid `destination`, `source` or `n` value (debug only).
-		See <a href="http://www.cplusplus.com/reference/clibrary/cstring/memmove/" target="mBlank">http://www.cplusplus.com/reference/clibrary/cstring/memmove/</a>
 	**/
 	public function memmove(destination:Int, source:Int, n:Int)
 	{

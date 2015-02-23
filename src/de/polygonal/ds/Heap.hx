@@ -25,7 +25,7 @@ import de.polygonal.ds.error.Assert.assert;
 	
 	The implementation is based on an arrayed binary tree.
 	
-	<o>Worst-case running time in Big O notation</o>
+	_<o>Worst-case running time in Big O notation</o>_
 **/
 class Heap<T:(Heapable<T>)> implements Collection<T>
 {
@@ -433,8 +433,8 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	
 	/**
 		Returns true if this heap contains the element `x`.
-		@throws de.polygonal.ds.error.AssertError `x` is invalid.
 		<o>1</o>
+		@throws de.polygonal.ds.error.AssertError `x` is invalid.
 	**/
 	inline public function contains(x:T):Bool
 	{

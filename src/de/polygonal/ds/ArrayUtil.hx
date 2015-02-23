@@ -66,54 +66,56 @@ class ArrayUtil
 	}
 	
 	/**
-		Copies elements in the range [`min`, `max`] from `src` to `dst`.
-		@throws de.polygonal.ds.error.AssertError `src` is null (debug only).
-		@throws de.polygonal.ds.error.AssertError `dst` is null (debug only).
+		Copies elements in the range [`min`, `max`] from `source` to `destination`.
+		@throws de.polygonal.ds.error.AssertError `source` is null (debug only).
+		@throws de.polygonal.ds.error.AssertError `destination` is null (debug only).
 		@throws de.polygonal.ds.error.AssertError index out of range (debug only).
 	**/
-	inline public static function copy<T>(src:Array<T>, dst:Array<T>, min = 0, max = -1):Array<T>
+	inline public static function copy<T>(source:Array<T>, destination:Array<T>, min = 0, max = -1):Array<T>
 	{
-		if (max == -1) max = src.length;
+		if (max == -1) max = source.length;
 		
-		assert(src != null);
-		assert(dst != null);
+		assert(source != null);
+		assert(destination != null);
 		assert(min >= 0);
-		assert(max <= src.length);
+		assert(max <= source.length);
 		assert(min < max);
 		
 		var j = 0;
-		for (i in min...max) dst[j++] = src[i];
-		return dst;
+		for (i in min...max) destination[j++] = source[i];
+		return destination;
 	}
 	
 	/**
-		Sets up to `k` elements in `dst` to the instance `x`.
-		@param k the number of elements to put into `dst`.
-		If omitted `k` is set to `dst`::length;
+		Sets up to `k` elements in `destination` to the instance `x`.
+		@param k the number of elements to put into `destination`.
+		If omitted `k` is set to `destination`::length;
 	**/
-	public static function fill<T>(dst:Array<T>, x:T, k = -1)
+	public static function fill<T>(destination:Array<T>, x:T, k = -1)
 	{
-		if (k == -1) k = dst.length;
-		for (i in 0...k) dst[i] = x;
+		if (k == -1) k = destination.length;
+		for (i in 0...k) destination[i] = x;
 	}
 	
 	/**
-		Sets up to `k` elements in `dst` to the object of type `cl`.
-		@param k the number of elements to put into `dst`.
-		If omitted `k` is set to `dst`::length;
+		Sets up to `k` elements in `destination` to the object of type `cl`.
+		@param k the number of elements to put into `destination`.
+		If omitted `k` is set to `destination`::length;
 	**/
-	public static function assign<T>(dst:Array<T>, cl:Class<T>, args:Array<Dynamic> = null, k = -1)
+	public static function assign<T>(destination:Array<T>, cl:Class<T>, args:Array<Dynamic> = null, k = -1)
 	{
-		if (k == -1) k = dst.length;
+		if (k == -1) k = destination.length;
 		if (args == null) args = [];
-		for (i in 0...k) dst[i] = Type.createInstance(cl, args);
+		for (i in 0...k) destination[i] = Type.createInstance(cl, args);
 	}
 	
 	/**
 		Copies `n` elements inside `a` from the location pointed by the index `source` to the location pointed by the index `destination`.
+		
 		Copying takes place as if an intermediate buffer is used, allowing the destination and source to overlap.
-		@throws de.polygonal.ds.error.AssertError invalid `destination`, `source` or `n` value (debug only).
+		
 		See <a href="ttp://www.cplusplus.com/reference/clibrary/cstring/memmove/" target="mBlank">ttp://www.cplusplus.com/reference/clibrary/cstring/memmove/</a>
+		@throws de.polygonal.ds.error.AssertError invalid `destination`, `source` or `n` value (debug only).
 	**/
 	public static function memmove<T>(a:Array<T>, destination:Int, source:Int, n:Int)
 	{
@@ -299,7 +301,7 @@ class ArrayUtil
 	}
 	
 	/**
-		A counting quick permutation algorithm.
+		A quick counting permutation algorithm.
 		
 		See <a href="http://www.freewebs.com/permute/quickperm.html" target="mBlank">http://www.freewebs.com/permute/quickperm.html</a>
 		@param n number of elements to permute.
@@ -343,7 +345,10 @@ class ArrayUtil
 		
 		return results;
 	}
-	
+
+	/**
+		Compares `a` and `b` by comparing their elements.
+	**/
 	public static function equals<T>(a:Array<T>, b:Array<T>):Bool
 	{
 		if (a.length != b.length) return false;

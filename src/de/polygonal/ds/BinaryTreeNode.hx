@@ -25,7 +25,7 @@ import de.polygonal.ds.error.Assert.assert;
 	
 	A tree data structure in which each node has at most two child nodes.
 	
-	<o>Worst-case running time in Big O notation</o>
+	_<o>Worst-case running time in Big O notation</o>_
 **/
 #if (flash && generic)
 @:generic

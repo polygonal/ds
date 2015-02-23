@@ -27,7 +27,7 @@ import de.polygonal.ds.error.Assert.assert;
 /**
 	<h3>An array hash set for storing Hashable objects.</h3>
 	
-	<o>Worst-case running time in Big O notation</o>
+	_<o>Worst-case running time in Big O notation</o>_
 **/
 #if (flash && generic)
 @:generic

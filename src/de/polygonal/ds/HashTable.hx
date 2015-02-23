@@ -29,7 +29,7 @@ import de.polygonal.ds.error.Assert.assert;
 	
 	The implementation is based on `IntIntHashTable`.
 	
-	<o>Worst-case running time in Big O notation</o>
+	_<o>Worst-case running time in Big O notation</o>_
 **/
 #if (flash && generic)
 @:generic
@@ -401,10 +401,10 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	}
 	
 	/**
-		Stores all values that are mapped to `key` in `values` or returns 0 if `key` does not exist.
+		Stores all values that are mapped to `key` in `output` or returns 0 if `key` does not exist.
 		@return the total number of values mapped to `key`.
 	**/
-	public function getAll(key:K, values:Array<T>):Int
+	public function getAll(key:K, output:Array<T>):Int
 	{
 		var i = mH.get(_key(key));
 		if (i == IntIntHashTable.KEY_ABSENT)
@@ -412,7 +412,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		else
 		{
 			var c = mH.getAll(_key(key), mTmpArr);
-			for (i in 0...c) values[i] = mVals[mTmpArr[i]];
+			for (i in 0...c) output[i] = mVals[mTmpArr[i]];
 			return c;
 		}
 	}

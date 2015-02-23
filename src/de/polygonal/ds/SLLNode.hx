@@ -27,7 +27,7 @@ A singly linked list node.</h3>
 	Each node wraps an element and stores a reference to the next list node.
 	
 	`SLLNode` objects are created and managed by the `SLL` class.
-	<o>Worst-case running time in Big O notation</o>
+	_<o>Worst-case running time in Big O notation</o>_
 **/
 #if (flash && generic)
 @:generic

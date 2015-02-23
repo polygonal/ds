@@ -27,7 +27,7 @@ import de.polygonal.ds.error.Assert.assert;
 	
 	The vertical pointer moves up and down the tree using the node's `parent` field, while the horizontal pointer moves left/right over the children using the `prev` and `next` fields.
 	
-	<o>Worst-case running time in Big O notation</o>
+	_<o>Worst-case running time in Big O notation</o>_
 **/
 #if (flash && generic)
 @:generic
