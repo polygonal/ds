@@ -26,13 +26,13 @@ A singly linked list node.</h3>
 	
 	Each node wraps an element and stores a reference to the next list node.
 	
-	`SLLNode` objects are created and managed by the `SLL` class.
+	`SllNode` objects are created and managed by the `Sll` class.
 	_<o>Worst-case running time in Big O notation</o>_
 **/
 #if (flash && generic)
 @:generic
 #end
-class SLLNode<T>
+class SllNode<T>
 {
 	/**
 		The node's data.
@@ -42,15 +42,15 @@ class SLLNode<T>
 	/**
 		The next node in the list being referenced or null if this node has no next node.
 	**/
-	public var next:SLLNode<T>;
+	public var next:SllNode<T>;
 	
-	var mList:SLL<T>;
+	var mList:Sll<T>;
 	
 	/**
 		@param x the element to store in this node.
 		@param list the list storing this node.
 	**/
-	public function new(x:T, list:SLL<T>)
+	public function new(x:T, list:Sll<T>)
 	{
 		val = x;
 		mList = list;
@@ -117,7 +117,7 @@ class SLLNode<T>
 		The list that owns this node or null if this node is not part of a list.
 		<o>1</o>
 	**/
-	inline public function getList():SLL<T>
+	inline public function getList():Sll<T>
 	{
 		return mList;
 	}
@@ -127,7 +127,7 @@ class SLLNode<T>
 		<o>n</o>
 		@throws de.polygonal.ds.error.AssertError list is null (debug only).
 	**/
-	inline public function unlink():SLLNode<T>
+	inline public function unlink():SllNode<T>
 	{
 		assert(mList != null);
 		
@@ -139,10 +139,10 @@ class SLLNode<T>
 	**/
 	public function toString():String
 	{
-		return '{ SLLNode ${Std.string(val)} }';
+		return '{ SllNode ${Std.string(val)} }';
 	}
 	
-	inline function insertAfter(node:SLLNode<T>)
+	inline function insertAfter(node:SllNode<T>)
 	{
 		node.next = next;
 		next = node;

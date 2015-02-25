@@ -45,11 +45,11 @@ class ListSet<T> implements Set<T>
 	**/
 	public var reuseIterator:Bool;
 	
-	var mData:DA<T>;
+	var mData:Da<T>;
 	
 	public function new()
 	{
-		mData = new DA<T>();
+		mData = new Da<T>();
 		key = HashKey.next();
 		reuseIterator = false;
 	}

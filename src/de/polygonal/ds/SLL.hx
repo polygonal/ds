@@ -30,8 +30,8 @@ import de.polygonal.ds.error.Assert.assert;
 #if (flash && generic)
 @:generic
 #end
-@:access(de.polygonal.ds.SLLNode)
-class SLL<T> implements Collection<T>
+@:access(de.polygonal.ds.SllNode)
+class Sll<T> implements Collection<T>
 {
 	/**
 		A unique identifier for this object.
@@ -45,12 +45,12 @@ class SLL<T> implements Collection<T>
 	/**
 		The head of this list or null if this list is empty.
 	**/
-	public var head:SLLNode<T>;
+	public var head:SllNode<T>;
 	
 	/**
 		The tail of this list or null if this list is empty.
 	**/
-	public var tail:SLLNode<T>;
+	public var tail:SllNode<T>;
 	
 	/**
 		The maximum allowed size of this list.
@@ -76,8 +76,8 @@ class SLL<T> implements Collection<T>
 	var mReservedSize:Int;
 	var mPoolSize:Int;
 	
-	var mHeadPool:SLLNode<T>;
-	var mTailPool:SLLNode<T>;
+	var mHeadPool:SllNode<T>;
+	var mTailPool:SllNode<T>;
 	
 	var mCircular:Bool;
 	var mIterator:Itr<T>;
@@ -110,7 +110,7 @@ class SLL<T> implements Collection<T>
 		
 		if (reservedSize > 0)
 		{
-			mHeadPool = mTailPool = new SLLNode<T>(cast null, this);
+			mHeadPool = mTailPool = new SllNode<T>(cast null, this);
 		}
 		
 		head = tail = null;
@@ -159,21 +159,21 @@ class SLL<T> implements Collection<T>
 	}
 	
 	/**
-		Creates and returns a new `SLLNode` object storing the value `x` and pointing to this list.
+		Creates and returns a new `SllNode` object storing the value `x` and pointing to this list.
 		<o>1</o>
 	**/
-	inline public function createNode(x:T):SLLNode<T>
+	inline public function createNode(x:T):SllNode<T>
 	{
-		return new SLLNode<T>(x, this);
+		return new SllNode<T>(x, this);
 	}
 	
 	/**
-		Appends the element `x` to the tail of this list by creating a `SLLNode` object storing `x`.
+		Appends the element `x` to the tail of this list by creating a `SllNode` object storing `x`.
 		<o>1</o>
 		@return the appended node storing `x`.
 		@throws de.polygonal.ds.error.AssertError `size()` equals `maxSize` (debug only).
 	**/
-	inline public function append(x:T):SLLNode<T>
+	inline public function append(x:T):SllNode<T>
 	{
 		#if debug
 		if (maxSize != -1)
@@ -198,7 +198,7 @@ class SLL<T> implements Collection<T>
 		Appends the node `x` to this list.
 		<o>1</o>
 	**/
-	inline public function appendNode(x:SLLNode<T>)
+	inline public function appendNode(x:SllNode<T>)
 	{
 		assert(x.getList() == this, "node is not managed by this list");
 		
@@ -215,12 +215,12 @@ class SLL<T> implements Collection<T>
 	}
 	
 	/**
-		Prepends the element `x` to the head of this list by creating a `SLLNode` object storing `x`.
+		Prepends the element `x` to the head of this list by creating a `SllNode` object storing `x`.
 		<o>1</o>
 		@return the prepended node storing `x`.
 		@throws de.polygonal.ds.error.AssertError `size()` equals `maxSize` (debug only).
 	**/
-	inline public function prepend(x:T):SLLNode<T>
+	inline public function prepend(x:T):SllNode<T>
 	{
 		#if debug
 		if (maxSize != -1)
@@ -245,7 +245,7 @@ class SLL<T> implements Collection<T>
 		Prepends the node `x` to this list.
 		<o>1</o>
 	**/
-	public function prependNode(x:SLLNode<T>)
+	public function prependNode(x:SllNode<T>)
 	{
 		assert(x.getList() == this, "node is not managed by this list");
 		
@@ -262,12 +262,12 @@ class SLL<T> implements Collection<T>
 	}
 	
 	/**
-		Inserts the element `x` after `node` by creating a `SLLNode` object storing `x`.
+		Inserts the element `x` after `node` by creating a `SllNode` object storing `x`.
 		<o>1</o>
 		@return the inserted node storing `x`.
 		@throws de.polygonal.ds.error.AssertError `node` is null or not managed by this list (debug only).
 	**/
-	inline public function insertAfter(node:SLLNode<T>, x:T):SLLNode<T>
+	inline public function insertAfter(node:SllNode<T>, x:T):SllNode<T>
 	{
 		#if debug
 		if (maxSize != -1)
@@ -291,12 +291,12 @@ class SLL<T> implements Collection<T>
 	}
 	
 	/**
-		Inserts the element `x` before `node` by creating a `SLLNode` object storing `x`.
+		Inserts the element `x` before `node` by creating a `SllNode` object storing `x`.
 		<o>1</o>
 		@return the inserted node storing `x`.
 		@throws de.polygonal.ds.error.AssertError `node` is null or not managed by this list (debug only).
 	**/
-	inline public function insertBefore(node:SLLNode<T>, x:T):SLLNode<T>
+	inline public function insertBefore(node:SllNode<T>, x:T):SllNode<T>
 	{
 		#if debug
 		if (maxSize != -1)
@@ -328,7 +328,7 @@ class SLL<T> implements Collection<T>
 		@throws de.polygonal.ds.error.AssertError list is empty (debug only).
 		@throws de.polygonal.ds.error.AssertError `node` is null or not managed by this list (debug only).
 	**/
-	inline public function unlink(node:SLLNode<T>):SLLNode<T>
+	inline public function unlink(node:SllNode<T>):SllNode<T>
 	{
 		assert(valid(node), "node is null");
 		assert(node.getList() == this, "node is not managed by this list");
@@ -373,7 +373,7 @@ class SLL<T> implements Collection<T>
 		@throws de.polygonal.ds.error.AssertError list is empty (debug only).
 		@throws de.polygonal.ds.error.AssertError index out of range (debug only).
 	**/
-	public function getNodeAt(i:Int):SLLNode<T>
+	public function getNodeAt(i:Int):SllNode<T>
 	{
 		assert(mSize > 0, "list is empty");
 		assert(i >= 0 || i < mSize, 'i index out of range ($i)');
@@ -508,7 +508,7 @@ class SLL<T> implements Collection<T>
 		If `from` is null, the search starts at the head of this list.
 		@throws de.polygonal.ds.error.AssertError `from` is not managed by this list (debug only).
 	**/
-	public function nodeOf(x:T, from:SLLNode<T> = null):SLLNode<T>
+	public function nodeOf(x:T, from:SllNode<T> = null):SllNode<T>
 	{
 		#if debug
 		if (valid(from))
@@ -560,7 +560,7 @@ class SLL<T> implements Collection<T>
 		<o>n</o>
 		@throws de.polygonal.ds.error.AssertError `x` is null or this list equals `x` (debug only).
 	**/
-	public function merge(x:SLL<T>)
+	public function merge(x:Sll<T>)
 	{
 		#if debug
 		if (maxSize != -1)
@@ -605,12 +605,12 @@ class SLL<T> implements Collection<T>
 		@return a new list containing the elements of both lists.
 		@throws de.polygonal.ds.error.AssertError `x` is null or this equals `x` (debug only).
 	**/
-	public function concat(x:SLL<T>):SLL<T>
+	public function concat(x:Sll<T>):Sll<T>
 	{
 		assert(x != null, "x is null");
 		assert(x != this, "x equals this list");
 		
-		var c = new SLL<T>();
+		var c = new Sll<T>();
 		var node = head;
 		for (i in 0...mSize)
 		{
@@ -711,7 +711,7 @@ class SLL<T> implements Collection<T>
 		@param n the number of elements to replace. If 0, `n` is set to `size()`.
 		@throws de.polygonal.ds.error.AssertError `n` out of range (debug only).
 	**/
-	public function fill(x:T, args:Array<Dynamic> = null, n = 0):SLL<T>
+	public function fill(x:T, args:Array<Dynamic> = null, n = 0):Sll<T>
 	{
 		assert(n >= 0);
 		
@@ -799,13 +799,13 @@ class SLL<T> implements Collection<T>
 		
 		Example:
 		<pre class="prettyprint">
-		var list = new de.polygonal.ds.SLL<Int>();
+		var list = new de.polygonal.ds.Sll<Int>();
 		for (i in 0...4) {
 		    list.append(i);
 		}
 		trace(list);</pre>
 		<pre class="console">
-		{ SLL size: 4 }
+		{ Sll size: 4 }
 		[ head
 		  0
 		  1
@@ -815,7 +815,7 @@ class SLL<T> implements Collection<T>
 	**/
 	public function toString():String
 	{
-		var s = '{ SLL size: ${size()}, circular: ${isCircular()} }';
+		var s = '{ Sll size: ${size()}, circular: ${isCircular()} }';
 		if (isEmpty()) return s;
 		s += "\n[ head \n";
 		var node = head;
@@ -954,14 +954,14 @@ class SLL<T> implements Collection<T>
 	}
 	
 	/**
-		Returns a new `SLLIterator` object to iterate over all elements contained in this singly linked list.
+		Returns a new `SllIterator` object to iterate over all elements contained in this singly linked list.
 		
 		The elements are visited from head to tail.
 		
 		If performance is crucial, use the following loop instead:
 		
 		<pre class="prettyprint">
-		var node = mySLL.head;
+		var node = mySll.head;
 		while (node != null)
 		{
 		    var element = node.val;
@@ -978,9 +978,9 @@ class SLL<T> implements Collection<T>
 			if (mIterator == null)
 			{
 				if (mCircular)
-					return new CircularSLLIterator<T>(this);
+					return new CircularSllIterator<T>(this);
 				else
-					return new SLLIterator<T>(this);
+					return new SllIterator<T>(this);
 			}
 			else
 				mIterator.reset();
@@ -989,9 +989,9 @@ class SLL<T> implements Collection<T>
 		else
 		{
 			if (mCircular)
-				return new CircularSLLIterator<T>(this);
+				return new CircularSllIterator<T>(this);
 			else
-				return new SLLIterator<T>(this);
+				return new SllIterator<T>(this);
 		}
 	}
 	
@@ -1058,19 +1058,19 @@ class SLL<T> implements Collection<T>
 	{
 		if (mSize == 0)
 		{
-			var copy = new SLL<T>(mReservedSize, maxSize);
+			var copy = new Sll<T>(mReservedSize, maxSize);
 			if (mCircular) copy.mCircular = true;
 			return copy;
 		}
 		
-		var copy = new SLL<T>();
+		var copy = new Sll<T>();
 		if (mCircular) copy.mCircular = true;
 		copy.mSize = mSize;
 		
 		if (assign)
 		{
 			var srcNode = head;
-			var dstNode = copy.head = new SLLNode<T>(head.val, copy);
+			var dstNode = copy.head = new SllNode<T>(head.val, copy);
 			if (mSize == 1)
 			{
 				copy.tail = copy.head;
@@ -1080,10 +1080,10 @@ class SLL<T> implements Collection<T>
 			srcNode = srcNode.next;
 			for (i in 1...mSize - 1)
 			{
-				dstNode = dstNode.next = new SLLNode<T>(srcNode.val, copy);
+				dstNode = dstNode.next = new SllNode<T>(srcNode.val, copy);
 				srcNode = srcNode.next;
 			}
-			copy.tail = dstNode.next = new SLLNode<T>(srcNode.val, copy);
+			copy.tail = dstNode.next = new SllNode<T>(srcNode.val, copy);
 		}
 		else
 		if (copier == null)
@@ -1093,7 +1093,7 @@ class SLL<T> implements Collection<T>
 			assert(Std.is(head.val, Cloneable), 'element is not of type Cloneable (${head.val})');
 			
 			var c = cast(head.val, Cloneable<Dynamic>);
-			var dstNode = copy.head = new SLLNode<T>(c.clone(), copy);
+			var dstNode = copy.head = new SllNode<T>(c.clone(), copy);
 			if (mSize == 1)
 			{
 				copy.tail = copy.head;
@@ -1107,19 +1107,19 @@ class SLL<T> implements Collection<T>
 				
 				c = cast(srcNode.val, Cloneable<Dynamic>);
 				
-				dstNode = dstNode.next = new SLLNode<T>(c.clone(), copy);
+				dstNode = dstNode.next = new SllNode<T>(c.clone(), copy);
 				srcNode = srcNode.next;
 			}
 			
 			assert(Std.is(srcNode.val, Cloneable), 'element is not of type Cloneable (${srcNode.val})');
 			
 			c = cast(srcNode.val, Cloneable<Dynamic>);
-			copy.tail = dstNode.next = new SLLNode<T>(c.clone(), copy);
+			copy.tail = dstNode.next = new SllNode<T>(c.clone(), copy);
 		}
 		else
 		{
 			var srcNode = head;
-			var dstNode = copy.head = new SLLNode<T>(copier(head.val), copy);
+			var dstNode = copy.head = new SllNode<T>(copier(head.val), copy);
 			if (mSize == 1)
 			{
 				if (mCircular) copy.tail.next = copy.head;
@@ -1129,17 +1129,17 @@ class SLL<T> implements Collection<T>
 			srcNode = srcNode.next;
 			for (i in 1...mSize - 1)
 			{
-				dstNode = dstNode.next = new SLLNode<T>(copier(srcNode.val), copy);
+				dstNode = dstNode.next = new SllNode<T>(copier(srcNode.val), copy);
 				srcNode = srcNode.next;
 			}
-			copy.tail = dstNode.next = new SLLNode<T>(copier(srcNode.val), copy);
+			copy.tail = dstNode.next = new SllNode<T>(copier(srcNode.val), copy);
 		}
 		
 		if (mCircular) copy.tail.next = copy.head;
 		return copy;
 	}
 	
-	function mergeSortComparable(node:SLLNode<T>):SLLNode<T>
+	function mergeSortComparable(node:SllNode<T>):SllNode<T>
 	{
 		var h = node;
 		var p, q, e, tail = null;
@@ -1209,7 +1209,7 @@ class SLL<T> implements Collection<T>
 		return h;
 	}
 	
-	function mergeSort(node:SLLNode<T>, cmp:T->T->Int):SLLNode<T>
+	function mergeSort(node:SllNode<T>, cmp:T->T->Int):SllNode<T>
 	{
 		var h = node;
 		var p, q, e, tail = null;
@@ -1276,7 +1276,7 @@ class SLL<T> implements Collection<T>
 		return h;
 	}
 	
-	function insertionSortComparable(node:SLLNode<T>):SLLNode<T>
+	function insertionSortComparable(node:SllNode<T>):SllNode<T>
 	{
 		var v = new Array<T>();
 		var i = 0;
@@ -1321,7 +1321,7 @@ class SLL<T> implements Collection<T>
 		return h;
 	}
 	
-	function insertionSort(node:SLLNode<T>, cmp:T->T->Int):SLLNode<T>
+	function insertionSort(node:SllNode<T>, cmp:T->T->Int):SllNode<T>
 	{
 		var v = new Array<T>();
 		var i = 0;
@@ -1357,12 +1357,12 @@ class SLL<T> implements Collection<T>
 		return h;
 	}
 	
-	inline function valid(node:SLLNode<T>):Bool
+	inline function valid(node:SllNode<T>):Bool
 	{
 		return node != null;
 	}
 	
-	inline function getNodeBefore(x:SLLNode<T>):SLLNode<T>
+	inline function getNodeBefore(x:SllNode<T>):SllNode<T>
 	{
 		var node = head;
 		while (node.next != x)
@@ -1373,7 +1373,7 @@ class SLL<T> implements Collection<T>
 	inline function getNode(x:T)
 	{
 		if (mReservedSize == 0 || mPoolSize == 0)
-			return new SLLNode<T>(x, this);
+			return new SllNode<T>(x, this);
 		else
 		{
 			assert(valid(mHeadPool.next), "mHeadPool.next != null");
@@ -1387,7 +1387,7 @@ class SLL<T> implements Collection<T>
 		}
 	}
 	
-	inline function putNode(x:SLLNode<T>):T
+	inline function putNode(x:SllNode<T>):T
 	{
 		var val = x.val;
 		
@@ -1411,13 +1411,13 @@ class SLL<T> implements Collection<T>
 @:generic
 #end
 @:dox(hide)
-class SLLIterator<T> implements de.polygonal.ds.Itr<T>
+class SllIterator<T> implements de.polygonal.ds.Itr<T>
 {
-	var mF:SLL<T>;
-	var mWalker:SLLNode<T>;
-	var mHook:SLLNode<T>;
+	var mF:Sll<T>;
+	var mWalker:SllNode<T>;
+	var mHook:SllNode<T>;
 	
-	public function new(f:SLL<T>)
+	public function new(f:Sll<T>)
 	{
 		mF = f;
 		reset();
@@ -1455,15 +1455,15 @@ class SLLIterator<T> implements de.polygonal.ds.Itr<T>
 @:generic
 #end
 @:dox(hide)
-class CircularSLLIterator<T> implements de.polygonal.ds.Itr<T>
+class CircularSllIterator<T> implements de.polygonal.ds.Itr<T>
 {
-	var mF:SLL<T>;
-	var mWalker:SLLNode<T>;
+	var mF:Sll<T>;
+	var mWalker:SllNode<T>;
 	var mI:Int;
 	var mS:Int;
-	var mHook:SLLNode<T>;
+	var mHook:SllNode<T>;
 	
-	public function new(f:SLL<T>)
+	public function new(f:Sll<T>)
 	{
 		mF = f;
 		reset();

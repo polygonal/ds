@@ -28,7 +28,7 @@ import de.polygonal.ds.error.Assert.assert;
 #if (flash && generic)
 @:generic
 #end
-class DA<T> implements Collection<T>
+class Da<T> implements Collection<T>
 {
 	/**
 		A unique identifier for this object.
@@ -41,7 +41,7 @@ class DA<T> implements Collection<T>
 	
 	var mData:Array<T>;
 	var mSize:Int;
-	var mIterator:DAIterator<T>;
+	var mIterator:DaIterator<T>;
 	
 	/**
 		The maximum allowed size of this dense array.
@@ -355,7 +355,7 @@ class DA<T> implements Collection<T>
 		@return a dense array storing all removed elements or null if `output` is omitted.
 		@throws de.polygonal.ds.error.AssertError `i` or `n` out of range (debug only).
 	**/
-	public function removeRange(i:Int, n:Int, output:DA<T> = null):DA<T>
+	public function removeRange(i:Int, n:Int, output:Da<T> = null):Da<T>
 	{
 		assert(i >= 0 && i <= size(), 'i index out of range ($i)');
 		assert(n > 0 && n <= size() && (i + n <= size()), 'n out of range ($n)');
@@ -396,13 +396,13 @@ class DA<T> implements Collection<T>
 		@throws de.polygonal.ds.error.AssertError `x` is null (debug only).
 		@throws de.polygonal.ds.error.AssertError `x` equals this if `copy`=false (debug only).
 	**/
-	public function concat(x:DA<T>, copy = false):DA<T>
+	public function concat(x:Da<T>, copy = false):Da<T>
 	{
 		assert(x != null, "x is null");
 		
 		if (copy)
 		{
-			var copy = new DA<T>();
+			var copy = new Da<T>();
 			copy.mSize = size() + x.size();
 			for (i in 0...size()) copy.set(i, _get(i));
 			for (i in size()...size() + x.size()) copy.set(i, x.get(i - size()));
@@ -557,7 +557,7 @@ class DA<T> implements Collection<T>
 		@param n the number of elements to replace. If 0, `n` is set to `size()`.
 		@throws de.polygonal.ds.error.AssertError `n` out of range (debug only).
 	**/
-	public function fill(x:T, n = 0):DA<T>
+	public function fill(x:T, n = 0):Da<T>
 	{
 		assert(n >= 0);
 		
@@ -785,7 +785,7 @@ class DA<T> implements Collection<T>
 	}
 	
 	/**
-		Returns a new `DAIterator` object to iterate over all elements contained in this dense array.
+		Returns a new `DaIterator` object to iterate over all elements contained in this dense array.
 		
 		Preserves the natural order of an array.
 		
@@ -796,13 +796,13 @@ class DA<T> implements Collection<T>
 		if (reuseIterator)
 		{
 			if (mIterator == null)
-				mIterator = new DAIterator<T>(this);
+				mIterator = new DaIterator<T>(this);
 			else
 				mIterator.reset();
 			return mIterator;
 		}
 		else
-			return new DAIterator<T>(this);
+			return new DaIterator<T>(this);
 	}
 	
 	/**
@@ -856,7 +856,7 @@ class DA<T> implements Collection<T>
 	**/
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{
-		var copy = new DA<T>(size(), maxSize);
+		var copy = new Da<T>(size(), maxSize);
 		copy.mSize = mSize;
 		if (assign)
 		{
@@ -925,13 +925,13 @@ class DA<T> implements Collection<T>
 		
 		Example:
 		<pre class="prettyprint">
-		var da = new de.polygonal.ds.DA<Int>(10);
+		var da = new de.polygonal.ds.Da<Int>(10);
 		for (i in 0...3) {
 		    da.set(i, i);
 		}
 		trace(da);</pre>
 		<pre class="console">
-		{ DA size/max: 3/10 }
+		{ Da size/max: 3/10 }
 		[
 		  0 -> 0
 		  1 -> 1
@@ -940,7 +940,7 @@ class DA<T> implements Collection<T>
 	**/
 	public function toString():String
 	{
-		var s = '{ DA size: ${size()} }';
+		var s = '{ Da size: ${size()} }';
 		if (isEmpty()) return s;
 		s += "\n[\n";
 		for (i in 0...size())
@@ -1114,19 +1114,19 @@ class DA<T> implements Collection<T>
 	inline function _cpy(i:Int, j:Int) mData[i] = mData[j];
 }
 
-@:access(de.polygonal.ds.DA)
+@:access(de.polygonal.ds.Da)
 #if (flash && generic)
 @:generic
 #end
 @:dox(hide)
-class DAIterator<T> implements de.polygonal.ds.Itr<T>
+class DaIterator<T> implements de.polygonal.ds.Itr<T>
 {
-	var mF:DA<T>;
+	var mF:Da<T>;
 	var mData:Array<T>;
 	var mI:Int;
 	var mS:Int;
 	
-	public function new(f:DA<T>)
+	public function new(f:Da<T>)
 	{
 		mF = f;
 		reset();

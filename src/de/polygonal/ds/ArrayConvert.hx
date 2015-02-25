@@ -99,12 +99,12 @@ class ArrayConvert
 		@throws de.polygonal.ds.error.AssertError `x` is null (debug only).
 		@throws de.polygonal.ds.error.AssertError `x` is empty (debug only).
 	**/
-	public static function toSLL<T>(x:Array<T>):SLL<T>
+	public static function toSll<T>(x:Array<T>):Sll<T>
 	{
 		assert(x != null);
 		assert(x.length > 0);
 		
-		var c = new SLL<T>();
+		var c = new Sll<T>();
 		for (i in 0...x.length) c.append(x[i]);
 		return c;
 	}
@@ -116,12 +116,12 @@ class ArrayConvert
 		@throws de.polygonal.ds.error.AssertError `x` is null (debug only).
 		@throws de.polygonal.ds.error.AssertError `x` is empty (debug only).
 	**/
-	public static function toDLL<T>(x:Array<T>):DLL<T>
+	public static function toDll<T>(x:Array<T>):Dll<T>
 	{
 		assert(x != null);
 		assert(x.length > 0);
 		
-		var c = new DLL<T>();
+		var c = new Dll<T>();
 		for (i in 0...x.length) c.append(x[i]);
 		return c;
 	}
@@ -167,12 +167,12 @@ class ArrayConvert
 		@throws de.polygonal.ds.error.AssertError `x` is null (debug only).
 		@throws de.polygonal.ds.error.AssertError `x` is empty (debug only).
 	**/
-	public static function toDA<T>(x:Array<T>):DA<T>
+	public static function toDa<T>(x:Array<T>):Da<T>
 	{
 		assert(x != null);
 		assert(x.length > 0);
 		
-		var c = new DA<T>(x.length);
+		var c = new Da<T>(x.length);
 		for (i in 0...x.length) c.pushBack(x[i]);
 		return c;
 	}

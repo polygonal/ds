@@ -30,7 +30,7 @@ import de.polygonal.ds.error.Assert.assert;
 #if generic
 @:generic
 #end
-class BST<T:Comparable<T>> implements Collection<T>
+class Bst<T:Comparable<T>> implements Collection<T>
 {
 	/**
 		A unique identifier for this object.
@@ -235,16 +235,16 @@ class BST<T:Comparable<T>> implements Collection<T>
 		class Main
 		{
 		    static function main() {
-		        var BST = new de.polygonal.ds.BST<Foo>();
-		        BST.insert(new Foo(1));
-		        BST.insert(new Foo(0));
-		        BST.insert(new Foo(2));
-		        BST.insert(new Foo(7));
-		        trace(BST);
+		        var bst = new de.polygonal.ds.Bst<Foo>();
+		        bst.insert(new Foo(1));
+		        bst.insert(new Foo(0));
+		        bst.insert(new Foo(2));
+		        bst.insert(new Foo(7));
+		        trace(bst);
 		    }
 		}</pre>
 		<pre class="console">
-		{ BST size: 4 }
+		{ Bst size: 4 }
 		[
 		  {Foo 7}
 		  {Foo 2}
@@ -254,7 +254,7 @@ class BST<T:Comparable<T>> implements Collection<T>
 	**/
 	public function toString():String
 	{
-		var s = '{ BST size: ${size()} }';
+		var s = '{ Bst size: ${size()} }';
 		if (isEmpty()) return s;
 		s += "\n[\n";
 		var dumpNode = function(node:BinaryTreeNode<T>, userData:Dynamic):Bool
@@ -410,7 +410,7 @@ class BST<T:Comparable<T>> implements Collection<T>
 	**/
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{
-		var copy = new BST<T>();
+		var copy = new Bst<T>();
 		copy.mRoot = cast mRoot.clone(assign, copier);
 		copy.mSize = mSize;
 		return copy;

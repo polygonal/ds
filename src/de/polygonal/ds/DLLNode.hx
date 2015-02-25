@@ -25,14 +25,14 @@ import de.polygonal.ds.error.Assert.assert;
 	
 	Each node wraps an element and stores a reference to the next and previous list node.
 	
-	`DLLNode` objects are created and managed by the `DLL` class.
+	`DllNode` objects are created and managed by the `Dll` class.
 	
 	_<o>Worst-case running time in Big O notation</o>_
 **/
 #if (flash && generic)
 @:generic
 #end
-class DLLNode<T>
+class DllNode<T>
 {
 	/**
 		The node's data.
@@ -42,20 +42,20 @@ class DLLNode<T>
 	/**
 		The next node in the list being referenced or null if this node has no next node.
 	**/
-	public var next:DLLNode<T>;
+	public var next:DllNode<T>;
 	
 	/**
 		The previous node in the list being referenced or null if this node has no previous node.
 	**/
-	public var prev:DLLNode<T>;
+	public var prev:DllNode<T>;
 	
-	var mList:DLL<T>;
+	var mList:Dll<T>;
 	
 	/**
 		@param x the element to store in this node.
 		@param list the list storing this node.
 	**/
-	public function new(x:T, list:DLL<T>)
+	public function new(x:T, list:Dll<T>)
 	{
 		val = x;
 		mList = list;
@@ -144,7 +144,7 @@ class DLLNode<T>
 		The list that owns this node or null if this node is not part of a list.
 		<o>1</o>
 	**/
-	inline public function getList():DLL<T>
+	inline public function getList():Dll<T>
 	{
 		return mList;
 	}
@@ -154,7 +154,7 @@ class DLLNode<T>
 		<o>1</o>
 		@throws de.polygonal.ds.error.AssertError list is null (debug only).
 	**/
-	inline public function unlink():DLLNode<T>
+	inline public function unlink():DllNode<T>
 	{
 		assert(mList != null);
 		
@@ -164,12 +164,12 @@ class DLLNode<T>
 	/**
 		Prepends `node` to this node assuming this is the <warn>head</warn> node of a list.
 		
-		Useful for updating a list which is not managed by a `DLL` object.
+		Useful for updating a list which is not managed by a `Dll` object.
 		
 		Example:
 		<pre class="prettyprint">
-		var a = new DLLNode<Int>(0, null);
-		var b = new DLLNode<Int>(1, null);
+		var a = new DllNode<Int>(0, null);
+		var b = new DllNode<Int>(1, null);
 		var head = b.prepend(a);
 		trace(head.val); //0
 		trace(head.nextVal()); //1</pre>
@@ -178,7 +178,7 @@ class DLLNode<T>
 		@throws de.polygonal.ds.error.AssertError `node` is null or managed by a list.
 		@throws de.polygonal.ds.error.AssertError `node`::`prev` exists (debug only).
 	**/
-	inline public function prepend(node:DLLNode<T>):DLLNode<T>
+	inline public function prepend(node:DllNode<T>):DllNode<T>
 	{
 		assert(node != null, "node is null");
 		assert(prev == null, "prev is not null");
@@ -192,12 +192,12 @@ class DLLNode<T>
 	/**
 		Appends `node` to this node assuming this is the <warn>tail</warn> node of a list.
 		
-		Useful for updating a list which is not managed by a `DLL` object.
+		Useful for updating a list which is not managed by a `Dll` object.
 		
 		Example:
 		<pre class="prettyprint">
-		var a = new DLLNode<Int>(0, null);
-		var b = new DLLNode<Int>(1, null);
+		var a = new DllNode<Int>(0, null);
+		var b = new DllNode<Int>(1, null);
 		var tail = a.append(b);
 		trace(tail.val); //1
 		trace(tail.prevVal()); //0</pre>
@@ -206,7 +206,7 @@ class DLLNode<T>
 		@throws de.polygonal.ds.error.AssertError `node` is null or managed by a list.
 		@throws de.polygonal.ds.error.AssertError `node`::`next` exists (debug only).
 	**/
-	inline public function append(node:DLLNode<T>):DLLNode<T>
+	inline public function append(node:DllNode<T>):DllNode<T>
 	{
 		assert(node != null, "node is null");
 		assert(next == null, "next is not null");
@@ -220,12 +220,12 @@ class DLLNode<T>
 	/**
 		Prepends this node to `node` assuming `node` is the <warn>head</warn> node of a list.
 		
-		Useful for updating a list which is not managed by a `DLL` object.
+		Useful for updating a list which is not managed by a `Dll` object.
 		
 		Example:
 		<pre class="prettyprint">
-		var a = new DLLNode<Int>(0, null);
-		var b = new DLLNode<Int>(1, null);
+		var a = new DllNode<Int>(0, null);
+		var b = new DllNode<Int>(1, null);
 		var head = a.prependTo(b);
 		trace(head.val); //0
 		trace(head.nextVal()); //1</pre>
@@ -234,7 +234,7 @@ class DLLNode<T>
 		@throws de.polygonal.ds.error.AssertError `node` is null or managed by a list (debug only).
 		@throws de.polygonal.ds.error.AssertError `node`::`prev` exists (debug only).
 	**/
-	inline public function prependTo(node:DLLNode<T>):DLLNode<T>
+	inline public function prependTo(node:DllNode<T>):DllNode<T>
 	{
 		assert(node != null, "node is null");
 		assert(mList == null && node.mList == null, "node is managed by a list");
@@ -248,12 +248,12 @@ class DLLNode<T>
 	/**
 		Appends this node to `node` assuming `node` is the <warn>tail</warn> node of a list.
 		
-		Useful for updating a list which is not managed by a `DLL` object.
+		Useful for updating a list which is not managed by a `Dll` object.
 		
 		Example:
 		<pre class="prettyprint">
-		var a = new DLLNode<Int>(0, null);
-		var b = new DLLNode<Int>(1, null);
+		var a = new DllNode<Int>(0, null);
+		var b = new DllNode<Int>(1, null);
 		var tail = b.appendTo(a);
 		trace(tail.val); //1
 		trace(tail.prevVal()); //0</pre>
@@ -262,7 +262,7 @@ class DLLNode<T>
 		@throws de.polygonal.ds.error.AssertError `node` is null or managed by a list (debug only).
 		@throws de.polygonal.ds.error.AssertError `node`::`next` exists (debug only).
 	**/
-	inline public function appendTo(node:DLLNode<T>):DLLNode<T>
+	inline public function appendTo(node:DllNode<T>):DllNode<T>
 	{
 		assert(node != null, "node is null");
 		assert(mList == null && node.mList == null, "node is managed by a list");
@@ -278,10 +278,10 @@ class DLLNode<T>
 	**/
 	public function toString():String
 	{
-		return '{ DLLNode ${Std.string(val)} }';
+		return '{ DllNode ${Std.string(val)} }';
 	}
 	
-	inline function insertAfter(node:DLLNode<T>)
+	inline function insertAfter(node:DllNode<T>)
 	{
 		node.next = next;
 		node.prev = this;
@@ -289,7 +289,7 @@ class DLLNode<T>
 		next = node;
 	}
 	
-	inline function insertBefore(node:DLLNode<T>)
+	inline function insertBefore(node:DllNode<T>)
 	{
 		node.next = this;
 		node.prev = prev;
@@ -297,7 +297,7 @@ class DLLNode<T>
 		prev = node;
 	}
 	
-	inline function _unlink():DLLNode<T>
+	inline function _unlink():DllNode<T>
 	{
 		var t = next;
 		if (hasPrev()) prev.next = next;
