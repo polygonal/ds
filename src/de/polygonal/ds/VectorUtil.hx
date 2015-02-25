@@ -18,8 +18,6 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 */
 package de.polygonal.ds;
 
-import de.polygonal.core.util.Assert.assert;
-
 class VectorUtil
 {
 	/**
@@ -56,28 +54,5 @@ class VectorUtil
 	{
 		if (k == -1) k = dst.length;
 		for (i in 0...k) dst[i] = x;
-	}
-	
-	
-	public static function bsearchFloat(a:Vector<Float>, x:Float, min:Int, max:Int):Int
-	{
-		assert(a != null);
-		assert(min >= 0 && min < a.length);
-		assert(max < a.length);
-		
-		var l = min, m, h = max + 1;
-		while (l < h)
-		{
-			m = l + ((h - l) >> 1);
-			if (a[m] < x)
-				l = m + 1;
-			else
-				h = m;
-		}
-		
-		if ((l <= max) && (a[l] == x))
-			return l;
-		else
-			return ~l;
 	}
 }
