@@ -16,19 +16,19 @@ NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FO
 DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT
 OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
-package de.polygonal.ds.util;
+package de.polygonal.ds;
 
 import haxe.ds.StringMap;
 
 /**
-	<h3>A helper class for converting an xml string into a TreeNode data structure</h3>
+	<h3>A helper class for working with trees.</h3>
 **/
-class XmlToTree
+class TreeUtil
 {
 	 /**
 		 Converts `xmlStr` to a `Treenode` structure.
 	 **/
-	public static function toTreeNode(xmlStr:String):TreeNode<XmlNode>
+	public static function ofXml(xmlStr:String):TreeNode<XmlNode>
 	{
 		var stack = new Array<Dynamic>();
 		var top = 1;
