@@ -62,8 +62,8 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	var mSize:Int;
 	var mIterator:HeapIterator<T>;
 	
-	#if (debug && flash)
-	var mMap:HashMap<T, Bool>;
+	#if debug
+	var mMap:haxe.ds.ObjectMap<T, Bool>;
 	#end
 	
 	/**
@@ -80,8 +80,8 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 		this.maxSize = -1;
 		#end
 		
-		#if (debug && flash)
-		mMap = new HashMap<T, Bool>();
+		#if debug
+		mMap = new haxe.ds.ObjectMap<T, Bool>();
 		#end
 		
 		if (reservedSize > 0)
@@ -112,8 +112,8 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	{
 		if (mData.length - 1 == size()) return;
 		
-		#if (debug && flash)
-		mMap.clear();
+		#if debug
+		mMap = new haxe.ds.ObjectMap<T, Bool>();
 		#end
 		
 		var tmp = mData;
@@ -123,7 +123,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 		{
 			set(i, tmp[i]);
 			
-			#if (debug && flash)
+			#if debug
 			mMap.set(tmp[i], true);
 			#end
 		}
@@ -198,12 +198,10 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	{
 		assert(x != null, "x is null");
 		
-		#if (debug && flash)
-		assert(!mMap.hasKey(x), "x already exists");
-		mMap.set(x, true);
-		#end
 		#if debug
 		if (maxSize != -1) assert(size() <= maxSize, 'size equals max size ($maxSize)');
+		assert(!mMap.exists(x), "x already exists");
+		mMap.set(x, true);
 		#end
 		
 		set(++mSize, x);
@@ -224,8 +222,8 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 		
 		var x = get(1);
 		
-		#if (debug && flash)
-		mMap.clr(x);
+		#if debug
+		mMap.remove(x);
 		#end
 		
 		set(1, get(mSize));
@@ -241,9 +239,9 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	**/
 	public function replace(x:T)
 	{
-		#if (debug && flash)
-		assert(!mMap.hasKey(x), "x already exists");
-		mMap.clr(get(1));
+		#if debug
+		assert(!mMap.exists(x), "x already exists");
+		mMap.remove(get(1));
 		mMap.set(x, true);
 		#end
 		
@@ -262,8 +260,8 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	**/
 	public function change(x:T, hint:Int)
 	{
-		#if (debug && flash)
-		assert(mMap.hasKey(x), "x does not exist");
+		#if debug
+		assert(mMap.exists(x), "x does not exist");
 		#end
 		
 		if (hint >= 0)
@@ -425,8 +423,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 			mIterator = null;
 		}
 		
-		#if (debug && flash)
-		mMap.free();
+		#if debug
 		mMap = null;
 		#end
 	}
@@ -458,9 +455,9 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 		{
 			assert(x != null, "x is null");
 			
-			#if (debug && flash)
-			assert(mMap.hasKey(x), "x does not exist");
-			mMap.clr(x);
+			#if debug
+			assert(mMap.exists(x), "x does not exist");
+			mMap.remove(x);
 			#end
 			
 			if (x.position == 1)
@@ -484,8 +481,8 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	**/
 	inline public function clear(purge = false)
 	{
-		#if (debug && flash)
-		mMap.clear();
+		#if debug
+		mMap = new haxe.ds.ObjectMap<T, Bool>();
 		#end
 		
 		if (purge)
@@ -572,7 +569,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 			{
 				copy.set(i, get(i));
 				
-				#if (debug && flash)
+				#if debug
 				copy.mMap.set(get(i), true);
 				#end
 			}
@@ -590,7 +587,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 				c.position = e.position;
 				copy.set(i, untyped c);
 				
-				#if (debug && flash)
+				#if debug
 				copy.mMap.set(untyped c, true);
 				#end
 			}
@@ -604,7 +601,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 				c.position = e.position;
 				copy.set(i, c);
 				
-				#if (debug && flash)
+				#if debug
 				copy.mMap.set(c, true);
 				#end
 			}
