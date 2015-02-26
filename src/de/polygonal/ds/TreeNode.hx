@@ -842,7 +842,7 @@ class TreeNode<T> implements Collection<T>
 		The first argument holds a reference to the current node, the second arguments stores the preflight flag and the third argument stores custom data specified by the `userData` parameter (default is null).
 		Once `process` returns false, the traversal stops immediately and no further nodes are examined.
 		If omitted, element.`visit()` is used instead.
-		@param userData custom data that is passed to every visited node via `process` or element.`visit()`. If omitted, null is used.
+		@param userData custom data that is passed to every visited node via `process` or element.`visit()`.
 		@param preflight if true, an extra traversal is performed before the actual traversal runs.
 		The first pass visits all elements and calls element.`visit()` with the `preflight` parameter set to true.
 		In this pass the return value determines whether the element (and all its children) will be processed (true) or
@@ -852,8 +852,7 @@ class TreeNode<T> implements Collection<T>
 		@param iterative if true, an iterative traversal is used (default traversal style is recursive).
 		@return this node.
 	**/
-	public function preorder(process:TreeNode<T>->Bool->Dynamic->Bool = null,
-		userData:Dynamic = null, preflight:Bool = false, iterative:Bool = false):TreeNode<T>
+	public function preorder(process:TreeNode<T>->Bool->Dynamic->Bool, userData:Dynamic, preflight:Bool = false, iterative:Bool = false):TreeNode<T>
 	{
 		if (parent == null && children == null)
 		{
@@ -1101,11 +1100,11 @@ class TreeNode<T> implements Collection<T>
 		Once `process` returns false, the traversal stops immediately and no further nodes are examined.
 		If omitted, element.`visit()` is used instead.
 		<warn>In this case all elements have to implement `Visitable`.</warn>
-		@param userData custom data that is passed to every visited node via `process` or element.`visit()`. If omitted, null is used.
+		@param userData custom data that is passed to every visited node via `process` or element.`visit()`.
 		@param iterative if true, an iterative traversal is used (default traversal style is recursive).
 		@return this node.
 	**/
-	public function postorder(process:TreeNode<T>->Dynamic->Bool = null, userData:Dynamic = null, iterative = false):TreeNode<T>
+	public function postorder(process:TreeNode<T>->Dynamic->Bool, userData:Dynamic, iterative = false):TreeNode<T>
 	{
 		if (parent == null && children == null)
 		{
@@ -1275,10 +1274,10 @@ class TreeNode<T> implements Collection<T>
 		Once `process` returns false, the traversal stops immediately and no further nodes are examined.
 		If omitted, element.`visit()` is used instead.
 		<warn>In this case all elements have to implement `Visitable`.</warn>
-		@param userData custom data that is passed to every visited node via `process` or element.`visit()`. If omitted, null is used.
+		@param userData custom data that is passed to every visited node via `process` or element.`visit()`.
 		@return this node.
 	**/
-	public function levelorder(process:TreeNode<T>->Dynamic->Bool = null, userData:Dynamic = null):TreeNode<T>
+	public function levelorder(process:TreeNode<T>->Dynamic->Bool, userData:Dynamic):TreeNode<T>
 	{
 		if (children == null)
 		{
@@ -1405,7 +1404,7 @@ class TreeNode<T> implements Collection<T>
 			}
 			s += "{ " + node.print() + " }\n";
 			return true;
-		});
+		}, null);
 		return s;
 	}
 	
@@ -2074,7 +2073,7 @@ class TreeNode<T> implements Collection<T>
 	{
 		var a:Array<T> = ArrayUtil.alloc(size());
 		var i = 0;
-		preorder(function(node:TreeNode<T>, _, _):Bool { a[i++] = node.val; return true; });
+		preorder(function(node:TreeNode<T>, _, _):Bool { a[i++] = node.val; return true; }, null);
 		return a;
 	}
 	
@@ -2087,7 +2086,7 @@ class TreeNode<T> implements Collection<T>
 	{
 		var v = new Vector<T>(size());
 		var i = 0;
-		preorder(function(node:TreeNode<T>, _, _):Bool { v[i++] = node.val; return true; });
+		preorder(function(node:TreeNode<T>, _, _):Bool { v[i++] = node.val; return true; }, null);
 		return v;
 	}
 	
