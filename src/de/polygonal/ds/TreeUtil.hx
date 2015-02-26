@@ -23,6 +23,7 @@ import haxe.ds.StringMap;
 /**
 	<h3>A helper class for working with trees.</h3>
 **/
+@:access(de.polygonal.ds.XmlNode)
 class TreeUtil
 {
 	 /**
@@ -40,7 +41,7 @@ class TreeUtil
 		info.treeNode = tree;
 		
 		for (attr in xml.attributes())
-			Reflect.setField(info.attributes, attr, xml.get(attr));
+			Reflect.setField(info.mAttributes, attr, xml.get(attr));
 		
 		stack.push(xml);
 		stack.push(tree);
@@ -59,7 +60,7 @@ class TreeUtil
 					var info = new XmlNode(i.nodeName);
 					
 					for (attr in i.attributes())
-						Reflect.setField(info.attributes, attr, i.get(attr));
+						Reflect.setField(info.mAttributes, attr, i.get(attr));
 					
 					var firstChild = i.firstChild();
 					if (firstChild != null)
