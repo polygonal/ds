@@ -789,6 +789,7 @@ class IntHashTable<T> implements Map<Int, T>
 		
 		var tmp = new Vector<T>(newSize);
 		for (i in 0...oldSize) tmp[i] = mVals[i];
+		mVals = tmp;
 		
 		mSizeLevel++;
 	}
