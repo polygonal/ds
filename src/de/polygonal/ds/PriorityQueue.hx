@@ -19,6 +19,7 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 package de.polygonal.ds;
 
 import de.polygonal.ds.error.Assert.assert;
+import haxe.ds.ObjectMap;
 
 /**
 	<h3>A priority queue is heap but with a simplified API for managing prioritized data.</h3>
@@ -63,8 +64,8 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	var mInverse:Bool;
 	var mIterator:PriorityQueueIterator<T>;
 	
-	#if (debug && flash)
-	var mMap:HashMap<T, Bool>;
+	#if debug
+	var mMap:haxe.ds.ObjectMap<T, Bool>;
 	#end
 	
 	/**
@@ -100,8 +101,8 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 		set(0, cast null);
 		mSize = 0;
 		
-		#if (debug && flash)
-		mMap = new HashMap<T, Bool>();
+		#if debug
+		mMap = new haxe.ds.ObjectMap<T, Bool>();
 		#end
 		
 		key = HashKey.next();
@@ -204,10 +205,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 		if (maxSize != -1)
 			assert(size() <= maxSize, 'size equals max size ($maxSize)');
 		assert(x != null, "element is null");
-		#end
-		
-		#if (debug && flash)
-		assert(!mMap.hasKey(x), "element already exists");
+		assert(!mMap.exists(x), "element already exists");
 		mMap.set(x, true);
 		#end
 		
@@ -230,8 +228,8 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 		set(1, get(mSize));
 		downheap(1);
 		
-		#if (debug && flash)
-		mMap.clr(x);
+		#if debug
+		mMap.remove(x);
 		#end
 		
 		mSize--;
@@ -249,8 +247,8 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	{
 		assert(size() > 0, "priority queue is empty");
 		
-		#if (debug && flash)
-		assert(mMap.hasKey(x), "unknown element");
+		#if debug
+		assert(mMap.exists(x), "unknown element");
 		#end
 		
 		var oldPriority = x.priority;
@@ -359,8 +357,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 			mIterator = null;
 		}
 		
-		#if (debug && flash)
-		mMap.free();
+		#if debug
 		mMap = null;
 		#end
 	}
@@ -392,9 +389,9 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 		{
 			assert(x != null, "x is null");
 			
-			#if (debug && flash)
-			assert(mMap.hasKey(x), "x does not exist");
-			mMap.clr(x);
+			#if debug
+			assert(mMap.exists(x), "x does not exist");
+			mMap.remove(x);
 			#end
 			
 			if (x.position == 1)
@@ -423,8 +420,8 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 			for (i in 1...mData.length) set(i, cast null);
 		}
 		
-		#if (debug && flash)
-		mMap.clear(true);
+		#if debug
+		mMap = new haxe.ds.ObjectMap<T, Bool>();
 		#end
 		
 		mSize = 0;
@@ -507,7 +504,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 			{
 				copy.set(i, get(i));
 				
-				#if (debug && flash)
+				#if debug
 				copy.mMap.set(get(i), true);
 				#end
 			}
@@ -526,7 +523,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 				c.priority = e.priority;
 				copy.set(i, untyped c);
 				
-				#if (debug && flash)
+				#if debug
 				copy.mMap.set(untyped c, true);
 				#end
 			}
@@ -541,7 +538,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 				c.priority = e.priority;
 				copy.set(i, c);
 				
-				#if (debug && flash)
+				#if debug
 				copy.mMap.set(e, true);
 				#end
 			}
