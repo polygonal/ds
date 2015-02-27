@@ -17,7 +17,7 @@ class TestArrayedStack extends haxe.unit.TestCase
 	
 	function testFree()
 	{
-		var s:ArrayedStack<Int> = new ArrayedStack<Int>(5);
+		var s:ArrayedStack<Int> = new ArrayedStack<Int>();
 		for (i in 0...3) s.push(i);
 		s.free();
 		assertTrue(true);
@@ -25,7 +25,7 @@ class TestArrayedStack extends haxe.unit.TestCase
 	
 	function testDup()
 	{
-		var s:ArrayedStack<Int> = new ArrayedStack<Int>(5);
+		var s:ArrayedStack<Int> = new ArrayedStack<Int>();
 		for (i in 0...2) s.push(i);
 		s.dup();
 		assertEquals(3, s.size());
@@ -36,13 +36,13 @@ class TestArrayedStack extends haxe.unit.TestCase
 	
 	function testExchange()
 	{
-		var s:ArrayedStack<Int> = new ArrayedStack<Int>(5);
+		var s:ArrayedStack<Int> = new ArrayedStack<Int>();
 		s.push(0);
 		s.push(1);
 		s.exchange();
 		assertEquals(0, s.top());
 		assertEquals(1, s.get(s.size() - 2));
-		var s:ArrayedStack<Int> = new ArrayedStack<Int>(5);
+		var s:ArrayedStack<Int> = new ArrayedStack<Int>();
 		s.push(0);
 		s.push(1);
 		s.push(2);
@@ -53,7 +53,7 @@ class TestArrayedStack extends haxe.unit.TestCase
 	
 	function testRotRight()
 	{
-		var s:ArrayedStack<Int> = new ArrayedStack<Int>(5);
+		var s:ArrayedStack<Int> = new ArrayedStack<Int>();
 		s.push(0);
 		s.push(1);
 		s.push(2);
@@ -76,7 +76,7 @@ class TestArrayedStack extends haxe.unit.TestCase
 		assertEquals(3, s.get(1));
 		assertEquals(2, s.get(0));
 		
-		var s:ArrayedStack<Int> = new ArrayedStack<Int>(5);
+		var s:ArrayedStack<Int> = new ArrayedStack<Int>();
 		s.push(0);
 		s.push(1);
 		s.push(2);
@@ -110,7 +110,7 @@ class TestArrayedStack extends haxe.unit.TestCase
 	
 	function testRotLeft()
 	{
-		var s:ArrayedStack<Int> = new ArrayedStack<Int>(5);
+		var s:ArrayedStack<Int> = new ArrayedStack<Int>();
 		s.push(0);
 		s.push(1);
 		s.push(2);
@@ -133,7 +133,7 @@ class TestArrayedStack extends haxe.unit.TestCase
 		assertEquals(4, s.get(1));
 		assertEquals(3, s.get(0));
 		
-		var s:ArrayedStack<Int> = new ArrayedStack<Int>(5);
+		var s:ArrayedStack<Int> = new ArrayedStack<Int>();
 		s.push(0);
 		s.push(1);
 		s.push(2);
@@ -167,7 +167,7 @@ class TestArrayedStack extends haxe.unit.TestCase
 	
 	function testRemove()
 	{
-		var s = new ArrayedStack<Int>(5);
+		var s = new ArrayedStack<Int>();
 		var values = [1, 2, 3, 4, 5];
 		for (i in values) s.push(i);
 		var k = 5;
@@ -182,7 +182,7 @@ class TestArrayedStack extends haxe.unit.TestCase
 	
 	function testReserve()
 	{
-		var stack = new ArrayedStack<Int>(0, 20);
+		var stack = new ArrayedStack<Int>(16, 20);
 		for (i in 0...10) stack.push(i);
 		stack.reserve(20);
 		assertEquals(10, stack.size());
@@ -192,7 +192,8 @@ class TestArrayedStack extends haxe.unit.TestCase
 	#if debug
 	function testMaxSize()
 	{
-		var stack = new ArrayedStack<Int>(0, 3);
+		var stack = new ArrayedStack<Int>(64, 3);
+		
 		stack.push(0);
 		stack.push(1);
 		stack.push(2);
@@ -208,7 +209,8 @@ class TestArrayedStack extends haxe.unit.TestCase
 		}
 		
 		assertTrue(failed);
-		var stack = new ArrayedStack<Int>(0, 3);
+		
+		var stack = new ArrayedStack<Int>(64, 3);
 		stack.push(0);
 		stack.push(1);
 		stack.push(2);
@@ -227,15 +229,9 @@ class TestArrayedStack extends haxe.unit.TestCase
 	}
 	#end
 	
-	function testStack()
-	{
-		var s:Stack<Int> = new ArrayedStack<Int>(5);
-		assertTrue(true);
-	}
-	
 	function testPack()
 	{
-		var l = new de.polygonal.ds.ArrayedStack<Int>();
+		/*var l = new de.polygonal.ds.ArrayedStack<Int>();
 		l.push(0);
 		l.push(1);
 		l.push(2);
@@ -246,7 +242,7 @@ class TestArrayedStack extends haxe.unit.TestCase
 		assertEquals(1, l._get(1));
 		assertEquals(2, l._get(2));
 		
-		l.pack();
+		l.shrinkToFit();*/
 		
 		//assertEquals(#if flash 0 #else null #end, l._get(0));
 		//assertEquals(#if flash 0 #else null #end, l._get(1));
@@ -311,7 +307,7 @@ class TestArrayedStack extends haxe.unit.TestCase
 		{
 			return val * i;
 		}
-		stack.walk(f);
+		stack.iter(f);
 		for (i in 0...10) assertEquals(i * i , stack.get(i));
 	}
 	
@@ -464,6 +460,7 @@ class TestArrayedStack extends haxe.unit.TestCase
 	{
 		var stack = getStack();
 		for (i in 0...10) stack.push(i);
+		
 		var copy:de.polygonal.ds.ArrayedStack<Int> = cast stack.clone(true);
 		for (i in 0...10) assertEquals(copy.get(i), stack.get(i));
 		assertEquals(10, copy.size());
@@ -475,7 +472,7 @@ class TestArrayedStack extends haxe.unit.TestCase
 		assertEquals(true, true);
 	}
 	
-	function getStack(size = -1)
+	function getStack(size = -1):ArrayedStack<Int>
 	{
 		if (size != -1)
 			return new de.polygonal.ds.ArrayedStack<Int>(size);

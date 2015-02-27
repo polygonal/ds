@@ -1,15 +1,15 @@
 ﻿import de.polygonal.ds.Compare;
-import de.polygonal.ds.DLL;
-import de.polygonal.ds.DLLNode;
+import de.polygonal.ds.Dll;
+import de.polygonal.ds.DllNode;
 import de.polygonal.ds.ListSet;
 import de.polygonal.ds.Set;
 
-@:access(de.polygonal.ds.DLL)
-class TestDLL extends haxe.unit.TestCase
+@:access(de.polygonal.ds.Dll)
+class TestDll extends haxe.unit.TestCase
 {
 	function testPool()
 	{
-		var l = new DLL<Int>(20);
+		var l = new Dll<Int>(20);
 		
 		for (i in 0...10) l.append(i);
 		for (i in 0...10) l.removeHead();
@@ -37,7 +37,7 @@ class TestDLL extends haxe.unit.TestCase
 	
 	function testJoin()
 	{
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		for (i in 0...10) list.append(i);
 		assertEquals(list.join(''), '0123456789');
 	}
@@ -45,7 +45,7 @@ class TestDLL extends haxe.unit.TestCase
 	#if debug
 	function testMaxSize()
 	{
-		var list = new DLL<Int>(3, 3);
+		var list = new Dll<Int>(3, 3);
 		list.append(0);
 		list.append(1);
 		list.append(2);
@@ -60,7 +60,7 @@ class TestDLL extends haxe.unit.TestCase
 		}
 		assertTrue(failed);
 		
-		var list = new DLL<Int>(3, 3);
+		var list = new Dll<Int>(3, 3);
 		list.append(0);
 		list.append(1);
 		list.append(2);
@@ -75,7 +75,7 @@ class TestDLL extends haxe.unit.TestCase
 		}
 		assertTrue(failed);
 		
-		var list = new DLL<Int>(3, 3);
+		var list = new Dll<Int>(3, 3);
 		list.append(0);
 		list.append(1);
 		list.append(2);
@@ -90,7 +90,7 @@ class TestDLL extends haxe.unit.TestCase
 		}
 		assertTrue(failed);
 		
-		var list = new DLL<Int>(3, 3);
+		var list = new Dll<Int>(3, 3);
 		list.append(0);
 		list.append(1);
 		list.append(2);
@@ -105,11 +105,11 @@ class TestDLL extends haxe.unit.TestCase
 		}
 		assertTrue(failed);
 		
-		var list1 = new DLL<Int>(3, 3);
+		var list1 = new Dll<Int>(3, 3);
 		list1.append(0);
 		list1.append(1);
 		list1.append(2);
-		var list2 = new DLL<Int>(3, 3);
+		var list2 = new Dll<Int>(3, 3);
 		list2.append(0);
 		list2.append(1);
 		list2.append(2);
@@ -124,7 +124,7 @@ class TestDLL extends haxe.unit.TestCase
 		}
 		assertTrue(failed);
 		
-		var list = new DLL<Int>(3, 3);
+		var list = new Dll<Int>(3, 3);
 		list.append(0);
 		list.append(1);
 		list.append(2);
@@ -143,7 +143,7 @@ class TestDLL extends haxe.unit.TestCase
 	
 	function testFill()
 	{
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		for (i in 0...10) list.append(i);
 		
 		list.fill(0);
@@ -155,7 +155,7 @@ class TestDLL extends haxe.unit.TestCase
 			n = n.next;
 		}
 		
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		for (i in 0...10) list.append(i);
 		
 		list.fill(0, 5);
@@ -175,7 +175,7 @@ class TestDLL extends haxe.unit.TestCase
 	
 	function testAssign()
 	{
-		var list = new DLL<E>();
+		var list = new Dll<E>();
 		for (i in 0...10) list.append(null);
 		
 		list.assign(E, [0]);
@@ -187,7 +187,7 @@ class TestDLL extends haxe.unit.TestCase
 			n = n.next;
 		}
 		
-		var list = new DLL<E>();
+		var list = new Dll<E>();
 		for (i in 0...10) list.append(null);
 		
 		list.assign(E, [0], 5);
@@ -205,7 +205,7 @@ class TestDLL extends haxe.unit.TestCase
 			n = n.next;
 		}
 		
-		var list = new DLL<E>();
+		var list = new Dll<E>();
 		for (i in 0...10) list.append(null);
 		
 		list.assign(E, [5], 10);
@@ -220,7 +220,7 @@ class TestDLL extends haxe.unit.TestCase
 	
 	function testShuffle()
 	{
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		for (i in 0...10) list.append(i);
 		list.shuffle(null);
 		var s:Set<Int> = new ListSet<Int>();
@@ -230,7 +230,7 @@ class TestDLL extends haxe.unit.TestCase
 	
 	function testGetNodeAt()
 	{
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		for (i in 0...10) list.append(i);
 		assertEquals(list.getNodeAt(0).val, 0);
 		assertEquals(list.getNodeAt(9).val, 9);
@@ -238,7 +238,7 @@ class TestDLL extends haxe.unit.TestCase
 	
 	function testInsertAfter()
 	{
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		list.append(0);
 		
 		var newNode = list.insertAfter(list.head, 1);
@@ -255,7 +255,7 @@ class TestDLL extends haxe.unit.TestCase
 	
 	function testInsertBefore()
 	{
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		list.append(1);
 		list.append(2);
 		list.insertBefore(list.tail, 0);
@@ -269,7 +269,7 @@ class TestDLL extends haxe.unit.TestCase
 	{
 		for (i in 1...10)
 		{
-			var list = new DLL<Int>();
+			var list = new Dll<Int>();
 			for (j in 0...i) list.append(j);
 			var k = i;
 			list.reverse();
@@ -279,7 +279,7 @@ class TestDLL extends haxe.unit.TestCase
 	
 	function testNodeOf()
 	{
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		var data:Array<Int> = [2, 3, 4, 9, 5, 1, 7, 6, 8, 0];
 		for (i in 0...10) list.append(data[i]);
 		
@@ -295,11 +295,11 @@ class TestDLL extends haxe.unit.TestCase
 	
 	function testMerge()
 	{
-		var list1 = new DLL<Int>();
+		var list1 = new Dll<Int>();
 		var data:Array<Int> = [0, 1, 2, 3, 4];
 		for (i in 0...data.length) list1.append(data[i]);
 		
-		var list2 = new DLL<Int>();
+		var list2 = new Dll<Int>();
 		var data:Array<Int> = [5, 6, 7, 8, 9];
 		for (i in 0...data.length) list2.append(data[i]);
 		
@@ -312,15 +312,15 @@ class TestDLL extends haxe.unit.TestCase
 	
 	function testConcat()
 	{
-		var list1 = new DLL<Int>();
+		var list1 = new Dll<Int>();
 		var data:Array<Int> = [0, 1, 2, 3, 4];
 		for (i in 0...data.length) list1.append(data[i]);
 		
-		var list2 = new DLL<Int>();
+		var list2 = new Dll<Int>();
 		var data:Array<Int> = [5, 6, 7, 8, 9];
 		for (i in 0...data.length) list2.append(data[i]);
 		
-		var list3 = new DLL<Int>();
+		var list3 = new Dll<Int>();
 		list3 = list3.concat(list1);
 		list3 = list3.concat(list2);
 		
@@ -331,7 +331,7 @@ class TestDLL extends haxe.unit.TestCase
 	
 	function testLastNodeOf()
 	{
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		var data:Array<Int> = [2, 3, 4, 9, 5, 1, 7, 6, 8, 0];
 		for (i in 0...10) list.append(data[i]);
 		
@@ -343,7 +343,7 @@ class TestDLL extends haxe.unit.TestCase
 		assertTrue(node != null);
 		assertEquals(5, node.val);
 		
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		list.append(0);
 		list.append(1);
 		list.append(2);
@@ -359,7 +359,7 @@ class TestDLL extends haxe.unit.TestCase
 	
 	function testInsertionSort()
 	{
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		list.append(1);
 		list.append(2);
 		list.sort(Compare.compareNumberRise, true);
@@ -370,7 +370,7 @@ class TestDLL extends haxe.unit.TestCase
 		assertFalse(list.head.hasPrev());
 		assertFalse(list.tail.hasNext());
 		
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		list.append(2);
 		list.append(1);
 		list.sort(Compare.compareNumberRise, true);
@@ -381,7 +381,7 @@ class TestDLL extends haxe.unit.TestCase
 		assertFalse(list.head.hasPrev());
 		assertFalse(list.tail.hasNext());
 		
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		list.append(1);
 		list.append(2);
 		list.append(3);
@@ -395,7 +395,7 @@ class TestDLL extends haxe.unit.TestCase
 		assertFalse(list.head.hasPrev());
 		assertFalse(list.tail.hasNext());
 		
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		list.append(3);
 		list.append(2);
 		list.append(1);
@@ -409,7 +409,7 @@ class TestDLL extends haxe.unit.TestCase
 		assertFalse(list.head.hasPrev());
 		assertFalse(list.tail.hasNext());
 		
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		list.append(3);
 		list.append(1);
 		list.append(2);
@@ -423,7 +423,7 @@ class TestDLL extends haxe.unit.TestCase
 		assertFalse(list.head.hasPrev());
 		assertFalse(list.tail.hasNext());
 		
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		list.append(4);
 		list.append(3);
 		list.append(2);
@@ -441,7 +441,7 @@ class TestDLL extends haxe.unit.TestCase
 	function testSortTail()
 	{
 		//insertion sort
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		
 		list.append(1);
 		list.append(3);
@@ -473,7 +473,7 @@ class TestDLL extends haxe.unit.TestCase
 		assertFalse(list.tail.hasNext());
 		
 		//merge sort
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		
 		list.append(1);
 		list.append(3);
@@ -507,7 +507,7 @@ class TestDLL extends haxe.unit.TestCase
 	
 	function testSort()
 	{
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		var data:Array<Int> = [2, 3, 4, 9, 5, 1, 7, 6, 8, 0];
 		for (i in 0...10) list.append(data[i]);
 		list.sort(Compare.compareNumberRise, false);
@@ -522,7 +522,7 @@ class TestDLL extends haxe.unit.TestCase
 		}
 		assertEquals(0, c);
 		
-		var list = new DLL<EComparable>();
+		var list = new Dll<EComparable>();
 		var data:Array<Int> = [2, 3, 4, 9, 5, 1, 7, 6, 8, 0];
 		for (i in 0...10) list.append(new EComparable(data[i]));
 		list.sort(null, false);
@@ -536,7 +536,7 @@ class TestDLL extends haxe.unit.TestCase
 		}
 		assertEquals(10, c);
 		
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		
 		var data:Array<Int> = [2, 3, 4, 9, 5, 1, 7, 6, 8, 0];
 		for (i in 0...10) list.append(data[i]);
@@ -565,7 +565,7 @@ class TestDLL extends haxe.unit.TestCase
 		assertFalse(list.head.hasPrev());
 		assertFalse(list.tail.hasNext());
 		
-		var list:DLL<EComparable> = new DLL<EComparable>();
+		var list:Dll<EComparable> = new Dll<EComparable>();
 		var data:Array<Int> = [2, 3, 4, 9, 5, 1, 7, 6, 8, 0];
 		for (i in 0...10) list.append(new EComparable(data[i]));
 		
@@ -576,7 +576,7 @@ class TestDLL extends haxe.unit.TestCase
 		assertFalse(list.head.hasPrev());
 		assertFalse(list.tail.hasNext());
 		
-		var list:DLL<EComparable> = new DLL<EComparable>();
+		var list:Dll<EComparable> = new Dll<EComparable>();
 		var data:Array<Int> = [2, 3, 4, 9, 5, 1, 7, 6, 8, 0];
 		for (i in 0...10) list.append(new EComparable(data[i]));
 		
@@ -586,7 +586,7 @@ class TestDLL extends haxe.unit.TestCase
 		assertFalse(list.head.hasPrev());
 		assertFalse(list.tail.hasNext());
 		
-		var list:DLL<EComparable> = new DLL<EComparable>();
+		var list:Dll<EComparable> = new Dll<EComparable>();
 		var data:Array<Int> = [2, 3, 4, 9, 5, 1, 7, 6, 8, 0];
 		for (i in 0...10) list.append(new EComparable(data[i]));
 		
@@ -605,7 +605,7 @@ class TestDLL extends haxe.unit.TestCase
 	
 	function testIterator()
 	{
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		for (i in 0...10) list.append(i);
 		var j:Int = 0;
 		for (i in list) assertEquals(i, j++);
@@ -626,7 +626,7 @@ class TestDLL extends haxe.unit.TestCase
 	{
 		for (i in 0...5)
 		{
-			var list = new DLL<Int>();
+			var list = new Dll<Int>();
 			var set = new de.polygonal.ds.ListSet<Int>();
 			for (j in 0...5)
 			{
@@ -652,7 +652,7 @@ class TestDLL extends haxe.unit.TestCase
 		
 		for (i in 0...5)
 		{
-			var list = new DLL<Int>();
+			var list = new Dll<Int>();
 			var set = new de.polygonal.ds.ListSet<Int>();
 			for (j in 0...i)
 			{
@@ -675,20 +675,20 @@ class TestDLL extends haxe.unit.TestCase
 	
 	function testContains()
 	{
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		for (i in 0...10) list.append(i);
 		for (i in 0...10) assertTrue(list.contains(i));
 	}
 	
 	function testClone0()
 	{
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		var copy = cast list.clone(true);
 		assertEquals(0, copy.size());
 		assertEquals(null, copy.head);
 		assertEquals(null, copy.tail);
 		
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		list.close();
 		var copy = cast list.clone(true);
 		assertEquals(0, copy.size());
@@ -698,17 +698,17 @@ class TestDLL extends haxe.unit.TestCase
 	
 	function testClone1()
 	{
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		list.append(0);
-		var copy:DLL<Int> = cast list.clone(true);
+		var copy:Dll<Int> = cast list.clone(true);
 		assertEquals(1, copy.size());
 		assertEquals(0, copy.head.val);
 		assertEquals(0, copy.tail.val);
 		
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		list.close();
 		list.append(0);
-		var copy:DLL<Int> = cast list.clone(true);
+		var copy:Dll<Int> = cast list.clone(true);
 		assertEquals(1, copy.size());
 		assertEquals(0, copy.head.val);
 		assertEquals(0, copy.tail.val);
@@ -717,20 +717,20 @@ class TestDLL extends haxe.unit.TestCase
 	
 	function testClone2()
 	{
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		list.append(0);
 		list.append(1);
-		var copy:DLL<Int> = cast list.clone(true);
+		var copy:Dll<Int> = cast list.clone(true);
 		assertEquals(2, copy.size());
 		assertEquals(0, copy.head.val);
 		assertEquals(1, copy.tail.val);
 		assertEquals(0, copy.tail.prev.val);
 		
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		list.close();
 		list.append(0);
 		list.append(1);
-		var copy:DLL<Int> = cast list.clone(true);
+		var copy:Dll<Int> = cast list.clone(true);
 		assertEquals(2, copy.size());
 		assertEquals(0, copy.head.val);
 		assertEquals(1, copy.tail.val);
@@ -740,10 +740,10 @@ class TestDLL extends haxe.unit.TestCase
 	
 	function testClone3()
 	{
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		for (i in 0...10) list.append(i);
 		
-		var copy:DLL<Int> = cast list.clone(true);
+		var copy:Dll<Int> = cast list.clone(true);
 		var j = 0;
 		for (i in copy) assertEquals(i, j++);
 		
@@ -781,13 +781,13 @@ class TestDLL extends haxe.unit.TestCase
 	
 	function testArray()
 	{
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		for (i in 0...10) list.append(i);
 		var a:Array<Int> = list.toArray();
 		for (i in a) assertEquals(a[i], i);
 		
 		#if flash
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		for (i in 0...10) list.append(i);
 		var a = list.toVector();
 		for (i in a) assertEquals(a[i], i);
@@ -796,14 +796,14 @@ class TestDLL extends haxe.unit.TestCase
 	
 	function testClear()
 	{
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		for (i in 0...10) list.append(i);
 		list.clear();
 		assertEquals(list.size(), 0);
 		assertEquals(list.head, null);
 		assertEquals(list.tail, null);
 		
-		var list = new DLL<Int>(10);
+		var list = new Dll<Int>(10);
 		for (i in 0...10) list.append(i);
 		for (i in 0...10) list.removeHead();
 		for (i in 0...10) list.append(i);
@@ -823,7 +823,7 @@ class TestDLL extends haxe.unit.TestCase
 	
 	function testAppend()
 	{
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		
 		assertEquals(list.size(), 0);
 		
@@ -841,7 +841,7 @@ class TestDLL extends haxe.unit.TestCase
 		assertEquals(list.head.val, 0);
 		assertEquals(list.tail.val, 9);
 		
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		list.append(0);
 		assertEquals(list.head.val, 0);
 		assertEquals(list.tail.val, 0);
@@ -858,7 +858,7 @@ class TestDLL extends haxe.unit.TestCase
 	
 	function testPrepend()
 	{
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		assertEquals(list.size(), 0);
 		
 		for (i in 0...10) list.prepend(i);
@@ -877,7 +877,7 @@ class TestDLL extends haxe.unit.TestCase
 	
 	function testRemove()
 	{
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		
 		assertEquals(list.size(), 0);
 		
@@ -898,7 +898,7 @@ class TestDLL extends haxe.unit.TestCase
 		assertEquals(list.head, null);
 		assertEquals(list.tail, null);
 		
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		assertEquals(list.size(), 0);
 		for (i in 0...10) list.append(0);
 		assertEquals(true, list.remove(0));
@@ -907,7 +907,7 @@ class TestDLL extends haxe.unit.TestCase
 	
 	function testPop()
 	{
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		assertEquals(list.size(), 0);
 		
 		for (i in 0...10) list.append(i);
@@ -926,7 +926,7 @@ class TestDLL extends haxe.unit.TestCase
 	
 	function testShift()
 	{
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		
 		assertEquals(list.size(), 0);
 		for (i in 0...10) list.append(i);
@@ -945,7 +945,7 @@ class TestDLL extends haxe.unit.TestCase
 	
 	function testShiftUp()
 	{
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		assertEquals(list.size(), 0);
 		for (i in 0...10) list.append(i);
 		list.shiftUp();
@@ -954,7 +954,7 @@ class TestDLL extends haxe.unit.TestCase
 	
 	function testPopDown()
 	{
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		assertEquals(list.size(), 0);
 		for (i in 0...10) list.append(i);
 		list.popDown();
@@ -963,8 +963,8 @@ class TestDLL extends haxe.unit.TestCase
 	
 	function testPrependUnmanaged()
 	{
-		var a = new DLLNode<Int>(0, null);
-		var b = new DLLNode<Int>(1, null);
+		var a = new DllNode<Int>(0, null);
+		var b = new DllNode<Int>(1, null);
 		var head = b.prepend(a);
 		
 		assertTrue(a.prev == null);
@@ -979,8 +979,8 @@ class TestDLL extends haxe.unit.TestCase
 	
 	function testAppendUnmanaged()
 	{
-		var a = new DLLNode<Int>(0, null);
-		var b = new DLLNode<Int>(1, null);
+		var a = new DllNode<Int>(0, null);
+		var b = new DllNode<Int>(1, null);
 		var tail = a.append(b);
 		
 		assertTrue(a.prev == null);
@@ -996,8 +996,8 @@ class TestDLL extends haxe.unit.TestCase
 	
 	function testPrependToUnmanaged()
 	{
-		var a = new DLLNode<Int>(0, null);
-		var b = new DLLNode<Int>(1, null);
+		var a = new DllNode<Int>(0, null);
+		var b = new DllNode<Int>(1, null);
 		var head = a.prependTo(b);
 		
 		assertTrue(a.prev == null);
@@ -1012,8 +1012,8 @@ class TestDLL extends haxe.unit.TestCase
 	
 	function testAppendToUnmanaged()
 	{
-		var a = new DLLNode<Int>(0, null);
-		var b = new DLLNode<Int>(1, null);
+		var a = new DllNode<Int>(0, null);
+		var b = new DllNode<Int>(1, null);
 		var tail = b.appendTo(a);
 		
 		assertTrue(a.prev == null);
@@ -1029,7 +1029,7 @@ class TestDLL extends haxe.unit.TestCase
 	
 	function testCollection()
 	{
-		var c:de.polygonal.ds.Collection<Int> = cast new DLL<Int>();
+		var c:de.polygonal.ds.Collection<Int> = cast new Dll<Int>();
 		assertEquals(true, true);
 	}
 }

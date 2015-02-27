@@ -1,8 +1,8 @@
 ﻿import de.polygonal.core.math.random.ParkMiller;
 import de.polygonal.ds.ArrayConvert;
 import de.polygonal.ds.ArrayUtil;
-import de.polygonal.ds.DA;
-import de.polygonal.ds.DLL;
+import de.polygonal.ds.Da;
+import de.polygonal.ds.Dll;
 import de.polygonal.ds.HashableItem;
 import de.polygonal.ds.IntIntHashTable;
 import de.polygonal.ds.ListSet;
@@ -502,7 +502,7 @@ class TestIntIntHashTable extends haxe.unit.TestCase
 		
 		var K = [17, 25, 10, 2, 8, 24, 30, 3];
 		
-		var keys = new DA<Int>();
+		var keys = new Da<Int>();
 		for (i in 0...K.length)
 		{
 			keys.pushBack(K[i]);
@@ -529,11 +529,14 @@ class TestIntIntHashTable extends haxe.unit.TestCase
 		
 		for (i in 0...100)
 		{
-			var keys = new DA<Int>();
+			var keys = new Da<Int>();
 			for (i in 0...8)
 			{
 				var x = Std.int(seed.random()) % 64;
-				while (keys.contains(x)) x = Std.int(seed.random()) % 64;
+				while (keys.contains(x))
+				{
+					x = Std.int(seed.random()) % 64;
+				}
 				
 				keys.pushBack(x);
 			}
@@ -564,7 +567,7 @@ class TestIntIntHashTable extends haxe.unit.TestCase
 		for (i in 0...100)
 		{
 			j++;
-			var keys = new DA<Int>();
+			var keys = new Da<Int>();
 			for (i in 0...8)
 			{
 				var x = Std.int(seed.random()) % 64;
@@ -728,7 +731,7 @@ class TestIntIntHashTable extends haxe.unit.TestCase
 		var c:IntIntHashTable = cast h.clone(true);
 		
 		var i = 0;
-		var l = new DLL<Int>();
+		var l = new Dll<Int>();
 		for (key in c)
 		{
 			l.append(key);
@@ -744,7 +747,7 @@ class TestIntIntHashTable extends haxe.unit.TestCase
 		assertEquals(8, i);
 	}
 	
-	function testToArrayToDA()
+	function testToArrayToDa()
 	{
 		var h = new IntIntHashTable(8);
 		for (i in 0...8) h.set(i, i);
@@ -789,7 +792,7 @@ class TestIntIntHashTable extends haxe.unit.TestCase
 		assertEquals(0, values.length);
 	}
 	
-	function testToKeyArrayToDA()
+	function testToKeyArrayToDa()
 	{
 		var h = new IntIntHashTable(8);
 		for (i in 0...8) h.set(i, i * 10);
@@ -811,7 +814,7 @@ class TestIntIntHashTable extends haxe.unit.TestCase
 		
 		assertEquals(0, keys.length);
 		
-		var a = h.toKeyDA();
+		var a = h.toKeyDa();
 		
 		var keys = [0, 1, 2, 3, 4, 5, 6, 7];
 		for (i in a)
@@ -878,7 +881,7 @@ class TestIntIntHashTable extends haxe.unit.TestCase
 		var h = new IntIntHashTable(8);
 		for (i in 0...8) h.set(i, i * 10);
 		
-		var set = new DA<Int>();
+		var set = new Da<Int>();
 		for (val in h)
 		{
 			assertFalse(set.contains(val));
@@ -887,7 +890,7 @@ class TestIntIntHashTable extends haxe.unit.TestCase
 		assertEquals(8, set.size());
 		for (i in 0...8) assertTrue(set.contains(i * 10));
 		
-		var set = new DA<Int>();
+		var set = new Da<Int>();
 		for (key in h.keys())
 		{
 			assertFalse(set.contains(key));
@@ -3506,7 +3509,7 @@ class TestIntIntHashTable extends haxe.unit.TestCase
 		ht.clr(resolve(211));
 		
 		var keys = ht.toKeyArray();
-		var da = ArrayConvert.toDA(keys);
+		var da = ArrayConvert.toDa(keys);
 		da.remove(210);
 		
 		ht.clr(resolve(210));

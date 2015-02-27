@@ -1,7 +1,7 @@
 ﻿import de.polygonal.core.math.random.ParkMiller;
 import de.polygonal.ds.ArrayUtil;
-import de.polygonal.ds.DA;
-import de.polygonal.ds.DLL;
+import de.polygonal.ds.Da;
+import de.polygonal.ds.Dll;
 import de.polygonal.ds.HashableItem;
 import de.polygonal.ds.HashTable;
 import de.polygonal.ds.IntIntHashTable;
@@ -474,8 +474,8 @@ class TestHashTable extends haxe.unit.TestCase
 		
 		var K = [17, 25, 10, 2, 8, 24, 30, 3];
 		
-		var items = new DA<E>();
-		var keys = new DA<Int>();
+		var items = new Da<E>();
+		var keys = new Da<Int>();
 		for (i in 0...K.length)
 		{
 			keys.pushBack(K[i]);
@@ -502,8 +502,8 @@ class TestHashTable extends haxe.unit.TestCase
 		
 		for (i in 0...100)
 		{
-			var items = new DA<E>();
-			var keys = new DA<Int>();
+			var items = new Da<E>();
+			var keys = new Da<Int>();
 			for (i in 0...8)
 			{
 				var x = Std.int(seed.random()) & (64 - 1);
@@ -538,8 +538,8 @@ class TestHashTable extends haxe.unit.TestCase
 		for (i in 0...100)
 		{
 			j++;
-			var items = new DA<E>();
-			var keys = new DA<Int>();
+			var items = new Da<E>();
+			var keys = new Da<Int>();
 			for (i in 0...8)
 			{
 				var x = Std.int(seed.random()) & (64 - 1);
@@ -683,7 +683,7 @@ class TestHashTable extends haxe.unit.TestCase
 		var c:HashTable<E, Int> = cast h.clone(true);
 		
 		var i = 0;
-		var l = new DLL<Int>();
+		var l = new Dll<Int>();
 		for (val in c)
 		{
 			l.append(val);
@@ -698,9 +698,9 @@ class TestHashTable extends haxe.unit.TestCase
 		assertEquals(8, i);
 	}
 	
-	function testToArrayToDA()
+	function testToArrayToDa()
 	{
-		var items = new DA<E>();
+		var items = new Da<E>();
 		for (i in 0...8) items.pushBack(new E(i));
 		
 		var h = new HashTable<E, Null<Int>>(8);
@@ -768,10 +768,10 @@ class TestHashTable extends haxe.unit.TestCase
 	
 	function testToKeyArrayOrVector()
 	{
-		var items = new DA<E>();
+		var items = new Da<E>();
 		for (i in 0...8) items.pushBack(new E(i));
 		
-		var tmp:DA<E> = cast items.clone(true);
+		var tmp:Da<E> = cast items.clone(true);
 		
 		var h = new HashTable<E, Null<Int>>(8);
 		for (i in 0...8) h.set(items.get(i), i * 10);
@@ -875,7 +875,7 @@ class TestHashTable extends haxe.unit.TestCase
 		
 		for (i in 0...8) h.set(items[i], i * 10);
 		
-		var set = new DA<Int>();
+		var set = new Da<Int>();
 		var i = 0;
 		for (val in h)
 		{
@@ -903,7 +903,7 @@ class TestHashTable extends haxe.unit.TestCase
 		
 		for (i in 0...8) h.set(items[i], i * 10);
 		
-		var set = new DA<E>();
+		var set = new Da<E>();
 		var i = 0;
 		for (key in h.keys())
 		{

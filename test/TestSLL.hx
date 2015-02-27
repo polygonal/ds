@@ -1,16 +1,16 @@
 ﻿import de.polygonal.ds.ArrayConvert;
 import de.polygonal.ds.Compare;
-import de.polygonal.ds.DA;
+import de.polygonal.ds.Da;
 import de.polygonal.ds.ListSet;
-import de.polygonal.ds.SLL;
-import de.polygonal.ds.SLLNode;
+import de.polygonal.ds.Sll;
+import de.polygonal.ds.SllNode;
 
-@:access(de.polygonal.ds.SLL)
-class TestSLL extends haxe.unit.TestCase
+@:access(de.polygonal.ds.Sll)
+class TestSll extends haxe.unit.TestCase
 {
 	function testCircular()
 	{
-		var l = new SLL<Int>();
+		var l = new Sll<Int>();
 		l.close();
 		
 		l.append(0);
@@ -30,7 +30,7 @@ class TestSLL extends haxe.unit.TestCase
 		assertEquals(1, l.tail.val);
 		assertEquals(l.head, l.tail.next);
 		
-		var l = new SLL<Int>();
+		var l = new Sll<Int>();
 		l.close();
 		l.append(0);
 		l.insertAfter(l.nodeOf(0), 1);
@@ -54,7 +54,7 @@ class TestSLL extends haxe.unit.TestCase
 		assertEquals(2, l.tail.val);
 		assertEquals(l.head, l.tail.next);
 		
-		var l = new SLL<Int>();
+		var l = new Sll<Int>();
 		l.close();
 		l.append(0);
 		l.insertBefore(l.nodeOf(0), 1);
@@ -64,7 +64,7 @@ class TestSLL extends haxe.unit.TestCase
 		assertEquals(0, l.tail.val);
 		assertEquals(l.head, l.tail.next);
 		
-		var l = new SLL<Int>();
+		var l = new Sll<Int>();
 		l.close();
 		l.append(0);
 		l.append(1);
@@ -92,7 +92,7 @@ class TestSLL extends haxe.unit.TestCase
 		assertEquals(null, l.tail);
 		assertEquals(null, node.next);
 		
-		var l = new SLL<Int>();
+		var l = new Sll<Int>();
 		l.close();
 		l.append(0);
 		l.append(1);
@@ -112,7 +112,7 @@ class TestSLL extends haxe.unit.TestCase
 		assertEquals(null, l.head);
 		assertEquals(null, l.tail);
 		
-		var l = new SLL<Int>();
+		var l = new Sll<Int>();
 		l.close();
 		l.append(0);
 		l.append(1);
@@ -132,7 +132,7 @@ class TestSLL extends haxe.unit.TestCase
 		assertEquals(null, l.head);
 		assertEquals(null, l.tail);
 		
-		var l = new SLL<Int>();
+		var l = new Sll<Int>();
 		l.close();
 		l.append(0);
 		l.append(1);
@@ -142,7 +142,7 @@ class TestSLL extends haxe.unit.TestCase
 		assertEquals(0, l.tail.val);
 		assertEquals(l.head, l.tail.next);
 		
-		var l = new SLL<Int>();
+		var l = new Sll<Int>();
 		l.close();
 		l.append(0);
 		l.append(1);
@@ -153,7 +153,7 @@ class TestSLL extends haxe.unit.TestCase
 		assertEquals(0, l.tail.val);
 		assertEquals(l.head, l.tail.next);
 		
-		var l = new SLL<Int>();
+		var l = new Sll<Int>();
 		l.close();
 		l.append(0);
 		l.append(1);
@@ -163,7 +163,7 @@ class TestSLL extends haxe.unit.TestCase
 		assertEquals(0, l.tail.val);
 		assertEquals(l.head, l.tail.next);
 		
-		var l = new SLL<Int>();
+		var l = new Sll<Int>();
 		l.close();
 		l.append(0);
 		l.append(1);
@@ -177,7 +177,7 @@ class TestSLL extends haxe.unit.TestCase
 	
 	function testPool()
 	{
-		var l = new SLL<Int>(20);
+		var l = new Sll<Int>(20);
 		
 		for (i in 0...10) l.append(i);
 		for (i in 0...10) l.removeHead();
@@ -205,7 +205,7 @@ class TestSLL extends haxe.unit.TestCase
 	
 	function testRemove()
 	{
-		var list = new SLL<Int>();
+		var list = new Sll<Int>();
 		for (i in 0...10) list.append(i);
 		
 		var head = list.head;
@@ -222,7 +222,7 @@ class TestSLL extends haxe.unit.TestCase
 		assertEquals(8, list.size());
 		assertEquals(list.join(''), '12345678');
 		
-		var list = new SLL<Int>();
+		var list = new Sll<Int>();
 		for (i in 0...10) list.append(i);
 		var i = 0;
 		while (!list.isEmpty())
@@ -234,7 +234,7 @@ class TestSLL extends haxe.unit.TestCase
 		
 		assertTrue(list.isEmpty());
 		
-		var list = new SLL<Int>();
+		var list = new Sll<Int>();
 		for (i in 0...10) list.append(i);
 		var i = 9;
 		while (!list.isEmpty())
@@ -246,7 +246,7 @@ class TestSLL extends haxe.unit.TestCase
 		
 		assertTrue(list.isEmpty());
 		
-		var list = new SLL<Int>();
+		var list = new Sll<Int>();
 		for (i in 0...10) list.append(1);
 		
 		assertTrue(list.remove(1));
@@ -256,7 +256,7 @@ class TestSLL extends haxe.unit.TestCase
 		assertEquals(null, list.tail);
 		
 		//circular
-		var list = new SLL<Int>();
+		var list = new Sll<Int>();
 		list.close();
 		for (i in 0...10) list.append(i);
 		assertTrue(list.remove(9));
@@ -274,7 +274,7 @@ class TestSLL extends haxe.unit.TestCase
 		
 		assertEquals(list.head, list.tail.next);
 		
-		var list = new SLL<Int>();
+		var list = new Sll<Int>();
 		list.close();
 		for (i in 0...10) list.append(i);
 		var i = 0;
@@ -291,7 +291,7 @@ class TestSLL extends haxe.unit.TestCase
 		
 		assertTrue(list.isEmpty());
 		
-		var list = new SLL<Int>();
+		var list = new Sll<Int>();
 		list.close();
 		for (i in 0...10) list.append(i);
 		var i = 9;
@@ -305,7 +305,7 @@ class TestSLL extends haxe.unit.TestCase
 		
 		assertTrue(list.isEmpty());
 		
-		var list = new SLL<Int>();
+		var list = new Sll<Int>();
 		for (i in 0...10) list.append(1);
 		
 		assertTrue(list.remove(1));
@@ -314,7 +314,7 @@ class TestSLL extends haxe.unit.TestCase
 		assertEquals(null, list.head);
 		assertEquals(null, list.tail);
 		
-		var list = new SLL<Int>();
+		var list = new Sll<Int>();
 		list.close();
 		list.append(0);
 		list.append(1);
@@ -326,7 +326,7 @@ class TestSLL extends haxe.unit.TestCase
 	
 	function testShuffle()
 	{
-		var list = new SLL<Int>();
+		var list = new Sll<Int>();
 		for (i in 0...10) list.append(i);
 		
 		var s = new ListSet();
@@ -341,7 +341,7 @@ class TestSLL extends haxe.unit.TestCase
 		assertEquals(10, s.size());
 		
 		//circular
-		var list = new SLL<Int>();
+		var list = new Sll<Int>();
 		list.close();
 		for (i in 0...10) list.append(i);
 		
@@ -361,7 +361,7 @@ class TestSLL extends haxe.unit.TestCase
 	#if debug
 	function testMaxSize()
 	{
-		var list = new SLL<Int>(0, 3);
+		var list = new Sll<Int>(0, 3);
 		list.append(1);
 		list.append(2);
 		list.append(3);
@@ -378,7 +378,7 @@ class TestSLL extends haxe.unit.TestCase
 		
 		return;
 		
-		var list = ArrayConvert.toSLL([0, 1, 2]);
+		var list = ArrayConvert.toSll([0, 1, 2]);
 		var failed = false;
 		try
 		{
@@ -390,7 +390,7 @@ class TestSLL extends haxe.unit.TestCase
 		}
 		assertTrue(failed);
 		
-		var list = ArrayConvert.toSLL([0, 1, 2]);
+		var list = ArrayConvert.toSll([0, 1, 2]);
 		var failed = false;
 		try
 		{
@@ -402,7 +402,7 @@ class TestSLL extends haxe.unit.TestCase
 		}
 		assertTrue(failed);
 		
-		var list = ArrayConvert.toSLL([0, 1, 2]);
+		var list = ArrayConvert.toSll([0, 1, 2]);
 		var failed = false;
 		try
 		{
@@ -414,8 +414,8 @@ class TestSLL extends haxe.unit.TestCase
 		}
 		assertTrue(failed);
 		
-		var list1 = ArrayConvert.toSLL([0, 1, 2]);
-		var list2 = ArrayConvert.toSLL([0, 1, 2]);
+		var list1 = ArrayConvert.toSll([0, 1, 2]);
+		var list2 = ArrayConvert.toSll([0, 1, 2]);
 		var failed = false;
 		try
 		{
@@ -427,7 +427,7 @@ class TestSLL extends haxe.unit.TestCase
 		}
 		assertTrue(failed);
 		
-		var list = ArrayConvert.toSLL([0, 1, 2]);
+		var list = ArrayConvert.toSll([0, 1, 2]);
 		var failed = false;
 		try
 		{
@@ -443,7 +443,7 @@ class TestSLL extends haxe.unit.TestCase
 	
 	function testFill()
 	{
-		var list = new SLL<Int>();
+		var list = new Sll<Int>();
 		for (i in 0...10) list.append(i);
 		
 		list.fill(0);
@@ -455,7 +455,7 @@ class TestSLL extends haxe.unit.TestCase
 			n = n.next;
 		}
 		
-		var list = new SLL<Int>();
+		var list = new Sll<Int>();
 		for (i in 0...10) list.append(i);
 		
 		list.fill(0, 5);
@@ -472,7 +472,7 @@ class TestSLL extends haxe.unit.TestCase
 			n = n.next;
 		}
 		
-		var list = new SLL<Int>();
+		var list = new Sll<Int>();
 		list.close();
 		for (i in 0...10) list.append(i);
 		
@@ -488,7 +488,7 @@ class TestSLL extends haxe.unit.TestCase
 	
 	function testAssign()
 	{
-		var list = new SLL<E>();
+		var list = new Sll<E>();
 		for (i in 0...10) list.append(null);
 		
 		list.assign(E, [0]);
@@ -500,7 +500,7 @@ class TestSLL extends haxe.unit.TestCase
 			n = n.next;
 		}
 		
-		var list = new SLL<E>();
+		var list = new Sll<E>();
 		for (i in 0...10) list.append(null);
 		
 		list.assign(E, [1], 5);
@@ -518,7 +518,7 @@ class TestSLL extends haxe.unit.TestCase
 			n = n.next;
 		}
 		
-		var list = new SLL<E>();
+		var list = new Sll<E>();
 		for (i in 0...10) list.append(null);
 		
 		list.assign(E, [5], 10);
@@ -530,7 +530,7 @@ class TestSLL extends haxe.unit.TestCase
 			n = n.next;
 		}
 		
-		var list = new SLL<E>();
+		var list = new Sll<E>();
 		list.close();
 		for (i in 0...10) list.append(null);
 		
@@ -546,7 +546,7 @@ class TestSLL extends haxe.unit.TestCase
 	
 	function testGetNodeAt()
 	{
-		var list = new SLL<Int>();
+		var list = new Sll<Int>();
 		for (i in 0...10) list.append(i);
 		
 		assertEquals(list.getNodeAt(0).val, 0);
@@ -555,10 +555,10 @@ class TestSLL extends haxe.unit.TestCase
 	
 	function testInsertAfter()
 	{
-		var list = new SLL<Int>();
+		var list = new Sll<Int>();
 		list.append(0);
 		
-		var newNode:SLLNode<Int> = list.insertAfter(list.head, 1);
+		var newNode:SllNode<Int> = list.insertAfter(list.head, 1);
 		
 		assertEquals(2, list.size());
 		assertEquals(0, list.head.val);
@@ -566,7 +566,7 @@ class TestSLL extends haxe.unit.TestCase
 		assertEquals(list.tail.next, null);
 		assertEquals(list.head.next, list.tail);
 		
-		list = new SLL<Int>();
+		list = new Sll<Int>();
 		list.append(0);
 		list.append(1);
 		list.append(2);
@@ -581,9 +581,9 @@ class TestSLL extends haxe.unit.TestCase
 	
 	function testInsertBefore()
 	{
-		var list = new SLL<Int>();
+		var list = new Sll<Int>();
 		list.append(0);
-		var newNode:SLLNode<Int> = list.insertBefore(list.head, 1);
+		var newNode:SllNode<Int> = list.insertBefore(list.head, 1);
 		
 		assertEquals(2, list.size());
 		assertEquals(1, list.head.val);
@@ -592,10 +592,10 @@ class TestSLL extends haxe.unit.TestCase
 		assertEquals(list.head.next, list.tail);
 		assertEquals(list.tail.next, null);
 		
-		var list = new SLL<Int>();
+		var list = new Sll<Int>();
 		list.append(0);
 		list.append(1);
-		var newNode:SLLNode<Int> = list.insertBefore(list.tail, 2);
+		var newNode:SllNode<Int> = list.insertBefore(list.tail, 2);
 		
 		assertEquals(3, list.size());
 		assertEquals(0, list.head.val);
@@ -607,11 +607,11 @@ class TestSLL extends haxe.unit.TestCase
 	
 	function testJoin()
 	{
-		var list = new SLL<Int>();
+		var list = new Sll<Int>();
 		for (i in 0...10) list.append(i);
 		assertEquals(list.join(''), '0123456789');
 		
-		var list = new SLL<Int>();
+		var list = new Sll<Int>();
 		list.close();
 		for (i in 0...10) list.append(i);
 		assertEquals(list.join(''), '0123456789');
@@ -619,14 +619,14 @@ class TestSLL extends haxe.unit.TestCase
 	
 	function testReverse()
 	{
-		var list = new SLL<Int>();
+		var list = new Sll<Int>();
 		for (i in 0...10) list.append(i);
 		list.reverse();
 		var j = 10;
 		for (i in list) assertEquals(i, --j);
 		
 		
-		var list = new SLL<Int>();
+		var list = new Sll<Int>();
 		list.close();
 		for (i in 0...10) list.append(i);
 		list.reverse();
@@ -636,26 +636,26 @@ class TestSLL extends haxe.unit.TestCase
 	
 	function testNodeOf()
 	{
-		var list = new SLL<Int>();
+		var list = new Sll<Int>();
 		var data:Array<Int> = [2, 3, 4, 9, 5, 1, 7, 6, 8, 0];
 		for (i in 0...10) list.append(data[i]);
 		
-		var node:SLLNode<Int> = list.nodeOf(3, list.head);
+		var node:SllNode<Int> = list.nodeOf(3, list.head);
 		assertTrue(node != null);
 		assertEquals(3, node.val);
 		
-		var node:SLLNode<Int> = list.nodeOf(5, list.head.next.next);
+		var node:SllNode<Int> = list.nodeOf(5, list.head.next.next);
 		assertTrue(node != null);
 		assertEquals(5, node.val);
 	}
 	
 	function testMerge()
 	{
-		var list1 = new SLL<Int>();
+		var list1 = new Sll<Int>();
 		var data:Array<Int> = [0, 1, 2, 3, 4];
 		for (i in 0...data.length) list1.append(data[i]);
 		
-		var list2 = new SLL<Int>();
+		var list2 = new Sll<Int>();
 		var data:Array<Int> = [5, 6, 7, 8, 9];
 		for (i in 0...data.length) list2.append(data[i]);
 		
@@ -665,12 +665,12 @@ class TestSLL extends haxe.unit.TestCase
 		assertEquals(10, list1.size());
 		for (i in list1) assertEquals(c++, i);
 		
-		var list1 = new SLL<Int>();
+		var list1 = new Sll<Int>();
 		list1.close();
 		var data:Array<Int> = [0, 1, 2, 3, 4];
 		for (i in 0...data.length) list1.append(data[i]);
 		
-		var list2 = new SLL<Int>();
+		var list2 = new Sll<Int>();
 		list2.close();
 		var data:Array<Int> = [5, 6, 7, 8, 9];
 		for (i in 0...data.length) list2.append(data[i]);
@@ -686,15 +686,15 @@ class TestSLL extends haxe.unit.TestCase
 	
 	function testConcat()
 	{
-		var list1 = new SLL<Int>();
+		var list1 = new Sll<Int>();
 		var data:Array<Int> = [0, 1, 2, 3, 4];
 		for (i in 0...data.length) list1.append(data[i]);
 		
-		var list2 = new SLL<Int>();
+		var list2 = new Sll<Int>();
 		var data:Array<Int> = [5, 6, 7, 8, 9];
 		for (i in 0...data.length) list2.append(data[i]);
 		
-		var list3 = new SLL<Int>();
+		var list3 = new Sll<Int>();
 		list3 = list3.concat(list1);
 		list3 = list3.concat(list2);
 		
@@ -702,18 +702,18 @@ class TestSLL extends haxe.unit.TestCase
 		assertEquals(10, list3.size());
 		for (i in list1) assertEquals(c++, i);
 		
-		//circular, also test concat DLL
-		var list1 = new SLL<Int>();
+		//circular, also test concat Dll
+		var list1 = new Sll<Int>();
 		list1.close();
 		var data:Array<Int> = [0, 1, 2, 3, 4];
 		for (i in 0...data.length) list1.append(data[i]);
 		
-		var list2 = new SLL<Int>();
+		var list2 = new Sll<Int>();
 		list2.close();
 		var data:Array<Int> = [5, 6, 7, 8, 9];
 		for (i in 0...data.length) list2.append(data[i]);
 		
-		var list3 = new SLL<Int>();
+		var list3 = new Sll<Int>();
 		//list3.close();
 		list3 = list3.concat(list1);
 		list3 = list3.concat(list2);
@@ -726,7 +726,7 @@ class TestSLL extends haxe.unit.TestCase
 	function testSortTail()
 	{
 		//insertion sort
-		var list = new SLL<Int>();
+		var list = new Sll<Int>();
 		
 		list.append(1);
 		list.append(3);
@@ -754,7 +754,7 @@ class TestSLL extends haxe.unit.TestCase
 		assertFalse(list.tail.hasNext());
 		
 		//merge sort
-		var list = new SLL<Int>();
+		var list = new Sll<Int>();
 		
 		list.append(1);
 		list.append(3);
@@ -784,7 +784,7 @@ class TestSLL extends haxe.unit.TestCase
 	
 	function testSort()
 	{
-		var list = new SLL<Int>();
+		var list = new Sll<Int>();
 		
 		var data:Array<Int> = [2, 3, 4, 9, 5, 1, 7, 6, 8, 0];
 		for (i in 0...10) list.append(data[i]);
@@ -805,7 +805,7 @@ class TestSLL extends haxe.unit.TestCase
 		var c = 10;
 		for (i in list) assertEquals(--c, i);
 		
-		var list:SLL<ESortable> = new SLL<ESortable>();
+		var list:Sll<ESortable> = new Sll<ESortable>();
 		var data:Array<Int> = [2, 3, 4, 9, 5, 1, 7, 6, 8, 0];
 		for (i in 0...10)
 			list.append(new ESortable(data[i]));
@@ -814,7 +814,7 @@ class TestSLL extends haxe.unit.TestCase
 		for (i in list)
 			assertEquals(--c, i.id);
 		
-		var list:SLL<ESortable> = new SLL<ESortable>();
+		var list:Sll<ESortable> = new Sll<ESortable>();
 		var data:Array<Int> = [2, 3, 4, 9, 5, 1, 7, 6, 8, 0];
 		for (i in 0...10)
 			list.append(new ESortable(data[i]));
@@ -826,7 +826,7 @@ class TestSLL extends haxe.unit.TestCase
 	
 	function testSortComparable()
 	{
-		var list = new SLL<Int>();
+		var list = new Sll<Int>();
 		
 		var data:Array<Int> = [2, 3, 4, 9, 5, 1, 7, 6, 8, 0];
 		for (i in 0...10) list.append(data[i]);
@@ -850,7 +850,7 @@ class TestSLL extends haxe.unit.TestCase
 	
 	function testSortCircular()
 	{
-		var list = new SLL<Int>();
+		var list = new Sll<Int>();
 		
 		var data:Array<Int> = [2, 3, 4, 9, 5, 1, 7, 6, 8, 0];
 		for (i in 0...10) list.append(data[i]);
@@ -870,7 +870,7 @@ class TestSLL extends haxe.unit.TestCase
 	
 	function testIterator()
 	{
-		var list = new SLL<Int>();
+		var list = new Sll<Int>();
 		for (i in 0...10) list.append(i);
 		var j = 0;
 		for (i in list) assertEquals(i, j++);
@@ -891,7 +891,7 @@ class TestSLL extends haxe.unit.TestCase
 	{
 		for (i in 0...5)
 		{
-			var list = new SLL<Int>();
+			var list = new Sll<Int>();
 			var set = new de.polygonal.ds.ListSet<Int>();
 			for (j in 0...5)
 			{
@@ -913,7 +913,7 @@ class TestSLL extends haxe.unit.TestCase
 		
 		for (i in 0...5)
 		{
-			var list = new SLL<Int>();
+			var list = new Sll<Int>();
 			var set = new de.polygonal.ds.ListSet<Int>();
 			for (j in 0...i)
 			{
@@ -936,7 +936,7 @@ class TestSLL extends haxe.unit.TestCase
 	{
 		for (i in 0...5)
 		{
-			var list = new SLL<Int>();
+			var list = new Sll<Int>();
 			var set = new de.polygonal.ds.ListSet<Int>();
 			for (j in 0...5)
 			{
@@ -959,7 +959,7 @@ class TestSLL extends haxe.unit.TestCase
 		
 		for (i in 0...5)
 		{
-			var list = new SLL<Int>();
+			var list = new Sll<Int>();
 			var set = new de.polygonal.ds.ListSet<Int>();
 			for (j in 0...i)
 			{
@@ -982,11 +982,11 @@ class TestSLL extends haxe.unit.TestCase
 	
 	function testContains()
 	{
-		var list = new SLL<Int>();
+		var list = new Sll<Int>();
 		for (i in 0...10) list.append(i);
 		for (i in 0...10) assertTrue(list.contains(i));
 		
-		var list = new SLL<Int>();
+		var list = new Sll<Int>();
 		list.close();
 		for (i in 0...10) list.append(i);
 		for (i in 0...10) assertTrue(list.contains(i));
@@ -995,24 +995,24 @@ class TestSLL extends haxe.unit.TestCase
 	function testClone()
 	{
 		//size 0
-		var list = new SLL<Int>();
-		var copy:SLL<Int> = cast list.clone(true);
+		var list = new Sll<Int>();
+		var copy:Sll<Int> = cast list.clone(true);
 		assertEquals(0, copy.size());
 		
 		//size 1
-		var list = new SLL<Int>();
+		var list = new Sll<Int>();
 		list.append(0);
-		var copy:SLL<Int> = cast list.clone(true);
+		var copy:Sll<Int> = cast list.clone(true);
 		assertEquals(1, copy.size());
 		assertEquals(0, copy.head.val);
 		assertEquals(0, copy.tail.val);
 		assertEquals(copy.head, copy.tail);
 		
 		//size 2
-		var list = new SLL<Int>();
+		var list = new Sll<Int>();
 		list.append(0);
 		list.append(1);
-		var copy:SLL<Int> = cast list.clone(true);
+		var copy:Sll<Int> = cast list.clone(true);
 		assertEquals(2, copy.size());
 		assertEquals(0, copy.head.val);
 		assertEquals(1, copy.tail.val);
@@ -1021,10 +1021,10 @@ class TestSLL extends haxe.unit.TestCase
 		assertEquals(null, copy.tail.next);
 		
 		//size>2
-		var list = new SLL<Int>();
+		var list = new Sll<Int>();
 		for (i in 0...10) list.append(i);
 		
-		var copy:SLL<Int> = cast list.clone(true);
+		var copy:Sll<Int> = cast list.clone(true);
 		assertEquals(10, copy.size());
 		
 		var j = 0;
@@ -1040,16 +1040,16 @@ class TestSLL extends haxe.unit.TestCase
 		
 		//circular
 		//size 0
-		var list = new SLL<Int>();
+		var list = new Sll<Int>();
 		list.close();
-		var copy:SLL<Int> = cast list.clone(true);
+		var copy:Sll<Int> = cast list.clone(true);
 		assertEquals(0, copy.size());
 		
 		//size 1
-		var list = new SLL<Int>();
+		var list = new Sll<Int>();
 		list.close();
 		list.append(0);
-		var copy:SLL<Int> = cast list.clone(true);
+		var copy:Sll<Int> = cast list.clone(true);
 		assertEquals(1, copy.size());
 		assertEquals(0, copy.head.val);
 		assertEquals(0, copy.tail.val);
@@ -1058,7 +1058,7 @@ class TestSLL extends haxe.unit.TestCase
 		assertEquals(copy.head, copy.tail.next);
 		
 		//size 2
-		var list = new SLL<Int>();
+		var list = new Sll<Int>();
 		list.close();
 		list.append(0);
 		list.append(1);
@@ -1072,11 +1072,11 @@ class TestSLL extends haxe.unit.TestCase
 		assertTrue(copy.isCircular());
 		
 		//size 10
-		var list = new SLL<Int>();
+		var list = new Sll<Int>();
 		list.close();
 		for (i in 0...10) list.append(i);
 		
-		var copy:SLL<Int> = cast list.clone(true);
+		var copy:Sll<Int> = cast list.clone(true);
 		assertEquals(10, copy.size());
 		assertEquals(copy.head, copy.tail.next);
 		assertTrue(copy.isCircular());
@@ -1094,7 +1094,7 @@ class TestSLL extends haxe.unit.TestCase
 	
 	function testArray()
 	{
-		var list = new SLL<Int>();
+		var list = new Sll<Int>();
 		for (i in 0...10) list.append(i);
 		var a:Array<Int> = list.toArray();
 		for (i in a) assertEquals(a[i], i);
@@ -1102,14 +1102,14 @@ class TestSLL extends haxe.unit.TestCase
 	
 	function testClear()
 	{
-		var list = new SLL<Int>();
+		var list = new Sll<Int>();
 		for (i in 0...10) list.append(i);
 		list.clear();
 		assertEquals(list.size(), 0);
 		assertEquals(list.head, null);
 		assertEquals(list.tail, null);
 		
-		var list = new SLL<Int>(10);
+		var list = new Sll<Int>(10);
 		for (i in 0...10) list.append(i);
 		for (i in 0...10) list.removeHead();
 		for (i in 0...10) list.append(i);
@@ -1129,7 +1129,7 @@ class TestSLL extends haxe.unit.TestCase
 	
 	function testAppend()
 	{
-		var list = new SLL<Int>();
+		var list = new Sll<Int>();
 		assertEquals(list.size(), 0);
 		list.append(0);
 		assertEquals(1, list.size());
@@ -1138,7 +1138,7 @@ class TestSLL extends haxe.unit.TestCase
 		for (i in 1...10) list.append(i);
 		
 		var i = 0;
-		var walker:SLLNode<Int> = list.head;
+		var walker:SllNode<Int> = list.head;
 		while (walker != null)
 		{
 			assertEquals(walker.val, i++);
@@ -1151,11 +1151,11 @@ class TestSLL extends haxe.unit.TestCase
 	
 	function testPrepend()
 	{
-		var list = new SLL<Int>();
+		var list = new Sll<Int>();
 		assertEquals(list.size(), 0);
 		for (i in 0...10) list.prepend(i);
 		var i = 10;
-		var walker:SLLNode<Int> = list.head;
+		var walker:SllNode<Int> = list.head;
 		while (walker != null)
 		{
 			assertEquals(walker.val, --i);
@@ -1167,16 +1167,16 @@ class TestSLL extends haxe.unit.TestCase
 	
 	function testUnlink()
 	{
-		var list = new SLL<Int>();
+		var list = new Sll<Int>();
 		
 		assertEquals(list.size(), 0);
 		for (i in 0...10) list.append(i);
 		
 		var i = 10;
-		var walker:SLLNode<Int> = list.head;
+		var walker:SllNode<Int> = list.head;
 		while (walker != null)
 		{
-			var hook:SLLNode<Int> = walker.next;
+			var hook:SllNode<Int> = walker.next;
 			list.unlink(walker);
 			assertEquals(list.size(), --i);
 			walker = hook;
@@ -1189,7 +1189,7 @@ class TestSLL extends haxe.unit.TestCase
 	
 	function testPop()
 	{
-		var list = new SLL<Int>();
+		var list = new Sll<Int>();
 		assertEquals(list.size(), 0);
 		for (i in 0...10) list.append(i);
 		
@@ -1207,7 +1207,7 @@ class TestSLL extends haxe.unit.TestCase
 	
 	function testShift()
 	{
-		var list = new SLL<Int>();
+		var list = new Sll<Int>();
 		assertEquals(list.size(), 0);
 		for (i in 0...10) list.append(i);
 		var i = 0;
@@ -1223,7 +1223,7 @@ class TestSLL extends haxe.unit.TestCase
 	
 	function testShiftUp()
 	{
-		var list = new SLL<Int>();
+		var list = new Sll<Int>();
 		assertEquals(list.size(), 0);
 		for (i in 0...10) list.append(i);
 		list.shiftUp();
@@ -1232,7 +1232,7 @@ class TestSLL extends haxe.unit.TestCase
 	
 	function testPopDown()
 	{
-		var list = new SLL<Int>();
+		var list = new Sll<Int>();
 		assertEquals(list.size(), 0);
 		for (i in 0...10) list.append(i);
 		list.popDown();

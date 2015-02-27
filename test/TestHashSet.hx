@@ -1,6 +1,6 @@
 import de.polygonal.core.math.random.ParkMiller;
-import de.polygonal.ds.DA;
-import de.polygonal.ds.DLL;
+import de.polygonal.ds.Da;
+import de.polygonal.ds.Dll;
 import de.polygonal.ds.HashableItem;
 import de.polygonal.ds.HashSet;
 
@@ -296,7 +296,7 @@ class TestHashSet extends haxe.unit.TestCase
 		
 		var K = [17, 25, 10, 2, 8, 24, 30, 3];
 		
-		var keys = new DA<Int>();
+		var keys = new Da<Int>();
 		for (i in 0...K.length) keys.pushBack(K[i]);
 		for (i in 0...keys.size()) h.set(values[keys.get(i)]);
 		
@@ -316,7 +316,7 @@ class TestHashSet extends haxe.unit.TestCase
 			var values = new Array<E>();
 			for (i in 0...64) values.push(new E(i));
 		
-			var keys = new DA<Int>();
+			var keys = new Da<Int>();
 			for (i in 0...8)
 			{
 				var x:Int = Std.int(seed.random() % 64);
@@ -344,7 +344,7 @@ class TestHashSet extends haxe.unit.TestCase
 			for (i in 0...64) values.push(new E(i));
 			
 			j++;
-			var keys = new DA<Int>();
+			var keys = new Da<Int>();
 			for (i in 0...8)
 			{
 				var x = Std.int(seed.random() % 64);
@@ -456,7 +456,7 @@ class TestHashSet extends haxe.unit.TestCase
 		var c:HashSet<E> = cast h.clone(true);
 		
 		var i = 0;
-		var l = new DLL<E>();
+		var l = new Dll<E>();
 		for (val in c)
 		{
 			l.append(val);
@@ -474,7 +474,7 @@ class TestHashSet extends haxe.unit.TestCase
 		assertEquals(8, i);
 	}
 	
-	function testToArrayToDA()
+	function testToArrayToDa()
 	{
 		var values = new Array<E>();
 		for (i in 0...16) values.push(new E(i));
@@ -580,7 +580,7 @@ class TestHashSet extends haxe.unit.TestCase
 		var h = new HashSet<E>(8);
 		for (i in 0...8) h.set(values[i]);
 		
-		var a = new DA<E>();
+		var a = new Da<E>();
 		
 		for (val in h) a.pushBack(val);
 		

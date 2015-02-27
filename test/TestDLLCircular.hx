@@ -1,18 +1,18 @@
-﻿import de.polygonal.ds.DLL;
+﻿import de.polygonal.ds.Dll;
 import de.polygonal.ds.ListSet;
 
-class TestDLLCircular extends haxe.unit.TestCase
+class TestDllCircular extends haxe.unit.TestCase
 {
 	function testClose()
 	{
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		list.close();
 		assertTrue(list.isCircular());
 	}
 	
 	function testOpen()
 	{
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		list.close();
 		assertTrue(list.isCircular());
 		assertEquals(null, list.head);
@@ -35,7 +35,7 @@ class TestDLLCircular extends haxe.unit.TestCase
 	
 	function testShuffle()
 	{
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		list.close();
 		for (i in 0...10) list.append(i);
 		
@@ -49,7 +49,7 @@ class TestDLLCircular extends haxe.unit.TestCase
 	
 	function testAppend()
 	{
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		list.close();
 		list.append(0);
 		assertEquals(1, list.size());
@@ -65,7 +65,7 @@ class TestDLLCircular extends haxe.unit.TestCase
 	
 	function testPrepend()
 	{
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		list.close();
 		list.prepend(0);
 		assertEquals(1, list.size());
@@ -81,7 +81,7 @@ class TestDLLCircular extends haxe.unit.TestCase
 	
 	function testInsertAfter()
 	{
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		list.close();
 		var node1 = list.append(0);
 		list.insertAfter(node1, 1);
@@ -90,7 +90,7 @@ class TestDLLCircular extends haxe.unit.TestCase
 		assertEquals(list.tail.next, list.head);
 		assertEquals(list.head.prev, list.tail);
 		
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		list.close();
 		var node1 = list.append(0);
 		var node2 = list.append(1);
@@ -105,7 +105,7 @@ class TestDLLCircular extends haxe.unit.TestCase
 		assertEquals(list.tail.next, list.head);
 		assertEquals(list.head.prev, list.tail);
 		
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		list.close();
 		var node1 = list.append(0);
 		var node2 = list.append(1);
@@ -123,7 +123,7 @@ class TestDLLCircular extends haxe.unit.TestCase
 	
 	function testInsertBefore()
 	{
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		list.close();
 		var node1 = list.append(0);
 		list.insertBefore(node1, 1);
@@ -132,7 +132,7 @@ class TestDLLCircular extends haxe.unit.TestCase
 		assertEquals(list.tail.next, list.head);
 		assertEquals(list.head.prev, list.tail);
 		
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		list.close();
 		var node1 = list.append(0);
 		var node2 = list.append(1);
@@ -146,7 +146,7 @@ class TestDLLCircular extends haxe.unit.TestCase
 		assertEquals(list.tail.next, list.head);
 		assertEquals(list.head.prev, list.tail);
 		
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		list.close();
 		var node1 = list.append(0);
 		var node2 = list.append(1);
@@ -164,14 +164,14 @@ class TestDLLCircular extends haxe.unit.TestCase
 	
 	function testRemove()
 	{
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		list.close();
 		var node1 = list.append(0);
 		list.unlink(node1);
 		assertEquals(null, list.head);
 		assertEquals(null, list.tail);
 		
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		list.close();
 		var node1 = list.append(0);
 		var node2 = list.append(1);
@@ -182,7 +182,7 @@ class TestDLLCircular extends haxe.unit.TestCase
 		assertEquals(list.tail.next, list.head);
 		assertEquals(list.head.prev, list.tail);
 		
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		list.close();
 		var node1 = list.append(0);
 		var node2 = list.append(1);
@@ -197,18 +197,18 @@ class TestDLLCircular extends haxe.unit.TestCase
 	
 	function testGetNodeAt()
 	{
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		list.close();
 		var node1 = list.append(0);
 		assertEquals(node1, list.getNodeAt(0));
 		
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		list.close();
 		var node1 = list.append(0);
 		var node2 = list.append(1);
 		assertEquals(node2, list.getNodeAt(1));
 		
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		list.close();
 		var node1 = list.append(0);
 		var node2 = list.append(1);
@@ -218,7 +218,7 @@ class TestDLLCircular extends haxe.unit.TestCase
 	
 	function testRemoveHead()
 	{
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		list.close();
 		var node1 = list.append(0);
 		list.removeHead();
@@ -226,7 +226,7 @@ class TestDLLCircular extends haxe.unit.TestCase
 		assertEquals(null, list.head);
 		assertEquals(null, list.tail);
 		
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		list.close();
 		var node1 = list.append(0);
 		var node2 = list.append(1);
@@ -236,7 +236,7 @@ class TestDLLCircular extends haxe.unit.TestCase
 		assertEquals(list.tail.next, list.head);
 		assertEquals(list.head.prev, list.tail);
 		
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		list.close();
 		var node1 = list.append(0);
 		var node2 = list.append(1);
@@ -250,7 +250,7 @@ class TestDLLCircular extends haxe.unit.TestCase
 	
 	function testRemoveTail()
 	{
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		list.close();
 		var node1 = list.append(0);
 		list.removeTail();
@@ -258,7 +258,7 @@ class TestDLLCircular extends haxe.unit.TestCase
 		assertEquals(null, list.head);
 		assertEquals(null, list.tail);
 		
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		list.close();
 		var node1 = list.append(0);
 		var node2 = list.append(1);
@@ -268,7 +268,7 @@ class TestDLLCircular extends haxe.unit.TestCase
 		assertEquals(list.tail.next, list.head);
 		assertEquals(list.head.prev, list.tail);
 		
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		list.close();
 		var node1 = list.append(0);
 		var node2 = list.append(1);
@@ -282,7 +282,7 @@ class TestDLLCircular extends haxe.unit.TestCase
 	
 	function testShiftUp()
 	{
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		list.close();
 		var node1 = list.append(0);
 		var node2 = list.append(1);
@@ -294,7 +294,7 @@ class TestDLLCircular extends haxe.unit.TestCase
 		assertEquals(list.tail.next, list.head);
 		assertEquals(list.head.prev, list.tail);
 		
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		list.close();
 		var node1 = list.append(0);
 		var node2 = list.append(1);
@@ -310,7 +310,7 @@ class TestDLLCircular extends haxe.unit.TestCase
 	
 	function testPopDown()
 	{
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		list.close();
 		var node1 = list.append(0);
 		var node2 = list.append(1);
@@ -322,7 +322,7 @@ class TestDLLCircular extends haxe.unit.TestCase
 		assertEquals(list.tail.next, list.head);
 		assertEquals(list.head.prev, list.tail);
 		
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		list.close();
 		var node1 = list.append(0);
 		var node2 = list.append(1);
@@ -338,12 +338,12 @@ class TestDLLCircular extends haxe.unit.TestCase
 	
 	function testNodeOf()
 	{
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		list.close();
 		var node1 = list.append(0);
 		assertEquals(node1, list.nodeOf(0, list.head));
 		
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		list.close();
 		var node1 = list.append(0);
 		var node2 = list.append(1);
@@ -356,12 +356,12 @@ class TestDLLCircular extends haxe.unit.TestCase
 	
 	function testLastNodeOf()
 	{
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		list.close();
 		var node1 = list.append(0);
 		assertEquals(node1, list.lastNodeOf(0, list.head));
 		
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		list.close();
 		var node1 = list.append(0);
 		var node2 = list.append(1);
@@ -375,12 +375,12 @@ class TestDLLCircular extends haxe.unit.TestCase
 	
 	function testMerge()
 	{
-		var list1 = new DLL<Int>();
+		var list1 = new Dll<Int>();
 		list1.close();
 		list1.append(0);
 		list1.append(1);
 		
-		var list2 = new DLL<Int>();
+		var list2 = new Dll<Int>();
 		list2.close();
 		list2.append(2);
 		list2.append(3);
@@ -394,13 +394,13 @@ class TestDLLCircular extends haxe.unit.TestCase
 	
 	function testConcat()
 	{
-		var list1 = new DLL<Int>();
+		var list1 = new Dll<Int>();
 		list1.close();
 		list1.append(0);
 		list1.append(1);
 		list1.append(2);
 		
-		var list2 = new DLL<Int>();
+		var list2 = new Dll<Int>();
 		list2.close();
 		list2.append(3);
 		list2.append(4);
@@ -417,11 +417,11 @@ class TestDLLCircular extends haxe.unit.TestCase
 			node = node.next;
 		}
 		
-		var list1 = new DLL<Int>();
+		var list1 = new Dll<Int>();
 		list1.append(0);
 		list1.append(1);
 		list1.append(2);
-		var list2 = new DLL<Int>();
+		var list2 = new Dll<Int>();
 		
 		var list3 = list1.concat(list2);
 		assertEquals(null, list3.tail.next);
@@ -437,7 +437,7 @@ class TestDLLCircular extends haxe.unit.TestCase
 	
 	function testReverse()
 	{
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		list.close();
 		list.append(0);
 		list.append(1);
@@ -447,7 +447,7 @@ class TestDLLCircular extends haxe.unit.TestCase
 		assertEquals(list.tail.next, list.head);
 		assertEquals(list.head.prev, list.tail);
 		
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		list.close();
 		list.append(0);
 		list.append(1);
@@ -463,7 +463,7 @@ class TestDLLCircular extends haxe.unit.TestCase
 	
 	function testJoin()
 	{
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		list.close();
 		list.append(0);
 		assertEquals('0',list.join('|'));
@@ -475,7 +475,7 @@ class TestDLLCircular extends haxe.unit.TestCase
 	
 	function testIterator()
 	{
-		var list = new DLL<Int>();
+		var list = new Dll<Int>();
 		for (i in 0...10) list.append(i);
 		list.close();
 		var c = 0;
@@ -487,7 +487,7 @@ class TestDLLCircular extends haxe.unit.TestCase
 	{
 		for (i in 0...5)
 		{
-			var list = new DLL<Int>();
+			var list = new Dll<Int>();
 			var set = new de.polygonal.ds.ListSet<Int>();
 			for (j in 0...5)
 			{
@@ -512,7 +512,7 @@ class TestDLLCircular extends haxe.unit.TestCase
 		
 		for (i in 0...5)
 		{
-			var list = new DLL<Int>();
+			var list = new Dll<Int>();
 			var set = new de.polygonal.ds.ListSet<Int>();
 			for (j in 0...i)
 			{

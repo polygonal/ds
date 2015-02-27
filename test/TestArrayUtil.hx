@@ -59,7 +59,7 @@ class TestArrayUtil extends haxe.unit.TestCase
 		a.push(1);
 		a.push(2);
 		a.push(3);
-		var da = ArrayConvert.toDA(a);
+		var da = ArrayConvert.toDa(a);
 		ArrayUtil.shuffle(a);
 		for (i in 0...4)
 		{

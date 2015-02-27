@@ -1,16 +1,16 @@
 ﻿import de.polygonal.core.math.random.Random;
 import de.polygonal.ds.BinaryTreeNode;
-import de.polygonal.ds.BST;
+import de.polygonal.ds.Bst;
 import de.polygonal.ds.Collection;
 import de.polygonal.ds.ListSet;
 import de.polygonal.ds.Set;
 
-@:access(de.polygonal.ds.BST)
-class TestBST extends haxe.unit.TestCase
+@:access(de.polygonal.ds.Bst)
+class TestBst extends haxe.unit.TestCase
 {
 	function testPreorder()
 	{
-		var bst = new BST<E>();
+		var bst = new Bst<E>();
 		
 		var data = [5, 1, -20, 100, 23, 67, 13];
 		var order = [5, 1, -20, 100, 23, 13, 67];
@@ -76,7 +76,7 @@ class TestBST extends haxe.unit.TestCase
 	
 	function testInOrder()
 	{
-		var bst = new BST<E>();
+		var bst = new Bst<E>();
 		var data = [5, 1, -20, 100, 23, 67, 13];
 		var order = [-20, 1, 5, 13, 23, 67, 100];
 		for (i in 0...data.length) bst.insert(new E(data[i]));
@@ -138,7 +138,7 @@ class TestBST extends haxe.unit.TestCase
 	
 	function testPostOrder()
 	{
-		var bst = new BST<E>();
+		var bst = new Bst<E>();
 		var data = [5, 1, -20, 100, 23, 67, 13];
 		var order = [-20, 1, 13, 67, 23, 100, 5];
 		for (i in 0...data.length) bst.insert(new E(data[i]));
@@ -202,7 +202,7 @@ class TestBST extends haxe.unit.TestCase
 	
 	function testDepth()
 	{
-		var bst = new BST<E>();
+		var bst = new Bst<E>();
 		var data = [5, 1, -20, 100, 23, 67, 13];
 		var order = [5, 1, -20, 100, 23, 13, 67];
 		var nodes = new Array<BinaryTreeNode<E>>();
@@ -219,7 +219,7 @@ class TestBST extends haxe.unit.TestCase
 	
 	function testHeight()
 	{
-		var bst = new BST<E>();
+		var bst = new Bst<E>();
 		var data = [4,2,6,5,1,3,7];
 		var height = [3, 2, 2, 1, 1, 1, 1];
 		var nodes = new Array<BinaryTreeNode<E>>();
@@ -231,7 +231,7 @@ class TestBST extends haxe.unit.TestCase
 	
 	function testContains()
 	{
-		var bst = new BST<E>();
+		var bst = new Bst<E>();
 		var data = [5, 1, -20, 100, 23, 67, 13];
 		var order = [5, 1, -20, 100, 23, 13, 67];
 		var nodes = new Array<BinaryTreeNode<E>>();
@@ -244,7 +244,7 @@ class TestBST extends haxe.unit.TestCase
 	function testRemove()
 	{
 		var num = new Array<E>();
-		var bst = new BST<E>();
+		var bst = new Bst<E>();
 		var k = 10;
 		for (i in 0...k)
 		{
@@ -260,7 +260,7 @@ class TestBST extends haxe.unit.TestCase
 	
 	function testIterator()
 	{
-		var bst = new BST<E>();
+		var bst = new Bst<E>();
 		var data = [5, 1, -20, 100, 23, 67, 13];
 		var s = new ListSet<Int>();
 		for (i in 0...data.length)
@@ -275,7 +275,7 @@ class TestBST extends haxe.unit.TestCase
 	
 	function testClone()
 	{
-		var bst = new BST<E>();
+		var bst = new Bst<E>();
 		var data = [5, 1, -20, 100, 23, 67, 13];
 		var s:Set<Int> = new ListSet<Int>();
 		for (i in 0...data.length)
@@ -291,7 +291,7 @@ class TestBST extends haxe.unit.TestCase
 	
 	function testToArray()
 	{
-		var bst = new BST<E>();
+		var bst = new Bst<E>();
 		var data = [5, 1, -20, 100, 23, 67, 13];
 		for (i in 0...data.length) bst.insert(new E(data[i]));
 		
@@ -306,7 +306,7 @@ class TestBST extends haxe.unit.TestCase
 	
 	function testToDenseArray()
 	{
-		var bst = new BST<E>();
+		var bst = new Bst<E>();
 		var data = [5, 1, -20, 100, 23, 67, 13];
 		for (i in 0...data.length)
 			bst.insert(new E(data[i]));
@@ -323,7 +323,7 @@ class TestBST extends haxe.unit.TestCase
 	function testFind()
 	{
 		var num = new Array<E>();
-		var bst = new BST<E>();
+		var bst = new Bst<E>();
 		var k = 10;
 		for (i in 0...k)
 		{
@@ -343,13 +343,13 @@ class TestBST extends haxe.unit.TestCase
 	
 	function testCollection()
 	{
-		var c:de.polygonal.ds.Collection<E> = cast new BST<E>();
+		var c:de.polygonal.ds.Collection<E> = cast new Bst<E>();
 		assertEquals(true, true);
 	}
 	
 	function testEmptyAndRefill()
 	{
-		var bst = new BST<E>();
+		var bst = new Bst<E>();
 		var data = [1, 2, 3];
 		var nodes = new Array();
 		for (i in 0...data.length) nodes.push(bst.insert(new E(data[i])));

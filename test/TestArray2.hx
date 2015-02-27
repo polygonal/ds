@@ -1,6 +1,6 @@
 ﻿import de.polygonal.ds.Array2;
 import de.polygonal.ds.ArrayConvert;
-import de.polygonal.ds.DA;
+import de.polygonal.ds.Da;
 import de.polygonal.ds.ListSet;
 import de.polygonal.ds.Set;
 
@@ -88,7 +88,7 @@ class TestArray2 extends haxe.unit.TestCase
 	function testToString()
 	{
 		var array2 = new de.polygonal.ds.Array2<String>(4, 4);
-		array2.walk(function(val:String, x:Int, y:Int):String { return Std.string(x) + '.' + Std.string(y); });
+		array2.iter(function(val:String, x:Int, y:Int):String { return Std.string(x) + '.' + Std.string(y); });
 		array2.toString();
 		assertTrue(true);
 	}
@@ -471,7 +471,7 @@ class TestArray2 extends haxe.unit.TestCase
 		assertEquals(c, a.size());
 		var s = new ListSet<String>();
 		var a = getStrArray();
-		a.walk(function(val:String, x:Int, y:Int):String
+		a.iter(function(val:String, x:Int, y:Int):String
 		{
 			s.set(x + '.' + y);
 			return x + '.' + y;
@@ -506,7 +506,7 @@ class TestArray2 extends haxe.unit.TestCase
 	{
 		var a = getIntArray();
 		var counter = 0;
-		a.walk(function(x:Int, y:Int, val:Int):Int
+		a.iter(function(x:Int, y:Int, val:Int):Int
 		{
 			return counter++;
 		});
@@ -554,7 +554,7 @@ class TestArray2 extends haxe.unit.TestCase
 		if (w == -1) w = mW;
 		if (h == -1) h = mH;
 		var a = new Array2<String>(w, h);
-		a.walk(function(val, x, y):String return x + '.' + y);
+		a.iter(function(val, x, y):String return x + '.' + y);
 		return a;
 	}
 	

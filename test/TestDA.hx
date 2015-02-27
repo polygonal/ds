@@ -1,17 +1,17 @@
 ﻿import de.polygonal.ds.ArrayConvert;
 import de.polygonal.ds.Compare;
-import de.polygonal.ds.DA;
+import de.polygonal.ds.Da;
 import de.polygonal.ds.ListSet;
 
-@:access(de.polygonal.ds.DA)
-class TestDA extends haxe.unit.TestCase
+@:access(de.polygonal.ds.Da)
+class TestDa extends haxe.unit.TestCase
 {
 	function testGetSet()
 	{
-		var a = new DA<Int>();
+		var a = new Da<Int>();
 		for (i in 0...1000) a.set(i, i);
 		assertEquals(1000, a.size());
-		var l = new DA<Int>(10);
+		var l = new Da<Int>(10);
 		var x = 0;
 		l.pushBack(x);
 		assertEquals(x, l.get(0));
@@ -20,7 +20,7 @@ class TestDA extends haxe.unit.TestCase
 	
 	function testNextPrev()
 	{
-		var a = new DA<Int>();
+		var a = new Da<Int>();
 		for (i in 0...10) a.set(i, i);
 		assertEquals(0, a.getNext(9));
 		assertEquals(9, a.getPrev(0));
@@ -31,7 +31,7 @@ class TestDA extends haxe.unit.TestCase
 	
 	function testConvert()
 	{
-		var a = ArrayConvert.toDA([0, 1, 2, 3]);
+		var a = ArrayConvert.toDa([0, 1, 2, 3]);
 		assertEquals(a.size(), 4);
 		for (x in 0...4)
 			assertEquals(x, a.get(x));
@@ -39,7 +39,7 @@ class TestDA extends haxe.unit.TestCase
 	
 	/*function testReserve()
 	{
-		var da = new DA<Int>();
+		var da = new Da<Int>();
 		for (i in 0...10) da.pushBack(i);
 		da.reserve(100);
 		assertEquals(10, da.size());
@@ -48,7 +48,7 @@ class TestDA extends haxe.unit.TestCase
 	
 	/*function testPack()
 	{
-		var l = new de.polygonal.ds.DA<Int>();
+		var l = new de.polygonal.ds.Da<Int>();
 		l.pushBack(0);
 		l.pushBack(1);
 		l.pushBack(2);
@@ -71,7 +71,7 @@ class TestDA extends haxe.unit.TestCase
 	
 	function testSwap()
 	{
-		var l = new de.polygonal.ds.DA<Int>();
+		var l = new de.polygonal.ds.Da<Int>();
 		l.pushBack(0);
 		l.pushBack(1);
 		l.swp(0, 1);
@@ -81,7 +81,7 @@ class TestDA extends haxe.unit.TestCase
 	
 	/*function testSortRange()
 	{
-		var d = new DA<Int>();
+		var d = new Da<Int>();
 		d.pushBack(0);
 		d.pushBack(1);
 		d.pushBack(2);
@@ -103,27 +103,27 @@ class TestDA extends haxe.unit.TestCase
 		assertEquals(20, d.get(5));
 		assertEquals(30, d.get(6));
 		
-		var d = ArrayConvert.toDA([9, 8, 1, 2, 3, 8, 9]);
+		var d = ArrayConvert.toDa([9, 8, 1, 2, 3, 8, 9]);
 		d.sort(Compare.compareNumberFall, true, 2, 3);
 		var sorted = [9, 8, 3, 2, 1, 8, 9];
 		for (i in 0...d.size()) assertEquals(sorted[i], d.get(i));
 		
-		var d = ArrayConvert.toDA([9, 8, 1, 2, 3, 8, 9]);
+		var d = ArrayConvert.toDa([9, 8, 1, 2, 3, 8, 9]);
 		d.sort(Compare.compareNumberFall, false, 2, 3);
 		var sorted = [9, 8, 3, 2, 1, 8, 9];
 		for (i in 0...d.size()) assertEquals(sorted[i], d.get(i));
 		
-		var d = ArrayConvert.toDA([1, 2, 3]);
+		var d = ArrayConvert.toDa([1, 2, 3]);
 		d.sort(Compare.compareNumberFall, true, 2, -1);
 		var sorted = [1, 2, 3];
 		for (i in 0...d.size()) assertEquals(sorted[i], d.get(i));
 		
-		var d = ArrayConvert.toDA([1, 2, 3]);
+		var d = ArrayConvert.toDa([1, 2, 3]);
 		d.sort(Compare.compareNumberFall, false, 1, 2);
 		var sorted = [1, 3, 2];
 		for (i in 0...d.size()) assertEquals(sorted[i], d.get(i));
 		
-		var d = ArrayConvert.toDA([1, 2, 3]);
+		var d = ArrayConvert.toDa([1, 2, 3]);
 		d.sort(Compare.compareNumberFall, true, 1, 2);
 		var sorted = [1, 3, 2];
 		for (i in 0...d.size()) assertEquals(sorted[i], d.get(i));
@@ -132,60 +132,60 @@ class TestDA extends haxe.unit.TestCase
 	/*function testSort()
 	{
 		//1
-		var v = ArrayConvert.toDA([4]);
+		var v = ArrayConvert.toDa([4]);
 		v.sort(Compare.compareNumberRise);
 		assertEquals(4, v.front());
 		
-		var v = ArrayConvert.toDA([4]);
+		var v = ArrayConvert.toDa([4]);
 		v.sort(Compare.compareNumberRise, true);
 		assertEquals(4, v.front());
 		
-		var v = ArrayConvert.toDA([new EComparable(4)]);
+		var v = ArrayConvert.toDa([new EComparable(4)]);
 		v.sort(null);
 		assertEquals(4, v.front().val);
 		
-		var v = ArrayConvert.toDA([new EComparable(4)]);
+		var v = ArrayConvert.toDa([new EComparable(4)]);
 		v.sort(null, true);
 		assertEquals(4, v.front().val);
 		
 		//2
-		var v = ArrayConvert.toDA([4, 2]);
+		var v = ArrayConvert.toDa([4, 2]);
 		v.sort(Compare.compareNumberRise);
 		assertEquals(2, v.front());
 		assertEquals(4, v.back());
 		
-		var v = ArrayConvert.toDA([4, 2]);
+		var v = ArrayConvert.toDa([4, 2]);
 		v.sort(Compare.compareNumberFall);
 		assertEquals(4, v.front());
 		assertEquals(2, v.back());
 		
-		var v = ArrayConvert.toDA([4, 2]);
+		var v = ArrayConvert.toDa([4, 2]);
 		v.sort(Compare.compareNumberRise, true);
 		assertEquals(2, v.front());
 		assertEquals(4, v.back());
 		
-		var v = ArrayConvert.toDA([4, 2]);
+		var v = ArrayConvert.toDa([4, 2]);
 		v.sort(Compare.compareNumberFall, true);
 		assertEquals(4, v.front());
 		assertEquals(2, v.back());
 		
-		var v = ArrayConvert.toDA([new EComparable(4), new EComparable(2)]);
+		var v = ArrayConvert.toDa([new EComparable(4), new EComparable(2)]);
 		v.sort(null);
 		assertEquals(2, v.front().val);
 		assertEquals(4, v.back().val);
 		
 		//n
-		var v = ArrayConvert.toDA([4, 1, 7, 3, 2]);
+		var v = ArrayConvert.toDa([4, 1, 7, 3, 2]);
 		v.sort(Compare.compareNumberRise);
 		assertEquals(1, v.front());
 		var j = 0; for (i in v) { assertTrue(i >= j); j = i; }
 		
-		var v = ArrayConvert.toDA([4, 1, 7, 3, 2]);
+		var v = ArrayConvert.toDa([4, 1, 7, 3, 2]);
 		v.sort(Compare.compareNumberFall);
 		assertEquals(7, v.front());
 		var j = 7; for (i in v) { assertTrue(i <= j); j = i; }
 		
-		var v = ArrayConvert.toDA([new EComparable(4), new EComparable(1), new EComparable(7), new EComparable(3), new EComparable(2)]);
+		var v = ArrayConvert.toDa([new EComparable(4), new EComparable(1), new EComparable(7), new EComparable(3), new EComparable(2)]);
 		v.sort(null);
 		assertEquals(1, v.front().val);
 		var j = 0; for (i in v) { assertTrue(i.val >= j); j = i.val; }
@@ -193,10 +193,10 @@ class TestDA extends haxe.unit.TestCase
 	
 	function testConcat()
 	{
-		var a = new de.polygonal.ds.DA<Int>();
+		var a = new de.polygonal.ds.Da<Int>();
 		a.pushBack(0);
 		a.pushBack(1);
-		var b = new de.polygonal.ds.DA<Int>();
+		var b = new de.polygonal.ds.Da<Int>();
 		b.pushBack(2);
 		b.pushBack(3);
 		var c = a.concat(b, true);
@@ -207,9 +207,9 @@ class TestDA extends haxe.unit.TestCase
 		for (i in 0...4) assertEquals(i, a.get(i));
 	}
 	
-	/*function testReverse()
+	function testReverse()
 	{
-		var l = new de.polygonal.ds.DA<Int>();
+		var l = new de.polygonal.ds.Da<Int>();
 		l.pushBack(0);
 		l.pushBack(1);
 		l.reverse();
@@ -217,7 +217,7 @@ class TestDA extends haxe.unit.TestCase
 		assertEquals(1, l.get(0));
 		assertEquals(0, l.get(1));
 		
-		var l = new de.polygonal.ds.DA<Int>();
+		var l = new de.polygonal.ds.Da<Int>();
 		l.pushBack(0);
 		l.pushBack(1);
 		l.pushBack(2);
@@ -226,7 +226,7 @@ class TestDA extends haxe.unit.TestCase
 		assertEquals(1, l.get(1));
 		assertEquals(0, l.get(2));
 		
-		var l = new de.polygonal.ds.DA<Int>();
+		var l = new de.polygonal.ds.Da<Int>();
 		l.pushBack(0);
 		l.pushBack(1);
 		l.pushBack(2);
@@ -237,7 +237,7 @@ class TestDA extends haxe.unit.TestCase
 		assertEquals(1, l.get(2));
 		assertEquals(0, l.get(3));
 		
-		var l = new de.polygonal.ds.DA<Int>();
+		var l = new de.polygonal.ds.Da<Int>();
 		l.pushBack(0);
 		l.pushBack(1);
 		l.pushBack(2);
@@ -252,17 +252,17 @@ class TestDA extends haxe.unit.TestCase
 		assertEquals(1, l.get(3));
 		assertEquals(0, l.get(4));
 		
-		var l = new de.polygonal.ds.DA<Int>();
+		var l = new de.polygonal.ds.Da<Int>();
 		for (i in 0...27) l.pushBack(i);
 		l.reverse();
 		for (i in 0...27) assertEquals(26 - i, l.get(i));
 		
-		var l = new DA<Int>(10, 10);
+		var l = new Da<Int>(10, 10);
 		for (i in 0...4) l.set(i, i);
 		l.reverse();
 		for (i in 0...4) assertEquals(3 - i, l.get(i));
 		
-		var da = new DA<Int>();
+		var da = new Da<Int>();
 		
 		da.pushBack(8);
 		da.pushBack(7);
@@ -284,11 +284,11 @@ class TestDA extends haxe.unit.TestCase
 		assertEquals(11, da.get(1));
 		assertEquals(10, da.get(2));
 		assertEquals(8 , da.get(3));
-	}*/
+	}
 	
 	function testJoin()
 	{
-		var l = new de.polygonal.ds.DA<Int>();
+		var l = new de.polygonal.ds.Da<Int>();
 		assertEquals('', l.join(','));
 		l.pushBack(0);
 		assertEquals('0', l.join(','));
@@ -302,7 +302,7 @@ class TestDA extends haxe.unit.TestCase
 	
 	function testFill()
 	{
-		var l = new DA<Int>(20);
+		var l = new Da<Int>(20);
 		assertEquals(0, l.size());
 		l.fill(99, 20);
 		assertEquals(20, l.size());
@@ -312,7 +312,7 @@ class TestDA extends haxe.unit.TestCase
 	
 	function testAssign()
 	{
-		var l = new DA<E>(20);
+		var l = new Da<E>(20);
 		
 		assertEquals(0, l.size());
 		l.assign(E, [0], 20);
@@ -321,7 +321,7 @@ class TestDA extends haxe.unit.TestCase
 		for (i in 0...20)
 			assertEquals(E, cast Type.getClass(l.get(i)));
 		
-		var l = new DA<E>(20);
+		var l = new Da<E>(20);
 		
 		assertEquals(0, l.size());
 		l.assign(E, [5], 20);
@@ -336,7 +336,7 @@ class TestDA extends haxe.unit.TestCase
 	
 	function testMove()
 	{
-		var l = new DA<Int>(20);
+		var l = new Da<Int>(20);
 		for (i in 0...20) l.pushBack(i);
 		
 		l.memmove(0, 10, 10);
@@ -347,7 +347,7 @@ class TestDA extends haxe.unit.TestCase
 			assertEquals(i, l.get(i));
 		
 		
-		var l = new DA<Int>(20);
+		var l = new Da<Int>(20);
 		for (i in 0...20) l.pushBack(i);
 		
 		l.memmove(10, 0, 10);
@@ -357,7 +357,7 @@ class TestDA extends haxe.unit.TestCase
 		for (i in 10...20)
 			assertEquals(i-10, l.get(i));
 		
-		var l = new DA<Int>(20);
+		var l = new Da<Int>(20);
 		for (i in 0...20) l.pushBack(i);
 		
 		l.memmove(5, 0, 10);
@@ -369,7 +369,7 @@ class TestDA extends haxe.unit.TestCase
 	
 	function testSwp()
 	{
-		var l = new DA<Int>(10);
+		var l = new Da<Int>(10);
 		l.pushBack(0);
 		l.pushBack(1);
 		l.swp(0, 1);
@@ -379,7 +379,7 @@ class TestDA extends haxe.unit.TestCase
 	
 	function testCpy()
 	{
-		var l = new DA<Int>(10);
+		var l = new Da<Int>(10);
 		l.pushBack(0);
 		l.pushBack(1);
 		l.cpy(0, 1);
@@ -390,7 +390,7 @@ class TestDA extends haxe.unit.TestCase
 	#if debug
 	function testGetOutOfBound()
 	{
-		var l = new DA<Int>(10);
+		var l = new Da<Int>(10);
 		try
 		{
 			l.get(1);
@@ -406,7 +406,7 @@ class TestDA extends haxe.unit.TestCase
 	#if debug
 	/*function testMaxSize()
 	{
-		var stack = new DA<Int>(0, 3);
+		var stack = new Da<Int>(0, 3);
 		stack.pushBack(0);
 		stack.pushBack(1);
 		stack.pushBack(2);
@@ -421,7 +421,7 @@ class TestDA extends haxe.unit.TestCase
 		}
 		assertTrue(failed);
 		
-		var stack = new DA<Int>(0, 3);
+		var stack = new Da<Int>(0, 3);
 		stack.pushBack(0);
 		stack.pushBack(1);
 		stack.pushBack(2);
@@ -436,7 +436,7 @@ class TestDA extends haxe.unit.TestCase
 		}
 		assertTrue(failed);
 		
-		var stack = new DA<Int>(0, 3);
+		var stack = new Da<Int>(0, 3);
 		stack.pushBack(0);
 		stack.pushBack(1);
 		stack.pushBack(2);
@@ -451,7 +451,7 @@ class TestDA extends haxe.unit.TestCase
 		}
 		assertTrue(failed);
 		
-		var stack = new DA<Int>(0, 3);
+		var stack = new Da<Int>(0, 3);
 		stack.pushBack(0);
 		stack.pushBack(1);
 		stack.pushBack(2);
@@ -471,7 +471,7 @@ class TestDA extends haxe.unit.TestCase
 	#if debug
 	function testSetOutOfBound()
 	{
-		var l = new DA<Int>(10);
+		var l = new Da<Int>(10);
 		var x = 0;
 		
 		try
@@ -498,7 +498,7 @@ class TestDA extends haxe.unit.TestCase
 	
 	function testFront()
 	{
-		var l = new DA<Int>(10);
+		var l = new Da<Int>(10);
 		
 		#if debug
 		var fail = false;
@@ -526,7 +526,7 @@ class TestDA extends haxe.unit.TestCase
 	
 	function testPopBack()
 	{
-		var l = new DA<Int>(10);
+		var l = new Da<Int>(10);
 		var x = 0;
 		l.pushBack(x);
 		assertEquals(1, l.size());
@@ -543,7 +543,7 @@ class TestDA extends haxe.unit.TestCase
 	
 	function testPushBack()
 	{
-		var l = new DA<Int>(10);
+		var l = new Da<Int>(10);
 		l.pushBack(1);
 		assertEquals(1, l.back());
 		assertEquals(1, l.size());
@@ -564,7 +564,7 @@ class TestDA extends haxe.unit.TestCase
 	#if debug
 	function testInsertOutOfBound()
 	{
-		var l = new DA<Int>(10);
+		var l = new Da<Int>(10);
 		try
 		{
 			l.insertAt(1, 0);
@@ -580,7 +580,7 @@ class TestDA extends haxe.unit.TestCase
 	#if debug
 	function testRemoveOutOfBound()
 	{
-		var l = new DA<Int>(10);
+		var l = new Da<Int>(10);
 		
 		try
 		{
@@ -596,7 +596,7 @@ class TestDA extends haxe.unit.TestCase
 	
 	/*function testIndexOf()
 	{
-		var l = new DA<Int>(10);
+		var l = new Da<Int>(10);
 		assertEquals(-1, l.indexOf(0));
 		for (i in 0...3) l.pushBack(i);
 		assertEquals(0, l.indexOf(0));
@@ -604,11 +604,11 @@ class TestDA extends haxe.unit.TestCase
 		assertEquals(2, l.indexOf(2));
 		assertEquals(-1, l.indexOf(4));
 		
-		var l = new DA<Int>();
+		var l = new Da<Int>();
 		for (i in 0...3) l.pushBack(i);
 		l.indexOf(0, 2);
 		
-		var l = new DA<Int>(10);
+		var l = new Da<Int>(10);
 		for (i in 0...10) l.pushBack(i);
 		
 		#if !neko
@@ -621,7 +621,7 @@ class TestDA extends haxe.unit.TestCase
 		for (i in 0...9)
 			assertTrue(l.indexOf(i, i+1, true, function(a, b) { return a - b;}) < 0);
 		
-		var l = new DA<E>(10);
+		var l = new Da<E>(10);
 		
 		for (i in 0...10) l.pushBack(new E(i));
 		
@@ -633,7 +633,7 @@ class TestDA extends haxe.unit.TestCase
 	
 	function testLastIndexOf()
 	{
-		var l = new DA<Int>(10);
+		var l = new Da<Int>(10);
 		assertEquals(-1, l.lastIndexOf(0));
 		
 		for (i in 0...3) l.pushBack(i);
@@ -642,7 +642,7 @@ class TestDA extends haxe.unit.TestCase
 		assertEquals(2, l.lastIndexOf(2));
 		assertEquals(-1, l.lastIndexOf(4));
 		
-		var l = new DA<Int>(10);
+		var l = new Da<Int>(10);
 		l.pushBack(0);
 		l.pushBack(1);
 		l.pushBack(2);
@@ -660,7 +660,7 @@ class TestDA extends haxe.unit.TestCase
 	
 	function testRemoveRange()
 	{
-		var l = new DA<Int>(10);
+		var l = new Da<Int>(10);
 		for (i in 0...10) l.pushBack(i);
 		
 		l.removeRange(0, 5);
@@ -670,9 +670,9 @@ class TestDA extends haxe.unit.TestCase
 		for (i in 0...5)
 			assertEquals(i + 5, l.get(i));
 		
-		var l = new DA<Int>(10);
+		var l = new Da<Int>(10);
 		for (i in 0...10) l.pushBack(i);
-		var output = l.removeRange(0, 5, new de.polygonal.ds.DA<Int>(5));
+		var output = l.removeRange(0, 5, new de.polygonal.ds.Da<Int>(5));
 		
 		assertEquals(5, output.size());
 		assertEquals(5, l.size());
@@ -683,7 +683,7 @@ class TestDA extends haxe.unit.TestCase
 			assertEquals(i + 5, l.get(i));
 		}
 		
-		var l = new DA<Int>();
+		var l = new Da<Int>();
 		for (i in 0...10) l.pushBack(i);
 		l.removeRange(0, 10);
 		assertEquals(0, l.size());
@@ -691,12 +691,12 @@ class TestDA extends haxe.unit.TestCase
 	
 	function testInsert()
 	{
-		var l = new DA<Int>(10);
+		var l = new Da<Int>(10);
 		l.insertAt(0, 0);
 		
 		assertEquals(1, l.size());
 		
-		var l = new DA<Int>(10);
+		var l = new Da<Int>(10);
 		for (i in 0...3) l.pushBack(i);
 		assertEquals(3, l.size());
 		
@@ -708,7 +708,7 @@ class TestDA extends haxe.unit.TestCase
 		assertEquals(1, l.get(2));
 		assertEquals(2, l.get(3));
 		
-		var l = new DA<Int>(10);
+		var l = new Da<Int>(10);
 		for (i in 0...3) l.pushBack(i);
 		assertEquals(3, l.size());
 		
@@ -720,7 +720,7 @@ class TestDA extends haxe.unit.TestCase
 		assertEquals(1, l.get(2));
 		assertEquals(2, l.get(3));
 		
-		var l = new DA<Int>(10);
+		var l = new Da<Int>(10);
 		for (i in 0...3) l.pushBack(i);
 		assertEquals(3, l.size());
 		
@@ -732,7 +732,7 @@ class TestDA extends haxe.unit.TestCase
 		assertEquals(5, l.get(2));
 		assertEquals(2, l.get(3));
 		
-		var l = new DA<Int>(10);
+		var l = new Da<Int>(10);
 		for (i in 0...3) l.pushBack(i);
 		assertEquals(3, l.size());
 		
@@ -744,7 +744,7 @@ class TestDA extends haxe.unit.TestCase
 		assertEquals(2, l.get(2));
 		assertEquals(5, l.get(3));
 		
-		var l = new DA<Int>();
+		var l = new Da<Int>();
 		l.insertAt(0, 0);
 		l.insertAt(1, 1);
 		
@@ -754,10 +754,10 @@ class TestDA extends haxe.unit.TestCase
 	
 	/*function testClone()
 	{
-		var l = new DA<Int>(10);
+		var l = new Da<Int>(10);
 		for (i in 0...3) l.pushBack(i);
 		
-		var copy:de.polygonal.ds.DA<Int> = cast l.clone(true);
+		var copy:de.polygonal.ds.Da<Int> = cast l.clone(true);
 		
 		assertEquals(3, copy.size());
 		
@@ -767,7 +767,7 @@ class TestDA extends haxe.unit.TestCase
 	
 	function testRemoveAt()
 	{
-		var l = new DA<Int>(10);
+		var l = new Da<Int>(10);
 		for (i in 0...3) l.pushBack(i);
 		
 		for (i in 0...3)
@@ -792,7 +792,7 @@ class TestDA extends haxe.unit.TestCase
 	
 	function testRemove()
 	{
-		var a = ArrayConvert.toDA([0, 1, 2, 2, 2, 3]);
+		var a = ArrayConvert.toDa([0, 1, 2, 2, 2, 3]);
 		
 		assertEquals(6, a.size());
 		
@@ -813,7 +813,7 @@ class TestDA extends haxe.unit.TestCase
 		
 		assertTrue(a.isEmpty());
 		
-		var a = ArrayConvert.toDA([0, 0, 0, 0, 0]);
+		var a = ArrayConvert.toDa([0, 0, 0, 0, 0]);
 		var k = a.remove(0);
 		assertEquals(true, k);
 		assertTrue(a.isEmpty());
@@ -821,7 +821,7 @@ class TestDA extends haxe.unit.TestCase
 	
 	function testIterator()
 	{
-		var q:DA<Int> = new DA<Int>();
+		var q:Da<Int> = new Da<Int>();
 		for (i in 0...10) q.pushBack(i);
 		
 		var c = 0;
@@ -864,7 +864,7 @@ class TestDA extends haxe.unit.TestCase
 	{
 		for (i in 0...5)
 		{
-			var da = new de.polygonal.ds.DA<Int>();
+			var da = new de.polygonal.ds.Da<Int>();
 			var set = new de.polygonal.ds.ListSet<Int>();
 			for (j in 0...5)
 			{
@@ -884,7 +884,7 @@ class TestDA extends haxe.unit.TestCase
 			assertTrue(set.isEmpty());
 		}
 		
-		var da = new de.polygonal.ds.DA<Int>();
+		var da = new de.polygonal.ds.Da<Int>();
 		for (j in 0...5) da.pushBack(j);
 		
 		var itr = da.iterator();
@@ -898,19 +898,19 @@ class TestDA extends haxe.unit.TestCase
 	
 	function testSwapPop()
 	{
-		var da = new DA<Int>();
+		var da = new Da<Int>();
 		da.pushBack(0);
 		da.swapPop(0);
 		assertEquals(0, da.size());
 		
-		var da = new DA<Int>();
+		var da = new Da<Int>();
 		da.pushBack(0);
 		da.pushBack(1);
 		da.swapPop(0);
 		assertEquals(1, da.size());
 		assertEquals(da.get(0), 1);
 		
-		var da = new DA<Int>();
+		var da = new Da<Int>();
 		da.pushBack(0);
 		da.pushBack(1);
 		da.pushBack(2);

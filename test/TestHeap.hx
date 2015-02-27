@@ -1,4 +1,4 @@
-﻿import de.polygonal.ds.DA;
+﻿import de.polygonal.ds.Da;
 import de.polygonal.ds.Heap;
 
 @:access(de.polygonal.ds.Heap)
@@ -308,7 +308,7 @@ class TestHeap extends haxe.unit.TestCase
 	
 	function testRemove4()
 	{
-		var toRemove = new DA<E2>();
+		var toRemove = new Da<E2>();
 		
 		var i:Int;
 		

@@ -107,7 +107,7 @@ class TestArray3 extends haxe.unit.TestCase
 		assertEquals(c, a.size());
 		var s = new ListSet<String>();
 		var a = new Array3<String>(mW, mH, mD);
-		a.walk(function(val:String, x:Int, y:Int, z:Int):String
+		a.iter(function(val:String, x:Int, y:Int, z:Int):String
 		{
 			var t = [x, y, z].join('.');
 			s.set(t);

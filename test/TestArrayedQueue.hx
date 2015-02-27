@@ -351,7 +351,7 @@ class TestArrayedQueue extends haxe.unit.TestCase
 		{
 			return (val+index) * 3;
 		}
-		q.walk(process);
+		q.iter(process);
 		for (i in 0...10) assertEquals((i + i) * 3, q.get(i));
 	}
 	

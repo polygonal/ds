@@ -419,14 +419,14 @@ class TestLinkedStack extends haxe.unit.TestCase
 		
 		assertTrue(failed);
 		
-		var stack = new ArrayedStack<Int>(0, 3);
+		var stack = new ArrayedStack<Int>(16, 16);
 		for (i in 0...3) stack.push(i);
 		
 		var failed = false;
 		
 		try
 		{
-			stack.fill(0, 10);
+			stack.fill(0, 17);
 		}
 		catch (unknown:Dynamic)
 		{

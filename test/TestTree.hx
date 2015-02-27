@@ -3,6 +3,7 @@
 import de.polygonal.ds.Compare;
 import de.polygonal.ds.TreeBuilder;
 import de.polygonal.ds.TreeNode;
+import de.polygonal.ds.TreeUtil;
 import haxe.Serializer;
 import haxe.Unserializer;
 
@@ -28,14 +29,14 @@ class TestTree extends haxe.unit.TestCase
 	function testXmlToTreeNode()
 	{
 		var xml = '<root rootAttr=\'rootAttrValue\'><node1 node1Attr1=\'a\' node1Attr2=\'b\'><node2 node2Attr=\'c\'/></node1></root>';
-		var root = de.polygonal.ds.XmlConvert.toTreeNode(xml);
+		var root = de.polygonal.ds.TreeUtil.ofXml(xml);
 		
 		assertEquals(root.val.name, 'root');
-		assertEquals('rootAttrValue', root.val.attributes.get('rootAttr'));
-		assertEquals('a', root.children.val.attributes.get('node1Attr1'));
-		assertEquals('b', root.children.val.attributes.get('node1Attr2'));
+		assertEquals('rootAttrValue', root.val.rootAttr);
+		assertEquals('a', root.children.val.node1Attr1);
+		assertEquals('b', root.children.val.node1Attr2);
 		assertEquals('node1', root.children.val.name);
-		assertEquals('c', root.children.children.val.attributes.get('node2Attr'));
+		assertEquals('c', root.children.children.val.node2Attr);
 		assertEquals('node2', root.children.children.val.name);
 	}
 	
@@ -165,19 +166,19 @@ class TestTree extends haxe.unit.TestCase
 		}
 		
 		visitOrder = [];
-		root.find('a').levelorder(process);
+		root.find('a').levelorder(process, null);
 		assertEquals('a,d,e,f,g,h', visitOrder.join(','));
 		
 		visitOrder = [];
-		root.find('f').levelorder(process);
+		root.find('f').levelorder(process, null);
 		assertEquals('f', visitOrder.join(','));
 		
 		visitOrder = [];
-		root.find('d').levelorder(process);
+		root.find('d').levelorder(process, null);
 		assertEquals('d', visitOrder.join(','));
 		
 		visitOrder = [];
-		root.find('e').levelorder(process);
+		root.find('e').levelorder(process, null);
 		assertEquals('e,g,h', visitOrder.join(','));
 		
 		var root = new TreeNode<String>('root');
@@ -202,7 +203,7 @@ class TestTree extends haxe.unit.TestCase
 			return true;
 		}
 		
-		root.levelorder(visit);
+		root.levelorder(visit, null);
 		
 		//visitable
 		var root = new TreeNode<Visitor>(new Visitor('root'));
@@ -258,9 +259,9 @@ class TestTree extends haxe.unit.TestCase
 		}
 		
 		i = 0;
-		root.preorder(visit, true, false);
+		root.preorder(visit, null, true, false);
 		i = 0;
-		root.preorder(visit, true, true);
+		root.preorder(visit, null, true, true);
 		
 		//visitable
 		var root = new TreeNode<Visitor>(new Visitor('root'));
@@ -280,25 +281,27 @@ class TestTree extends haxe.unit.TestCase
 		Visitor.order = ['root', 'root.a2', 'root.a3'];
 		Visitor.exclude = 'root.a1';
 		
-		root.preorder(null, true, true);
-		Visitor.c = 0;
-		root.preorder(null, true, false);
+		root.preorder(null, null, true, true);
 		
+		Visitor.c = 0;
+		root.preorder(null, null, true, false);
+	
 		Visitor.c = 0;
 		Visitor.order = ['root', 'root.a1', 'root.a1.b1', 'root.a1.b2', 'root.a3'];
 		Visitor.exclude = 'root.a2';
 		
-		root.preorder(null, true, true);
+		root.preorder(null, null, true, true);
+		
 		Visitor.c = 0;
-		root.preorder(null, true, false);
+		root.preorder(null, null, true, false);
 		
 		Visitor.c = 0;
 		Visitor.order = [];
 		Visitor.exclude = 'root';
 		
-		root.preorder(null, true, true);
+		root.preorder(null, null, true, true);
 		Visitor.c = 0;
-		root.preorder(null, true, false);
+		root.preorder(null, null, true, false);
 	}
 	
 	function testPreOrder()
@@ -326,9 +329,9 @@ class TestTree extends haxe.unit.TestCase
 		}
 		
 		i = 0;
-		root.preorder(visit, false, false);
+		root.preorder(visit, null, false, false);
 		i = 0;
-		root.preorder(visit, false, true);
+		root.preorder(visit, null, false, true);
 		
 		//visitable
 		
@@ -346,7 +349,7 @@ class TestTree extends haxe.unit.TestCase
 		Visitor.t = this;
 		Visitor.order = order;
 		
-		root.preorder(null, false);
+		root.preorder(null, null, false);
 		
 		assertEquals(root.size(), Visitor.c);
 	}
@@ -376,7 +379,7 @@ class TestTree extends haxe.unit.TestCase
 		}
 		
 		i = 0;
-		root.postorder(visit);
+		root.postorder(visit, null);
 		i = 0;
 		root.postorder(visit, true);
 		

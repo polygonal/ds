@@ -1,6 +1,6 @@
 ﻿import de.polygonal.core.math.random.ParkMiller;
-import de.polygonal.ds.DA;
-import de.polygonal.ds.DLL;
+import de.polygonal.ds.Da;
+import de.polygonal.ds.Dll;
 import de.polygonal.ds.IntHashSet;
 import de.polygonal.core.util.Assert;
 
@@ -258,7 +258,7 @@ class TestIntHashSet extends haxe.unit.TestCase
 		
 		var K = [17, 25, 10, 2, 8, 24, 30, 3];
 		
-		var keys = new DA<Int>();
+		var keys = new Da<Int>();
 		for (i in 0...K.length)
 		{
 			keys.pushBack(K[i]);
@@ -285,7 +285,7 @@ class TestIntHashSet extends haxe.unit.TestCase
 		
 		for (i in 0...100)
 		{
-			var keys = new DA<Int>();
+			var keys = new Da<Int>();
 			for (i in 0...8)
 			{
 				var x = Std.int(seed.random()) % 64;
@@ -320,7 +320,7 @@ class TestIntHashSet extends haxe.unit.TestCase
 		for (i in 0...100)
 		{
 			j++;
-			var keys = new DA<Int>();
+			var keys = new Da<Int>();
 			for (i in 0...8)
 			{
 				var x = Std.int(seed.random()) & (64 - 1);
@@ -337,16 +337,12 @@ class TestIntHashSet extends haxe.unit.TestCase
 			keys.shuffle();
 			
 			for (i in 0...keys.size())
-			{
 				assertTrue(h.has(keys.get(i)));
-			}
 			
 			keys.shuffle();
 			
 			for (i in 0...keys.size())
-			{
 				assertTrue(h.remove(keys.get(i)));
-			}
 		}
 		
 		assertEquals(100, j);
@@ -454,7 +450,7 @@ class TestIntHashSet extends haxe.unit.TestCase
 		var c:IntHashSet = cast h.clone(true);
 		
 		var i = 0;
-		var l = new DLL<Int>();
+		var l = new Dll<Int>();
 		for (key in c)
 		{
 			l.append(key);
@@ -470,7 +466,7 @@ class TestIntHashSet extends haxe.unit.TestCase
 		assertEquals(8, i);
 	}
 	
-	function testToArrayToDA()
+	function testToArrayToDa()
 	{
 		var h = new IntHashSet(8);
 		for (i in 0...8) h.set(i);
@@ -609,7 +605,7 @@ class TestIntHashSet extends haxe.unit.TestCase
 		var h = new IntHashSet(8);
 		for (i in 0...8) h.set(i);
 		
-		var a = new DA<Int>();
+		var a = new Da<Int>();
 		
 		for (key in h)
 		{
