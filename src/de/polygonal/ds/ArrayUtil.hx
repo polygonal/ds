@@ -21,13 +21,13 @@ package de.polygonal.ds;
 import de.polygonal.ds.error.Assert.assert;
 
 /**
-	<h3>Various utility functions for working with arrays.</h3>
+	Various utility functions for working with arrays
 **/
 class ArrayUtil
 {
 	/**
 		Allocates an array with a length of `x`.
-		@throws de.polygonal.ds.error.AssertError `x` < 0 (debug only).
+		<assert>`x` < 0</assert>
 	**/
 	inline public static function alloc<T>(x:Int):Array<T>
 	{
@@ -47,7 +47,7 @@ class ArrayUtil
 	}
 	
 	/**
-		Shrinks the array to the size `x` and returns the modified array.
+		Shrinks the array `a` to the size `x` and returns the modified array.
 	**/
 	inline public static function shrink<T>(a:Array<T>, x:Int):Array<T>
 	{
@@ -67,9 +67,9 @@ class ArrayUtil
 	
 	/**
 		Copies elements in the range [`min`, `max`] from `source` to `destination`.
-		@throws de.polygonal.ds.error.AssertError `source` is null (debug only).
-		@throws de.polygonal.ds.error.AssertError `destination` is null (debug only).
-		@throws de.polygonal.ds.error.AssertError index out of range (debug only).
+		<assert>`source` is null</assert>
+		<assert>`destination` is null</assert>
+		<assert>`min`/`max` out of range</assert>
 	**/
 	inline public static function copy<T>(source:Array<T>, destination:Array<T>, min = 0, max = -1):Array<T>
 	{
@@ -115,7 +115,7 @@ class ArrayUtil
 		Copying takes place as if an intermediate buffer is used, allowing the destination and source to overlap.
 		
 		See <a href="ttp://www.cplusplus.com/reference/clibrary/cstring/memmove/" target="mBlank">ttp://www.cplusplus.com/reference/clibrary/cstring/memmove/</a>
-		@throws de.polygonal.ds.error.AssertError invalid `destination`, `source` or `n` value (debug only).
+		<assert>invalid `destination`, `source` or `n` value</assert>
 	**/
 	public static function memmove<T>(a:Array<T>, destination:Int, source:Int, n:Int)
 	{
@@ -153,10 +153,10 @@ class ArrayUtil
 	
 	/**
 		Searches the sorted array `a` for the element `x` in the range (`min`, `max`] using the binary search algorithm.
-		@return the index of the element `x` or the bitwise complement (~) of the index where `x` would be inserted (guaranteed to be a negative number).
 		<warn>The insertion point is only valid for `min`=0 and `max`=a.length-1.</warn>
-		@throws de.polygonal.ds.error.AssertError `a`/`comparator` is null (debug only).
-		@throws de.polygonal.ds.error.AssertError invalid min/max search boundaries (debug only).
+		<assert>`a`/`comparator` is null</assert>
+		<assert>invalid `min`/`max` search boundaries</assert>
+		@return the index of the element `x` or the bitwise complement (~) of the index where `x` would be inserted (guaranteed to be a negative number).
 	**/
 	public static function bsearchComparator<T>(a:Array<T>, x:T, min:Int, max:Int, comparator:T->T->Int):Int
 	{
@@ -183,10 +183,10 @@ class ArrayUtil
 	
 	/**
 		Searches the sorted array `a` for the element `x` in the range [`min`, `max`) using the binary search algorithm.
-		@return the index of the element `x` or the bitwise complement (~) of the index where `x` would be inserted (guaranteed to be a negative number).
 		<warn>The insertion point is only valid for `min`=0 and `max`=`a`::length-1.</warn>
-		@throws de.polygonal.ds.error.AssertError `a` is null (debug only).
-		@throws de.polygonal.ds.error.AssertError invalid min/max search boundaries (debug only).
+		<assert>`a` is null</assert>
+		<assert>invalid `min`/`max` search boundaries</assert>
+		@return the index of the element `x` or the bitwise complement (~) of the index where `x` would be inserted (guaranteed to be a negative number).
 	**/
 	public static function bsearchInt(a:Array<Int>, x:Int, min:Int, max:Int):Int
 	{
@@ -212,10 +212,10 @@ class ArrayUtil
 	
 	/**
 		Searches the sorted array `a` for the element `x` in the range [`min`, `max`) using the binary search algorithm.
-		@return the index of the element `x` or the bitwise complement (~) of the index where `x` would be inserted (guaranteed to be a negative number).
 		<warn>The insertion point is only valid for `min`=0 and `max`=`a`::length-1.</warn>
-		@throws de.polygonal.ds.error.AssertError `a` is null (debug only).
-		@throws de.polygonal.ds.error.AssertError invalid min/max search boundaries (debug only).
+		<assert>`a` is null</assert>
+		<assert>invalid `min`/`max` search boundaries</assert>
+		@return the index of the element `x` or the bitwise complement (~) of the index where `x` would be inserted (guaranteed to be a negative number).
 	**/
 	public static function bsearchFloat(a:Array<Float>, x:Float, min:Int, max:Int):Int
 	{
@@ -241,9 +241,9 @@ class ArrayUtil
 	
 	/**
 		Shuffles the elements of the array `a` by using the Fisher-Yates algorithm.
+		<assert>insufficient random values</assert>
 		@param rval a list of random double values in the range between [0,1) defining the new positions of the elements.
 		If omitted, random values are generated on-the-fly by calling `Math::random()`.
-		@throws de.polygonal.ds.error.AssertError insufficient random values (debug only).
 	**/
 	public static function shuffle<T>(a:Array<T>, rval:Array<Float> = null)
 	{
@@ -278,12 +278,12 @@ class ArrayUtil
 	
 	/**
 		Sorts the elements of the array `a` by using the quick sort algorithm.
+		<assert>`first` or `count` out of bound</assert>
 		@param compare a comparison function.
 		@param useInsertionSort if true, the array is sorted using the insertion sort algorithm. This is faster for nearly sorted lists.
 		@param first sort start index. The default value is 0.
 		@param count the number of elements to sort (range: [`first`, `first` + `count`]).
-		If omitted, `count` is set to `size()`.
-		@throws de.polygonal.ds.error.AssertError `first` or `count` out of bound (debug only).
+		If omitted, `count` is set to ``size()``.
 	**/
 	public static function sortRange(a:Array<Float>, compare:Float->Float->Int, useInsertionSort:Bool, first:Int, count:Int)
 	{
@@ -347,7 +347,7 @@ class ArrayUtil
 	}
 
 	/**
-		Compares `a` and `b` by comparing their elements.
+		Compares `a` and `b` by comparing their elements using ==.
 	**/
 	public static function equals<T>(a:Array<T>, b:Array<T>):Bool
 	{
@@ -360,7 +360,7 @@ class ArrayUtil
 	
 	/**
 		Splits the input array `a` storing `n` elements into smaller chunks, each containing k elements.
-		@throws de.polygonal.AssertError `n` is not a multiple of `k` (debug only).
+		<assert>`n` is not a multiple of `k`</assert>
 	**/
 	public static function split<T>(a:Array<T>, n:Int, k:Int):Array<Array<T>>
 	{

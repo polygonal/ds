@@ -25,7 +25,7 @@ import de.polygonal.ds.mem.IntMemory;
 import de.polygonal.ds.error.Assert.assert;
 
 /**
-	<h3>An array hash table for mapping integer keys to generic elements.</h3>
+	An array hash table for mapping integer keys to generic elements
 	
 	The implementation is based `IntIntHashTable`.
 	
@@ -57,7 +57,7 @@ class IntHashTable<T> implements Map<Int, T>
 	public var maxSize:Int;
 	
 	/**
-		If true, reuses the iterator object instead of allocating a new one when calling `iterator()`.
+		If true, reuses the iterator object instead of allocating a new one when calling ``iterator()``.
 		
 		The default is false.
 		
@@ -88,10 +88,14 @@ class IntHashTable<T> implements Map<Int, T>
 	var mTmpArr:Array<Int>;
 	
 	/**
+		<assert>`slotCount` is not a power of two</assert>
+		<assert>`capacity` is not a power of two</assert>
+		<assert>`capacity` is < 2</assert>
+		
 		@param slotCount the total number of slots into which the hashed keys are distributed.
 		This defines the space-time trade off of the hash table.
 		Increasing the `slotCount` reduces the computation time (read/write/access) of the hash table at the cost of increased memory use.
-		This value is fixed and can only be changed by calling `rehash()`, which rebuilds the hash table (expensive).
+		This value is fixed and can only be changed by calling ``rehash()``, which rebuilds the hash table (expensive).
 		
 		@param capacity the initial physical space for storing the key/value pairs at the time the hash table is created.
 		This is also the minimum allowed size of the hash table and cannot be changed in the future. If omitted, the initial `capacity` equals `slotCount`.
@@ -102,16 +106,12 @@ class IntHashTable<T> implements Map<Int, T>
 		</ul>
 		
 		@param isResizable if false, the hash table is treated as fixed size table.
-		Thus adding a value when `size()` equals `capacity` throws an error.
+		Thus adding a value when ``size()`` equals `capacity` throws an error.
 		Otherwise the `capacity` is automatically adjusted.
 		Default is true.
 		
 		@param maxSize the maximum allowed size of the stack.
 		The default value of -1 indicates that there is no upper limit.
-		
-		@throws de.polygonal.ds.error.AssertError `slotCount` is not a power of two (debug only).
-		@throws de.polygonal.ds.error.AssertError `capacity` is not a power of two (debug only).
-		@throws de.polygonal.ds.error.AssertError `capacity` is < 2 (debug only).
 	**/
 	public function new(slotCount:Int, capacity = -1, isResizable = true, maxSize = -1)
 	{
@@ -166,7 +166,7 @@ class IntHashTable<T> implements Map<Int, T>
 		
 		A high load factor thus indicates poor performance.
 		
-		If the load factor gets too high, additional slots can be allocated by calling `rehash()`.
+		If the load factor gets too high, additional slots can be allocated by calling ``rehash()``.
 	**/
 	inline public function getLoadFactor():Float
 	{
@@ -184,9 +184,9 @@ class IntHashTable<T> implements Map<Int, T>
 	/**
 		The size of the allocated storage space for the key/value pairs.
 		
-		If more space is required to accomodate new elements, the `capacity` is doubled every time `size()` grows beyond `capacity`, and split in half when `size()` is a quarter of `capacity`.
+		If more space is required to accomodate new elements,``getCapacity()`` is doubled every time ``size()`` grows beyond capacity, and split in half when ``size()`` is a quarter of capacity.
 		
-		The `capacity` never falls below the initial size defined in the constructor.
+		The capacity never falls below the initial size defined in the constructor.
 	**/
 	inline public function getCapacity():Int
 	{
@@ -229,9 +229,9 @@ class IntHashTable<T> implements Map<Int, T>
 	/**
 		Maps `val` to `key` in this map, but only if `key` does not exist yet.
 		<o>1</o>
+		<assert>out of space - hash table is full but not resizable</assert>
+		<assert>``size()`` equals ``maxSize``</assert>
 		@return true if `key` was mapped to `val` for the first time.
-		@throws de.polygonal.ds.error.AssertError out of space - hash table is full but not resizable.
-		@throws de.polygonal.ds.error.AssertError `size()` equals `maxSize` (debug only).
 	**/
 	inline public function setIfAbsent(key:Int, val:T):Bool
 	{
@@ -276,7 +276,7 @@ class IntHashTable<T> implements Map<Int, T>
 		
 		This is an expensive operations as the hash table is rebuild from scratch.
 		<o>n</o>
-		@throws de.polygonal.ds.error.AssertError `slotCount` is not a power of two (debug only).
+		<assert>`slotCount` is not a power of two</assert>
 	**/
 	public function rehash(slotCount:Int)
 	{
@@ -450,12 +450,12 @@ class IntHashTable<T> implements Map<Int, T>
 		
 		The method allows duplicate keys.
 		
-		<warn>To ensure unique keys either use `hasKey()` before `set()` or `setIfAbsent()`</warn>
+		<warn>To ensure unique keys either use ``hasKey()`` before ``set()`` or ``setIfAbsent()``</warn>
 		<o>1</o>
+		<assert>out of space - hash table is full but not resizable</assert>
+		<assert>key 0x80000000 is reserved</assert>
+		<assert>``size()`` equals ``maxSize``</assert>
 		@return true if `key` was added for the first time, false if another instance of `key` was inserted.
-		@throws de.polygonal.ds.error.AssertError out of space - hash table is full but not resizable.
-		@throws de.polygonal.ds.error.AssertError key 0x80000000 is reserved (debug only).
-		@throws de.polygonal.ds.error.AssertError `size()` equals `maxSize` (debug only).
 	**/
 	public function set(key:Int, val:T):Bool
 	{
@@ -577,7 +577,7 @@ class IntHashTable<T> implements Map<Int, T>
 	}
 	
 	/**
-		Same as `has()`.
+		Same as ``has()``.
 		<o>1</o>
 	**/
 	public function contains(val:T):Bool
@@ -701,10 +701,10 @@ class IntHashTable<T> implements Map<Int, T>
 	
 	/**
 		Duplicates this hash table. Supports shallow (structure only) and deep copies (structure & elements).
+		<assert>element is not of type `Cloneable`</assert>
 		@param assign if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
-		If false, the `clone()` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
-		@param copier a custom function for copying elements. Replaces element.`clone()` if `assign` is false.
-		@throws de.polygonal.ds.error.AssertError element is not of type `Cloneable` (debug only).
+		If false, the ``clone()`` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
+		@param copier a custom function for copying elements. Replaces ``element::clone()`` if `assign` is false.
 	**/
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{

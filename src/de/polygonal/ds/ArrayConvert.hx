@@ -21,14 +21,14 @@ package de.polygonal.ds;
 import de.polygonal.ds.error.Assert.assert;
 
 /**
-	<h3>Helper class for converting arrays to various collections.</h3>
+	Helper class for converting arrays to various collections
 **/
 class ArrayConvert
 {
 	/**
 		Converts the array `x` to a two-dimensional array with dimensions `width` and `height`.
-		@throws de.polygonal.ds.error.AssertError `x` is null (debug only).
-		@throws de.polygonal.ds.error.AssertError `x`::length < `width` * `height` (debug only).
+		<assert>`x` is null</assert>
+		<assert>`x`::length < `width` * `height`</assert>
 	**/
 	public static function toArray2<T>(x:Array<T>, width:Int, height:Int):Array2<T>
 	{
@@ -43,8 +43,8 @@ class ArrayConvert
 	
 	/**
 		Converts the array `x` to a three-dimensional array with dimensions `width`, `height` and `depth`.
-		@throws de.polygonal.ds.error.AssertError `x` is null (debug only).
-		@throws de.polygonal.ds.error.AssertError `x`::length < `width` * `height` * `depth` (debug only).
+		<assert>`x` is null</assert>
+		<assert>`x`::length < `width` * `height` * `depth`</assert>
 	**/
 	public static function toArray3<T>(x:Array<T>, width:Int, height:Int, depth:Int):Array3<T>
 	{
@@ -61,8 +61,8 @@ class ArrayConvert
 		Converts the array `x` to an arrayed queue.
 		
 		The size of the queue equals `x`::length.
-		@throws de.polygonal.ds.error.AssertError `x` is null (debug only).
-		@throws de.polygonal.ds.error.AssertError `x` is empty (debug only).
+		<assert>`x` is null</assert>
+		<assert>`x` is empty</assert>
 	**/
 	public static function toArrayedQueue<T>(x:Array<T>):ArrayedQueue<T>
 	{
@@ -79,8 +79,8 @@ class ArrayConvert
 		Converts the array `x` to an arrayed stack.
 		
 		The size of the stack equals `x`::length.
-		@throws de.polygonal.ds.error.AssertError `x` is null (debug only).
-		@throws de.polygonal.ds.error.AssertError `x` is empty (debug only).
+		<assert>`x` is null</assert>
+		<assert>`x` is empty</assert>
 	**/
 	public static function toArrayedStack<T>(x:Array<T>):ArrayedStack<T>
 	{
@@ -96,8 +96,8 @@ class ArrayConvert
 		Converts the array `x` to a singly linked list.
 		
 		The size of the linked list equals `x`::length.
-		@throws de.polygonal.ds.error.AssertError `x` is null (debug only).
-		@throws de.polygonal.ds.error.AssertError `x` is empty (debug only).
+		<assert>`x` is null</assert>
+		<assert>`x` is empty</assert>
 	**/
 	public static function toSll<T>(x:Array<T>):Sll<T>
 	{
@@ -113,8 +113,8 @@ class ArrayConvert
 		Converts the array `x` to a doubly linked list.
 		
 		The size of the linked list equals `x`::length.
-		@throws de.polygonal.ds.error.AssertError `x` is null (debug only).
-		@throws de.polygonal.ds.error.AssertError `x` is empty (debug only).
+		<assert>`x` is null</assert>
+		<assert>`x` is empty</assert>
 	**/
 	public static function toDll<T>(x:Array<T>):Dll<T>
 	{
@@ -130,8 +130,8 @@ class ArrayConvert
 		Converts the array `x` to a linked queue.
 		
 		The size of the queue equals `x`::length.
-		@throws de.polygonal.ds.error.AssertError `x` is null (debug only).
-		@throws de.polygonal.ds.error.AssertError `x` is empty (debug only).
+		<assert>`x` is null</assert>
+		<assert>`x` is empty</assert>
 	**/
 	public static function toLinkedQueue<T>(x:Array<T>):LinkedQueue<T>
 	{
@@ -147,8 +147,8 @@ class ArrayConvert
 		Converts the array `x` to a linked stack.
 		
 		The size of the stack equals `x`::length.
-		@throws de.polygonal.ds.error.AssertError `x` is null (debug only).
-		@throws de.polygonal.ds.error.AssertError `x` is empty (debug only).
+		<assert>`x` is null</assert>
+		<assert>`x` is empty</assert>
 	**/
 	public static function toLinkedStack<T>(x:Array<T>):LinkedStack<T>
 	{
@@ -164,8 +164,8 @@ class ArrayConvert
 		Converts the array `x` to a dense array.
 		
 		The size of the dense array equals `x`::length.
-		@throws de.polygonal.ds.error.AssertError `x` is null (debug only).
-		@throws de.polygonal.ds.error.AssertError `x` is empty (debug only).
+		<assert>`x` is null</assert>
+		<assert>`x` is empty</assert>
 	**/
 	public static function toDa<T>(x:Array<T>):Da<T>
 	{

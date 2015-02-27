@@ -19,7 +19,7 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 package de.polygonal.ds;
 
 /**
-	<h3>Specifies that the order of an element in a collection can be determined by calling object::compare(otherObject).</h3>
+	Specifies that the order of an element in a collection can be determined by calling object::compare(otherObject)
 	
 	Example:
 	<pre class="prettyprint">

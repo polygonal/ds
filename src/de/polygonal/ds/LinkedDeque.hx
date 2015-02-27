@@ -21,7 +21,7 @@ package de.polygonal.ds;
 import de.polygonal.ds.error.Assert.assert;
 
 /**
-	<h3>A deque is a "double-ended queue".</h3>
+	A deque is a "double-ended queue"
 	
 	This is a linear list for which all insertions and deletions (and usually all accesses) are made at ends of the list.
 	
@@ -53,7 +53,7 @@ class LinkedDeque<T> implements Deque<T>
 	public var maxSize:Int;
 	
 	/**
-		If true, reuses the iterator object instead of allocating a new one when calling `iterator()`.
+		If true, reuses the iterator object instead of allocating a new one when calling ``iterator()``.
 		
 		The default is false.
 		
@@ -73,11 +73,11 @@ class LinkedDeque<T> implements Deque<T>
 	var mIterator:LinkedDequeIterator<T>;
 	
 	/**
+		<assert>reserved size is greater than allowed size</assert>
 		@param reservedSize if > 0, this queue maintains an object pool of node objects.
 		Prevents frequent node allocation and thus increases performance at the cost of using more memory.
 		@param maxSize the maximum allowed size of this queue.
 		The default value of -1 indicates that there is no upper limit.
-		@throws de.polygonal.ds.error.AssertError reserved size is greater than allowed size (debug only).
 	**/
 	public function new(reservedSize = 0, maxSize = -1)
 	{
@@ -105,7 +105,7 @@ class LinkedDeque<T> implements Deque<T>
 	/**
 		Returns the first element of this deque.
 		<o>1</o>
-		@throws de.polygonal.ds.error.AssertError deque is empty (debug only).
+		<assert>deque is empty</assert>
 	**/
 	inline public function front():T
 	{
@@ -117,7 +117,7 @@ class LinkedDeque<T> implements Deque<T>
 	/**
 		Inserts the element `x` at the front of this deque.
 		<o>1</o>
-		@throws de.polygonal.ds.error.AssertError `size()` equals `maxSize` (debug only).
+		<assert>``size()`` equals ``maxSize``</assert>
 	**/
 	inline public function pushFront(x:T)
 	{
@@ -137,7 +137,7 @@ class LinkedDeque<T> implements Deque<T>
 	/**
 		Removes and returns the element at the beginning of this deque.
 		<o>1</o>
-		@throws de.polygonal.ds.error.AssertError deque is empty (debug only).
+		<assert>deque is empty</assert>
 	**/
 	inline public function popFront():T
 	{
@@ -155,7 +155,7 @@ class LinkedDeque<T> implements Deque<T>
 	/**
 		Returns the last element of the deque.
 		<o>1</o>
-		@throws de.polygonal.ds.error.AssertError deque is empty (debug only).
+		<assert>deque is empty</assert>
 	**/
 	inline public function back():T
 	{
@@ -167,7 +167,7 @@ class LinkedDeque<T> implements Deque<T>
 	/**
 		Inserts the element `x` at the back of the deque.
 		<o>1</o>
-		@throws de.polygonal.ds.error.AssertError `size()` equals `maxSize` (debug only).
+		<assert>``size()`` equals ``maxSize``</assert>
 	**/
 	inline public function pushBack(x:T)
 	{
@@ -187,7 +187,7 @@ class LinkedDeque<T> implements Deque<T>
 	/**
 		Deletes the element at the end of the deque.
 		<o>1</o>
-		@throws de.polygonal.ds.error.AssertError deque is empty (debug only).
+		<assert>deque is empty</assert>
 	**/
 	inline public function popBack():T
 	{
@@ -205,10 +205,10 @@ class LinkedDeque<T> implements Deque<T>
 	/**
 		Returns the element at index `i` relative to the front of this deque.
 		
-		The front element is at index [0], the back element is at index [`size()` - 1].
+		The front element is at index [0], the back element is at index [``size()`` - 1].
 		<o>n</o>
-		@throws de.polygonal.ds.error.AssertError deque is empty (debug only).
-		@throws de.polygonal.ds.error.AssertError index out of range (debug only).
+		<assert>deque is empty</assert>
+		<assert>`i` out of range</assert>
 	**/
 	public function getFront(i:Int):T
 	{
@@ -222,7 +222,7 @@ class LinkedDeque<T> implements Deque<T>
 	/**
 		Returns the index of the first occurence of the element `x` or -1 if `x` does not exist.
 		
-		The front element is at index [0], the back element is at index [`size()` - 1].
+		The front element is at index [0], the back element is at index [``size()`` - 1].
 		<o>n</o>
 	**/
 	public function indexOfFront(x:T):Int
@@ -239,10 +239,10 @@ class LinkedDeque<T> implements Deque<T>
 	/**
 		Returns the element at index `i` relative to the back of this deque.
 		
-		The back element is at index [0], the front element is at index [`size()` - 1].
+		The back element is at index [0], the front element is at index [``size()`` - 1].
 		<o>n</o>
-		@throws de.polygonal.ds.error.AssertError deque is empty (debug only).
-		@throws de.polygonal.ds.error.AssertError index out of range (debug only).
+		<assert>deque is empty</assert>
+		<assert>`i` out of range</assert>
 	**/
 	public function getBack(i:Int):T
 	{
@@ -256,7 +256,7 @@ class LinkedDeque<T> implements Deque<T>
 	/**
 		Returns the index of the first occurence of the element `x` or -1 if `x` does not exist.
 		
-		The back element is at index [0], the front element is at index [`size()` - 1].
+		The back element is at index [0], the front element is at index [``size()`` - 1].
 		<o>n</o>
 	**/
 	public function indexOfBack(x:T):Int
@@ -275,7 +275,7 @@ class LinkedDeque<T> implements Deque<T>
 		<o>n</o>
 		@param cl the class to instantiate for each element.
 		@param args passes additional constructor arguments to the class `cl`.
-		@param n the number of elements to replace. If 0, `n` is set to `size()`.
+		@param n the number of elements to replace. If 0, `n` is set to ``size()``.
 	**/
 	public function assign(cl:Class<T>, args:Array<Dynamic> = null, n = 0)
 	{
@@ -305,9 +305,9 @@ class LinkedDeque<T> implements Deque<T>
 	/**
 		Replaces up to `n` existing elements with the instance `x`.
 		
-		If size() < `n`, additional elements are added to the back of this deque.
+		If ``size()`` < `n`, additional elements are added to the back of this deque.
 		<o>n</o>
-		@param n the number of elements to replace. If 0, `n` is set to `size()`.
+		@param n the number of elements to replace. If 0, `n` is set to ``size()``.
 	**/
 	public function fill(x:T, n = 0):LinkedDeque<T>
 	{
@@ -565,10 +565,10 @@ class LinkedDeque<T> implements Deque<T>
 	
 	/**
 		Duplicates this deque. Supports shallow (structure only) and deep copies (structure & elements).
+		<assert>element is not of type `Cloneable`</assert>
 		@param assign if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
-		If false, the `clone()` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
-		@param copier a custom function for copying elements. Replaces element.`clone()` if `assign` is false.
-		@throws de.polygonal.ds.error.AssertError element is not of type `Cloneable` (debug only).
+		If false, the ``clone()`` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
+		@param copier a custom function for copying elements. Replaces ``element::clone()`` if `assign` is false.
 	**/
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{

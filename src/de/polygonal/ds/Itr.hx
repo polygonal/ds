@@ -19,9 +19,9 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 package de.polygonal.ds;
 
 /**
-	<h3>An iterator over a collection.</h3>
+	An iterator over a collection
 	
-	Same as typedef Iterator<T> but augmented with a reset() method.
+	Same as typedef Iterator<T> but augmented with a ``reset()`` method.
 **/
 interface Itr<T>
 {

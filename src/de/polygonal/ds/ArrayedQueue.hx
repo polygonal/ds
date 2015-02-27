@@ -21,7 +21,7 @@ package de.polygonal.ds;
 import de.polygonal.ds.error.Assert.assert;
 
 /**
-	<h3>An arrayed queue based on an arrayed circular queue.</h3>
+	An arrayed queue based on an arrayed circular queue
 	
 	A queue is a linear list for which all insertions are made at one end of the list; all deletions (and usually all accesses) are made at the other end.
 	
@@ -57,7 +57,7 @@ class ArrayedQueue<T> implements Queue<T>
 	public var maxSize:Int;
 	
 	/**
-		If true, reuses the iterator object instead of allocating a new one when calling `iterator()`.
+		If true, reuses the iterator object instead of allocating a new one when calling ``iterator()``.
 		
 		The default is false.
 		
@@ -80,12 +80,13 @@ class ArrayedQueue<T> implements Queue<T>
 	#end
 	
 	/**
+		<assert>reserved size is greater than allowed size</assert>
 		@param capacity the initial physical space for storing the elements at the time the queue is created.
 		This is also the minimum size of this queue.
 		The `capacity` is automatically adjusted according to the storage requirements based on three rules:
 		<ul>
 		<li>If this queue runs out of space, the `capacity` is doubled (if `isResizable` is true)</li>
-		<li>If the `size()` falls below a quarter of the current `capacity`, the `capacity` is cut in half</li>
+		<li>If the ``size()`` falls below a quarter of the current `capacity`, the `capacity` is cut in half</li>
 		<li>The minimum `capacity` equals `capacity`</li>
 		</ul>
 		@param isResizable if true, the `capacity` is automatically adjusted.
@@ -93,7 +94,6 @@ class ArrayedQueue<T> implements Queue<T>
 		Default is true.
 		@param maxSize the maximum allowed size of this queue.
 		The default value of -1 indicates that there is no upper limit.
-		@throws de.polygonal.ds.error.AssertError reserved size is greater than allowed size (debug only).
 	**/
 	public function new(capacity:Int, isResizable = true, maxSize = -1)
 	{
@@ -122,7 +122,7 @@ class ArrayedQueue<T> implements Queue<T>
 	/**
 		Returns the front element. This is the "oldest" element.
 		<o>1</o>
-		@throws de.polygonal.ds.error.AssertError queue is empty (debug only).
+		<assert>queue is empty</assert>
 	**/
 	inline public function peek():T
 	{
@@ -136,7 +136,7 @@ class ArrayedQueue<T> implements Queue<T>
 		
 		This is the "newest" element.
 		<o>1</o>
-		@throws de.polygonal.ds.error.AssertError queue is empty (debug only).
+		<assert>queue is empty</assert>
 	**/
 	inline public function back():T
 	{
@@ -148,8 +148,8 @@ class ArrayedQueue<T> implements Queue<T>
 	/**
 		Enqueues the element `x`.
 		<o>1</o>
-		@throws de.polygonal.ds.error.AssertError `size()` equals `maxSize` (debug only).
-		@throws de.polygonal.ds.error.AssertError out of space - queue is full but not resizable.
+		<assert>``size()`` equals ``maxSize``</assert>
+		<assert>out of space - queue is full but not resizable</assert>
 	**/
 	public function enqueue(x:T)
 	{
@@ -181,9 +181,9 @@ class ArrayedQueue<T> implements Queue<T>
 	/**
 		Dequeues and returns the front element.
 		
-		To allow instant garbage collection of the dequeued element call `dequeue()` followed by `dispose()`.
+		To allow instant garbage collection of the dequeued element call ``dequeue()`` followed by ``dispose()``.
 		<o>1</o>
-		@throws de.polygonal.ds.error.AssertError queue is empty (debug only).
+		<assert>queue is empty</assert>
 	**/
 	public function dequeue():T
 	{
@@ -214,9 +214,9 @@ class ArrayedQueue<T> implements Queue<T>
 	/**
 		Nullifies the last dequeued element so it can be garbage collected.
 		
-		<warn>Use only directly after `dequeue()`.</warn>
+		<warn>Use only directly after ``dequeue()``.</warn>
 		<o>1</o>
-		@throws de.polygonal.ds.error.AssertError `dispose()` wasn't directly called after `dequeue()`(debug only).
+		<assert>``dispose()`` wasn't directly called after ``dequeue()``</assert>
 	**/
 	inline public function dispose()
 	{
@@ -227,7 +227,7 @@ class ArrayedQueue<T> implements Queue<T>
 	
 	/**
 		For performance reasons the queue does nothing to ensure that empty locations contain null;
-		`pack()` therefore nullifies all obsolete references.
+		``pack()`` therefore nullifies all obsolete references.
 		<o>n</o>
 	**/
 	public function pack()
@@ -242,8 +242,8 @@ class ArrayedQueue<T> implements Queue<T>
 		
 		The index is measured relative to the index of the front element (= 0).
 		<o>1</o>
-		@throws de.polygonal.ds.error.AssertError queue is empty (debug only).
-		@throws de.polygonal.ds.error.AssertError index out of range (debug only).
+		<assert>queue is empty</assert>
+		<assert>`i` out of range</assert>
 	**/
 	inline public function get(i:Int):T
 	{
@@ -258,8 +258,8 @@ class ArrayedQueue<T> implements Queue<T>
 		
 		The index is measured relative to the index of the front element (= 0).
 		<o>1</o>
-		@throws de.polygonal.ds.error.AssertError queue is empty (debug only).
-		@throws de.polygonal.ds.error.AssertError index out of range (debug only).
+		<assert>queue is empty</assert>
+		<assert>`i` out of range</assert>
 	**/
 	inline public function set(i:Int, x:T)
 	{
@@ -274,9 +274,9 @@ class ArrayedQueue<T> implements Queue<T>
 		
 		The index is measured relative to the index of the front element (= 0).
 		<o>1</o>
-		@throws de.polygonal.ds.error.AssertError queue is empty (debug only).
-		@throws de.polygonal.ds.error.AssertError index out of range (debug only).
-		@throws de.polygonal.ds.error.AssertError `i` equals `j` (debug only).
+		<assert>queue is empty</assert>
+		<assert>`i`/`j` out of range</assert>
+		<assert>`i` equals `j`</assert>
 	**/
 	inline public function swp(i:Int, j:Int)
 	{
@@ -295,9 +295,9 @@ class ArrayedQueue<T> implements Queue<T>
 		
 		The index is measured relative to the index of the front element (= 0).
 		<o>1</o>
-		@throws de.polygonal.ds.error.AssertError queue is empty (debug only).
-		@throws de.polygonal.ds.error.AssertError index out of range (debug only).
-		@throws de.polygonal.ds.error.AssertError `i` equals `j` (debug only).
+		<assert>queue is empty</assert>
+		<assert>`i`/`j` out of range</assert>
+		<assert>`i` equals `j`</assert>
 	**/
 	inline public function cpy(i:Int, j:Int)
 	{
@@ -312,10 +312,10 @@ class ArrayedQueue<T> implements Queue<T>
 	/**
 		Replaces up to `n` existing elements with objects of type `cl`.
 		<o>n</o>
+		<assert>`n` out of range</assert>
 		@param cl the class to instantiate for each element.
 		@param args passes additional constructor arguments to the class `cl`.
-		@param n the number of elements to replace. If 0, `n` is set to `capacity`.
-		@throws de.polygonal.ds.error.AssertError `n` out of range (debug only).
+		@param n the number of elements to replace. If 0, `n` is set to ``getCapacity()``.
 	**/
 	public function assign(cl:Class<T>, args:Array<Dynamic> = null, n = 0)
 	{
@@ -335,8 +335,8 @@ class ArrayedQueue<T> implements Queue<T>
 	/**
 		Replaces up to `n` existing elements with the instance `x`.
 		<o>n</o>
-		@param n the number of elements to replace. If 0, `n` is set to `capacity`.
-		@throws de.polygonal.ds.error.AssertError `n` out of range (debug only).
+		<assert>`n` out of range</assert>
+		@param n the number of elements to replace. If 0, `n` is set to ``getCapacity()``.
 	**/
 	public function fill(x:T, n = 0):ArrayedQueue<T>
 	{
@@ -356,7 +356,7 @@ class ArrayedQueue<T> implements Queue<T>
 	/**
 		Invokes the `process` function for each element.
 		
-		The function signature is: `process(oldValue, index):newValue`
+		The function signature is: ``process(oldValue, index):newValue``
 		<o>n</o>
 	**/
 	public function iter(process:T->Int->T)
@@ -371,9 +371,9 @@ class ArrayedQueue<T> implements Queue<T>
 	/**
 		Shuffles the elements of this collection by using the Fisher-Yates algorithm.
 		<o>n</o>
+		<assert>insufficient random values</assert>
 		@param rval a list of random double values in the range between 0 (inclusive) to 1 (exclusive) defining the new positions of the elements.
 		If omitted, random values are generated on-the-fly by calling `Math::random()`.
-		@throws de.polygonal.ds.error.AssertError insufficient random values (debug only).
 	**/
 	public function shuffle(rval:Array<Float> = null)
 	{
@@ -439,8 +439,8 @@ class ArrayedQueue<T> implements Queue<T>
 	/**
 		The size of the allocated storage space for the elements.
 		
-		If more space is required to accomodate new elements, the `capacity` is doubled every time `size()` grows beyond `capacity`, and split in half when `size()` is a quarter of `capacity`.
-		The `capacity` never falls below the initial size defined in the constructor.
+		If more space is required to accomodate new elements, the capacity is doubled every time ``size()`` grows beyond capacity, and split in half when ``size()`` is a quarter of capacity.
+		The capacity never falls below the initial size defined in the constructor.
 		<o>1</o>
 	**/
 	inline public function getCapacity():Int
@@ -558,7 +558,7 @@ class ArrayedQueue<T> implements Queue<T>
 	/**
 		Removes all elements.
 		<o>1 or n if `purge` is true</o>
-		@param purge if true, elements are nullified upon removal and `capacity` is set to the initial `capacity` defined in the constructor.
+		@param purge if true, elements are nullified upon removal and ``getCapacity()`` is set to the initial capacity defined in the constructor.
 	**/
 	public function clear(purge = false)
 	{
@@ -642,10 +642,10 @@ class ArrayedQueue<T> implements Queue<T>
 	
 	/**
 		Duplicates this queue. Supports shallow (structure only) and deep copies (structure & elements).
+		<assert>element is not of type `Cloneable`</assert>
 		@param assign if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
-		If false, the `clone()` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
-		@param copier a custom function for copying elements. Replaces element.`clone()` if `assign` is false.
-		@throws de.polygonal.ds.error.AssertError element is not of type `Cloneable` (debug only).
+		If false, the ``clone()`` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
+		@param copier a custom function for copying elements. Replaces ``element::clone()`` if `assign` is false.
 	**/
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{

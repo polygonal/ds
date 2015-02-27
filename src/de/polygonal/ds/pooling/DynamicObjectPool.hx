@@ -116,10 +116,10 @@ class DynamicObjectPool<T>
 		Creates an empty pool.
 		@param cl allocates objects by instantiating the class `cl`.
 		@param fabricate allocates objects by calling `fabricate()`.
-		@param factory allocates objects by using a `Factory` object (calling `factory`::`create()`).
+		@param factory allocates objects by using a `Factory` object (calling `factory`::create()).
 		@param capacity the maximum number of objects that are stored in this pool.
 		The default value of 0x7FFFFFFF indicates that the size is unbound.
-		@throws de.polygonal.ds.error.AssertError invalid arguments.
+		<assert>invalid arguments</assert>
 	**/
 	public function new(cl:Class<T> = null, fabricate:Void->T = null, factory:Factory<T> = null, capacity = M.INT32_MAX)
 	{
@@ -199,7 +199,7 @@ class DynamicObjectPool<T>
 	/**
 		Acquires the next object from this pool or creates a new object if all objects are in use.
 		To minimize object creation, return objects back to the pool as soon as their life cycle ends by calling `put()`.
-		<warn>If `size()` equals `capacity()`, `get()` still allocates a new object but does not pool it. This effectively disables pooling.</warn>
+		<warn>If ``size()`` equals `capacity()`, `get()` still allocates a new object but does not pool it. This effectively disables pooling.</warn>
 	**/
 	inline public function get():T
 	{
@@ -227,7 +227,7 @@ class DynamicObjectPool<T>
 	/**
 		Returns the object `x` to the pool.
 		Objects are pushed onto a stack, so `get()` returns `x` if called immediately after `put()`.
-		@throws de.polygonal.ds.error.AssertError `x` was returned twice to the pool (debug only).
+		<assert>`x` was returned twice to the pool</assert>
 	**/
 	inline public function put(x:T)
 	{

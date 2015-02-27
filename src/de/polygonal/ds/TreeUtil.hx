@@ -21,14 +21,14 @@ package de.polygonal.ds;
 import haxe.ds.StringMap;
 
 /**
-	<h3>A helper class for working with trees.</h3>
+	A helper class for working with trees
 **/
 @:access(de.polygonal.ds.XmlNode)
 class TreeUtil
 {
-	 /**
-		 Converts `xmlStr` to a `Treenode` structure.
-	 **/
+	/**
+		 Converts `xmlStr` to a ``Treenode`` structure.
+	**/
 	public static function ofXml(xmlStr:String):TreeNode<XmlNode>
 	{
 		var stack = new Array<Dynamic>();
@@ -90,7 +90,7 @@ class TreeUtil
 }
 
 /**
-	<h3>An object containing the data of an xml node.</h3>
+	An object containing the data of an xml node
 **/
 class XmlNode implements Dynamic<String>
 {

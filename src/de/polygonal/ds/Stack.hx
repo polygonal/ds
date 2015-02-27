@@ -19,7 +19,7 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 package de.polygonal.ds;
 
 /**
-	<h3>A stack is a Last-In-First-Out (LIFO) data structure.</h3>
+	A stack is a Last-In-First-Out (LIFO) data structure
 	
 	The last element added to the stack will be the first one to be removed.
 	

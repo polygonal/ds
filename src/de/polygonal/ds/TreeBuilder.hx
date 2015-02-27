@@ -21,11 +21,11 @@ package de.polygonal.ds;
 import de.polygonal.ds.error.Assert.assert;
 
 /**
-	<h3>A helper class for building tree structures.</h3>
+	A helper class for building tree structures
 	
 	The class manages two pointers: A "vertical" pointer and a "horizontal" pointer.
 	
-	The vertical pointer moves up and down the tree using the node's `parent` field, while the horizontal pointer moves left/right over the children using the `prev` and `next` fields.
+	The vertical pointer moves up and down the tree using the node's ``parent`` field, while the horizontal pointer moves left/right over the children using the ``prev`` and ``next`` fields.
 	
 	_<o>Worst-case running time in Big O notation</o>_
 **/
@@ -38,8 +38,8 @@ class TreeBuilder<T>
 	var mChild:TreeNode<T>;
 	
 	/**
-		Creates a `TreeBuilder` object pointing to `node`.
-		@throws de.polygonal.ds.error.AssertError node is null (debug only).
+		Creates a ``TreeBuilder`` object pointing to `node`.
+		<assert>node is null</assert>
 	**/
 	public function new(node:TreeNode<T>)
 	{
@@ -63,7 +63,7 @@ class TreeBuilder<T>
 	/**
 		Returns the data stored in the node that the tree builder is currently pointing at.
 		<o>1</o>
-		@throws de.polygonal.ds.error.AssertError vertical pointer is null (debug only).
+		<assert>vertical pointer is null</assert>
 	**/
 	inline public function getVal():T
 	{
@@ -75,7 +75,7 @@ class TreeBuilder<T>
 	/**
 		Stores the element `x` in the node that the tree builder is currently pointing at.
 		<o>1</o>
-		@throws de.polygonal.ds.error.AssertError vertical pointer is null (debug only).
+		<assert>vertical pointer is null</assert>
 	**/
 	inline public function setVal(x:T)
 	{
@@ -105,7 +105,7 @@ class TreeBuilder<T>
 	/**
 		Returns the data of the child pointer.
 		<o>1</o>
-		@throws de.polygonal.ds.error.AssertError invalid child pointer (debug only).
+		<assert>invalid child pointer</assert>
 	**/
 	inline public function getChildVal():T
 	{
@@ -126,7 +126,7 @@ class TreeBuilder<T>
 	/**
 		Moves the vertical pointer to the root of the tree.
 		<o>n</o>
-		@throws de.polygonal.ds.error.AssertError invalid pointer (debug only).
+		<assert>invalid pointer</assert>
 	**/
 	public function root()
 	{
@@ -268,7 +268,7 @@ class TreeBuilder<T>
 	/**
 		Appends a child node storing `x` to the children of the vertical pointer.
 		<o>1</o>
-		@throws de.polygonal.ds.error.AssertError invalid vertical pointer (debug only).
+		<assert>invalid vertical pointer</assert>
 	**/
 	public function appendChild(x:T):TreeNode<T>
 	{
@@ -281,7 +281,7 @@ class TreeBuilder<T>
 	/**
 		Prepends a child node storing `x` to the children of the vertical pointer.
 		<o>1</o>
-		@throws de.polygonal.ds.error.AssertError invalid vertical pointer (debug only).
+		<assert>invalid vertical pointer</assert>
 	**/
 	public function prependChild(x:T):TreeNode<T>
 	{
@@ -303,7 +303,7 @@ class TreeBuilder<T>
 	/**
 		Prepends a child node storing `x` to the child node referenced by the horizontal pointer.
 		<o>1</o>
-		@throws de.polygonal.ds.error.AssertError invalid vertical pointer (debug only).
+		<assert>invalid vertical pointer</assert>
 	**/
 	public function insertBeforeChild(x:T):TreeNode<T>
 	{
@@ -331,7 +331,7 @@ class TreeBuilder<T>
 	/**
 		Appends a child node storing `x` to the node referenced by the vertical pointer.
 		<o>1</o>
-		@throws de.polygonal.ds.error.AssertError invalid vertical pointer (debug only).
+		<assert>invalid vertical pointer</assert>
 	**/
 	public function insertAfterChild(x:T):TreeNode<T>
 	{

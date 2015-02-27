@@ -21,7 +21,7 @@ package de.polygonal.ds;
 import de.polygonal.ds.error.Assert.assert;
 
 /**
-	<h3>Generates unique, unsigned integer keys.</h3>
+	Generates unique, unsigned integer keys
 **/
 class HashKey
 {

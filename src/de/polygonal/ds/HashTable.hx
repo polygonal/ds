@@ -25,7 +25,7 @@ import de.polygonal.ds.mem.IntMemory;
 import de.polygonal.ds.error.Assert.assert;
 
 /**
-	<h3>An array hash table for mapping Hashable keys to generic elements.</h3>
+	An array hash table for mapping Hashable keys to generic elements
 	
 	The implementation is based on `IntIntHashTable`.
 	
@@ -46,7 +46,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	public var key:Int;
 	
 	/**
-		If true, reuses the iterator object instead of allocating a new one when calling `iterator()`.
+		If true, reuses the iterator object instead of allocating a new one when calling ``iterator()``.
 		
 		The default is false.
 		
@@ -73,10 +73,13 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	var mTmpArr:Array<Int>;
 	
 	/**
+		<assert>`slotCount` is not a power of two</assert>
+		<assert>`capacity` is not a power of two</assert>
+		<assert>`capacity` is < 2</assert>
 		@param slotCount the total number of slots into which the hashed keys are distributed.
 		This defines the space-time trade off of the hash table.
 		Increasing the `slotCount` reduces the computation time (read/write/access) of the hash table at the cost of increased memory use.
-		This value is fixed and can only be changed by calling `rehash()`, which rebuilds the hash table (expensive).
+		This value is fixed and can only be changed by calling ``rehash()``, which rebuilds the hash table (expensive).
 		
 		@param capacity the initial physical space for storing the key/value pairs at the time the hash table is created.
 		This is also the minimum allowed size of the hash table and cannot be changed in the future. If omitted, the initial `capacity` equals `slotCount`.
@@ -87,16 +90,12 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		</ul>
 		
 		@param isResizable if false, the hash table is treated as fixed size table.
-		Thus adding a value when `size()` equals `capacity` throws an error.
+		Thus adding a value when ``size()`` equals `capacity` throws an error.
 		Otherwise the `capacity` is automatically adjusted.
 		Default is true.
 		
 		@param maxSize the maximum allowed size of this hash table.
 		The default value of -1 indicates that there is no upper limit.
-		
-		@throws de.polygonal.ds.error.AssertError `slotCount` is not a power of two (debug only).
-		@throws de.polygonal.ds.error.AssertError `capacity` is not a power of two (debug only).
-		@throws de.polygonal.ds.error.AssertError `capacity` is < 2 (debug only).
 	**/
 	public function new(slotCount:Int, capacity = -1, isResizable = true, maxSize = -1)
 	{
@@ -135,7 +134,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		
 		A high load factor thus indicates poor performance.
 		
-		If the load factor gets too high, additional slots can be allocated by calling `rehash()`.
+		If the load factor gets too high, additional slots can be allocated by calling ``rehash()``.
 	**/
 	inline public function getLoadFactor():Float
 	{
@@ -153,9 +152,9 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	/**
 		The size of the allocated storage space for the key/value pairs.
 		
-		If more space is required to accomodate new elements, the `capacity` is doubled every time `size()` grows beyond `capacity`, and split in half when `size()` is a quarter of `capacity`.
+		If more space is required to accomodate new elements, ``getCapacity()`` is doubled every time ``size()`` grows beyond capacity, and split in half when ``size()`` is a quarter of capacity.
 		
-		The `capacity` never falls below the initial size defined in the constructor.
+		The capacity never falls below the initial size defined in the constructor.
 	**/
 	inline public function getCapacity():Int
 	{
@@ -177,7 +176,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		
 		Uses move-to-front-on-access which reduces access time when similar keys are frequently queried.
 		<o>n</o>
-		@throws de.polygonal.ds.error.AssertError `key` is null (debug only).
+		<assert>`key` is null</assert>
 	**/
 	inline public function getFront(key:K):T
 	{
@@ -191,10 +190,10 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	/**
 		Maps `val` to `key` in this map, but only if `key` does not exist yet.
 		<o>n</o>
+		<assert>out of space - hash table is full but not resizable</assert>
+		<assert>`key` is null</assert>
+		<assert>``size()`` equals ``maxSize``</assert>
 		@return true if `key` was mapped to `val` for the first time.
-		@throws de.polygonal.ds.error.AssertError out of space - hash table is full but not resizable.
-		@throws de.polygonal.ds.error.AssertError `key` is null (debug only).
-		@throws de.polygonal.ds.error.AssertError `size()` equals `maxSize` (debug only).
 	**/
 	inline public function setIfAbsent(key:K, val:T):Bool
 	{
@@ -231,7 +230,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		
 		This is an expensive operations as the hash table is rebuild from scratch.
 		<o>n</o>
-		@throws de.polygonal.ds.error.AssertError `slotCount` is not a power of two (debug only).
+		<assert>`slotCount` is not a power of two</assert>
 	**/
 	public function rehash(slotCount:Int)
 	{
@@ -241,8 +240,8 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	/**
 		Remaps the first occurrence of `key` to a new value `val`.
 		<o>n</o>
+		<assert>`key` is null</assert>
 		@return true if `val` was successfully remapped to `key`.
-		@throws de.polygonal.ds.error.AssertError `key` is null (debug only).
 	**/
 	inline public function remap(key:K, val:T):Bool
 	{
@@ -290,7 +289,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	
 	/**
 		For performance reasons the hash table does nothing to ensure that empty locations contain null;
-		`pack()` therefore nullifies all obsolete references.
+		``pack()`` therefore nullifies all obsolete references.
 		<o>n</o>
 	**/
 	public function pack()
@@ -377,7 +376,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	/**
 		Returns true if this map contains `key`.
 		<o>n</o>
-		@throws de.polygonal.ds.error.AssertError `key` is null (debug only).
+		<assert>`key` is null</assert>
 	**/
 	inline public function hasKey(key:K):Bool
 	{
@@ -387,7 +386,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	/**
 		Returns the value that is mapped to `key` or null if `key` does not exist.
 		<o>n</o>
-		@throws de.polygonal.ds.error.AssertError `key` is null (debug only).
+		<assert>`key` is null</assert>
 	**/
 	inline public function get(key:K):T
 	{
@@ -422,12 +421,12 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		
 		The method allows duplicate keys.
 		
-		<warn>To ensure unique keys either use `hasKey()` before `set()` or `setIfAbsent()`</warn>
+		<warn>To ensure unique keys either use ``hasKey()`` before ``set()`` or ``setIfAbsent()``</warn>
 		<o>n</o>
+		<assert> out of space - hash table is full but not resizable</assert>
+		<assert>`key` is null</assert>
+		<assert>``size()`` equals ``maxSize``</assert>
 		@return true if `key` was added for the first time, false if another instance of `key` was inserted.
-		@throws de.polygonal.ds.error.AssertError out of space - hash table is full but not resizable.
-		@throws de.polygonal.ds.error.AssertError `key` is null (debug only).
-		@throws de.polygonal.ds.error.AssertError `size()` equals `maxSize` (debug only).
 	**/
 	inline public function set(key:K, val:T):Bool
 	{
@@ -445,10 +444,10 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	/**
 		Removes and nullifies the first occurrence of `key`.
 		
-		Only the key is nullified, to nullifiy the value call `pack()`.
+		Only the key is nullified, to nullifiy the value call ``pack()``.
 		<o>n</o>
+		<assert>`key` is null</assert>
 		@return true if `key` is successfully removed.
-		@throws de.polygonal.ds.error.AssertError `key` is null (debug only).
 	**/
 	inline public function clr(key:K):Bool
 	{
@@ -553,7 +552,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	}
 	
 	/**
-		Same as `has()`.
+		Same as ``has()``.
 		<o>n</o>
 	**/
 	public function contains(val:T):Bool
@@ -690,10 +689,10 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	
 	/**
 		Duplicates this hash table. Supports shallow (structure only) and deep copies (structure & elements).
+		<assert>element is not of type `Cloneable`</assert>
 		@param assign if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
-		If false, the `clone()` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
-		@param copier a custom function for copying elements. Replaces element.`clone()` if `assign` is false.
-		@throws de.polygonal.ds.error.AssertError element is not of type `Cloneable` (debug only).
+		If false, the ``clone()`` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
+		@param copier a custom function for copying elements. Replaces ``element::clone()`` if `assign` is false.
 	**/
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{

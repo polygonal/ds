@@ -21,7 +21,7 @@ package de.polygonal.ds;
 import de.polygonal.ds.error.Assert.assert;
 
 /**
-	<h3>A singly linked list.</h3>
+	A singly linked list
 	
 	See <a href="http://lab.polygonal.de/?p=206" target="mBlank">http://lab.polygonal.de/?p=206</a>
 	
@@ -64,7 +64,7 @@ class Sll<T> implements Collection<T>
 	public var maxSize:Int;
 	
 	/**
-		If true, reuses the iterator object instead of allocating a new one when calling `iterator()`.
+		If true, reuses the iterator object instead of allocating a new one when calling ``iterator()``.
 		
 		The default is false.
 		
@@ -83,11 +83,11 @@ class Sll<T> implements Collection<T>
 	var mIterator:Itr<T>;
 	
 	/**
+		<assert>reserved size is greater than allowed size</assert>
 		@param reservedSize if > 0, this list maintains an object pool of node objects.
 		Prevents frequent node allocation and thus increases performance at the cost of using more memory.
 		@param maxSize the maximum allowed size of this list.
 		The default value of -1 indicates that there is no upper limit.
-		@throws de.polygonal.ds.error.AssertError reserved size is greater than allowed size (debug only).
 	**/
 	public function new(reservedSize = 0, maxSize = -1)
 	{
@@ -159,7 +159,7 @@ class Sll<T> implements Collection<T>
 	}
 	
 	/**
-		Creates and returns a new `SllNode` object storing the value `x` and pointing to this list.
+		Creates and returns a new ``SllNode`` object storing the value `x` and pointing to this list.
 		<o>1</o>
 	**/
 	inline public function createNode(x:T):SllNode<T>
@@ -168,10 +168,10 @@ class Sll<T> implements Collection<T>
 	}
 	
 	/**
-		Appends the element `x` to the tail of this list by creating a `SllNode` object storing `x`.
+		Appends the element `x` to the tail of this list by creating a ``SllNode`` object storing `x`.
 		<o>1</o>
+		<assert>``size()`` equals ``maxSize``</assert>
 		@return the appended node storing `x`.
-		@throws de.polygonal.ds.error.AssertError `size()` equals `maxSize` (debug only).
 	**/
 	inline public function append(x:T):SllNode<T>
 	{
@@ -215,10 +215,10 @@ class Sll<T> implements Collection<T>
 	}
 	
 	/**
-		Prepends the element `x` to the head of this list by creating a `SllNode` object storing `x`.
+		Prepends the element `x` to the head of this list by creating a ``SllNode`` object storing `x`.
 		<o>1</o>
+		<assert>``size()`` equals ``maxSize``</assert>
 		@return the prepended node storing `x`.
-		@throws de.polygonal.ds.error.AssertError `size()` equals `maxSize` (debug only).
 	**/
 	inline public function prepend(x:T):SllNode<T>
 	{
@@ -262,10 +262,10 @@ class Sll<T> implements Collection<T>
 	}
 	
 	/**
-		Inserts the element `x` after `node` by creating a `SllNode` object storing `x`.
+		Inserts the element `x` after `node` by creating a ``SllNode`` object storing `x`.
 		<o>1</o>
+		<assert>`node` is null or not managed by this list</assert>
 		@return the inserted node storing `x`.
-		@throws de.polygonal.ds.error.AssertError `node` is null or not managed by this list (debug only).
 	**/
 	inline public function insertAfter(node:SllNode<T>, x:T):SllNode<T>
 	{
@@ -291,10 +291,10 @@ class Sll<T> implements Collection<T>
 	}
 	
 	/**
-		Inserts the element `x` before `node` by creating a `SllNode` object storing `x`.
+		Inserts the element `x` before `node` by creating a ``SllNode`` object storing `x`.
 		<o>1</o>
+		<assert>`node` is null or not managed by this list</assert>
 		@return the inserted node storing `x`.
-		@throws de.polygonal.ds.error.AssertError `node` is null or not managed by this list (debug only).
 	**/
 	inline public function insertBefore(node:SllNode<T>, x:T):SllNode<T>
 	{
@@ -323,10 +323,10 @@ class Sll<T> implements Collection<T>
 	}
 	
 	/**
-		Unlinks `node` from this list and returns `node`::`next`;.
+		Unlinks `node` from this list and returns `node`::next.
 		<o>n</o>
-		@throws de.polygonal.ds.error.AssertError list is empty (debug only).
-		@throws de.polygonal.ds.error.AssertError `node` is null or not managed by this list (debug only).
+		<assert>list is empty</assert>
+		<assert>`node` is null or not managed by this list</assert>
 	**/
 	inline public function unlink(node:SllNode<T>):SllNode<T>
 	{
@@ -370,8 +370,8 @@ class Sll<T> implements Collection<T>
 		
 		The index is measured relative to the head node (= index 0).
 		<o>n</o>
-		@throws de.polygonal.ds.error.AssertError list is empty (debug only).
-		@throws de.polygonal.ds.error.AssertError index out of range (debug only).
+		<assert>list is empty</assert>
+		<assert>`i` out of range</assert>
 	**/
 	public function getNodeAt(i:Int):SllNode<T>
 	{
@@ -386,7 +386,7 @@ class Sll<T> implements Collection<T>
 	/**
 		Removes the head node and returns the element stored in this node.
 		<o>1</o>
-		@throws de.polygonal.ds.error.AssertError list is empty (debug only).
+		<assert>list is empty</assert>
 	**/
 	inline public function removeHead():T
 	{
@@ -412,7 +412,7 @@ class Sll<T> implements Collection<T>
 	/**
 		Removes the tail node and returns the element stored in this node.
 		<o>n</o>
-		@throws de.polygonal.ds.error.AssertError list is empty (debug only).
+		<assert>list is empty</assert>
 	**/
 	inline public function removeTail():T
 	{
@@ -443,7 +443,7 @@ class Sll<T> implements Collection<T>
 	/**
 		Unlinks the head node and appends it to the tail.
 		<o>1</o>
-		@throws de.polygonal.ds.error.AssertError list is empty (debug only).
+		<assert>list is empty</assert>
 	**/
 	inline public function shiftUp()
 	{
@@ -472,7 +472,7 @@ class Sll<T> implements Collection<T>
 	/**
 		Unlinks the tail node and prepends it to the head.
 		<o>n</o>
-		@throws de.polygonal.ds.error.AssertError list is empty (debug only).
+		<assert>list is empty</assert>
 	**/
 	inline public function popDown()
 	{
@@ -504,9 +504,9 @@ class Sll<T> implements Collection<T>
 	/**
 		Searches for the element `x` in this list from head to tail starting at node `from`.
 		<o>n</o>
+		<assert>`from` is not managed by this list</assert>
 		@return the node containing `x` or null if such a node does not exist.
 		If `from` is null, the search starts at the head of this list.
-		@throws de.polygonal.ds.error.AssertError `from` is not managed by this list (debug only).
 	**/
 	public function nodeOf(x:T, from:SllNode<T> = null):SllNode<T>
 	{
@@ -527,12 +527,12 @@ class Sll<T> implements Collection<T>
 	/**
 		Sorts the elements of this list using the merge sort algorithm.
 		<o>n log n for merge sort and n&sup2; for insertion sort</o>
+		<assert>element does not implement `Comparable`</assert>
 		@param compare a comparison function.
-		If null, the elements are compared using element.`compare()`.
+		If null, the elements are compared using ``element::compare()``.
 		<warn>In this case all elements have to implement `Comparable`.</warn>
 		@param useInsertionSort if true, the linked list is sorted using the insertion sort algorithm.
 		This is faster for nearly sorted lists.
-		@throws de.polygonal.ds.error.AssertError element does not implement `Comparable` (debug only).
 	**/
 	public function sort(compare:T->T->Int, useInsertionSort = false)
 	{
@@ -558,7 +558,7 @@ class Sll<T> implements Collection<T>
 		
 		<warn>The merge operation destroys x so it should be discarded.</warn>
 		<o>n</o>
-		@throws de.polygonal.ds.error.AssertError `x` is null or this list equals `x` (debug only).
+		<assert>`x` is null or this list equals `x`</assert>
 	**/
 	public function merge(x:Sll<T>)
 	{
@@ -602,8 +602,8 @@ class Sll<T> implements Collection<T>
 		
 		This list and `x` are untouched.
 		<o>n</o>
+		<assert>`x` is null or this equals `x`</assert>
 		@return a new list containing the elements of both lists.
-		@throws de.polygonal.ds.error.AssertError `x` is null or this equals `x` (debug only).
 	**/
 	public function concat(x:Sll<T>):Sll<T>
 	{
@@ -677,10 +677,10 @@ class Sll<T> implements Collection<T>
 	/**
 		Replaces up to `n` existing elements with objects of type `cl`.
 		<o>n</o>
+		<assert>`n` out of range</assert>
 		@param cl the class to instantiate for each element.
 		@param args passes additional constructor arguments to `cl`.
-		@param n the number of elements to replace. If 0, `n` is set to `size()`.
-		@throws de.polygonal.ds.error.AssertError `n` out of range (debug only).
+		@param n the number of elements to replace. If 0, `n` is set to ``size()``.
 	**/
 	public function assign(cl:Class<T>, args:Array<Dynamic> = null, n = 0)
 	{
@@ -708,8 +708,8 @@ class Sll<T> implements Collection<T>
 	/**
 		Replaces up to `n` existing elements with the instance `x`.
 		<o>n</o>
-		@param n the number of elements to replace. If 0, `n` is set to `size()`.
-		@throws de.polygonal.ds.error.AssertError `n` out of range (debug only).
+		<assert>`n` out of range</assert>
+		@param n the number of elements to replace. If 0, `n` is set to ``size()``.
 	**/
 	public function fill(x:T, args:Array<Dynamic> = null, n = 0):Sll<T>
 	{
@@ -738,9 +738,9 @@ class Sll<T> implements Collection<T>
 	/**
 		Shuffles the elements of this collection by using the Fisher-Yates algorithm.
 		<o>n</o>
+		<assert>insufficient random values</assert>
 		@param rval a list of random double values in the range between 0 (inclusive) to 1 (exclusive) defining the new positions of the elements.
 		If omitted, random values are generated on-the-fly by calling `Math::random()`.
-		@throws de.polygonal.ds.error.AssertError insufficient random values (debug only).
 	**/
 	public function shuffle(rval:Array<Float> = null)
 	{
@@ -1049,10 +1049,10 @@ class Sll<T> implements Collection<T>
 	
 	/**
 		Duplicates this linked list. Supports shallow (structure only) and deep copies (structure & elements).
+		<assert>element is not of type `Cloneable`</assert>
 		@param assign if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
-		If false, the `clone()` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
-		@param copier a custom function for copying elements. Replaces element.`clone()` if `assign` is false.
-		@throws de.polygonal.ds.error.AssertError element is not of type `Cloneable` (debug only).
+		If false, the ``clone()`` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
+		@param copier a custom function for copying elements. Replaces ``element::clone()`` if `assign` is false.
 	**/
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{

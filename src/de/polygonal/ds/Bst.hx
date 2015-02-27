@@ -21,7 +21,7 @@ package de.polygonal.ds;
 import de.polygonal.ds.error.Assert.assert;
 
 /**
-	<h3>A binary search tree (BST).</h3>
+	A binary search tree (BST)
 	
 	A BST automatically arranges `BinaryTreeNode` objects so the resulting tree is a valid BST.
 	
@@ -42,7 +42,7 @@ class Bst<T:Comparable<T>> implements Collection<T>
 	public var key:Int;
 	
 	/**
-		If true, reuses the iterator object instead of allocating a new one when calling `iterator()`.
+		If true, reuses the iterator object instead of allocating a new one when calling ``iterator()``.
 		
 		The default is false.
 		
@@ -75,8 +75,8 @@ class Bst<T:Comparable<T>> implements Collection<T>
 	/**
 		Inserts the element `x` into the binary search tree.
 		<o>n</o>
+		<assert>`x` is null</assert>
 		@return the inserted node storing the element `x`.
-		@throws de.polygonal.ds.error.AssertError `x` is null (debug only).
 	**/
 	public function insert(x:T):BinaryTreeNode<T>
 	{
@@ -124,9 +124,9 @@ class Bst<T:Comparable<T>> implements Collection<T>
 	/**
 		Finds the node that stores the element `x`.
 		<o>n</o>
+		<assert>tree is empty</assert>
+		<assert>`x` is null</assert>
 		@return the node storing `x` or null if `x` does not exist.
-		@throws de.polygonal.ds.error.AssertError tree is empty (debug only).
-		@throws de.polygonal.ds.error.AssertError `x` is null (debug only).
 	**/
 	public function find(x:T):BinaryTreeNode<T>
 	{
@@ -146,8 +146,8 @@ class Bst<T:Comparable<T>> implements Collection<T>
 	/**
 		Removes the node storing the element `x`.
 		<o>n</o>
+		<assert>`x` is invalid</assert>
 		@return true if `x` was successfully removed.
-		@throws de.polygonal.ds.error.AssertError `x` is invalid (debug only).
 	**/
 	public function removeNode(x:BinaryTreeNode<T>):Bool
 	{
@@ -297,8 +297,8 @@ class Bst<T:Comparable<T>> implements Collection<T>
 	/**
 		Removes all nodes containing the element `x`.
 		<o>n</o>
+		<assert>`x` is invalid</assert>
 		@return true if at least one occurrence of `x` is nullified.
-		@throws de.polygonal.ds.error.AssertError `x` is invalid (debug only).
 	**/
 	public function remove(x:T):Bool
 	{
@@ -403,10 +403,10 @@ class Bst<T:Comparable<T>> implements Collection<T>
 	
 	/**
 		Duplicates this subtree. Supports shallow (structure only) and deep copies (structure & elements).
+		<assert>element is not of type `Cloneable`</assert>
 		@param assign if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
-		If false, the `clone()` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
-		@param copier a custom function for copying elements. Replaces element.`clone()` if `assign` is false.
-		@throws de.polygonal.ds.error.AssertError element is not of type `Cloneable` (debug only).
+		If false, the ``clone()`` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
+		@param copier a custom function for copying elements. Replaces ``element::clone()`` if `assign` is false.
 	**/
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{

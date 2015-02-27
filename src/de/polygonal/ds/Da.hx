@@ -21,7 +21,7 @@ package de.polygonal.ds;
 import de.polygonal.ds.error.Assert.assert;
 
 /**
-	<h3>A dense, dynamic array.</h3>
+	A dense, dynamic array
 	
 	_<o>Worst-case running time in Big O notation</o>_
 **/
@@ -55,7 +55,7 @@ class Da<T> implements Collection<T>
 	public var maxSize:Int;
 	
 	/**
-		If true, reuses the iterator object instead of allocating a new one when calling `iterator()`.
+		If true, reuses the iterator object instead of allocating a new one when calling ``iterator()``.
 		
 		The default is false.
 		
@@ -64,10 +64,10 @@ class Da<T> implements Collection<T>
 	public var reuseIterator:Bool;
 	
 	/**
-		@param reservedSize the initial capacity of the internal container. See `reserve()`.
+		<assert>reserved size is greater than allowed size</assert>
+		@param reservedSize the initial capacity of the internal container. See ``reserve()``.
 		@param maxSize the maximum allowed size of this dense array.
 		The default value of -1 indicates that there is no upper limit.
-		@throws de.polygonal.ds.error.AssertError reserved size is greater than allowed size (debug only).
 	**/
 	public function new(reservedSize = 0, maxSize = -1)
 	{
@@ -95,7 +95,7 @@ class Da<T> implements Collection<T>
 	
 	/**
 		For performance reasons the dense array does nothing to ensure that empty locations contain null;
-		`pack()` therefore nullifies all obsolete references and shrinks the container to the actual size allowing the garbage collector to reclaim used memory.
+		``pack()`` therefore nullifies all obsolete references and shrinks the container to the actual size allowing the garbage collector to reclaim used memory.
 		<o>n</o>
 	**/
 	public function pack()
@@ -128,12 +128,12 @@ class Da<T> implements Collection<T>
 	}
 	
 	/**
-		Trims the dense array by cutting of `size()` - `x` elements.
+		Trims the dense array by cutting of ``size()`` - `x` elements.
 		
-		<warn>This only modifies the value of `size()`; to enable garbage collection of all cut off elements and to shrink the internal array to the new size, call `pack()` afterwards.</warn>
+		<warn>This only modifies the value of ``size()``; to enable garbage collection of all cut off elements and to shrink the internal array to the new size, call ``pack()`` afterwards.</warn>
 		<o>1</o>
+		<assert>new size > current ``size()``</assert>
 		@param x the new size of this dense array.
-		@throws de.polygonal.ds.error.AssertError new size > current `size()` (debug only).
 	**/
 	inline public function trim(x:Int)
 	{
@@ -145,7 +145,7 @@ class Da<T> implements Collection<T>
 	/**
 		Returns the element stored at index `i`.
 		<o>1</o>
-		@throws de.polygonal.ds.error.AssertError index out of range (debug only).
+		<assert>`i` out of range</assert>
 	**/
 	inline public function get(i:Int):T
 	{
@@ -157,9 +157,9 @@ class Da<T> implements Collection<T>
 	/**
 		Returns the element stored at index `i` + 1.
 		
-		The index wraps around when `i` equals `size()`.
+		The index wraps around when `i` equals ``size()``.
 		<o>n</o>
-		@throws de.polygonal.ds.error.AssertError index out of range (debug only).
+		<assert>`i` out of range</assert>
 	**/
 	inline public function getNext(i:Int):T
 	{
@@ -173,7 +173,7 @@ class Da<T> implements Collection<T>
 		
 		The index wraps around when `i` equals 0.
 		<o>1</o>
-		@throws de.polygonal.ds.error.AssertError index out of range (debug only).
+		<assert>`i` out of range</assert>
 	**/
 	inline public function getPrev(i:Int):T
 	{
@@ -185,7 +185,7 @@ class Da<T> implements Collection<T>
 	/**
 		Replaces the element at index `i` with the element `x`.
 		<o>1</o>
-		@throws de.polygonal.ds.error.AssertError index out of range or maximum size reached (debug only).
+		<assert>`i` out of range or maximum size reached</assert>
 	**/
 	inline public function set(i:Int, x:T)
 	{
@@ -199,7 +199,7 @@ class Da<T> implements Collection<T>
 	/**
 		Swaps the element stored at index `i` with the element stored at index `j`.
 		<o>1</o>
-		@throws de.polygonal.ds.error.AssertError index out of range or `i` equals `j` (debug only).
+		<assert>`i`/`j` out of range or `i` equals `j`</assert>
 	**/
 	inline public function swp(i:Int, j:Int)
 	{
@@ -213,7 +213,7 @@ class Da<T> implements Collection<T>
 	/**
 		Replaces the element at index `i` with the element from index `j`.
 		<o>1</o>
-		@throws de.polygonal.ds.error.AssertError index out of range or `i` equals `j` (debug only).
+		<assert>`i`/`j` out of range or `i` equals `j`</assert>
 	**/
 	inline public function cpy(i:Int, j:Int)
 	{
@@ -227,7 +227,7 @@ class Da<T> implements Collection<T>
 		
 		This is the element at index 0.
 		<o>1</o>
-		@throws de.polygonal.ds.error.AssertError index out of range (debug only).
+		<assert>index out of range</assert>
 	**/
 	inline public function front():T
 	{
@@ -237,9 +237,9 @@ class Da<T> implements Collection<T>
 	/**
 		Returns the last element.
 		
-		This is the element at index `size()` - 1.
+		This is the element at index ``size()`` - 1.
 		<o>1</o>
-		@throws de.polygonal.ds.error.AssertError index out of range (debug only).
+		<assert>index out of range</assert>
 	**/
 	inline public function back():T
 	{
@@ -249,7 +249,7 @@ class Da<T> implements Collection<T>
 	/**
 		Removes and returns the last element.
 		<o>1</o>
-		@throws de.polygonal.ds.error.AssertError array is empty (debug only).
+		<assert>array is empty</assert>
 	**/
 	inline public function popBack():T
 	{
@@ -261,7 +261,7 @@ class Da<T> implements Collection<T>
 	/**
 		Appends the element `x` to the last element.
 		<o>1</o>
-		@throws de.polygonal.ds.error.AssertError `size()` equals `maxSize` (debug only).
+		<assert>``size()`` equals ``maxSize``</assert>
 	**/
 	inline public function pushBack(x:T)
 	{
@@ -273,7 +273,7 @@ class Da<T> implements Collection<T>
 		
 		To fill the gap, any subsequent elements are shifted to the left (indices - 1).
 		<o>n</o>
-		@throws de.polygonal.ds.error.AssertError array is empty (debug only).
+		<assert>array is empty</assert>
 	**/
 	inline public function popFront():T
 	{
@@ -285,7 +285,7 @@ class Da<T> implements Collection<T>
 		
 		Shifts the first element (if any) and any subsequent elements to the right (indices + 1).
 		<o>n</o>
-		@throws de.polygonal.ds.error.AssertError `size()` equals `maxSize` (debug only).
+		<assert>``size()`` equals ``maxSize``</assert>
 	**/
 	inline public function pushFront(x:T)
 	{
@@ -302,8 +302,8 @@ class Da<T> implements Collection<T>
 		
 		Shifts the element currently at that position (if any) and any subsequent elements to the right (indices + 1).
 		<o>n</o>
-		@throws de.polygonal.ds.error.AssertError index out of range (debug only).
-		@throws de.polygonal.ds.error.AssertError `size()` equals `maxSize` (debug only).
+		<assert>`i` out of range</assert>
+		<assert>``size()`` equals ``maxSize``</assert>
 	**/
 	public function insertAt(i:Int, x:T)
 	{
@@ -322,7 +322,7 @@ class Da<T> implements Collection<T>
 		
 		Shifts any subsequent elements to the left (indices - 1).
 		<o>n</o>
-		@throws de.polygonal.ds.error.AssertError index out of range (debug only).
+		<assert>`i` out of range</assert>
 	**/
 	public function removeAt(i:Int):T
 	{
@@ -339,7 +339,7 @@ class Da<T> implements Collection<T>
 	/**
 		Fast removal of the element at index `i` if the order of the elements doesn't matter.
 		<o>1</o>
-		@throws de.polygonal.ds.error.AssertError index out of range (debug only).
+		<assert>`i` out of range</assert>
 	**/
 	inline public function swapPop(i:Int)
 	{
@@ -351,9 +351,9 @@ class Da<T> implements Collection<T>
 	/**
 		Removes `n` elements starting at the specified index `i` in the range [`i`, `i` + `n`].
 		<o>n</o>
+		<assert>`i` or `n` out of range</assert>
 		@param output stores the removed elements. If omitted, the removed elements are lost.
 		@return a dense array storing all removed elements or null if `output` is omitted.
-		@throws de.polygonal.ds.error.AssertError `i` or `n` out of range (debug only).
 	**/
 	public function removeRange(i:Int, n:Int, output:Da<T> = null):Da<T>
 	{
@@ -392,9 +392,9 @@ class Da<T> implements Collection<T>
 	/**
 		Concatenates this array with `x` by appending all elements of `x` to this array.
 		<o>n</o>
+		<assert>`x` is null</assert>
+		<assert>`x` equals this if `copy`=false</assert>
 		@param copy if true, returns a new array instead of modifying this array.
-		@throws de.polygonal.ds.error.AssertError `x` is null (debug only).
-		@throws de.polygonal.ds.error.AssertError `x` equals this if `copy`=false (debug only).
 	**/
 	public function concat(x:Da<T>, copy = false):Da<T>
 	{
@@ -422,13 +422,13 @@ class Da<T> implements Collection<T>
 	/**
 		Finds the first occurrence of the element `x` (by incrementing indices - from left to right).
 		<o>n</o>
+		<assert>`from` out of range</assert>
 		@param from the index to start from. The default value is 0.
 		@param binarySearch use the binary search algorithm. Requires that the elements are sorted.
 		@param comparator a comparison function for the binary search. If omitted, the method assumes that all elements implement `Comparable`.
 		@return the index storing the element `x` or -1 if `x` was not found.
 		If `binarySearch` is true, returns the index of `x` or the bitwise complement (~) of the index where the `x` would be inserted (guaranteed to be a negative number).
 		<warn>The insertion point is only valid if`from`=0.</warn>
-		@throws de.polygonal.ds.error.AssertError `from` index out of range (debug only).
 	**/
 	public function indexOf(x:T, from = 0, binarySearch = false, comparator:T->T->Int = null):Int
 	{
@@ -487,8 +487,8 @@ class Da<T> implements Collection<T>
 	/**
 		Finds the first occurrence of `x` (by decrementing indices - from right to left) and returns the index storing the element `x` or -1 if `x` was not found.
 		<o>n</o>
+		<assert>`from` out of range</assert>
 		@param from the index to start from. By default, the method starts from the last element in this dense array.
-		@throws de.polygonal.ds.error.AssertError `from` index out of range (debug only).
 	**/
 	public function lastIndexOf(x:T, from = -1):Int
 	{
@@ -530,10 +530,10 @@ class Da<T> implements Collection<T>
 	/**
 		Replaces up to `n` existing elements with objects of type `cl`.
 		<o>n</o>
+		<assert>`n` out of range</assert>
 		@param cl the class to instantiate for each element.
 		@param args passes additional constructor arguments to the class `cl`.
-		@param n the number of elements to replace. If 0, `n` is set to `size()`.
-		@throws de.polygonal.ds.error.AssertError `n` out of range (debug only).
+		@param n the number of elements to replace. If 0, `n` is set to ``size()``.
 	**/
 	public function assign(cl:Class<T>, args:Array<Dynamic> = null, n = 0)
 	{
@@ -554,8 +554,8 @@ class Da<T> implements Collection<T>
 	/**
 		Replaces up to `n` existing elements with the instance `x`.
 		<o>n</o>
-		@param n the number of elements to replace. If 0, `n` is set to `size()`.
-		@throws de.polygonal.ds.error.AssertError `n` out of range (debug only).
+		<assert>`n` out of range</assert>
+		@param n the number of elements to replace. If 0, `n` is set to ``size()``.
 	**/
 	public function fill(x:T, n = 0):Da<T>
 	{
@@ -583,7 +583,7 @@ class Da<T> implements Collection<T>
 		
 		See <a href="http://www.cplusplus.com/reference/clibrary/cstring/memmove/" target="mBlank">http://www.cplusplus.com/reference/clibrary/cstring/memmove/</a>
 		<o>n</o>
-		@throws de.polygonal.ds.error.AssertError invalid `destination`, `source` or `n` value (debug only).
+		<assert>invalid `destination`, `source` or `n` value</assert>
 	**/
 	public function memmove(destination:Int, source:Int, n:Int)
 	{
@@ -640,14 +640,14 @@ class Da<T> implements Collection<T>
 	/**
 		Sorts the elements of this dense array using the quick sort algorithm.
 		<o>n&sup2;</o>
-		@param compare a comparison function.If null, the elements are compared using element.`compare()`.
+		<assert>element does not implement `Comparable`</assert>
+		<assert>`first` or `count` out of bound</assert>
+		@param compare a comparison function.If null, the elements are compared using ``element::compare()``.
 		<warn>In this case all elements have to implement `Comparable`.</warn>
 		@param useInsertionSort if true, the dense array is sorted using the insertion sort algorithm. This is faster for nearly sorted lists.
 		@param first sort start index. The default value is 0.
 		@param count the number of elements to sort (range: [`first`, `first` + `count`]).
-		If omitted, `count` is set to the remaining elements (`size()` - `first`).
-		@throws de.polygonal.ds.error.AssertError element does not implement `Comparable` (debug only).
-		@throws de.polygonal.ds.error.AssertError `first` or `count` out of bound (debug only).
+		If omitted, `count` is set to the remaining elements (``size()`` - `first`).
 	**/
 	public function sort(compare:T->T->Int, useInsertionSort = false, first = 0, count = -1)
 	{
@@ -696,7 +696,7 @@ class Da<T> implements Collection<T>
 		
 		Useful for fast iteration or low-level operations.
 		
-		<warn>The length of the array doesn't have to match `size()`.</warn>
+		<warn>The length of the array doesn't have to match ``size()``.</warn>
 		<o>1</o>
 	**/
 	inline public function getArray():Array<T>
@@ -849,10 +849,10 @@ class Da<T> implements Collection<T>
 	
 	/**
 		Duplicates this dense array. Supports shallow (structure only) and deep copies (structure & elements).
+		<assert>element is not of type `Cloneable`</assert>
 		@param assign if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
-		If false, the `clone()` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
-		@param copier a custom function for copying elements. Replaces element.`clone()` if `assign` is false.
-		@throws de.polygonal.ds.error.AssertError element is not of type `Cloneable` (debug only).
+		If false, the ``clone()`` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
+		@param copier a custom function for copying elements. Replaces ``element::clone()`` if `assign` is false.
 	**/
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{
@@ -887,9 +887,9 @@ class Da<T> implements Collection<T>
 	/**
 		Shuffles the elements of this collection by using the Fisher-Yates algorithm.
 		<o>n</o>
+		<assert>insufficient random values</assert>
 		@param rval a list of random double values in the range between 0 (inclusive) to 1 (exclusive) defining the new positions of the elements.
 		If omitted, random values are generated on-the-fly by calling `Math::random()`.
-		@throws de.polygonal.ds.error.AssertError insufficient random values (debug only).
 	**/
 	public function shuffle(rval:Array<Float> = null)
 	{

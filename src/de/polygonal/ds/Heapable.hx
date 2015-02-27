@@ -19,7 +19,7 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 package de.polygonal.ds;
 
 /**
-	<h3>An object that can be inserted into a Heap.</h3>
+	An object that can be inserted into a Heap
 **/
 interface Heapable<T> extends Comparable<T>
 {

@@ -19,7 +19,7 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 package de.polygonal.ds;
 
 /**
-	<h3>An object that creates objects of type T.</h3>
+	An object that creates objects of type T
 **/
 interface Factory<T>
 {

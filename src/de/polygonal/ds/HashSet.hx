@@ -25,7 +25,7 @@ import de.polygonal.ds.mem.IntMemory;
 import de.polygonal.ds.error.Assert.assert;
 
 /**
-	<h3>An array hash set for storing Hashable objects.</h3>
+	An array hash set for storing Hashable objects
 	
 	_<o>Worst-case running time in Big O notation</o>_
 **/
@@ -55,7 +55,7 @@ class HashSet<T:Hashable> implements Set<T>
 	public var maxSize:Int;
 	
 	/**
-		If true, reuses the iterator object instead of allocating a new one when calling `iterator()`.
+		If true, reuses the iterator object instead of allocating a new one when calling ``iterator()``.
 		
 		The default is false.
 		
@@ -79,10 +79,13 @@ class HashSet<T:Hashable> implements Set<T>
 	var mIterator:HashSetIterator<T>;
 	
 	/**
+		<assert>`slotCount` is not a power of two</assert>
+		<assert>`capacity` is not a power of two</assert>
+		<assert>`capacity` is < 2</assert>
 		@param slotCount the total number of slots into which the hashed values are distributed.
 		This defines the space-time trade off of the set.
 		Increasing the `slotCount` reduces the computation time (read/write/access) of the set at the cost of increased memory use.
-		This value is fixed and can only be changed by calling `rehash()`, which rebuilds the set (expensive).
+		This value is fixed and can only be changed by calling ``rehash()``, which rebuilds the set (expensive).
 		
 		@param capacity the initial physical space for storing the elements at the time the set is created.
 		This is also the minimum allowed size of the set and cannot be changed in the future.
@@ -90,20 +93,16 @@ class HashSet<T:Hashable> implements Set<T>
 		The `capacity` is automatically adjusted according to the storage requirements based on two rules:
 		<ul>
 		<li>If the set runs out of space, the `capacity` is doubled (if `isResizable` is true).</li>
-		<li>If the `size()` falls below a quarter of the current `capacity`, the `capacity` is cut in half while the minimum `capacity` can't fall below `capacity`.</li>
+		<li>If the ``size()`` falls below a quarter of the current `capacity`, the `capacity` is cut in half while the minimum `capacity` can't fall below `capacity`.</li>
 		</ul>
 		
 		@param isResizable if false, the hash set is created with a fixed size.
-		Thus adding an element when `size()` equals `capacity` throws an error.
+		Thus adding an element when ``size()`` equals `capacity` throws an error.
 		Otherwise the `capacity` is automatically adjusted.
 		Default is true.
 		
 		@param maxSize the maximum allowed size of this hash set.
 		The default value of -1 indicates that there is no upper limit.
-		
-		@throws de.polygonal.ds.error.AssertError `slotCount` is not a power of two (debug only).
-		@throws de.polygonal.ds.error.AssertError `capacity` is not a power of two (debug only).
-		@throws de.polygonal.ds.error.AssertError `capacity` is < 2 (debug only).
 	**/
 	public function new(slotCount:Int, capacity = -1, isResizable = true, maxSize = -1)
 	{
@@ -146,7 +145,7 @@ class HashSet<T:Hashable> implements Set<T>
 		
 		A high load factor thus indicates poor performance.
 		
-		If the load factor gets too high, additional slots can be allocated by calling `rehash()`.
+		If the load factor gets too high, additional slots can be allocated by calling ``rehash()``.
 	**/
 	inline public function getLoadFactor():Float
 	{
@@ -164,9 +163,9 @@ class HashSet<T:Hashable> implements Set<T>
 	/**
 		The size of the allocated storage space for the elements.
 		
-		If more space is required to accomodate new elements, the `capacity` is doubled every time `size()` grows beyond `capacity`, and split in half when `size()` is a quarter of `capacity`.
+		If more space is required to accomodate new elements, ``getCapacity()`` is doubled every time ``size()`` grows beyond capacity, and split in half when ``size()`` is a quarter of capacity.
 		
-		The `capacity` never falls below the initial size defined in the constructor.
+		The capacity never falls below the initial size defined in the constructor.
 	**/
 	inline public function getCapacity():Int
 	{
@@ -188,7 +187,7 @@ class HashSet<T:Hashable> implements Set<T>
 		
 		Uses move-to-front-on-access which reduces access time when similar elements are frequently queried.
 		<o>n</o>
-		@throws de.polygonal.ds.error.AssertError `x` is null (debug only).
+		<assert>`x` is null</assert>
 	**/
 	inline public function hasFront(x:T):Bool
 	{
@@ -201,7 +200,7 @@ class HashSet<T:Hashable> implements Set<T>
 		
 		This is an expensive operations as the set is rebuild from scratch.
 		<o>n</o>
-		@throws de.polygonal.ds.error.AssertError `slotCount` is not a power of two (debug only).
+		<assert>`slotCount` is not a power of two</assert>
 	**/
 	public function rehash(slotCount:Int)
 	{
@@ -263,7 +262,7 @@ class HashSet<T:Hashable> implements Set<T>
 	/**
 		Returns true if this set contains the element `x` or null if `x` does not exist.
 		<o>n</o>
-		@throws de.polygonal.ds.error.AssertError `x` is null (debug only).
+		<assert>`x` is null</assert>
 	**/
 	inline public function has(x:T):Bool
 	{
@@ -273,10 +272,10 @@ class HashSet<T:Hashable> implements Set<T>
 	/**
 		Adds the element `x` to this set if possible.
 		<o>n</o>
+		<assert>`x` is null</assert>
+		<assert>``size()`` equals ``maxSize``</assert>
+		<assert>hash set is full (if not resizable)</assert>
 		@return true if `x` was added to this set, false if `x` already exists.
-		@throws de.polygonal.ds.error.AssertError `x` is null (debug only).
-		@throws de.polygonal.ds.error.AssertError `size()` equals `maxSize` (debug only).
-		@throws de.polygonal.ds.error.AssertError hash set is full (if not resizable).
 	**/
 	inline public function set(x:T):Bool
 	{
@@ -339,9 +338,9 @@ class HashSet<T:Hashable> implements Set<T>
 	}
 	
 	/**
-		Same as `has()`.
+		Same as ``has()``.
 		<o>n</o>
-		@throws de.polygonal.ds.error.AssertError `x` is null (debug only).
+		<assert>`x` is null</assert>
 	**/
 	public function contains(x:T):Bool
 	{
@@ -351,8 +350,8 @@ class HashSet<T:Hashable> implements Set<T>
 	/**
 		Removes the element `x`.
 		<o>n</o>
+		<assert>`x` is null</assert>
 		@return true if `x` was successfully removed, false if `x` does not exist.
-		@throws de.polygonal.ds.error.AssertError `x` is null (debug only).
 	**/
 	public function remove(x:T):Bool
 	{
@@ -476,9 +475,9 @@ class HashSet<T:Hashable> implements Set<T>
 	/**
 		Duplicates this hash set. Supports shallow (structure only) and deep copies (structure & elements).
 		@param assign if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
-		If false, the `clone()` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
-		@param copier a custom function for copying elements. Replaces element.`clone()` if `assign` is false.
-		@throws de.polygonal.ds.error.AssertError element is not of type `Cloneable` (debug only).
+		If false, the ``clone()`` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
+		@param copier a custom function for copying elements. Replaces ``element::clone()`` if `assign` is false.
+		<assert>element is not of type `Cloneable`</assert>
 	**/
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{

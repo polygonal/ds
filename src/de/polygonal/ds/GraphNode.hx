@@ -21,7 +21,7 @@ package de.polygonal.ds;
 import de.polygonal.ds.error.Assert.assert;
 
 /**
-	<h3>A graph node manages a doubly linked list of GraphArc objects.</h3>
+	A graph node manages a doubly linked list of GraphArc objects
 	
 	`GraphNode` objects are created and managed by the `Graph` class.
 	
@@ -124,7 +124,7 @@ class GraphNode<T> implements Hashable
 	/**
 		Returns true if this node is connected to the `target` node.
 		<o>n</o>
-		@throws de.polygonal.ds.error.AssertError `target` is null (debug only).
+		<assert>`target` is null</assert>
 	**/
 	inline public function isConnected(target:GraphNode<T>):Bool
 	{
@@ -136,7 +136,7 @@ class GraphNode<T> implements Hashable
 	/**
 		Returns true if this node and the `target` node are pointing to each other.
 		<o>n</o>
-		@throws de.polygonal.ds.error.AssertError `target` is null (debug only).
+		<assert>`target` is null</assert>
 	**/
 	inline public function isMutuallyConnected(target:GraphNode<T>):Bool
 	{
@@ -148,8 +148,8 @@ class GraphNode<T> implements Hashable
 	/**
 		Finds the arc that is pointing to the `target` node or returns null if such an arc does not exist.
 		<o>n</o>
-		@throws de.polygonal.ds.error.AssertError `target` is null (debug only).
-		@throws de.polygonal.ds.error.AssertError `target` equals this (debug only).
+		<assert>`target` is null</assert>
+		<assert>`target` equals this</assert>
 	**/
 	public function getArc(target:GraphNode<T>):GraphArc<T>
 	{
@@ -177,8 +177,8 @@ class GraphNode<T> implements Hashable
 	/**
 		Adds an arc pointing from this node to the specified `target` node.
 		<o>1</o>
+		<assert>`target` is null or arc to `target` already exists</assert>
 		@param cost defines how "hard" it is to get from one node to the other. Default is 1.0.
-		@throws de.polygonal.ds.error.AssertError `target` is null or arc to `target` already exists (debug only).
 	**/
 	public function addArc(target:GraphNode<T>, cost = 1.)
 	{
@@ -198,8 +198,8 @@ class GraphNode<T> implements Hashable
 	/**
 		Removes the arc that is pointing to the specified `target` node.
 		<o>n</o>
+		<assert>`target`</assert>
 		@return true if the arc is successfully removed, false if such an arc does not exist.
-		@throws de.polygonal.ds.error.AssertError `target` (debug only).
 	**/
 	public function removeArc(target:GraphNode<T>):Bool
 	{

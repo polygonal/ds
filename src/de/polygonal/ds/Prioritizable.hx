@@ -19,7 +19,7 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 package de.polygonal.ds;
 
 /**
-	<h3>An prioritized object that can be inserted into a PriorityQueue.</h3>
+	An prioritized object that can be inserted into a PriorityQueue
 **/
 interface Prioritizable
 {
@@ -28,7 +28,7 @@ interface Prioritizable
 		
 		By default, a higher number equals a higher priority.
 		
-		<warn>This value should never be changed by the user after being added to a priority queue - use PriorityQueue::reprioritize() instead.</warn>
+		<warn>This value should never be changed by the user after being added to a priority queue - use ``PriorityQueue::reprioritize()`` instead.</warn>
 	**/
 	var priority:Float;
 	

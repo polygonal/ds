@@ -21,7 +21,7 @@ package de.polygonal.ds;
 import de.polygonal.ds.error.Assert.assert;
 
 /**
-	<h3>A graph arc represents an uni-directional link between two GraphNode objects.</h3>
+	A graph arc represents an uni-directional link between two GraphNode objects
 	
 	`GraphArc` objects are created and managed by the `Graph` class.
 	

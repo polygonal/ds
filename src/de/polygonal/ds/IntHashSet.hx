@@ -26,7 +26,7 @@ import flash.Memory;
 import de.polygonal.ds.error.Assert.assert;
 
 /**
-	<h3>An array hash set for storing integers.</h3>
+	An array hash set for storing integers
 	
 	<o>Amortized running time in Big O notation</o>
 **/
@@ -61,7 +61,7 @@ class IntHashSet implements Set<Int>
 	public var maxSize:Int;
 	
 	/**
-		If true, reuses the iterator object instead of allocating a new one when calling `iterator()`.
+		If true, reuses the iterator object instead of allocating a new one when calling ``iterator()``.
 		
 		The default is false.
 		
@@ -89,10 +89,13 @@ class IntHashSet implements Set<Int>
 	var mIterator:IntHashSetIterator;
 	
 	/**
+		<assert>`slotCount` is not a power of two</assert>
+		<assert>`capacity` is not a power of two</assert>
+		<assert>`capacity` is < 2</assert>
 		@param slotCount the total number of slots into which the hashed elements are distributed.
 		This defines the space-time trade off of the set.
 		Increasing the `slotCount` reduces the computation time (read/write/access) of the set at the cost of increased memory use.
-		This value is fixed and can only be changed by calling `rehash()`, which rebuilds the set (expensive).
+		This value is fixed and can only be changed by calling ``rehash()``, which rebuilds the set (expensive).
 		
 		@param capacity the initial physical space for storing the elements at the time the set is created.
 		This is also the minimum allowed size of the set and cannot be changed in the future.
@@ -100,20 +103,16 @@ class IntHashSet implements Set<Int>
 		The `capacity` is automatically adjusted according to the storage requirements based on two rules:
 		<ul>
 		<li>If the set runs out of space, the `capacity` is doubled (if `isResizable` is true).</li>
-		<li>If the `size()` falls below a quarter of the current `capacity`, the `capacity` is cut in half while the minimum `capacity` can't fall below `capacity`.</li>
+		<li>If the ``size()`` falls below a quarter of the current `capacity`, the `capacity` is cut in half while the minimum `capacity` can't fall below `capacity`.</li>
 		</ul>
 		
 		@param isResizable if false, the hash set is created with a fixed size.
-		Thus adding an element when `size()` equals `capacity` throws an error.
+		Thus adding an element when ``size()`` equals `capacity` throws an error.
 		Otherwise the `capacity` is automatically adjusted.
 		Default is true.
 		
 		@param maxSize the maximum allowed size of this hash set.
 		The default value of -1 indicates that there is no upper limit.
-		
-		@throws de.polygonal.ds.error.AssertError `slotCount` is not a power of two (debug only).
-		@throws de.polygonal.ds.error.AssertError `capacity` is not a power of two (debug only).
-		@throws de.polygonal.ds.error.AssertError `capacity` is < 2 (debug only).
 	**/
 	public function new(slotCount:Int, capacity = -1, isResizable = true, maxSize = -1)
 	{
@@ -179,7 +178,7 @@ class IntHashSet implements Set<Int>
 		
 		A high load factor thus indicates poor performance.
 		
-		If the load factor gets too high, additional slots can be allocated by calling `rehash()`.
+		If the load factor gets too high, additional slots can be allocated by calling ``rehash()``.
 	**/
 	inline public function getLoadFactor():Float
 	{
@@ -197,9 +196,9 @@ class IntHashSet implements Set<Int>
 	/**
 		The size of the allocated storage space for the elements.
 		
-		If more space is required to accomodate new elements, the `capacity` is doubled every time `size()` grows beyond `capacity`, and split in half when `size()` is a quarter of `capacity`.
+		If more space is required to accomodate new elements, ``getCapacity()`` is doubled every time ``size()`` grows beyond capacity and split in half when ``size()`` is a quarter of capacity.
 		
-		The `capacity` never falls below the initial size defined in the constructor.
+		The capacity never falls below the initial size defined in the constructor.
 	**/
 	inline public function getCapacity():Int
 	{
@@ -234,7 +233,7 @@ class IntHashSet implements Set<Int>
 		
 		Uses move-to-front-on-access which reduces access time when similar elements are frequently queried.
 		<o>1</o>
-		@throws de.polygonal.ds.error.AssertError value 0x80000000 is reserved (debug only).
+		<assert>value 0x80000000 is reserved</assert>
 	**/
 	inline public function hasFront(x:Int):Bool
 	{
@@ -301,7 +300,7 @@ class IntHashSet implements Set<Int>
 		
 		This is an expensive operations as the set is rebuild from scratch.
 		<o>n</o>
-		@throws de.polygonal.ds.error.AssertError `slotCount` is not a power of two (debug only).
+		<assert>`slotCount` is not a power of two</assert>
 	**/
 	public function rehash(slotCount:Int)
 	{
@@ -380,7 +379,7 @@ class IntHashSet implements Set<Int>
 	/**
 		Returns true if this set contains the element `x`.
 		<o>1</o>
-		@throws de.polygonal.ds.error.AssertError value 0x80000000 is reserved (debug only).
+		<assert>value 0x80000000 is reserved</assert>
 	**/
 	inline public function has(x:Int):Bool
 	{
@@ -434,10 +433,10 @@ class IntHashSet implements Set<Int>
 	/**
 		Adds the element `x` to this set if possible.
 		<o>1</o>
+		<assert>value 0x80000000 is reserved</assert>
+		<assert>``size()`` equals ``maxSize``</assert>
+		<assert>hash set is full (if not resizable)</assert>
 		@return true if `x` was added to this set, false if `x` already exists.
-		@throws de.polygonal.ds.error.AssertError value 0x80000000 is reserved (debug only).
-		@throws de.polygonal.ds.error.AssertError `size()` equals `maxSize` (debug only).
-		@throws de.polygonal.ds.error.AssertError hash set is full (if not resizable).
 	**/
 	public function set(x:Int):Bool
 	{
@@ -566,7 +565,7 @@ class IntHashSet implements Set<Int>
 	}
 	
 	/**
-		Same as `has()`.
+		Same as ``has()``.
 		<o>1</o>
 	**/
 	inline public function contains(x:Int):Bool

@@ -21,7 +21,7 @@ package de.polygonal.ds;
 import de.polygonal.ds.error.Assert.assert;
 
 /**
-	<h3>A queue based on a linked list.</h3>
+	A queue based on a linked list
 	
 	A queue is a linear list for which all insertions are made at one end of the list; all deletions (and usually all accesses) are made at the other end.
 	
@@ -57,7 +57,7 @@ class LinkedQueue<T> implements Queue<T>
 	public var maxSize:Int;
 	
 	/**
-		If true, reuses the iterator object instead of allocating a new one when calling `iterator()`.
+		If true, reuses the iterator object instead of allocating a new one when calling ``iterator()``.
 		
 		The default is false.
 		
@@ -78,11 +78,11 @@ class LinkedQueue<T> implements Queue<T>
 	var mIterator:LinkedQueueIterator<T>;
 	
 	/**
+		<assert>reserved size is greater than allowed size</assert>
 		@param reservedSize if > 0, this queue maintains an object pool of node objects.
 		Prevents frequent node allocation and thus increases performance at the cost of using more memory.
 		@param maxSize the maximum allowed size of this queue.
 		The default value of -1 indicates that there is no upper limit.
-		@throws de.polygonal.ds.error.AssertError reserved size is greater than allowed size (debug only).
 	**/
 	public function new(reservedSize = 0, maxSize = -1)
 	{
@@ -123,7 +123,7 @@ class LinkedQueue<T> implements Queue<T>
 		
 		This is the "oldest" element.
 		<o>1</o>
-		@throws de.polygonal.ds.error.AssertError queue is empty (debug only).
+		<assert>queue is empty</assert>
 	**/
 	inline public function peek():T
 	{
@@ -137,7 +137,7 @@ class LinkedQueue<T> implements Queue<T>
 		
 		This is the "newest" element.
 		<o>1</o>
-		@throws de.polygonal.ds.error.AssertError queue is empty (debug only).
+		<assert>queue is empty</assert>
 	**/
 	inline public function back():T
 	{
@@ -149,7 +149,7 @@ class LinkedQueue<T> implements Queue<T>
 	/**
 		Enqueues the element `x`.
 		<o>1</o>
-		@throws de.polygonal.ds.error.AssertError `size()` equals `maxSize` (debug only).
+		<assert>``size()`` equals ``maxSize``</assert>
 		**/
 	inline public function enqueue(x:T)
 	{
@@ -176,7 +176,7 @@ class LinkedQueue<T> implements Queue<T>
 	/**
 		Dequeues and returns the front element.
 		<o>1</o>
-		@throws de.polygonal.ds.error.AssertError queue is empty (debug only).
+		<assert>queue is empty</assert>
 	**/
 	inline public function dequeue():T
 	{
@@ -199,10 +199,10 @@ class LinkedQueue<T> implements Queue<T>
 	/**
 		Replaces up to `n` existing elements with objects of type `cl`.
 		<o>n</o>
+		<assert>`n` out of range</assert>
 		@param cl the class to instantiate for each element.
 		@param args passes additional constructor arguments to the class `cl`.
-		@param n the number of elements to replace. If 0, `n` is set to `size()`.
-		@throws de.polygonal.ds.error.AssertError `n` out of range (debug only).
+		@param n the number of elements to replace. If 0, `n` is set to ``size()``.
 	**/
 	public function assign(cl:Class<T>, args:Array<Dynamic> = null, n = 0)
 	{
@@ -230,8 +230,8 @@ class LinkedQueue<T> implements Queue<T>
 	/**
 		Replaces up to `n` existing elements with the instance `x`.
 		<o>n</o>
-		@param n the number of elements to replace. If 0, `n` is set to `size()`.
-		@throws de.polygonal.ds.error.AssertError `n` out of range (debug only).
+		<assert>`n` out of range</assert>
+		@param n the number of elements to replace. If 0, `n` is set to ``size()``.
 	**/
 	public function fill(x:T, n = 0):LinkedQueue<T>
 	{
@@ -260,9 +260,9 @@ class LinkedQueue<T> implements Queue<T>
 	/**
 		Shuffles the elements of this collection by using the Fisher-Yates algorithm.
 		<o>n</o>
+		<assert>insufficient random values</assert>
 		@param rval a list of random double values in the range between 0 (inclusive) to 1 (exclusive) defining the new positions of the elements.
 		If omitted, random values are generated on-the-fly by calling `Math::random()`.
-		@throws de.polygonal.ds.error.AssertError insufficient random values (debug only).
 	**/
 	public function shuffle(rval:Array<Float> = null)
 	{
@@ -553,10 +553,10 @@ class LinkedQueue<T> implements Queue<T>
 	
 	/**
 		Duplicates this queue. Supports shallow (structure only) and deep copies (structure & elements).
+		<assert>element is not of type `Cloneable`</assert>
 		@param assign if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
-		If false, the `clone()` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
-		@param copier a custom function for copying elements. Replaces element.`clone()` if `assign` is false.
-		@throws de.polygonal.ds.error.AssertError element is not of type `Cloneable` (debug only).
+		If false, the ``clone()`` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
+		@param copier a custom function for copying elements. Replaces ``element::clone()`` if `assign` is false.
 	**/
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{

@@ -19,7 +19,7 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 package de.polygonal.ds;
 
 /**
-	<h3>An object that maps keys to values.</h3>
+	An object that maps keys to values
 	
 	<warn>This map allows duplicate keys.</warn>
 **/
@@ -58,7 +58,7 @@ interface Map<K, T> extends Collection<T>
 	/**
 		Remaps the first occurrence of `key` to the element `x`.
 		
-		This is faster than `clr(key)` followed by `set(key, x)`.
+		This is faster than ``clr(key)`` followed by ``set(key, x)``.
 		@return true if the remapping was successful, false if `key` does not exist.
 	**/
 	function remap(key:K, x:T):Bool;

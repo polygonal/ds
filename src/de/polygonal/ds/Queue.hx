@@ -19,7 +19,7 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 package de.polygonal.ds;
 
 /**
-	<h3>A queue is a First-In-First-Out (FIFO) data structure.</h3>
+	A queue is a First-In-First-Out (FIFO) data structure
 	
 	The first element added to the queue will be the first one to be removed.
 	

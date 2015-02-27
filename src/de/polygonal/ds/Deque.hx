@@ -19,7 +19,7 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 package de.polygonal.ds;
 
 /**
-	<h3>A double-ended queue that supports fast element insertion and removal at both ends.</h3>
+	A double-ended queue that supports fast element insertion and removal at both ends
 **/
 interface Deque<T> extends Collection<T>
 {

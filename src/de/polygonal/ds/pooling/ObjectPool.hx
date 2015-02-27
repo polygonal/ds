@@ -136,7 +136,7 @@ class ObjectPool<T> implements Hashable
 	/**
 		Returns the id to the next free object.
 		After an id has been obtained, the corresponding object can be retrieved using `get(id)`.
-		@throws de.polygonal.ds.error.AssertError pool exhausted (debug only).
+		<assert>pool exhausted</assert>
 	**/
 	inline public function next():Int
 	{
@@ -158,7 +158,7 @@ class ObjectPool<T> implements Hashable
 	/**
 		Returns the object that is mapped to `id`.
 		Call `next()` to request an `id` first.
-		@throws de.polygonal.ds.error.AssertError invalid `id` or object linked to `id` is not used.
+		<assert>invalid `id` or object linked to `id` is not used</assert>
 	**/
 	inline public function get(id:Int):T
 	{
@@ -175,7 +175,7 @@ class ObjectPool<T> implements Hashable
 	
 	/**
 		Puts the object mapped to `id` back into the pool.
-		@throws de.polygonal.ds.error.AssertError pool is full or object linked to `id` is not used (debug only).
+		<assert>pool is full or object linked to `id` is not used</assert>
 	**/
 	inline public function put(id:Int)
 	{
@@ -195,8 +195,8 @@ class ObjectPool<T> implements Hashable
 		@param lazy if true, objects are allocated on-the-fly until the pool is full.
 		@param cl allocates objects by instantiating the class `cl`.
 		@param fabricate allocates objects by calling `fabricate()`.
-		@param factory allocates objects by using a `Factory` object (calling `factory`::`create()`).
-		@throws de.polygonal.ds.error.AssertError invalid arguments.
+		@param factory allocates objects by using a `Factory` object (calling `factory`::create()).
+		<assert>invalid arguments</assert>
 	**/
 	public function allocate(lazy:Bool, cl:Class<T> = null, fabricate:Void->T = null, factory:Factory<T> = null)
 	{

@@ -19,7 +19,7 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 package de.polygonal.ds;
 
 /**
-	<h3>A collection is an object that stores other objects (its elements).</h3>
+	A collection is an object that stores other objects (its elements)
 **/
 interface Collection<T> extends Hashable
 {
@@ -118,8 +118,8 @@ interface Collection<T> extends Hashable
 		    var clone = c.clone(false, function(existingValue:Foo) { return new Foo(existingValue.value); })
 		}</pre>
 		@param assign if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
-		If false, the `clone()` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
-		@param copier a custom function for copying elements. Replaces element.`clone()` if `assign` is false.
+		If false, the ``clone()`` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
+		@param copier a custom function for copying elements. Replaces ``element::clone()`` if `assign` is false.
 	**/
 	function clone(assign:Bool = true, copier:T->T = null):Collection<T>;
 }

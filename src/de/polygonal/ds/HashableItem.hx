@@ -19,7 +19,7 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 package de.polygonal.ds;
 
 /**
-	<h3>An abstract object that provides an unique integer key.</h3>
+	An abstract object that provides an unique integer key
 	
 	Can be inserted into a `HashSet` or used as a key in a `HashTable` object.
 **/

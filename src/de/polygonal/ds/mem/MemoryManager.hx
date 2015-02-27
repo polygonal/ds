@@ -25,7 +25,7 @@ import de.polygonal.ds.error.Assert.assert;
 #end
 
 /**
-	<h3>Manages fast "alchemy memory".</h3>
+	Manages fast "alchemy memory"
 	
 	See <a href="http://lab.polygonal.de/2009/03/14/a-little-alchemy-in-hx3ds/" target="_blank">http://lab.polygonal.de/2009/03/14/a-little-alchemy-in-hx3ds/</a>.
 	See <a href="http://lab.polygonal.de/2010/03/15/memorymanager-revisited/" target="_blank">http://lab.polygonal.de/2010/03/15/memorymanager-revisited/</a>
@@ -203,7 +203,7 @@ class MemoryManager
 		Copying takes place as if an intermediate buffer was used, allowing the destination and source to overlap.
 		
 		See <a href="http://www.cplusplus.com/reference/clibrary/cstring/memmove/" target="_blank">http://www.cplusplus.com/reference/clibrary/cstring/memmove/</a>
-		@throws de.polygonal.ds.error.AssertError invalid `destination`, `source` or `n` value (debug only).
+		<assert>invalid `destination`, `source` or `n` value</assert>
 	**/
 	#if (flash && alchemy)
 	public function memmove(destination:Int, source:Int, n:Int)

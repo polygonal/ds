@@ -19,7 +19,7 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 package de.polygonal.ds;
 
 /**
-	<h3>An object that can be cloned by calling object::clone().</h3>
+	An object that can be cloned by calling object::clone()
 	
 	Example:
 	<pre class="prettyprint">

@@ -68,7 +68,7 @@ abstract MockVector<T>(Array<T>)
 #end
 
 /**
-	<h3>Unifies haxe.ds.Vector<T> and flash.Vector<T>.</h3>
+	Unifies haxe.ds.Vector<T> and flash.Vector<T>
 **/
 typedef Vector<T> =
 #if flash

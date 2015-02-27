@@ -33,7 +33,7 @@ class ByteMemory extends MemoryAccess
 		Converts `input` in the range [`min`, `max`] to a byte array.
 		If no range is specified, all `input` bytes are copied.</i>
 		<warn>The bytes are written in little endian format.</warn>
-		@throws de.polygonal.ds.error.AssertError invalid range, invalid `input` or memory deallocated (debug only).
+		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
 	#if flash
 	public static function toByteArray(input:ByteMemory, min = -1, max = -1):flash.utils.ByteArray
@@ -66,7 +66,7 @@ class ByteMemory extends MemoryAccess
 	/**
 		Converts `input` in the range [`min`, `max`] to a `ByteMemory` object.
 		If no range is specified, all `input` bytes are copied.
-		@throws de.polygonal.ds.error.AssertError invalid range, invalid `input` or memory deallocated (debug only).
+		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
 	public static function ofByteArray(input:flash.utils.ByteArray, min = -1, max = -1):ByteMemory
 	{
@@ -90,7 +90,7 @@ class ByteMemory extends MemoryAccess
 		Converts `input` in the range [`min`, `max`] to a `BytesData` object.
 		If no range is specified, all `input` bytes are copied.</i>
 		<warn>The bytes are written in little endian format.</warn>
-		@throws de.polygonal.ds.error.AssertError invalid range, invalid `input` or memory deallocated (debug only).
+		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
 	public static function toBytesData(input:ByteMemory, min = -1, max = -1):haxe.io.BytesData
 	{
@@ -111,7 +111,7 @@ class ByteMemory extends MemoryAccess
 	/**
 		Converts `input` in the range [`min`, `max`] to a `ByteMemory` object.
 		If no range is specified, all `input` bytes are copied.
-		@throws de.polygonal.ds.error.AssertError invalid range, invalid `input` or memory deallocated (debug only).
+		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
 	public static function ofBytesData(input:haxe.io.BytesData, min = -1, max = -1):ByteMemory
 	{
@@ -133,7 +133,7 @@ class ByteMemory extends MemoryAccess
 	/**
 		Converts `input` in the range [`min`, `max`] to an array.
 		If no range is specified, all `input` bytes are copied.
-		@throws de.polygonal.ds.error.AssertError invalid range, invalid `input` or memory deallocated (debug only).
+		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
 	public static function toArray(input:ByteMemory, min = -1, max = -1):Array<Int>
 	{
@@ -166,7 +166,7 @@ class ByteMemory extends MemoryAccess
 	/**
 		Converts `input` in the range [`min`, `max`] to a `ByteMemory` object.
 		If no range is specified, all `input` bytes are copied.
-		@throws de.polygonal.ds.error.AssertError invalid range, invalid `input` or memory deallocated (debug only).
+		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
 	public static function ofArray(input:Array<Int>, min = -1, max = -1):ByteMemory
 	{
@@ -188,7 +188,7 @@ class ByteMemory extends MemoryAccess
 		Converts `input` in the range [`min`, `max`] to a Vector object.
 		If no range is specified, all `input` bytes are copied.
 		@param output the `Vector` object to write into. If null, a new Vector object is created on-the-fly.
-		@throws de.polygonal.ds.error.AssertError invalid range, invalid `input` or memory deallocated (debug only).
+		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
 	public static function toVector(input:ByteMemory, min = -1, max = -1, output:Vector<Int> = null):Vector<Int>
 	{
@@ -228,7 +228,7 @@ class ByteMemory extends MemoryAccess
 	/**
 		Converts `input` in the range [`min`, `max`] to a `ByteMemory` object.
 		If no range is specified, all `input` bytes are copied.
-		@throws de.polygonal.ds.error.AssertError invalid range, invalid `input` or memory deallocated (debug only).
+		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
 	public static function ofVector(input:Vector<Int>, min = -1, max = -1):ByteMemory
 	{
@@ -348,8 +348,8 @@ class ByteMemory extends MemoryAccess
 	
 	/**
 		Adjusts the size of this object so it's capable of storing `newSize` bytes.
-		@throws de.polygonal.ds.error.AssertError invalid size (debug only).
-		@throws de.polygonal.ds.error.AssertError memory was already deallocated (debug only).
+		<assert>invalid size</assert>
+		<assert>memory was already deallocated</assert>
 	**/
 	override public function resize(newSize:Int)
 	{
@@ -374,8 +374,8 @@ class ByteMemory extends MemoryAccess
 	
 	/**
 		Returns the byte at index `i`.
-		@throws de.polygonal.ds.error.AssertError segmentation Fault (debug only).
-		@throws de.polygonal.ds.error.AssertError memory deallocated (debug only).
+		<assert>segmentation Fault</assert>
+		<assert>memory deallocated</assert>
 	**/
 	inline public function get(i:Int):Int
 	{
@@ -392,8 +392,8 @@ class ByteMemory extends MemoryAccess
 	
 	/**
 		Replaces the byte at the index `i` with the byte `x`.
-		@throws de.polygonal.ds.error.AssertError segmentation Fault (debug only).
-		@throws de.polygonal.ds.error.AssertError memory deallocated (debug only).
+		<assert>segmentation Fault</assert>
+		<assert>memory deallocated</assert>
 	**/
 	inline public function set(i:Int, x:Int)
 	{
@@ -410,9 +410,9 @@ class ByteMemory extends MemoryAccess
 	
 	/**
 		Swaps the byte at the index `i` with the byte at the index `j`.
-		@throws de.polygonal.ds.error.AssertError `i` equals `j` (debug only).
-		@throws de.polygonal.ds.error.AssertError segmentation Fault (debug only).
-		@throws de.polygonal.ds.error.AssertError memory deallocated (debug only).
+		<assert>`i` equals `j`</assert>
+		<assert>segmentation Fault</assert>
+		<assert>memory deallocated</assert>
 	**/
 	inline public function swp(i:Int, j:Int)
 	{
@@ -431,8 +431,8 @@ class ByteMemory extends MemoryAccess
 	
 	/**
 		Returns the memory byte offset for the byte at index `i`.
-		@throws de.polygonal.ds.error.AssertError segmentation fault (debug only).
-		@throws de.polygonal.ds.error.AssertError memory deallocated (debug only).
+		<assert>segmentation fault</assert>
+		<assert>memory deallocated</assert>
 	**/
 	inline public function getAddr(i:Int):Int
 	{

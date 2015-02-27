@@ -26,7 +26,7 @@ import haxe.macro.Context;
 #end
 
 /**
-	<h3>Helper class for working with bits.</h3>
+	Helper class for working with bits
 **/
 class Bits
 {
@@ -209,7 +209,7 @@ class Bits
 	
 	/**
 		Returns true if the bit in `x` at index `i` is one.
-		@throws de.polygonal.ds.error.AssertError index out of range (debug only).
+		<assert>`i` out of range</assert>
 	**/
 	inline public static function hasBitAt(x:Int, i:Int):Bool
 	{
@@ -220,7 +220,7 @@ class Bits
 	
 	/**
 		Sets the bit in `x` at index `i` to one.
-		@throws de.polygonal.ds.error.AssertError index out of range (debug only).
+		<assert>`i` out of range</assert>
 	**/
 	inline public static function setBitAt(x:Int, i:Int):Int
 	{
@@ -231,7 +231,7 @@ class Bits
 	
 	/**
 		Sets the bit in `x` at index `i` to zero.
-		@throws de.polygonal.ds.error.AssertError index out of range (debug only).
+		<assert>`i` out of range</assert>
 	**/
 	inline public static function clrBitAt(x:Int, i:Int):Int
 	{
@@ -242,7 +242,7 @@ class Bits
 	
 	/**
 		Flips the bit in `x` at index `i`.
-		@throws de.polygonal.ds.error.AssertError index out of range (debug only).
+		<assert>`i` out of range</assert>
 	**/
 	inline public static function invBitAt(x:Int, i:Int):Int
 	{
@@ -253,7 +253,7 @@ class Bits
 	
 	/**
 		Sets all bits in `x` in the range [0, 31].
-		@throws de.polygonal.ds.error.AssertError invalid range (debug only).
+		<assert>invalid `min`/`max`</assert>
 	**/
 	inline public static function setBitsRange(x:Int, min:Int, max:Int):Int
 	{
@@ -271,7 +271,7 @@ class Bits
 	}
 	
 	/**
-		Constructs a mask of n bits.
+		Constructs a mask of `n` bits.
 	**/
 	inline public static function mask(n:Int):Int
 	{
@@ -281,7 +281,7 @@ class Bits
 	}
 	
 	/**
-		Counts the number of "1"-bits; e.g. 00110111 has 5 bits set.
+		Counts the number of "1"-bits in `x`; e.g. 00110111 has 5 bits set.
 	**/
 	inline public static function ones(x:Int)
 	{
@@ -294,7 +294,7 @@ class Bits
 	}
 	
 	/**
-		Counts the number of trailing 0's; e.g. 16 (0x10 or b10000) has 4 trailing 0's.
+		Counts the number of trailing 0's in `x`; e.g. 16 (0x10 or b10000) has 4 trailing 0's.
 	**/
 	inline public static function ntz(x:Int):Int
 	{
@@ -330,7 +330,7 @@ class Bits
 	}
 	
 	/**
-		Counts the number of leading 0's; e.g. 16 (0x10 or b10000) has 27 leading 0's.
+		Counts the number of leading 0's in `x`; e.g. 16 (0x10 or b10000) has 27 leading 0's.
 	**/
 	inline public static function nlz(x:Int):Int
 	{
@@ -387,7 +387,7 @@ class Bits
 	}
 	
 	/**
-		Flips the bytes within the WORD `x` (2 byte) to convert between little endian and big endian format.
+		Flips the bytes within the WORD `x` (2 bytes) to convert between little endian and big endian format.
 	**/
 	inline public static function flipWORD(x:Int):Int
 	{
@@ -395,7 +395,7 @@ class Bits
 	}
 	
 	/**
-		Flips the bytes within the DWORD `x` (4 byte) to convert between little endian and big endian format.
+		Flips the bytes within the DWORD `x` (4 bytes) to convert between little endian and big endian format.
 	**/
 	inline public static function flipDWORD(x:Int):Int
 	{

@@ -21,7 +21,7 @@ package de.polygonal.ds;
 import de.polygonal.ds.error.Assert.assert;
 
 /**
-	<h3>A binary tree.</h3>
+	A binary tree
 	
 	A tree data structure in which each node has at most two child nodes.
 	
@@ -94,11 +94,11 @@ class BinaryTreeNode<T> implements Collection<T>
 		
 		<o>n</o>
 		@param process a function that is invoked on every traversed node.
-		If omitted, element.`visit()` is used instead. <warn>In this case all elements have to implement `Visitable`.</warn>
+		If omitted, ``element::visit()`` is used instead. <warn>In this case all elements have to implement `Visitable`.</warn>
 		The first argument holds a reference to the current node, while the second argument stores custom data specified by the userData parameter (default is null).
 		Once `process` returns false, the traversal stops immediately and no further nodes are examined.
 		@param iterative if true, an iterative traversal is used (default traversal style is recursive).
-		@param userData custom data that is passed to every visited node via `process` or element.`visit()`. If omitted, null is used.
+		@param userData custom data that is passed to every visited node via `process` or ``element::visit()``. If omitted, null is used.
 	**/
 	public function preorder(process:BinaryTreeNode<T>->Dynamic->Bool = null, iterative = false, userData:Dynamic = null)
 	{
@@ -166,11 +166,11 @@ class BinaryTreeNode<T> implements Collection<T>
 		
 		<o>n</o>
 		@param process a function that is invoked on every traversed node.
-		If omitted, element.`visit()` is used instead. <warn>In this case all elements have to implement `Visitable`.</warn>
+		If omitted, element:``visit()`` is used instead. <warn>In this case all elements have to implement `Visitable`.</warn>
 		The first argument holds a reference to the current node, while the second argument stores custom data specified by the userData parameter (default is null).
 		Once `process` returns false, the traversal stops immediately and no further nodes are examined.
 		@param iterative if true, an iterative traversal is used (default traversal style is recursive).
-		@param userData custom data that is passed to every visited node via `process` or element.`visit()`. If omitted, null is used.
+		@param userData custom data that is passed to every visited node via `process` or element:``visit()``. If omitted, null is used.
 	**/
 	public function inorder(process:BinaryTreeNode<T>->Dynamic->Bool = null, iterative = false, userData:Dynamic = null)
 	{
@@ -270,11 +270,11 @@ class BinaryTreeNode<T> implements Collection<T>
 		
 		<o>n</o>
 		@param process a function that is invoked on every traversed node.
-		If omitted, element.`visit()` is used instead. <warn>In this case all elements have to implement `Visitable`.</warn>
+		If omitted, ``element::visit()`` is used instead. <warn>In this case all elements have to implement `Visitable`.</warn>
 		The first argument holds a reference to the current node, while the second argument stores custom data specified by the userData parameter (default is null).
 		Once `process` returns false, the traversal stops immediately and no further nodes are examined.
 		@param iterative if true, an iterative traversal is used (default traversal style is recursive).
-		@param userData custom data that is passed to every visited node via `process` or element.`visit()`. If omitted, null is used.
+		@param userData custom data that is passed to every visited node via `process` or ``element::visit()``. If omitted, null is used.
 	**/
 	public function postorder(process:BinaryTreeNode<T>->Dynamic->Bool = null, iterative = false, userData:Dynamic = null)
 	{
@@ -454,7 +454,7 @@ class BinaryTreeNode<T> implements Collection<T>
 	}
 	
 	/**
-		Returns true if this node is a root node (`p` is null).
+		Returns true if this node is a root node (``p`` is null).
 		<o>1</o>
 	**/
 	inline public function isRoot():Bool
@@ -746,7 +746,7 @@ class BinaryTreeNode<T> implements Collection<T>
 	}
 	
 	/**
-		Unsupported operation - always returns false.
+		<warn>Unsupported operation - always returns false.</warn>
 	**/
 	inline public function isEmpty():Bool
 	{
@@ -781,10 +781,10 @@ class BinaryTreeNode<T> implements Collection<T>
 	
 	/**
 		Duplicates this subtree. Supports shallow (structure only) and deep copies (structure & elements).
+		<assert>element is not of type `Cloneable`</assert>
 		@param assign if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
-		If false, the `clone()` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
-		@param copier a custom function for copying elements. Replaces element.`clone()` if `assign` is false.
-		@throws de.polygonal.ds.error.AssertError element is not of type `Cloneable` (debug only).
+		If false, the ``clone()`` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
+		@param copier a custom function for copying elements. Replaces ``element::clone()`` if `assign` is false.
 	**/
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{

@@ -21,7 +21,7 @@ package de.polygonal.ds;
 import de.polygonal.ds.error.Assert.assert;
 
 /**
-	<h3>A heap is a special kind of binary tree in which every node is greater than all of its children.</h3>
+	A heap is a special kind of binary tree in which every node is greater than all of its children
 	
 	The implementation is based on an arrayed binary tree.
 	
@@ -50,7 +50,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	public var maxSize:Int;
 	
 	/**
-		If true, reuses the iterator object instead of allocating a new one when calling `iterator()`.
+		If true, reuses the iterator object instead of allocating a new one when calling ``iterator()``.
 		
 		The default is false.
 		
@@ -67,10 +67,10 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	#end
 	
 	/**
-		@param reservedSize the initial capacity of the internal container. See `reserve()`.
+		<assert>`reservedSize` > ``maxSize``</assert>
+		@param reservedSize the initial capacity of the internal container. See ``reserve()``.
 		@param maxSize the maximum allowed size of this heap.
 		The default value of -1 indicates that there is no upper limit.
-		@throws de.polygonal.ds.error.AssertError `reservedSize` > `maxSize` (debug only).
 	**/
 	public function new(reservedSize = 0, maxSize = -1)
 	{
@@ -104,7 +104,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	}
 	
 	/**
-		For performance reasons the heap does nothing to ensure that empty locations contain null; `pack()` therefore
+		For performance reasons the heap does nothing to ensure that empty locations contain null; ``pack()`` therefore
 		nullifies all obsolete references and shrinks the container to the actual size allowing the garbage collector to reclaim used memory.
 		<o>n</o>
 	**/
@@ -156,7 +156,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 		
 		This is the smallest element (assuming ascending order).
 		<o>1</o>
-		@throws de.polygonal.ds.error.AssertError heap is empty (debug only).
+		<assert>heap is empty</assert>
 	**/
 	inline public function top():T
 	{
@@ -170,7 +170,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 		
 		This is the largest element (assuming ascending order).
 		<o>n</o>
-		@throws de.polygonal.ds.error.AssertError heap is empty (debug only).
+		<assert>heap is empty</assert>
 	**/
 	public function bottom():T
 	{
@@ -190,9 +190,9 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	/**
 		Adds the element `x`.
 		<o>log n</o>
-		@throws de.polygonal.ds.error.AssertError heap is full (debug only).
-		@throws de.polygonal.ds.error.AssertError `x` is null or `x` already exists (debug only).
-		@throws de.polygonal.ds.error.AssertError `size()` equals `maxSize` (debug only).
+		<assert>heap is full</assert>
+		<assert>`x` is null or `x` already exists</assert>
+		<assert>``size()`` equals ``maxSize``</assert>
 	**/
 	public function add(x:T)
 	{
@@ -214,7 +214,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 		
 		This is the smallest element (assuming ascending order).
 		<o>log n</o>
-		@throws de.polygonal.ds.error.AssertError heap is empty (debug only).
+		<assert>heap is empty</assert>
 	**/
 	public function pop():T
 	{
@@ -235,7 +235,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	/**
 		Replaces the item at the top of the heap with a new element `x`.
 		<o>log n</o>
-		@throws de.polygonal.ds.error.AssertError `x` already exists (debug only).
+		<assert>`x` already exists</assert>
 	**/
 	public function replace(x:T)
 	{
@@ -254,9 +254,9 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 		
 		This is faster than removing and readding an element.
 		<o>log n</o>
+		<assert>`x` does not exist</assert>
 		@param hint a value >= 0 indicates that `x` is now smaller (ascending order) or bigger (descending order) and should be moved towards the root of the tree to rebuild the heap property.
 		Likewise, a value < 0 indicates that `x` is now bigger (ascending order) or smaller (descending order) and should be moved towards the leaf nodes of the tree.
-		@throws de.polygonal.ds.error.AssertError `x` does not exist (debug only).
 	**/
 	public function change(x:T, hint:Int)
 	{
@@ -431,7 +431,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	/**
 		Returns true if this heap contains the element `x`.
 		<o>1</o>
-		@throws de.polygonal.ds.error.AssertError `x` is invalid.
+		<assert>`x` is invalid</assert>
 	**/
 	inline public function contains(x:T):Bool
 	{
@@ -444,7 +444,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	/**
 		Removes the element `x`.
 		<o>2 * log n</o>
-		@throws de.polygonal.ds.error.AssertError `x` is invalid or does not exist (debug only).
+		<assert>`x` is invalid or does not exist</assert>
 		@return true if `x` was removed.
 	**/
 	public function remove(x:T):Bool
@@ -553,10 +553,10 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	
 	/**
 		Duplicates this heap. Supports shallow (structure only) and deep copies (structure & elements).
+		<assert>element is not of type `Cloneable`</assert>
 		@param assign if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
-		If false, the `clone()` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
-		@param copier a custom function for copying elements. Replaces element.`clone()` if `assign` is false.
-		@throws de.polygonal.ds.error.AssertError element is not of type `Cloneable` (debug only).
+		If false, the ``clone()`` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
+		@param copier a custom function for copying elements. Replaces ``element::clone()`` if `assign` is false.
 		<warn>If `assign` is true, only the copied version should be used from now on.</warn>
 	**/
 	public function clone(assign = true, copier:T->T = null):Collection<T>

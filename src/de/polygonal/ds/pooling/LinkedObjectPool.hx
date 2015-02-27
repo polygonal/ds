@@ -114,7 +114,7 @@ class LinkedObjectPool<T> implements Hashable
 	
 	/**
 		Retrieves the next available object from the pool.
-		@throws de.polygonal.ds.error.AssertError object pool exhausted (debug only).
+		<assert>object pool exhausted</assert>
 	**/
 	inline public function get():T
 	{
@@ -139,7 +139,7 @@ class LinkedObjectPool<T> implements Hashable
 	
 	/**
 		Recycles the object `o` so it can be reused by calling `get()`.
-		@throws de.polygonal.ds.error.AssertError object pool is full (debug only).
+		<assert>object pool is full</assert>
 	**/
 	inline public function put(o:T)
 	{
@@ -154,8 +154,8 @@ class LinkedObjectPool<T> implements Hashable
 		Allocates the pool.
 		@param cl allocates objects by instantiating the class `cl`.
 		@param fabricate allocates objects by calling `fabricate()`.
-		@param factory allocates objects by calling `factory`::`create()`.
-		@throws de.polygonal.ds.error.AssertError invalid arguments.
+		@param factory allocates objects by calling `factory`::create().
+		<assert>invalid arguments</assert>
 	**/
 	public function allocate(cl:Class<T> = null, fabricate:Void->T = null, factory:Factory<T> = null)
 	{

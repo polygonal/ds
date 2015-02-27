@@ -18,10 +18,12 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 */
 package de.polygonal.ds;
 
+import de.polygonal.ds.error.Assert.assert;
+
 class VectorUtil
 {
 	/**
-		Wrapper for haxe.ds.Vector::blit().
+		Wrapper for ``haxe.ds.Vector::blit()``.
 	**/
 	public static #if (cs || java || neko || cpp) inline #end function blit<T>(src:Vector<T>, srcPos:Int, dest:Vector<T>, destPos:Int, len:Int):Void
 	{
@@ -54,5 +56,35 @@ class VectorUtil
 	{
 		if (k == -1) k = dst.length;
 		for (i in 0...k) dst[i] = x;
+	}
+	
+	/**
+		Searches the sorted vector `v` for the element `x` in the range (`min`, `max`] using the binary search algorithm.
+		<assert>`a`/`comparator` is null</assert>
+		<assert>invalid `min`/`max` search boundaries</assert>
+		@return the index of the element `x` or the bitwise complement (~) of the index where `x` would be inserted (guaranteed to be a negative number).
+		<warn>The insertion point is only valid for `min`=0 and `max`=a.length-1.</warn>
+	**/
+	public static function bsearchComparator<T>(v:Vector<T>, x:T, min:Int, max:Int, comparator:T->T->Int):Int
+	{
+		assert(v != null);
+		assert(comparator != null);
+		assert(min >= 0 && min < v.length);
+		assert(max < v.length);
+		
+		var l = min, m, h = max + 1;
+		while (l < h)
+		{
+			m = l + ((h - l) >> 1);
+			if (comparator(v[m], x) < 0)
+				l = m + 1;
+			else
+				h = m;
+		}
+		
+		if ((l <= max) && comparator(v[l], x) == 0)
+			return l;
+		else
+			return ~l;
 	}
 }

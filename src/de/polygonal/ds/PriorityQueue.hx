@@ -22,7 +22,7 @@ import de.polygonal.ds.error.Assert.assert;
 import haxe.ds.ObjectMap;
 
 /**
-	<h3>A priority queue is heap but with a simplified API for managing prioritized data.</h3>
+	A priority queue is heap but with a simplified API for managing prioritized data
 	
 	Adds additional methods for removing and re-prioritizing elements.
 	
@@ -51,7 +51,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	public var maxSize:Int;
 	
 	/**
-		If true, reuses the iterator object instead of allocating a new one when calling `iterator()`.
+		If true, reuses the iterator object instead of allocating a new one when calling ``iterator()``.
 		
 		The default is false.
 		
@@ -152,7 +152,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 		
 		This is the element with the highest priority.
 		<o>1</o>
-		@throws de.polygonal.ds.error.AssertError priority queue is empty (debug only).
+		<assert>priority queue is empty</assert>
 	**/
 	inline public function peek():T
 	{
@@ -166,7 +166,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 		
 		This is the element with the lowest priority.
 		<o>n</o>
-		@throws de.polygonal.ds.error.AssertError priority queue is empty (debug only).
+		<assert>priority queue is empty</assert>
 	**/
 	public function back():T
 	{
@@ -196,8 +196,8 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	/**
 		Enqueues the element `x`.
 		<o>log n</o>
-		@throws de.polygonal.ds.error.AssertError `size()` equals `maxSize` (debug only).
-		@throws de.polygonal.ds.error.AssertError `x` is null or `x` already exists (debug only).
+		<assert>``size()`` equals ``maxSize``</assert>
+		<assert>`x` is null or `x` already exists</assert>
 	**/
 	inline public function enqueue(x:T)
 	{
@@ -217,7 +217,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	/**
 		Dequeues the front element.
 		<o>log n</o>
-		@throws de.polygonal.ds.error.AssertError priority queue is empty (debug only).
+		<assert>priority queue is empty</assert>
 	**/
 	inline public function dequeue():T
 	{
@@ -239,9 +239,9 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	/**
 		Reprioritizes the element `x`.
 		<o>log n</o>
+		<assert>priority queue is empty or `x` does not exist</assert>
 		@param x the element to re-prioritize.
 		@param priority the new priority.
-		@throws de.polygonal.ds.error.AssertError priority queue is empty or `x` does not exist (debug only).
 	**/
 	public function reprioritize(x:T, priority:Float)
 	{
@@ -365,7 +365,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	/**
 		Returns true if this priority queue contains the element `x`.
 		<o>1</o>
-		@throws de.polygonal.ds.error.AssertError `x` is invalid.
+		<assert>`x` is invalid</assert>
 	**/
 	inline public function contains(x:T):Bool
 	{
@@ -378,8 +378,8 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	/**
 		Removes the element `x`.
 		<o>n</o>
+		<assert>`x` is invalid or does not exist</assert>
 		@return true if `x` was removed.
-		@throws de.polygonal.ds.error.AssertError `x` is invalid or does not exist (debug only).
 	**/
 	public function remove(x:T):Bool
 	{
@@ -488,10 +488,10 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	
 	/**
 		Duplicates this priority queue. Supports shallow (structure only) and deep copies (structure & elements).
+		<assert>element is not of type `Cloneable`</assert>
 		@param assign if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
-		If false, the `clone()` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
-		@param copier a custom function for copying elements. Replaces element.`clone()` if `assign` is false.
-		@throws de.polygonal.ds.error.AssertError element is not of type `Cloneable` (debug only).
+		If false, the ``clone()`` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
+		@param copier a custom function for copying elements. Replaces ``element::clone()`` if `assign` is false.
 		<warn>If `assign` is true, only the copied version should be used from now on.</warn>
 	**/
 	public function clone(assign = true, copier:T->T = null):Collection<T>

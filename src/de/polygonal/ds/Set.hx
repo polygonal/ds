@@ -19,7 +19,7 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 package de.polygonal.ds;
 
 /**
-	<h3>A collection that contains no duplicate elements.</h3>
+	A collection that contains no duplicate elements
 **/
 interface Set<T> extends Collection<T>
 {

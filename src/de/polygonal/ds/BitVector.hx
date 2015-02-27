@@ -24,7 +24,7 @@ import haxe.ds.Vector;
 using de.polygonal.ds.Bits;
 
 /**
-	<h3>An array data structure that compactly stores individual bits (boolean values).</h3>
+	An array data structure that compactly stores individual bits (boolean values)
 	
 	_<o>Worst-case running time in Big O notation</o>_
 **/
@@ -99,7 +99,7 @@ class BitVector implements Hashable
 	/**
 		Returns true if the bit at index `i` is 1.
 		<o>1</o>
-		@throws de.polygonal.ds.error.AssertError index out of range (debug only).
+		<assert>`i` out of range</assert>
 	**/
 	inline public function has(i:Int):Bool
 	{
@@ -111,7 +111,7 @@ class BitVector implements Hashable
 	/**
 		Sets the bit at index `i` to one.
 		<o>1</o>
-		@throws de.polygonal.ds.error.AssertError index out of range (debug only).
+		<assert>`i` out of range</assert>
 	**/
 	inline public function set(i:Int)
 	{
@@ -124,7 +124,7 @@ class BitVector implements Hashable
 	/**
 		Sets the bit at index `i` to zero.
 		<o>1</o>
-		@throws de.polygonal.ds.error.AssertError index out of range (debug only).
+		<assert>`i` out of range</assert>
 	**/
 	inline public function clr(i:Int)
 	{
@@ -155,10 +155,10 @@ class BitVector implements Hashable
 	/**
 		Clears all bits in the range [`min`, `max`).
 		
-		This is faster than clearing individual bits by using the `clr` method.
+		This is faster than clearing individual bits by using ``clr()``.
 		<o>n</o>
-		@throws de.polygonal.ds.error.AssertError min out of range (debug only).
-		@throws de.polygonal.ds.error.AssertError max out of range (debug only).
+		<assert>`min` out of range</assert>
+		<assert>`max` out of range</assert>
 	**/
 	public function clrRange(min:Int, max:Int)
 	{
@@ -181,10 +181,10 @@ class BitVector implements Hashable
 	/**
 		Sets all bits in the range [`min`, `max`).
 		
-		This is faster than setting individual bits by using the `set` method.
+		This is faster than setting individual bits by using ``set()``.
 		<o>n</o>
-		@throws de.polygonal.ds.error.AssertError min out of range (debug only).
-		@throws de.polygonal.ds.error.AssertError max out of range (debug only).
+		<assert>`min` out of range</assert>
+		<assert>`max` out of range</assert>
 	**/
 	public function setRange(min:Int, max:Int)
 	{
@@ -207,7 +207,7 @@ class BitVector implements Hashable
 	/**
 		Sets the bit at index `i` to one if `cond` is true or clears the bit at index `i` if `cond` is false.
 		<o>1</o>
-		@throws de.polygonal.ds.error.AssertError index out of range (debug only) (debug only).
+		<assert>`i` out of range</assert>
 	**/
 	inline public function ofBool(i:Int, cond:Bool)
 	{
@@ -218,7 +218,7 @@ class BitVector implements Hashable
 		Returns the bucket at index `i`.
 		
 		A bucket is a 32-bit integer for storing the bit flags.
-		@throws de.polygonal.ds.error.AssertError `i` out of range (debug only).
+		<assert>`i` out of range</assert>
 	**/
 	inline public function getBucketAt(i:Int):Int
 	{
@@ -286,7 +286,7 @@ class BitVector implements Hashable
 	/**
 		Writes the data in this bit-vector to a byte array.
 		
-		The number of bytes equals `bucketSize()` * 4 and the number of bits equals `capacity()`.
+		The number of bytes equals ``bucketSize()`` * 4 and the number of bits equals ``capacity()``.
 		<o>n</o>
 		@param bigEndian the byte order (default is little endian)
 	**/
@@ -312,8 +312,8 @@ class BitVector implements Hashable
 		
 		The bit-vector is resized to the size of `bytes`.
 		<o>n</o>
+		<assert>`input` is null</assert>
 		@param bigEndian the input byte order (default is little endian)
-		@throws de.polygonal.ds.error.AssertError `input` is null (debug only).
 	**/
 	public function ofBytes(bytes:haxe.io.BytesData, bigEndian = false)
 	{

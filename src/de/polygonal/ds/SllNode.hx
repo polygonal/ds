@@ -21,12 +21,12 @@ package de.polygonal.ds;
 import de.polygonal.ds.error.Assert.assert;
 
 /**
-	
-A singly linked list node.</h3>
+	A singly linked list node
 	
 	Each node wraps an element and stores a reference to the next list node.
 	
-	`SllNode` objects are created and managed by the `Sll` class.
+	``SllNode`` objects are created and managed by the ``Sll`` class.
+	
 	_<o>Worst-case running time in Big O notation</o>_
 **/
 #if (flash && generic)
@@ -71,7 +71,7 @@ class SllNode<T>
 	/**
 		Returns true if this node is the head of a list.
 		<o>1</o>
-		@throws de.polygonal.ds.error.AssertError node is not managed by a list (debug only).
+		<assert>node is not managed by a list</assert>
 	**/
 	inline public function isHead():Bool
 	{
@@ -83,7 +83,7 @@ class SllNode<T>
 	/**
 		Returns true if this node is the tail of a list.
 		<o>1</o>
-		@throws de.polygonal.ds.error.AssertError node is not managed by a list (debug only).
+		<assert>node is not managed by a list</assert>
 	**/
 	inline public function isTail():Bool
 	{
@@ -104,7 +104,7 @@ class SllNode<T>
 	/**
 		Returns the element of the next node.
 		<o>1</o>
-		@throws de.polygonal.ds.error.AssertError next node is null (debug only).
+		<assert>next node is null</assert>
 	**/
 	inline public function nextVal():T
 	{
@@ -125,7 +125,7 @@ class SllNode<T>
 	/**
 		Unlinks this node from its list and returns node.`next`.
 		<o>n</o>
-		@throws de.polygonal.ds.error.AssertError list is null (debug only).
+		<assert>list is null</assert>
 	**/
 	inline public function unlink():SllNode<T>
 	{
