@@ -182,7 +182,7 @@ class ArrayUtil
 	}
 	
 	/**
-		Searches the sorted array `a` for the element `x` in the range (`min`, `max`] using the binary search algorithm.
+		Searches the sorted array `a` for the element `x` in the range [`min`, `max`) using the binary search algorithm.
 		@return the index of the element `x` or the bitwise complement (~) of the index where `x` would be inserted (guaranteed to be a negative number).
 		<warn>The insertion point is only valid for `min`=0 and `max`=`a`::length-1.</warn>
 		@throws de.polygonal.ds.error.AssertError `a` is null (debug only).
@@ -211,7 +211,7 @@ class ArrayUtil
 	}
 	
 	/**
-		Searches the sorted array `a` for the element `x` in the range (`min`, `max`] using the binary search algorithm.
+		Searches the sorted array `a` for the element `x` in the range [`min`, `max`) using the binary search algorithm.
 		@return the index of the element `x` or the bitwise complement (~) of the index where `x` would be inserted (guaranteed to be a negative number).
 		<warn>The insertion point is only valid for `min`=0 and `max`=`a`::length-1.</warn>
 		@throws de.polygonal.ds.error.AssertError `a` is null (debug only).
@@ -241,7 +241,7 @@ class ArrayUtil
 	
 	/**
 		Shuffles the elements of the array `a` by using the Fisher-Yates algorithm.
-		@param rval a list of random double values in the range between 0 (inclusive) to 1 (exclusive) defining the new positions of the elements.
+		@param rval a list of random double values in the range between [0,1) defining the new positions of the elements.
 		If omitted, random values are generated on-the-fly by calling `Math::random()`.
 		@throws de.polygonal.ds.error.AssertError insufficient random values (debug only).
 	**/
