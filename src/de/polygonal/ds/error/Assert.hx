@@ -23,6 +23,13 @@ import haxe.macro.Context;
 import haxe.macro.Expr;
 #end
 
+/**
+	Assertion macro injects an assertion statement.
+	
+	An assertion specifies a condition that you expect to be true at a point in your program.
+	
+	If that condition is not true, the assertion fails, throwing an instance of the `AssertError` class.
+**/
 class Assert
 {
 	macro public static function assert(predicate:Expr, ?info:Expr):Expr
@@ -38,10 +45,13 @@ class Assert
 		
 		if (error) Context.error("predicate should be a boolean", predicate.pos);
 		
+		var hasInfo = true;
 		switch (Context.typeof(info))
 		{
 			case TMono(t):
 				error = t.get() != null;
+				hasInfo = false;
+				
 			case TInst(t, _):
 				error = t.get().name != "String";
 			case _: error = true;
@@ -50,8 +60,15 @@ class Assert
 		if (error) Context.error("info should be a string", info.pos);
 		
 		var p = Context.currentPos();
+		
+		var infoStr =
+		if (hasInfo)
+			EBinop(OpAdd, info, {expr: EConst(CString(" (" + new haxe.macro.Printer().printExpr(predicate) + ")")), pos: p});
+		else
+			EConst(CString(new haxe.macro.Printer().printExpr(predicate)));
+		
+		var eif = {expr: EThrow({expr: ENew({name: "AssertError", pack: ["de", "polygonal", "core", "util"], params: []}, [{expr: infoStr, pos: p}]), pos: p}), pos: p};
 		var econd = {expr: EBinop(OpNotEq, {expr: EConst(CIdent("true")), pos: p}, predicate), pos: p};
-		var eif = {expr: EThrow({expr: ENew({name: "AssertError", pack: ["de", "polygonal", "ds", "error"], params: []}, [info]), pos: p}), pos: p};
 		return {expr: EIf(econd, eif, null), pos: p};
 	}
 }
