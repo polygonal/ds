@@ -2,6 +2,7 @@
 	"name": "polygonal-ds",
 	"license": "MIT",
 	"description": "data structures for games",
+	"classPath": "src",
 	"url": "https://github.com/polygonal/ds",
 	"tags": ["cross", "utility", "game"],
 	"contributors" : ["mbaczynski"],
