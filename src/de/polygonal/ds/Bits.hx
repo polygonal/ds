@@ -44,43 +44,43 @@ class Bits
 	/**
 	 * 1 << 00 (0x00000001) 
 	 */
-	inline public static var BIT_01 = 1 << 00;
+	inline public static var BIT_01 = 1 << 0;
 	/**
 	 * 1 << 01 (0x00000002) 
 	 */
-	inline public static var BIT_02 = 1 << 01;
+	inline public static var BIT_02 = 1 << 1;
 	/**
 	 * 1 << 02 (0x00000004) 
 	 */
-	inline public static var BIT_03 = 1 << 02;
+	inline public static var BIT_03 = 1 << 2;
 	/**
 	 * 1 << 03 (0x00000008) 
 	 */
-	inline public static var BIT_04 = 1 << 03;
+	inline public static var BIT_04 = 1 << 3;
 	/**
 	 * 1 << 04 (0x00000010) 
 	 */
-	inline public static var BIT_05 = 1 << 04;
+	inline public static var BIT_05 = 1 << 4;
 	/**
 	 * 1 << 05 (0x00000020) 
 	 */
-	inline public static var BIT_06 = 1 << 05;
+	inline public static var BIT_06 = 1 << 5;
 	/**
 	 * 1 << 06 (0x00000040) 
 	 */
-	inline public static var BIT_07 = 1 << 06;
+	inline public static var BIT_07 = 1 << 6;
 	/**
 	 * 1 << 07 (0x00000080) 
 	 */
-	inline public static var BIT_08 = 1 << 07;
+	inline public static var BIT_08 = 1 << 7;
 	/**
 	 * 1 << 08 (0x00000100) 
 	 */
-	inline public static var BIT_09 = 1 << 08;
+	inline public static var BIT_09 = 1 << 8;
 	/**
 	 * 1 << 09 (0x00000200) 
 	 */
-	inline public static var BIT_10 = 1 << 09;
+	inline public static var BIT_10 = 1 << 9;
 	/**
 	 * 1 << 10 (0x00000400) 
 	 */
