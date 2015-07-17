@@ -30,8 +30,8 @@ class AssertError
 		if (message == null) message = "";
 		this.message = message;
 		
-		var stack = CallStack.toString(CallStack.callStack());
-		stack = ~/\nCalled from de\.polygonal\.core\.util\.AssertError.*$/m.replace(stack, "");
+		var stack = haxe.CallStack.toString(haxe.CallStack.callStack());
+		stack = ~/\nCalled from de\.polygonal\.ds\.error\.AssertError.*$/m.replace(stack, "");
 		
 		this.message = 'Assertation $message failed in file ${info.fileName}, line ${info.lineNumber}, ${info.className}:: ${info.methodName}\nCall stack:${stack}';
 	}

@@ -67,7 +67,7 @@ class Assert
 		else
 			EConst(CString(new haxe.macro.Printer().printExpr(predicate)));
 		
-		var eif = {expr: EThrow({expr: ENew({name: "AssertError", pack: ["de", "polygonal", "core", "util"], params: []}, [{expr: infoStr, pos: p}]), pos: p}), pos: p};
+		var eif = {expr: EThrow({expr: ENew({name: "AssertError", pack: ["de", "polygonal", "ds", "error"], params: []}, [{expr: infoStr, pos: p}]), pos: p}), pos: p};
 		var econd = {expr: EBinop(OpNotEq, {expr: EConst(CIdent("true")), pos: p}, predicate), pos: p};
 		return {expr: EIf(econd, eif, null), pos: p};
 	}
