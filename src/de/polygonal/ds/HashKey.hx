@@ -33,12 +33,9 @@ class HashKey
 	inline public static function next():Int
 	{
 		#if debug
-		var x = mCounter;
-		var y = ++mCounter;
-		assert(x < y);
-		return x;
-		#else
-		return mCounter++;
+		assert(mCounter < mCounter + 1);
 		#end
+		
+		return mCounter++;
 	}
 }
