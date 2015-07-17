@@ -345,7 +345,7 @@ class Graph<T> implements Collection<T>
 		<warn>Call this method to start a fresh traversal.</warn>
 		<o>n</o>
 	**/
-	inline public function clearMarks()
+	public function clearMarks()
 	{
 		var node = mNodeList;
 		while (node != null)
@@ -359,7 +359,7 @@ class Graph<T> implements Collection<T>
 		Clears the parent pointers on all graph nodes.
 		<o>n</o>
 	**/
-	inline public function clearParent()
+	public function clearParent()
 	{
 		var node = mNodeList;
 		while (node != null)
