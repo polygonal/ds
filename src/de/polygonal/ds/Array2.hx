@@ -1046,21 +1046,21 @@ class Array2<T> implements Collection<T>
 @:dox(hide)
 class Array2Iterator<T> implements de.polygonal.ds.Itr<T>
 {
-	var mF:Array2<T>;
+	var mStructure:Array2<T>;
 	var mData:Vector<T>;
 	var mI:Int;
 	var mS:Int;
 	
 	public function new(f:Array2<T>)
 	{
-		mF = f;
+		mStructure = f;
 		reset();
 	} 
 	
 	inline public function reset():Itr<T>
 	{
-		mData = mF.mData;
-		mS = mF.mW * mF.mH;
+		mData = mStructure.mData;
+		mS = mStructure.mW * mStructure.mH;
 		mI = 0;
 		return this;
 	}

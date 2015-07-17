@@ -153,6 +153,7 @@ class ArrayUtil
 	
 	/**
 		Searches the sorted array `a` for the element `x` in the range (`min`, `max`] using the binary search algorithm.
+		
 		<warn>The insertion point is only valid for `min`=0 and `max`=a.length-1.</warn>
 		<assert>`a`/`comparator` is null</assert>
 		<assert>invalid `min`/`max` search boundaries</assert>
@@ -183,6 +184,7 @@ class ArrayUtil
 	
 	/**
 		Searches the sorted array `a` for the element `x` in the range [`min`, `max`) using the binary search algorithm.
+		
 		<warn>The insertion point is only valid for `min`=0 and `max`=`a`::length-1.</warn>
 		<assert>`a` is null</assert>
 		<assert>invalid `min`/`max` search boundaries</assert>
@@ -212,6 +214,7 @@ class ArrayUtil
 	
 	/**
 		Searches the sorted array `a` for the element `x` in the range [`min`, `max`) using the binary search algorithm.
+		
 		<warn>The insertion point is only valid for `min`=0 and `max`=`a`::length-1.</warn>
 		<assert>`a` is null</assert>
 		<assert>invalid `min`/`max` search boundaries</assert>

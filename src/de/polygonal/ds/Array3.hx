@@ -740,21 +740,21 @@ class Array3<T> implements Collection<T>
 @:dox(hide)
 class Array3Iterator<T> implements de.polygonal.ds.Itr<T>
 {
-	var mF:Array3<T>;
+	var mStructure:Array3<T>;
 	var mData:Vector<T>;
 	var mI:Int;
 	var mS:Int;
 	
 	public function new(f:Array3<T>)
 	{
-		mF = f;
+		mStructure = f;
 		reset();
 	}
 	
 	inline public function reset():Itr<T>
 	{
-		mData = mF.mData;
-		mS = mF.mW * mF.mH * mF.mD;
+		mData = mStructure.mData;
+		mS = mStructure.mW * mStructure.mH * mStructure.mD;
 		mI = 0;
 		return this;
 	}
