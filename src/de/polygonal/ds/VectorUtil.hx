@@ -25,13 +25,21 @@ class VectorUtil
 	/**
 		Wrapper for ``haxe.ds.Vector::blit()``.
 	**/
-	public static #if (cs || java || neko || cpp) inline #end function blit<T>(src:Vector<T>, srcPos:Int, dest:Vector<T>, destPos:Int, len:Int):Void
+	public static #if (cs || java || neko || cpp) inline #end function blit<T>(src:Vector<T>, srcPos:Int, dst:Vector<T>, dstPos:Int, len:Int):Void
 	{
 		#if flash
-		for (i in 0...len)
-			dest[destPos + i] = src[srcPos + i];
+		if (srcPos == 0 && dstPos == 0)
+		{
+			for (i in 0...len)
+				dst[i] = src[i];
+		}
+		else
+		{
+			for (i in 0...len)
+				dst[dstPos + i] = src[srcPos + i];
+		}
 		#else
-		haxe.ds.Vector.blit(src, srcPos, dest, destPos, len);
+		haxe.ds.Vector.blit(src, srcPos, dst, dstPos, len);
 		#end
 	}
 	
