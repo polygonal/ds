@@ -44,12 +44,31 @@ If you want to test the latest beta build, you should pull the dev branch and ad
 
 ## Changelog
 
+### 1.4.2 (dev)
+__supports Haxe Compiler 3.2.1__
+
+ * modified: use Vector instead of Array where possible
+ * modified: require flash10; drop support for fp 9.x
+ * added: IntIntHashTable.hasPair() for checking if a {key, value} pair exists
+ * added: IntIntHashTable.clrPair() for removing a {key, value} pair
+ * added: IntIntHashTable.toKeyVector()
+ * added: Array.getRect() for extracting a rectangular region
+ * modified: use access control instead of friend sytax with typedef
+ * modified: less agressive inlining
+ * modified: API: use plain array to pass random values to shuffle() instead of Da
+ * modified: API: Array2/3.getArray() renamed to Array2/3.getVector()
+ * fixed: several bugfixes for neko/cpp
+ * modified: API: walk() renamed to iter() to match Haxe Lambda style.
+ * modified: switched to dox for documentation
+ * modified: API: renamed SLL to Sll, DLL to Dll, BST to Bst, DA to Da: match Haxe naming style
+ * modified: removed HashMap class (deprecated, Flash only)
+ 
 ### 1.4.1 (released 2013-07-08)
 
  * modified: removed "polygonal-core" haxelib dependency
  
 ### 1.4.0 (released 2013-06-28)
-_support Haxe Compiler 3.0.0_
+_supports Haxe Compiler 3.0.0_
 
  * modified: support Haxe 3 only (Haxe 2.x and Neko 1.x are no longer supported)
  * modified: sacrifice Collection.toDA() for proper @:generic support
