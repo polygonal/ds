@@ -703,7 +703,7 @@ class ArrayedStack<T> implements Stack<T>
 		return copy;
 	}
 	
-	function expand() 
+	function expand()
 	{
 		var oldCapacity = mCapacity;
 		mCapacity <<= 1;

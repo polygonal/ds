@@ -66,6 +66,12 @@ class GraphArc<T> implements Hashable
 	public var prev:GraphArc<T>;
 	
 	/**
+		The data of the node that this arc points to.
+	**/
+	public var val(get_val, never):T;
+	inline function get_val():T return node.val;
+	
+	/**
 		Creates a graph arc pointing to `node` with a weight of `cost` .
 	**/
 	public function new(node:GraphNode<T>, cost:Float)
@@ -87,13 +93,5 @@ class GraphArc<T> implements Hashable
 	{
 		node = null;
 		next = prev = null;
-	}
-	
-	/**
-		Returns the data of the node that this arc points to.
-	**/
-	inline public function val():T
-	{
-		return node.val;
 	}
 }

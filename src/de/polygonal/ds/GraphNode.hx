@@ -105,7 +105,7 @@ class GraphNode<T> implements Hashable
 	**/
 	public function free()
 	{
-		val = cast  null;
+		val = cast null;
 		next = prev = null;
 		arcList = null;
 		mGraph = null;
@@ -278,7 +278,7 @@ class GraphNode<T> implements Hashable
 			var arc = arcList;
 			while (arc != null)
 			{
-				t.push(Std.string(arc.val()));
+				t.push(Std.string(arc.val));
 				arc = arc.next;
 			}
 		}
