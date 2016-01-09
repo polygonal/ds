@@ -853,13 +853,22 @@ class TreeNode<T> implements Collection<T>
 	**/
 	public function preorder(process:TreeNode<T>->Bool->Dynamic->Bool, userData:Dynamic, preflight:Bool = false, iterative:Bool = false):TreeNode<T>
 	{
+		inline function asVisitable(value:Dynamic):Visitable
+		{
+			#if flash
+			return flash.Lib.as(value, Visitable);
+			#else
+			return cast value;
+			#end
+		}
+		
 		if (parent == null && children == null)
 		{
 			if (process == null)
 			{
 				assert(Std.is(val, Visitable), "element is not of type Visitable");
 				
-				var v = cast(val, Visitable);
+				var v = asVisitable(val);
 				if (preflight)
 				{
 					if (v.visit(true, userData))
@@ -889,7 +898,7 @@ class TreeNode<T> implements Collection<T>
 				
 				if (preflight)
 				{
-					var v = cast(val, Visitable);
+					var v = asVisitable(val);
 					
 					if (v.visit(true, userData))
 					{
@@ -907,7 +916,7 @@ class TreeNode<T> implements Collection<T>
 				}
 				else
 				{
-					var v = cast(val, Visitable);
+					var v = asVisitable(val);
 					if (v.visit(false, userData))
 					{
 						var child = children, hook;
@@ -981,7 +990,7 @@ class TreeNode<T> implements Collection<T>
 						
 						assert(Std.is(node.val, Visitable), "element is not of type Visitable");
 						
-						var v = cast(node.val, Visitable);
+						var v = asVisitable(node.val);
 						
 						if (!v.visit(true, userData)) continue;
 						if (!v.visit(false, userData)) return this;
@@ -1004,7 +1013,6 @@ class TreeNode<T> implements Collection<T>
 									assert(top.mNextInStack == null);
 								#end
 								
-								
 								c = c.prev;
 							}
 						}
@@ -1019,8 +1027,7 @@ class TreeNode<T> implements Collection<T>
 						
 						assert(Std.is(node.val, Visitable), "element is not of type Visitable");
 						
-						var v = cast(node.val, Visitable);
-						
+						var v = asVisitable(node.val);
 						if (!v.visit(false, userData)) return this;
 						
 						var n = node.children;
@@ -1480,7 +1487,16 @@ class TreeNode<T> implements Collection<T>
 	{
 		assert(Std.is(node.val, Visitable), "element is not of type Visitable");
 		
-		var v = cast(node.val, Visitable);
+		inline function asVisitable(value:Dynamic):Visitable
+		{
+			#if flash
+			return flash.Lib.as(value, Visitable);
+			#else
+			return cast value;
+			#end
+		}
+		
+		var v = asVisitable(node.val);
 		if (v.visit(false, userData))
 		{
 			if (node.hasChildren())
@@ -1502,7 +1518,16 @@ class TreeNode<T> implements Collection<T>
 	{
 		assert(Std.is(node.val, Visitable), "element is not of type Visitable");
 		
-		var v = cast(node.val, Visitable);
+		inline function asVisitable(value:Dynamic):Visitable
+		{
+			#if flash
+			return flash.Lib.as(value, Visitable);
+			#else
+			return cast value;
+			#end
+		}
+		
+		var v = asVisitable(node.val);
 		if (v.visit(true, userData))
 		{
 			if (v.visit(false, userData))
