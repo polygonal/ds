@@ -47,6 +47,8 @@ If you want to test the latest beta build, you should pull the dev branch and ad
 ### 1.4.2 (dev)
 __supports Haxe Compiler 3.2.1__
 
+ * added: initial python support
+ * fixed: Graph.remove()
  * modified: use Vector instead of Array where possible
  * modified: require flash10; drop support for fp 9.x
  * added: IntIntHashTable.hasPair() for checking if a {key, value} pair exists
