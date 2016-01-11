@@ -313,9 +313,9 @@ class IntHashTable<T> implements Map<Int, T>
 		Creates and returns an unordered dense array of all keys.
 		<o>n</o>
 	**/
-	public function toKeyDa():Da<Int>
+	public function toKeyVector():Vector<Int>
 	{
-		return mH.toKeyDa();
+		return mH.toKeyVector();
 	}
 	
 	/**

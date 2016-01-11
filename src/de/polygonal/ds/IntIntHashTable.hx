@@ -706,26 +706,6 @@ class IntIntHashTable implements Map<Int, Int>
 	}
 	
 	/**
-		Creates and returns an unordered dense array of all keys.
-	**/
-	public function toKeyDa():Da<Int>
-	{
-		var a = new Da<Int>(size());
-		for (i in 0...mCapacity)
-		{
-			#if (flash && alchemy)
-			var o = mData.getAddr(i * 3);
-			if (Memory.getI32(o + 4) != VAL_ABSENT)
-				a.pushBack(Memory.getI32(o));
-			#else
-			if (getData((i * 3) + 1) != VAL_ABSENT)
-				a.pushBack(getData(i * 3));
-			#end
-		}
-		return a;
-	}
-	
-	/**
 		Returns a string representing the current object.
 		
 		Example:
