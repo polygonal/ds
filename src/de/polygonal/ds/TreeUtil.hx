@@ -21,140 +21,204 @@ package de.polygonal.ds;
 import haxe.ds.StringMap;
 
 /**
-	A helper class for working with trees
+	A helper class for working with trees.
 **/
 @:access(de.polygonal.ds.XmlNode)
 class TreeUtil
 {
 	/**
-		 Converts `xmlStr` to a ``Treenode`` structure.
+		Converts `xmlStr` to a `Treenode` structure.
 	**/
 	public static function ofXml(xmlStr:String):TreeNode<XmlNode>
 	{
-		var stack = new Array<Dynamic>();
-		var top = 1;
-		
 		var xml = Xml.parse(xmlStr).firstElement();
 		
-		var info = new XmlNode(xml.nodeName);
-		var tree = new TreeNode<XmlNode>(info);
-		info.treeNode = tree;
+		var node = XmlNode.of(xml);
+		var root = new TreeNode<XmlNode>(node);
+		node.arbiter = root;
 		
-		for (attr in xml.attributes())
-			Reflect.setField(info.mAttributes, attr, xml.get(attr));
-		
-		stack.push(xml);
-		stack.push(tree);
-		
-		while (top != 0)
+		var p:TreeNode<XmlNode>, c:TreeNode<XmlNode>;
+		var stack:Array<Dynamic> = [xml, root];
+		var top = 1;
+		while (top-- != 0)
 		{
-			--top;
+			p = stack.pop();
 			
-			var t:TreeNode<XmlNode> = stack.pop();
-			var e:Xml = stack.pop();
-			
-			for (i in e)
+			for (xml in (stack.pop() : Xml))
 			{
-				if (i.nodeType == Xml.Element)
-				{
-					var info = new XmlNode(i.nodeName);
-					
-					for (attr in i.attributes())
-						Reflect.setField(info.mAttributes, attr, i.get(attr));
-					
-					var firstChild = i.firstChild();
-					if (firstChild != null)
-					{
-						switch (firstChild.nodeType)
-						{
-							case Xml.CData, Xml.PCData:
-								if (~/\S/.match(firstChild.nodeValue))
-									info.data = firstChild.nodeValue;
-							default:
-						}
-					}
-					
-					var node = new TreeNode<XmlNode>(info);
-					info.treeNode = node;
-					t.appendNode(node);
-					
-					stack.push(i);
-					stack.push(node);
-					top++;
-				}
+				if (xml.nodeType != Xml.Element) continue;
+				
+				node = XmlNode.of(xml);
+				c = new TreeNode<XmlNode>(node);
+				node.arbiter = c;
+				p.appendNode(c);
+				
+				stack.push(xml);
+				stack.push(c);
+				top++;
 			}
 		}
 		
-		return tree;
+		return root;
 	}
 }
 
 /**
-	An object containing the data of an xml node
+	An object containing the data of an xml node.
 **/
-class XmlNode implements Dynamic<String>
+@:publicFields
+class XmlNode
 {
+	public static function of(xml:Xml):XmlNode
+	{
+		var node = new XmlNode();
+		
+		node.name = xml.nodeName;
+		
+		var firstChild = xml.firstChild();
+		if (firstChild != null)
+		{
+			switch (firstChild.nodeType)
+			{
+				case Xml.CData, Xml.PCData:
+					if (~/\S/.match(firstChild.nodeValue))
+						node.data = firstChild.nodeValue;
+				case _:
+			}
+		}
+		
+		node.attributes = new AttrAccess(xml);
+		
+		return node;
+	}
+	
 	/**
 		Node element name.
 	**/
-	public var name:String;
+	var name:String;
 	
 	/**
 		PCDATA or CDATA (if any).
 	**/
-	public var data:String;
+	var data:String;
 	
 	/**
-		The `TreeNode` instance storing this node.
+		XML Attributes (if any).
 	**/
-	public var treeNode:TreeNode<XmlNode>;
+	var attributes:AttrAccess;
 	
-	var mAttributes:Dynamic;
+	/**
+		A `TreeNode` instance storing this node.
+	**/
+	var arbiter:TreeNode<XmlNode>;
 	
-	public function new(name:String)
+	public function new() {}
+	
+	public function iterator():Iterator<XmlNode>
 	{
-		this.name = name;
-		mAttributes = {};
+		var n = arbiter.children;
+		return
+		{
+			hasNext: function() return n != null,
+			next: function()
+			{
+				var t = n;
+				n = n.next;
+				return t.val;
+			}
+		}
 	}
 	
-	public function firstChild():XmlNode
+	public function firstDescendant(name:String, deep:Bool = true):XmlNode
 	{
-		if (treeNode.hasChildren())
-			return treeNode.getFirstChild().val;
-		return null;
+		if (arbiter.hasChildren())
+		{
+			var first = arbiter.getFirstChild().val;
+			if (first.name == name)
+				return first;
+		}
+		
+		var output = null;
+		
+		if (deep)
+		{
+			arbiter.preorder(
+				function(x:TreeNode<XmlNode>, _, _)
+				{
+					if (x.val.name == name)
+					{
+						output = x.val;
+						return false;
+					}
+					return true;
+				}, null);
+			
+			return output;
+		}
+		else
+		{
+			var c = arbiter.children;
+			while (c.hasNextSibling())
+			{
+				if (c.val.name == name)
+				{
+					output = c.val;
+					break;
+				}
+				c = c.next;
+			}
+		}
+		
+		return output;
 	}
 	
-	public function numChildren():Int
+	public function descendants(name:String, deep:Bool = true):Array<XmlNode>
 	{
-		return treeNode.numChildren();
+		var output = [];
+		
+		if (deep)
+		{
+			arbiter.preorder(
+				function(x:TreeNode<XmlNode>, _, _)
+				{
+					if (x.val.name == name)
+						output.push(x.val);
+					return true;
+				}, null);
+		}
+		else
+		{
+			var c = arbiter.children;
+			while (c.hasNextSibling())
+			{
+				if (c.val.name == name)
+					output.push(c.val);
+				c = c.next;
+			}
+		}
+		
+		return output;
 	}
 	
-	public function firstDescendantByName(name:String):XmlNode
+	public function toString()
 	{
-		return Lambda.find(treeNode, function(e) return e.name == name);
+		return '{ XmlNode: name=$name }';
 	}
+}
+
+@:allow(de.polygonal.ds.TreeUtil)
+private class AttrAccess implements Dynamic<String>
+{
+	var __o:Dynamic = {};
 	
-	public function descendantsByName(name:String):Iterator<XmlNode>
+	public function new(xml:Xml)
 	{
-		return Lambda.filter(treeNode, function(e) return e.name == name).iterator();
+		for (i in xml.attributes())
+			Reflect.setField(__o, i, xml.get(i));
 	}
-	
-	public function childrenByName(name:String):Iterator<XmlNode>
-	{
-		var a = [];
-		for (i in treeNode.childIterator())
-			if (i.name == name)
-				a.push(i);
-		return a.iterator();
-	}
-	
-	public function exists(name:String):Bool return Reflect.hasField(mAttributes, name);
 	
 	public function resolve(name:String):String
 	{
-		if (Reflect.hasField(mAttributes, name))
-			return Reflect.field(mAttributes, name);
-		else
-			return null;
+		return Reflect.hasField(__o, name) ? Reflect.field(__o, name) : null;
 	}
 }
