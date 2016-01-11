@@ -89,7 +89,7 @@ class TestArray2 extends AbstractTest
 	function testToString()
 	{
 		var array2 = new de.polygonal.ds.Array2<String>(4, 4);
-		array2.iter(function(val:String, x:Int, y:Int):String { return Std.string(x) + '.' + Std.string(y); });
+		array2.iter(function(val:String, x:Int, y:Int):String { return Std.string(x) + "." + Std.string(y); });
 		array2.toString();
 		assertTrue(true);
 	}
@@ -146,7 +146,6 @@ class TestArray2 extends AbstractTest
 		for (i in 0...a.getH()) assertEquals((a.size()) + i, a.get(1, i));
 	}
 	
-	#if !neko
 	function testAssign()
 	{
 		var a = new Array2<E>(mW, mH);
@@ -166,7 +165,6 @@ class TestArray2 extends AbstractTest
 			}
 		}
 	}
-	#end
 	
 	function testFill()
 	{
@@ -189,7 +187,7 @@ class TestArray2 extends AbstractTest
 		var a = getStrArray();
 		for (y in 0...mH)
 			for (x in 0...mW)
-				assertEquals(x + '.' + y, a.get(x, y));
+				assertEquals(x + "." + y, a.get(x, y));
 	}
 	
 	function testResize()
@@ -225,9 +223,9 @@ class TestArray2 extends AbstractTest
 		a.shiftW();
 		for (y in 0...mH)
 			for (x in 0...mW - 1)
-				assertEquals((x + 1) + '.' + y, a.get(x, y));
+				assertEquals((x + 1) + "." + y, a.get(x, y));
 		for (y in 0...mH)
-			assertEquals('0.' + y, a.get(mW - 1, y));
+			assertEquals("0." + y, a.get(mW - 1, y));
 	}
 	
 	function testShiftE()
@@ -236,9 +234,9 @@ class TestArray2 extends AbstractTest
 		a.shiftE();
 		for (y in 0...mH)
 			for (x in 1...mW)
-				assertEquals((x - 1) + '.' + y, a.get(x, y));
+				assertEquals((x - 1) + "." + y, a.get(x, y));
 		for (y in 0...mH)
-			assertEquals((mW - 1) + '.' + y, a.get(0, y));
+			assertEquals((mW - 1) + "." + y, a.get(0, y));
 	}
 	
 	function testShiftN()
@@ -247,9 +245,9 @@ class TestArray2 extends AbstractTest
 		a.shiftN();
 		for (y in 0...(mH - 1))
 			for (x in 0...mW)
-				assertEquals(x + '.' + (y + 1), a.get(x, y));
+				assertEquals(x + "." + (y + 1), a.get(x, y));
 		for (x in 0...mW)
-			assertEquals(x + '.0', a.get(x, mH - 1));
+			assertEquals(x + ".0", a.get(x, mH - 1));
 	}
 	
 	function testShiftS()
@@ -258,9 +256,9 @@ class TestArray2 extends AbstractTest
 		a.shiftS();
 		for (y in 1...mH)
 			for (x in 0...mW)
-				assertEquals(Std.string(x) + '.' + (y - 1), a.get(x, y));
+				assertEquals(Std.string(x) + "." + (y - 1), a.get(x, y));
 		for (x in 0...mW)
-			assertEquals(Std.string(x) + '.' + Std.string(mH - 1), a.get(x, 0));
+			assertEquals(Std.string(x) + "." + Std.string(mH - 1), a.get(x, 0));
 	}
 	
 	function testSwap()
@@ -304,22 +302,36 @@ class TestArray2 extends AbstractTest
 	{
 		var a = getIntArray(mW, mH - 1);
 		
-		for (i in 0...mW) a.set(i, mH - 2, i);
+		var c = 0;
+		for (j in 0...mH - 1)
+			for (i in 0...mW)
+				a.set(i, j, c++);
 		
 		var input = new Array<Int>();
-		for (i in 0...mW) input.push(i);
+		for (i in 0...mW) input.push(100+i*100);
+		
 		a.prependRow(input);
+		
 		assertEquals(a.getH(), mH);
 		
-		for (x in 0...mW) assertEquals(x, a.get(x, 0));
-		for (x in 0...mW) assertEquals(x, a.get(x, mH - 1));
+		var c = 0;
+		for (j in 1...mH)
+		{
+			for (i in 0...mW)
+			{
+				assertEquals(c, a.get(i, j));
+				c++;
+			}
+		}
+		
+		for (x in 0...mW) assertEquals(100 + x * 100, a.get(x, 0));
 	}
 	
 	function testPrependCol()
 	{
 		var a = getIntArray(mW - 1, mH);
 		
-		for (i in 0...mH) a.set(mW - 2, i, i);
+		for (i in 0...mH) a.set(mW - 2, i, 10 + i * 10);
 		
 		var input = new Array<Int>();
 		for (i in 0...mH) input.push(i);
@@ -327,7 +339,7 @@ class TestArray2 extends AbstractTest
 		
 		assertEquals(a.getW(), mW);
 		for (y in 0...mH) assertEquals(y, a.get(0, y));
-		for (y in 0...mH) assertEquals(y, a.get(mW - 1, y));
+		for (y in 0...mH) assertEquals(10 + y * 10, a.get(mW - 1, y));
 	}
 	
 	function testCopyRow()
@@ -410,63 +422,59 @@ class TestArray2 extends AbstractTest
 			a.transpose();
 			for (y in 0...mH)
 				for (x in 0...mW)
-				 assertEquals(Std.string(y) + '.' + Std.string(x), a.get(x, y));
+				 assertEquals(Std.string(y) + "." + Std.string(x), a.get(x, y));
 			var a = getStrArray(4, 3);
 			a.transpose();
 			for (y in 0...4)
 				for (x in 0...3)
-				 assertEquals(Std.string(y) + '.' + Std.string(x), a.get(x, y));
+				 assertEquals(Std.string(y) + "." + Std.string(x), a.get(x, y));
 		}
 	}
 	
 	function testContains()
 	{
 		var a = getStrArray();
-		a.fill('?');
+		a.fill("?");
 		for (y in 0...mH)
 			for (x in 0...mW)
-				assertEquals(true, a.contains('?'));
+				assertEquals(true, a.contains("?"));
 	}
 	
 	function testToArray()
 	{
 		var a = getStrArray();
-		a.fill('?');
+		a.fill("?");
 		var out = new Array<String>();
 		var out = a.toArray();
 		for (i in out)
-			assertEquals('?', i);
+			assertEquals("?", i);
 		assertEquals(out.length, a.size());
 	}
 	
-	#if flash
 	function testToVector()
 	{
 		var a = getStrArray();
-		a.fill('?');
-		var out = new flash.Vector<Dynamic>();
+		a.fill("?");
 		var arr = a.toVector();
-		for (i in arr)
-			assertEquals('?', i);
+		for (i in arr) assertEquals("?", i);
 		assertEquals(arr.length, a.size());
 	}
-	#end
 	
 	function testIterator()
 	{
 		var a = getStrArray();
-		a.fill('?');
+		a.fill("?");
 		var c = 0;
 		for (val in a)
 		{
-			assertEquals(val, '?');
+			assertEquals(val, "?");
 			c++;
 		}
 		assertEquals(c, a.size());
 		var c = 0;
 		for (val in a)
 		{
-			assertEquals(val, '?');
+			assertEquals(val, "?");
 			c++;
 		}
 		assertEquals(c, a.size());
@@ -474,8 +482,8 @@ class TestArray2 extends AbstractTest
 		var a = getStrArray();
 		a.iter(function(val:String, x:Int, y:Int):String
 		{
-			s.set(x + '.' + y);
-			return x + '.' + y;
+			s.set(x + "." + y);
+			return x + "." + y;
 		});
 		var s1:Set<String> = cast s.clone(true);
 		var s2:Set<String> = cast s.clone(true);
@@ -490,7 +498,7 @@ class TestArray2 extends AbstractTest
 	function testIteratorRemove()
 	{
 		var a = getStrArray();
-		a.fill('?');
+		a.fill("?");
 		var itr = a.iterator();
 		while (itr.hasNext())
 		{
@@ -555,7 +563,7 @@ class TestArray2 extends AbstractTest
 		if (w == -1) w = mW;
 		if (h == -1) h = mH;
 		var a = new Array2<String>(w, h);
-		a.iter(function(val, x, y):String return x + '.' + y);
+		a.iter(function(val, x, y):String return x + "." + y);
 		return a;
 	}
 	
@@ -568,7 +576,7 @@ class TestArray2 extends AbstractTest
 		var i = 0;
 		for (y in 0...5)
 			for (x in 0...5)
-				assertEquals(x + '.' + y, output[i++]);
+				assertEquals(x + "." + y, output[i++]);
 				
 		var a = getStrArray(3, 3);
 		

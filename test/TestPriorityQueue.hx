@@ -289,6 +289,6 @@ private class E extends de.polygonal.ds.HashableItem, implements de.polygonal.ds
 	
 	public function toString():String
 	{
-		return '' + priority;
+		return "" + priority;
 	}
 }

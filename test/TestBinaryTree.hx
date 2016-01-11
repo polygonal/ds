@@ -15,20 +15,20 @@ class TestBinaryTree extends AbstractTest
 	
 	function testClear()
 	{
-		var node = new BinaryTreeNode<String>('root');
-		node.setL('e1');
-		node.setR('e2');
-		node.l.setL('e1');
-		node.l.l.setR('e2');
+		var node = new BinaryTreeNode<String>("root");
+		node.setL("e1");
+		node.setR("e2");
+		node.l.setL("e1");
+		node.l.l.setR("e2");
 		
 		node.clear(false);
 		assertEquals(1, node.size());
 		
-		var node = new BinaryTreeNode<String>('root');
-		node.setL('e1');
-		node.setR('e2');
-		node.l.setL('e1');
-		node.l.l.setR('e2');
+		var node = new BinaryTreeNode<String>("root");
+		node.setL("e1");
+		node.setR("e2");
+		node.l.setL("e1");
+		node.l.l.setR("e2");
 		
 		node.clear(true);
 		assertEquals(1, node.size());
@@ -36,24 +36,24 @@ class TestBinaryTree extends AbstractTest
 	
 	function testRemove()
 	{
-		var node = new BinaryTreeNode<String>('root');
+		var node = new BinaryTreeNode<String>("root");
 		
-		node.setL('e1');
-		node.setR('e2');
-		node.l.setL('e1');
-		node.l.l.setR('e2');
+		node.setL("e1");
+		node.setR("e2");
+		node.l.setL("e1");
+		node.l.l.setR("e2");
 		
 		assertTrue(node.hasL());
 		assertTrue(node.hasR());
 		assertTrue(node.l.hasL());
 		assertTrue(node.l.l.hasR());
 		
-		assertEquals('e1', node.l.val);
-		assertEquals('e2', node.r.val);
-		assertEquals('e1', node.l.l.val);
-		assertEquals('e2', node.l.l.r.val);
+		assertEquals("e1", node.l.val);
+		assertEquals("e2", node.r.val);
+		assertEquals("e1", node.l.l.val);
+		assertEquals("e2", node.l.l.r.val);
 		
-		node.remove('e1');
+		node.remove("e1");
 		
 		assertFalse(node.hasL());
 		assertTrue(node.hasR());

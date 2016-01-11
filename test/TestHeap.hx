@@ -554,7 +554,7 @@ private class E1 implements de.polygonal.ds.Heapable<E1>, implements de.polygona
 	
 	public function toString():String
 	{
-		return '' + ID;
+		return "" + ID;
 	}
 }
 
@@ -571,7 +571,7 @@ private class E2 implements de.polygonal.ds.Heapable<E2>
 	
 	public function toString():String
 	{
-		return '' + y;
+		return "" + y;
 	}
 	
 	public function compare(other:E2):Int

@@ -15,9 +15,9 @@ class TestGraph extends AbstractTest
 		//function
 		var graph = new Graph<String>();
 		
-		var a = graph.addNode(graph.createNode('a'));
-		var b = graph.addNode(graph.createNode('b'));
-		var c = graph.addNode(graph.createNode('c'));
+		var a = graph.addNode(graph.createNode("a"));
+		var b = graph.addNode(graph.createNode("b"));
+		var c = graph.addNode(graph.createNode("c"));
 		
 		graph.addSingleArc(a, b);
 		graph.addSingleArc(b, c);
@@ -553,8 +553,8 @@ class TestGraph extends AbstractTest
 		var f = function(node:GraphNode<String>, preflight:Bool, userData:Dynamic):Bool return true;
 		
 		var graph = new Graph<String>();
-		var node1 = new CustomGraphNode<String>(graph, 'a');
-		var node2 = new CustomGraphNode<String>(graph, 'b');
+		var node1 = new CustomGraphNode<String>(graph, "a");
+		var node2 = new CustomGraphNode<String>(graph, "b");
 		
 		graph.addNode(node1);
 		graph.addNode(node2);
@@ -601,7 +601,7 @@ private class E extends de.polygonal.ds.HashableItem, implements de.polygonal.ds
 	
 	public function toString():String
 	{
-		return '' + id;
+		return "" + id;
 	}
 	
 	public function visit(preflight:Bool, userData:Dynamic):Bool

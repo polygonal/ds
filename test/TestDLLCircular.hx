@@ -466,11 +466,11 @@ class TestDllCircular extends AbstractTest
 		var list = new Dll<Int>();
 		list.close();
 		list.append(0);
-		assertEquals('0',list.join('|'));
+		assertEquals("0",list.join("|"));
 		list.append(1);
-		assertEquals('0|1',list.join('|'));
+		assertEquals("0|1",list.join("|"));
 		list.append(2);
-		assertEquals('0|1|2',list.join('|'));
+		assertEquals("0|1|2",list.join("|"));
 	}
 	
 	function testIterator()
@@ -549,6 +549,6 @@ private class E implements de.polygonal.ds.Comparable<E>
 	
 	public function toString():String
 	{
-		return '' + id;
+		return "" + id;
 	}
 }

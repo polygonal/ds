@@ -398,6 +398,6 @@ private class E implements de.polygonal.ds.Comparable<E>, implements de.polygona
 	
 	public function toString():String
 	{
-		return '[' + id + ']';
+		return "[" + id + "]";
 	}
 }

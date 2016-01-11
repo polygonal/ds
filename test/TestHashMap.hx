@@ -8,23 +8,23 @@ class TestHashMap extends AbstractTest
 		var h = new de.polygonal.ds.HashMap<String, Null<Int>>();
 		for (i in 0...2)
 		{
-			h.set('a', 1);
-			h.set('b', 1);
-			h.set('c', 1);
+			h.set("a", 1);
+			h.set("b", 1);
+			h.set("c", 1);
 			h.remove(1);
 			assertFalse(h.has(1));
-			assertFalse(h.hasKey('a'));
-			assertFalse(h.hasKey('b'));
-			assertFalse(h.hasKey('c'));
+			assertFalse(h.hasKey("a"));
+			assertFalse(h.hasKey("b"));
+			assertFalse(h.hasKey("c"));
 			assertEquals(0, h.size());
 		}
 		
 		var h = new de.polygonal.ds.HashMap<String, Null<Int>>();
-		h.set('a', 0);
+		h.set("a", 0);
 		
-		assertEquals(0, h.get('a'));
+		assertEquals(0, h.get("a"));
 		h.remove(0);
-		assertEquals(null, h.get('a'));
+		assertEquals(null, h.get("a"));
 		assertEquals(0, h.size());
 	}
 	
@@ -32,31 +32,31 @@ class TestHashMap extends AbstractTest
 	{
 		var h = new de.polygonal.ds.HashMap < String, Null<Int> > ();
 		
-		h.set('a', 1);
-		assertEquals(1, h.get('a'));
+		h.set("a", 1);
+		assertEquals(1, h.get("a"));
 		assertEquals(1, h.size());
 		
-		var result = h.remap('a', 2);
+		var result = h.remap("a", 2);
 		assertTrue(result);
-		assertEquals(2, h.get('a'));
+		assertEquals(2, h.get("a"));
 		assertEquals(1, h.size());
 		
-		h.set('b', 1);
-		assertEquals(1, h.get('b'));
+		h.set("b", 1);
+		assertEquals(1, h.get("b"));
 		assertEquals(2, h.size());
 		
-		var result = h.remap('b', 2);
+		var result = h.remap("b", 2);
 		assertTrue(result);
-		assertEquals(2, h.get('b'));
+		assertEquals(2, h.get("b"));
 		assertEquals(2, h.size());
 	}
 	
 	function testHasVal()
 	{
 		var h = new de.polygonal.ds.HashMap<String, Null<Int>>();
-		h.set('a', 1);
-		h.set('b', 2);
-		h.set('c', 3);
+		h.set("a", 1);
+		h.set("b", 2);
+		h.set("c", 3);
 		
 		assertTrue(h.has(1));
 		assertTrue(h.has(2));
@@ -77,14 +77,14 @@ class TestHashMap extends AbstractTest
 	function testHasKey()
 	{
 		var h = new de.polygonal.ds.HashMap<String, Null<Int>>();
-		h.set('a', 1);
-		h.set('b', 2);
-		h.set('c', 3);
+		h.set("a", 1);
+		h.set("b", 2);
+		h.set("c", 3);
 		
-		assertTrue(h.hasKey('a'));
-		assertTrue(h.hasKey('b'));
-		assertTrue(h.hasKey('c'));
-		assertFalse(h.hasKey('d'));
+		assertTrue(h.hasKey("a"));
+		assertTrue(h.hasKey("b"));
+		assertTrue(h.hasKey("c"));
+		assertFalse(h.hasKey("d"));
 		
 		var h = new de.polygonal.ds.HashMap<Int, Int>();
 		h.set(1, 1);
@@ -100,15 +100,15 @@ class TestHashMap extends AbstractTest
 	function testGetSet()
 	{
 		var h = new de.polygonal.ds.HashMap<String, Null<Int>>();
-		assertTrue(h.set('a', 1));
-		assertTrue(h.set('b', 2));
-		assertTrue(h.set('c', 3));
-		assertFalse(h.set('c', 3));
+		assertTrue(h.set("a", 1));
+		assertTrue(h.set("b", 2));
+		assertTrue(h.set("c", 3));
+		assertFalse(h.set("c", 3));
 		
-		assertEquals(1, h.get('a'));
-		assertEquals(2, h.get('b'));
-		assertEquals(3, h.get('c'));
-		assertEquals(null, h.get('d'));
+		assertEquals(1, h.get("a"));
+		assertEquals(2, h.get("b"));
+		assertEquals(3, h.get("c"));
+		assertEquals(null, h.get("d"));
 		
 		var h = new de.polygonal.ds.HashMap<Int, Null<Int>>();
 		h.set(1, 1);
@@ -121,36 +121,36 @@ class TestHashMap extends AbstractTest
 		assertEquals(null, h.get(0));
 		
 		var h = new de.polygonal.ds.HashMap<Int, String>();
-		h.set(1, 'a');
-		h.set(2, 'b');
-		h.set(3, 'c');
+		h.set(1, "a");
+		h.set(2, "b");
+		h.set(3, "c");
 		
-		assertEquals('a', h.get(1));
-		assertEquals('b', h.get(2));
-		assertEquals('c', h.get(3));
+		assertEquals("a", h.get(1));
+		assertEquals("b", h.get(2));
+		assertEquals("c", h.get(3));
 		assertEquals(null, h.get(0));
 	}
 	
 	function testClr()
 	{
 		var h = new de.polygonal.ds.HashMap<String, Null<Int>>();
-		assertTrue(h.set('a', 1));
-		assertTrue(h.set('b', 2));
-		assertTrue(h.set('c', 3));
-		assertFalse(h.set('c', 3));
+		assertTrue(h.set("a", 1));
+		assertTrue(h.set("b", 2));
+		assertTrue(h.set("c", 3));
+		assertFalse(h.set("c", 3));
 		
-		assertTrue(h.clr('a'));
-		assertTrue(h.clr('b'));
-		assertTrue(h.clr('c'));
-		assertFalse(h.clr('c'));
+		assertTrue(h.clr("a"));
+		assertTrue(h.clr("b"));
+		assertTrue(h.clr("c"));
+		assertFalse(h.clr("c"));
 	}
 	
 	function testClear()
 	{
 		var h = new de.polygonal.ds.HashMap<String, Null<Int>>();
-		h.set('a', 1);
-		h.set('b', 2);
-		h.set('c', 3);
+		h.set("a", 1);
+		h.set("b", 2);
+		h.set("c", 3);
 		
 		h.clear();
 		
@@ -159,17 +159,17 @@ class TestHashMap extends AbstractTest
 		assertFalse(h.has(2));
 		assertFalse(h.has(3));
 		
-		assertFalse(h.hasKey('a'));
-		assertFalse(h.hasKey('b'));
-		assertFalse(h.hasKey('c'));
+		assertFalse(h.hasKey("a"));
+		assertFalse(h.hasKey("b"));
+		assertFalse(h.hasKey("c"));
 	}
 	
 	function testToValSet()
 	{
 		var h = new de.polygonal.ds.HashMap<String, Null<Int>>();
-		h.set('a', 1);
-		h.set('b', 2);
-		h.set('c', 3);
+		h.set("a", 1);
+		h.set("b", 2);
+		h.set("c", 3);
 		
 		var s:Set<Int> = h.toValSet();
 		assertEquals(3, s.size());
@@ -181,19 +181,19 @@ class TestHashMap extends AbstractTest
 	function testToKeySet()
 	{
 		var h = new de.polygonal.ds.HashMap<String, Null<Int>>();
-		h.set('a', 1);
-		h.set('b', 2);
-		h.set('c', 3);
+		h.set("a", 1);
+		h.set("b", 2);
+		h.set("c", 3);
 		var s:Set<String> = h.toKeySet();
 		assertEquals(3, s.size());
-		assertTrue(s.contains('a'));
-		assertTrue(s.contains('b'));
-		assertTrue(s.contains('c'));
+		assertTrue(s.contains("a"));
+		assertTrue(s.contains("b"));
+		assertTrue(s.contains("c"));
 		
 		var a = h.toKeyArray();
 		assertEquals(3, s.size());
 		
-		var ref = ['a', 'b', 'c'];
+		var ref = ["a", "b", "c"];
 		while (a.length > 0)
 		{
 			for (i in 0...a.length)
@@ -208,24 +208,24 @@ class TestHashMap extends AbstractTest
 		
 		var a = h.toKeyDa();
 		assertEquals(3, s.size());
-		assertTrue(a.contains('a'));
-		assertTrue(a.contains('b'));
-		assertTrue(a.contains('c'));
+		assertTrue(a.contains("a"));
+		assertTrue(a.contains("b"));
+		assertTrue(a.contains("c"));
 	}
 	
 	function testClone()
 	{
 		var h:HashMap<String, String> = new HashMap<String, String>(true);
-		h.set('key1a', 'val1');
-		h.set('key1b', 'val1');
-		h.set('key2', 'val2');
-		h.set('key3', 'val3');
+		h.set("key1a", "val1");
+		h.set("key1b", "val1");
+		h.set("key2", "val2");
+		h.set("key3", "val3");
 		
 		var clone:de.polygonal.ds.HashMap<String, String> = cast h.clone(true);
-		assertEquals(clone.get('key1a'), 'val1');
-		assertEquals(clone.get('key1b'), 'val1');
-		assertEquals(clone.get('key2') , 'val2');
-		assertEquals(clone.get('key3') , 'val3');
+		assertEquals(clone.get("key1a"), "val1");
+		assertEquals(clone.get("key1b"), "val1");
+		assertEquals(clone.get("key2") , "val2");
+		assertEquals(clone.get("key3") , "val3");
 	}
 	
 	function testIterator()

@@ -934,6 +934,6 @@ private class E extends HashableItem
 	
 	public function toString():String
 	{
-		return 'item_' + value;
+		return "item_" + value;
 	}
 }

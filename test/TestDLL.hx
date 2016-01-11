@@ -39,7 +39,7 @@ class TestDll extends AbstractTest
 	{
 		var list = new Dll<Int>();
 		for (i in 0...10) list.append(i);
-		assertEquals(list.join(''), '0123456789');
+		assertEquals(list.join(""), "0123456789");
 	}
 	
 	#if debug
@@ -1049,7 +1049,7 @@ private class EComparable implements de.polygonal.ds.Comparable<EComparable>
 	
 	public function toString():String
 	{
-		return '' + id;
+		return "" + id;
 	}
 }
 

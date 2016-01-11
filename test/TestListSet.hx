@@ -8,30 +8,30 @@ class TestListSet extends AbstractTest
 	{
 		var s1 = new ListSet<String>();
 		
-		s1.set('a');
-		assertEquals(s1.contains('a'), true);
-		assertTrue(s1.has('a'));
+		s1.set("a");
+		assertEquals(s1.contains("a"), true);
+		assertTrue(s1.has("a"));
 		assertEquals(1, s1.size());
 		
 		var s2 = new ListSet<String>();
-		s2.set('b');
-		assertEquals(s2.contains('b'), true);
-		assertTrue(s2.has('b'));
+		s2.set("b");
+		assertEquals(s2.contains("b"), true);
+		assertTrue(s2.has("b"));
 		
 		s1.merge(s2, true);
 		
-		assertTrue(s1.contains('b'));
-		assertTrue(s1.has('b'));
-		s1.remove('b');
+		assertTrue(s1.contains("b"));
+		assertTrue(s1.has("b"));
+		s1.remove("b");
 		
 		s1.merge(s2, false, function(val:String) { return val; });
 		
-		assertTrue(s1.contains('b'));
+		assertTrue(s1.contains("b"));
 		
 		assertEquals(2, s1.size());
 		
-		s1.remove('a');
-		s1.remove('b');
+		s1.remove("a");
+		s1.remove("b");
 		
 		assertTrue(s1.isEmpty());
 	}
@@ -39,14 +39,14 @@ class TestListSet extends AbstractTest
 	function testClone()
 	{
 		var s1 = new ListSet<String>();
-		s1.set('a');
-		s1.set('b');
-		s1.set('c');
+		s1.set("a");
+		s1.set("b");
+		s1.set("c");
 		
 		var s2 = s1.clone(true);
-		assertTrue(s2.contains('a'));
-		assertTrue(s2.contains('b'));
-		assertTrue(s2.contains('c'));
+		assertTrue(s2.contains("a"));
+		assertTrue(s2.contains("b"));
+		assertTrue(s2.contains("c"));
 		assertEquals(3, s2.size());
 	}
 	

@@ -216,11 +216,11 @@ class TestSll extends AbstractTest
 		assertTrue(list.remove(9));
 		assertEquals(9, list.size());
 		assertEquals(node, list.tail);
-		assertEquals(list.join(''), '012345678');
+		assertEquals(list.join(""), "012345678");
 		
 		assertTrue(list.remove(0));
 		assertEquals(8, list.size());
-		assertEquals(list.join(''), '12345678');
+		assertEquals(list.join(""), "12345678");
 		
 		var list = new Sll<Int>();
 		for (i in 0...10) list.append(i);
@@ -266,11 +266,11 @@ class TestSll extends AbstractTest
 		var node = head;
 		for (i in 0...8) node = node.next;
 		assertEquals(node, list.tail);
-		assertEquals(list.join(''), '012345678');
+		assertEquals(list.join(""), "012345678");
 		
 		assertTrue(list.remove(0));
 		assertEquals(8, list.size());
-		assertEquals(list.join(''), '12345678');
+		assertEquals(list.join(""), "12345678");
 		
 		assertEquals(list.head, list.tail.next);
 		
@@ -334,7 +334,7 @@ class TestSll extends AbstractTest
 		var node = list.head;
 		while (node != null)
 		{
-			if (s.has(node.val)) throw 'error';
+			if (s.has(node.val)) throw "error";
 			s.set(node.val);
 			node = node.next;
 		}
@@ -350,7 +350,7 @@ class TestSll extends AbstractTest
 		var node = list.head;
 		for (i in 0...list.size())
 		{
-			if (s.has(node.val)) throw 'error';
+			if (s.has(node.val)) throw "error";
 			s.set(node.val);
 			node = node.next;
 		}
@@ -609,12 +609,12 @@ class TestSll extends AbstractTest
 	{
 		var list = new Sll<Int>();
 		for (i in 0...10) list.append(i);
-		assertEquals(list.join(''), '0123456789');
+		assertEquals(list.join(""), "0123456789");
 		
 		var list = new Sll<Int>();
 		list.close();
 		for (i in 0...10) list.append(i);
-		assertEquals(list.join(''), '0123456789');
+		assertEquals(list.join(""), "0123456789");
 	}
 	
 	function testReverse()
@@ -1265,6 +1265,6 @@ private class ESortable implements de.polygonal.ds.Comparable<ESortable>
 	
 	public function toString():String
 	{
-		return 'Node_' + id;
+		return "Node_" + id;
 	}
 }

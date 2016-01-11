@@ -9,42 +9,42 @@ class TestTree extends AbstractTest
 {
 	function testRemove()
 	{
-		var root = new TreeNode<String>('root');
+		var root = new TreeNode<String>("root");
 		var itr = root.getBuilder();
-		itr.appendChild('element');
-		itr.appendChild('root.a2');
-		itr.appendChild('root.a3');
+		itr.appendChild("element");
+		itr.appendChild("root.a2");
+		itr.appendChild("root.a3");
 		itr.childStart();
 		itr.down();
-		itr.appendChild('root.b1');
-		itr.appendChild('root.b2');
-		itr.appendChild('element');
+		itr.appendChild("root.b1");
+		itr.appendChild("root.b2");
+		itr.appendChild("element");
 		itr.down();
-		itr.appendChild('element');
-		assertTrue(root.remove('element'));
+		itr.appendChild("element");
+		assertTrue(root.remove("element"));
 	}
 	
 	function testXmlToTreeNode()
 	{
-		var xml = '<root rootAttr=\'rootAttrValue\'><node1 node1Attr1=\'a\' node1Attr2=\'b\'><node2 node2Attr=\'c\'/></node1></root>';
+		var xml = "<root rootAttr=\"rootAttrValue\"><node1 node1Attr1=\"a\" node1Attr2=\"b\"><node2 node2Attr=\"c\"/></node1></root>";
 		var root = de.polygonal.ds.TreeUtil.ofXml(xml);
 		
-		assertEquals(root.val.name, 'root');
-		assertEquals('rootAttrValue', root.val.attributes.rootAttr);
-		assertEquals('a', root.children.val.attributes.node1Attr1);
-		assertEquals('b', root.children.val.attributes.node1Attr2);
-		assertEquals('node1', root.children.val.name);
-		assertEquals('c', root.children.children.val.attributes.node2Attr);
-		assertEquals('node2', root.children.children.val.name);
+		assertEquals(root.val.name, "root");
+		assertEquals("rootAttrValue", root.val.attributes.rootAttr);
+		assertEquals("a", root.children.val.attributes.node1Attr1);
+		assertEquals("b", root.children.val.attributes.node1Attr2);
+		assertEquals("node1", root.children.val.name);
+		assertEquals("c", root.children.children.val.attributes.node2Attr);
+		assertEquals("node2", root.children.children.val.name);
 	}
 	
 	function testUnlink()
 	{
-		var root = new TreeNode<String>('root');
+		var root = new TreeNode<String>("root");
 		var itr = root.getBuilder();
-		itr.appendChild('root.a1');
-		itr.appendChild('root.a2');
-		itr.appendChild('root.a3');
+		itr.appendChild("root.a1");
+		itr.appendChild("root.a2");
+		itr.appendChild("root.a3");
 		
 		var node = root.children.unlink();
 		assertEquals(null, node.parent);
@@ -65,17 +65,17 @@ class TestTree extends AbstractTest
 	
 	function testAppendNode()
 	{
-		var root = new TreeNode<String>('root');
+		var root = new TreeNode<String>("root");
 		var itr = root.getBuilder();
-		itr.appendChild('root.a1');
-		itr.appendChild('root.a2');
-		itr.appendChild('root.a3');
+		itr.appendChild("root.a1");
+		itr.appendChild("root.a2");
+		itr.appendChild("root.a3");
 		
-		var node = new TreeNode<String>('new');
+		var node = new TreeNode<String>("new");
 		var itr = node.getBuilder();
-		itr.appendChild('new.a1');
-		itr.appendChild('new.a2');
-		itr.appendChild('new.a3');
+		itr.appendChild("new.a1");
+		itr.appendChild("new.a2");
+		itr.appendChild("new.a3");
 		
 		root.appendNode(node);
 		assertEquals(8, root.size());
@@ -83,17 +83,17 @@ class TestTree extends AbstractTest
 	
 	function testPrependNode()
 	{
-		var root = new TreeNode<String>('root');
+		var root = new TreeNode<String>("root");
 		var itr = root.getBuilder();
-		itr.appendChild('root.a1');
-		itr.appendChild('root.a2');
-		itr.appendChild('root.a3');
+		itr.appendChild("root.a1");
+		itr.appendChild("root.a2");
+		itr.appendChild("root.a3");
 		
-		var node = new TreeNode<String>('new');
+		var node = new TreeNode<String>("new");
 		var itr = node.getBuilder();
-		itr.appendChild('new.a1');
-		itr.appendChild('new.a2');
-		itr.appendChild('new.a3');
+		itr.appendChild("new.a1");
+		itr.appendChild("new.a2");
+		itr.appendChild("new.a3");
 		
 		root.prependNode(node);
 		assertEquals(8, root.size());
@@ -101,16 +101,16 @@ class TestTree extends AbstractTest
 	
 	function testInsertAfter()
 	{
-		var root = new TreeNode<String>('root');
+		var root = new TreeNode<String>("root");
 		var itr = root.getBuilder();
-		itr.appendChild('root.a1');
-		itr.appendChild('root.a3');
+		itr.appendChild("root.a1");
+		itr.appendChild("root.a3");
 		
-		var node = new TreeNode<String>('new');
+		var node = new TreeNode<String>("new");
 		var itr = node.getBuilder();
-		itr.appendChild('new.a1');
-		itr.appendChild('new.a2');
-		itr.appendChild('new.a3');
+		itr.appendChild("new.a1");
+		itr.appendChild("new.a2");
+		itr.appendChild("new.a3");
 		
 		root.insertAfterChild(root.children, node);
 		assertEquals(3, root.numChildren());
@@ -119,16 +119,16 @@ class TestTree extends AbstractTest
 	
 	function testInsertBefore()
 	{
-		var root = new TreeNode<String>('root');
+		var root = new TreeNode<String>("root");
 		var itr = root.getBuilder();
-		itr.appendChild('root.a1');
-		itr.appendChild('root.a3');
+		itr.appendChild("root.a1");
+		itr.appendChild("root.a3");
 		
-		var node = new TreeNode<String>('new');
+		var node = new TreeNode<String>("new");
 		var itr = node.getBuilder();
-		itr.appendChild('new.a1');
-		itr.appendChild('new.a2');
-		itr.appendChild('new.a3');
+		itr.appendChild("new.a1");
+		itr.appendChild("new.a2");
+		itr.appendChild("new.a3");
 		
 		root.insertBeforeChild(root.children, node);
 		assertEquals(3, root.numChildren());
@@ -137,23 +137,23 @@ class TestTree extends AbstractTest
 	
 	function testLevelOrder()
 	{
-		var root = new TreeNode<String>('R');
+		var root = new TreeNode<String>("R");
 		var itr = root.getBuilder();
 		
-		itr.appendChild('a');
-		itr.appendChild('b');
-		itr.appendChild('c');
+		itr.appendChild("a");
+		itr.appendChild("b");
+		itr.appendChild("c");
 		
 		itr.childStart();
 		itr.down();
-		itr.appendChild('d');
-		itr.appendChild('e');
-		itr.appendChild('f');
+		itr.appendChild("d");
+		itr.appendChild("e");
+		itr.appendChild("f");
 		itr.childStart();
 		itr.nextChild();
 		itr.down();
-		itr.appendChild('g');
-		itr.appendChild('h');
+		itr.appendChild("g");
+		itr.appendChild("h");
 		
 		var visitOrder = [];
 		
@@ -164,34 +164,34 @@ class TestTree extends AbstractTest
 		}
 		
 		visitOrder = [];
-		root.find('a').levelorder(process, null);
-		assertEquals('a,d,e,f,g,h', visitOrder.join(','));
+		root.find("a").levelorder(process, null);
+		assertEquals("a,d,e,f,g,h", visitOrder.join(","));
 		
 		visitOrder = [];
-		root.find('f').levelorder(process, null);
-		assertEquals('f', visitOrder.join(','));
+		root.find("f").levelorder(process, null);
+		assertEquals("f", visitOrder.join(","));
 		
 		visitOrder = [];
-		root.find('d').levelorder(process, null);
-		assertEquals('d', visitOrder.join(','));
+		root.find("d").levelorder(process, null);
+		assertEquals("d", visitOrder.join(","));
 		
 		visitOrder = [];
-		root.find('e').levelorder(process, null);
-		assertEquals('e,g,h', visitOrder.join(','));
+		root.find("e").levelorder(process, null);
+		assertEquals("e,g,h", visitOrder.join(","));
 		
-		var root = new TreeNode<String>('root');
+		var root = new TreeNode<String>("root");
 		var itr = root.getBuilder();
 		
-		itr.appendChild('root.a1');
-		itr.appendChild('root.a2');
-		itr.appendChild('root.a3');
+		itr.appendChild("root.a1");
+		itr.appendChild("root.a2");
+		itr.appendChild("root.a3");
 		
 		itr.childStart();
 		itr.down();
-		itr.appendChild('root.a1.b1');
-		itr.appendChild('root.a1.b2');
+		itr.appendChild("root.a1.b1");
+		itr.appendChild("root.a1.b2");
 		
-		var order = ['root', 'root.a1', 'root.a2', 'root.a3', 'root.a1.b1', 'root.a1.b2'];
+		var order = ["root", "root.a1", "root.a2", "root.a3", "root.a1.b1", "root.a1.b2"];
 		var i = 0;
 		
 		var scope = this;
@@ -204,17 +204,17 @@ class TestTree extends AbstractTest
 		root.levelorder(visit, null);
 		
 		//visitable
-		var root = new TreeNode<Visitor>(new Visitor('root'));
+		var root = new TreeNode<Visitor>(new Visitor("root"));
 		var itr = root.getBuilder();
 		
-		itr.appendChild(new Visitor('root.a1'));
-		itr.appendChild(new Visitor('root.a2'));
-		itr.appendChild(new Visitor('root.a3'));
+		itr.appendChild(new Visitor("root.a1"));
+		itr.appendChild(new Visitor("root.a2"));
+		itr.appendChild(new Visitor("root.a3"));
 		
 		itr.childStart();
 		itr.down();
-		itr.appendChild(new Visitor('root.a1.b1'));
-		itr.appendChild(new Visitor('root.a1.b2'));
+		itr.appendChild(new Visitor("root.a1.b1"));
+		itr.appendChild(new Visitor("root.a1.b2"));
 		
 		Visitor.c = 0;
 		Visitor.t = this;
@@ -227,19 +227,19 @@ class TestTree extends AbstractTest
 	function testPreOrderPreflight()
 	{
 		//function
-		var root = new TreeNode<String>('root');
+		var root = new TreeNode<String>("root");
 		var itr = root.getBuilder();
 		
-		itr.appendChild('root.a1');
-		itr.appendChild('root.a2');
-		itr.appendChild('root.a3');
+		itr.appendChild("root.a1");
+		itr.appendChild("root.a2");
+		itr.appendChild("root.a3");
 		
 		itr.childStart();
 		itr.down();
-		itr.appendChild('root.a1.b1');
-		itr.appendChild('root.a1.b2');
+		itr.appendChild("root.a1.b1");
+		itr.appendChild("root.a1.b2");
 		
-		var order = ['root', 'root.a2', 'root.a3'];
+		var order = ["root", "root.a2", "root.a3"];
 		var i = 0;
 		
 		var scope = this;
@@ -247,7 +247,7 @@ class TestTree extends AbstractTest
 		{
 			if (preflight)
 			{
-				if (x.val == 'root.a1')
+				if (x.val == "root.a1")
 					return false;
 				return true;
 			}
@@ -262,22 +262,22 @@ class TestTree extends AbstractTest
 		root.preorder(visit, null, true, true);
 		
 		//visitable
-		var root = new TreeNode<Visitor>(new Visitor('root'));
+		var root = new TreeNode<Visitor>(new Visitor("root"));
 		var itr = root.getBuilder();
 		
-		itr.appendChild(new Visitor('root.a1'));
-		itr.appendChild(new Visitor('root.a2'));
-		itr.appendChild(new Visitor('root.a3'));
+		itr.appendChild(new Visitor("root.a1"));
+		itr.appendChild(new Visitor("root.a2"));
+		itr.appendChild(new Visitor("root.a3"));
 		
 		itr.childStart();
 		itr.down();
-		itr.appendChild(new Visitor('root.a1.b1'));
-		itr.appendChild(new Visitor('root.a1.b2'));
+		itr.appendChild(new Visitor("root.a1.b1"));
+		itr.appendChild(new Visitor("root.a1.b2"));
 		
 		Visitor.c = 0;
 		Visitor.t = this;
-		Visitor.order = ['root', 'root.a2', 'root.a3'];
-		Visitor.exclude = 'root.a1';
+		Visitor.order = ["root", "root.a2", "root.a3"];
+		Visitor.exclude = "root.a1";
 		
 		root.preorder(null, null, true, true);
 		
@@ -285,8 +285,8 @@ class TestTree extends AbstractTest
 		root.preorder(null, null, true, false);
 	
 		Visitor.c = 0;
-		Visitor.order = ['root', 'root.a1', 'root.a1.b1', 'root.a1.b2', 'root.a3'];
-		Visitor.exclude = 'root.a2';
+		Visitor.order = ["root", "root.a1", "root.a1.b1", "root.a1.b2", "root.a3"];
+		Visitor.exclude = "root.a2";
 		
 		root.preorder(null, null, true, true);
 		
@@ -295,7 +295,7 @@ class TestTree extends AbstractTest
 		
 		Visitor.c = 0;
 		Visitor.order = [];
-		Visitor.exclude = 'root';
+		Visitor.exclude = "root";
 		
 		root.preorder(null, null, true, true);
 		Visitor.c = 0;
@@ -304,19 +304,19 @@ class TestTree extends AbstractTest
 	
 	function testPreOrder()
 	{
-		var root = new TreeNode<String>('root');
+		var root = new TreeNode<String>("root");
 		var itr = root.getBuilder();
 		
-		itr.appendChild('root.a1');
-		itr.appendChild('root.a2');
-		itr.appendChild('root.a3');
+		itr.appendChild("root.a1");
+		itr.appendChild("root.a2");
+		itr.appendChild("root.a3");
 		
 		itr.childStart();
 		itr.down();
-		itr.appendChild('root.a1.b1');
-		itr.appendChild('root.a1.b2');
+		itr.appendChild("root.a1.b1");
+		itr.appendChild("root.a1.b2");
 		
-		var order = ['root', 'root.a1', 'root.a1.b1', 'root.a1.b2', 'root.a2', 'root.a3'];
+		var order = ["root", "root.a1", "root.a1.b1", "root.a1.b2", "root.a2", "root.a3"];
 		var i = 0;
 		
 		var scope = this;
@@ -333,15 +333,15 @@ class TestTree extends AbstractTest
 		
 		//visitable
 		
-		var root = new TreeNode<Visitor>(new Visitor('root'));
+		var root = new TreeNode<Visitor>(new Visitor("root"));
 		var itr = root.getBuilder();
-		itr.appendChild(new Visitor('root.a1'));
-		itr.appendChild(new Visitor('root.a2'));
-		itr.appendChild(new Visitor('root.a3'));
+		itr.appendChild(new Visitor("root.a1"));
+		itr.appendChild(new Visitor("root.a2"));
+		itr.appendChild(new Visitor("root.a3"));
 		itr.childStart();
 		itr.down();
-		itr.appendChild(new Visitor('root.a1.b1'));
-		itr.appendChild(new Visitor('root.a1.b2'));
+		itr.appendChild(new Visitor("root.a1.b1"));
+		itr.appendChild(new Visitor("root.a1.b2"));
 		
 		Visitor.c = 0;
 		Visitor.t = this;
@@ -354,19 +354,19 @@ class TestTree extends AbstractTest
 	
 	function testPostOrder()
 	{
-		var root = new TreeNode<String>('root');
+		var root = new TreeNode<String>("root");
 		var itr = root.getBuilder();
 		
-		itr.appendChild('root.a1');
-		itr.appendChild('root.a2');
-		itr.appendChild('root.a3');
+		itr.appendChild("root.a1");
+		itr.appendChild("root.a2");
+		itr.appendChild("root.a3");
 		
 		itr.childStart();
 		itr.down();
-		itr.appendChild('root.a1.b1');
-		itr.appendChild('root.a1.b2');
+		itr.appendChild("root.a1.b1");
+		itr.appendChild("root.a1.b2");
 		
-		var order = ['root.a1.b1', 'root.a1.b2', 'root.a1', 'root.a2', 'root.a3', 'root'];
+		var order = ["root.a1.b1", "root.a1.b2", "root.a1", "root.a2", "root.a3", "root"];
 		var i = 0;
 		
 		var scope = this;
@@ -383,17 +383,17 @@ class TestTree extends AbstractTest
 		
 		//visitable
 		
-		var root = new TreeNode<Visitor>(new Visitor('root'));
+		var root = new TreeNode<Visitor>(new Visitor("root"));
 		var itr = root.getBuilder();
 		
-		itr.appendChild(new Visitor('root.a1'));
-		itr.appendChild(new Visitor('root.a2'));
-		itr.appendChild(new Visitor('root.a3'));
+		itr.appendChild(new Visitor("root.a1"));
+		itr.appendChild(new Visitor("root.a2"));
+		itr.appendChild(new Visitor("root.a3"));
 		
 		itr.childStart();
 		itr.down();
-		itr.appendChild(new Visitor('root.a1.b1'));
-		itr.appendChild(new Visitor('root.a1.b2'));
+		itr.appendChild(new Visitor("root.a1.b1"));
+		itr.appendChild(new Visitor("root.a1.b2"));
 		
 		Visitor.c = 0;
 		Visitor.t = this;
@@ -424,42 +424,42 @@ class TestTree extends AbstractTest
 	
 	function testFind()
 	{
-		var root = new TreeNode<String>('root');
+		var root = new TreeNode<String>("root");
 		var itr = root.getBuilder();
 		
-		itr.appendChild('root.a1');
-		itr.appendChild('root.a2');
-		itr.appendChild('root.a3');
+		itr.appendChild("root.a1");
+		itr.appendChild("root.a2");
+		itr.appendChild("root.a3");
 		
 		itr.childStart();
 		itr.down();
-		itr.appendChild('root.a1.b1');
-		itr.appendChild('root.a1.b2');
+		itr.appendChild("root.a1.b1");
+		itr.appendChild("root.a1.b2");
 		
-		assertEquals('root.a1', root.find('root.a1').val);
-		assertEquals('root.a2', root.find('root.a2').val);
-		assertEquals('root.a3', root.find('root.a3').val);
-		assertEquals('root.a1.b1', root.find('root.a1.b1').val);
-		assertEquals('root.a1.b2', root.find('root.a1.b2').val);
+		assertEquals("root.a1", root.find("root.a1").val);
+		assertEquals("root.a2", root.find("root.a2").val);
+		assertEquals("root.a3", root.find("root.a3").val);
+		assertEquals("root.a1.b1", root.find("root.a1.b1").val);
+		assertEquals("root.a1.b2", root.find("root.a1.b2").val);
 	}
 	
 	function testDepth()
 	{
-		var root = new TreeNode<String>('root');
+		var root = new TreeNode<String>("root");
 		var itr = root.getBuilder();
 		
-		itr.appendChild('root.a1');
-		itr.appendChild('root.a2');
-		itr.appendChild('root.a3');
+		itr.appendChild("root.a1");
+		itr.appendChild("root.a2");
+		itr.appendChild("root.a3");
 		
 		itr.childStart();
 		itr.down();
-		itr.appendChild('root.a1.b1');
-		itr.appendChild('root.a1.b2');
+		itr.appendChild("root.a1.b1");
+		itr.appendChild("root.a1.b2");
 		
 		itr.childStart();
 		itr.down();
-		itr.appendChild('root.a1.b1.c1');
+		itr.appendChild("root.a1.b1.c1");
 		
 		assertEquals(0, root.depth());
 		assertEquals(1, root.children.depth());
@@ -469,21 +469,21 @@ class TestTree extends AbstractTest
 	
 	function testChildIndex()
 	{
-		var root = new TreeNode<String>('root');
+		var root = new TreeNode<String>("root");
 		var itr = root.getBuilder();
 		
-		itr.appendChild('root.a1');
-		itr.appendChild('root.a2');
-		itr.appendChild('root.a3');
+		itr.appendChild("root.a1");
+		itr.appendChild("root.a2");
+		itr.appendChild("root.a3");
 		
 		itr.childStart();
 		itr.down();
-		itr.appendChild('root.a1.b1');
-		itr.appendChild('root.a1.b2');
+		itr.appendChild("root.a1.b1");
+		itr.appendChild("root.a1.b2");
 		
 		itr.childStart();
 		itr.down();
-		itr.appendChild('root.a1.b1.c1');
+		itr.appendChild("root.a1.b1.c1");
 		
 		assertEquals(0, root.getSiblingIndex());
 		assertEquals(0, root.children.getSiblingIndex());
@@ -494,21 +494,21 @@ class TestTree extends AbstractTest
 	
 	function testHeight()
 	{
-		var root = new TreeNode<String>('root');
+		var root = new TreeNode<String>("root");
 		var itr = root.getBuilder();
 		
-		itr.appendChild('root.a1');
-		itr.appendChild('root.a2');
-		itr.appendChild('root.a3');
+		itr.appendChild("root.a1");
+		itr.appendChild("root.a2");
+		itr.appendChild("root.a3");
 		
 		itr.childStart();
 		itr.down();
-		itr.appendChild('root.a1.b1');
-		itr.appendChild('root.a1.b2');
+		itr.appendChild("root.a1.b1");
+		itr.appendChild("root.a1.b2");
 		
 		itr.childStart();
 		itr.down();
-		itr.appendChild('root.a1.b1.c1');
+		itr.appendChild("root.a1.b1.c1");
 		
 		assertEquals(4, root.height());
 		assertEquals(3, root.children.height());
@@ -518,22 +518,22 @@ class TestTree extends AbstractTest
 	
 	function testIteratorRemove()
 	{
-		var a = new TreeNode<String>('a');
+		var a = new TreeNode<String>("a");
 		var itr = a.getBuilder();
-		itr.appendChild('b');
-		itr.appendChild('c');
+		itr.appendChild("b");
+		itr.appendChild("c");
 		itr.childStart();
 		itr.down();
-		itr.appendChild('d');
-		itr.appendChild('e');
+		itr.appendChild("d");
+		itr.appendChild("e");
 		itr.up();
 		itr.childEnd();
 		itr.down();
-		itr.appendChild('f');
-		//['a', 'c', 'f', 'b', 'e', 'd'];
+		itr.appendChild("f");
+		//["a", "c", "f", "b", "e", "d"];
 		var tree:TreeNode<String> = cast a.clone(true);
 		
-		var order = ['a'];
+		var order = ["a"];
 		var itr = tree.iterator();
 		while (itr.hasNext())
 		{
@@ -544,49 +544,49 @@ class TestTree extends AbstractTest
 		assertEquals(0, order.length);
 		
 		var tree:TreeNode<String> = cast a.clone(true);
-		var order = ['a', 'c', 'b', 'e', 'd'];
+		var order = ["a", "c", "b", "e", "d"];
 		var itr = tree.iterator();
 		while (itr.hasNext())
 		{
 			var e = itr.next();
 			assertEquals(e, order.shift());
-			if (e == 'c')
+			if (e == "c")
 				itr.remove();
 		}
 		assertEquals(0, order.length);
 		
 		var tree:TreeNode<String> = cast a.clone(true);
-		var order = ['a', 'c', 'f', 'b'];
+		var order = ["a", "c", "f", "b"];
 		var itr = tree.iterator();
 		while (itr.hasNext())
 		{
 			var e = itr.next();
 			assertEquals(e, order.shift());
-			if (e == 'b')
+			if (e == "b")
 				itr.remove();
 		}
 		assertEquals(0, order.length);
 		
 		var tree:TreeNode<String> = cast a.clone(true);
-		var order = ['a', 'c', 'f', 'b', 'e', 'd'];
+		var order = ["a", "c", "f", "b", "e", "d"];
 		var itr = tree.iterator();
 		while (itr.hasNext())
 		{
 			var e = itr.next();
 			assertEquals(e, order.shift());
-			if (e == 'e')
+			if (e == "e")
 				itr.remove();
 		}
 		assertEquals(0, order.length);
 		
 		var tree:TreeNode<String> = cast a.clone(true);
-		var order = ['a', 'c', 'f', 'b', 'e', 'd'];
+		var order = ["a", "c", "f", "b", "e", "d"];
 		var itr = tree.iterator();
 		while (itr.hasNext())
 		{
 			var e = itr.next();
 			assertEquals(e, order.shift());
-			if (e == 'd')
+			if (e == "d")
 				itr.remove();
 		}
 		assertEquals(0, order.length);
@@ -904,10 +904,10 @@ class TestTree extends AbstractTest
 		assertEquals(c, root.children.next);
 		assertEquals(b, root.children.next.next);
 		
-		var root = new TreeNode<String>('root');
-		var a = new TreeNode<String>('a');
-		var b = new TreeNode<String>('b');
-		var c = new TreeNode<String>('c');
+		var root = new TreeNode<String>("root");
+		var a = new TreeNode<String>("a");
+		var b = new TreeNode<String>("b");
+		var c = new TreeNode<String>("c");
 		root.appendNode(a);
 		root.appendNode(b);
 		root.appendNode(c);
@@ -917,10 +917,10 @@ class TestTree extends AbstractTest
 		assertEquals(c, root.children.next);
 		assertEquals(a, root.children.next.next);
 		
-		var root = new TreeNode<String>('root');
-		var a = new TreeNode<String>('a');
-		var b = new TreeNode<String>('b');
-		var c = new TreeNode<String>('c');
+		var root = new TreeNode<String>("root");
+		var a = new TreeNode<String>("a");
+		var b = new TreeNode<String>("b");
+		var c = new TreeNode<String>("c");
 		root.appendNode(a);
 		root.appendNode(b);
 		root.appendNode(c);
@@ -933,31 +933,31 @@ class TestTree extends AbstractTest
 	
 	function testInsertChildAt()
 	{
-		var root = new TreeNode<String>('root');
-		var a = new TreeNode<String>('a');
+		var root = new TreeNode<String>("root");
+		var a = new TreeNode<String>("a");
 		root.insertChildAt(a, 0);
 		assertEquals(a, root.children);
 		
-		var root = new TreeNode<String>('root');
-		var a = new TreeNode<String>('a');
-		var b = new TreeNode<String>('b');
+		var root = new TreeNode<String>("root");
+		var a = new TreeNode<String>("a");
+		var b = new TreeNode<String>("b");
 		root.appendNode(a);
 		root.insertChildAt(b, 1);
 		assertEquals(a, root.children);
 		assertEquals(b, root.children.next);
 		
-		var root = new TreeNode<String>('root');
-		var a = new TreeNode<String>('a');
-		var b = new TreeNode<String>('b');
+		var root = new TreeNode<String>("root");
+		var a = new TreeNode<String>("a");
+		var b = new TreeNode<String>("b");
 		root.appendNode(a);
 		root.insertChildAt(b, 0);
 		assertEquals(b, root.children);
 		assertEquals(a, root.children.next);
 		
-		var root = new TreeNode<String>('root');
-		var a = new TreeNode<String>('a');
-		var b = new TreeNode<String>('b');
-		var c = new TreeNode<String>('c');
+		var root = new TreeNode<String>("root");
+		var a = new TreeNode<String>("a");
+		var b = new TreeNode<String>("b");
+		var c = new TreeNode<String>("c");
 		root.appendNode(a);
 		root.appendNode(b);
 		root.insertChildAt(c, 0);
@@ -965,10 +965,10 @@ class TestTree extends AbstractTest
 		assertEquals(a, root.children.next);
 		assertEquals(b, root.children.next.next);
 		
-		var root = new TreeNode<String>('root');
-		var a = new TreeNode<String>('a');
-		var b = new TreeNode<String>('b');
-		var c = new TreeNode<String>('c');
+		var root = new TreeNode<String>("root");
+		var a = new TreeNode<String>("a");
+		var b = new TreeNode<String>("b");
+		var c = new TreeNode<String>("c");
 		root.appendNode(a);
 		root.appendNode(b);
 		root.insertChildAt(c, 2);
@@ -976,10 +976,10 @@ class TestTree extends AbstractTest
 		assertEquals(b, root.children.next);
 		assertEquals(c, root.children.next.next);
 		
-		var root = new TreeNode<String>('root');
-		var a = new TreeNode<String>('a');
-		var b = new TreeNode<String>('b');
-		var c = new TreeNode<String>('c');
+		var root = new TreeNode<String>("root");
+		var a = new TreeNode<String>("a");
+		var b = new TreeNode<String>("b");
+		var c = new TreeNode<String>("c");
 		root.appendNode(a);
 		root.appendNode(b);
 		root.insertChildAt(c, 1);
@@ -990,24 +990,24 @@ class TestTree extends AbstractTest
 	
 	function testRemoveChildren()
 	{
-		var root = new TreeNode<String>('root');
-		var a = new TreeNode<String>('a');
+		var root = new TreeNode<String>("root");
+		var a = new TreeNode<String>("a");
 		root.appendNode(a);
 		root.removeChildren();
 		assertEquals(null, root.children);
 		
-		var root = new TreeNode<String>('root');
-		var a = new TreeNode<String>('a');
-		var b = new TreeNode<String>('b');
+		var root = new TreeNode<String>("root");
+		var a = new TreeNode<String>("a");
+		var b = new TreeNode<String>("b");
 		root.appendNode(a);
 		root.appendNode(b);
 		root.removeChildren(1);
 		assertEquals(a, root.children);
 		
-		var root = new TreeNode<String>('root');
-		var a = new TreeNode<String>('a');
-		var b = new TreeNode<String>('b');
-		var c = new TreeNode<String>('c');
+		var root = new TreeNode<String>("root");
+		var a = new TreeNode<String>("a");
+		var b = new TreeNode<String>("b");
+		var c = new TreeNode<String>("c");
 		root.appendNode(a);
 		root.appendNode(b);
 		root.appendNode(c);
@@ -1023,15 +1023,15 @@ class TestTree extends AbstractTest
 	
 	function testSerialization()
 	{
-		var a = new TreeNode<String>('a');
-		var b = new TreeNode<String>('b');
-		var c = new TreeNode<String>('c');
-		var d = new TreeNode<String>('d');
-		var e = new TreeNode<String>('e');
-		var f = new TreeNode<String>('f');
-		var g = new TreeNode<String>('g');
-		var x = new TreeNode<String>('x');
-		var y = new TreeNode<String>('y');
+		var a = new TreeNode<String>("a");
+		var b = new TreeNode<String>("b");
+		var c = new TreeNode<String>("c");
+		var d = new TreeNode<String>("d");
+		var e = new TreeNode<String>("e");
+		var f = new TreeNode<String>("f");
+		var g = new TreeNode<String>("g");
+		var x = new TreeNode<String>("x");
+		var y = new TreeNode<String>("y");
 		
 		a.appendNode(b);
 		a.appendNode(c);
@@ -1057,15 +1057,15 @@ class TestTree extends AbstractTest
 		var output = new TreeNode<String>(null);
 		output.unserialize(list);
 		
-		assertEquals('a', output.val);
-		assertEquals('b', output.getChildAt(0).val);
-		assertEquals('c', output.getChildAt(1).val);
-		assertEquals('d', output.getChildAt(2).val);
-		assertEquals('e', output.getChildAt(0).getChildAt(0).val);
-		assertEquals('f', output.getChildAt(0).getChildAt(1).val);
-		assertEquals('g', output.getChildAt(0).getChildAt(1).getChildAt(0).val);
-		assertEquals('x', output.getChildAt(2).getChildAt(0).val);
-		assertEquals('y', output.getChildAt(2).getChildAt(1).val);
+		assertEquals("a", output.val);
+		assertEquals("b", output.getChildAt(0).val);
+		assertEquals("c", output.getChildAt(1).val);
+		assertEquals("d", output.getChildAt(2).val);
+		assertEquals("e", output.getChildAt(0).getChildAt(0).val);
+		assertEquals("f", output.getChildAt(0).getChildAt(1).val);
+		assertEquals("g", output.getChildAt(0).getChildAt(1).getChildAt(0).val);
+		assertEquals("x", output.getChildAt(2).getChildAt(0).val);
+		assertEquals("y", output.getChildAt(2).getChildAt(1).val);
 		assertEquals(9, output.size());
 	}
 }
@@ -1113,6 +1113,6 @@ private class SortableNode implements de.polygonal.ds.Comparable<SortableNode>
 	
 	public function toString():String
 	{
-		return '' + id;
+		return "" + id;
 	}
 }

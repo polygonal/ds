@@ -109,7 +109,7 @@ class TestArray3 extends AbstractTest
 		var a = new Array3<String>(mW, mH, mD);
 		a.iter(function(val:String, x:Int, y:Int, z:Int):String
 		{
-			var t = [x, y, z].join('.');
+			var t = [x, y, z].join(".");
 			s.set(t);
 			return t;
 		});
@@ -128,7 +128,7 @@ class TestArray3 extends AbstractTest
 	function testIteratorRemove()
 	{
 		var a = new Array3<String>(mW, mH, mD);
-		a.fill('?');
+		a.fill("?");
 		
 		var itr = a.iterator();
 		while (itr.hasNext())

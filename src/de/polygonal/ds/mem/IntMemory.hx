@@ -261,6 +261,7 @@ class IntMemory extends MemoryAccess
 		return output;
 	}
 	
+	#if flash
 	/**
 		Converts `input` in the range [`min`, `max`] to a vector object.
 		If no range is specified, all `input` bytes are copied.
@@ -296,6 +297,7 @@ class IntMemory extends MemoryAccess
 		
 		return output;
 	}
+	#end
 	
 	/**
 		Converts `input` in the range [`min`, `max`] to an `IntMemory` object.
