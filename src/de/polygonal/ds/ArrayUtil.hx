@@ -29,7 +29,7 @@ class ArrayUtil
 		Allocates an array with a length of `x`.
 		<assert>`x` < 0</assert>
 	**/
-	inline public static function alloc<T>(x:Int):Array<T>
+	public static function alloc<T>(x:Int):Array<T>
 	{
 		assert(x >= 0);
 		
@@ -56,12 +56,18 @@ class ArrayUtil
 			untyped a.length = x;
 		return a;
 		#elseif cpp
-		untyped a.length = x;
-		return a;
+			#if no_inline
+			var t = new Array<T>();
+			for (i in 0...x) t[i] = a[i];
+			return t;
+			#else
+			untyped a.length = x;
+			return a;
+			#end
 		#else
-		var b = new Array<T>();
-		for (i in 0...x) b[i] = a[i];
-		return b;
+		var t = new Array<T>();
+		for (i in 0...x) t[i] = a[i];
+		return t;
 		#end
 	}
 	
@@ -71,7 +77,7 @@ class ArrayUtil
 		<assert>`destination` is null</assert>
 		<assert>`min`/`max` out of range</assert>
 	**/
-	inline public static function copy<T>(source:Array<T>, destination:Array<T>, min = 0, max = -1):Array<T>
+	public static function copy<T>(source:Array<T>, destination:Array<T>, min = 0, max = -1):Array<T>
 	{
 		if (max == -1) max = source.length;
 		
@@ -297,9 +303,9 @@ class ArrayUtil
 			assert(count >= 0 && count <= k, "count out of bound");
 			
 			if (useInsertionSort)
-				insertionSort(a, first, count, compare);
+				_insertionSort(a, first, count, compare);
 			else
-				quickSort(a, first, count, compare);
+				_quickSort(a, first, count, compare);
 		}
 	}
 	
@@ -380,7 +386,7 @@ class ArrayUtil
 		return output;
 	}
 	
-	static function insertionSort(a:Array<Float>, first:Int, k:Int, cmp:Float->Float->Int)
+	static function _insertionSort(a:Array<Float>, first:Int, k:Int, cmp:Float->Float->Int)
 	{
 		for (i in first + 1...first + k)
 		{
@@ -402,7 +408,7 @@ class ArrayUtil
 		}
 	}
 	
-	static function quickSort(a:Array<Float>, first:Int, k:Int, cmp:Float->Float->Int)
+	static function _quickSort(a:Array<Float>, first:Int, k:Int, cmp:Float->Float->Int)
 	{
 		var last = first + k - 1;
 		var lo = first;
@@ -447,8 +453,8 @@ class ArrayUtil
 			}
 			
 			a[lo] = pivot;
-			quickSort(a, first, lo - first, cmp);
-			quickSort(a, lo + 1, last - lo, cmp);
+			_quickSort(a, first, lo - first, cmp);
+			_quickSort(a, lo + 1, last - lo, cmp);
 		}
 	}
 }
