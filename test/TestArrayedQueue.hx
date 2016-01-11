@@ -4,7 +4,7 @@ import de.polygonal.ds.Queue;
 import de.polygonal.ds.Vector;
 
 @:access(de.polygonal.ds.ArrayedQueue)
-class TestArrayedQueue extends haxe.unit.TestCase
+class TestArrayedQueue extends AbstractTest
 {
 	inline static var DEFAULT_SIZE = 16;
 	

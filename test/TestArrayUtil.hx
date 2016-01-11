@@ -2,7 +2,7 @@
 import de.polygonal.ds.ArrayUtil;
 import de.polygonal.ds.Compare;
 
-class TestArrayUtil extends haxe.unit.TestCase
+class TestArrayUtil extends AbstractTest
 {
 	function testSortRange()
 	{

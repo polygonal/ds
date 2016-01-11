@@ -1,7 +1,7 @@
 ﻿import de.polygonal.ds.ArrayedDeque;
 import de.polygonal.ds.Deque;
 
-class TestArrayedDeque extends haxe.unit.TestCase
+class TestArrayedDeque extends AbstractTest
 {
 	inline static var BLOCK_SIZE = 4;
 	

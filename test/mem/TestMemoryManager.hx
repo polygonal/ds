@@ -1,12 +1,10 @@
 ﻿package mem;
 
-import de.polygonal.core.math.Mathematics;
-import de.polygonal.core.math.random.Random;
 import de.polygonal.ds.mem.ByteMemory;
 import de.polygonal.ds.mem.MemoryManager;
 
 @:access(de.polygonal.ds.mem.MemoryAccess)
-class TestMemoryManager extends haxe.unit.TestCase
+class TestMemoryManager extends AbstractTest
 {
 	function new()
 	{
@@ -139,13 +137,13 @@ class TestMemoryManager extends haxe.unit.TestCase
 		
 		for (i in 0...10)
 		{
-			if (Mathematics.isEven(i))
+			if (isEven(i))
 				m[i].free();
 		}
 		
 		for (i in 0...10)
 		{
-			if (!Mathematics.isEven(i))
+			if (!isEven(i))
 				checkBytes(m[i]);
 		}
 		

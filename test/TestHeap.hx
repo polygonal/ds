@@ -2,7 +2,7 @@
 import de.polygonal.ds.Heap;
 
 @:access(de.polygonal.ds.Heap)
-class TestHeap extends haxe.unit.TestCase
+class TestHeap extends AbstractTest
 {
 	inline static var DEFAULT_SIZE = 100;
 	

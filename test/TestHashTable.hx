@@ -1,12 +1,11 @@
-﻿import de.polygonal.core.math.random.ParkMiller;
-import de.polygonal.ds.ArrayUtil;
+﻿import de.polygonal.ds.ArrayUtil;
 import de.polygonal.ds.Da;
 import de.polygonal.ds.Dll;
 import de.polygonal.ds.HashableItem;
 import de.polygonal.ds.HashTable;
 import de.polygonal.ds.IntIntHashTable;
 
-class TestHashTable extends haxe.unit.TestCase
+class TestHashTable extends AbstractTest
 {
 	function new()
 	{
@@ -498,7 +497,7 @@ class TestHashTable extends haxe.unit.TestCase
 	{
 		var h = new HashTable<E, Null<Int>>(16);
 		
-		var seed = new ParkMiller(1);
+		initPrng();
 		
 		for (i in 0...100)
 		{
@@ -506,8 +505,8 @@ class TestHashTable extends haxe.unit.TestCase
 			var keys = new Da<Int>();
 			for (i in 0...8)
 			{
-				var x = Std.int(seed.random()) & (64 - 1);
-				while (keys.contains(x)) x = Std.int(seed.random()) % 64;
+				var x = Std.int(prand()) & (64 - 1);
+				while (keys.contains(x)) x = Std.int(prand()) % 64;
 				keys.pushBack(x);
 				
 				var item = new E(i);
@@ -532,7 +531,7 @@ class TestHashTable extends haxe.unit.TestCase
 	{
 		var h = new HashTable<E, Null<Int>>(16);
 		
-		var seed = new ParkMiller(1);
+		initPrng();
 		
 		var j = 0;
 		for (i in 0...100)
@@ -542,8 +541,8 @@ class TestHashTable extends haxe.unit.TestCase
 			var keys = new Da<Int>();
 			for (i in 0...8)
 			{
-				var x = Std.int(seed.random()) & (64 - 1);
-				while (keys.contains(x)) x = Std.int(seed.random()) % 64;
+				var x = Std.int(prand()) & (64 - 1);
+				while (keys.contains(x)) x = Std.int(prand()) % 64;
 				keys.pushBack(x);
 				
 				var item = new E(i);
@@ -607,7 +606,7 @@ class TestHashTable extends haxe.unit.TestCase
 		var items = new Array<E>();
 		for (i in 0...16) items.push(new E(i));
 		
-		var seed = new ParkMiller(1);
+		initPrng();
 		for (i in 0...100)
 		{
 			for (i in 0...16) h.setIfAbsent(items[i], i);
@@ -622,7 +621,7 @@ class TestHashTable extends haxe.unit.TestCase
 		for (i in 0...32) items.push(new E(i));
 		
 		var h = new HashTable<E, Null<Int>>(16);
-		var seed = new ParkMiller(1);
+		initPrng();
 		
 		for (i in 0...100)
 		{

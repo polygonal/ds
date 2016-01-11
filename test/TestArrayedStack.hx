@@ -3,7 +3,7 @@ import de.polygonal.ds.ListSet;
 import de.polygonal.ds.Stack;
 
 @:access(de.polygonal.ds.ArrayedStack)
-class TestArrayedStack extends haxe.unit.TestCase
+class TestArrayedStack extends AbstractTest
 {
 	inline static var DEFAULT_SIZE = 100;
 	
@@ -229,7 +229,7 @@ class TestArrayedStack extends haxe.unit.TestCase
 	}
 	#end
 	
-	function testPack()
+	function _testPack()
 	{
 		/*var l = new de.polygonal.ds.ArrayedStack<Int>();
 		l.push(0);

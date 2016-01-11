@@ -1,10 +1,9 @@
-import de.polygonal.core.math.random.ParkMiller;
 import de.polygonal.ds.Da;
 import de.polygonal.ds.Dll;
 import de.polygonal.ds.HashableItem;
 import de.polygonal.ds.HashSet;
 
-class TestHashSet extends haxe.unit.TestCase
+class TestHashSet extends AbstractTest
 {
 	function new()
 	{
@@ -309,18 +308,18 @@ class TestHashSet extends haxe.unit.TestCase
 	{
 		var h = new HashSet<E>(16);
 		
-		var seed = new ParkMiller(1);
+		initPrng();
 		
 		for (i in 0...100)
 		{
 			var values = new Array<E>();
 			for (i in 0...64) values.push(new E(i));
-		
+			
 			var keys = new Da<Int>();
 			for (i in 0...8)
 			{
-				var x:Int = Std.int(seed.random() % 64);
-				while (keys.contains(x)) x = Std.int(seed.random() % 64);
+				var x:Int = Std.int(prand() % 64);
+				while (keys.contains(x)) x = Std.int(prand() % 64);
 				keys.pushBack(x);
 			}
 			for (i in 0...keys.size()) h.set(values[keys.get(i)]);
@@ -335,7 +334,8 @@ class TestHashSet extends haxe.unit.TestCase
 	function testInsertRemoveRandom3()
 	{
 		var h = new HashSet<E>(16);
-		var seed = new ParkMiller(1);
+		
+		initPrng();
 		
 		var j = 0;
 		for (i in 0...100)
@@ -347,8 +347,8 @@ class TestHashSet extends haxe.unit.TestCase
 			var keys = new Da<Int>();
 			for (i in 0...8)
 			{
-				var x = Std.int(seed.random() % 64);
-				while (keys.contains(x)) x = Std.int(seed.random() % 64);
+				var x = Std.int(prand() % 64);
+				while (keys.contains(x)) x = Std.int(prand() % 64);
 				keys.pushBack(x);
 			}
 			
@@ -402,7 +402,6 @@ class TestHashSet extends haxe.unit.TestCase
 		for (i in 0...16) values.push(new E(i));
 		
 		var h = new HashSet<E>(16);
-		var seed = new ParkMiller(1);
 		for (i in 0...100)
 		{
 			for (i in 0...16) h.set(values[i]);

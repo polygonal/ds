@@ -1,6 +1,6 @@
 ﻿import de.polygonal.ds.BinaryTreeNode;
 
-class TestBinaryTree extends haxe.unit.TestCase
+class TestBinaryTree extends AbstractTest
 {
 	function testFree()
 	{

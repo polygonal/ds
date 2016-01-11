@@ -3,7 +3,7 @@
 import de.polygonal.ds.pooling.LinkedObjectPool;
 import flash.geom.Point;
 
-class TestLinkedObjectPool extends haxe.unit.TestCase
+class TestLinkedObjectPool extends AbstractTest
 {
 	function test()
 	{

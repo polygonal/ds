@@ -3,7 +3,7 @@ import de.polygonal.ds.ListSet;
 import de.polygonal.ds.Queue;
 
 @:access(de.polygonal.ds.LinkedQueue)
-class TestLinkedQueue extends haxe.unit.TestCase
+class TestLinkedQueue extends AbstractTest
 {
 	function testPool()
 	{

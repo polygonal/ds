@@ -1,7 +1,7 @@
 ﻿import de.polygonal.ds.HashMap;
 import de.polygonal.ds.Set;
 
-class TestHashMap extends haxe.unit.TestCase
+class TestHashMap extends AbstractTest
 {
 	function testRemove()
 	{

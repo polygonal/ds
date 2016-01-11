@@ -3,8 +3,9 @@ import de.polygonal.ds.ArrayConvert;
 import de.polygonal.ds.Da;
 import de.polygonal.ds.ListSet;
 import de.polygonal.ds.Set;
+import de.polygonal.ds.Vector;
 
-class TestArray2 extends haxe.unit.TestCase
+class TestArray2 extends AbstractTest
 {
 	inline static var DEFAULT_SIZE = 10;
 	

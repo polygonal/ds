@@ -2,7 +2,7 @@
 import de.polygonal.ds.GraphArc;
 import de.polygonal.ds.GraphNode;
 
-class TestGraph extends haxe.unit.TestCase
+class TestGraph extends AbstractTest
 {
 	var c:Int;
 	var d:Int;

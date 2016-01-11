@@ -11,7 +11,7 @@ import haxe.io.BytesOutput;
 import de.polygonal.ds.mem.MemoryManager;
 #end
 
-class TestDoubleMemory extends haxe.unit.TestCase
+class TestDoubleMemory extends AbstractTest
 {
 	function new()
 	{

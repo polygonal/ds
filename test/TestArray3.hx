@@ -2,7 +2,7 @@
 import de.polygonal.ds.ListSet;
 import de.polygonal.ds.Set;
 
-class TestArray3 extends haxe.unit.TestCase
+class TestArray3 extends AbstractTest
 {
 	inline static var DEFAULT_SIZE = 10;
 	

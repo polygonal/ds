@@ -1,9 +1,8 @@
 ﻿package test.pooling;
 
-import de.polygonal.core.math.random.Random;
 import de.polygonal.ds.ListSet;
 
-class TestObjectPool extends haxe.unit.TestCase
+class TestObjectPool extends AbstractTest
 {
 	static function shuffle<T>(v:Array<T>)
 	{

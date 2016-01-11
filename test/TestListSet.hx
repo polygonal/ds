@@ -2,7 +2,7 @@
 import de.polygonal.ds.ListSet;
 import de.polygonal.ds.Set;
 
-class TestListSet extends haxe.unit.TestCase
+class TestListSet extends AbstractTest
 {
 	function test()
 	{

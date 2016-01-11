@@ -1,7 +1,7 @@
 ﻿import de.polygonal.ds.Dll;
 import de.polygonal.ds.ListSet;
 
-class TestDllCircular extends haxe.unit.TestCase
+class TestDllCircular extends AbstractTest
 {
 	function testClose()
 	{

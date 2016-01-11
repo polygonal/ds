@@ -2,7 +2,7 @@
 import haxe.io.Bytes;
 import haxe.io.BytesInput;
 
-class TestBitVector extends haxe.unit.TestCase
+class TestBitVector extends AbstractTest
 {
 	function test()
 	{

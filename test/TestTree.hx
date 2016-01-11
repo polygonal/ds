@@ -1,13 +1,11 @@
-﻿package;
-
-import de.polygonal.ds.Compare;
+﻿import de.polygonal.ds.Compare;
 import de.polygonal.ds.TreeBuilder;
 import de.polygonal.ds.TreeNode;
 import de.polygonal.ds.TreeUtil;
 import haxe.Serializer;
 import haxe.Unserializer;
 
-class TestTree extends haxe.unit.TestCase
+class TestTree extends AbstractTest
 {
 	function testRemove()
 	{
@@ -32,11 +30,11 @@ class TestTree extends haxe.unit.TestCase
 		var root = de.polygonal.ds.TreeUtil.ofXml(xml);
 		
 		assertEquals(root.val.name, 'root');
-		assertEquals('rootAttrValue', root.val.rootAttr);
-		assertEquals('a', root.children.val.node1Attr1);
-		assertEquals('b', root.children.val.node1Attr2);
+		assertEquals('rootAttrValue', root.val.attributes.rootAttr);
+		assertEquals('a', root.children.val.attributes.node1Attr1);
+		assertEquals('b', root.children.val.attributes.node1Attr2);
 		assertEquals('node1', root.children.val.name);
-		assertEquals('c', root.children.children.val.node2Attr);
+		assertEquals('c', root.children.children.val.attributes.node2Attr);
 		assertEquals('node2', root.children.children.val.name);
 	}
 	

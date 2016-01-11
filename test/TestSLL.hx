@@ -6,7 +6,7 @@ import de.polygonal.ds.Sll;
 import de.polygonal.ds.SllNode;
 
 @:access(de.polygonal.ds.Sll)
-class TestSll extends haxe.unit.TestCase
+class TestSll extends AbstractTest
 {
 	function testCircular()
 	{

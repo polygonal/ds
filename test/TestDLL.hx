@@ -5,7 +5,7 @@ import de.polygonal.ds.ListSet;
 import de.polygonal.ds.Set;
 
 @:access(de.polygonal.ds.Dll)
-class TestDll extends haxe.unit.TestCase
+class TestDll extends AbstractTest
 {
 	function testPool()
 	{

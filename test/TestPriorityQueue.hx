@@ -1,7 +1,7 @@
 ﻿import de.polygonal.ds.PriorityQueue;
 
 @:access(de.polygonal.ds.PriorityQueue)
-class TestPriorityQueue extends haxe.unit.TestCase
+class TestPriorityQueue extends AbstractTest
 {
 	function test()
 	{

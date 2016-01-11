@@ -2,7 +2,7 @@ package test.pooling;
 
 import de.polygonal.ds.pooling.DynamicObjectPool;
 
-class TestDynamicObjectPool extends haxe.unit.TestCase
+class TestDynamicObjectPool extends AbstractTest
 {
 	var _counter:Int;
 	

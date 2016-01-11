@@ -1,5 +1,4 @@
-﻿import de.polygonal.core.math.random.ParkMiller;
-import de.polygonal.ds.ArrayConvert;
+﻿import de.polygonal.ds.ArrayConvert;
 import de.polygonal.ds.ArrayUtil;
 import de.polygonal.ds.Da;
 import de.polygonal.ds.Dll;
@@ -8,7 +7,7 @@ import de.polygonal.ds.IntIntHashTable;
 import de.polygonal.ds.ListSet;
 import de.polygonal.ds.mem.MemoryManager;
 
-class TestIntIntHashTable extends haxe.unit.TestCase
+class TestIntIntHashTable extends AbstractTest
 {
 	function new()
 	{
@@ -525,17 +524,17 @@ class TestIntIntHashTable extends haxe.unit.TestCase
 	{
 		var h = new IntIntHashTable(16);
 		
-		var seed = new ParkMiller();
+		initPrng();
 		
 		for (i in 0...100)
 		{
 			var keys = new Da<Int>();
 			for (i in 0...8)
 			{
-				var x = Std.int(seed.random()) % 64;
+				var x = Std.int(prand()) % 64;
 				while (keys.contains(x))
 				{
-					x = Std.int(seed.random()) % 64;
+					x = Std.int(prand()) % 64;
 				}
 				
 				keys.pushBack(x);
@@ -561,7 +560,7 @@ class TestIntIntHashTable extends haxe.unit.TestCase
 	{
 		var h = new IntIntHashTable(16);
 		
-		var seed = new ParkMiller();
+		initPrng();
 		
 		var j = 0;
 		for (i in 0...100)
@@ -570,8 +569,8 @@ class TestIntIntHashTable extends haxe.unit.TestCase
 			var keys = new Da<Int>();
 			for (i in 0...8)
 			{
-				var x = Std.int(seed.random()) % 64;
-				while (keys.contains(x)) x = Std.int(seed.random()) % 64;
+				var x = Std.int(prand()) % 64;
+				while (keys.contains(x)) x = Std.int(prand()) % 64;
 				
 				keys.pushBack(x);
 			}
@@ -663,7 +662,7 @@ class TestIntIntHashTable extends haxe.unit.TestCase
 	{
 		var h = new IntIntHashTable(16);
 		
-		var seed = new ParkMiller();
+		initPrng();
 		
 		for (i in 0...100)
 		{
@@ -790,45 +789,6 @@ class TestIntIntHashTable extends haxe.unit.TestCase
 		}
 		
 		assertEquals(0, values.length);
-	}
-	
-	function testToKeyArrayToDa()
-	{
-		var h = new IntIntHashTable(8);
-		for (i in 0...8) h.set(i, i * 10);
-		
-		var a = h.toKeyArray();
-		assertEquals(8, a.length);
-		
-		var keys = [0, 1, 2, 3, 4, 5, 6, 7];
-		for (i in a)
-		{
-			for (j in 0...8)
-			{
-				if (keys[j] == i)
-				{
-					keys.remove(i);
-				}
-			}
-		}
-		
-		assertEquals(0, keys.length);
-		
-		var a = h.toKeyDa();
-		
-		var keys = [0, 1, 2, 3, 4, 5, 6, 7];
-		for (i in a)
-		{
-			for (j in 0...8)
-			{
-				if (keys[j] == i)
-				{
-					keys.remove(i);
-				}
-			}
-		}
-		
-		assertEquals(0, keys.length);
 	}
 	
 	function testClear()

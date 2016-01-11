@@ -1,10 +1,8 @@
-﻿import de.polygonal.core.fmt.NumberFormat;
-import de.polygonal.core.math.Limits;
-import de.polygonal.ds.Bits;
+﻿import de.polygonal.ds.Bits;
 
 using de.polygonal.ds.Bits;
 
-class TestBits extends haxe.unit.TestCase
+class TestBits extends AbstractTest
 {
 	function testReverse()
 	{
@@ -26,7 +24,7 @@ class TestBits extends haxe.unit.TestCase
 	
 	function testMsb()
 	{
-		var k = Limits.INT_BITS;
+		var k = 32;
 		var x = 0;
 		for (i in 0...k)
 		{
@@ -43,7 +41,7 @@ class TestBits extends haxe.unit.TestCase
 	
 	function testNTZ()
 	{
-		var k = Limits.INT_BITS;
+		var k = 32;
 		for (i in 0...k)
 		{
 			var x = 1 << i;
@@ -58,7 +56,7 @@ class TestBits extends haxe.unit.TestCase
 	
 	function testNLZ()
 	{
-		var k = Limits.INT_BITS;
+		var k = 32;
 		var n = k - 1;
 		for (i in 0...k)
 		{
@@ -70,7 +68,7 @@ class TestBits extends haxe.unit.TestCase
 	
 	function testOnes()
 	{
-		var k = Limits.INT_BITS;
+		var k = 32;
 		var x = 0;
 		for (i in 0...k)
 		{
@@ -81,7 +79,7 @@ class TestBits extends haxe.unit.TestCase
 	
 	function testBitMask()
 	{
-		var k = Limits.INT_BITS - 1;
+		var k = 32 - 1;
 		for (i in 0...k)
 		{
 			var x = (i + 1).mask();
@@ -105,7 +103,7 @@ class TestBits extends haxe.unit.TestCase
 	function testSetAll()
 	{
 		var x = 0;
-		var k = Limits.INT_BITS;
+		var k = 32;
 		for (i in 0...k)
 		{
 			x = x.setBits(1 << i);
@@ -126,7 +124,7 @@ class TestBits extends haxe.unit.TestCase
 	{
 		var b = 0;
 		assertEquals(0, b.ones());
-		var k = Limits.INT_BITS;
+		var k = 32;
 		for (i in 0...k)
 		{
 			b = b.setBits(1 << i);
@@ -183,7 +181,7 @@ class TestBits extends haxe.unit.TestCase
 		b = b.clrBits(Bits.BIT_04);
 		assertFalse(b.hasBits(Bits.BIT_04));
 		var b = Bits.ALL;
-		var k = Limits.INT_BITS;
+		var k = 32;
 		for (i in 0...k)
 		{
 			b = b.clrBits(1 << i);

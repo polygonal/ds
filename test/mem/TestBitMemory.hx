@@ -1,7 +1,5 @@
 ﻿package mem;
 
-import de.polygonal.core.math.Limits;
-import de.polygonal.core.math.Mathematics;
 import de.polygonal.ds.Bits;
 import de.polygonal.ds.BitVector;
 import de.polygonal.ds.mem.BitMemory;
@@ -15,7 +13,7 @@ import de.polygonal.ds.mem.MemoryManager;
 
 using de.polygonal.ds.Bits;
 
-class TestBitMemory extends haxe.unit.TestCase
+class TestBitMemory extends AbstractTest
 {
 	function new()
 	{
@@ -87,12 +85,12 @@ class TestBitMemory extends haxe.unit.TestCase
 		var mem = new BitMemory(capacity);
 		for (i in 0...capacity)
 		{
-			if (Mathematics.isEven(i))
+			if (isEven(i))
 				mem.set(i);
 		}
 		for (i in 0...capacity)
 		{
-			if (Mathematics.isEven(i))
+			if (isEven(i))
 				assertTrue(mem.has(i));
 			else
 				assertFalse(mem.has(i));
@@ -115,7 +113,7 @@ class TestBitMemory extends haxe.unit.TestCase
 				if (c == capacity) return;
 				var x = byte & 1;
 				byte >>= 1;
-				if (Mathematics.isEven(i))
+				if (isEven(i))
 					assertEquals(1, x);
 				else
 					assertEquals(0, x);
@@ -136,12 +134,12 @@ class TestBitMemory extends haxe.unit.TestCase
 		var mem = new BitMemory(capacity);
 		for (i in 0...capacity)
 		{
-			if (Mathematics.isEven(i))
+			if (isEven(i))
 				mem.set(i);
 		}
 		for (i in 0...capacity)
 		{
-			if (Mathematics.isEven(i))
+			if (isEven(i))
 				assertTrue(mem.has(i));
 			else
 				assertFalse(mem.has(i));
@@ -175,7 +173,7 @@ class TestBitMemory extends haxe.unit.TestCase
 				if (c == capacity) return;
 				var x = byte & 1;
 				byte >>= 1;
-				if (Mathematics.isEven(i))
+				if (isEven(i))
 					assertEquals(1, x);
 				else
 					assertEquals(0, x);
@@ -261,12 +259,12 @@ class TestBitMemory extends haxe.unit.TestCase
 		var mem = new BitMemory(capacity);
 		for (i in 0...capacity)
 		{
-			if (Mathematics.isEven(i))
+			if (isEven(i))
 				mem.set(i);
 		}
 		for (i in 0...capacity)
 		{
-			if (Mathematics.isEven(i))
+			if (isEven(i))
 				assertTrue(mem.has(i));
 			else
 				assertFalse(mem.has(i));
@@ -279,7 +277,7 @@ class TestBitMemory extends haxe.unit.TestCase
 		
 		for (i in 0...100)
 		{
-			if (Mathematics.isEven(i))
+			if (isEven(i))
 				assertTrue(v.has(i));
 			else
 				assertFalse(v.has(i));
@@ -292,31 +290,31 @@ class TestBitMemory extends haxe.unit.TestCase
 	{
 		var b:BitMemory = new BitMemory(32);
 		
-		for (i in 0...Limits.INT_BITS) b.set(i);
-		for (i in 0...Limits.INT_BITS) assertTrue(b.has(i));
-		for (i in 0...Limits.INT_BITS)
+		for (i in 0...32) b.set(i);
+		for (i in 0...32) assertTrue(b.has(i));
+		for (i in 0...32)
 		{
 			if ((i & 1) == 0)
 				b.clr(i);
 		}
 		
-		for (i in 0...Limits.INT_BITS)
+		for (i in 0...32)
 		{
 			if ((i & 1) == 0)
 				assertFalse(b.has(i));
 		}
 		
-		for (i in 0...Limits.INT_BITS)
+		for (i in 0...32)
 		{
 			if ((i & 1) == 1)
 				assertTrue(b.has(i));
 		}
-		for (i in 0...Limits.INT_BITS)
+		for (i in 0...32)
 		{
 			if ((i & 1) == 1)
 				b.clr(i);
 		}
-		for (i in 0...Limits.INT_BITS)
+		for (i in 0...32)
 		{
 			if ((i & 1) == 1)
 				assertFalse(b.has(i));
@@ -352,12 +350,12 @@ class TestBitMemory extends haxe.unit.TestCase
 		var b = new BitMemory(100);
 		for (i in 0...100)
 		{
-			if (Mathematics.isEven(i))
+			if (isEven(i))
 				b.set(i);
 		}
 		for (i in 0...100)
 		{
-			if (Mathematics.isEven(i))
+			if (isEven(i))
 				assertTrue(b.get(i) != 0)
 			else
 				assertEquals(0, b.get(i));

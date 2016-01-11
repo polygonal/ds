@@ -1,12 +1,11 @@
-﻿import de.polygonal.core.math.random.Random;
-import de.polygonal.ds.BinaryTreeNode;
+﻿import de.polygonal.ds.BinaryTreeNode;
 import de.polygonal.ds.Bst;
 import de.polygonal.ds.Collection;
 import de.polygonal.ds.ListSet;
 import de.polygonal.ds.Set;
 
 @:access(de.polygonal.ds.Bst)
-class TestBst extends haxe.unit.TestCase
+class TestBst extends AbstractTest
 {
 	function testPreorder()
 	{
@@ -248,7 +247,7 @@ class TestBst extends haxe.unit.TestCase
 		var k = 10;
 		for (i in 0...k)
 		{
-			var i = Random.rand() % 100;
+			var i = rand() % 100;
 			num.unshift(new E(i));
 			bst.insert(num[0]);
 		}
@@ -327,7 +326,7 @@ class TestBst extends haxe.unit.TestCase
 		var k = 10;
 		for (i in 0...k)
 		{
-			var i = Random.rand() % 100;
+			var i = rand() % 100;
 			num.unshift(new E(i));
 			bst.insert(num[0]);
 		}

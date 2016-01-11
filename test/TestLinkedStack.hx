@@ -4,7 +4,7 @@ import de.polygonal.ds.ListSet;
 import de.polygonal.ds.Stack;
 
 @:access(de.polygonal.ds.LinkedStack)
-class TestLinkedStack extends haxe.unit.TestCase
+class TestLinkedStack extends AbstractTest
 {
 	function testPool()
 	{

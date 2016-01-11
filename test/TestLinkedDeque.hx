@@ -19,7 +19,7 @@ private class E implements Cloneable<E>
 }
 
 @:access(de.polygonal.ds.LinkedDeque)
-class TestLinkedDeque extends haxe.unit.TestCase
+class TestLinkedDeque extends AbstractTest
 {
 	inline static var BLOCK_SIZE = 4;
 	
