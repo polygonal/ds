@@ -1103,6 +1103,7 @@ class Graph<T> implements Collection<T>
 			if (node.val == x)
 			{
 				unlink(node);
+				if (node == mNodeList) mNodeList = nextNode;
 				node.val = cast null;
 				node.next = node.prev = null;
 				node.arcList = null;

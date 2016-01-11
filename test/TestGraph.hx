@@ -231,6 +231,17 @@ class TestGraph extends AbstractTest
 			assertEquals(true, k);
 		}
 		assertTrue(graph.isEmpty());
+		
+		var graph = new Graph<Int>();
+		graph.addNode(graph.createNode(5));
+		graph.addNode(graph.createNode(3));
+		assertTrue(graph.remove(5));
+		assertTrue(graph.remove(3));
+		
+		graph.addNode(graph.createNode(5));
+		graph.addNode(graph.createNode(3));
+		assertTrue(graph.remove(3));
+		assertTrue(graph.remove(5));
 	}
 	
 	function testDLBFS()
