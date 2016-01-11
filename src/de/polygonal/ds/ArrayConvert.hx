@@ -172,7 +172,7 @@ class ArrayConvert
 		assert(x != null);
 		assert(x.length > 0);
 		
-		var c = new Da<T>(x.length);
+		var c = new Da<T>();
 		for (i in 0...x.length) c.pushBack(x[i]);
 		return c;
 	}

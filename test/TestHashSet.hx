@@ -473,7 +473,7 @@ class TestHashSet extends AbstractTest
 		assertEquals(8, i);
 	}
 	
-	function testToArrayToDa()
+	function testToArray()
 	{
 		var values = new Array<E>();
 		for (i in 0...16) values.push(new E(i));

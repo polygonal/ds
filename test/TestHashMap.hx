@@ -205,12 +205,6 @@ class TestHashMap extends AbstractTest
 				}
 			}
 		}
-		
-		var a = h.toKeyDa();
-		assertEquals(3, s.size());
-		assertTrue(a.contains("a"));
-		assertTrue(a.contains("b"));
-		assertTrue(a.contains("c"));
 	}
 	
 	function testClone()

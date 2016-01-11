@@ -746,7 +746,7 @@ class TestIntIntHashTable extends AbstractTest
 		assertEquals(8, i);
 	}
 	
-	function testToArrayToDa()
+	function testToArray()
 	{
 		var h = new IntIntHashTable(8);
 		for (i in 0...8) h.set(i, i);

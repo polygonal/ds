@@ -23,7 +23,7 @@ class TestArrayUtil extends AbstractTest
 	{
 		var a = ArrayUtil.alloc(10);
 		for (i in 0...5) a[i] = i;
-		ArrayUtil.shrink(a, 5);
+		a = ArrayUtil.shrink(a, 5);
 		assertEquals(5, a.length);
 		for (i in 0...5) assertEquals(i, a[i]);
 	}

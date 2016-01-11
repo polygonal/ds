@@ -697,7 +697,7 @@ class TestHashTable extends AbstractTest
 		assertEquals(8, i);
 	}
 	
-	function testToArrayToDa()
+	function testToArray()
 	{
 		var items = new Da<E>();
 		for (i in 0...8) items.pushBack(new E(i));

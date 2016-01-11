@@ -698,7 +698,7 @@ class TestIntHashTable extends AbstractTest
 		assertEquals(8, i);
 	}
 	
-	function testToArrayToDa()
+	function testToArray()
 	{
 		var h = new IntHashTable<Null<Int>>(8);
 		for (i in 0...8) h.set(i, i);
@@ -741,70 +741,14 @@ class TestIntHashTable extends AbstractTest
 		}
 		
 		assertEquals(0, values.length);
-		
-		var a = ArrayConvert.toDa(h.toArray());
-		
-		var values = [0, 1, 2, 3, 4, 5, 6, 7];
-		for (i in a)
-		{
-			var found = false;
-			for (j in 0...8)
-			{
-				if (values[j] == i)
-				{
-					values.remove(i);
-					found = true;
-				}
-			}
-			
-			assertTrue(found);
-		}
-		
-		assertEquals(0, values.length);
-		
-		var a = ArrayConvert.toDa(h.toArray());
-		
-		var values = [0, 1, 2, 3, 4, 5, 6, 7];
-		for (i in a)
-		{
-			var found = false;
-			for (j in 0...8)
-			{
-				if (values[j] == i)
-				{
-					values.remove(i);
-					found = true;
-				}
-			}
-			
-			assertTrue(found);
-		}
-		
-		assertEquals(0, values.length);
 	}
 	
-	function testToKeyArrayToDD()
+	function testToKeyArray()
 	{
 		var h = new IntHashTable<Null<Int>>(8);
 		for (i in 0...8) h.set(i, i * 10);
 		
 		var a = h.toKeyArray();
-		
-		var keys = [0, 1, 2, 3, 4, 5, 6, 7];
-		for (i in a)
-		{
-			for (j in 0...8)
-			{
-				if (keys[j] == i)
-				{
-					keys.remove(i);
-				}
-			}
-		}
-		
-		assertEquals(0, keys.length);
-		
-		var a = h.toKeyDa();
 		
 		var keys = [0, 1, 2, 3, 4, 5, 6, 7];
 		for (i in a)
@@ -920,6 +864,6 @@ private class E extends HashableItem
 	
 	function toString():String
 	{
-		return 'item_' + value;
+		return "item_" + value;
 	}
 }

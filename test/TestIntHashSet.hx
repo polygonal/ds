@@ -464,7 +464,7 @@ class TestIntHashSet extends AbstractTest
 		assertEquals(8, i);
 	}
 	
-	function testToArrayToDa()
+	function testToArray()
 	{
 		var h = new IntHashSet(8);
 		for (i in 0...8) h.set(i);
