@@ -78,12 +78,10 @@ class XmlNode
 		var firstChild = xml.firstChild();
 		if (firstChild != null)
 		{
-			switch (firstChild.nodeType)
+			if (firstChild.nodeType == Xml.CData || firstChild.nodeType == Xml.PCData)
 			{
-				case Xml.CData, Xml.PCData:
-					if (~/\S/.match(firstChild.nodeValue))
-						node.data = firstChild.nodeValue;
-				case _:
+				if (~/\S/.match(firstChild.nodeValue))
+					node.data = firstChild.nodeValue;
 			}
 		}
 		

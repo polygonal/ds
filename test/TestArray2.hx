@@ -29,13 +29,13 @@ class TestArray2 extends AbstractTest
 		assertEquals(true, success);
 		
 		var x = a.get(0, 0);
-		assertEquals(#if (js || neko) null #else 0 #end, x);
+		assertEquals(isDynamic() ? null : 0, x);
 		
 		var x = a.get(1, 1);
-		assertEquals(#if (js || neko) null #else 0 #end, x);
+		assertEquals(isDynamic() ? null : 0, x);
 		
 		var x = a.get(2, 2);
-		assertEquals(#if (js || neko) null #else 0 #end, x);
+		assertEquals(isDynamic() ? null : 0, x);
 	}
 	
 	function testIndexOf()
@@ -211,7 +211,7 @@ class TestArray2 extends AbstractTest
 				else
 				{
 					var z = a.get(x, y);
-					assertEquals(#if (js||neko) null #else 0 #end, z);
+					assertEquals(isDynamic() ? null : 0, z);
 				}
 			}
 		}

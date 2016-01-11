@@ -28,13 +28,13 @@ class TestArray3 extends AbstractTest
 		assertEquals(k, true);
 		
 		var x = a.get(0, 0, 0);
-		assertEquals(#if (js || neko) null #else 0 #end, x);
+		assertEquals(isDynamic() ? null : 0, x);
 		
 		var x = a.get(1, 1, 1);
-		assertEquals(#if (js || neko) null #else 0 #end, x);
+		assertEquals(isDynamic() ? null : 0, x);
 		
 		var x = a.get(2, 2, 2);
-		assertEquals(#if (js || neko) null #else 0 #end, x);
+		assertEquals(isDynamic() ? null : 0, x);
 	}
 	
 	function testIndexOf()

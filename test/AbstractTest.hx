@@ -9,17 +9,13 @@ class AbstractTest extends TestCase
 		super();
 	}
 	
-	function isEven(x:Int) return (x & 1) == 0;
+	function isEven(x:Int):Bool return (x & 1) == 0;
 	
 	function rand():Int return cast (Math.random() * 0x7FFFFFFF);
 	
-	function initPrng(seed:Int = 1)
-	{
-		mSeed = seed;
-	}
+	function initPrng(seed:Int = 1) mSeed = seed;
 	
-	function prand()
-	{
-		return mSeed = (mSeed * 16807.) % 2147483647.;
-	}
+	function prand():Float return mSeed = (mSeed * 16807.) % 2147483647.;
+	
+	function isDynamic():Bool return #if (js || neko || python) true; #else false; #end
 }

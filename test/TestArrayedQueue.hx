@@ -137,7 +137,7 @@ class TestArrayedQueue extends AbstractTest
 		
 		var a:Vector<Int> = untyped q.mData;
 		
-		for (i in 0...16) assertEquals(#if (js||neko) null #else 0 #end, a[i]);
+		for (i in 0...16) assertEquals(isDynamic() ? null : 0, a[i]);
 		
 		var q = new ArrayedQueue<Int>(16);
 		for (i in 0...16) q.enqueue(i);
@@ -152,7 +152,7 @@ class TestArrayedQueue extends AbstractTest
 		}
 		var a:Vector<Int> = untyped q.mData;
 		for (i in 0...16)
-			assertEquals(#if (js||neko) null #else 0 #end, a[i]);
+			assertEquals(isDynamic() ? null : 0, a[i]);
 	}
 	
 	function testRemove()
