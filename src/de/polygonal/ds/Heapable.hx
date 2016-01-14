@@ -21,6 +21,7 @@ package de.polygonal.ds;
 /**
 	An object that can be inserted into a Heap
 **/
+@:allow(de.polygonal.ds.Heap)
 interface Heapable<T> extends Comparable<T>
 {
 	/**
@@ -28,5 +29,5 @@ interface Heapable<T> extends Comparable<T>
 		
 		<warn>This value should never be changed by the user.</warn>
 	**/
-	var position:Int;
+	var position(default, null):Int;
 }

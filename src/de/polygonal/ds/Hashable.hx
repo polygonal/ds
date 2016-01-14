@@ -30,5 +30,5 @@ interface Hashable
 		
 		<warn>This value should never be changed by the user.</warn>
 	**/
-	var key:Int;
+	var key(default, null):Int;
 }

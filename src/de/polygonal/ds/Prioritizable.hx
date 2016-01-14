@@ -21,6 +21,7 @@ package de.polygonal.ds;
 /**
 	An prioritized object that can be inserted into a PriorityQueue
 **/
+@:allow(de.polygonal.ds.PriorityQueue)
 interface Prioritizable
 {
 	/**
@@ -30,12 +31,12 @@ interface Prioritizable
 		
 		<warn>This value should never be changed by the user after being added to a priority queue - use ``PriorityQueue::reprioritize()`` instead.</warn>
 	**/
-	var priority:Float;
+	var priority(default, null):Float;
 	
 	/**
 		Tracks the position inside a binary heap.
 		
 		<warn>This value should never be changed by the user.</warn>
 	**/
-	var position:Int;
+	var position(default, null):Int;
 }

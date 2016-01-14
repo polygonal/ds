@@ -28,6 +28,7 @@ import haxe.ds.ObjectMap;
 	
 	_<o>Worst-case running time in Big O notation</o>_
 **/
+@:allow(de.polygonal.ds.Heap)
 class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 {
 	/**
