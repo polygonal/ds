@@ -620,6 +620,17 @@ class TestDll extends AbstractTest
 		j = 0;
 		for (i in itr) assertEquals(i, j++);
 		assertEquals(10, j);
+		
+		var list = new Dll<Int>();
+		for (i in 0...10) list.append(i);
+		var j:Int = 0;
+		var itr = list.iterator();
+		while (itr.hasNext())
+		{
+			itr.hasNext();
+			assertEquals(itr.next(), j++);
+		}
+		assertEquals(10, j);
 	}
 	
 	function testIteratorRemove()

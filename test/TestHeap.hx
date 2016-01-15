@@ -473,6 +473,29 @@ class TestHeap extends AbstractTest
 		}
 		assertEquals(c, 10);
 		assertEquals(d, sum);
+		
+		var h:Heap<E1> = new Heap<E1>(10);
+		var data = new Array<Int>();
+		var sum:Int = 0;
+		for (i in 0...10)
+		{
+			data[i] = i;
+			sum += i;
+		}
+		
+		for (i in 0...10) h.add(new E1(data[i]));
+		
+		var c:Int = 0;
+		var d:Int = 0;
+		var itr = h.iterator();
+		while (itr.hasNext())
+		{
+			itr.hasNext();
+			c++;
+			d += itr.next().ID;
+		}
+		assertEquals(c, 10);
+		assertEquals(d, sum);
 	}
 	
 	function testIteratorRemove()

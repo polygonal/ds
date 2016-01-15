@@ -624,9 +624,7 @@ class HashSet<T:Hashable> implements Set<T>
 class HashSetIterator<T:Hashable> implements de.polygonal.ds.Itr<T>
 {
 	var mF:HashSet<T>;
-	
 	var mVals:Vector<T>;
-	
 	var mI:Int;
 	var mS:Int;
 	
@@ -639,24 +637,24 @@ class HashSetIterator<T:Hashable> implements de.polygonal.ds.Itr<T>
 	inline public function reset():Itr<T>
 	{
 		mVals = mF.mVals;
-		mI = -1;
+		mI = 0;
 		mS = mF.mH.getCapacity();
+		while (mI < mS && mVals[mI] == null) mI++;
+		
 		return this;
 	}
 	
 	inline public function hasNext():Bool
 	{
-		while (++mI < mS)
-		{
-			if (mVals[mI] != null)
-				return true;
-		}
-		return false;
+		return mI < mS;
 	}
 	
 	inline public function next():T
 	{
-		return mVals[mI];
+		var v = mVals[mI];
+		while (++mI < mS && mVals[mI] == null) {}
+		
+		return v;
 	}
 	
 	inline public function remove()

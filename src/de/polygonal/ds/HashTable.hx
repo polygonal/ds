@@ -862,22 +862,22 @@ class HashTableKeyIterator<K:Hashable, T> implements de.polygonal.ds.Itr<K>
 		mKeys = mF.mKeys;
 		mI = -1;
 		mS = mF.mH.getCapacity();
+		while (mI < mS && mKeys[mI] == null) mI++;
+		
 		return this;
 	}
 	
 	inline public function hasNext():Bool
 	{
-		while (++mI < mS)
-		{
-			if (mKeys[mI] != null)
-				return true;
-		}
-		return false;
+		return mI < mS;
 	}
 
 	inline public function next():K
 	{
-		return mKeys[mI];
+		var v = mKeys[mI];
+		while (++mI < mS && mKeys[mI] == null) {}
+		
+		return v;
 	}
 	
 	inline public function remove()
@@ -911,24 +911,24 @@ class HashTableValIterator<K:Hashable, T> implements de.polygonal.ds.Itr<T>
 	{
 		mVals = mF.mVals;
 		mKeys = mF.mKeys;
-		mI = -1;
+		mI = 0;
 		mS = mF.mH.getCapacity();
+		while (mI < mS && mKeys[mI] == null) mI++;
+		
 		return this;
 	}
 	
 	inline public function hasNext():Bool
 	{
-		while (++mI < mS)
-		{
-			if (mKeys[mI] != null)
-				return true;
-		}
-		return false;
+		return mI < mS;
 	}
 	
 	inline public function next():T
 	{
-		return mVals[mI];
+		var v = mVals[mI];
+		while (++mI < mS && mKeys[mI] == null) {}
+		
+		return v;
 	}
 	
 	inline public function remove()

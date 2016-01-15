@@ -627,5 +627,34 @@ class TestIntHashSet extends AbstractTest
 		}
 		
 		assertEquals(0, c);
+		
+		var h = new IntHashSet(8);
+		for (i in 0...8) h.set(i);
+		
+		var a = new Da<Int>();
+		var itr = h.iterator();
+		while (itr.hasNext())
+		{
+			itr.hasNext();
+			var key = itr.next();
+			assertFalse(a.contains(key));
+			a.pushBack(key);
+		}
+		assertEquals(8, a.size());
+		
+		for (i in 0...8)
+			a.contains(i);
+		
+		var h = new IntHashSet(8);
+		var c = 0;
+		var itr = h.iterator();
+		while (itr.hasNext())
+		{
+			itr.hasNext();
+			itr.next();
+			c++;
+		}
+		
+		assertEquals(0, c);
 	}
 }

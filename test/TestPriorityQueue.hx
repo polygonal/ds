@@ -247,7 +247,14 @@ class TestPriorityQueue extends AbstractTest
 		pq.enqueue(new E(2));
 		pq.enqueue(new E(3));
 		var c = 0;
-		for (x in pq) c++;
+		
+		var itr = pq.iterator();
+		while (itr.hasNext())
+		{
+			itr.hasNext();
+			itr.next();
+			c++;
+		}
 		assertEquals(3, c);
 	}
 	

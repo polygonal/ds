@@ -265,9 +265,11 @@ class TestLinkedDeque extends AbstractTest
 			
 			i = 0;
 			var z = 0;
-			for (x in d)
+			var itr = d.iterator();
+			while (itr.hasNext())
 			{
-				assertEquals(x, i++);
+				itr.hasNext();
+				assertEquals(itr.next(), i++);
 				z++;
 			}
 			assertEquals(s, z);

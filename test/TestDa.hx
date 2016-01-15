@@ -779,8 +779,11 @@ class TestDa extends AbstractTest
 		
 		var c = 0;
 		var itr:de.polygonal.ds.ResettableIterator<Int> = cast q.iterator();
-		for (val in itr)
-			assertEquals(c++, val);
+		while (itr.hasNext())
+		{
+			itr.hasNext();
+			assertEquals(c++, itr.next());
+		}
 		assertEquals(c, 10);
 		
 		c = 0;

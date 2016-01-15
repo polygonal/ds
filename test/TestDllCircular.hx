@@ -481,6 +481,19 @@ class TestDllCircular extends AbstractTest
 		var c = 0;
 		for (i in list) assertEquals(c++, i);
 		assertEquals(10, c);
+		
+		var list = new Dll<Int>();
+		for (i in 0...10) list.append(i);
+		list.close();
+		var c = 0;
+		
+		var itr = list.iterator();
+		while (itr.hasNext())
+		{
+			itr.hasNext();
+			assertEquals(c++, itr.next());
+		}
+		assertEquals(10, c);
 	}
 	
 	function testIteratorRemove()

@@ -1,4 +1,5 @@
 ﻿import de.polygonal.ds.BinaryTreeNode;
+import haxe.ds.StringMap;
 
 class TestBinaryTree extends AbstractTest
 {
@@ -59,6 +60,35 @@ class TestBinaryTree extends AbstractTest
 		assertTrue(node.hasR());
 		
 		assertEquals(2, node.size());
+	}
+	
+	function testIterator()
+	{
+		var map = new StringMap<Bool>();
+		
+		var node = new BinaryTreeNode<String>("root");
+		node.setL("a");
+		node.setR("b");
+		node.l.setL("c");
+		node.l.l.setR("d");
+		
+		map.set("root", true);
+		map.set("a", true);
+		map.set("b", true);
+		map.set("c", true);
+		map.set("d", true);
+		
+		var c = 0;
+		var itr = node.iterator();
+		while (itr.hasNext())
+		{
+			itr.hasNext();
+			var val = itr.next();
+			assertTrue(map.exists(val));
+			assertTrue(map.remove(val));
+			c++;
+		}
+		assertEquals(5, c);
 	}
 }
 

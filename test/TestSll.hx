@@ -878,7 +878,11 @@ class TestSll extends AbstractTest
 		
 		var itr:de.polygonal.ds.ResettableIterator<Int> = cast list.iterator();
 		j = 0;
-		for (i in itr) assertEquals(i, j++);
+		while (itr.hasNext())
+		{
+			itr.hasNext();
+			assertEquals(itr.next(), j++);
+		}
 		assertEquals(10, j);
 		
 		itr.reset();

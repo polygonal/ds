@@ -1806,6 +1806,7 @@ class IntIntHashTableValIterator implements de.polygonal.ds.Itr<Int>
 		mI = 0;
 		mS = mF.mCapacity;
 		scan();
+		
 		return this;
 	}
 	
@@ -1818,6 +1819,7 @@ class IntIntHashTableValIterator implements de.polygonal.ds.Itr<Int>
 	{
 		var val = getData((mI++ * 3) + 1);
 		scan();
+		
 		return val;
 	}
 	

@@ -590,8 +590,20 @@ class TestHashSet extends AbstractTest
 		var h = new HashSet<E>(8);
 		var c = 0;
 		for (key in h) c++;
-		
 		assertEquals(0, c);
+		
+		var values = [for (i in 0...16) new E(i)];
+		var h = new HashSet<E>(8);
+		for (i in 0...8) h.set(values[i]);
+		var a = new Da<E>();
+		var itr = h.iterator();
+		while (itr.hasNext())
+		{
+			itr.hasNext();
+			a.pushBack(itr.next());
+		}
+		assertEquals(8, a.size());
+		for (i in 0...8) a.contains(values[i]);
 	}
 }
 

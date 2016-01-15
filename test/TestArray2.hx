@@ -488,7 +488,12 @@ class TestArray2 extends AbstractTest
 		var s1:Set<String> = cast s.clone(true);
 		var s2:Set<String> = cast s.clone(true);
 		var itr:de.polygonal.ds.ResettableIterator<String> = cast a.iterator();
-		for (i in itr) assertEquals(true, s1.remove(i));
+		
+		while (itr.hasNext())
+		{
+			itr.hasNext();
+			assertEquals(true, s1.remove(itr.next()));
+		}
 		assertTrue(s1.isEmpty());
 		itr.reset();
 		for (i in itr) assertEquals(true, s2.remove(i));

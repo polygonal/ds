@@ -920,28 +920,34 @@ class IntHashTableIterator<T> implements de.polygonal.ds.Itr<T>
 	{
 		mVals = mF.mVals;
 		mKeys = mF.mKeys;
-		mI = -1;
+		mI = 0;
 		mS = mF.mH.getCapacity();
+		
+		#if (flash && alchemy)
+		while (mI < mS && mKeys.get(mI) == IntIntHashTable.KEY_ABSENT) mI++;
+		#else
+		while (mI < mS && mKeys[mI] == IntIntHashTable.KEY_ABSENT) mI++;
+		#end
+		
 		return this;
 	}
 	
 	inline public function hasNext():Bool
 	{
-		while (++mI < mS)
-		{
-			#if (flash && alchemy)
-			if (mKeys.get(mI) != IntIntHashTable.KEY_ABSENT)
-			#else
-			if (mKeys[mI] != IntIntHashTable.KEY_ABSENT)
-			#end
-				return true;
-		}
-		return false;
+		return mI < mS;
 	}
 	
 	inline public function next():T
 	{
-		return mVals[mI];
+		#if (flash && alchemy)
+		var v = mVals.get(mI);
+		while (++mI < mS && mKeys.get(mI) == IntIntHashTable.KEY_ABSENT) {}
+		#else
+		var v = mVals[mI];
+		while (++mI < mS && mKeys[mI] == IntIntHashTable.KEY_ABSENT) {}
+		#end
+		
+		return v;
 	}
 	
 	inline public function remove()

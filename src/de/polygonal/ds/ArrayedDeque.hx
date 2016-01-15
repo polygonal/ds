@@ -1116,13 +1116,13 @@ class ArrayedDequeIterator<T> implements de.polygonal.ds.Itr<T>
 		mB = mI >> mF.mBlockSizeShift;
 		mS = mF.size();
 		mBlock = mBlocks[mB];
-			mI -= mB << mF.mBlockSizeShift;
+		mI -= mB << mF.mBlockSizeShift;
 		return this;
 	}
 	
 	inline public function hasNext():Bool
 	{
-		return mS-- > 0;
+		return mS > 0;
 	}
 	
 	inline public function next():T
@@ -1133,7 +1133,7 @@ class ArrayedDequeIterator<T> implements de.polygonal.ds.Itr<T>
 			mI = 0;
 			mBlock = mBlocks[++mB];
 		}
-		
+		mS--;
 		return x;
 	}
 	

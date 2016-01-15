@@ -457,9 +457,10 @@ class TestLinkedStack extends AbstractTest
 		var itr:de.polygonal.ds.ResettableIterator<Int> = cast l.iterator();
 		
 		var c:de.polygonal.ds.Set<Int> = cast s.clone(true);
-		for (i in itr)
+		while (itr.hasNext())
 		{
-			assertEquals(true, c.remove(i));
+			itr.hasNext();
+			assertEquals(true, c.remove(itr.next()));
 		}
 		assertTrue(c.isEmpty());
 		

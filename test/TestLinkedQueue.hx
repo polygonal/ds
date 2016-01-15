@@ -99,7 +99,11 @@ class TestLinkedQueue extends AbstractTest
 		var itr:de.polygonal.ds.ResettableIterator<Int> = cast l.iterator();
 		
 		var c:de.polygonal.ds.Set<Int> = cast s.clone(true);
-		for (i in itr) assertEquals(true, c.remove(i));
+		while (itr.hasNext())
+		{
+			itr.hasNext();
+			assertEquals(true, c.remove(itr.next()));
+		}
 		assertTrue(c.isEmpty());
 		
 		s.set(6);

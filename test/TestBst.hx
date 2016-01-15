@@ -267,8 +267,12 @@ class TestBst extends AbstractTest
 			bst.insert(new E(data[i]));
 			s.set(data[i]);
 		}
-		for (i in bst)
-			assertEquals(true, s.remove(i.id));
+		var itr = bst.iterator();
+		while (itr.hasNext())
+		{
+			itr.hasNext();
+			assertEquals(true, s.remove(itr.next().id));
+		}
 		assertTrue(s.isEmpty());
 	}
 	

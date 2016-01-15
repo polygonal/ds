@@ -63,8 +63,11 @@ class TestListSet extends AbstractTest
 		var c:de.polygonal.ds.Set<Int> = cast s.clone(true);
 		
 		var itr:de.polygonal.ds.ResettableIterator<Int> = cast S.iterator();
-		
-		for (i in itr) assertEquals(true, c.remove(i));
+		while (itr.hasNext())
+		{
+			itr.hasNext();
+			assertEquals(true, c.remove(itr.next()));
+		}
 		
 		itr.reset();
 		

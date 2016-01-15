@@ -891,6 +891,35 @@ class TestHashTable extends AbstractTest
 		for (val in h) c++;
 		
 		assertEquals(0, c);
+		
+		var items = [for (i in 0...16) new E(i)];
+		var h = new HashTable<E, Null<Int>>(8);
+		for (i in 0...8) h.set(items[i], i * 10);
+		
+		var set = new Da<Int>();
+		var i = 0;
+		
+		var itr = h.iterator();
+		while (itr.hasNext())
+		{
+			itr.hasNext();
+			var val = itr.next();
+			assertFalse(set.contains(val));
+			set.pushBack(val);
+		}
+		
+		assertEquals(8, set.size());
+		for (i in 0...8) assertTrue(set.contains(i * 10));
+		
+		var h = new HashTable<E, Null<Int>>(8);
+		var c = 0;
+		var itr = h.iterator();
+		while (itr.hasNext())
+		{
+			itr.next();
+			c++;
+		}
+		assertEquals(0, c);
 	}
 	
 	function testKeyIterator()
@@ -917,6 +946,37 @@ class TestHashTable extends AbstractTest
 		var h = new HashTable<E, Null<Int>>(8);
 		var c = 0;
 		for (key in h.keys()) c++;
+		assertEquals(0, c);
+		
+		
+		
+		var items = [for (i in 0...16) new E(i)];
+		var h = new HashTable<E, Null<Int>>(8);
+		for (i in 0...8) h.set(items[i], i * 10);
+		
+		var set = new Da<E>();
+		var i = 0;
+		var itr = h.keys();
+		while (itr.hasNext())
+		{
+			itr.hasNext();
+			var key = itr.next();
+			assertFalse(set.contains(key));
+			set.pushBack(key);
+		}
+		
+		assertEquals(8, set.size());
+		for (i in 0...8) assertTrue(set.contains(items[i]));
+		
+		var h = new HashTable<E, Null<Int>>(8);
+		var c = 0;
+		var itr = h.keys();
+		while (itr.hasNext())
+		{
+			itr.hasNext();
+			itr.next();
+			c++;
+		}
 		assertEquals(0, c);
 	}
 }

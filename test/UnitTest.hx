@@ -36,41 +36,38 @@ class UnitTest extends TestRunner
 		
 		var success = true;
 		
-		//add(new TestArray2());
-		//add(new TestArray3());
-		//add(new TestArrayedDeque());
-		//add(new TestArrayedQueue());
-		//add(new TestArrayedStack());
-		//add(new TestArrayUtil());
-		//add(new TestBinaryTree());
-		//add(new TestBits());
-		//add(new TestBitVector());
-		//add(new TestBst());
-		//add(new TestDll());
-		//add(new TestDllCircular());
+		add(new TestArray2());
+		add(new TestArray3());
+		add(new TestArrayedDeque()); 
+		add(new TestArrayedQueue());
+		add(new TestArrayedStack());
+		add(new TestArrayUtil());
+		add(new TestBinaryTree());
+		add(new TestBits());
+		add(new TestBitVector());
+		add(new TestBst());
+		add(new TestDll());
+		add(new TestDllCircular());
 		add(new TestGraph());
-		//add(new TestHashSet());
-		//add(new TestHashTable());
-		//add(new TestHeap());
-		//add(new TestIntHashSet());
-		//add(new TestIntHashTable());
-		//add(new TestIntIntHashTable());
-		//add(new TestLinkedDeque());
-		//add(new TestLinkedQueue());
-		//add(new TestLinkedStack());
-		//add(new TestListSet());
-		//add(new TestPriorityQueue());
-		//add(new TestSll());
-		//add(new TestTree());
+		add(new TestHashSet());
+		add(new TestHashTable());
+		add(new TestIntHashSet());
+		add(new TestIntHashTable());
+		add(new TestIntIntHashTable());
+		add(new TestHeap());
+		add(new TestLinkedDeque());
+		add(new TestLinkedQueue());
+		add(new TestLinkedStack());
+		add(new TestListSet());
+		add(new TestPriorityQueue());
+		add(new TestSll());
+		add(new TestTree());
+		add(new TestDa());
 		
-		//add(new TestDynamicVector());
-		//add(new TestFreeList());
-		//add(new TestDa());
+		//add(new pooling.TestObjectPool());
+		//add(new pooling.TestDynamicObjectPool());
 		
-		//add(new test.pooling.TestObjectPool());
-		//add(new test.pooling.TestDynamicObjectPool());
-		
-		/*#if flash
+		#if flash
 			#if alchemy
 			add(new mem.TestMemoryManager());
 			run();
@@ -86,7 +83,7 @@ class UnitTest extends TestRunner
 			add(new mem.TestFloatMemory());
 			add(new mem.TestDoubleMemory());
 			add(new mem.TestIntMemory());
-		#end*/
+		#end
 		
 		success = success && run();
 		
