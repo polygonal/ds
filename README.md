@@ -44,9 +44,10 @@ If you want to test the latest beta build, you should pull the dev branch and ad
 
 ## Changelog
 
-### 1.4.2 (dev)
+### 1.x.x (dev)
 __supports Haxe Compiler 3.2.1__
 
+ * fixed: always increment iterator state inside next()
  * added: initial python support
  * fixed: Graph.remove()
  * modified: use Vector instead of Array where possible
