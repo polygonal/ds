@@ -100,6 +100,7 @@ class IntIntHashTable implements Map<Int, Int>
 	var mNext:Vector<Int>;
 	#end
 	
+	var mSlotCount:Int;
 	var mMask:Int;
 	var mFree:Int;
 	
@@ -153,6 +154,7 @@ class IntIntHashTable implements Map<Int, Int>
 		mFree = 0;
 		mCapacity = capacity;
 		mSize = 0;
+		mSlotCount = slotCount;
 		mMask = slotCount - 1;
 		mSizeLevel = 0;
 		mIterator = null;
@@ -210,7 +212,7 @@ class IntIntHashTable implements Map<Int, Int>
 	**/
 	inline public function getSlotCount():Int
 	{
-		return mMask + 1;
+		return mSlotCount;
 	}
 	
 	/**
@@ -480,6 +482,7 @@ class IntIntHashTable implements Map<Int, Int>
 		mData = tmp.mData;
 		mNext = tmp.mNext;
 		
+		mSlotCount = tmp.mSlotCount;
 		mMask = tmp.mMask;
 		mFree = tmp.mFree;
 		mSizeLevel = tmp.mSizeLevel;
@@ -1544,6 +1547,7 @@ class IntIntHashTable implements Map<Int, Int>
 		for (i in 0...Std.int(mNext.length)) c.mNext[i] = mNext[i];
 		#end
 		
+		c.mSlotCount = mSlotCount;
 		c.mMask = mMask;
 		c.mCapacity = mCapacity;
 		c.mFree = mFree;

@@ -81,6 +81,7 @@ class IntHashSet implements Set<Int>
 	
 	var mMask:Int;
 	var mFree:Int;
+	var mSlotCount:Int;
 	
 	var mCapacity:Int;
 	var mSize:Int;
@@ -134,7 +135,9 @@ class IntHashSet implements Set<Int>
 		mFree = 0;
 		mCapacity = capacity;
 		mSize = 0;
+		mSlotCount = slotCount;
 		mMask = slotCount - 1;
+		
 		mSizeLevel = 0;
 		mIterator = null;
 		
@@ -190,7 +193,7 @@ class IntHashSet implements Set<Int>
 	**/
 	inline public function getSlotCount():Int
 	{
-		return mMask + 1;
+		return mSlotCount;
 	}
 	
 	/**
@@ -335,6 +338,7 @@ class IntHashSet implements Set<Int>
 		mData = tmp.mData;
 		mNext = tmp.mNext;
 		
+		mSlotCount = slotCount;
 		mMask = tmp.mMask;
 		mFree = tmp.mFree;
 		mSizeLevel = tmp.mSizeLevel;
@@ -822,6 +826,7 @@ class IntHashSet implements Set<Int>
 		#end
 		
 		c.mMask = mMask;
+		c.mSlotCount = mSlotCount;
 		c.mCapacity = mCapacity;
 		c.mFree = mFree;
 		c.mSize = mSize;
