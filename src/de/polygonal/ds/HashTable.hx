@@ -857,7 +857,7 @@ class HashTableKeyIterator<K:Hashable, T> implements de.polygonal.ds.Itr<K>
 		reset();
 	}
 	
-	inline public function reset():Itr<K>
+	public function reset():Itr<K>
 	{
 		mKeys = mF.mKeys;
 		mI = -1;
@@ -907,7 +907,7 @@ class HashTableValIterator<K:Hashable, T> implements de.polygonal.ds.Itr<T>
 		reset();
 	}
 	
-	inline public function reset():Itr<T>
+	public function reset():Itr<T>
 	{
 		mVals = mF.mVals;
 		mKeys = mF.mKeys;

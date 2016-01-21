@@ -916,7 +916,7 @@ class IntHashTableIterator<T> implements de.polygonal.ds.Itr<T>
 		reset();
 	}
 	
-	inline public function reset():Itr<T>
+	public function reset():Itr<T>
 	{
 		mVals = mF.mVals;
 		mKeys = mF.mKeys;

@@ -1054,7 +1054,7 @@ class IntHashSetIterator implements de.polygonal.ds.Itr<Int>
 		scan();
 	}
 	
-	inline public function reset():Itr<Int>
+	public function reset():Itr<Int>
 	{
 		mData = mF.mData;
 		mI = 0;

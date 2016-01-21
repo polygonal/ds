@@ -714,7 +714,7 @@ class HeapIterator<T:(Heapable<T>)> implements de.polygonal.ds.Itr<T>
 		mData = null;
 	}
 	
-	inline public function reset():Itr<T>
+	public function reset():Itr<T>
 	{
 		mS = mF.size() + 1;
 		mI = 1;

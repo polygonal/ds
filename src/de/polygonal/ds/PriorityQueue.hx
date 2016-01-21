@@ -672,7 +672,7 @@ class PriorityQueueIterator<T:(Prioritizable)> implements de.polygonal.ds.Itr<T>
 		mData = null;
 	}
 	
-	inline public function reset():Itr<T>
+	public function reset():Itr<T>
 	{
 		mS = mQue.size() + 1;
 		mI = 1;

@@ -634,7 +634,7 @@ class HashSetIterator<T:Hashable> implements de.polygonal.ds.Itr<T>
 		reset();
 	}
 	
-	inline public function reset():Itr<T>
+	public function reset():Itr<T>
 	{
 		mVals = mF.mVals;
 		mI = 0;

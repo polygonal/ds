@@ -719,7 +719,7 @@ class ArrayedQueueIterator<T> implements de.polygonal.ds.Itr<T>
 		reset();
 	}
 	
-	inline public function reset():Itr<T>
+	public function reset():Itr<T>
 	{
 		mFront = mF.mFront;
 		mCapacity = mF.mCapacity;

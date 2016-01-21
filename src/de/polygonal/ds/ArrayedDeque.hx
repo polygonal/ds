@@ -1108,7 +1108,7 @@ class ArrayedDequeIterator<T> implements de.polygonal.ds.Itr<T>
 		reset();
 	}
 	
-	inline public function reset():Itr<T>
+	public function reset():Itr<T>
 	{
 		mBlockSize = mF.mBlockSize;
 		mBlocks = mF.mBlocks;
