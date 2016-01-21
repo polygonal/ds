@@ -860,7 +860,7 @@ class HashTableKeyIterator<K:Hashable, T> implements de.polygonal.ds.Itr<K>
 	public function reset():Itr<K>
 	{
 		mKeys = mF.mKeys;
-		mI = -1;
+		mI = 0;
 		mS = mF.mH.getCapacity();
 		while (mI < mS && mKeys[mI] == null) mI++;
 		
