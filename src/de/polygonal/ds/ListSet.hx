@@ -45,11 +45,14 @@ class ListSet<T> implements Set<T>
 	**/
 	public var reuseIterator:Bool;
 	
-	var mData:Da<T>;
+	var mData:Array<T>;
+	var mSize:Int;
+	var mIterator:ListSetIterator<T>;
 	
 	public function new()
 	{
-		mData = new Da<T>();
+		mData = new Array<T>();
+		mSize = 0;
 		key = HashKey.next();
 		reuseIterator = false;
 	}
@@ -76,7 +79,7 @@ class ListSet<T> implements Set<T>
 		if (isEmpty()) return s;
 		s += "\n[\n";
 		for (i in 0...size())
-			s += '  ${Std.string(mData.get(i))}\n';
+			s += '  ${Std.string(mData[i])}\n';
 		s += "]";
 		return s;
 	}
@@ -91,7 +94,10 @@ class ListSet<T> implements Set<T>
 	**/
 	public function has(x:T):Bool
 	{
-		return mData.contains(x);
+		if (mSize == 0) return false;
+		for (i in mData) if (i == x) return true;
+		
+		return false;
 	}
 	
 	/**
@@ -101,13 +107,12 @@ class ListSet<T> implements Set<T>
 	**/
 	public function set(x:T):Bool
 	{
-		if (mData.contains(x))
-			return false;
-		else
-		{
-			mData.pushBack(x);
-			return true;
-		}
+		for (i in 0...mSize) if (mData[i] == x) return false;
+		
+		mData.push(x);
+		mSize++;
+		
+		return true;
 	}
 	
 	/**
@@ -118,7 +123,7 @@ class ListSet<T> implements Set<T>
 		If false, the ``clone()`` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
 		@param copier a custom function for copying elements. Replaces ``element::clone()`` if `assign` is false.
 	**/
-	public function merge(x:Set<T>, assign:Bool, copier:T->T = null)
+	public function merge(x:Set<T>, ?assign:Bool, copier:T->T = null)
 	{
 		if (assign)
 		{
@@ -156,7 +161,8 @@ class ListSet<T> implements Set<T>
 	**/
 	public function free()
 	{
-		mData.free();
+		for (i in 0...mData.length) mData[i] = null;
+		mIterator = null;
 		mData = null;
 	}
 	
@@ -166,7 +172,9 @@ class ListSet<T> implements Set<T>
 	**/
 	public function contains(x:T):Bool
 	{
-		return mData.contains(x);
+		for (i in 0...mSize) if (mData[i] == x) return true;
+		
+		return false;
 	}
 	
 	/**
@@ -176,7 +184,16 @@ class ListSet<T> implements Set<T>
 	**/
 	public function remove(x:T):Bool
 	{
-		return mData.remove(x);
+		for (i in 0...mSize)
+		{
+			if (mData[i] == x)
+			{
+				mData[i] = mData[--mSize];
+				return true;
+			}
+		}
+		
+		return false;
 	}
 	
 	/**
@@ -186,7 +203,8 @@ class ListSet<T> implements Set<T>
 	**/
 	public function clear(purge = false)
 	{
-		mData.clear(purge);
+		mSize = 0;
+		if (purge) mData = [];
 	}
 	
 	/**
@@ -198,8 +216,16 @@ class ListSet<T> implements Set<T>
 	**/
 	public function iterator():Itr<T>
 	{
-		mData.reuseIterator = reuseIterator;
-		return mData.iterator();
+		if (reuseIterator)
+		{
+			if (mIterator == null)
+				mIterator = new ListSetIterator<T>(this);
+			else
+				mIterator.reset();
+			return mIterator;
+		}
+		else
+			return new ListSetIterator<T>(this);
 	}
 	
 	/**
@@ -208,7 +234,7 @@ class ListSet<T> implements Set<T>
 	**/
 	public function isEmpty():Bool
 	{
-		return mData.isEmpty();
+		return mSize == 0;
 	}
 	
 	/**
@@ -217,7 +243,7 @@ class ListSet<T> implements Set<T>
 	**/
 	public function size():Int
 	{
-		return mData.size();
+		return mSize;
 	}
 	
 	/**
@@ -225,7 +251,11 @@ class ListSet<T> implements Set<T>
 	**/
 	public function toArray():Array<T>
 	{
-		return mData.toArray();
+		var output = [];
+		var t = mData;
+		for (i in 0...mSize) output[i] = t[i];
+		
+		return output;
 	}
 	
 	/**
@@ -233,7 +263,11 @@ class ListSet<T> implements Set<T>
 	**/
 	public function toVector():Vector<T>
 	{
-		return mData.toVector();
+		var output = new Vector<T>(mSize);
+		var t = mData;
+		for (i in 0...mSize) output[i] = t[i];
+		
+		return output;
 	}
 	
 	/**
@@ -245,9 +279,76 @@ class ListSet<T> implements Set<T>
 	**/
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{
-		var copy = new ListSet();
-		copy.key = HashKey.next();
-		copy.mData = cast mData.clone(assign, copier);
+		var copy = new ListSet<T>();
+		copy.mSize = mSize;
+		if (assign)
+		{
+			for (i in 0...mSize)
+			{
+				copy.mData[i] = mData[i];
+			}
+		}
+		else
+		if (copier == null)
+		{
+			var c:Cloneable<Dynamic> = null;
+			for (i in 0...mSize)
+			{
+				assert(Std.is(mData[i], Cloneable), 'element is not of type Cloneable (${mData[i]})');
+				
+				copy.mData[i] = cast(mData[i], Cloneable<Dynamic>).clone();
+			}
+		}
+		else
+		{
+			for (i in 0...mSize)
+				copy.mData[i] = copier(mData[i]);
+		}
+		
 		return copy;
+	}
+}
+
+@:access(de.polygonal.ds.ListSet)
+#if generic
+@:generic
+#end
+@:dox(hide)
+class ListSetIterator<T> implements de.polygonal.ds.Itr<T>
+{
+	var mF:ListSet<T>;
+	var mData:Array<T>;
+	var mI:Int;
+	var mS:Int;
+	
+	public function new(f:ListSet<T>)
+	{
+		mF = f;
+		reset();
+	}
+	
+	inline public function reset():Itr<T>
+	{
+		mData = mF.mData;
+		mS = mF.mSize;
+		mI = 0;
+		return this;
+	}
+	
+	inline public function hasNext():Bool
+	{
+		return mI < mS;
+	}
+	
+	inline public function next():T
+	{
+		return mData[mI++];
+	}
+	
+	inline public function remove()
+	{
+		assert(mI > 0, "call next() before removing an element");
+		
+		mData[mI] = mData[--mS];
 	}
 }
