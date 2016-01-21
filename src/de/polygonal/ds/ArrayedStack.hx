@@ -685,13 +685,11 @@ class ArrayedStack<T> implements Stack<T>
 		else
 		if (copier == null)
 		{
-			var c:Cloneable<T> = null;
 			for (i in 0...mTop)
 			{
 				assert(Std.is(_get(i), Cloneable), 'element is not of type Cloneable (${_get(i)})');
 				
-				c = untyped _get(i);
-				t[i] = c.clone();
+				t[i] = cast(_get(i), Cloneable<Dynamic>).clone();
 			}
 		}
 		else
@@ -700,6 +698,7 @@ class ArrayedStack<T> implements Stack<T>
 				t[i] = copier(_get(i));
 		}
 		copy.mTop = mTop;
+		
 		return copy;
 	}
 	
