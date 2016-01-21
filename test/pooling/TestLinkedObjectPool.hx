@@ -1,4 +1,4 @@
-﻿package pooling;
+﻿package test.pooling;
 
 import de.polygonal.ds.pooling.LinkedObjectPool;
 import flash.geom.Point;

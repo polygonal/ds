@@ -9,7 +9,6 @@ class TestListSet extends AbstractTest
 		var s1 = new ListSet<String>();
 		
 		s1.set("a");
-		assertEquals(s1.contains("a"), true);
 		assertTrue(s1.has("a"));
 		assertEquals(1, s1.size());
 		
@@ -19,20 +18,19 @@ class TestListSet extends AbstractTest
 		assertTrue(s2.has("b"));
 		
 		s1.merge(s2, true);
-		
+		assertEquals(2, s1.size());
 		assertTrue(s1.contains("b"));
 		assertTrue(s1.has("b"));
 		s1.remove("b");
 		
+		assertEquals(1, s1.size());
 		s1.merge(s2, false, function(val:String) { return val; });
 		
 		assertTrue(s1.contains("b"));
-		
 		assertEquals(2, s1.size());
 		
 		s1.remove("a");
 		s1.remove("b");
-		
 		assertTrue(s1.isEmpty());
 	}
 	
@@ -63,11 +61,8 @@ class TestListSet extends AbstractTest
 		var c:de.polygonal.ds.Set<Int> = cast s.clone(true);
 		
 		var itr:de.polygonal.ds.ResettableIterator<Int> = cast S.iterator();
-		while (itr.hasNext())
-		{
-			itr.hasNext();
-			assertEquals(true, c.remove(itr.next()));
-		}
+		
+		for (i in itr) assertEquals(true, c.remove(i));
 		
 		itr.reset();
 		

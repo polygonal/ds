@@ -219,11 +219,8 @@ class TestArrayedDeque extends AbstractTest
 				d.pushBack(i++);
 			i = 0;
 			var z = 0;
-			var itr = d.iterator();
-			while (itr.hasNext())
+			for (x in d)
 			{
-				itr.hasNext();
-				var x = itr.next();
 				assertEquals(x, i++);
 				z++;
 			}
@@ -245,30 +242,6 @@ class TestArrayedDeque extends AbstractTest
 		
 		var values = [5, 0, 1, 2, 3, 4];
 		for (e in d) assertEquals(values.shift(), e);
-		
-		var d = createDequeInt(16);
-		for (i in 0...100) d.pushBack(i);
-		
-		var i = 0;
-		var itr = d.iterator();
-		while (itr.hasNext())
-		{
-			itr.hasNext();
-			var val = itr.next();
-			assertEquals(i++, val);
-		}
-		assertEquals(100, i);
-		
-		d.clear();
-		var itr = d.iterator();
-		var i = 0;
-		while (itr.hasNext())
-		{
-			itr.hasNext();
-			itr.next();
-			i++;
-		}
-		assertEquals(0, i);
 	}
 	
 	function testContains()

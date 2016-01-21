@@ -1,4 +1,4 @@
-﻿package pooling;
+﻿package test.pooling;
 
 import de.polygonal.ds.ListSet;
 
@@ -31,7 +31,7 @@ class TestObjectPool extends AbstractTest
 			var idset = new ListSet<Int>();
 			var objset = new ListSet<E>();
 			var idrange = new Array<Int>();
-			var r = randRange(0, 10);
+			var r = Random.randRange(0, 10);
 			for (j in 0...r) idrange.push(j); shuffle(idrange);
 			
 			var t = new ListSet<Int>();

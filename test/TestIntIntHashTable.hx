@@ -867,44 +867,6 @@ class TestIntIntHashTable extends AbstractTest
 		}
 		
 		assertEquals(0, c);
-		
-		/////////////
-		
-		var h = new IntIntHashTable(8);
-		for (i in 0...8) h.set(i, i * 10);
-		
-		var set = new Da<Int>();
-		var itr = h.iterator();
-		while (itr.hasNext())
-		{
-			itr.hasNext();
-			var val = itr.next();
-			assertFalse(set.contains(val));
-			set.pushBack(val);
-		}
-		assertEquals(8, set.size());
-		for (i in 0...8) assertTrue(set.contains(i * 10));
-		
-		var set = new Da<Int>();
-		for (key in h.keys())
-		{
-			assertFalse(set.contains(key));
-			set.pushBack(key);
-		}
-		assertEquals(8, set.size());
-		for (i in 0...8) assertTrue(set.contains(i));
-		
-		var h = new IntIntHashTable(8);
-		var c = 0;
-		var itr = h.iterator();
-		while (itr.hasNext())
-		{
-			itr.hasNext();
-			itr.next();
-			c++;
-		}
-		
-		assertEquals(0, c);
 	}
 	
 	function testCount()

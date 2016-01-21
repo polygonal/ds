@@ -542,7 +542,7 @@ class TestMemoryManager extends AbstractTest
 		var a = new Array<ByteMemory>();
 		for (i in 0...10)
 		{
-			a[i] = new ByteMemory(100 + randRange(0, 100));
+			a[i] = new ByteMemory(100 + Random.randRange(0, 100));
 			fillBytes(a[i]);
 		}
 		

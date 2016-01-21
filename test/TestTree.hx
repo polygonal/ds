@@ -537,7 +537,6 @@ class TestTree extends AbstractTest
 		var itr = tree.iterator();
 		while (itr.hasNext())
 		{
-			itr.hasNext();
 			var e = itr.next();
 			assertEquals(e, order.shift());
 			itr.remove();

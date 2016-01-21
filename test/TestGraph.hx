@@ -432,16 +432,6 @@ class TestGraph extends AbstractTest
 		for (i in graph) assertEquals(true, s.set(i));
 		assertEquals(10, s.size());
 		
-		var s = new de.polygonal.ds.HashSet<E>(1024);
-		var c = 0;
-		var itr = graph.iterator();
-		while (itr.hasNext())
-		{
-			itr.hasNext();
-			assertEquals(true, s.set(itr.next()));
-		}
-		assertEquals(10, s.size());
-		
 		var c:de.polygonal.ds.Set<E> = cast s.clone(true);
 		var itr = graph.iterator();
 		var itr:de.polygonal.ds.ResettableIterator<E> = cast graph.iterator();

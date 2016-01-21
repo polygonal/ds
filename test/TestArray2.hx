@@ -1,6 +1,5 @@
 ﻿import de.polygonal.ds.Array2;
 import de.polygonal.ds.ArrayConvert;
-import de.polygonal.ds.Da;
 import de.polygonal.ds.ListSet;
 import de.polygonal.ds.Set;
 import de.polygonal.ds.Vector;
@@ -478,6 +477,7 @@ class TestArray2 extends AbstractTest
 			c++;
 		}
 		assertEquals(c, a.size());
+		
 		var s = new ListSet<String>();
 		var a = getStrArray();
 		a.iter(function(val:String, x:Int, y:Int):String
@@ -488,12 +488,7 @@ class TestArray2 extends AbstractTest
 		var s1:Set<String> = cast s.clone(true);
 		var s2:Set<String> = cast s.clone(true);
 		var itr:de.polygonal.ds.ResettableIterator<String> = cast a.iterator();
-		
-		while (itr.hasNext())
-		{
-			itr.hasNext();
-			assertEquals(true, s1.remove(itr.next()));
-		}
+		for (i in itr) assertEquals(true, s1.remove(i));
 		assertTrue(s1.isEmpty());
 		itr.reset();
 		for (i in itr) assertEquals(true, s2.remove(i));
@@ -516,7 +511,7 @@ class TestArray2 extends AbstractTest
 			assertEquals(i, null);
 	}
 	
-	function testShuffle()
+	function  testShuffle()
 	{
 		var a = getIntArray();
 		var counter = 0;

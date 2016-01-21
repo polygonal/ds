@@ -948,8 +948,6 @@ class TestHashTable extends AbstractTest
 		for (key in h.keys()) c++;
 		assertEquals(0, c);
 		
-		
-		
 		var items = [for (i in 0...16) new E(i)];
 		var h = new HashTable<E, Null<Int>>(8);
 		for (i in 0...8) h.set(items[i], i * 10);

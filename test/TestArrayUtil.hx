@@ -1,6 +1,7 @@
 ﻿import de.polygonal.ds.ArrayConvert;
 import de.polygonal.ds.ArrayUtil;
 import de.polygonal.ds.Compare;
+import haxe.ds.IntMap;
 
 class TestArrayUtil extends AbstractTest
 {
@@ -59,14 +60,22 @@ class TestArrayUtil extends AbstractTest
 		a.push(1);
 		a.push(2);
 		a.push(3);
-		var da = ArrayConvert.toDa(a);
+		
+		var set = new IntMap<Bool>();
+		for (i in 0...4) set.set(i, true);
+		
 		ArrayUtil.shuffle(a);
+		
 		for (i in 0...4)
 		{
 			var v = a[i];
-			da.remove(v);
+			assertTrue(set.exists(v));
+			assertTrue(set.remove(v));
 		}
-		assertTrue(da.isEmpty());
+		
+		var c = 0;
+		for (i in set.keys()) c++;
+		assertEquals(0, c);
 	}
 	
 	function testBinarySearchComparator()

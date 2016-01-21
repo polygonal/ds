@@ -376,9 +376,9 @@ class TestSll extends AbstractTest
 		}
 		assertTrue(failed);
 		
-		return;
-		
 		var list = ArrayConvert.toSll([0, 1, 2]);
+		list.maxSize = 3;
+		
 		var failed = false;
 		try
 		{
@@ -391,6 +391,7 @@ class TestSll extends AbstractTest
 		assertTrue(failed);
 		
 		var list = ArrayConvert.toSll([0, 1, 2]);
+		list.maxSize = 3;
 		var failed = false;
 		try
 		{
@@ -403,6 +404,7 @@ class TestSll extends AbstractTest
 		assertTrue(failed);
 		
 		var list = ArrayConvert.toSll([0, 1, 2]);
+		list.maxSize = 3;
 		var failed = false;
 		try
 		{
@@ -415,6 +417,7 @@ class TestSll extends AbstractTest
 		assertTrue(failed);
 		
 		var list1 = ArrayConvert.toSll([0, 1, 2]);
+		list1.maxSize = 3;
 		var list2 = ArrayConvert.toSll([0, 1, 2]);
 		var failed = false;
 		try
@@ -878,11 +881,7 @@ class TestSll extends AbstractTest
 		
 		var itr:de.polygonal.ds.ResettableIterator<Int> = cast list.iterator();
 		j = 0;
-		while (itr.hasNext())
-		{
-			itr.hasNext();
-			assertEquals(itr.next(), j++);
-		}
+		for (i in itr) assertEquals(i, j++);
 		assertEquals(10, j);
 		
 		itr.reset();

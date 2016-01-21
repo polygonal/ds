@@ -346,11 +346,7 @@ class TestArrayedStack extends AbstractTest
 		for (i in 0...10) stack.push(i);
 		var c = 10;
 		var itr:de.polygonal.ds.ResettableIterator<Int> = cast stack.iterator();
-		while (itr.hasNext())
-		{
-			itr.hasNext();
-			assertEquals(itr.next(), --c);
-		}
+		for (i in itr) assertEquals(i, --c);
 		assertEquals(c, 0);
 		c = 10;
 		itr.reset();

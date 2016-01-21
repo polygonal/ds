@@ -38,7 +38,7 @@ class UnitTest extends TestRunner
 		
 		add(new TestArray2());
 		add(new TestArray3());
-		add(new TestArrayedDeque()); 
+		add(new TestArrayedDeque());
 		add(new TestArrayedQueue());
 		add(new TestArrayedStack());
 		add(new TestArrayUtil());
@@ -62,10 +62,13 @@ class UnitTest extends TestRunner
 		add(new TestPriorityQueue());
 		add(new TestSll());
 		add(new TestTree());
-		add(new TestDa());
 		
-		//add(new pooling.TestObjectPool());
-		//add(new pooling.TestDynamicObjectPool());
+		//add(new TestDynamicVector());
+		//add(new TestFreeList());
+		//add(new TestDa());
+		
+		//add(new test.pooling.TestObjectPool());
+		//add(new test.pooling.TestDynamicObjectPool());
 		
 		#if flash
 			#if alchemy
@@ -87,7 +90,9 @@ class UnitTest extends TestRunner
 		
 		success = success && run();
 		
-		#if js
+		#if flash
+		flash.system.System.exit(success ? 0 : 1);
+		#elseif js
 		(untyped process).exit(success ? 0 : 1);
 		#elseif sys
 		Sys.exit(success ? 0 : 1);

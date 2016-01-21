@@ -415,14 +415,10 @@ class TestArrayedQueue extends AbstractTest
 		var c = 0;
 		
 		var itr:de.polygonal.ds.ResettableIterator<Int> = cast q.iterator();
-		while (itr.hasNext())
-		{
-			itr.hasNext();
-			assertEquals(c++, itr.next());
-		}
+		
+		for (val in itr) assertEquals(c++, val);
 		assertEquals(c, 10);
 		c = 0;
-		
 		itr.reset();
 		for (val in itr) assertEquals(c++, val);
 		assertEquals(c, 10);
