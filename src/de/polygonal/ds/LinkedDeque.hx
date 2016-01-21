@@ -619,7 +619,7 @@ class LinkedDeque<T> implements Deque<T>
 			
 			assert(Std.is(mHead.val, Cloneable), 'element is not of type Cloneable (${mHead.val})');
 			
-			var c:Cloneable<T> = untyped mHead.val;
+			var c = cast(mHead.val, Cloneable<Dynamic>);
 			var dstNode = copy.mHead = new LinkedDequeNode<T>(c.clone());
 			
 			if (mSize == 1)
@@ -637,7 +637,7 @@ class LinkedDeque<T> implements Deque<T>
 				
 				assert(Std.is(srcNode.val, Cloneable), 'element is not of type Cloneable (${srcNode.val})');
 				
-				c = untyped srcNode.val;
+				c = cast(srcNode.val, Cloneable<Dynamic>);
 				dstNode = dstNode.next = new LinkedDequeNode<T>(c.clone());
 				dstNode.prev = dstNode0;
 				
@@ -647,7 +647,7 @@ class LinkedDeque<T> implements Deque<T>
 			
 			assert(Std.is(srcNode.val, Cloneable), 'element is not of type Cloneable (${srcNode.val})');
 			
-			c = untyped srcNode.val;
+			c = cast(srcNode.val, Cloneable<Dynamic>);
 			dstNode0 = dstNode;
 			copy.mTail = dstNode.next = new LinkedDequeNode<T>(c.clone());
 			copy.mTail.prev = dstNode0;

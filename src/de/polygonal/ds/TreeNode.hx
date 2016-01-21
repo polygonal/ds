@@ -855,10 +855,16 @@ class TreeNode<T> implements Collection<T>
 	{
 		inline function asVisitable(value:Dynamic):Visitable
 		{
+			return
 			#if flash
-			return flash.Lib.as(value, Visitable);
+			flash.Lib.as(value, Visitable);
 			#else
-			return cast value;
+			
+			#if (cpp && generic)
+			cast(value, Visitable);
+			#else
+			cast value;
+			#end
 			#end
 		}
 		
@@ -1489,10 +1495,16 @@ class TreeNode<T> implements Collection<T>
 		
 		inline function asVisitable(value:Dynamic):Visitable
 		{
+			return
 			#if flash
-			return flash.Lib.as(value, Visitable);
+			flash.Lib.as(value, Visitable);
 			#else
-			return cast value;
+			
+			#if (cpp && generic)
+			cast(value, Visitable);
+			#else
+			cast value;
+			#end
 			#end
 		}
 		
@@ -1520,10 +1532,16 @@ class TreeNode<T> implements Collection<T>
 		
 		inline function asVisitable(value:Dynamic):Visitable
 		{
+			return
 			#if flash
-			return flash.Lib.as(value, Visitable);
+			flash.Lib.as(value, Visitable);
 			#else
-			return cast value;
+			
+			#if (cpp && generic)
+			cast(value, Visitable);
+			#else
+			cast value;
+			#end
 			#end
 		}
 		
