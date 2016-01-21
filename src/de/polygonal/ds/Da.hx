@@ -422,8 +422,6 @@ class Da<T> implements Collection<T>
 				return j;
 			}
 		}
-		
-		return 0;
 	}
 	
 	/**

@@ -1098,8 +1098,6 @@ class IntIntHashTable implements Map<Int, Int>
 					return false;
 			}
 		}
-		
-		return false;
 	}
 	
 	/**
