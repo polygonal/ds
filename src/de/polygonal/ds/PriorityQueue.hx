@@ -249,7 +249,8 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 		assert(size() > 0, "priority queue is empty");
 		
 		#if debug
-		assert(mMap.exists(x), "unknown element");
+		var exists = mMap.exists(x);
+		assert(exists, "unknown element");
 		#end
 		
 		var oldPriority = x.priority;
@@ -391,7 +392,8 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 			assert(x != null, "x is null");
 			
 			#if debug
-			assert(mMap.exists(x), "x does not exist");
+			var exists = mMap.exists(x);
+			assert(exists, "x does not exist");
 			mMap.remove(x);
 			#end
 			

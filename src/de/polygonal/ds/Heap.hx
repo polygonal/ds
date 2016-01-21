@@ -261,7 +261,8 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	public function change(x:T, hint:Int)
 	{
 		#if debug
-		assert(mMap.exists(x), "x does not exist");
+		var exists = mMap.exists(x);
+		assert(exists, "x does not exist");
 		#end
 		
 		if (hint >= 0)
@@ -456,7 +457,8 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 			assert(x != null, "x is null");
 			
 			#if debug
-			assert(mMap.exists(x), "x does not exist");
+			var exists = mMap.exists(x);
+			assert(exists, "x does not exist");
 			mMap.remove(x);
 			#end
 			
