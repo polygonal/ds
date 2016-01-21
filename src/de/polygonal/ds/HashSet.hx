@@ -516,7 +516,7 @@ class HashSet<T:Hashable> implements Set<T>
 					{
 						assert(Std.is(v, Cloneable), 'element is not of type Cloneable ($v)');
 						
-						c = untyped v;
+						c = cast v;
 						tmp[i] = c.clone();
 					}
 				}

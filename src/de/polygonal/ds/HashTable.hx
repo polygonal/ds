@@ -728,7 +728,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 					{
 						assert(Std.is(mVals[i], Cloneable), 'element is not of type Cloneable (${mVals[i]})');
 						
-						c = untyped mVals[i];
+						c = cast mVals[i];
 						tmp[i] = c.clone();
 					}
 				}

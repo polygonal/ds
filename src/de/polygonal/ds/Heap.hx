@@ -585,12 +585,13 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 				
 				assert(Std.is(e, Cloneable), 'element is not of type Cloneable (${get(i)})');
 				
-				var c = untyped e.clone();
+				var cl:Cloneable<T> = cast e;
+				var c = cl.clone();
 				c.position = e.position;
-				copy.set(i, untyped c);
+				copy.set(i, cast c);
 				
 				#if debug
-				copy.mMap.set(untyped c, true);
+				copy.mMap.set(c, true);
 				#end
 			}
 		}

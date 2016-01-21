@@ -521,13 +521,14 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 				
 				assert(Std.is(e, Cloneable), 'element is not of type Cloneable ($e)');
 				
-				var c = untyped e.clone();
+				var cl:Cloneable<T> = cast e;
+				var c = cl.clone();
 				c.position = e.position;
 				c.priority = e.priority;
-				copy.set(i, untyped c);
+				copy.set(i, c);
 				
 				#if debug
-				copy.mMap.set(untyped c, true);
+				copy.mMap.set(c, true);
 				#end
 			}
 		}

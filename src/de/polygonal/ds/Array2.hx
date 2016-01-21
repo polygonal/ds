@@ -1012,7 +1012,7 @@ class Array2<T> implements Collection<T>
 		if (assign)
 		{
 			for (i in 0...size())
-				copy._set(i, untyped _get(i));
+				copy._set(i, _get(i));
 		}
 		else
 		if (copier == null)

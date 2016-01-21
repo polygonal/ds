@@ -142,7 +142,8 @@ class ListSet<T> implements Set<T>
 				{
 					assert(Std.is(val, Cloneable), 'element is not of type Cloneable ($val)');
 					
-					set(untyped val.clone());
+					var c:Cloneable<T> = cast val;
+					set(c.clone());
 				}
 			}
 		}

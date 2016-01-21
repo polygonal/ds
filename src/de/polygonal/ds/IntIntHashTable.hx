@@ -1719,8 +1719,6 @@ class IntIntHashTable implements Map<Int, Int>
 	{
 		#if (flash && alchemy)
 		return mHash.get(i);
-		//#elseif cpp
-		//return untyped mHash._unsafemGet(i);
 		#else
 		return mHash[i];
 		#end
@@ -1729,8 +1727,6 @@ class IntIntHashTable implements Map<Int, Int>
 	{
 		#if (flash && alchemy)
 		mHash.set(i, x);
-		//#elseif cpp
-		//untyped mHash._unsafemSet(i, x);
 		#else
 		mHash[i] = x;
 		#end
@@ -1740,8 +1736,6 @@ class IntIntHashTable implements Map<Int, Int>
 	{
 		#if (flash && alchemy)
 		return mNext.get(i);
-		//#elseif cpp
-		//return untyped mNext._unsafemGet(i);
 		#else
 		return mNext[i];
 		#end
@@ -1750,8 +1744,6 @@ class IntIntHashTable implements Map<Int, Int>
 	{
 		#if (flash && alchemy)
 		mNext.set(i, x);
-		//#elseif cpp
-		//untyped mNext._unsafemSet(i, x);
 		#else
 		mNext[i] = x;
 		#end
@@ -1761,8 +1753,6 @@ class IntIntHashTable implements Map<Int, Int>
 	{
 		#if (flash && alchemy)
 		return mData.get(i);
-		//#elseif cpp
-		//return untyped mData._unsafemGet(i);
 		#else
 		return mData[i];
 		#end
@@ -1771,8 +1761,6 @@ class IntIntHashTable implements Map<Int, Int>
 	{
 		#if (flash && alchemy)
 		mData.set(i, x);
-		//#elseif cpp
-		//untyped mData._unsafemSet(i, x);
 		#else
 		mData[i] = x;
 		#end
@@ -1839,8 +1827,6 @@ class IntIntHashTableValIterator implements de.polygonal.ds.Itr<Int>
 	{
 		#if (flash && alchemy)
 		return mData.get(i);
-		//#elseif cpp
-		//return untyped mData._unsafemGet(i);
 		#else
 		return mData[i];
 		#end
@@ -1905,8 +1891,6 @@ class IntIntHashTableKeyIterator implements de.polygonal.ds.Itr<Int>
 	{
 		#if (flash && alchemy)
 		return mData.get(i);
-		//#elseif cpp
-		//return untyped mData._unsafemGet(i);
 		#else
 		return mData[i];
 		#end
