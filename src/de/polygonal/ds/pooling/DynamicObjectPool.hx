@@ -295,7 +295,7 @@ class DynamicObjectPool<T>
 	}
 }
 
-#if (flash && generic)
+#if generic
 @:generic
 #end
 @:access(de.polygonal.ds.pooling.DynamicObjectPool)

@@ -31,7 +31,7 @@ import de.polygonal.ds.error.Assert.assert;
 	
 	_<o>Worst-case running time in Big O notation</o>_
 **/
-#if (flash && generic)
+#if generic
 @:generic
 #end
 class ArrayedQueue<T> implements Queue<T>
@@ -698,7 +698,7 @@ class ArrayedQueue<T> implements Queue<T>
 	inline function _set(i:Int, x:T) mData[i] = x;
 }
 
-#if (flash && generic)
+#if generic
 @:generic
 #end
 @:access(de.polygonal.ds.ArrayedQueue)

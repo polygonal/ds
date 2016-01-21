@@ -25,7 +25,7 @@ import de.polygonal.ds.error.Assert.assert;
 	
 	_<o>Worst-case running time in Big O notation</o>_
 **/
-#if (flash && generic)
+#if generic
 @:generic
 #end
 class Array3<T> implements Collection<T>
@@ -733,7 +733,7 @@ class Array3<T> implements Collection<T>
 	inline function _set(i:Int, x:T) mData[i] = x;
 }
 
-#if (flash && generic)
+#if generic
 @:generic
 #end
 @:access(de.polygonal.ds.Array3)

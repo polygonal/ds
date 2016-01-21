@@ -29,7 +29,7 @@ import de.polygonal.ds.error.Assert.assert;
 	
 	_<o>Worst-case running time in Big O notation</o>_
 **/
-#if (flash && generic)
+#if generic
 @:generic
 #end
 class HashSet<T:Hashable> implements Set<T>
@@ -616,7 +616,7 @@ class HashSet<T:Hashable> implements Set<T>
 	}
 }
 
-#if (flash && generic)
+#if generic
 @:generic
 #end
 @:access(de.polygonal.ds.HashSet)

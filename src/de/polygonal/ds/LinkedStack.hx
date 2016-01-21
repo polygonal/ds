@@ -29,7 +29,7 @@ import de.polygonal.ds.error.Assert.assert;
 	
 	_<o>Worst-case running time in Big O notation</o>_
 **/
-#if (flash && generic)
+#if generic
 @:generic
 #end
 class LinkedStack<T> implements Stack<T>
@@ -830,7 +830,7 @@ class LinkedStack<T> implements Stack<T>
 	}
 }
 
-#if (flash && generic)
+#if generic
 @:generic
 #end
 @:dox(hide)
@@ -850,7 +850,7 @@ class LinkedStackNode<T>
 	}
 }
 
-#if (flash && generic)
+#if generic
 @:generic
 #end
 @:access(de.polygonal.ds.LinkedStack)

@@ -27,7 +27,7 @@ import de.polygonal.ds.error.Assert.assert;
 	
 	_<o>Worst-case running time in Big O notation</o>_
 **/
-#if (flash && generic)
+#if generic
 @:generic
 #end
 class GraphNode<T> implements Hashable
@@ -289,7 +289,7 @@ class GraphNode<T> implements Hashable
 	}
 }
 
-#if (flash && generic)
+#if generic
 @:generic
 #end
 @:dox(hide)

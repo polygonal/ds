@@ -31,7 +31,7 @@ import de.polygonal.ds.error.Assert.assert;
 	
 	<o>Amortized running time in Big O notation</o>
 **/
-#if (flash && generic)
+#if generic
 @:generic
 #end
 class IntHashTable<T> implements Map<Int, T>
@@ -890,7 +890,7 @@ class IntHashTable<T> implements Map<Int, T>
 	}
 }
 
-#if (flash && generic)
+#if generic
 @:generic
 #end
 @:access(de.polygonal.ds.IntHashTable)

@@ -29,7 +29,7 @@ import de.polygonal.ds.error.Assert.assert;
 	
 	_<o>Worst-case running time in Big O notation</o>_
 **/
-#if (flash && generic)
+#if generic
 @:generic
 #end
 class Graph<T> implements Collection<T>
@@ -1391,7 +1391,7 @@ class Graph<T> implements Collection<T>
 	}
 }
 
-#if (flash && generic)
+#if generic
 @:generic
 #end
 @:access(de.polygonal.ds.Graph)
@@ -1431,7 +1431,7 @@ class GraphIterator<T> implements de.polygonal.ds.Itr<T>
 	}
 }
 
-#if (flash && generic)
+#if generic
 @:generic
 #end
 @:access(de.polygonal.ds.Graph)
@@ -1471,7 +1471,7 @@ class GraphNodeIterator<T> implements de.polygonal.ds.Itr<GraphNode<T>>
 	}
 }
 
-#if (flash && generic)
+#if generic
 @:generic
 #end
 @:access(de.polygonal.ds.Graph)

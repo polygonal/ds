@@ -25,7 +25,7 @@ import de.polygonal.ds.error.Assert.assert;
 	
 	_<o>Worst-case running time in Big O notation</o>_
 **/
-#if (flash && generic)
+#if generic
 @:generic
 #end
 class Da<T> implements Collection<T>
@@ -1044,7 +1044,7 @@ class Da<T> implements Collection<T>
 }
 
 @:access(de.polygonal.ds.Da)
-#if (flash && generic)
+#if generic
 @:generic
 #end
 @:dox(hide)

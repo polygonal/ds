@@ -25,7 +25,7 @@ import de.polygonal.ds.error.Assert.assert;
 	
 	See <a href="http://lab.polygonal.de/2008/06/18/using-object-pools/" target="mBlank">http://lab.polygonal.de/2008/06/18/using-object-pools/</a>.
 **/
-#if (flash && generic)
+#if generic
 @:generic
 #end
 class LinkedObjectPool<T> implements Hashable
@@ -364,7 +364,7 @@ class LinkedObjectPool<T> implements Hashable
 	}
 }
 
-#if (flash && generic)
+#if generic
 @:generic
 #end
 @:dox(hide)

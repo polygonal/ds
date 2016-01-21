@@ -29,7 +29,7 @@ import de.polygonal.ds.error.Assert.assert;
 	
 	_<o>Worst-case running time in Big O notation</o>_
 **/
-#if (flash && generic)
+#if generic
 @:generic
 #end
 class ArrayedStack<T> implements Stack<T>
@@ -740,7 +740,7 @@ class ArrayedStack<T> implements Stack<T>
 	inline function _cpy(i:Int, j:Int) mData[i] = mData[j];
 }
 
-#if (flash && generic)
+#if generic
 @:generic
 #end
 @:access(de.polygonal.ds.ArrayedStack)

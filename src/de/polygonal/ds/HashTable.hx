@@ -31,7 +31,7 @@ import de.polygonal.ds.error.Assert.assert;
 	
 	_<o>Worst-case running time in Big O notation</o>_
 **/
-#if (flash && generic)
+#if generic
 @:generic
 #end
 class HashTable<K:Hashable, T> implements Map<K, T>
@@ -837,7 +837,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	}
 }
 
-#if (flash && generic)
+#if generic
 @:generic
 #end
 @:access(de.polygonal.ds.HashTable)
@@ -886,7 +886,7 @@ class HashTableKeyIterator<K:Hashable, T> implements de.polygonal.ds.Itr<K>
 	}
 }
 
-#if (flash && generic)
+#if generic
 @:generic
 #end
 @:access(de.polygonal.ds.HashTable)
