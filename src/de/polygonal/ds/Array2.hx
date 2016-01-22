@@ -91,7 +91,7 @@ class Array2<T> implements Collection<T>
 		<assert>`cell` is null</assert>
 		<assert>`x`/`y` out of range</assert>
 	**/
-	inline public function getAt(cell:Array2Cell):T
+	inline public function getAtCell(cell:Array2Cell):T
 	{
 		assert(cell != null, "cell is null");
 		
@@ -129,7 +129,7 @@ class Array2<T> implements Collection<T>
 		<assert>`cell` is null</assert>
 		<assert>`x`/`y` out of range</assert>
 	**/
-	inline public function setAt(cell:Array2Cell, val:T)
+	inline public function setAtCell(cell:Array2Cell, val:T)
 	{
 		assert(cell != null, "cell is null");
 		
