@@ -504,7 +504,7 @@ class Array3<T> implements Collection<T>
 		Useful for fast iteration or low-level operations.
 		<o>1</o>
 	**/
-	inline public function getVector():Vector<T>
+	inline public function getStorage():Vector<T>
 	{
 		return mData;
 	}
