@@ -1,5 +1,4 @@
-﻿import de.polygonal.ds.Da;
-import de.polygonal.ds.Heap;
+﻿import de.polygonal.ds.Heap;
 
 @:access(de.polygonal.ds.Heap)
 class TestHeap extends AbstractTest
@@ -308,7 +307,7 @@ class TestHeap extends AbstractTest
 	
 	function testRemove4()
 	{
-		var toRemove = new Da<E2>();
+		var toRemove = new Array<E2>();
 		
 		var i:Int;
 		
@@ -319,7 +318,7 @@ class TestHeap extends AbstractTest
 		for (i in 0...10000)
 		{
 			var item = new E2(Math.random() * 1000);
-			if (Math.random() < 0.05) toRemove.pushBack(item);
+			if (Math.random() < 0.05) toRemove.push(item);
 			heap.add(item);
 		}
 		
@@ -337,9 +336,9 @@ class TestHeap extends AbstractTest
 			var removed = false;
 			if (Math.random() > 0.015)
 			{
-				if(toRemove.size()>0) 
+				if(toRemove.length > 0) 
 				{
-					rem = toRemove.popBack();
+					rem = toRemove.pop();
 					if (heap.contains(rem))
 						heap.remove(rem);
 				}

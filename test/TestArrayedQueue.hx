@@ -1,7 +1,7 @@
 ﻿import de.polygonal.ds.ArrayedQueue;
+import de.polygonal.ds.Container;
 import de.polygonal.ds.ListSet;
 import de.polygonal.ds.Queue;
-import de.polygonal.ds.Vector;
 
 @:access(de.polygonal.ds.ArrayedQueue)
 class TestArrayedQueue extends AbstractTest
@@ -125,6 +125,7 @@ class TestArrayedQueue extends AbstractTest
 		assertEquals(2, q.getCapacity());
 	}
 	
+	@:access(de.polygonal.ds.ArrayedQueue)
 	function testDispose()
 	{
 		var q = new ArrayedQueue<Int>(16);
@@ -135,7 +136,7 @@ class TestArrayedQueue extends AbstractTest
 			q.dispose();
 		}
 		
-		var a:Vector<Int> = untyped q.mData;
+		var a:Container<Int> = q.mData;
 		
 		for (i in 0...16) assertEquals(isDynamic() ? null : 0, a[i]);
 		
@@ -150,7 +151,7 @@ class TestArrayedQueue extends AbstractTest
 			q.dequeue();
 			q.dispose();
 		}
-		var a:Vector<Int> = untyped q.mData;
+		var a:Container<Int> = q.mData;
 		for (i in 0...16)
 			assertEquals(isDynamic() ? null : 0, a[i]);
 	}

@@ -6,41 +6,12 @@ import de.polygonal.ds.ListSet;
 @:access(de.polygonal.ds.Da)
 class TestDa extends AbstractTest
 {
-	function testGetSet()
-	{
-		var a = new Da<Int>();
-		for (i in 0...100) a.set(i, i);
-		assertEquals(100, a.size());
-		var l = new Da<Int>();
-		var x = 0;
-		l.pushBack(x);
-		assertEquals(x, l.get(0));
-		assertEquals(1, l.size());
-	}
-	
 	function testConvert()
 	{
 		var a = ArrayConvert.toDa([0, 1, 2, 3]);
 		assertEquals(a.size(), 4);
 		for (x in 0...4)
 			assertEquals(x, a.get(x));
-	}
-	
-	function testSwap()
-	{
-		var l = new Da<Int>();
-		l.pushBack(0);
-		l.pushBack(1);
-		l.swap(0, 1);
-		assertEquals(1, l.get(0));
-		assertEquals(0, l.get(1));
-		
-		var l = new Da<Int>();
-		l.pushBack(0);
-		l.pushBack(1);
-		l.swap(0, 1);
-		assertEquals(1, l.front());
-		assertEquals(0, l.back());
 	}
 	
 	function testSortRange()
@@ -330,16 +301,6 @@ class TestDa extends AbstractTest
 		for (i in 15...20) assertEquals(i, l.get(i));
 	}
 	
-	function testCopy()
-	{
-		var l = new Da<Int>();
-		l.pushBack(0);
-		l.pushBack(1);
-		l.copy(0, 1);
-		assertEquals(1, l.front());
-		assertEquals(1, l.back());
-	}
-	
 	#if debug
 	function testGetOutOfBound()
 	{
@@ -448,34 +409,6 @@ class TestDa extends AbstractTest
 		}
 	}
 	#end
-	
-	function testFront()
-	{
-		var l = new Da<Int>();
-		
-		#if debug
-		var fail = false;
-		try
-		{
-			l.front();
-		}
-		catch (unknown:Dynamic)
-		{
-			fail = true;
-		}
-		assertTrue(fail);
-		#end
-		
-		l.pushBack(0);
-		assertEquals(0, l.front());
-		assertEquals(1, l.size());
-		
-		l.pushBack(1);
-		assertEquals(0, l.front());
-		
-		l.insertAt(0, 1);
-		assertEquals(1, l.front());
-	}
 	
 	function testPopBack()
 	{
@@ -642,68 +575,7 @@ class TestDa extends AbstractTest
 		assertEquals(0, l.size());
 	}
 	
-	function testInsert()
-	{
-		var l = new Da<Int>();
-		l.insertAt(0, 0);
-		
-		assertEquals(1, l.size());
-		
-		var l = new Da<Int>();
-		for (i in 0...3) l.pushBack(i);
-		assertEquals(3, l.size());
-		
-		l.insertAt(0, 5);
-		assertEquals(4, l.size());
-		
-		assertEquals(5, l.get(0));
-		assertEquals(0, l.get(1));
-		assertEquals(1, l.get(2));
-		assertEquals(2, l.get(3));
-		
-		var l = new Da<Int>();
-		for (i in 0...3) l.pushBack(i);
-		assertEquals(3, l.size());
-		
-		l.insertAt(1, 5);
-		assertEquals(4, l.size());
-		
-		assertEquals(0, l.get(0));
-		assertEquals(5, l.get(1));
-		assertEquals(1, l.get(2));
-		assertEquals(2, l.get(3));
-		
-		var l = new Da<Int>();
-		for (i in 0...3) l.pushBack(i);
-		assertEquals(3, l.size());
-		
-		l.insertAt(2, 5);
-		assertEquals(4, l.size());
-		
-		assertEquals(0, l.get(0));
-		assertEquals(1, l.get(1));
-		assertEquals(5, l.get(2));
-		assertEquals(2, l.get(3));
-		
-		var l = new Da<Int>();
-		for (i in 0...3) l.pushBack(i);
-		assertEquals(3, l.size());
-		
-		l.insertAt(3, 5);
-		assertEquals(4, l.size());
-		
-		assertEquals(0, l.get(0));
-		assertEquals(1, l.get(1));
-		assertEquals(2, l.get(2));
-		assertEquals(5, l.get(3));
-		
-		var l = new Da<Int>();
-		l.insertAt(0, 0);
-		l.insertAt(1, 1);
-		
-		assertEquals(0, l.get(0));
-		assertEquals(1, l.get(1));
-	}
+	
 	
 	function testClone()
 	{
@@ -718,30 +590,7 @@ class TestDa extends AbstractTest
 			assertEquals(i, copy.get(i));
 	}
 	
-	function testRemoveAt()
-	{
-		var l = new Da<Int>();
-		for (i in 0...3) l.pushBack(i);
-		
-		for (i in 0...3)
-		{
-			assertEquals(i, l.removeAt(0));
-			assertEquals(3 - i - 1, l.size());
-		}
-		assertEquals(0, l.size());
-		
-		for (i in 0...3) l.pushBack(i);
-		
-		var size = 3;
-		while (l.size() > 0)
-		{
-			l.removeAt(l.size() - 1);
-			size--;
-			assertEquals(size, l.size());
-		}
-		
-		assertEquals(0, l.size());
-	}
+	
 	
 	function testRemove()
 	{

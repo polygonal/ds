@@ -1,5 +1,4 @@
 ﻿import de.polygonal.ds.ArrayUtil;
-import de.polygonal.ds.Da;
 import de.polygonal.ds.Dll;
 import de.polygonal.ds.HashableItem;
 import de.polygonal.ds.HashTable;
@@ -473,24 +472,24 @@ class TestHashTable extends AbstractTest
 		
 		var K = [17, 25, 10, 2, 8, 24, 30, 3];
 		
-		var items = new Da<E>();
-		var keys = new Da<Int>();
+		var items = new Array<E>();
+		var keys = new Array<Int>();
 		for (i in 0...K.length)
 		{
-			keys.pushBack(K[i]);
+			keys.push(K[i]);
 			
 			var item = new E(i);
 			item.key = K[i];
-			items.pushBack(item);
+			items.push(item);
 		}
 		
-		for (i in 0...items.size())
-			h.set(items.get(i), i);
+		for (i in 0...items.length)
+			h.set(items[i], i);
 		
-		items.shuffle();
+		ArrayUtil.shuffle(items);
 		
-		for (i in 0...items.size())
-			assertTrue(h.clr(items.get(i)));
+		for (i in 0...items.length)
+			assertTrue(h.clr(items[i]));
 	}
 	
 	function testInsertRemoveRandom2()
@@ -501,29 +500,29 @@ class TestHashTable extends AbstractTest
 		
 		for (i in 0...100)
 		{
-			var items = new Da<E>();
-			var keys = new Da<Int>();
+			var items = new Array<E>();
+			var keys = new Array<Int>();
 			for (i in 0...8)
 			{
 				var x = Std.int(prand()) & (64 - 1);
-				while (keys.contains(x)) x = Std.int(prand()) % 64;
-				keys.pushBack(x);
+				while (contains(keys, x)) x = Std.int(prand()) % 64;
+				keys.push(x);
 				
 				var item = new E(i);
 				item.key = x;
 				
-				items.pushBack(item);
+				items.push(item);
 			}
 			
-			for (i in 0...keys.size())
-				h.set(items.get(i), i);
+			for (i in 0...keys.length)
+				h.set(items[i], i);
 			
-			items.shuffle();
+			ArrayUtil.shuffle(items);
 			
-			for (i in 0...keys.size())
-				assertTrue(h.clr(items.get(i)));
+			for (i in 0...keys.length)
+				assertTrue(h.clr(items[i]));
 			
-			items.shuffle();
+			ArrayUtil.shuffle(items);
 		}
 	}
 	
@@ -537,32 +536,32 @@ class TestHashTable extends AbstractTest
 		for (i in 0...100)
 		{
 			j++;
-			var items = new Da<E>();
-			var keys = new Da<Int>();
+			var items = new Array<E>();
+			var keys = new Array<Int>();
 			for (i in 0...8)
 			{
 				var x = Std.int(prand()) & (64 - 1);
-				while (keys.contains(x)) x = Std.int(prand()) % 64;
-				keys.pushBack(x);
+				while (contains(keys, x)) x = Std.int(prand()) % 64;
+				keys.push(x);
 				
 				var item = new E(i);
 				item.key = x;
 				
-				items.pushBack(item);
+				items.push(item);
 			}
 			
-			for (i in 0...keys.size())
-				h.set(items.get(i), i);
+			for (i in 0...keys.length)
+				h.set(items[i], i);
 			
-			items.shuffle();
+			ArrayUtil.shuffle(items);
 			
-			for (i in 0...keys.size())
-				assertTrue(h.get(items.get(i)) != IntIntHashTable.KEY_ABSENT);
+			for (i in 0...keys.length)
+				assertTrue(h.get(items[i]) != IntIntHashTable.KEY_ABSENT);
 			
-			items.shuffle();
+			ArrayUtil.shuffle(items);
 			
-			for (i in 0...keys.size())
-				assertTrue(h.clr(items.get(i)));
+			for (i in 0...keys.length)
+				assertTrue(h.clr(items[i]));
 		}
 		
 		assertEquals(100, j);
@@ -699,11 +698,11 @@ class TestHashTable extends AbstractTest
 	
 	function testToArray()
 	{
-		var items = new Da<E>();
-		for (i in 0...8) items.pushBack(new E(i));
+		var items = new Array<E>();
+		for (i in 0...8) items.push(new E(i));
 		
 		var h = new HashTable<E, Null<Int>>(8);
-		for (i in 0...8) h.set(items.get(i), i);
+		for (i in 0...8) h.set(items[i], i);
 		
 		var a = h.toArray();
 		
@@ -767,13 +766,13 @@ class TestHashTable extends AbstractTest
 	
 	function testToKeyArrayOrVector()
 	{
-		var items = new Da<E>();
-		for (i in 0...8) items.pushBack(new E(i));
+		var items = new Array<E>();
+		for (i in 0...8) items.push(new E(i));
 		
-		var tmp:Da<E> = cast items.clone(true);
+		var tmp =items.copy();
 		
 		var h = new HashTable<E, Null<Int>>(8);
-		for (i in 0...8) h.set(items.get(i), i * 10);
+		for (i in 0...8) h.set(items[i], i * 10);
 		
 		var a = h.toKeyArray();
 		assertEquals(8, a.length);
@@ -781,7 +780,7 @@ class TestHashTable extends AbstractTest
 		{
 			for (j in 0...8)
 			{
-				if (items.get(j) == i)
+				if (items[j] == i)
 				{
 					items.remove(i);
 					break;
@@ -789,14 +788,14 @@ class TestHashTable extends AbstractTest
 			}
 		}
 		
-		assertEquals(0, items.size());
+		assertEquals(0, items.length);
 		items = tmp;
 		var a = h.toKeyVector();
 		for (i in a)
 		{
 			for (j in 0...8)
 			{
-				if (items.get(j) == i)
+				if (items[j] == i)
 				{
 					items.remove(i);
 					break;
@@ -804,7 +803,7 @@ class TestHashTable extends AbstractTest
 			}
 		}
 		
-		assertEquals(0, items.size());
+		assertEquals(0, items.length);
 	}
 	
 	function testClear()
@@ -874,17 +873,17 @@ class TestHashTable extends AbstractTest
 		
 		for (i in 0...8) h.set(items[i], i * 10);
 		
-		var set = new Da<Int>();
+		var set = new Array<Int>();
 		var i = 0;
 		for (val in h)
 		{
-			assertFalse(set.contains(val));
-			set.pushBack(val);
+			assertFalse(contains(set, val));
+			set.push(val);
 		}
 		
-		assertEquals(8, set.size());
+		assertEquals(8, set.length);
 		
-		for (i in 0...8) assertTrue(set.contains(i * 10));
+		for (i in 0...8) assertTrue(contains(set, i * 10));
 		
 		var h = new HashTable<E, Null<Int>>(8);
 		var c = 0;
@@ -896,7 +895,7 @@ class TestHashTable extends AbstractTest
 		var h = new HashTable<E, Null<Int>>(8);
 		for (i in 0...8) h.set(items[i], i * 10);
 		
-		var set = new Da<Int>();
+		var set = new Array<Int>();
 		var i = 0;
 		
 		var itr = h.iterator();
@@ -904,12 +903,12 @@ class TestHashTable extends AbstractTest
 		{
 			itr.hasNext();
 			var val = itr.next();
-			assertFalse(set.contains(val));
-			set.pushBack(val);
+			assertFalse(contains(set, val));
+			set.push(val);
 		}
 		
-		assertEquals(8, set.size());
-		for (i in 0...8) assertTrue(set.contains(i * 10));
+		assertEquals(8, set.length);
+		for (i in 0...8) assertTrue(contains(set, i * 10));
 		
 		var h = new HashTable<E, Null<Int>>(8);
 		var c = 0;
@@ -931,17 +930,17 @@ class TestHashTable extends AbstractTest
 		
 		for (i in 0...8) h.set(items[i], i * 10);
 		
-		var set = new Da<E>();
+		var set = new Array<E>();
 		var i = 0;
 		for (key in h.keys())
 		{
-			assertFalse(set.contains(key));
-			set.pushBack(key);
+			assertFalse(contains(set, key));
+			set.push(key);
 		}
 		
-		assertEquals(8, set.size());
+		assertEquals(8, set.length);
 		
-		for (i in 0...8) assertTrue(set.contains(items[i]));
+		for (i in 0...8) assertTrue(contains(set, items[i]));
 		
 		var h = new HashTable<E, Null<Int>>(8);
 		var c = 0;
@@ -952,19 +951,19 @@ class TestHashTable extends AbstractTest
 		var h = new HashTable<E, Null<Int>>(8);
 		for (i in 0...8) h.set(items[i], i * 10);
 		
-		var set = new Da<E>();
+		var set = new Array<E>();
 		var i = 0;
 		var itr = h.keys();
 		while (itr.hasNext())
 		{
 			itr.hasNext();
 			var key = itr.next();
-			assertFalse(set.contains(key));
-			set.pushBack(key);
+			assertFalse(contains(set, key));
+			set.push(key);
 		}
 		
-		assertEquals(8, set.size());
-		for (i in 0...8) assertTrue(set.contains(items[i]));
+		assertEquals(8, set.length);
+		for (i in 0...8) assertTrue(contains(set, items[i]));
 		
 		var h = new HashTable<E, Null<Int>>(8);
 		var c = 0;

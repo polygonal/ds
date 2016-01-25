@@ -1,4 +1,4 @@
-﻿import de.polygonal.ds.Da;
+﻿import de.polygonal.ds.ArrayUtil;
 import de.polygonal.ds.Dll;
 import de.polygonal.ds.IntHashSet;
 
@@ -256,22 +256,22 @@ class TestIntHashSet extends AbstractTest
 		
 		var K = [17, 25, 10, 2, 8, 24, 30, 3];
 		
-		var keys = new Da<Int>();
+		var keys = new Array<Int>();
 		for (i in 0...K.length)
 		{
-			keys.pushBack(K[i]);
+			keys.push(K[i]);
 		}
 		
-		for (i in 0...keys.size())
+		for (i in 0...keys.length)
 		{
-			h.set(keys.get(i));
+			h.set(keys[i]);
 		}
 		
-		keys.shuffle();
+		ArrayUtil.shuffle(keys);
 		
-		for (i in 0...keys.size())
+		for (i in 0...keys.length)
 		{
-			assertTrue(h.remove(keys.get(i)));
+			assertTrue(h.remove(keys[i]));
 		}
 	}
 	
@@ -283,27 +283,27 @@ class TestIntHashSet extends AbstractTest
 		
 		for (i in 0...100)
 		{
-			var keys = new Da<Int>();
+			var keys = new Array<Int>();
 			for (i in 0...8)
 			{
 				var x = Std.int(prand()) % 64;
-				while (keys.contains(x)) x = Std.int(prand()) % 64;
-				keys.pushBack(x);
+				while (contains(keys, x)) x = Std.int(prand()) % 64;
+				keys.push(x);
 			}
-			for (i in 0...keys.size())
+			for (i in 0...keys.length)
 			{
-				h.set(keys.get(i));
+				h.set(keys[i]);
 			}
-			for (i in 0...keys.size())
+			for (i in 0...keys.length)
 			{
-				assertTrue(h.has(keys.get(i)));
+				assertTrue(h.has(keys[i]));
 			}
 			
-			keys.shuffle();
+			ArrayUtil.shuffle(keys);
 			
-			for (i in 0...keys.size())
+			for (i in 0...keys.length)
 			{
-				assertTrue(h.remove(keys.get(i)));
+				assertTrue(h.remove(keys[i]));
 			}
 		}
 	}
@@ -318,29 +318,29 @@ class TestIntHashSet extends AbstractTest
 		for (i in 0...100)
 		{
 			j++;
-			var keys = new Da<Int>();
+			var keys = new Array<Int>();
 			for (i in 0...8)
 			{
 				var x = Std.int(prand()) & (64 - 1);
-				while (keys.contains(x)) x = Std.int(prand()) % 64;
+				while (contains(keys, x)) x = Std.int(prand()) % 64;
 				
-				keys.pushBack(x);
+				keys.push(x);
 			}
 			
-			for (i in 0...keys.size())
+			for (i in 0...keys.length)
 			{
-				h.set(keys.get(i));
+				h.set(keys[i]);
 			}
 			
-			keys.shuffle();
+			ArrayUtil.shuffle(keys);
 			
-			for (i in 0...keys.size())
-				assertTrue(h.has(keys.get(i)));
+			for (i in 0...keys.length)
+				assertTrue(h.has(keys[i]));
 			
-			keys.shuffle();
+			ArrayUtil.shuffle(keys);
 			
-			for (i in 0...keys.size())
-				assertTrue(h.remove(keys.get(i)));
+			for (i in 0...keys.length)
+				assertTrue(h.remove(keys[i]));
 		}
 		
 		assertEquals(100, j);
@@ -603,20 +603,19 @@ class TestIntHashSet extends AbstractTest
 		var h = new IntHashSet(8);
 		for (i in 0...8) h.set(i);
 		
-		var a = new Da<Int>();
+		var a = new Array<Int>();
 		
 		for (key in h)
 		{
-			assertFalse(a.contains(key));
-			
-			a.pushBack(key);
+			assertFalse(contains(a, key));
+			a.push(key);
 		}
 		
-		assertEquals(8, a.size());
+		assertEquals(8, a.length);
 		
 		for (i in 0...8)
 		{
-			a.contains(i);
+			contains(a, i);
 		}
 		
 		var h = new IntHashSet(8);
@@ -631,19 +630,18 @@ class TestIntHashSet extends AbstractTest
 		var h = new IntHashSet(8);
 		for (i in 0...8) h.set(i);
 		
-		var a = new Da<Int>();
+		var a = new Array<Int>();
 		var itr = h.iterator();
 		while (itr.hasNext())
 		{
 			itr.hasNext();
 			var key = itr.next();
-			assertFalse(a.contains(key));
-			a.pushBack(key);
+			assertFalse(contains(a, key));
+			a.push(key);
 		}
-		assertEquals(8, a.size());
+		assertEquals(8, a.length);
 		
-		for (i in 0...8)
-			a.contains(i);
+		for (i in 0...8) contains(a, i);
 		
 		var h = new IntHashSet(8);
 		var c = 0;

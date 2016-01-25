@@ -136,7 +136,7 @@ class TestArray3 extends AbstractTest
 			itr.next();
 			itr.remove();
 		}
-		var arr = a.getVector();
+		var arr = a.getStorage();
 		for (i in arr)
 			assertEquals(i, null);
 	}

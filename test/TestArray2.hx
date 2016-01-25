@@ -2,7 +2,6 @@
 import de.polygonal.ds.ArrayConvert;
 import de.polygonal.ds.ListSet;
 import de.polygonal.ds.Set;
-import de.polygonal.ds.Vector;
 
 class TestArray2 extends AbstractTest
 {
@@ -41,7 +40,7 @@ class TestArray2 extends AbstractTest
 	{
 		var a = new Array2<Int>(10, 10);
 		assertEquals(-1, a.indexOf(1));
-		a.set( 0, 9, 1);
+		a.set(0, 9, 1);
 		assertEquals(100 - 10, a.indexOf(1));
 	}
 	
@@ -506,8 +505,7 @@ class TestArray2 extends AbstractTest
 			itr.remove();
 		}
 		
-		var arr = a.getVector();
-		for (i in arr)
+		for (i in a)
 			assertEquals(i, null);
 	}
 	
