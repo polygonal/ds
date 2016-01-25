@@ -189,7 +189,7 @@ class Array3<T> implements Collection<T>
 		The index is in the range [0, ``size()`` - 1].
 		<o>n</o>
 	**/
-	inline public function indexOf(x:T):Int
+	public function indexOf(x:T):Int
 	{
 		var i = 0;
 		var j = size();
@@ -326,7 +326,7 @@ class Array3<T> implements Collection<T>
 		<assert>`output` is null</assert>
 		@return a reference to the `output` array.
 	**/
-	inline public function getCol(z:Int, x:Int, output:Array<T>):Array<T>
+	public function getCol(z:Int, x:Int, output:Array<T>):Array<T>
 	{
 		assert(x >= 0 && x < getW(), 'x index out of range (${x})');
 		assert(z >= 0 && z < getD(), 'z index out of range (${z})');
@@ -361,7 +361,7 @@ class Array3<T> implements Collection<T>
 		<assert>`output` is null</assert>
 		@return a reference to the `output` array.
 	**/
-	inline public function getPile(x:Int, y:Int, output:Array<T>):Array<T>
+	public function getPile(x:Int, y:Int, output:Array<T>):Array<T>
 	{
 		assert(x >= 0 && x < getW(), 'x index out of range ($x)');
 		assert(y >= 0 && y < getH(), 'y index out of range ($y)');

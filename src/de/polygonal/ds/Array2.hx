@@ -205,7 +205,7 @@ class Array2<T> implements Collection<T>
 		The index is in the range [0, ``size()`` - 1].
 		<o>n</o>
 	**/
-	inline public function indexOf(x:T):Int
+	public function indexOf(x:T):Int
 	{
 		var i = 0;
 		var j = mW * mH;
@@ -284,7 +284,7 @@ class Array2<T> implements Collection<T>
 		<assert>`output` is null</assert>
 		@return a reference to the `output` array.
 	**/
-	inline public function getRow(y:Int, output:Array<T>):Array<T>
+	public function getRow(y:Int, output:Array<T>):Array<T>
 	{
 		assert(y >= 0 && y < getH(), 'y index out of range ($y)');
 		assert(output != null, "output is null");
