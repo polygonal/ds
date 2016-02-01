@@ -88,9 +88,9 @@ interface Collection<T> extends Hashable
 	function toArray():Array<T>;
 	
 	/**
-		Returns a `Vector<T>` object storing all elements in this collection.
+		Returns the inner `Container<T>` storing all elements in this collection.
 	**/
-	function toVector():Vector<T>;
+	function toVector():Container<T>;
 	
 	/**
 		Duplicates this collection. Supports shallow (structure only) and deep copies (structure & elements).

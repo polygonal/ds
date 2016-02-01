@@ -24,6 +24,8 @@ import de.polygonal.ds.mem.IntMemory;
 
 import de.polygonal.ds.error.Assert.assert;
 
+using de.polygonal.ds.tools.NativeArray;
+
 /**
 	An array hash table for mapping Hashable keys to generic elements
 	
@@ -54,22 +56,57 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	**/
 	public var reuseIterator:Bool;
 	
-	var mH:IntIntHashTable;
+	/**
+		The size of the allocated storage space for the key/value pairs.
+		
+		If more space is required to accomodate new elements, ``capacity`` is doubled every time ``size()`` grows beyond capacity, and split in half when ``size()`` is a quarter of capacity.
+		
+		The capacity never falls below the initial size defined in the constructor.
+	**/
+	public var capacity(get, never):Int;
+	inline function get_capacity():Int
+	{
+		return mH.capacity;
+	}
 	
-	var mKeys:Vector<K>;
-	var mVals:Vector<T>;
+	/**
+		The load factor measure the "denseness" of a hash table and is proportional to the time cost to look up an entry.
+		
+		E.g. assuming that the keys are perfectly distributed, a load factor of 4.0 indicates that each slot stores 4 keys, which have to be sequentially searched in order to find a value.
+		
+		A high load factor thus indicates poor performance.
+		
+		If the load factor gets too high, additional slots can be allocated by calling ``rehash()``.
+	**/
+	public var loadFactor(get, never):Float;
+	function get_loadFactor():Float
+	{
+		return mH.loadFactor;
+	}
+	
+	/**
+		The total number of allocated slots.
+	**/
+	public var slotCount(get, never):Int;
+	inline function get_slotCount():Int
+	{
+		return mH.slotCount;
+	}
+	
+	var mH:IntIntHashTable;
+	var mKeys:Container<K>;
+	var mVals:Container<T>;
 	
 	#if alchemy
 	var mNext:IntMemory;
 	#else
-	var mNext:Vector<Int>;
+	var mNext:Container<Int>;
 	#end
 	
 	var mFree:Int;
-	var mSizeLevel:Int;
+	var mMinCapacity:Int;
 	var mIsResizable:Bool;
 	var mIterator:HashTableValIterator<K, T>;
-	
 	var mTmpArr:Array<Int>;
 	
 	/**
@@ -106,59 +143,26 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		
 		mIsResizable = isResizable;
 		
+		mMinCapacity = capacity;
+		
 		mH = new IntIntHashTable(slotCount, capacity, isResizable, maxSize);
-		mKeys = new Vector<K>(capacity);
-		mVals = new Vector<T>(capacity);
+		mKeys = NativeArray.init(capacity);
+		mVals = NativeArray.init(capacity);
 		
 		#if alchemy
 		mNext = new IntMemory(capacity, "HashTable.mNext");
 		#else
-		mNext = new Vector<Int>(capacity);
+		mNext = NativeArray.init(capacity);
 		#end
 		
 		for (i in 0...capacity - 1) setNext(i, i + 1);
 		setNext(capacity - 1, IntIntHashTable.NULL_POINTER);
 		mFree = 0;
-		mSizeLevel = 0;
 		mIterator = null;
 		mTmpArr = [];
 		
 		key = HashKey.next();
 		reuseIterator = false;
-	}
-	
-	/**
-		The load factor measure the "denseness" of a hash table and is proportional to the time cost to look up an entry.
-		
-		E.g. assuming that the keys are perfectly distributed, a load factor of 4.0 indicates that each slot stores 4 keys, which have to be sequentially searched in order to find a value.
-		
-		A high load factor thus indicates poor performance.
-		
-		If the load factor gets too high, additional slots can be allocated by calling ``rehash()``.
-	**/
-	inline public function getLoadFactor():Float
-	{
-		return mH.getLoadFactor();
-	}
-	
-	/**
-		The total number of allocated slots.
-	**/
-	inline public function getSlotCount():Int
-	{
-		return mH.getSlotCount();
-	}
-	
-	/**
-		The size of the allocated storage space for the key/value pairs.
-		
-		If more space is required to accomodate new elements, ``getCapacity()`` is doubled every time ``size()`` grows beyond capacity, and split in half when ``size()`` is a quarter of capacity.
-		
-		The capacity never falls below the initial size defined in the constructor.
-	**/
-	inline public function getCapacity():Int
-	{
-		return mH.getCapacity();
 	}
 	
 	/**
@@ -197,11 +201,11 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	**/
 	inline public function setIfAbsent(key:K, val:T):Bool
 	{
-		if ((size() == getCapacity()))
+		if ((size() == capacity))
 		{
 			if (mH.setIfAbsent(_key(key), size()))
 			{
-				expand(getCapacity() >> 1);
+				grow(capacity >> 1);
 				
 				mVals[mFree] = val;
 				mKeys[mFree] = key;
@@ -263,7 +267,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	{
 		var a:Array<K> = ArrayUtil.alloc(size());
 		var j = 0;
-		for (i in 0...getCapacity())
+		for (i in 0...capacity)
 		{
 			if (mKeys[i] != null)
 				a[j++] = mKeys[i];
@@ -275,14 +279,15 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		Creates and returns an unordered vector of all keys.
 		<o>n</o>
 	**/
-	public function toKeyVector():Vector<K>
+	public function toKeyVector():Container<K>
 	{
-		var a = new Vector<K>(size());
+		var src = mKeys;
+		var a = NativeArray.init(size());
 		var j = 0;
-		for (i in 0...getCapacity())
+		for (i in 0...capacity)
 		{
-			if (mKeys[i] != null)
-				a[j++] = mKeys[i];
+			if (src.get(i) != null)
+				a.set(j++, mKeys.get(i));
 		}
 		return a;
 	}
@@ -294,7 +299,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	**/
 	public function pack()
 	{
-		for (i in 0...getCapacity())
+		for (i in 0...capacity)
 			if (mKeys[i] != null) mVals[i] = cast null;
 	}
 	
@@ -334,7 +339,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	**/
 	public function toString():String
 	{
-		var s = Printf.format("{ HashTable size/capacity: %d/%d, load factor: %.2f }", [size(), getCapacity(), getLoadFactor()]);
+		var s = Printf.format("{ HashTable size/capacity: %d/%d, load factor: %.2f }", [size(), capacity, loadFactor]);
 		if (isEmpty()) return s;
 		s += "\n[\n";
 		
@@ -359,7 +364,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	public function has(val:T):Bool
 	{
 		var exists = false;
-		for (i in 0...getCapacity())
+		for (i in 0...capacity)
 		{
 			if (mKeys[i] != null)
 			{
@@ -430,8 +435,8 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	**/
 	inline public function set(key:K, val:T):Bool
 	{
-		if (size() == getCapacity())
-			expand(getCapacity());
+		if (size() == capacity)
+			grow(capacity);
 		
 		var first = mH.set(_key(key), mFree);
 		mVals[mFree] = val;
@@ -462,10 +467,8 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 			
 			var doShrink = false;
 			
-			if (mSizeLevel > 0)
-				if (size() - 1 == (getCapacity() >> 2))
-					if (mIsResizable)
-						doShrink = true;
+			if (size() - 1 == (capacity >> 2) && capacity > mMinCapacity && mIsResizable)
+				doShrink = true;
 			
 			mH.clr(_key(key));
 			
@@ -482,7 +485,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	public function toValSet():Set<T>
 	{
 		var s = new ListSet<T>();
-		for (i in 0...getCapacity())
+		for (i in 0...capacity)
 		{
 			if (mKeys[i] != null)
 				s.set(mVals[i]);
@@ -498,7 +501,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	public function toKeySet():Set<K>
 	{
 		var s = new ListSet<K>();
-		for (i in 0...getCapacity())
+		for (i in 0...capacity)
 		{
 			if (mKeys[i] != null)
 				s.set(mKeys[i]);
@@ -569,7 +572,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	{
 		var found = false;
 		var tmp = new Array<K>();
-		for (i in 0...getCapacity())
+		for (i in 0...capacity)
 		{
 			if (mKeys[i] != null)
 			{
@@ -598,21 +601,21 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	public function clear(purge = false)
 	{
 		mH.clear(purge);
-		for (i in 0...getCapacity()) mKeys[i] = null;
+		for (i in 0...capacity) mKeys[i] = null;
 		
 		if (purge)
 		{
-			for (i in 0...getCapacity())
+			for (i in 0...capacity)
 			{
 				mVals[i] = cast null;
 				mKeys[i] = null;
 			}
 			
-			while (mSizeLevel > 0) shrink();
+			while (capacity > mMinCapacity) shrink();
 		}
 		
-		for (i in 0...getCapacity() - 1) setNext(i, i + 1);
-		setNext(getCapacity() - 1, IntIntHashTable.NULL_POINTER);
+		for (i in 0...capacity - 1) setNext(i, i + 1);
+		setNext(capacity - 1, IntIntHashTable.NULL_POINTER);
 		mFree = 0;
 	}
 	
@@ -662,7 +665,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	{
 		var a:Array<T> = ArrayUtil.alloc(size());
 		var j = 0;
-		for (i in 0...getCapacity())
+		for (i in 0...capacity)
 		{
 			if (mKeys[i] != null)
 				a[j++] = mVals[i];
@@ -673,16 +676,16 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	/**
 		Returns a `Vector<T>` object containing all values in this hash table.
 	**/
-	public function toVector():Vector<T>
+	public function toVector():Container<T>
 	{
-		var v = new Vector<T>(size());
+		var v = NativeArray.init(size());
 		var j = 0;
 		var keys = mKeys;
 		var vals = mVals;
-		for (i in 0...getCapacity())
+		for (i in 0...capacity)
 		{
 			if (keys[i] != null)
-				v[j++] = vals[i];
+				v.set(j++, vals[i]);
 		}
 		return v;
 	}
@@ -697,73 +700,72 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{
 		var c = new HashTable<K, T>(M.INT16_MIN);
-		
 		c.key = HashKey.next();
-		c.mH = cast mH.clone(false);
+		c.mH = cast mH.clone();
 		
-		var capacity = getCapacity();
+		var capacity = capacity;
 		
 		if (assign)
 		{
-			c.mVals = new Vector<T>(capacity);
+			c.mVals = NativeArray.init(capacity);
 			for (i in 0...capacity) c.mVals[i] = mVals[i];
 		}
 		else
 		{
-			var tmp = new Vector<T>(capacity);
+			var tmp = NativeArray.init(capacity);
 			if (copier != null)
 			{
-				for (i in 0...getCapacity())
+				for (i in 0...capacity)
 				{
-					if (mKeys[i] != null)
-						tmp[i] = copier(mVals[i]);
+					if (mKeys.get(i) != null)
+						tmp.set(i, copier(mVals.get(i)));
 				}
 			}
 			else
 			{
 				var c:Cloneable<T> = null;
-				for (i in 0...getCapacity())
+				for (i in 0...capacity)
 				{
-					if (mKeys[i] != null)
+					if (mKeys.get(i) != null)
 					{
-						assert(Std.is(mVals[i], Cloneable), 'element is not of type Cloneable (${mVals[i]})');
+						assert(Std.is(mVals.get(i), Cloneable), 'element is not of type Cloneable (${mVals.get(i)})');
 						
-						c = cast mVals[i];
-						tmp[i] = c.clone();
+						c = cast mVals.get(i);
+						tmp.set(i, c.clone());
 					}
 				}
 			}
 			c.mVals = tmp;
 		}
 		
-		c.mSizeLevel = mSizeLevel;
 		c.mFree = mFree;
 		
 		#if alchemy
 		c.mNext = mNext.clone();
 		#else
-		c.mNext = new Vector<Int>(mNext.length);
-		for (i in 0...Std.int(mNext.length)) c.mNext[i] = mNext[i];
+		c.mNext = NativeArray.copy(mNext);
+		//c.mNext = NativeArray.init(mNext.length);
+		//for (i in 0...Std.int(mNext.length)) c.mNext[i] = mNext[i];
 		#end
-		
-		c.mKeys = new Vector<K>(capacity);
-		for (i in 0...capacity) c.mKeys[i] = mKeys[i];
+		c.mKeys = NativeArray.copy(mKeys);
+		//c.mKeys = NativeArray.init(capacity);
+		//for (i in 0...capacity) c.mKeys[i] = mKeys[i];
 		return c;
 	}
 	
-	inline function expand(oldSize:Int)
+	inline function grow(oldSize:Int)
 	{
 		var newSize = oldSize << 1;
 		
 		#if alchemy
 		mNext.resize(newSize);
 		#else
-		var tmp = new Vector<Int>(newSize);
+		var tmp = NativeArray.init(newSize);
 		for (i in 0...oldSize) tmp[i] = mNext[i];
 		mNext = tmp;
 		#end
 		
-		var tmp = new Vector<K>(newSize);
+		var tmp = NativeArray.init(newSize);
 		for (i in 0...oldSize) tmp[i] = mKeys[i];
 		mKeys = tmp;
 		
@@ -771,32 +773,28 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		setNext(newSize - 1, IntIntHashTable.NULL_POINTER);
 		mFree = oldSize;
 		
-		var tmp = new Vector<T>(newSize);
+		var tmp = NativeArray.init(newSize);
 		for (i in 0...oldSize) tmp[i] = mVals[i];
 		mVals = tmp;
-		
-		mSizeLevel++;
 	}
 	
 	inline function shrink()
 	{
-		mSizeLevel--;
-		
-		var oldSize = getCapacity() << 1;
-		var newSize = getCapacity();
+		var oldSize = capacity << 1;
+		var newSize = capacity;
 		
 		#if alchemy
 		mNext.resize(newSize);
 		#else
-		mNext = new Vector<Int>(newSize);
+		mNext = NativeArray.init(newSize);
 		#end
 		
 		for (i in 0...newSize - 1) setNext(i, i + 1);
 		setNext(newSize - 1, IntIntHashTable.NULL_POINTER);
 		mFree = 0;
 		
-		var tmpKeys = new Vector<K>(newSize);
-		var tmpVals = new Vector<T>(newSize);
+		var tmpKeys = NativeArray.init(newSize);
+		var tmpVals = NativeArray.init(newSize);
 		
 		for (i in mH)
 		{
@@ -846,7 +844,7 @@ class HashTableKeyIterator<K:Hashable, T> implements de.polygonal.ds.Itr<K>
 {
 	var mF:HashTable<K, T>;
 	
-	var mKeys:Vector<K>;
+	var mKeys:Container<K>;
 	
 	var mI:Int;
 	var mS:Int;
@@ -861,7 +859,7 @@ class HashTableKeyIterator<K:Hashable, T> implements de.polygonal.ds.Itr<K>
 	{
 		mKeys = mF.mKeys;
 		mI = 0;
-		mS = mF.mH.getCapacity();
+		mS = mF.mH.capacity;
 		while (mI < mS && mKeys[mI] == null) mI++;
 		
 		return this;
@@ -895,8 +893,8 @@ class HashTableValIterator<K:Hashable, T> implements de.polygonal.ds.Itr<T>
 {
 	var mF:HashTable<K, T>;
 	
-	var mKeys:Vector<K>;
-	var mVals:Vector<T>;
+	var mKeys:Container<K>;
+	var mVals:Container<T>;
 	
 	var mI:Int;
 	var mS:Int;
@@ -912,7 +910,7 @@ class HashTableValIterator<K:Hashable, T> implements de.polygonal.ds.Itr<T>
 		mVals = mF.mVals;
 		mKeys = mF.mKeys;
 		mI = 0;
-		mS = mF.mH.getCapacity();
+		mS = mF.mH.capacity;
 		while (mI < mS && mKeys[mI] == null) mI++;
 		
 		return this;

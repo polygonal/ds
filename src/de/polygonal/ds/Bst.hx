@@ -19,6 +19,7 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 package de.polygonal.ds;
 
 import de.polygonal.ds.error.Assert.assert;
+import de.polygonal.ds.tools.NativeArray;
 
 /**
 	A binary search tree (BST)
@@ -393,9 +394,9 @@ class Bst<T:Comparable<T>> implements Collection<T>
 		
 		The elements are added by applying a preorder traversal.
 	**/
-	public function toVector():Vector<T>
+	public function toVector():Container<T>
 	{
-		var v = new Vector<T>(size());
+		var v = NativeArray.init(size());
 		var i = 0;
 		mRoot.preorder(function(node:BinaryTreeNode<T>, userData:Dynamic):Bool { v[i++] = node.val; return true; });
 		return v;

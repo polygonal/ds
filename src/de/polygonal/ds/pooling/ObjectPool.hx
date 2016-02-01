@@ -19,6 +19,7 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 package de.polygonal.ds.pooling;
 
 import de.polygonal.ds.error.Assert.assert;
+import de.polygonal.ds.tools.NativeArray;
 
 /**
 	A fixed sized, arrayed object pool.
@@ -35,7 +36,7 @@ class ObjectPool<T> implements Hashable
 	#if alchemy
 	var mNext:de.polygonal.ds.mem.IntMemory;
 	#else
-	var mNext:Vector<Int>;
+	var mNext:Container<Int>;
 	#end
 	
 	var mPool:Array<T>;
@@ -205,7 +206,7 @@ class ObjectPool<T> implements Hashable
 		#if alchemy
 		mNext = new de.polygonal.ds.mem.IntMemory(mSize, "ObjectPool.mNext");
 		#else
-		mNext = new Vector<Int>(mSize);
+		mNext = NativeArray.init(mSize);
 		#end
 		
 		for (i in 0...mSize - 1) setNext(i, i + 1);

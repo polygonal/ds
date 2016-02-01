@@ -20,6 +20,8 @@ package de.polygonal.ds;
 
 import de.polygonal.ds.error.Assert.assert;
 
+using de.polygonal.ds.tools.NativeArray;
+
 /**
 	A three-dimensional array based on a rectangular sequential array
 	
@@ -48,7 +50,7 @@ class Array3<T> implements Collection<T>
 	**/
 	public var reuseIterator:Bool;
 	
-	var mData:Vector<T>;
+	var mData:Container<T>;
 	var mW:Int;
 	var mH:Int;
 	var mD:Int;
@@ -67,7 +69,7 @@ class Array3<T> implements Collection<T>
 		mW = width;
 		mH = height;
 		mD = depth;
-		mData = new Vector<T>(size());
+		mData = NativeArray.init(size());
 		mIterator = null;
 		key = HashKey.next();
 		reuseIterator = false;
@@ -84,7 +86,7 @@ class Array3<T> implements Collection<T>
 		assert(y >= 0 && y < getH(), 'y index out of range ($y)');
 		assert(z >= 0 && z < getD(), 'z index out of range ($z)');
 		
-		return _get(getIndex(x, y, z));
+		return mData.get(getIndex(x, y, z));
 	}
 	
 	/**
@@ -92,9 +94,14 @@ class Array3<T> implements Collection<T>
 		<o>1</o>
 		<assert>`x`/`y`/`z` out of range</assert>
 	**/
-	inline public function getAt(cell:Array3Cell):T
+	inline public function getAtCell(cell:Array3Cell):T
 	{
-		return _get(getIndex(cell.x, cell.y, cell.z));
+		assert(cell != null, "cell is null");
+		assert(cell.x >= 0 && cell.x < getW(), 'cell.x out of range (${cell.x})');
+		assert(cell.y >= 0 && cell.y < getH(), 'cell.y out of range (${cell.y})');
+		assert(cell.z >= 0 && cell.z < getD(), 'cell.z out of range (${cell.z})');
+		
+		return mData.get(getIndex(cell.x, cell.y, cell.z));
 	}
 	
 	/**
@@ -108,7 +115,7 @@ class Array3<T> implements Collection<T>
 		assert(y >= 0 && y < getH(), 'y index out of range ($y)');
 		assert(z >= 0 && z < getD(), 'z index out of range ($z)');
 		
-		_set(getIndex(x, y, z), val);
+		mData.set(getIndex(x, y, z), val);
 	}
 	
 	/**
@@ -191,14 +198,12 @@ class Array3<T> implements Collection<T>
 	**/
 	public function indexOf(x:T):Int
 	{
-		var i = 0;
-		var j = size();
+		var i = 0, j = size(), d = mData;
 		while (i < j)
 		{
-			if (_get(i) == x) break;
+			if (d.get(i) == x) break;
 			i++;
 		}
-		
 		return (i == j) ? -1 : i;
 	}
 	
@@ -222,10 +227,7 @@ class Array3<T> implements Collection<T>
 		assert(output != null);
 		
 		var i = indexOf(x);
-		if (i == -1)
-			return null;
-		else
-			return indexToCell(i, output);
+		return i == -1 ? null : indexToCell(i, output);
 	}
 	
 	/**
@@ -278,10 +280,10 @@ class Array3<T> implements Collection<T>
 		assert(output != null);
 		assert(output.getW() == getW() && output.getH() == getH(), 'output too small (w: ${output.getW()}, d: ${output.getH()})');
 		
-		var offset = z * mW * mH;
+		var offset = z * mW * mH, d = mData;
 		for (x in 0...mW)
 			for (y in 0...mH)
-				output.set(x, y, _get(offset + (y * mW) + x));
+				output.set(x, y, d.get(offset + (y * mW) + x));
 		return output;
 	}
 	
@@ -297,8 +299,8 @@ class Array3<T> implements Collection<T>
 		assert(z >= 0 && z < getD(), 'z index out of range ($z)');
 		assert(output != null);
 		
-		var offset = (z * mW * mH) + (y * mW);
-		for (x in 0...mW) output.push(_get(offset + x));
+		var offset = (z * mW * mH) + (y * mW), d = mData;
+		for (x in 0...mW) output.push(d.get(offset + x));
 		return output;
 	}
 	
@@ -315,8 +317,8 @@ class Array3<T> implements Collection<T>
 		assert(input != null, "input is null");
 		assert(input.length >= size(), "insufficient values");
 		
-		var offset = (z * mW * mH) + (y * mW);
-		for (x in 0...mW) _set(offset + x, input[x]);
+		var offset = (z * mW * mH) + (y * mW), d = mData;
+		for (x in 0...mW) d.set(offset + x, input[x]);
 	}
 	
 	/**
@@ -332,8 +334,8 @@ class Array3<T> implements Collection<T>
 		assert(z >= 0 && z < getD(), 'z index out of range (${z})');
 		assert(output != null);
 		
-		var offset = z * mW * mH;
-		for (i in 0...mH) output.push(_get(offset + (i * mW + x)));
+		var offset = z * mW * mH, d = mData;
+		for (i in 0...mH) output.push(d.get(offset + (i * mW + x)));
 		return output;
 	}
 
@@ -350,8 +352,8 @@ class Array3<T> implements Collection<T>
 		assert(input != null, "input is null");
 		assert(input.length >= getH(), "insufficient values");
 		
-		var offset = z * mW * mH;
-		for (i in 0...mH) _set(offset + (i * mW + x), input[i]);
+		var offset = z * mW * mH, d = mData;
+		for (i in 0...mH) d.set(offset + (i * mW + x), input[i]);
 	}
 	
 	/**
@@ -369,7 +371,8 @@ class Array3<T> implements Collection<T>
 		
 		var offset1 = mW * mH;
 		var offset2 = (y * mW + x);
-		for (z in 0...mD) output.push(_get(z * offset1 + offset2));
+		var d = mData;
+		for (z in 0...mD) output.push(d.get(z * offset1 + offset2));
 		return output;
 	}
 	
@@ -388,8 +391,9 @@ class Array3<T> implements Collection<T>
 		
 		var offset1 = mW * mH;
 		var offset2 = (y * mW + x);
+		var d = mData;
 		for (z in 0...mD)
-			_set(z * offset1 + offset2, input[z]);
+			d.set(z * offset1 + offset2, input[z]);
 	}
 	
 	/**
@@ -401,7 +405,8 @@ class Array3<T> implements Collection<T>
 	public function assign(cl:Class<T>, args:Array<Dynamic> = null)
 	{
 		if (args == null) args = [];
-		for (i in 0...size()) _set(i, Type.createInstance(cl, args));
+		var d = mData;
+		for (i in 0...size()) d.set(i, Type.createInstance(cl, args));
 	}
 	
 	/**
@@ -410,7 +415,8 @@ class Array3<T> implements Collection<T>
 	**/
 	public function fill(x:T):Array3<T>
 	{
-		for (i in 0...size()) _set(i, x);
+		var d = mData;
+		for (i in 0...size()) d.set(i, x);
 		return this;
 	}
 	
@@ -422,17 +428,14 @@ class Array3<T> implements Collection<T>
 	**/
 	public function iter(process:T->Int->Int->Int->T)
 	{
+		var i, d = mData;
 		for (z in 0...mD)
-		{
 			for (y in 0...mH)
-			{
 				for (x in 0...mW)
 				{
-					var i = z * mW * mH + y * mW + x;
-					_set(i, process(_get(i), x, y, z));
+					i = z * mW * mH + y * mW + x;
+					d.set(i, process(d.get(i), x, y, z));
 				}
-			}
-		}
 	}
 	
 	/**
@@ -448,25 +451,24 @@ class Array3<T> implements Collection<T>
 		assert(width >= 2 && height >= 2 && depth >= 1, 'invalid size (width:$width, height:$height, depth: $depth)');
 		
 		if (width == mW && height == mH && depth == mD) return;
-		var t = mData;
-		mData = new Vector<T>(width * height * depth);
+		
+		var tmp = mData;
+		mData = NativeArray.init(width * height * depth);
 		
 		var minX = width < mW ? width : mW;
 		var minY = height < mH ? height : mH;
-		var zmin = depth < mD ? depth : mD;
-		
-		for (z in 0...zmin)
+		var minZ = depth < mD ? depth : mD;
+		var t1, t2, t3, t4, d = mData;
+		for (z in 0...minZ)
 		{
-			var t1 = z * width * height;
-			var t2 = z * mW * mH;
-			
+			t1 = z * width * height;
+			t2 = z * mW * mH;
 			for (y in 0...minY)
 			{
-				var t3 = y * width;
-				var t4 = y * mW;
-				
+				t3 = y * width;
+				t4 = y * mW;
 				for (x in 0...minX)
-					_set(t1 + t3 + x, t[t2 + t4 + x]);
+					d.set(t1 + t3 + x, tmp.get(t2 + t4 + x));
 			}
 		}
 		
@@ -493,9 +495,10 @@ class Array3<T> implements Collection<T>
 		
 		var i = (z0 * mW * mH) + (y0 * mW) + x0;
 		var j = (z1 * mW * mH) + (y1 * mW) + x1;
-		var t = _get(i);
-		_set(i, _get(j));
-		_set(j, t);
+		var d = mData;
+		var t = d.get(i);
+		d.set(i, d.get(j));
+		d.set(j, t);
 	}
 	
 	/**
@@ -504,7 +507,7 @@ class Array3<T> implements Collection<T>
 		Useful for fast iteration or low-level operations.
 		<o>1</o>
 	**/
-	inline public function getStorage():Vector<T>
+	inline public function getStorage():Container<T>
 	{
 		return mData;
 	}
@@ -519,28 +522,29 @@ class Array3<T> implements Collection<T>
 	public function shuffle(rval:Array<Float> = null)
 	{
 		var s = size();
+		var d = mData;
 		if (rval == null)
 		{
-			var m = Math;
+			var m = Math, i, j, t;
 			while (--s > 1)
 			{
-				var i = Std.int(m.random() * s);
-				var t = _get(s);
-				_set(s, _get(i));
-				_set(i,  t);
+				i = Std.int(m.random() * s);
+				t = d.get(s);
+				d.set(s, d.get(i));
+				d.set(i, t);
 			}
 		}
 		else
 		{
 			assert(rval.length >= size(), "insufficient random values");
 			
-			var j = 0;
+			var i, j = 0, t;
 			while (--s > 1)
 			{
-				var i = Std.int(rval[j++] * s);
-				var t = _get(s);
-				_set(s, _get(i));
-				_set(i, t);
+				i = Std.int(rval[j++] * s);
+				t = d.get(s);
+				d.set(s, d.get(i));
+				d.set(i, t);
 			}
 		}
 	}
@@ -575,7 +579,8 @@ class Array3<T> implements Collection<T>
 	**/
 	public function free()
 	{
-		for (i in 0...size()) _set(i, cast null);
+		var d = mData;
+		for (i in 0...size()) d.set(i, cast null);
 		mData = null;
 		mIterator = null;
 	}
@@ -586,9 +591,10 @@ class Array3<T> implements Collection<T>
 	**/
 	public function contains(x:T):Bool
 	{
+		var d = mData;
 		for (i in 0...size())
 		{
-			if (_get(i) == x)
+			if (d.get(i) == x)
 				return true;
 		}
 		return false;
@@ -603,16 +609,15 @@ class Array3<T> implements Collection<T>
 	**/
 	public function remove(x:T):Bool
 	{
-		var found = false;
+		var found = false, d = mData;
 		for (i in 0...size())
 		{
-			if (_get(i) == x)
+			if (d.get(i) == x)
 			{
-				_set(i, cast null);
+				d.set(i, cast null);
 				found = true;
 			}
 		}
-		
 		return found;
 	}
 	
@@ -624,7 +629,8 @@ class Array3<T> implements Collection<T>
 	**/
 	inline public function clear(purge = false)
 	{
-		for (i in 0...size()) _set(i, cast null);
+		var d = mData;
+		for (i in 0...size()) d.set(i, cast null);
 	}
 	
 	/**
@@ -674,9 +680,8 @@ class Array3<T> implements Collection<T>
 	**/
 	public function toArray():Array<T>
 	{
-		var a:Array<T> = ArrayUtil.alloc(size());
-		for (i in 0...size())
-			a[i] = _get(i);
+		var a:Array<T> = ArrayUtil.alloc(size()), d = mData;
+		for (i in 0...size()) a[i] = d.get(i);
 		return a;
 	}
 	
@@ -685,10 +690,10 @@ class Array3<T> implements Collection<T>
 		
 		Order: Row-major order (row-by-row).
 	**/
-	public function toVector():Vector<T>
+	public function toVector():Container<T>
 	{
-		var v = new Vector<T>(size());
-		for (i in 0...size()) v[i] = _get(i);
+		var v = NativeArray.init(size()), d = mData;
+		for (i in 0...size()) v.set(i, d.get(i));
 		return v;
 	}
 	
@@ -702,35 +707,38 @@ class Array3<T> implements Collection<T>
 	**/
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{
-		var copy = new Array3<T>(getW(), getH(), getD());
+		var c = new Array3<T>(mW, mH, mD);
+		
 		if (assign)
-		{
-			for (i in 0...size())
-				copy._set(i, _get(i));
-		}
+			c.mData = NativeArray.copy(mData);
 		else
-		if (copier == null)
 		{
-			var c:Cloneable<Dynamic> = null;
-			for (i in 0...size())
+			c.mData = NativeArray.init(size());
+			var src = mData;
+			var dst = c.mData;
+			
+			if (copier == null)
 			{
-				assert(Std.is(_get(i), Cloneable), 'element is not of type Cloneable (${_get(i)})');
+				var e:Cloneable<Dynamic> = null;
+				var d:Dynamic; //required for -cpp
 				
-				c = cast(_get(i), Cloneable<Dynamic>);
-				copy._set(i, c.clone());
+				for (i in 0...size())
+				{
+					assert(Std.is(src.get(i), Cloneable), 'element is not of type Cloneable (${src.get(i)})');
+					
+					d = src.get(i);
+					e = cast d;
+					dst.set(i, e.clone());
+				}
+			}
+			else
+			{
+				for (i in 0...size())
+					dst.set(i, copier(src.get(i)));
 			}
 		}
-		else
-		{
-			for (i in 0...size())
-				copy._set(i, copier(_get(i)));
-		}
-		return copy;
+		return c;
 	}
-	
-	inline function _get(i:Int) return mData[i];
-	
-	inline function _set(i:Int, x:T) mData[i] = x;
 }
 
 #if generic
@@ -741,7 +749,7 @@ class Array3<T> implements Collection<T>
 class Array3Iterator<T> implements de.polygonal.ds.Itr<T>
 {
 	var mStructure:Array3<T>;
-	var mData:Vector<T>;
+	var mData:Container<T>;
 	var mI:Int;
 	var mS:Int;
 	

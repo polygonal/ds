@@ -24,6 +24,8 @@ import de.polygonal.ds.mem.IntMemory;
 
 import de.polygonal.ds.error.Assert.assert;
 
+using de.polygonal.ds.tools.NativeArray;
+
 /**
 	An array hash table for mapping integer keys to generic elements
 	
@@ -65,23 +67,61 @@ class IntHashTable<T> implements Map<Int, T>
 	**/
 	public var reuseIterator:Bool;
 	
+	/**
+		The size of the allocated storage space for the key/value pairs.
+		
+		If more space is required to accomodate new elements,``getCapacity()`` is doubled every time ``size()`` grows beyond capacity, and split in half when ``size()`` is a quarter of capacity.
+		
+		The capacity never falls below the initial size defined in the constructor.
+	**/
+	public var capacity(get, never):Int;
+	inline function get_capacity():Int
+	{
+		return mH.capacity;
+	}
+	
+	/**
+		The load factor measure the "denseness" of a hash table and is proportional to the time cost to look up an entry.
+		
+		E.g. assuming that the keys are perfectly distributed, a load factor of 4.0 indicates that each slot stores 4 keys, which have to be sequentially searched in order to find a value.
+		
+		A high load factor thus indicates poor performance.
+		
+		If the load factor gets too high, additional slots can be allocated by calling ``rehash()``.
+	**/
+	public var loadFactor(get, never):Float;
+	function get_loadFactor():Float
+	{
+		return mH.loadFactor;
+	}
+	
+	/**
+		The total number of allocated slots.
+	**/
+	public var slotCount(get, never):Int;
+	inline function get_slotCount():Int
+	{
+		return mH.slotCount;
+	}
+	
 	var mH:IntIntHashTable;
 	
-	var mVals:Vector<T>;
+	var mVals:Container<T>;
 	
 	#if alchemy
 	var mKeys:IntMemory;
 	var mNext:IntMemory;
 	#else
-	var mNext:Vector<Int>;
-	var mKeys:Vector<Int>;
+	var mNext:Container<Int>;
+	var mKeys:Container<Int>;
 	#end
 	
 	var mFree:Int;
 	var mKey0:Int;
 	var mIndex0:Int;
 	
-	var mSizeLevel:Int;
+	var mMinCapacity:Int;
+	var mShrinkSize:Int;
 	var mIsResizable:Bool;
 	var mIterator:IntHashTableIterator<T>;
 	
@@ -122,8 +162,10 @@ class IntHashTable<T> implements Map<Int, T>
 		
 		mIsResizable = isResizable;
 		
+		mMinCapacity = capacity;
+		
 		mH = new IntIntHashTable(slotCount, capacity, isResizable, maxSize);
-		mVals = new Vector<T>(capacity);
+		mVals = NativeArray.init(capacity);
 		
 		#if debug
 		this.maxSize = (maxSize == -1) ? M.INT32_MAX : maxSize;
@@ -136,8 +178,8 @@ class IntHashTable<T> implements Map<Int, T>
 		mKeys = new IntMemory(capacity, "IntHashTable.mKeys");
 		mKeys.fill(IntIntHashTable.KEY_ABSENT);
 		#else
-		mNext = new Vector<Int>(capacity);
-		mKeys = new Vector<Int>(capacity);
+		mNext = NativeArray.init(capacity);
+		mKeys = NativeArray.init(capacity);
 		for (i in 0...capacity) mKeys[i] = IntIntHashTable.KEY_ABSENT;
 		#end
 		
@@ -146,51 +188,11 @@ class IntHashTable<T> implements Map<Int, T>
 		mFree = 0;
 		mKey0 = 0;
 		mIndex0 = 0;
-		mSizeLevel = 0;
 		mIterator = null;
 		mTmpArr = [];
 		
 		key = HashKey.next();
 		reuseIterator = false;
-	}
-	
-	function init()
-	{
-		
-	}
-	
-	/**
-		The load factor measure the "denseness" of a hash table and is proportional to the time cost to look up an entry.
-		
-		E.g. assuming that the keys are perfectly distributed, a load factor of 4.0 indicates that each slot stores 4 keys, which have to be sequentially searched in order to find a value.
-		
-		A high load factor thus indicates poor performance.
-		
-		If the load factor gets too high, additional slots can be allocated by calling ``rehash()``.
-	**/
-	inline public function getLoadFactor():Float
-	{
-		return mH.getLoadFactor();
-	}
-	
-	/**
-		The total number of allocated slots.
-	**/
-	inline public function getSlotCount():Int
-	{
-		return mH.getSlotCount();
-	}
-	
-	/**
-		The size of the allocated storage space for the key/value pairs.
-		
-		If more space is required to accomodate new elements,``getCapacity()`` is doubled every time ``size()`` grows beyond capacity, and split in half when ``size()`` is a quarter of capacity.
-		
-		The capacity never falls below the initial size defined in the constructor.
-	**/
-	inline public function getCapacity():Int
-	{
-		return mH.getCapacity();
 	}
 	
 	/**
@@ -237,13 +239,13 @@ class IntHashTable<T> implements Map<Int, T>
 	{
 		assert(key != IntIntHashTable.KEY_ABSENT, "key 0x80000000 is reserved");
 		
-		if ((size() == getCapacity()))
+		if ((size() == capacity))
 		{
 			if (mH.setIfAbsent(key, mFree))
 			{
 				invalidate();
 				
-				expand(getCapacity() >> 1);
+				grow(capacity >> 1);
 				
 				mVals[mFree] = val;
 				setKey(mFree, key);
@@ -313,7 +315,7 @@ class IntHashTable<T> implements Map<Int, T>
 		Creates and returns an unordered dense array of all keys.
 		<o>n</o>
 	**/
-	public function toKeyVector():Vector<Int>
+	public function toKeyVector():Container<Int>
 	{
 		return mH.toKeyVector();
 	}
@@ -353,7 +355,7 @@ class IntHashTable<T> implements Map<Int, T>
 	**/
 	public function toString():String
 	{
-		var s = Printf.format("{ IntHashTable size/capacity: %d/%d, load factor: %.2f }", [size(), getCapacity(), getLoadFactor()]);
+		var s = Printf.format("{ IntHashTable size/capacity: %d/%d, load factor: %.2f }", [size(), capacity, loadFactor]);
 		if (isEmpty()) return s;
 		s += "\n[\n";
 		
@@ -383,7 +385,7 @@ class IntHashTable<T> implements Map<Int, T>
 	inline public function has(val:T):Bool
 	{
 		var exists = false;
-		for (i in 0...getCapacity())
+		for (i in 0...capacity)
 		{
 			if (_hasKey(i))
 			{
@@ -463,9 +465,9 @@ class IntHashTable<T> implements Map<Int, T>
 		assert(size() < maxSize, 'size equals max size (${maxSize})');
 		
 		invalidate();
-		if (size() == getCapacity())
+		if (size() == capacity)
 		{
-			expand(getCapacity());
+			grow(capacity);
 		}
 		mH.set(key, mFree);
 		mVals[mFree] = val;
@@ -496,10 +498,8 @@ class IntHashTable<T> implements Map<Int, T>
 			
 			var doShrink = false;
 			
-			if (mSizeLevel > 0)
-				if (size() - 1 == (getCapacity() >> 2))
-					if (mIsResizable)
-						doShrink = true;
+			if (size() - 1 == (capacity >> 2) && capacity > mMinCapacity && mIsResizable)
+				doShrink = true;
 			
 			mH.clr(key);
 			
@@ -516,7 +516,7 @@ class IntHashTable<T> implements Map<Int, T>
 	public function toValSet():Set<T>
 	{
 		var s = new ListSet<T>();
-		for (i in 0...getCapacity())
+		for (i in 0...capacity)
 		{
 			if (_hasKey(i))
 				s.set(mVals[i]);
@@ -594,7 +594,7 @@ class IntHashTable<T> implements Map<Int, T>
 	{
 		var tmp = mTmpArr;
 		var c = 0;
-		for (i in 0...getCapacity())
+		for (i in 0...capacity)
 			if (_hasKey(i))
 				if (mVals[i] == x)
 					tmp[c++] = getKey(i);
@@ -611,21 +611,21 @@ class IntHashTable<T> implements Map<Int, T>
 	public function clear(purge = false)
 	{
 		mH.clear(purge);
-		for (i in 0...getCapacity()) clrKey(i);
+		for (i in 0...capacity) clrKey(i);
 		
 		if (purge)
 		{
-			while (mSizeLevel > 0) shrink();
+			while (capacity > mMinCapacity) shrink();
 			
-			for (i in 0...getCapacity())
+			for (i in 0...capacity)
 			{
 				mVals[i] = null;
 				clrKey(i);
 			}
 		}
 		
-		for (i in 0...getCapacity() - 1) setNext(i, i + 1);
-		setNext(getCapacity() - 1, IntIntHashTable.NULL_POINTER);
+		for (i in 0...capacity - 1) setNext(i, i + 1);
+		setNext(capacity - 1, IntIntHashTable.NULL_POINTER);
 		mFree = 0;
 	}
 
@@ -675,7 +675,7 @@ class IntHashTable<T> implements Map<Int, T>
 	{
 		var a:Array<T> = ArrayUtil.alloc(size());
 		var j = 0;
-		for (i in 0...getCapacity())
+		for (i in 0...capacity)
 		{
 			if (_hasKey(i))
 				a[j++] = mVals[i];
@@ -686,15 +686,15 @@ class IntHashTable<T> implements Map<Int, T>
 	/**
 		Returns an unordered `Vector<T>` object containing all values in this hash table.
 	**/
-	public function toVector():Vector<T>
+	public function toVector():Container<T>
 	{
-		var v = new Vector<T>(size());
+		var v = NativeArray.init(size());
 		var j = 0;
 		var vals = mVals;
-		for (i in 0...getCapacity())
+		for (i in 0...capacity)
 		{
 			if (_hasKey(i))
-				v[j++] = vals[i];
+				v.set(j++, vals[i]);
 		}
 		return v;
 	}
@@ -713,16 +713,16 @@ class IntHashTable<T> implements Map<Int, T>
 		c.maxSize = maxSize;
 		c.mH = cast mH.clone(false);
 		
-		var capacity = getCapacity();
+		var capacity = capacity;
 		
 		if (assign)
 		{
-			c.mVals = new Vector<T>(capacity);
+			c.mVals = NativeArray.init(capacity);
 			for (i in 0...capacity) c.mVals[i] = mVals[i];
 		}
 		else
 		{
-			var tmp = new Vector<T>(capacity);
+			var tmp = NativeArray.init(capacity);
 			if (copier != null)
 			{
 				for (i in 0...capacity)
@@ -734,7 +734,7 @@ class IntHashTable<T> implements Map<Int, T>
 			else
 			{
 				var c:Cloneable<T> = null;
-				for (i in 0...getCapacity())
+				for (i in 0...capacity)
 				{
 					if (_hasKey(i))
 					{
@@ -748,7 +748,6 @@ class IntHashTable<T> implements Map<Int, T>
 			c.mVals = tmp;
 		}
 		
-		c.mSizeLevel = mSizeLevel;
 		c.mFree = mFree;
 		c.mKey0 = mKey0;
 		c.mIndex0 = mIndex0;
@@ -757,16 +756,18 @@ class IntHashTable<T> implements Map<Int, T>
 		c.mKeys = mKeys.clone();
 		c.mNext = mNext.clone();
 		#else
-		c.mKeys = new Vector<Int>(mKeys.length);
-		c.mNext = new Vector<Int>(mNext.length);
-		for (i in 0...Std.int(mKeys.length)) c.mKeys[i] = mKeys[i];
-		for (i in 0...Std.int(mNext.length)) c.mNext[i] = mNext[i];
+		c.mKeys = NativeArray.copy(mKeys);
+		c.mNext = NativeArray.copy(mNext);
+		//c.mKeys = NativeArray.init(mKeys.length);
+		//c.mNext = NativeArray.init(mNext.length);
+		//for (i in 0...Std.int(mKeys.length)) c.mKeys[i] = mKeys[i];
+		//for (i in 0...Std.int(mNext.length)) c.mNext[i] = mNext[i];
 		#end
 		
 		return c;
 	}
 	
-	inline function expand(oldSize:Int)
+	inline function grow(oldSize:Int)
 	{
 		var newSize = oldSize << 1;
 		
@@ -774,10 +775,10 @@ class IntHashTable<T> implements Map<Int, T>
 		mNext.resize(newSize);
 		mKeys.resize(newSize);
 		#else
-		var tmp = new Vector<Int>(newSize);
+		var tmp = NativeArray.init(newSize);
 		for (i in 0...oldSize) tmp[i] = mNext[i];
 		mNext = tmp;
-		var tmp = new Vector<Int>(newSize);
+		var tmp = NativeArray.init(newSize);
 		for (i in 0...oldSize) tmp[i] = mKeys[i];
 		mKeys = tmp;
 		#end
@@ -787,34 +788,30 @@ class IntHashTable<T> implements Map<Int, T>
 		setNext(newSize - 1, IntIntHashTable.NULL_POINTER);
 		mFree = oldSize;
 		
-		var tmp = new Vector<T>(newSize);
+		var tmp = NativeArray.init(newSize);
 		for (i in 0...oldSize) tmp[i] = mVals[i];
 		mVals = tmp;
-		
-		mSizeLevel++;
 	}
 	
 	inline function shrink()
 	{
-		mSizeLevel--;
-		
-		var oldSize = getCapacity() << 1;
-		var newSize = getCapacity();
+		var oldSize = capacity << 1;
+		var newSize = capacity;
 		
 		#if alchemy
 		mNext.resize(newSize);
 		#else
-		mNext = new Vector<Int>(newSize);
+		mNext = NativeArray.init(newSize);
 		#end
 		
 		for (i in 0...newSize - 1) setNext(i, i + 1);
 		setNext(newSize - 1, IntIntHashTable.NULL_POINTER);
 		mFree = 0;
 		
-		var tmpKeys = new Vector<Int>(newSize);
+		var tmpKeys = NativeArray.init(newSize);
 		for (i in 0...newSize) tmpKeys[i] = IntIntHashTable.KEY_ABSENT;
 		
-		var tmpVals = new Vector<T>(newSize);
+		var tmpVals = NativeArray.init(newSize);
 		
 		for (i in mH)
 		{
@@ -899,12 +896,12 @@ class IntHashTableIterator<T> implements de.polygonal.ds.Itr<T>
 {
 	var mF:IntHashTable<T>;
 	
-	var mVals:Vector<T>;
+	var mVals:Container<T>;
 	
 	#if alchemy
 	var mKeys:IntMemory;
 	#else
-	var mKeys:Vector<Int>;
+	var mKeys:Container<Int>;
 	#end
 	
 	var mI:Int;
@@ -921,7 +918,7 @@ class IntHashTableIterator<T> implements de.polygonal.ds.Itr<T>
 		mVals = mF.mVals;
 		mKeys = mF.mKeys;
 		mI = 0;
-		mS = mF.mH.getCapacity();
+		mS = mF.mH.capacity;
 		
 		#if (flash && alchemy)
 		while (mI < mS && mKeys.get(mI) == IntIntHashTable.KEY_ABSENT) mI++;

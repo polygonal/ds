@@ -20,6 +20,8 @@ package de.polygonal.ds;
 
 import de.polygonal.ds.error.Assert.assert;
 
+using de.polygonal.ds.tools.NativeArray;
+
 /**
 	A simple set using an array
 	
@@ -262,11 +264,11 @@ class ListSet<T> implements Set<T>
 	/**
 		Returns a `Vector<T>` object containing all elements in this set.
 	**/
-	public function toVector():Vector<T>
+	public function toVector():Container<T>
 	{
-		var output = new Vector<T>(mSize);
+		var output = NativeArray.init(mSize);
 		var t = mData;
-		for (i in 0...mSize) output[i] = t[i];
+		for (i in 0...mSize) output.set(i, t[i]);
 		
 		return output;
 	}

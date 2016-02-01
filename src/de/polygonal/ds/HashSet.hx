@@ -24,6 +24,8 @@ import de.polygonal.ds.mem.IntMemory;
 
 import de.polygonal.ds.error.Assert.assert;
 
+using de.polygonal.ds.tools.NativeArray;
+
 /**
 	An array hash set for storing Hashable objects
 	
@@ -63,19 +65,56 @@ class HashSet<T:Hashable> implements Set<T>
 	**/
 	public var reuseIterator:Bool;
 	
+	/**
+		The size of the allocated storage space for the elements.
+		
+		If more space is required to accomodate new elements, ``capacity`` is doubled every time ``size()`` grows beyond capacity, and split in half when ``size()`` is a quarter of capacity.
+		
+		The capacity never falls below the initial size defined in the constructor.
+	**/
+	public var capacity(get, never):Int;
+	inline function get_capacity():Int
+	{
+		return mH.capacity;
+	}
+	
+	/**
+		The load factor measure the "denseness" of a hash set and is proportional to the time cost to look up an entry.
+		
+		E.g. assuming that the elements are perfectly distributed, a load factor of 4.0 indicates that each slot stores 4 elements, which have to be sequentially searched in order to find an element.
+		
+		A high load factor thus indicates poor performance.
+		
+		If the load factor gets too high, additional slots can be allocated by calling ``rehash()``.
+	**/
+	public var loadFactor(get, never):Float;
+	function get_loadFactor():Float
+	{
+		return mH.loadFactor;
+	}
+	
+	/**
+		The current slot count.
+	**/
+	public var slotCount(get, never):Int;
+	inline function get_slotCount():Int
+	{
+		return mH.slotCount;
+	}
+	
 	var mH:IntIntHashTable;
 	
-	var mVals:Vector<T>;
+	var mVals:Container<T>;
 	
 	#if alchemy
 	var mNext:IntMemory;
 	#else
-	var mNext:Vector<Int>;
+	var mNext:Container<Int>;
 	#end
 	
 	var mFree:Int;
-	var mSizeLevel:Int;
 	var mIsResizable:Bool;
+	var mMinCapacity:Int;
 	var mIterator:HashSetIterator<T>;
 	
 	/**
@@ -113,8 +152,10 @@ class HashSet<T:Hashable> implements Set<T>
 		
 		mIsResizable = isResizable;
 		
+		mMinCapacity = capacity;
+		
 		mH = new IntIntHashTable(slotCount, capacity, mIsResizable, maxSize);
-		mVals = new Vector<T>(capacity);
+		mVals = NativeArray.init(capacity);
 		
 		#if debug
 		this.maxSize = (maxSize == -1) ? M.INT32_MAX : maxSize;
@@ -125,51 +166,16 @@ class HashSet<T:Hashable> implements Set<T>
 		#if alchemy
 		mNext = new IntMemory(capacity, "HashSet.mNext");
 		#else
-		mNext = new Vector<Int>(capacity);
+		mNext = NativeArray.init(capacity);
 		#end
 		
 		for (i in 0...capacity - 1) setNext(i, i + 1);
 		setNext(capacity - 1, IntIntHashTable.NULL_POINTER);
 		mFree = 0;
-		mSizeLevel = 0;
 		mIterator = null;
 		
 		key = HashKey.next();
 		reuseIterator = false;
-	}
-	
-	/**
-		The load factor measure the "denseness" of a hash set and is proportional to the time cost to look up an entry.
-		
-		E.g. assuming that the elements are perfectly distributed, a load factor of 4.0 indicates that each slot stores 4 elements, which have to be sequentially searched in order to find an element.
-		
-		A high load factor thus indicates poor performance.
-		
-		If the load factor gets too high, additional slots can be allocated by calling ``rehash()``.
-	**/
-	inline public function getLoadFactor():Float
-	{
-		return mH.getLoadFactor();
-	}
-	
-	/**
-		The current slot count.
-	**/
-	inline public function getSlotCount():Int
-	{
-		return mH.getSlotCount();
-	}
-	
-	/**
-		The size of the allocated storage space for the elements.
-		
-		If more space is required to accomodate new elements, ``getCapacity()`` is doubled every time ``size()`` grows beyond capacity, and split in half when ``size()`` is a quarter of capacity.
-		
-		The capacity never falls below the initial size defined in the constructor.
-	**/
-	inline public function getCapacity():Int
-	{
-		return mH.getCapacity();
 	}
 	
 	/**
@@ -244,7 +250,7 @@ class HashSet<T:Hashable> implements Set<T>
 	**/
 	public function toString():String
 	{
-		var s = Printf.format("{ HashSet size/capacity: %d/%d, load factor: %.2f }", [size(), getCapacity(), getLoadFactor()]);
+		var s = Printf.format("{ HashSet size/capacity: %d/%d, load factor: %.2f }", [size(), capacity, loadFactor]);
 		if (isEmpty()) return s;
 		s += "\n[\n";
 		for (x in this)
@@ -281,16 +287,16 @@ class HashSet<T:Hashable> implements Set<T>
 	{
 		assert(size() != maxSize, 'size equals max size ($maxSize)');
 		
-		if ((size() == getCapacity()))
+		if ((size() == capacity))
 		{
 			if (mH.setIfAbsent(_key(x), size()))
 			{
 				#if debug
 				if (!mIsResizable)
-					assert(false, 'hash set is full (${getCapacity()})');
+					assert(false, 'hash set is full (${capacity})');
 				#end
 				
-				expand(getCapacity() >> 1);
+				grow(capacity >> 1);
 				mVals[mFree] = x;
 				mFree = getNext(mFree);
 				return true;
@@ -365,11 +371,8 @@ class HashSet<T:Hashable> implements Set<T>
 			mFree = i;
 			
 			var doShrink = false;
-			
-			if (mSizeLevel > 0)
-				if (size() - 1 == (getCapacity() >> 2))
-					if (mIsResizable)
-						doShrink = true;
+			if (size() - 1 == (capacity >> 2) && capacity > mMinCapacity && mIsResizable)
+				doShrink = true;
 			
 			mH.clr(_key(x));
 			
@@ -396,18 +399,18 @@ class HashSet<T:Hashable> implements Set<T>
 	public function clear(purge = false)
 	{
 		mH.clear(purge);
-		for (i in 0...getCapacity()) mVals[i] = null;
+		for (i in 0...capacity) mVals[i] = null;
 		
 		if (purge)
 		{
-			while (mSizeLevel > 0) shrink();
+			while (capacity > mMinCapacity) shrink();
 			
-			for (i in 0...getCapacity())
+			for (i in 0...capacity)
 				mVals[i] = null;
 		}
 		
-		for (i in 0...getCapacity() - 1) setNext(i, i + 1);
-		setNext(getCapacity() - 1, IntIntHashTable.NULL_POINTER);
+		for (i in 0...capacity - 1) setNext(i, i + 1);
+		setNext(capacity - 1, IntIntHashTable.NULL_POINTER);
 		mFree = 0;
 	}
 	
@@ -448,7 +451,7 @@ class HashSet<T:Hashable> implements Set<T>
 	{
 		var a:Array<T> = ArrayUtil.alloc(size());
 		var j = 0;
-		for (i in 0...getCapacity())
+		for (i in 0...capacity)
 		{
 			var v = mVals[i];
 			if (v != null) a[j++] = v;
@@ -459,15 +462,15 @@ class HashSet<T:Hashable> implements Set<T>
 	/**
 		Returns a `Vector<T>` object containing all elements in this set.
 	**/
-	public function toVector():Vector<T>
+	public function toVector():Container<T>
 	{
-		var v = new Vector<T>(size());
+		var v = NativeArray.init(size());
 		var j = 0;
 		var t = mVals;
-		for (i in 0...getCapacity())
+		for (i in 0...capacity)
 		{
 			var val = t[i];
-			if (val != null) v[j++] = val;
+			if (val != null) v.set(j++, val);
 		}
 		return v;
 	}
@@ -488,19 +491,19 @@ class HashSet<T:Hashable> implements Set<T>
 		c.key = HashKey.next();
 		c.mH = cast mH.clone(false);
 		
-		var capacity = getCapacity();
+		var capacity = capacity;
 		
 		if (assign)
 		{
-			c.mVals = new Vector<T>(capacity);
+			c.mVals = NativeArray.init(capacity);
 			for (i in 0...capacity) c.mVals[i] = mVals[i];
 		}
 		else
 		{
-			var tmp = new Vector<T>(capacity);
+			var tmp = NativeArray.init(capacity);
 			if (copier != null)
 			{
-				for (i in 0...getCapacity())
+				for (i in 0...capacity)
 				{
 					var v = mVals[i];
 					if (v != null) tmp[i] = copier(v);
@@ -509,7 +512,7 @@ class HashSet<T:Hashable> implements Set<T>
 			else
 			{
 				var c:Cloneable<T> = null;
-				for (i in 0...getCapacity())
+				for (i in 0...capacity)
 				{
 					var v = mVals[i];
 					if (v != null)
@@ -524,27 +527,29 @@ class HashSet<T:Hashable> implements Set<T>
 			c.mVals = tmp;
 		}
 		
-		c.mSizeLevel = mSizeLevel;
 		c.mFree = mFree;
 		
 		#if alchemy
 		c.mNext = mNext.clone();
 		#else
-		c.mNext = new Vector<Int>(mNext.length);
-		for (i in 0...Std.int(mNext.length)) c.mNext[i] = mNext[i];
+		
+		c.mNext = NativeArray.copy(mNext);
+		
+		//c.mNext = NativeArray.init(mNext.length);
+		//for (i in 0...Std.int(mNext.length)) c.mNext[i] = mNext[i];
 		#end
 		
 		return c;
 	}
 	
-	inline function expand(oldSize:Int)
+	inline function grow(oldSize:Int)
 	{
 		var newSize = oldSize << 1;
 		
 		#if alchemy
 		mNext.resize(newSize);
 		#else
-		var tmp = new Vector<Int>(newSize);
+		var tmp = NativeArray.init(newSize);
 		for (i in 0...oldSize) tmp[i] = mNext[i];
 		mNext = tmp;
 		#end
@@ -553,31 +558,27 @@ class HashSet<T:Hashable> implements Set<T>
 		setNext(newSize - 1, IntIntHashTable.NULL_POINTER);
 		mFree = oldSize;
 		
-		var tmp = new Vector<T>(newSize);
+		var tmp = NativeArray.init(newSize);
 		for (i in 0...oldSize) tmp[i] = mVals[i];
 		mVals = tmp;
-		
-		mSizeLevel++;
 	}
 	
 	inline function shrink()
 	{
-		mSizeLevel--;
-		
-		var oldSize = getCapacity() << 1;
-		var newSize = getCapacity();
+		var oldSize = capacity << 1;
+		var newSize = capacity;
 		
 		#if alchemy
 		mNext.resize(newSize);
 		#else
-		mNext = new Vector<Int>(newSize);
+		mNext = NativeArray.init(newSize);
 		#end
 		
 		for (i in 0...newSize - 1) setNext(i, i + 1);
 		setNext(newSize - 1, IntIntHashTable.NULL_POINTER);
 		mFree = 0;
 		
-		var tmpVals = new Vector<T>(newSize);
+		var tmpVals = NativeArray.init(newSize);
 		
 		for (i in mH)
 		{
@@ -624,7 +625,7 @@ class HashSet<T:Hashable> implements Set<T>
 class HashSetIterator<T:Hashable> implements de.polygonal.ds.Itr<T>
 {
 	var mF:HashSet<T>;
-	var mVals:Vector<T>;
+	var mVals:Container<T>;
 	var mI:Int;
 	var mS:Int;
 	
@@ -638,7 +639,7 @@ class HashSetIterator<T:Hashable> implements de.polygonal.ds.Itr<T>
 	{
 		mVals = mF.mVals;
 		mI = 0;
-		mS = mF.mH.getCapacity();
+		mS = mF.mH.capacity;
 		while (mI < mS && mVals[mI] == null) mI++;
 		
 		return this;

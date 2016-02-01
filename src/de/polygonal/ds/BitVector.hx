@@ -19,7 +19,8 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 package de.polygonal.ds;
 
 import de.polygonal.ds.error.Assert.assert;
-import haxe.ds.Vector;
+
+using de.polygonal.ds.tools.NativeArray;
 
 using de.polygonal.ds.Bits;
 
@@ -39,21 +40,23 @@ class BitVector implements Hashable
 	**/
 	public var key:Int;
 	
-	var mData:Vector<Int>;
+	var mData:Container<Int>;
 	var mArrSize:Int;
 	var mBitSize:Int;
 	
 	/**
-		Creates a bit-vector capable of storing a total of `size` bits.
+		Creates a bit-vector capable of storing a total of `numBits` bits.
+		
+		<assert>invalid `numBits` value</assert>
 	**/
-	public function new(size:Int)
+	public function new(numBits:Int)
 	{
+		assert(numBits > 0);
+		
 		mData = null;
 		mBitSize = 0;
 		mArrSize = 0;
-		
-		resize(size);
-		
+		resize(numBits);
 		key = HashKey.next();
 	}
 	
@@ -81,9 +84,8 @@ class BitVector implements Hashable
 	**/
 	inline public function size():Int
 	{
-		var c = 0;
-		for (i in 0...mArrSize)
-			c += mData[i].ones();
+		var c = 0, d = mData;
+		for (i in 0...mArrSize) c += d.get(i).ones();
 		return c;
 	}
 	
@@ -105,7 +107,7 @@ class BitVector implements Hashable
 	{
 		assert(i < capacity(), 'i index out of range ($i)');
 		
-		return ((mData[i >> 5] & (1 << (i & (32 - 1)))) >> (i & (32 - 1))) != 0;
+		return ((mData.get(i >> 5) & (1 << (i & (32 - 1)))) >> (i & (32 - 1))) != 0;
 	}
 	
 	/**
@@ -117,8 +119,8 @@ class BitVector implements Hashable
 	{
 		assert(i < capacity(), 'i index out of range ($i)');
 		
-		var p = i >> 5;
-		mData[p] = mData[p] | (1 << (i & (32 - 1)));
+		var p = i >> 5, d = mData;
+		d.set(p, d.get(p) | (1 << (i & (32 - 1))));
 	}
 	
 	/**
@@ -130,8 +132,8 @@ class BitVector implements Hashable
 	{
 		assert(i < capacity(), 'i index out of range ($i)');
 		
-		var p = i >> 5;
-		mData[p] = mData[p] & (~(1 << (i & (32 - 1))));
+		var p = i >> 5, d = mData;
+		d.set(p, d.get(p) & (~(1 << (i & (32 - 1)))));
 	}
 	
 	/**
@@ -140,7 +142,14 @@ class BitVector implements Hashable
 	**/
 	inline public function clrAll()
 	{
-		for (i in 0...mArrSize) mData[i] = 0;
+		var d = mData;
+		
+		#if cpp
+		cpp.NativeArray.zero(mData, 0, mArrSize);
+		#else
+		var d = mData;
+		for (i in 0...mArrSize) d.set(i, 0);
+		#end
 	}
 	
 	/**
@@ -149,7 +158,8 @@ class BitVector implements Hashable
 	**/
 	inline public function setAll()
 	{
-		for (i in 0...mArrSize) mData[i] = -1;
+		var d = mData;
+		for (i in 0...mArrSize) d.set(i, -1);
 	}
 	
 	/**
@@ -164,16 +174,14 @@ class BitVector implements Hashable
 	{
 		assert(min >= 0 && min <= max && max < mBitSize, 'min/max out of range ($min/$max)');
 		
-		var current = min;
-		
-		while ( current < max )
+		var current = min, binIndex, nextBound, mask, d = mData;
+		while (current < max)
 		{
-			var binIndex = current >> 5;
-			var nextBound = (binIndex + 1) << 5;
-			var mask = -1 << (32 - nextBound + current);
+			binIndex = current >> 5;
+			nextBound = (binIndex + 1) << 5;
+			mask = -1 << (32 - nextBound + current);
 			mask &= (max < nextBound) ? -1 >>> (nextBound - max) : -1;
-			mData[binIndex] &= ~mask;
-			
+			d.set(binIndex, d.get(binIndex) & ~mask);
 			current = nextBound;
 		}
 	}
@@ -235,52 +243,43 @@ class BitVector implements Hashable
 	**/
 	inline public function getBuckets(output:Array<Int>):Int
 	{
-		var t = mData;
-		for (i in 0...mArrSize) output[i] = t[i];
+		var d = mData;
+		for (i in 0...mArrSize) output[i] = d.get(i);
 		return mArrSize;
 	}
 	
 	/**
-		Resizes the bit-vector to `x` bits.
+		Resizes the bit-vector to `numBits` bits.
 		
-		Preserves existing values if the new size > old size.
+		Preserves existing values if new size > old size.
 		<o>n</o>
 	**/
-	public function resize(x:Int)
+	public function resize(numBits:Int)
 	{
-		if (mBitSize == x) return;
+		if (mBitSize == numBits) return;
 		
-		var newSize = x >> 5;
-		if ((x & (32 - 1)) > 0) newSize++;
+		var newArrSize = numBits >> 5;
+		if ((numBits & (32 - 1)) > 0) newArrSize++;
 		
-		if (mData == null)
+		if (mData == null || newArrSize < mArrSize)
 		{
-			mData = new Vector(newSize);
-			
-			for (i in 0...newSize) mData[i] = 0;
+			mData = NativeArray.init(newArrSize);
+			mData.zero(0, newArrSize);
 		}
 		else
-		if (newSize < mArrSize)
+		if (newArrSize > mArrSize)
 		{
-			mData = new Vector(newSize);
-			
-			for (i in 0...newSize) mData[i] = 0;
+			var tmp = NativeArray.init(newArrSize);
+			tmp.zero(0, newArrSize);
+			mData.blit(0, tmp, 0, mArrSize);
+			mData = tmp;
 		}
 		else
-		if (newSize > mArrSize)
-		{
-			var t = new Vector<Int>(newSize);
-			Vector.blit(mData, 0, t, 0, mArrSize);
-			for (i in mArrSize...newSize) t[i] = 0;
-			mData = t;
-		}
-		else if (x < mBitSize)
-		{
-			for (i in 0...newSize) mData[i] = 0;
-		}
+		if (numBits < mBitSize)
+			mData.zero(0, newArrSize);
 		
-		mBitSize = x;
-		mArrSize = newSize;
+		mBitSize = numBits;
+		mArrSize = newArrSize;
 	}
 	
 	/**
@@ -339,7 +338,7 @@ class BitVector implements Hashable
 		var numIntegers = (k - numBytes) >> 2;
 		mArrSize = numIntegers + (numBytes > 0 ? 1 : 0);
 		mBitSize = mArrSize << 5;
-		mData = new Vector<Int>(mArrSize);
+		mData = NativeArray.init(mArrSize);
 		for (i in 0...mArrSize) mData[i] = 0;
 		for (i in 0...numIntegers)
 		{
@@ -402,8 +401,7 @@ class BitVector implements Hashable
 	public function clone():BitVector
 	{
 		var copy = new BitVector(mBitSize);
-		var t = copy.mData;
-		Vector.blit(mData, 0, copy.mData, 0, mArrSize);
+		mData.blit(0, copy.mData, 0, mArrSize);
 		return copy;
 	}
 }

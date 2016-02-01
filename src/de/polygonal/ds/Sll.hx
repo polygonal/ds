@@ -20,6 +20,8 @@ package de.polygonal.ds;
 
 import de.polygonal.ds.error.Assert.assert;
 
+using de.polygonal.ds.tools.NativeArray;
+
 /**
 	A singly linked list
 	
@@ -1035,13 +1037,13 @@ class Sll<T> implements Collection<T>
 		
 		The elements are ordered head-to-tail.
 	**/
-	public function toVector():Vector<T>
+	public function toVector():Container<T>
 	{
-		var v = new Vector<T>(size());
+		var v = NativeArray.init(size());
 		var node = head;
 		for (i in 0...mSize)
 		{
-			v[i] = node.val;
+			v.set(i, node.val);
 			node = node.next;
 		}
 		return v;

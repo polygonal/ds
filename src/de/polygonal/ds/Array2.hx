@@ -21,6 +21,8 @@ package de.polygonal.ds;
 import de.polygonal.ds.Array2.Array2Cell;
 import de.polygonal.ds.error.Assert.assert;
 
+using de.polygonal.ds.tools.NativeArray;
+
 /**
 	A two-dimensional array based on a rectangular sequential array
 	
@@ -49,7 +51,7 @@ class Array2<T> implements Collection<T>
 	**/
 	public var reuseIterator:Bool;
 	
-	var mData:Vector<T>;
+	var mData:Container<T>;
 	var mW:Int;
 	var mH:Int;
 	var mIterator:Array2Iterator<T>;
@@ -66,7 +68,7 @@ class Array2<T> implements Collection<T>
 		
 		mW = width;
 		mH = height;
-		mData = new Vector(size());
+		mData = NativeArray.init(size());
 		mIterator = null;
 		key = HashKey.next();
 		reuseIterator = false;
@@ -82,7 +84,7 @@ class Array2<T> implements Collection<T>
 		assert(x >= 0 && x < getW(), 'x index out of range ($x)');
 		assert(y >= 0 && y < getH(), 'y index out of range ($y)');
 		
-		return _get(getIndex(x, y));
+		return mData.get(getIndex(x, y));
 	}
 	
 	/**
@@ -94,8 +96,10 @@ class Array2<T> implements Collection<T>
 	inline public function getAtCell(cell:Array2Cell):T
 	{
 		assert(cell != null, "cell is null");
+		assert(cell.x >= 0 && cell.x < getW(), 'cell.x out of range (${cell.x})');
+		assert(cell.y >= 0 && cell.y < getH(), 'cell.y out of range (${cell.y})');
 		
-		return _get(getIndex(cell.x, cell.y));
+		return mData.get(getIndex(cell.x, cell.y));
 	}
 	
 	/**
@@ -108,7 +112,7 @@ class Array2<T> implements Collection<T>
 		assert(x >= 0 && x < getW(), 'x index out of range ($x)');
 		assert(y >= 0 && y < getH(), 'y index out of range ($y)');
 		
-		_set(getIndex(x, y), val);
+		mData.set(getIndex(x, y), val);
 	}
 	
 	/**
@@ -120,7 +124,7 @@ class Array2<T> implements Collection<T>
 	{
 		assert(i >= 0 && i < size(), 'index out of range ($i)');
 		
-		return _get(getIndex(i % mW, Std.int(i / mW)));
+		return mData.get(getIndex(i % mW, Std.int(i / mW)));
 	}
 	
 	/**
@@ -132,8 +136,10 @@ class Array2<T> implements Collection<T>
 	inline public function setAtCell(cell:Array2Cell, val:T)
 	{
 		assert(cell != null, "cell is null");
+		assert(cell.x >= 0 && cell.x < getW(), 'cell.x out of range (${cell.x})');
+		assert(cell.y >= 0 && cell.y < getH(), 'cell.y out of range (${cell.y})');
 		
-		return _set(getIndex(cell.x, cell.y), val);
+		return mData.set(getIndex(cell.x, cell.y), val);
 	}
 	
 	/**
@@ -145,7 +151,7 @@ class Array2<T> implements Collection<T>
 	{
 		assert(i >= 0 && i < size(), 'index out of range ($i)');
 		
-		_set(getIndex(i % mW, Std.int(i / mW)), val);
+		mData.set(getIndex(i % mW, Std.int(i / mW)), val);
 	}
 	
 	/**
@@ -207,14 +213,12 @@ class Array2<T> implements Collection<T>
 	**/
 	public function indexOf(x:T):Int
 	{
-		var i = 0;
-		var j = mW * mH;
+		var i = 0, j = size(), d = mData;
 		while (i < j)
 		{
-			if (_get(i) == x) break;
+			if (d.get(i) == x) break;
 			i++;
 		}
-		
 		return (i == j) ? -1 : i;
 	}
 	
@@ -238,10 +242,7 @@ class Array2<T> implements Collection<T>
 		assert(output != null);
 		
 		var i = indexOf(x);
-		if (i == -1)
-			return null;
-		else
-			return indexToCell(i, output);
+		return i == -1 ? null : indexToCell(i, output);
 	}
 	
 	/**
@@ -289,9 +290,8 @@ class Array2<T> implements Collection<T>
 		assert(y >= 0 && y < getH(), 'y index out of range ($y)');
 		assert(output != null, "output is null");
 		
-		var offset = y * mW;
-		for (x in 0...mW)
-			output[x] = _get(offset + x);
+		var offset = y * mW, d = mData;
+		for (x in 0...mW) output[x] = d.get(offset + x);
 		return output;
 	}
 	
@@ -306,9 +306,8 @@ class Array2<T> implements Collection<T>
 		assert(input != null, "input is null");
 		assert(input.length >= getW(), "insufficient input values");
 		
-		var offset = y * mW;
-		for (x in 0...mW)
-			_set(offset + x, input[x]);
+		var offset = y * mW, d = mData;
+		for (x in 0...mW) d.set(offset + x, input[x]);
 	}
 	
 	/**
@@ -323,8 +322,8 @@ class Array2<T> implements Collection<T>
 		assert(x >= 0 && x < getW(), 'x index out of range ($x)');
 		assert(output != null, "output is null");
 		
-		for (i in 0...mH)
-			output[i] = _get(i * mW + x);
+		var d = mData;
+		for (i in 0...mH) output[i] = d.get(getIndex(x, i));
 		return output;
 	}
 	
@@ -340,8 +339,8 @@ class Array2<T> implements Collection<T>
 		assert(input != null, "input is null");
 		assert(input.length >= getH(), "insufficient input values");
 		
-		for (y in 0...mH)
-			_set(getIndex(x, y), input[y]);
+		var d = mData;
+		for (y in 0...mH) d.set(getIndex(x, y), input[y]);
 	}
 	
 	/**
@@ -353,7 +352,8 @@ class Array2<T> implements Collection<T>
 	public function assign(cl:Class<T>, args:Array<Dynamic> = null)
 	{
 		if (args == null) args = [];
-		for (i in 0...size()) _set(i, Type.createInstance(cl, args));
+		var d = mData;
+		for (i in 0...size()) d.set(i, Type.createInstance(cl, args));
 	}
 	
 	/**
@@ -362,7 +362,8 @@ class Array2<T> implements Collection<T>
 	**/
 	public function fill(x:T):Array2<T>
 	{
-		for (i in 0...size()) _set(i, x);
+		var d = mData;
+		for (i in 0...size()) d.set(i, x);
 		return this;
 	}
 	
@@ -374,14 +375,13 @@ class Array2<T> implements Collection<T>
 	**/
 	public function iter(process:T->Int->Int->T)
 	{
+		var i, d = mData;
 		for (y in 0...mH)
-		{
 			for (x in 0...mW)
 			{
-				var i = getIndex(x, y);
-				_set(i, process(_get(i), x, y));
+				i = getIndex(x, y);
+				d.set(i, process(d.get(i), x, y));
 			}
-		}
 	}
 	
 	/**
@@ -396,18 +396,21 @@ class Array2<T> implements Collection<T>
 		assert(width >= 2 && height >= 2, 'invalid size (width:$width, height:$height)');
 		
 		if (width == mW && height == mH) return;
-		var t = mData;
-		mData = new Vector(width * height);
+		
+		var tmp = mData;
+		mData = NativeArray.init(width * height);
 		
 		var minX = width < mW ? width : mW;
 		var minY = height < mH ? height : mH;
 		
+		var t1, t2, d = mData;
+		
 		for (y in 0...minY)
 		{
-			var t1 = y * width;
-			var t2 = y * mW;
+			t1 = y * width;
+			t2 = y * mW;
 			for (x in 0...minX)
-				_set(t1 + x, t[t2 + x]);
+				d.set(t1 + x, tmp.get(t2 + x));
 		}
 		
 		mW = width;
@@ -422,14 +425,14 @@ class Array2<T> implements Collection<T>
 	**/
 	public function shiftW()
 	{
-		var t, k;
+		var t, k, d = mData;
 		for (y in 0...mH)
 		{
 			k = y * mW;
-			t = _get(k);
+			t = d.get(k);
 			for (x in 1...mW)
-				_set(k + x - 1, _get(k + x));
-			_set(k + mW - 1, t);
+				d.set(k + x - 1, d.get(k + x));
+			d.set(k + mW - 1, t);
 		}
 	}
 	
@@ -441,15 +444,15 @@ class Array2<T> implements Collection<T>
 	**/
 	public function shiftE()
 	{
-		var t, x, k;
+		var t, x, k, d = mData;
 		for (y in 0...mH)
 		{
 			k = y * mW;
-			t = _get(k + mW - 1);
+			t = d.get(k + mW - 1);
 			x = mW - 1;
 			while (x-- > 0)
-				_set(k + x + 1, _get(k + x));
-			_set(k, t);
+				d.set(k + x + 1, d.get(k + x));
+			d.set(k, t);
 		}
 	}
 	
@@ -461,15 +464,13 @@ class Array2<T> implements Collection<T>
 	**/
 	public function shiftN()
 	{
-		var t;
-		var k = mH - 1;
-		var l = (mH - 1) * mW;
+		var k = mH - 1, l = (mH - 1) * mW, t, d = mData;
 		for (x in 0...mW)
 		{
-			t = _get(x);
+			t = d.get(x);
 			for (y in 0...k)
-				_set(getIndex(x, y), _get((y + 1) * mW + x));
-			_set(l + x, t);
+				d.set(getIndex(x, y), d.get(getIndex(x, y + 1)));
+			d.set(l + x, t);
 		}
 	}
 	
@@ -481,15 +482,14 @@ class Array2<T> implements Collection<T>
 	**/
 	public function shiftS()
 	{
-		var t, k, y;
-		var k = mH - 1;
-		var l = k * mW;
+		var k = mH - 1, l = k * mW, y, t, d = mData;
 		for (x in 0...mW)
 		{
-			t = _get(l + x);
+			t = d.get(l + x);
 			y = k;
-			while(y-- > 0) _set((y + 1) * mW + x, _get(getIndex(x, y)));
-			_set(x, t);
+			while (y-- > 0)
+				d.set(getIndex(x, y + 1), d.get(getIndex(x, y)));
+			d.set(x, t);
 		}
 	}
 	
@@ -499,7 +499,8 @@ class Array2<T> implements Collection<T>
 		<assert>`x0`/`y0` or `x1`/`y1` out of range</assert>
 		<assert>`x0`, `y0` equals `x1`, `y1`</assert>
 	**/
-	inline public function swap(x0:Int, y0:Int, x1:Int, y1:Int)
+	#if !cpp inline #end //TODO cpp bug
+	public function swap(x0:Int, y0:Int, x1:Int, y1:Int)
 	{
 		assert(x0 >= 0 && x0 < getW(), 'x0 index out of range ($x0)');
 		assert(y0 >= 0 && y0 < getH(), 'y0 index out of range ($y0)');
@@ -507,11 +508,12 @@ class Array2<T> implements Collection<T>
 		assert(y1 >= 0 && y1 < getH(), 'y1 index out of range ($y1)');
 		assert(!(x0 == x1 && y0 == y1), 'source indices equal target indices (x: $x0, y: $y0)');
 		
-		var i = y0 * mW + x0;
-		var j = y1 * mW + x1;
-		var t = _get(i);
-		_set(i, _get(j));
-		_set(j, t);
+		var i = getIndex(x0, y0);
+		var j = getIndex(x1, y1);
+		var d = mData;
+		var t = d.get(i);
+		d.set(i, d.get(j));
+		d.set(j, t);
 	}
 	
 	/**
@@ -524,12 +526,12 @@ class Array2<T> implements Collection<T>
 		assert(input != null, "input is null");
 		assert(input.length >= getW(), "insufficient input values");
 		
-		var tmp = new Vector<T>(mW * (mH + 1));
-		VectorUtil.blit(mData, 0, tmp, 0, mW * mH);
+		var tmp = NativeArray.init(mW * (mH + 1));
+		mData.blit(0, tmp, 0, size());
 		mData = tmp;
-		
-		var t = mW * mH++;
-		for (i in 0...mW) _set(t + i, input[i]);
+		var t = size(), d = mData;
+		mH++;
+		for (i in 0...mW) d.set(t + i, input[i]);
 	}
 	
 	/**
@@ -542,25 +544,20 @@ class Array2<T> implements Collection<T>
 		assert(input != null, "input is null");
 		assert(input.length >= getH(), "insufficient input values");
 		
-		var tmp = new Vector<T>((mW + 1) * mH);
-		VectorUtil.blit(mData, 0, tmp, 0, mW * mH);
+		var tmp = NativeArray.init((mW + 1) * mH);
+		mData.blit(0, tmp, 0, size());
 		mData = tmp;
-		
-		var l = size() + mH;
-		var i = mH - 1;
-		var j = mH;
-		var x = mW;
-		var y = l;
+		var y = size() + mH, i = mH - 1, j = mH, x = mW, d = mData;
 		while (y-- > 0)
 		{
 			if (++x > mW)
 			{
 				x = 0;
 				j--;
-				_set(y, input[i--]);
+				d.set(y, input[i--]);
 			}
 			else
-				_set(y, _get(y - j));
+				d.set(y, d.get(y - j));
 		}
 		mW++;
 	}
@@ -575,13 +572,12 @@ class Array2<T> implements Collection<T>
 		assert(input != null, "input is null");
 		assert(input.length >= getW(), "insufficient input values");
 		
-		var tmp = new Vector<T>(mW * (mH + 1));
-		VectorUtil.blit(mData, 0, tmp, mW, mW * mH);
+		var tmp = NativeArray.init(mW * (mH + 1));
+		mData.blit(0, tmp, mW, size());
 		mData = tmp;
-		
 		mH++;
-		
-		for (i in 0...mW) _set(i, input[i]);
+		var d = mData;
+		for (i in 0...mW) d.set(i, input[i]);
 	}
 	
 	/**
@@ -594,25 +590,20 @@ class Array2<T> implements Collection<T>
 		assert(input != null, "input is null");
 		assert(input.length >= getH(), "insufficient input values");
 		
-		var tmp = new Vector<T>((mW + 1) * mH);
-		VectorUtil.blit(mData, 0, tmp, 0, mW * mH);
+		var tmp = NativeArray.init((mW + 1) * mH);
+		mData.blit(0, tmp, 0, size());
 		mData = tmp;
-		
-		var l = size() + mH;
-		var i = mH - 1;
-		var j = mH;
-		var x = 0;
-		var y = l;
+		var y = size() + mH, i = mH - 1, j = mH, x = 0, d = mData;
 		while (y-- > 0)
 		{
 			if (++x > mW)
 			{
 				x = 0;
 				j--;
-				_set(y, input[i--]);
+				d.set(y, input[i--]);
 			}
 			else
-				_set(y, _get(y - j));
+				d.set(y, d.get(y - j));
 		}
 		mW++;
 	}
@@ -631,7 +622,8 @@ class Array2<T> implements Collection<T>
 		{
 			var srcOffset = mW * i;
 			var dstOffset = mW * j;
-			for (x in 0...mW) _set(dstOffset + x, _get(srcOffset + x));
+			var d = mData;
+			for (x in 0...mW) d.set(dstOffset + x, d.get(srcOffset + x));
 		}
 	}
 	
@@ -649,13 +641,13 @@ class Array2<T> implements Collection<T>
 		{
 			var srcOffset = mW * i;
 			var dstOffset = mW * j;
-			
+			var t, k, tmp, d = mData;
 			for (x in 0...mW)
 			{
-				var tmp = _get(srcOffset + x);
-				var k = dstOffset + x;
-				_set(srcOffset + x, _get(k));
-				_set(k, tmp);
+				tmp = d.get(srcOffset + x);
+				k = dstOffset + x;
+				d.set(srcOffset + x, d.get(k));
+				d.set(k, tmp);
 			}
 		}
 	}
@@ -672,10 +664,11 @@ class Array2<T> implements Collection<T>
 		
 		if (i != j)
 		{
+			var t, d = mData;
 			for (y in 0...mH)
 			{
-				var t = y * mW;
-				_set(t + j, _get(t + i));
+				t = y * mW;
+				d.set(t + j, d.get(t + i));
 			}
 		}
 	}
@@ -692,14 +685,15 @@ class Array2<T> implements Collection<T>
 		
 		if (i != j)
 		{
+			var t, k, l, tmp, d = mData;
 			for (y in 0...mH)
 			{
-				var t = y * mW;
-				var k = t + i;
-				var l = t + j;
-				var tmp = _get(k);
-				_set(k, _get(l));
-				_set(l, tmp);
+				t = y * mW;
+				k = t + i;
+				l = t + j;
+				tmp = d.get(k);
+				d.set(k, d.get(l));
+				d.set(l, tmp);
 			}
 		}
 	}
@@ -718,11 +712,11 @@ class Array2<T> implements Collection<T>
 		}
 		else
 		{
-			var t = new Vector(mW * mH);
+			var tmp = NativeArray.init(size());
 			for (y in 0...mH)
 				for (x in 0...mW)
-					t[x * mH + y] = get(x, y);
-			mData = t;
+					tmp.set(x * mH + y, get(x, y));
+			mData = tmp;
 			mW ^= mH;
 			mH ^= mW;
 			mW ^= mH;
@@ -735,7 +729,7 @@ class Array2<T> implements Collection<T>
 		Useful for fast iteration or low-level operations.
 		<o>1</o>
 	**/
-	inline public function getStorage():Vector<T>
+	inline public function getStorage():Container<T>
 	{
 		return mData;
 	}
@@ -748,12 +742,12 @@ class Array2<T> implements Collection<T>
 	{
 		assert(a.length == getH() && a[0] != null && a[0].length == getW(), "invalid input");
 		
-		var w = a[0].length;
+		var w = a[0].length, row, d = mData;
 		for (y in 0...a.length)
 		{
-			var row = a[y];
+			row = a[y];
 			for (x in 0...w)
-				_set(getIndex(x, y), row[x]);
+				d.set(getIndex(x, y), row[x]);
 		}
 	}
 	
@@ -767,28 +761,29 @@ class Array2<T> implements Collection<T>
 	public function shuffle(rval:Array<Float> = null)
 	{
 		var s = size();
+		var d = mData;
 		if (rval == null)
 		{
-			var m = Math;
+			var m = Math, i, t;
 			while (--s > 1)
 			{
-				var i = Std.int(m.random() * s);
-				var t = _get(s);
-				_set(s, _get(i));
-				_set(i, t);
+				i = Std.int(m.random() * s);
+				t = d.get(s);
+				d.set(s, d.get(i));
+				d.set(i, t);
 			}
 		}
 		else
 		{
 			assert(rval.length >= size(), "insufficient random values");
 			
-			var j = 0;
+			var j = 0, i, t;
 			while (--s > 1)
 			{
-				var i = Std.int(rval[j++] * s);
-				var t = _get(s);
-				_set(s, _get(i));
-				_set(i, t);
+				i = Std.int(rval[j++] * s);
+				t = d.get(s);
+				d.set(s, d.get(i));
+				d.set(i, t);
 			}
 		}
 	}
@@ -809,19 +804,18 @@ class Array2<T> implements Collection<T>
 		if (maxX > mW - 1) maxX = mW - 1;
 		if (maxY > mH - 1) maxY = mH - 1;
 		
-		var y = minY, x, i = 0, offset, w = mW;
+		var y = minY, x, i = 0, offset, w = mW, d = mData;
 		while (y <= maxY)
 		{
 			offset = y * w;
 			x = minX;
 			while (x <= maxX)
 			{
-				output[i++] = _get(offset + x);
+				output[i++] = d.get(offset + x);
 				x++;
 			}
 			y++;
 		}
-		
 		return output;
 	}
 	
@@ -844,10 +838,10 @@ class Array2<T> implements Collection<T>
 	**/
 	public function toString():String
 	{
-		var l = 0;
+		var l = 0, d = mData;
 		for (i in 0...size())
 		{
-			var s = Std.string(_get(i));
+			var s = Std.string(d.get(i));
 			l = Std.int(Math.max(s.length, l));
 		}
 		var s = '{ Array2 ${mW}x${mH} }';
@@ -860,7 +854,7 @@ class Array2<T> implements Collection<T>
 			s += Printf.format("%- 4d: ", [row++]);
 			offset = y * mW;
 			for (x in 0...mW)
-				s += Printf.format("%" + l + "s%s", [Std.string(_get(offset + x)), x < mW - 1 ? ", " : ""]);
+				s += Printf.format("%" + l + "s%s", [Std.string(d.get(offset + x)), x < mW - 1 ? ", " : ""]);
 			s += "\n";
 		}
 		
@@ -880,7 +874,8 @@ class Array2<T> implements Collection<T>
 	**/
 	public function free()
 	{
-		for (i in 0...size()) _set(i, cast null);
+		var d = mData;
+		for (i in 0...size()) d.set(i, cast null);
 		mData = null;
 		mIterator = null;
 	}
@@ -891,9 +886,10 @@ class Array2<T> implements Collection<T>
 	**/
 	public function contains(x:T):Bool
 	{
+		var d = mData;
 		for (i in 0...size())
 		{
-			if (_get(i) == x)
+			if (d.get(i) == x)
 				return true;
 		}
 		return false;
@@ -907,16 +903,15 @@ class Array2<T> implements Collection<T>
 	**/
 	public function remove(x:T):Bool
 	{
-		var found = false;
+		var found = false, d = mData;
 		for (i in 0...size())
 		{
-			if (_get(i) == x)
+			if (d.get(i) == x)
 			{
-				_set(i, cast null);
+				d.set(i, cast null);
 				found = true;
 			}
 		}
-		
 		return found;
 	}
 	
@@ -928,7 +923,8 @@ class Array2<T> implements Collection<T>
 	**/
 	public function clear(purge = false)
 	{
-		for (i in 0...size()) _set(i, cast null);
+		var d = mData;
+		for (i in 0...size()) d.set(i, cast null);
 	}
 	
 	/**
@@ -979,9 +975,8 @@ class Array2<T> implements Collection<T>
 	**/
 	public function toArray():Array<T>
 	{
-		var a:Array<T> = ArrayUtil.alloc(size());
-		for (i in 0...size())
-			a[i] = _get(i);
+		var a:Array<T> = ArrayUtil.alloc(size()), d = mData;
+		for (i in 0...size()) a[i] = d.get(i);
 		return a;
 	}
 	
@@ -990,10 +985,10 @@ class Array2<T> implements Collection<T>
 		
 		Order: Row-major order (row-by-row).
 	**/
-	public function toVector():Vector<T>
+	public function toVector():Container<T>
 	{
-		var v = new Vector<T>(size());
-		for (i in 0...size()) v[i] = _get(i);
+		var v = NativeArray.init(size()), d = mData;
+		for (i in 0...size()) v.set(i, d.get(i));
 		return v;
 	}
 	
@@ -1008,35 +1003,38 @@ class Array2<T> implements Collection<T>
 	**/
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{
-		var copy = new Array2<T>(mW, mH);
+		var c = new Array2<T>(mW, mH);
+		
 		if (assign)
-		{
-			for (i in 0...size())
-				copy._set(i, _get(i));
-		}
+			c.mData = NativeArray.copy(mData);
 		else
-		if (copier == null)
 		{
-			var c:Cloneable<Dynamic> = null;
-			for (i in 0...size())
+			c.mData = NativeArray.init(size());
+			var src = mData;
+			var dst = c.mData;
+			
+			if (copier == null)
 			{
-				assert(Std.is(_get(i), Cloneable), 'element is not of type Cloneable (${_get(i)})');
+				var e:Cloneable<Dynamic> = null;
+				var d:Dynamic; //required for -cpp
 				
-				c = cast(_get(i), Cloneable<Dynamic>);
-				copy._set(i, c.clone());
+				for (i in 0...size())
+				{
+					assert(Std.is(src.get(i), Cloneable), 'element is not of type Cloneable (${src.get(i)})');
+					
+					d = src.get(i);
+					e = cast d;
+					dst.set(i, e.clone());
+				}
+			}
+			else
+			{
+				for (i in 0...size())
+					dst.set(i, copier(src.get(i)));
 			}
 		}
-		else
-		{
-			for (i in 0...size())
-				copy._set(i, copier(_get(i)));
-		}
-		return copy;
+		return c;
 	}
-	
-	inline function _get(i:Int) return mData[i];
-	
-	inline function _set(i:Int, x:T) mData[i] = x;
 }
 
 #if generic
@@ -1047,7 +1045,7 @@ class Array2<T> implements Collection<T>
 class Array2Iterator<T> implements de.polygonal.ds.Itr<T>
 {
 	var mStructure:Array2<T>;
-	var mData:Vector<T>;
+	var mData:Container<T>;
 	var mI:Int;
 	var mS:Int;
 	
@@ -1072,14 +1070,14 @@ class Array2Iterator<T> implements de.polygonal.ds.Itr<T>
 	
 	inline public function next():T
 	{
-		return mData[mI++];
+		return mData.get(mI++);
 	}
 	
 	inline public function remove()
 	{
 		//just nullify value
 		assert(mI > 0, "call next() before removing an element");
-		mData[mI - 1] = cast null;
+		mData.set(mI - 1, cast null);
 	}
 }
 

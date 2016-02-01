@@ -20,6 +20,8 @@ package de.polygonal.ds;
 
 import de.polygonal.ds.error.Assert.assert;
 
+using de.polygonal.ds.tools.NativeArray;
+
 /**
 	A deque is a "double-ended queue"
 	
@@ -876,9 +878,9 @@ class ArrayedDeque<T> implements Deque<T>
 	/**
 		Returns a `Vector<T>` object containing all elements in this deque in the natural order.
 	**/
-	public function toVector():Vector<T>
+	public function toVector():Container<T>
 	{
-		var v = new Vector<T>(size());
+		var v = NativeArray.init(size());
 		var i = 0;
 		if (mTailBlockIndex == 0)
 		{

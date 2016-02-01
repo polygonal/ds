@@ -20,6 +20,10 @@ package de.polygonal.ds;
 
 import de.polygonal.ds.error.Assert.assert;
 
+#if cpp
+using cpp.NativeArray;
+#end
+
 /**
 	Various utility functions for working with arrays
 **/
@@ -37,8 +41,9 @@ class ArrayUtil
 		#if (flash || js)
 		a = untyped __new__(Array, x);
 		#elseif cpp
-		a = new Array<T>();
-		a[x - 1] = cast null;
+		var a = new Array<T>();
+		a.setSize(x);
+		return a;
 		#else
 		a = new Array<T>();
 		for (i in 0...x) a[i] = cast null;
@@ -51,24 +56,19 @@ class ArrayUtil
 	**/
 	inline public static function shrink<T>(a:Array<T>, x:Int):Array<T>
 	{
-		#if (flash || js)
 		if (a.length > x)
-			untyped a.length = x;
-		return a;
-		#elseif cpp
-			#if no_inline
-			var t = new Array<T>();
-			for (i in 0...x) t[i] = a[i];
-			return t;
-			#else
+		{
+			#if (flash || js)
 			untyped a.length = x;
 			return a;
+			#elseif cpp
+			return a.setSize(x);
+			#else
+			return a.slice(0, x);
 			#end
-		#else
-		var t = new Array<T>();
-		for (i in 0...x) t[i] = a[i];
-		return t;
-		#end
+		}
+		else
+			return a;
 	}
 	
 	/**
@@ -333,7 +333,7 @@ class ArrayUtil
 		results.push(a.copy());
 		
 		i = 1;
-		while(i < n)
+		while (i < n)
 		{
 			if (p[i] < i)
 			{

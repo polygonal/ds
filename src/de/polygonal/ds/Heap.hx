@@ -20,6 +20,8 @@ package de.polygonal.ds;
 
 import de.polygonal.ds.error.Assert.assert;
 
+using de.polygonal.ds.tools.NativeArray;
+
 /**
 	A heap is a special kind of binary tree in which every node is greater than all of its children
 	
@@ -58,9 +60,14 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	**/
 	public var reuseIterator:Bool;
 	
-	var mData:Array<T>;
+	public var capacity(default, null):Int;
+	
+	var mData:Container<T>;
 	var mSize:Int;
 	var mIterator:HeapIterator<T>;
+	var mShrinkSize:Int;
+	
+	var mCapacityIncrement:Int;
 	
 	#if debug
 	var mMap:haxe.ds.ObjectMap<T, Bool>;
@@ -72,7 +79,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 		@param maxSize the maximum allowed size of this heap.
 		The default value of -1 indicates that there is no upper limit.
 	**/
-	public function new(reservedSize = 0, maxSize = -1)
+	public function new(initialCapacity:Int = 16, capacityIncrement:Int = -1, maxSize = -1)
 	{
 		#if debug
 		this.maxSize = (maxSize == -1) ? M.INT32_MAX : maxSize;
@@ -80,22 +87,15 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 		this.maxSize = -1;
 		#end
 		
+		capacity = initialCapacity;
+		mCapacityIncrement = capacityIncrement;
+		
 		#if debug
 		mMap = new haxe.ds.ObjectMap<T, Bool>();
 		#end
 		
-		if (reservedSize > 0)
-		{
-			#if debug
-			if (this.maxSize != -1)
-				assert(reservedSize <= this.maxSize, "reserved size is greater than allowed size");
-			#end
-			mData = ArrayUtil.alloc(reservedSize + 1);
-		}
-		else
-			mData = new Array<T>();
-		
-		set(0, cast null);
+		mData = NativeArray.init(capacity + 1);
+		mData.set(0, cast null); //reserved
 		mSize = 0;
 		mIterator = null;
 		
@@ -110,6 +110,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	**/
 	public function pack()
 	{
+		throw 'TODO';
 		if (mData.length - 1 == size()) return;
 		
 		#if debug
@@ -118,16 +119,19 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 		
 		var tmp = mData;
 		mData = ArrayUtil.alloc(size() + 1);
-		set(0, cast null);
+		
+		var d = mData;
+		
+		d.set(0, cast null);
 		for (i in 1...size() + 1)
 		{
-			set(i, tmp[i]);
+			d.set(i, tmp.get(i));
 			
 			#if debug
-			mMap.set(tmp[i], true);
+			mMap.set(tmp.get(i), true);
 			#end
 		}
-		for (i in size() + 1...tmp.length) tmp[i] = cast null;
+		for (i in size() + 1...NativeArray.size(tmp)) tmp.set(i, cast null);
 	}
 	
 	/**
@@ -136,19 +140,15 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 		This is useful if the expected size is known in advance - many platforms can optimize memory usage if an exact size is specified.
 		<o>n</o>
 	**/
-	public function reserve(x:Int)
+	public function reserve(n:Int)
 	{
-		if (size() == x) return;
+		if (n <= capacity) return this;
 		
-		var tmp = mData;
-		mData = ArrayUtil.alloc(x + 1);
+		capacity = n;
+		mShrinkSize = n >> 2;
+		resize(n);
 		
-		set(0, cast null);
-		if (size() < x)
-		{
-			for (i in 1...size() + 1)
-				set(i, tmp[i]);
-		}
+		return this;
 	}
 	
 	/**
@@ -162,7 +162,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	{
 		assert(size() > 0, "heap is empty");
 		
-		return get(1);
+		return mData.get(1);
 	}
 	
 	/**
@@ -176,11 +176,13 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	{
 		assert(size() > 0, "heap is empty");
 		
-		if (mSize == 1) return get(1);
-		var a = get(1), b;
+		if (mSize == 1) return mData.get(1);
+		
+		var d = mData;
+		var a = d.get(1), b;
 		for (i in 2...mSize + 1)
 		{
-			b = get(i);
+			b = d.get(i);
 			if (a.compare(b) > 0) a = b;
 		}
 		
@@ -204,7 +206,8 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 		mMap.set(x, true);
 		#end
 		
-		set(++mSize, x);
+		if (mSize == capacity) grow();
+		mData.set(++mSize, x);
 		x.position = mSize;
 		upheap(mSize);
 	}
@@ -220,13 +223,16 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	{
 		assert(size() > 0, "heap is empty");
 		
-		var x = get(1);
+		var d = mData;
+		var x = d.get(1);
 		
 		#if debug
 		mMap.remove(x);
 		#end
 		
-		set(1, get(mSize));
+		//TODO shrink
+		
+		d.set(1, d.get(mSize));
 		downheap(1);
 		mSize--;
 		return x;
@@ -241,11 +247,11 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	{
 		#if debug
 		assert(!mMap.exists(x), "x already exists");
-		mMap.remove(get(1));
+		mMap.remove(mData.get(1));
 		mMap.set(x, true);
 		#end
 		
-		set(1, x);
+		mData.set(1, x);
 		downheap(1);
 	}
 	
@@ -374,11 +380,14 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	{
 		var s = '{ Heap size: ${size()} }';
 		if (isEmpty()) return s;
+		
+		var d = mData;
+		
 		var tmp = new Heap<HeapElementWrapper<T>>();
 		for (i in 1...mSize + 1)
 		{
-			var w = new HeapElementWrapper<T>(get(i));
-			tmp.set(i, w);
+			var w = new HeapElementWrapper<T>(d.get(i));
+			tmp.mData.set(i, w);
 		}
 		tmp.mSize = mSize;
 		s += "\n[ front\n";
@@ -393,7 +402,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 		Uses the Floyd algorithm (bottom-up) to repair the heap tree by restoring the heap property.
 		<o>n</o>
 	**/
-	public function repair()
+	public function repair():Heap<T>
 	{
 		var i = mSize >> 1;
 		while (i >= 1)
@@ -401,6 +410,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 			heapify(i, mSize);
 			i--;
 		}
+		return this;
 	}
 	
 	/*///////////////////////////////////////////////////////
@@ -415,7 +425,8 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	**/
 	public function free()
 	{
-		for (i in 0...mData.length) set(i, cast null);
+		var d = mData;
+		for (i in 0...NativeArray.size(d)) d.set(i, cast null);
 		mData = null;
 		
 		if (mIterator != null)
@@ -439,7 +450,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 		assert(x != null, "x is null");
 		
 		var position = x.position;
-		return (position > 0 && position <= mSize) && (get(position) == x);
+		return (position > 0 && position <= mSize) && (mData.get(position) == x);
 	}
 	
 	/**
@@ -450,30 +461,30 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	**/
 	public function remove(x:T):Bool
 	{
-		if (isEmpty())
-			return false;
+		if (isEmpty()) return false;
+
+		assert(x != null, "x is null");
+		
+		#if debug
+		var exists = mMap.exists(x);
+		assert(exists, "x does not exist");
+		mMap.remove(x);
+		#end
+		
+		if (x.position == 1)
+			pop();
 		else
 		{
-			assert(x != null, "x is null");
-			
-			#if debug
-			var exists = mMap.exists(x);
-			assert(exists, "x does not exist");
-			mMap.remove(x);
-			#end
-			
-			if (x.position == 1)
-				pop();
-			else
-			{
-				var p = x.position;
-				set(p, get(mSize));
-				downheap(p);
-				upheap(p);
-				mSize--;
-			}
-			return true;
+			var p = x.position, d = mData;
+			d.set(p, d.get(mSize));
+			downheap(p);
+			upheap(p);
+			mSize--;
 		}
+		
+		//TODO shrink
+		
+		return true;
 	}
 	
 	/**
@@ -489,7 +500,8 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 		
 		if (purge)
 		{
-			for (i in 1...mData.length) set(i, cast null);
+			var d = mData;
+			for (i in 1...NativeArray.size(mData)) d.set(i, cast null);
 		}
 		mSize = 0;
 	}
@@ -538,18 +550,20 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	**/
 	public function toArray():Array<T>
 	{
+		var d = mData;
 		var a:Array<T> = ArrayUtil.alloc(size());
-		for (i in 1...mSize + 1) a[i - 1] = get(i);
+		for (i in 1...mSize + 1) a[i - 1] = d.get(i);
 		return a;
 	}
 	
 	/**
 		Returns a `Vector<T>` object containing all elements in this heap.
 	**/
-	public function toVector():Vector<T>
+	public function toVector():Container<T>
 	{
-		var v = new Vector<T>(size());
-		for (i in 1...mSize + 1) v[i - 1] = get(i);
+		var v = NativeArray.init(size());
+		var d = mData;
+		for (i in 1...mSize + 1) v.set(i - 1, d.get(i));
 		return v;
 	}
 	
@@ -567,12 +581,13 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 		if (mSize == 0) return copy;
 		if (assign)
 		{
+			//TODo optimize
 			for (i in 1...mSize + 1)
 			{
-				copy.set(i, get(i));
+				copy.mData.set(i, mData.get(i));
 				
 				#if debug
-				copy.mMap.set(get(i), true);
+				copy.mMap.set(mData.get(i), true);
 				#end
 			}
 		}
@@ -581,14 +596,14 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 		{
 			for (i in 1...mSize + 1)
 			{
-				var e = get(i);
+				var e = mData.get(i);
 				
-				assert(Std.is(e, Cloneable), 'element is not of type Cloneable (${get(i)})');
+				assert(Std.is(e, Cloneable), 'element is not of type Cloneable (${mData.get(i)})');
 				
 				var cl:Cloneable<T> = cast e;
 				var c = cl.clone();
 				c.position = e.position;
-				copy.set(i, cast c);
+				copy.mData.set(i, cast c);
 				
 				#if debug
 				copy.mMap.set(c, true);
@@ -599,10 +614,10 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 		{
 			for (i in 1...mSize + 1)
 			{
-				var e = get(i);
+				var e = mData.get(i);
 				var c = copier(e);
 				c.position = e.position;
-				copy.set(i, c);
+				copy.mData.set(i, c);
 				
 				#if debug
 				copy.mMap.set(c, true);
@@ -616,14 +631,16 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	
 	inline function upheap(i:Int)
 	{
+		var d = mData;
 		var p = i >> 1;
-		var a = get(i), b;
+		var a = d.get(i), b;
+		
 		while (p > 0)
 		{
-			b = get(p);
+			b = d.get(p);
 			if (a.compare(b) > 0)
 			{
-				set(i, b);
+				d.set(i, b);
 				b.position = i;
 				i = p;
 				p >>= 1;
@@ -631,25 +648,26 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 			else break;
 		}
 		a.position = i;
-		set(i, a);
+		d.set(i, a);
 	}
 	
 	inline function downheap(i:Int)
 	{
+		var d = mData;
 		var c = i << 1;
-		var a = get(i);
+		var a = d.get(i);
 		var s = mSize - 1;
 		
 		while (c < mSize)
 		{
 			if (c < s)
-				if (get(c).compare(get(c + 1)) < 0)
+				if (d.get(c).compare(d.get(c + 1)) < 0)
 					c++;
 			
-			var b = get(c);
+			var b = d.get(c);
 			if (a.compare(b) < 0)
 			{
-				set(i, b);
+				d.set(i, b);
 				b.position = i;
 				a.position = c;
 				i = c;
@@ -658,25 +676,24 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 			else break;
 		}
 		a.position = i;
-		set(i, a);
+		d.set(i, a);
 	}
 	
 	function heapify(p:Int, s:Int)
 	{
+		var d = mData;
 		var l = p << 1;
 		var r = l + 1;
-		
 		var max = p;
-		
-		if (l <= s && get(l).compare(get(max)) > 0) max = l;
-		if (l + 1 <= s && get(l + 1).compare(get(max)) > 0) max = r;
+		if (l <= s && d.get(l).compare(d.get(max)) > 0) max = l;
+		if (l + 1 <= s && d.get(l + 1).compare(d.get(max)) > 0) max = r;
 		
 		if (max != p)
 		{
-			var a = get(max);
-			var b = get(p);
-			set(max, b);
-			set(p, a);
+			var a = d.get(max);
+			var b = d.get(p);
+			d.set(max, b);
+			d.set(p, a);
 			var tmp = a.position;
 			a.position = b.position;
 			b.position = tmp;
@@ -685,13 +702,32 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 		}
 	}
 	
-	inline function get(i:Int)
+	function grow()
 	{
-		return mData[i];
+		var tmp = capacity;
+		
+		capacity =
+		if (mCapacityIncrement == -1)
+		{
+			if (true)
+				Std.int((capacity * 3) / 2 + 1); //1.5
+			else
+				capacity + ((capacity >> 3) + (capacity < 9 ? 3 : 6)); //1.125
+		}
+		else
+			capacity + mCapacityIncrement;
+		
+		//trace('heap resized from $tmp -> $capacity');
+		//mShrinkSize = capacity >> 2;
+		
+		resize(capacity + 1);
 	}
-	inline function set(i:Int, x:T)
+	
+	function resize(newSize:Int)
 	{
-		mData[i] = x;
+		var tmp = NativeArray.init(newSize);
+		NativeArray.blit(mData, 0, tmp, 0, mSize + 1);
+		mData = tmp;
 	}
 }
 

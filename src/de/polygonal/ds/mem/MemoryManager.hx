@@ -128,7 +128,7 @@ class MemoryManager
 		bytesTotal = mBlockSizeBytes;
 		
 		mSegmentList = new MemorySegment(this, mBytesRaw);
-		mSegmentList.expandRight(bytesTotal);
+		mSegmentList.growRight(bytesTotal);
 		
 		#if alchemy
 			mBytes = new flash.utils.ByteArray();
@@ -371,7 +371,7 @@ class MemoryManager
 					wipe(i.next.e - bytesToEat + 1, bytesToEat, i.offset);
 					
 					i.shrinkLeft(bytesToEat);
-					i.next.expandLeft(bytesToEat);
+					i.next.growLeft(bytesToEat);
 					i.next.setOffset();
 					
 					if (i.size == 0)
@@ -407,7 +407,7 @@ class MemoryManager
 					
 					//update intervals
 					m.shiftLeft(bytesToEat);
-					m.expandRight(bytesToEat);
+					m.growRight(bytesToEat);
 					m.setOffset();
 				}
 				
@@ -445,7 +445,7 @@ class MemoryManager
 				if (memory.prev.isEmpty)
 				{
 					//refit empty interval to close gap
-					memory.prev.expandRight(gap);
+					memory.prev.growRight(gap);
 				}
 				else
 				{
@@ -453,7 +453,7 @@ class MemoryManager
 					//fill gap with an empty interval
 					var i = new MemorySegment(this, mBytesRaw);
 					i.b = b;
-					i.expandRight(gap);
+					i.growRight(gap);
 					
 					//insert into linked list
 					i.next = memory;
@@ -467,7 +467,7 @@ class MemoryManager
 			{
 				//fill gap with an empty interval
 				var i = new MemorySegment(this, mBytesRaw);
-				i.expandRight(gap);
+				i.growRight(gap);
 				
 				//prepend
 				memory.prev = i;
@@ -580,7 +580,7 @@ class MemoryManager
 						//fits [i0][  i1  ]
 						_memmove(i1.e - i0.size + 1, i0.b, i0.size, offset);
 						
-						i0.expandRight(-t);
+						i0.growRight(-t);
 						i1.shrinkRight(-t);
 					}
 					else
@@ -589,7 +589,7 @@ class MemoryManager
 						//does not fit [  i0  ][i1]
 						_memmove(i0.b + i1.size, i0.b, i0.size, offset);
 						
-						i1.expandLeft(t);
+						i1.growLeft(t);
 						i0.shrinkLeft(t);
 					}
 					
@@ -691,14 +691,14 @@ class MemoryManager
 		//adjust first interval to cover the extra space or create new one
 		if (mSegmentList.isEmpty)
 		{
-			//just expand empty interval to cover the extra space
-			mSegmentList.expandRight(freeSpace);
+			//just grow empty interval to cover the extra space
+			mSegmentList.growRight(freeSpace);
 		}
 		else
 		{
 			//span interval over extra space
 			var i = new MemorySegment(this, rawOffset);
-			i.expandRight(freeSpace);
+			i.growRight(freeSpace);
 			
 			//append to interval list
 			i.next = mSegmentList;
@@ -880,7 +880,7 @@ private class MemorySegment
 		setOffset();
 	}
 	
-	inline public function expandLeft(s:Int)
+	inline public function growLeft(s:Int)
 	{
 		size += s;
 		b = e - size + 1;
@@ -892,7 +892,7 @@ private class MemorySegment
 		e = b + size - 1;
 	}
 	
-	inline public function expandRight(s:Int)
+	inline public function growRight(s:Int)
 	{
 		size += s;
 		e = b + size - 1;

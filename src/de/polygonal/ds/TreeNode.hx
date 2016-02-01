@@ -20,6 +20,8 @@ package de.polygonal.ds;
 
 import de.polygonal.ds.error.Assert.assert;
 
+using de.polygonal.ds.tools.NativeArray;
+
 /**
 	A tree structure
 	
@@ -2124,11 +2126,11 @@ class TreeNode<T> implements Collection<T>
 		
 		The elements are collected using a preorder traversal.
 	**/
-	public function toVector():Vector<T>
+	public function toVector():Container<T>
 	{
-		var v = new Vector<T>(size());
+		var v = NativeArray.init(size());
 		var i = 0;
-		preorder(function(node:TreeNode<T>, _, _):Bool { v[i++] = node.val; return true; }, null);
+		preorder(function(node:TreeNode<T>, _, _):Bool { v.set(i++, node.val); return true; }, null);
 		return v;
 	}
 	

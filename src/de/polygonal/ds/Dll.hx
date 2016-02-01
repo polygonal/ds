@@ -19,6 +19,7 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 package de.polygonal.ds;
 
 import de.polygonal.ds.error.Assert.assert;
+import de.polygonal.ds.tools.NativeArray;
 
 /**
 	A doubly linked list
@@ -1174,9 +1175,9 @@ class Dll<T> implements Collection<T>
 		
 		Preserves the natural order of this linked list.
 	**/
-	public function toVector():Vector<T>
+	public function toVector():Container<T>
 	{
-		var v = new Vector<T>(size());
+		var v = NativeArray.init(size());
 		var node = head;
 		for (i in 0...mSize)
 		{

@@ -19,6 +19,7 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 package de.polygonal.ds;
 
 import de.polygonal.ds.error.Assert.assert;
+import de.polygonal.ds.tools.NativeArray;
 
 /**
 	A weighted graph
@@ -1234,9 +1235,9 @@ class Graph<T> implements Collection<T>
 	/**
 		Returns an unordered `Vector<T>` object containing all elements stored in the graph nodes of this graph.
 	**/
-	public function toVector():Vector<T>
+	public function toVector():Container<T>
 	{
-		var v = new Vector<T>(size());
+		var v = NativeArray.init(size());
 		var node = mNodeList;
 		var i = 0;
 		while (node != null)

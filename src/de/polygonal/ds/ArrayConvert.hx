@@ -27,16 +27,21 @@ class ArrayConvert
 {
 	/**
 		Converts the array `x` to a two-dimensional array with dimensions `width` and `height`.
+		@param height if omitted, #rows equals `x`.length divided by `width`.
+		
 		<assert>`x` is null</assert>
 		<assert>`x`::length < `width` * `height`</assert>
 	**/
-	public static function toArray2<T>(x:Array<T>, width:Int, height:Int):Array2<T>
+	public static function toArray2<T>(x:Array<T>, width:Int, height:Int = 0):Array2<T>
 	{
 		assert(x != null);
+		
+		if (height == 0) height = Std.int(x.length / width);
+		
 		assert(x.length >= width * height);
 		
 		var c = new Array2<T>(width, height);
-		var a = c.getVector();
+		var a = c.getStorage();
 		for (i in 0...x.length) a[i] = x[i];
 		return c;
 	}
@@ -52,7 +57,7 @@ class ArrayConvert
 		assert(x.length >= width * height * depth);
 		
 		var c = new Array3<T>(width, height, depth);
-		var a = c.getVector();
+		var a = c.getStorage();
 		for (i in 0...x.length) a[i] = x[i];
 		return c;
 	}
@@ -157,23 +162,6 @@ class ArrayConvert
 		
 		var c = new LinkedStack<T>();
 		for (i in 0...x.length) c.push(x[i]);
-		return c;
-	}
-	
-	/**
-		Converts the array `x` to a dense array.
-		
-		The size of the dense array equals `x`::length.
-		<assert>`x` is null</assert>
-		<assert>`x` is empty</assert>
-	**/
-	public static function toDa<T>(x:Array<T>):Da<T>
-	{
-		assert(x != null);
-		assert(x.length > 0);
-		
-		var c = new Da<T>();
-		for (i in 0...x.length) c.pushBack(x[i]);
 		return c;
 	}
 }
