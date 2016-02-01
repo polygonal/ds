@@ -16,6 +16,68 @@ class TestArrayedQueue extends AbstractTest
 		super();
 	}
 	
+	function testGrow()
+	{
+		//0123
+		//^
+		var q = new ArrayedQueue<Int>(4);
+		for (i in 0...4) q.enqueue(i);
+		assertEquals(4, q.size());
+		assertEquals(4, q.capacity);
+		for (i in 0...4) assertEquals(i, q.get(i));
+		q.enqueue(4);
+		assertEquals(5, q.size());
+		assertTrue(q.capacity > 4);
+		for (i in 0...5) assertEquals(i, q.get(i));
+		
+		//0123
+		// ^
+		var q = new ArrayedQueue<Int>(4);
+		for (i in 0...4) q.enqueue(i);
+		q.dequeue();
+		q.enqueue(4);
+		q.enqueue(5);
+		for (i in 0...5) assertEquals(i + 1, q.get(i));
+		assertEquals(5, q.size());
+		
+		//0123
+		//  ^
+		var q = new ArrayedQueue<Int>(4);
+		for (i in 0...4) q.enqueue(i);
+		q.dequeue();
+		q.dequeue();
+		q.enqueue(4);
+		q.enqueue(5);
+		q.enqueue(6);
+		for (i in 0...5) assertEquals(i + 2, q.get(i));
+		
+		//0123
+		//   ^
+		var q = new ArrayedQueue<Int>(4);
+		for (i in 0...4) q.enqueue(i);
+		q.dequeue();
+		q.dequeue();
+		q.dequeue();
+		q.enqueue(4);
+		q.enqueue(5);
+		q.enqueue(6);
+		q.enqueue(7);
+		for (i in 0...5) assertEquals(i + 3, q.get(i));
+		
+		for (s in 2...5)
+		{
+			var q = new ArrayedQueue<Int>(s);
+			for (i in 0...s - 1) q.enqueue(i);
+			q.enqueue(s - 1);
+			for (i in 0...s)
+			{
+				assertEquals(s - i, q.size());
+				assertEquals(i, q.dequeue());
+			}
+			assertTrue(q.isEmpty());
+		}
+	}
+	
 	function testPack()
 	{
 		var q = new ArrayedQueue<Int>(16);
@@ -37,49 +99,6 @@ class TestArrayedQueue extends AbstractTest
 			assertEquals(values.shift(), q.dequeue());
 	}
 	
-	function testGrow()
-	{
-		for (s in 2...5)
-		{
-			var q = new ArrayedQueue<Int>(s);
-			for (i in 0...s - 1) q.enqueue(i);
-			q.enqueue(s - 1);
-			for (i in 0...s)
-			{
-				assertEquals(s - i, q.size());
-				assertEquals(i, q.dequeue());
-			}
-			assertTrue(q.isEmpty());
-		}
-		
-		#if debug
-		var q = new ArrayedQueue<Int>(10, false);
-		for (i in 0...10) q.enqueue(i);
-		
-		var success = true;
-		try
-		{
-			q.enqueue(99);
-		}
-		catch (unknown:Dynamic)
-		{
-			success = false;
-		}
-		
-		assertFalse(success);
-		
-		var q = new ArrayedQueue<Int>(32, false);
-		for (i in 0...32) q.enqueue(i);
-		for (i in 0...32) q.dequeue();
-		assertEquals(32, q.getCapacity());
-		
-		var q = new ArrayedQueue<Int>(32, false);
-		for (i in 0...32) q.enqueue(i);
-		q.clear(true);
-		assertEquals(32, q.getCapacity());
-		#end
-	}
-	
 	function testShrinkDequeue()
 	{
 		var q = new ArrayedQueue<Int>(8);
@@ -89,7 +108,7 @@ class TestArrayedQueue extends AbstractTest
 		for (i in 0...4) assertEquals(12 + i, q.dequeue());
 	}
 	
-	function testShrinkRemove()
+	function testShrinkRemove() //TODO
 	{
 		var q = new ArrayedQueue<Int>(2);
 		for (i in 0...8) q.enqueue(i);
@@ -98,7 +117,9 @@ class TestArrayedQueue extends AbstractTest
 		assertEquals(8, q.size());
 		for (i in 0...8) assertEquals(i, q.dequeue());
 		
-		var q = new ArrayedQueue<Int>(2);
+		return;
+		
+		var q = new ArrayedQueue<Int>(2, 2);
 		for (i in 0...3) q.enqueue(i);
 		for (i in 0...32 - 3) q.enqueue(99);
 		q.remove(99);
@@ -228,12 +249,6 @@ class TestArrayedQueue extends AbstractTest
 		assertEquals(q.dequeue(), 14);
 		assertEquals(q.dequeue(), 15);
 		assertTrue(q.isEmpty());
-	}
-	
-	function testMaxSize()
-	{
-		var q:ArrayedQueue<Int> = new ArrayedQueue<Int>(mSize);
-		assertEquals(mSize, q.getCapacity());
 	}
 	
 	function testQueue()
@@ -368,21 +383,6 @@ class TestArrayedQueue extends AbstractTest
 		var q:ArrayedQueue<Int> = new ArrayedQueue<Int>(mSize);
 		for (i in 0...10) q.enqueue(5);
 		q.clear();
-		assertEquals(0, q.size());
-		
-		//shrink to initial capacity
-		var q:ArrayedQueue<Int> = new ArrayedQueue<Int>(4);
-		for (i in 0...8) q.enqueue(i);
-		q.clear();
-		assertEquals(8, q.getCapacity());
-		assertEquals(0, q.size());
-		q.clear(true);
-		assertEquals(4, q.getCapacity());
-		assertEquals(0, q.size());
-		var q:ArrayedQueue<Int> = new ArrayedQueue<Int>(3);
-		for (i in 0...111) q.enqueue(i);
-		q.clear(true);
-		assertEquals(3, q.getCapacity());
 		assertEquals(0, q.size());
 	}
 	

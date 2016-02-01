@@ -2,6 +2,7 @@
 import de.polygonal.ds.ArrayConvert;
 import de.polygonal.ds.ListSet;
 import de.polygonal.ds.Set;
+import de.polygonal.ds.tools.NativeArray;
 
 class TestArray2 extends AbstractTest
 {
@@ -454,8 +455,8 @@ class TestArray2 extends AbstractTest
 		var a = getStrArray();
 		a.fill("?");
 		var arr = a.toVector();
-		for (i in arr) assertEquals("?", i);
-		assertEquals(arr.length, a.size());
+		for (i in 0...NativeArray.size(arr)) assertEquals("?", arr[i]);
+		assertEquals(NativeArray.size(arr), a.size());
 	}
 	
 	function testIterator()

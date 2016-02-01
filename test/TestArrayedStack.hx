@@ -15,6 +15,18 @@ class TestArrayedStack extends AbstractTest
 		super();
 	}
 	
+	function testGrow()
+	{
+		var s = new ArrayedStack<Int>(4);
+		for (i in 0...4) s.push(i);
+		assertEquals(4, s.size());
+		assertEquals(4, s.capacity);
+		
+		s.push(4);
+		assertEquals(5, s.size());
+		assertTrue(s.capacity > 4);
+	}
+	
 	function testFree()
 	{
 		var s:ArrayedStack<Int> = new ArrayedStack<Int>();
@@ -189,64 +201,19 @@ class TestArrayedStack extends AbstractTest
 		for (i in 0...10) assertEquals(9 - i, stack.pop());
 	}
 	
-	#if debug
-	function testMaxSize()
+	function _testPack() //TODO
 	{
-		var stack = new ArrayedStack<Int>(64, 3);
-		
-		stack.push(0);
-		stack.push(1);
-		stack.push(2);
-		
-		var failed = false;
-		try
-		{
-			stack.push(4);
-		}
-		catch (unknown:Dynamic)
-		{
-			failed = true;
-		}
-		
-		assertTrue(failed);
-		
-		var stack = new ArrayedStack<Int>(64, 3);
-		stack.push(0);
-		stack.push(1);
-		stack.push(2);
-		
-		var failed = false;
-		try
-		{
-			stack.fill(0, 10);
-		}
-		catch (unknown:Dynamic)
-		{
-			failed = true;
-		}
-		
-		assertTrue(failed);
-	}
-	#end
-	
-	function _testPack()
-	{
-		/*var l = new de.polygonal.ds.ArrayedStack<Int>();
+		var l = new de.polygonal.ds.ArrayedStack<Int>();
 		l.push(0);
 		l.push(1);
 		l.push(2);
 		
 		l.clear();
 		
-		assertEquals(0, l._get(0));
-		assertEquals(1, l._get(1));
-		assertEquals(2, l._get(2));
-		
-		l.shrinkToFit();*/
-		
-		//assertEquals(#if flash 0 #else null #end, l._get(0));
-		//assertEquals(#if flash 0 #else null #end, l._get(1));
-		//assertEquals(#if flash 0 #else null #end, l._get(2));
+		//assertEquals(0, l._get(0));
+		//assertEquals(1, l._get(1));
+		//assertEquals(2, l._get(2));
+		//l.shrinkToFit();
 	}
 	
 	function testPeek()

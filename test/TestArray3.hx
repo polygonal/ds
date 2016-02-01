@@ -1,6 +1,7 @@
 ﻿import de.polygonal.ds.Array3;
 import de.polygonal.ds.ListSet;
 import de.polygonal.ds.Set;
+import de.polygonal.ds.tools.NativeArray;
 
 class TestArray3 extends AbstractTest
 {
@@ -137,7 +138,6 @@ class TestArray3 extends AbstractTest
 			itr.remove();
 		}
 		var arr = a.getStorage();
-		for (i in arr)
-			assertEquals(i, null);
+		for (i in 0...NativeArray.size(arr)) assertEquals(null, arr[i]);
 	}
 }

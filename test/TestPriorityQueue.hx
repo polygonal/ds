@@ -21,7 +21,7 @@ class TestPriorityQueue extends AbstractTest
 		var a = new E(1);
 		var b = new E(2);
 		var c = new E(3);
-		var pq = new PriorityQueue<E>(true, 0, 20);
+		var pq = new PriorityQueue<E>(4, true);
 		pq.enqueue(a);
 		pq.enqueue(b);
 		pq.enqueue(c);

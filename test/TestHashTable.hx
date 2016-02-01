@@ -1,8 +1,9 @@
 ﻿import de.polygonal.ds.ArrayUtil;
-import de.polygonal.ds.Dll;
+import de.polygonal.ds.Container;
 import de.polygonal.ds.HashableItem;
 import de.polygonal.ds.HashTable;
 import de.polygonal.ds.IntIntHashTable;
+import de.polygonal.ds.tools.NativeArray;
 
 class TestHashTable extends AbstractTest
 {
@@ -51,7 +52,7 @@ class TestHashTable extends AbstractTest
 		
 		h.rehash(512);
 		assertEquals(8, h.size());
-		assertEquals(8, h.getCapacity());
+		assertEquals(8, h.capacity);
 		
 		for (i in 0...8) assertEquals(i, h.get(items[i]));
 	}
@@ -315,7 +316,7 @@ class TestHashTable extends AbstractTest
 			h.set(item, item);
 			
 			assertEquals(2, h.size());
-			assertEquals(2, h.getCapacity());
+			assertEquals(2, h.capacity);
 			for (i in items) assertEquals(i, h.get(i));
 			
 			var item = new E(0);
@@ -324,7 +325,7 @@ class TestHashTable extends AbstractTest
 			for (i in items) assertEquals(i, h.get(i));
 			
 			assertEquals(3, h.size());
-			assertEquals(4, h.getCapacity());
+			assertEquals(4, h.capacity);
 			
 			var item = new E(0);
 			items.push(item);
@@ -332,7 +333,7 @@ class TestHashTable extends AbstractTest
 			for (i in items) assertEquals(i, h.get(i));
 			
 			assertEquals(4, h.size());
-			assertEquals(4, h.getCapacity());
+			assertEquals(4, h.capacity);
 			
 			for (i in 0...4)
 			{
@@ -342,7 +343,7 @@ class TestHashTable extends AbstractTest
 			}
 			for (i in items) assertEquals(i, h.get(i));
 			assertEquals(8, h.size());
-			assertEquals(8, h.getCapacity());
+			assertEquals(8, h.capacity);
 			
 			for (i in 0...8)
 			{
@@ -352,24 +353,24 @@ class TestHashTable extends AbstractTest
 			}
 			for (i in items) assertEquals(i, h.get(i));
 			assertEquals(16, h.size());
-			assertEquals(16, h.getCapacity());
+			assertEquals(16, h.capacity);
 			
 			for (i in 0...12)
 				assertTrue(h.clr(items.pop()));
-			assertEquals(8, h.getCapacity());
+			assertEquals(8, h.capacity);
 			assertEquals(4, h.size());
 			for (i in items) assertEquals(i, h.get(i));
 			
 			for (i in 0...2) assertTrue(h.clr(items.pop()));
 			
-			assertEquals(4, h.getCapacity());
+			assertEquals(4, h.capacity);
 			assertEquals(2, h.size());
 			for (i in items) assertEquals(i, h.get(i));
 			
 			assertTrue(h.clr(items.pop()));
 			assertTrue(h.clr(items.pop()));
 			
-			assertEquals(2, h.getCapacity());
+			assertEquals(2, h.capacity);
 			assertEquals(0, h.size());
 			assertTrue(h.isEmpty());
 		}
@@ -643,7 +644,7 @@ class TestHashTable extends AbstractTest
 		var h = new HashTable<E, Null<Int>>(8);
 		
 		for (i in 0...8) h.set(items[i], i);
-		assertTrue(h.size() == h.getCapacity());
+		assertTrue(h.size() == h.capacity);
 		
 		h.set(items[8], 8);
 		
@@ -653,7 +654,7 @@ class TestHashTable extends AbstractTest
 		
 		for (i in 9...16) h.set(items[i], i);
 		
-		assertTrue(h.size() == h.getCapacity());
+		assertTrue(h.size() == h.capacity);
 		
 		for (i in 0...16) assertEquals(i, h.get(items[i]));
 		var i = 16;
@@ -666,31 +667,29 @@ class TestHashTable extends AbstractTest
 		assertTrue(h.isEmpty());
 		
 		for (i in 0...16) h.set(items[i], i);
-		assertTrue(h.size() == h.getCapacity());
+		assertTrue(h.size() == h.capacity);
 		for (i in 0...16) assertEquals(i, h.get(items[i]));
 	}
 	
 	function testClone()
 	{
-		var items = new Array<E>();
-		for (i in 0...8) items.push(new E(i));
+		var items = [for (i in 0...8) new E(i)];
 		
 		var h = new HashTable<E, Null<Int>>(8);
 		for (i in 0...8) h.set(items[i], i);
 		
-		var c:HashTable<E, Int> = cast h.clone(true);
+		var c:HashTable<E, Null<Int>> = cast h.clone(true);
 		
 		var i = 0;
-		var l = new Dll<Int>();
+		var a = [];
 		for (val in c)
 		{
-			l.append(val);
+			a.push(val);
 			i++;
 		}
 		
-		l.sort(function(a, b) { return a - b; } );
+		a.sort(function(a, b) return a - b );
 		
-		var a:Array<Int> = l.toArray();
 		assertEquals(8, a.length);
 		for (i in 0...a.length) assertEquals(i, a[i]);
 		assertEquals(8, i);
@@ -790,14 +789,18 @@ class TestHashTable extends AbstractTest
 		
 		assertEquals(0, items.length);
 		items = tmp;
-		var a = h.toKeyVector();
-		for (i in a)
+		
+		var a:Container<E> = h.toKeyVector();
+		
+		for (i in 0...NativeArray.size(a))
 		{
+			var e = a[i];
+			
 			for (j in 0...8)
 			{
-				if (items[j] == i)
+				if (items[j] == e)
 				{
-					items.remove(i);
+					items.remove(e);
 					break;
 				}
 			}
@@ -825,19 +828,19 @@ class TestHashTable extends AbstractTest
 		
 		var h = new HashTable<E, Null<Int>>(8);
 		for (i in 0...8) h.set(items[i], i);
-		assertEquals(8, h.getCapacity());
+		assertEquals(8, h.capacity);
 		for (i in 8...16) h.set(items[i], i);
-		assertEquals(16, h.getCapacity());
+		assertEquals(16, h.capacity);
 		
 		h.clear();
 		
-		assertEquals(16, h.getCapacity());
+		assertEquals(16, h.capacity);
 		
 		assertEquals(0, h.size());
 		assertTrue(h.isEmpty());
 		
 		for (i in 0...16) h.set(items[i], i);
-		assertEquals(16, h.getCapacity());
+		assertEquals(16, h.capacity);
 		
 		for (i in 0...16)
 			assertEquals(i, h.get(items[i]));
@@ -850,17 +853,17 @@ class TestHashTable extends AbstractTest
 		for (i in 0...16) h.set(items[i], i);
 		h.clear(true);
 		
-		assertEquals(8, h.getCapacity());
+		assertEquals(8, h.capacity);
 		assertEquals(0, h.size());
 		
 		for (i in 0...16) h.set(items[i], i);
-		assertEquals(16, h.getCapacity());
+		assertEquals(16, h.capacity);
 		for (i in 0...16) assertEquals(i, h.get(items[i]));
 		
 		h.clear(true);
 		
 		for (i in 0...16) h.set(items[i], i);
-		assertEquals(16, h.getCapacity());
+		assertEquals(16, h.capacity);
 		for (i in 0...16) assertEquals(i, h.get(items[i]));
 	}
 	

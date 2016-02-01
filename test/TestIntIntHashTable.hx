@@ -263,7 +263,8 @@ class TestIntIntHashTable extends AbstractTest
 		h.rehash(512);
 		
 		assertEquals(8, h.size());
-		assertEquals(8, h.getCapacity());
+		assertEquals(8, h.capacity);
+		assertEquals(512, h.slotCount);
 		
 		for (i in 0...8) assertEquals(i, h.get(i));
 	}
@@ -349,19 +350,19 @@ class TestIntIntHashTable extends AbstractTest
 			keys.push(key); h.set(key, key); key++;
 			keys.push(key); h.set(key, key); key++;
 			assertEquals(2, h.size());
-			assertEquals(2, h.getCapacity());
+			assertEquals(2, h.capacity);
 			for (i in keys) assertEquals(i, h.get(i));
 			
 			keys.push(key); h.set(key, key); key++;
 			for (i in keys) assertEquals(i, h.get(i));
 			
 			assertEquals(3, h.size());
-			assertEquals(4, h.getCapacity());
+			assertEquals(4, h.capacity);
 			
 			keys.push(key); h.set(key, key); key++;
 			for (i in keys) assertEquals(i, h.get(i));
 			assertEquals(4, h.size());
-			assertEquals(4, h.getCapacity());
+			assertEquals(4, h.capacity);
 			
 			for (i in 0...4)
 			{
@@ -369,7 +370,7 @@ class TestIntIntHashTable extends AbstractTest
 			}
 			for (i in keys) assertEquals(i, h.get(i));
 			assertEquals(8, h.size());
-			assertEquals(8, h.getCapacity());
+			assertEquals(8, h.capacity);
 			
 			for (i in 0...8)
 			{
@@ -377,24 +378,24 @@ class TestIntIntHashTable extends AbstractTest
 			}
 			for (i in keys) assertEquals(i, h.get(i));
 			assertEquals(16, h.size());
-			assertEquals(16, h.getCapacity());
+			assertEquals(16, h.capacity);
 			
 			for (i in 0...12)
 				assertTrue(h.remove(keys.pop()));
-			assertEquals(8, h.getCapacity());
+			assertEquals(8, h.capacity);
 			assertEquals(4, h.size());
 			for (i in keys) assertEquals(i, h.get(i));
 			
 			for (i in 0...2) assertTrue(h.remove(keys.pop()));
 			
-			assertEquals(4, h.getCapacity());
+			assertEquals(4, h.capacity);
 			assertEquals(2, h.size());
 			for (i in keys) assertEquals(i, h.get(i));
 			
 			assertTrue(h.remove(keys.pop()));
 			assertTrue(h.remove(keys.pop()));
 			
-			assertEquals(2, h.getCapacity());
+			assertEquals(2, h.capacity);
 			assertEquals(0, h.size());
 			assertTrue(h.isEmpty());
 		}
@@ -682,7 +683,7 @@ class TestIntIntHashTable extends AbstractTest
 		var h = new IntIntHashTable(8);
 		
 		for (i in 0...8) h.set(i, i);
-		assertTrue(h.size() == h.getCapacity());
+		assertTrue(h.size() == h.capacity);
 		
 		h.set(8, 8);
 		
@@ -697,7 +698,7 @@ class TestIntIntHashTable extends AbstractTest
 			h.set(i, i);
 		}
 		
-		assertTrue(h.size() == h.getCapacity());
+		assertTrue(h.size() == h.capacity);
 		
 		for (i in 0...16)
 		{
@@ -717,7 +718,7 @@ class TestIntIntHashTable extends AbstractTest
 		assertTrue(h.isEmpty());
 		
 		for (i in 0...16) h.set(i, i);
-		assertTrue(h.size() == h.getCapacity());
+		assertTrue(h.size() == h.capacity);
 		for (i in 0...16) assertEquals(i, h.get(i));
 	}
 	
@@ -801,18 +802,18 @@ class TestIntIntHashTable extends AbstractTest
 		
 		var h = new IntIntHashTable(8);
 		for (i in 0...8) h.set(i, i);
-		assertEquals(8, h.getCapacity());
+		assertEquals(8, h.capacity);
 		for (i in 8...16) h.set(i, i);
-		assertEquals(16, h.getCapacity());
+		assertEquals(16, h.capacity);
 		
 		h.clear();
 		
-		assertEquals(16, h.getCapacity());
+		assertEquals(16, h.capacity);
 		assertEquals(0, h.size());
 		assertTrue(h.isEmpty());
 		
 		for (i in 0...16) h.set(i, i);
-		assertEquals(16, h.getCapacity());
+		assertEquals(16, h.capacity);
 		for (i in 0...16) assertEquals(i, h.get(i));
 		
 		//clear with purge
@@ -820,18 +821,18 @@ class TestIntIntHashTable extends AbstractTest
 		for (i in 0...16) h.set(i, i);
 		h.clear(true);
 		
-		assertEquals(8, h.getCapacity());
+		assertEquals(8, h.capacity);
 		assertEquals(0, h.size());
 		
 		for (i in 0...16) h.set(i, i);
-		assertEquals(16, h.getCapacity());
+		assertEquals(16, h.capacity);
 		for (i in 0...16) assertEquals(i, h.get(i));
 		
 		h.clear(true);
-		assertEquals(8, h.getCapacity());
+		assertEquals(8, h.capacity);
 		
 		for (i in 0...16) h.set(i, i);
-		assertEquals(16, h.getCapacity());
+		assertEquals(16, h.capacity);
 		for (i in 0...16) assertEquals(i, h.get(i));
 	}
 	
@@ -3489,9 +3490,14 @@ class TestIntIntHashTable extends AbstractTest
 	
 	function clrAll(h:IntIntHashTable, key:Int):Bool
 	{
+		var iter = 0;
+		
 		if (h.clr(key))
 		{
-			while (h.clr(key)) {}
+			while (h.clr(key))
+			{
+				if (iter++ > 1000) throw 'bail out';
+			}
 			return true;
 		}
 		return false;

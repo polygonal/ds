@@ -13,6 +13,17 @@ class TestHeap extends AbstractTest
 		mSize = size;
 	}
 	
+	function testGrow()
+	{
+		var heap = new Heap<E2>(4);
+		assertEquals(4, heap.capacity);
+		for (i in 0...4) heap.add(new E2(i));
+		assertEquals(4, heap.size());
+		heap.add(new E2(50));
+		assertTrue(heap.capacity > 4);
+		assertEquals(5, heap.size());
+	}
+	
 	function testChange()
 	{
 		var heap = new Heap<E2>();

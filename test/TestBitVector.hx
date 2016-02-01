@@ -300,25 +300,20 @@ class TestBitVector extends AbstractTest
 	function testResize()
 	{
 		var b = new BitVector(32);
-		for (i in 0...10)
-			b.set(i);
-		
+		for (i in 0...10) b.set(i);
 		b.resize(16);
 		for (i in 0...16) assertFalse(b.has(i));
 		
+		var b = new BitVector(32);
 		for (i in 0...10) b.set(i);
-		
 		b.resize(64);
-		for (i in 0...10)
-			assertTrue(b.has(i));
+		for (i in 0...10) assertTrue(b.has(i));
 		
-		for (i in 11...64)
-			assertFalse(b.has(i));
+		for (i in 11...64) assertFalse(b.has(i));
 		
 		b.resize(10);
 		
-		for (i in 0...10)
-			assertFalse(b.has(i));
+		for (i in 0...10) assertFalse(b.has(i));
     }
 	
 	function testGetBuckets()
