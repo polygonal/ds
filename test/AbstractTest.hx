@@ -17,7 +17,7 @@ class AbstractTest extends TestCase
 	
 	function prand():Float return mSeed = (mSeed * 16807.) % 2147483647.;
 	
-	function isDynamic():Bool return #if (js || neko || python) true; #else false; #end
+	function isDynamic():Bool return #if (js || neko || python || php) true; #else false; #end
 	
 	function contains<T>(x:Array<T>, v:T):Bool
 	{
