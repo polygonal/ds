@@ -23,16 +23,24 @@ class UnitTest extends TestRunner
 				output += v;
 				f(v);
 			}
-			#if no_inline
-			TestRunner.print("using flash.Vector<Dynamic>\n");
-			#else
-			TestRunner.print("using flash.Vector<T>\n");
-			#end
 		#end
 		
-		#if alchemy
-		TestRunner.print("using alchemy\n");
+		var flags = [];
+		
+		#if debug
+		flags.push("-debug");
 		#end
+		#if generic
+		flags.push("-D generic");
+		#end
+		#if alchemy
+		flags.push("-D alchemy");
+		#end
+		#if no_inline
+		flags.push("--no-inline");
+		#end
+		
+		TestRunner.print('compile flags: ${flags.join(" ")}\n');
 		
 		var success = true;
 		
