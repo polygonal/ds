@@ -669,10 +669,10 @@ class ArrayedStack<T> implements Stack<T>
 	**/
 	public function toArray():Array<T>
 	{
-		var a:Array<T> = ArrayUtil.alloc(size());
+		var out = ArrayUtil.alloc(size());
 		var i = mTop, j = 0, d = mData;
-		while (i > 0) a[j++] = d.get(--i);
-		return a;
+		while (i > 0) out[j++] = d.get(--i);
+		return out;
 	}
 	
 	/**
@@ -778,20 +778,20 @@ class ArrayedStack<T> implements Stack<T>
 @:dox(hide)
 class ArrayedStackIterator<T> implements de.polygonal.ds.Itr<T>
 {
-	var mF:ArrayedStack<T>;
+	var mStack:ArrayedStack<T>;
 	var mData:Container<T>;
 	var mI:Int;
 	
-	public function new(f:ArrayedStack<T>)
+	public function new(x:ArrayedStack<T>)
 	{
-		mF = f;
+		mStack = x;
 		reset();
 	}
 	
 	inline public function reset():Itr<T>
 	{
-		mData = mF.mData;
-		mI = mF.mTop - 1;
+		mData = mStack.mData;
+		mI = mStack.mTop - 1;
 		return this;
 	}
 	
@@ -802,22 +802,21 @@ class ArrayedStackIterator<T> implements de.polygonal.ds.Itr<T>
 	
 	inline public function next():T
 	{
-		return mData[mI--];
+		return mData.get(mI--);
 	}
 	
 	inline public function remove()
 	{
-		assert(mI != (mF.mTop - 1), "call next() before removing an element");
+		assert(mI != (mStack.mTop - 1), "call next() before removing an element");
 		
 		var i = mI + 1;
-		var top = mF.mTop - 1;
+		var top = mStack.mTop - 1;
 		if (i == top)
-			mF.mTop = top;
+			mStack.mTop = top;
 		else
 		{
-			while (i < top)
-				mData[i++] = mData[i];
-			mF.mTop = top;
+			while (i < top) mData.set(i++, mData.get(i));
+			mStack.mTop = top;
 		}
 	}
 }
