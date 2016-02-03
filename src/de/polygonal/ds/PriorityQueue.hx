@@ -62,9 +62,10 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	**/
 	public var reuseIterator:Bool;
 	
-	
 	public var capacity:Int;
+	
 	var mCapacityIncrement:Int;
+	var mShrinkSize:Int;
 	
 	var mData:Container<T>;
 	var mSize:Int;
@@ -94,15 +95,15 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 		mCapacityIncrement = capacityIncrement;
 		
 		mInverse = inverse;
-		mIterator = null;
-		
-		mData = NativeArray.init(capacity + 1);
-		mData.set(0, cast null);
-		mSize = 0;
 		
 		#if debug
 		mMap = new haxe.ds.ObjectMap<T, Bool>();
 		#end
+		
+		mData = NativeArray.init(capacity + 1);
+		mData.set(0, cast null); //reserved
+		mSize = 0;
+		mIterator = null;
 		
 		key = HashKey.next();
 		reuseIterator = false;
@@ -115,7 +116,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	**/
 	public function pack()
 	{
-		if (mData.length - 1 == size()) return;
+		/*if (mData.length - 1 == size()) return;
 		
 		var tmp = mData;
 		mData = ArrayUtil.alloc(size() + 1);
@@ -123,31 +124,23 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 		mData.set(0, cast null);
 		
 		for (i in 1...size() + 1) mData.set(i, tmp.get(i));
-		for (i in size() + 1...tmp.length) tmp.set(i, null);
+		for (i in size() + 1...tmp.length) tmp.set(i, null);*/
 	}
 	
 	/**
-		Preallocates internal space for storing `x` elements.
+		Preallocates storage for `n` elements.
 		
-		This is useful if the expected size is known in advance - many platforms can optimize memory usage if an exact size is specified.
-		<o>n</o>
+		Useful before inserting a large number of elements as this reduces the amount of incremental reallocation.
 	**/
-	public function reserve(x:Int)
+	public function reserve(n:Int):PriorityQueue<T>
 	{
-		if (size() == x) return;
+		if (n <= capacity) return this;
 		
-		var tmp = mData;
+		capacity = n;
+		mShrinkSize = n >> 2;
+		resize(n);
 		
-		mData = ArrayUtil.alloc(x + 1);
-		
-		var d = mData;
-		d.set(0, cast null);
-		
-		if (size() < x)
-		{
-			for (i in 1...size() + 1)
-				d.set(i, tmp[i]);
-		}
+		return this;
 	}
 	
 	/**
@@ -204,7 +197,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 		<assert>``size()`` equals ``maxSize``</assert>
 		<assert>`x` is null or `x` already exists</assert>
 	**/
-	inline public function enqueue(x:T)
+	public function enqueue(x:T)
 	{
 		#if debug
 		if (maxSize != -1)
@@ -214,6 +207,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 		mMap.set(x, true);
 		#end
 		
+		if (mSize == capacity) grow();
 		mData.set(++mSize, x);
 		x.position = mSize;
 		upheap(mSize);
@@ -224,7 +218,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 		<o>log n</o>
 		<assert>priority queue is empty</assert>
 	**/
-	inline public function dequeue():T
+	public function dequeue():T
 	{
 		assert(size() > 0, "priority queue is empty");
 		
@@ -287,6 +281,80 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	}
 	
 	/**
+		Returns a sorted array of all elements.
+		<o>n log n</o>
+	**/
+	public function sort():Array<T>
+	{
+		if (isEmpty()) return [];
+		
+		var out = ArrayUtil.alloc(mSize);
+		var tmp = NativeArray.copy(mData);
+		var k = mSize;
+		var j = 0, i, c, v, s, u;
+		
+		if (mInverse)
+		{
+			while (k > 0)
+			{
+				out[j++] = tmp.get(1);
+				tmp.set(1, tmp.get(k));
+				i = 1;
+				c = i << 1;
+				v = tmp.get(i);
+				s = k - 1;
+				while (c < k)
+				{
+					if (c < s)
+						if (tmp.get(c).priority - tmp.get(c + 1).priority > 0)
+							c++;
+					
+					u = tmp.get(c);
+					if (v.priority - u.priority > 0)
+					{
+						tmp.set(i, u);
+						i = c;
+						c <<= 1;
+					}
+					else break;
+				}
+				tmp.set(i, v);
+				k--;
+			}
+		}
+		else
+		{
+			while (k > 0)
+			{
+				out[j++] = tmp.get(1);
+				tmp.set(1, tmp.get(k));
+				i = 1;
+				c = i << 1;
+				v = tmp.get(i);
+				s = k - 1;
+				while (c < k)
+				{
+					if (c < s)
+						if (tmp.get(c).priority - tmp.get(c + 1).priority < 0)
+							c++;
+					
+					u = tmp.get(c);
+					if (v.priority - u.priority < 0)
+					{
+						tmp.set(i, u);
+						i = c;
+						c <<= 1;
+					}
+					else break;
+				}
+				tmp.set(i, v);
+				k--;
+			}
+		}
+		return out;
+	}
+	
+	/**
 		Returns a string representing the current object.
 		
 		Example:
@@ -326,18 +394,12 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	{
 		var s = '{ PriorityQueue size: ${size()} }';
 		if (isEmpty()) return s;
-		var tmp = new PriorityQueue<PQElementWrapper<T>>();
-		tmp.mInverse = mInverse;
-		for (i in 1...mSize + 1)
-		{
-			var w = new PQElementWrapper<T>(mData.get(i));
-			tmp.mData.set(i, w);
-		}
-		tmp.mSize = mSize;
+		
+		var tmp = sort();
 		s += "\n[ front\n";
 		var i = 0;
-		while (tmp.size() > 0)
-			s += Printf.format("  %4d -> %s\n", [i++, Std.string(tmp.dequeue())]);
+		for (i in 0...size())
+			s += Printf.format("  %4d -> %s\n", [i, Std.string(tmp[i])]);
 		s += "]";
 		return s;
 	}
@@ -657,36 +719,63 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 		d.set(index, tmp);
 		tmp.position = index;
 	}
+	
+	function grow()
+	{
+		var tmp = capacity;
+		
+		capacity =
+		if (mCapacityIncrement == -1)
+		{
+			if (true)
+				Std.int((capacity * 3) / 2 + 1); //1.5
+			else
+				capacity + ((capacity >> 3) + (capacity < 9 ? 3 : 6)); //1.125
+		}
+		else
+			capacity + mCapacityIncrement;
+		
+		//trace('heap resized from $tmp -> $capacity');
+		//mShrinkSize = capacity >> 2;
+		
+		resize(capacity + 1);
+	}
+	
+	function resize(newSize:Int)
+	{
+		var tmp = NativeArray.init(newSize + 1);
+		NativeArray.blit(mData, 0, tmp, 0, mSize + 1);
+		mData = tmp;
+	}
 }
 
 @:access(de.polygonal.ds.PriorityQueue)
 @:dox(hide)
 class PriorityQueueIterator<T:(Prioritizable)> implements de.polygonal.ds.Itr<T>
 {
-	var mQue:PriorityQueue<T>;
-	var mData:Array<T>;
+	var mPriorityQueue:PriorityQueue<T>;
+	var mData:Container<T>;
 	var mI:Int;
 	var mS:Int;
 	
-	public function new(que:PriorityQueue<T>)
+	public function new(x:PriorityQueue<T>)
 	{
-		mQue = que;
-		mData = new Array<T>();
-		mData[0] = null;
+		mPriorityQueue = x;
 		reset();
 	}
 	
 	public function free()
 	{
+		mPriorityQueue = null;
 		mData = null;
 	}
 	
 	public function reset():Itr<T>
 	{
-		mS = mQue.size() + 1;
+		mS = mPriorityQueue.size();
 		mI = 1;
-		var a = mQue.mData;
-		for (i in 1...mS) mData[i] = a[i];
+		mData = NativeArray.init(mS);
+		NativeArray.blit(mPriorityQueue.mData, 1, mData, 0, mS);
 		return this;
 	}
 	
@@ -697,33 +786,13 @@ class PriorityQueueIterator<T:(Prioritizable)> implements de.polygonal.ds.Itr<T>
 	
 	inline public function next():T
 	{
-		return mData[mI++];
+		return mData.get(mI++);
 	}
 	
 	inline public function remove()
 	{
 		assert(mI > 0, "call next() before removing an element");
 		
-		mQue.remove(mData[mI - 1]);
-	}
-}
-
-@:dox(hide)
-private class PQElementWrapper<T:(Prioritizable)> implements Prioritizable
-{
-	public var priority:Float;
-	public var position:Int;
-	public var e:T;
-	
-	public function new(e:T)
-	{
-		this.e = e;
-		this.priority = e.priority;
-		this.position = e.position;
-	}
-	
-	public function toString():String
-	{
-		return Std.string(e);
+		mPriorityQueue.remove(mData.get(mI - 1));
 	}
 }
