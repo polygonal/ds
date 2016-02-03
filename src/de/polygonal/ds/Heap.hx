@@ -110,7 +110,6 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	**/
 	public function pack()
 	{
-		throw 'TODO';
 		if (mData.length - 1 == size()) return;
 		
 		#if debug
@@ -118,7 +117,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 		#end
 		
 		var tmp = mData;
-		mData = ArrayUtil.alloc(size() + 1);
+		mData = NativeArray.init(size() + 1);
 		
 		var d = mData;
 		
@@ -135,12 +134,11 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	}
 	
 	/**
-		Preallocates internal space for storing `x` elements.
+		Preallocates storage for `n` elements.
 		
-		This is useful if the expected size is known in advance - many platforms can optimize memory usage if an exact size is specified.
-		<o>n</o>
+		Useful before inserting a large number of elements as this reduces the amount of incremental reallocation.
 	**/
-	public function reserve(n:Int)
+	public function reserve(n:Int):Heap<T>
 	{
 		if (n <= capacity) return this;
 		
@@ -286,44 +284,39 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	**/
 	public function sort():Array<T>
 	{
-		if (isEmpty()) return new Array();
+		if (isEmpty()) return [];
 		
-		var a = ArrayUtil.alloc(mSize);
-		var h = ArrayUtil.alloc(mSize + 1);
-		ArrayUtil.copy(mData, h, 0, mSize + 1);
-		
+		var out = ArrayUtil.alloc(mSize);
+		var tmp = NativeArray.copy(mData);
 		var k = mSize;
-		var j = 0;
+		var j = 0, i, c, v, s, u;
 		while (k > 0)
 		{
-			a[j++] = h[1];
-			h[1] = h[k];
-			
-			var i = 1;
-			var c = i << 1;
-			var v = h[i];
-			var s = k - 1;
-			
+			out[j++] = tmp.get(1);
+			tmp.set(1, tmp.get(k));
+			i = 1;
+			c = i << 1;
+			v = tmp.get(i);
+			s = k - 1;
 			while (c < k)
 			{
 				if (c < s)
-					if (h[c].compare(h[c + 1]) < 0)
+					if (tmp.get(c).compare(tmp.get(c + 1)) < 0)
 						c++;
 				
-				var u = h[c];
+				u = tmp.get(c);
 				if (v.compare(u) < 0)
 				{
-					h[i] = u;
+					tmp.set(i, u);
 					i = c;
 					c <<= 1;
 				}
 				else break;
 			}
-			h[i] = v;
+			tmp.set(i, v);
 			k--;
 		}
-		
-		return a;
+		return out;
 	}
 	
 	/**
@@ -381,19 +374,11 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 		var s = '{ Heap size: ${size()} }';
 		if (isEmpty()) return s;
 		
-		var d = mData;
-		
-		var tmp = new Heap<HeapElementWrapper<T>>();
-		for (i in 1...mSize + 1)
-		{
-			var w = new HeapElementWrapper<T>(d.get(i));
-			tmp.mData.set(i, w);
-		}
-		tmp.mSize = mSize;
+		var tmp = sort();
 		s += "\n[ front\n";
 		var i = 0;
-		while (tmp.size() > 0)
-			s += Printf.format("  %4d -> %s\n", [i++, Std.string(tmp.pop())]);
+		for (i in 0...size())
+			s += Printf.format("  %4d -> %s\n", [i, Std.string(tmp[i])]);
 		s += "]";
 		return s;
 	}
@@ -722,7 +707,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	
 	function resize(newSize:Int)
 	{
-		var tmp = NativeArray.init(newSize);
+		var tmp = NativeArray.init(newSize + 1);
 		NativeArray.blit(mData, 0, tmp, 0, mSize + 1);
 		mData = tmp;
 	}
@@ -732,30 +717,29 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 @:dox(hide)
 class HeapIterator<T:(Heapable<T>)> implements de.polygonal.ds.Itr<T>
 {
-	var mF:Heap<T>;
-	var mData:Array<T>;
+	var mHeap:Heap<T>;
+	var mData:Container<T>;
 	var mI:Int;
 	var mS:Int;
 	
-	public function new(f:Heap<T>)
+	public function new(x:Heap<T>)
 	{
-		mF = f;
-		mData = new Array<T>();
-		mData[0] = null;
+		mHeap = x;
 		reset();
 	}
 	
 	public function free()
 	{
+		mHeap = null;
 		mData = null;
 	}
 	
 	public function reset():Itr<T>
 	{
-		mS = mF.size() + 1;
-		mI = 1;
-		var a = mF.mData;
-		for (i in 1...mS) mData[i] = a[i];
+		mS = mHeap.size();
+		mI = 0;
+		mData = NativeArray.init(mS);
+		NativeArray.blit(mHeap.mData, 1, mData, 0, mS);
 		return this;
 	}
 	
@@ -766,36 +750,13 @@ class HeapIterator<T:(Heapable<T>)> implements de.polygonal.ds.Itr<T>
 	
 	inline public function next():T
 	{
-		return mData[mI++];
+		return mData.get(mI++);
 	}
 	
 	inline public function remove()
 	{
 		assert(mI > 0, "call next() before removing an element");
 		
-		mF.remove(mData[mI - 1]);
-	}
-}
-
-@:dox(hide)
-private class HeapElementWrapper<T:(Heapable<T>)> implements Heapable<HeapElementWrapper<T>>
-{
-	public var position:Int;
-	public var e:T;
-	
-	public function new(e:T)
-	{
-		this.e = e;
-		this.position = e.position;
-	}
-	
-	public function compare(other:HeapElementWrapper<T>):Int
-	{
-		return e.compare(other.e);
-	}
-	
-	public function toString():String
-	{
-		return Std.string(e);
+		mHeap.remove(mData.get(mI - 1));
 	}
 }
