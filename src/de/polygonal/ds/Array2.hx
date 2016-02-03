@@ -975,9 +975,7 @@ class Array2<T> implements Collection<T>
 	**/
 	public function toArray():Array<T>
 	{
-		var a:Array<T> = ArrayUtil.alloc(size()), d = mData;
-		for (i in 0...size()) a[i] = d.get(i);
-		return a;
+		return NativeArray.toArray(mData);
 	}
 	
 	/**
@@ -1044,21 +1042,21 @@ class Array2<T> implements Collection<T>
 @:dox(hide)
 class Array2Iterator<T> implements de.polygonal.ds.Itr<T>
 {
-	var mStructure:Array2<T>;
+	var mArray2:Array2<T>;
 	var mData:Container<T>;
 	var mI:Int;
 	var mS:Int;
 	
-	public function new(f:Array2<T>)
+	public function new(x:Array2<T>)
 	{
-		mStructure = f;
+		mArray2 = x;
 		reset();
 	} 
 	
 	inline public function reset():Itr<T>
 	{
-		mData = mStructure.mData;
-		mS = mStructure.mW * mStructure.mH;
+		mData = mArray2.mData;
+		mS = mArray2.size();
 		mI = 0;
 		return this;
 	}
@@ -1075,8 +1073,8 @@ class Array2Iterator<T> implements de.polygonal.ds.Itr<T>
 	
 	inline public function remove()
 	{
-		//just nullify value
 		assert(mI > 0, "call next() before removing an element");
+		
 		mData.set(mI - 1, cast null);
 	}
 }

@@ -550,10 +550,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	**/
 	public function toArray():Array<T>
 	{
-		var d = mData;
-		var a:Array<T> = ArrayUtil.alloc(size());
-		for (i in 1...mSize + 1) a[i - 1] = d.get(i);
-		return a;
+		return NativeArray.toArray(mData, 1, size());
 	}
 	
 	/**
