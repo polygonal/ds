@@ -614,10 +614,18 @@ class ArrayedQueue<T> implements Queue<T>
 	**/
 	public function toArray():Array<T>
 	{
+		#if cpp
+		var out = NativeArray.init(mSize);
+		var n = M.min(capacity, mFront + mSize) - mFront;
+		NativeArray.blit(mData, mFront, out, 0, n);
+		if (mSize - n > 0) NativeArray.blit(mData, 0, out, n, mSize - n);
+		return out;
+		#else
 		var d = mData;
-		var a:Array<T> = ArrayUtil.alloc(mSize);
-		for (i in 0...mSize) a[i] = d.get((i + mFront) % capacity);
-		return a;
+		var out = ArrayUtil.alloc(mSize);
+		for (i in 0...mSize) out[i] = d.get((i + mFront) % capacity);
+		return out;
+		#end
 	}
 	
 	/**
@@ -723,30 +731,26 @@ class ArrayedQueue<T> implements Queue<T>
 @:dox(hide)
 class ArrayedQueueIterator<T> implements de.polygonal.ds.Itr<T>
 {
-	var mF:ArrayedQueue<T>;
-	
+	var mQueue:ArrayedQueue<T>;
 	var mData:Container<T>;
 	var mFront:Int;
 	var mCapacity:Int;
 	var mSize:Int;
 	var mI:Int;
 	
-	public function new(f:ArrayedQueue<T>)
+	public function new(x:ArrayedQueue<T>)
 	{
-		mF = f;
+		mQueue = x;
 		reset();
 	}
 	
 	public function reset():Itr<T>
 	{
-		mFront = mF.mFront;
-		mCapacity = mF.capacity;
-		mSize = mF.mSize;
+		mFront = mQueue.mFront;
+		mCapacity = mQueue.capacity;
+		mSize = mQueue.mSize;
 		mI = 0;
-		
-		var tmp = mF.mData;
-		mData = NativeArray.init(mCapacity);
-		for (i in 0...mCapacity) mData.set(i, tmp.get(i));
+		mData = NativeArray.copy(mQueue.mData);
 		return this;
 	}
 	
@@ -757,13 +761,13 @@ class ArrayedQueueIterator<T> implements de.polygonal.ds.Itr<T>
 	
 	inline public function next():T
 	{
-		return mData[(mI++ + mFront) % mCapacity];
+		return mData.get((mI++ + mFront) % mCapacity);
 	}
 	
 	inline public function remove()
 	{
 		assert(mI > 0, "call next() before removing an element");
 		
-		mF.remove(mData[((mI - 1) + mFront) % mCapacity]);
+		mQueue.remove(mData.get(((mI - 1) + mFront) % mCapacity));
 	}
 }
