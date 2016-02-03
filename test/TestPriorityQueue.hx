@@ -267,11 +267,7 @@ class TestPriorityQueue extends AbstractTest
 	}
 }
 
-#if haxe3
 private class E extends de.polygonal.ds.HashableItem implements de.polygonal.ds.Prioritizable implements de.polygonal.ds.Cloneable<E>
-#else
-private class E extends de.polygonal.ds.HashableItem, implements de.polygonal.ds.Prioritizable, implements de.polygonal.ds.Cloneable<E>
-#end
 {
 	public var priority:Float;
 	public var position:Int;

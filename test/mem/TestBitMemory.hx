@@ -197,11 +197,7 @@ class TestBitMemory extends AbstractTest
 		Bits.BIT_01 | Bits.BIT_02 | Bits.BIT_03 | Bits.BIT_08 | Bits.BIT_09 | Bits.BIT_16 | Bits.BIT_17 | Bits.BIT_24 | Bits.BIT_25 | Bits.BIT_31;
 		#end
 		
-		#if haxe3
 		b.writeInt32(i);
-		#else
-		b.writeInt32(haxe.Int32.ofInt(i));
-		#end
 		
 		var bytesData = b.getBytes().getData();
 		

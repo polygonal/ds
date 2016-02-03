@@ -370,11 +370,7 @@ class TestBst extends AbstractTest
 	}
 }
 
-#if haxe3
 private class E implements de.polygonal.ds.Comparable<E> implements de.polygonal.ds.Visitable
-#else
-private class E implements de.polygonal.ds.Comparable<E>, implements de.polygonal.ds.Visitable
-#end
 {
 	public var id:Int;
 	

@@ -590,11 +590,7 @@ class TestGraph extends AbstractTest
 	}
 }
 
-#if haxe3
 private class E extends de.polygonal.ds.HashableItem implements de.polygonal.ds.Visitable
-#else
-private class E extends de.polygonal.ds.HashableItem, implements de.polygonal.ds.Visitable
-#end
 {
 	public var f:Int->Bool->Void;
 	public var id:Int;
@@ -635,11 +631,10 @@ private class E extends de.polygonal.ds.HashableItem, implements de.polygonal.ds
 	}
 }
 
-#if haxe3 @:generic #end
-private class CustomGraphNode<T> extends GraphNode<T>
-#if !haxe3
-, implements haxe.rtti.Generic
+#if generic
+@:generic
 #end
+private class CustomGraphNode<T> extends GraphNode<T>
 {
 	public function new(graph:Graph<T>, value:T)
 	{

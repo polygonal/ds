@@ -220,11 +220,7 @@ class TestIntMemory extends AbstractTest
 		var output = new BytesOutput();
 		
 		for (i in 0...256)
-		#if haxe3
 		output.writeInt32(i % 10);
-		#else
-		output.writeInt32(haxe.Int32.ofInt(i % 10));
-		#end
 		
 		var m = IntMemory.ofBytesData(output.getBytes().getData());
 		assertEquals(m.size, 256);
@@ -294,11 +290,7 @@ class TestIntMemory extends AbstractTest
 		if (min == -1) min = 0;
 		if (max == -1) max = bytes.length >> 2;
 		
-		#if haxe3
 		for (i in 0...max - min) assertEquals((i + min) % 10, input.readInt32());
-		#else
-		for (i in 0...max - min) assertEquals((i + min) % 10, haxe.Int32.toInt(input.readInt32()));
-		#end
 		#end
 	}
 }
