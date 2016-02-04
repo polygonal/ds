@@ -596,19 +596,11 @@ class HashSet<T:Hashable> implements Set<T>
 	
 	inline function getNext(i:Int)
 	{
-		#if alchemy
 		return mNext.get(i);
-		#else
-		return mNext[i];
-		#end
 	}
 	inline function setNext(i:Int, x:Int)
 	{
-		#if alchemy
 		mNext.set(i, x);
-		#else
-		mNext[i] = x;
-		#end
 	}
 	
 	inline function _key(x:Hashable)

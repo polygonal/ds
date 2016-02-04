@@ -1688,32 +1688,14 @@ class IntIntHashTable implements Map<Int, Int>
 		mFree = newSize >> 1;
 	}
 	
-	inline function getHash(i:Int)
-	{
-		return mHash.get(i);
-	}
-	inline function setHash(i:Int, x:Int)
-	{
-		mHash.set(i, x);
-	}
+	inline function getHash(i:Int) return mHash.get(i);
+	inline function setHash(i:Int, x:Int) mHash.set(i, x);
 	
-	inline function getNext(i:Int)
-	{
-		return mNext.get(i);
-	}
-	inline function setNext(i:Int, x:Int)
-	{
-		mNext.set(i, x);
-	}
+	inline function getNext(i:Int) return mNext.get(i);
+	inline function setNext(i:Int, x:Int) mNext.set(i, x);
 	
-	inline function getData(i:Int)
-	{
-		return mData.get(i);
-	}
-	inline function setData(i:Int, x:Int)
-	{
-		mData.set(i, x);
-	}
+	inline function getData(i:Int) return mData.get(i);
+	inline function setData(i:Int, x:Int) mData.set(i, x);
 }
 
 @:access(de.polygonal.ds.IntIntHashTable)

@@ -812,22 +812,8 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 			mH.remap(_key(mKeys[i]), i);
 	}
 	
-	inline function getNext(i:Int)
-	{
-		#if alchemy
-		return mNext.get(i);
-		#else
-		return mNext[i];
-		#end
-	}
-	inline function setNext(i:Int, x:Int)
-	{
-		#if alchemy
-		mNext.set(i, x);
-		#else
-		mNext[i] = x;
-		#end
-	}
+	inline function getNext(i:Int) return mNext.get(i);
+	inline function setNext(i:Int, x:Int) mNext.set(i, x);
 	
 	inline function _key(x:Hashable)
 	{

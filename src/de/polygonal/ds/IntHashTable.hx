@@ -836,55 +836,15 @@ class IntHashTable<T> implements Map<Int, T>
 		mKey0 = IntIntHashTable.KEY_ABSENT;
 	}
 	
-	inline function getNext(i:Int)
-	{
-		#if (flash && alchemy)
-		return mNext.get(i);
-		#else
-		return mNext[i];
-		#end
-	}
-	inline function setNext(i:Int, x:Int)
-	{
-		#if (flash && alchemy)
-		mNext.set(i, x);
-		#else
-		mNext[i] = x;
-		#end
-	}
+	inline function getNext(i:Int) return mNext.get(i);
+	inline function setNext(i:Int, x:Int) mNext.set(i, x);
 	
-	inline function getKey(i:Int)
-	{
-		#if (flash && alchemy)
-		return mKeys.get(i);
-		#else
-		return mKeys[i];
-		#end
-	}
-	inline function setKey(i:Int, x:Int)
-	{
-		#if (flash && alchemy)
-		mKeys.set(i, x);
-		#else
-		mKeys[i] = x;
-		#end
-	}
-	inline function clrKey(i:Int)
-	{
-		#if (flash && alchemy)
-		mKeys.set(i, IntIntHashTable.KEY_ABSENT);
-		#else
-		mKeys[i] = IntIntHashTable.KEY_ABSENT;
-		#end
-	}
-	inline function _hasKey(i:Int)
-	{
-		#if (flash && alchemy)
-		return mKeys.get(i) != IntIntHashTable.KEY_ABSENT;
-		#else
-		return mKeys[i] != IntIntHashTable.KEY_ABSENT;
-		#end
-	}
+	inline function getKey(i:Int) return mKeys.get(i);
+	inline function setKey(i:Int, x:Int) mKeys.set(i, x);
+	
+	inline function clrKey(i:Int) mKeys.set(i, IntIntHashTable.KEY_ABSENT);
+	
+	inline function _hasKey(i:Int) return mKeys.get(i) != IntIntHashTable.KEY_ABSENT;
 }
 
 #if generic
