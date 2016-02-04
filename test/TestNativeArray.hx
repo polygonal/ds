@@ -38,6 +38,27 @@ class TestNativeArray extends AbstractTest
 		for (i in 0...10) assertEquals(i, v.get(i));
 	}
 	
+	function testToArray()
+	{
+		var v = NativeArray.init(10);
+		for (i in 0...10) v.set(i, i);
+		
+		var a = NativeArray.toArray(v);
+		for (i in 0...10) assertEquals(v.get(i), a[i]);
+		
+		var a = NativeArray.toArray(v, 1);
+		assertEquals(9, a.length);
+		for (i in 0...10 - 1) assertEquals(i + 1, a[i]);
+		
+		var a = NativeArray.toArray(v, 1, 9);
+		assertEquals(9, a.length);
+		for (i in 0...10 - 1) assertEquals(i + 1, a[i]);
+		
+		var a = NativeArray.toArray(v, 0, 5);
+		assertEquals(5, a.length);
+		for (i in 0...5) assertEquals(i, a[i]);
+	}
+	
 	function testBinarySearch()
 	{
 		var v = NativeArray.init(10);

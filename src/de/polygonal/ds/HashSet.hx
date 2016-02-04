@@ -102,7 +102,6 @@ class HashSet<T:Hashable> implements Set<T>
 	#end
 	
 	var mFree:Int;
-	var mIsResizable:Bool;
 	var mMinCapacity:Int;
 	var mIterator:HashSetIterator<T>;
 	
@@ -120,27 +119,20 @@ class HashSet<T:Hashable> implements Set<T>
 		If omitted, the initial `capacity` equals `slotCount`.
 		The `capacity` is automatically adjusted according to the storage requirements based on two rules:
 		<ul>
-		<li>If the set runs out of space, the `capacity` is doubled (if `isResizable` is true).</li>
+		<li>If the set runs out of space, the `capacity` is doubled.</li>
 		<li>If the ``size()`` falls below a quarter of the current `capacity`, the `capacity` is cut in half while the minimum `capacity` can't fall below `capacity`.</li>
 		</ul>
-		
-		@param isResizable if false, the hash set is created with a fixed size.
-		Thus adding an element when ``size()`` equals `capacity` throws an error.
-		Otherwise the `capacity` is automatically adjusted.
-		Default is true.
 	**/
-	public function new(slotCount:Int, capacity = -1, isResizable = true)
+	public function new(slotCount:Int, capacity = -1)
 	{
 		if (slotCount == M.INT16_MIN) return;
 		assert(slotCount > 0);
 		
 		if (capacity == -1) capacity = slotCount;
 		
-		mIsResizable = isResizable;
-		
 		mMinCapacity = capacity;
 		
-		mH = new IntIntHashTable(slotCount, capacity, mIsResizable);
+		mH = new IntIntHashTable(slotCount, capacity);
 		mVals = NativeArray.init(capacity);
 		
 		#if alchemy
@@ -268,11 +260,6 @@ class HashSet<T:Hashable> implements Set<T>
 		{
 			if (mH.setIfAbsent(_key(x), size()))
 			{
-				#if debug
-				if (!mIsResizable)
-					assert(false, 'hash set is full (${capacity})');
-				#end
-				
 				grow(capacity >> 1);
 				mVals[mFree] = x;
 				mFree = getNext(mFree);
@@ -348,7 +335,7 @@ class HashSet<T:Hashable> implements Set<T>
 			mFree = i;
 			
 			var doShrink = false;
-			if (size() - 1 == (capacity >> 2) && capacity > mMinCapacity && mIsResizable)
+			if (size() - 1 == (capacity >> 2) && capacity > mMinCapacity)
 				doShrink = true;
 			
 			mH.clr(_key(x));
@@ -465,7 +452,6 @@ class HashSet<T:Hashable> implements Set<T>
 	{
 		var c = new HashSet<T>(M.INT16_MIN);
 		
-		c.mIsResizable = mIsResizable;
 		c.key = HashKey.next();
 		c.mH = cast mH.clone(false);
 		

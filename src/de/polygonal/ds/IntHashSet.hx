@@ -105,7 +105,6 @@ class IntHashSet implements Set<Int>
 	var mSize:Int;
 	
 	var mMinCapacity:Int;
-	var mIsResizable:Bool;
 	var mIterator:IntHashSetIterator;
 	
 	/**
@@ -122,23 +121,16 @@ class IntHashSet implements Set<Int>
 		If omitted, the initial `capacity` equals `slotCount`.
 		The `initialCapacity` is automatically adjusted according to the storage requirements based on two rules:
 		<ul>
-		<li>If the set runs out of space, the `capacity` is doubled (if `isResizable` is true).</li>
+		<li>If the set runs out of space, the `capacity` is doubled.</li>
 		<li>If the ``size()`` falls below a quarter of the current `capacity`, the `capacity` is cut in half while the minimum `capacity` can't fall below `capacity`.</li>
 		</ul>
-		
-		@param isResizable if false, the hash set is created with a fixed size.
-		Thus adding an element when ``size()`` equals `capacity` throws an error.
-		Otherwise the `capacity` is automatically adjusted.
-		Default is true.
 	**/
-	public function new(slotCount:Int, initialCapacity = -1, isResizable = true)
+	public function new(slotCount:Int, initialCapacity = -1)
 	{
 		if (slotCount == M.INT16_MIN) return;
 		assert(slotCount > 0);
 		
 		assert(M.isPow2(slotCount), "slotCount is not a power of 2");
-		
-		mIsResizable = isResizable;
 		
 		if (initialCapacity == -1)
 			initialCapacity = slotCount;
@@ -430,15 +422,7 @@ class IntHashSet implements Set<Int>
 		#end
 		if (j == EMPTY_SLOT)
 		{
-			if (mSize == capacity)
-			{
-				#if debug
-				if (!mIsResizable)
-					assert(false, 'hash set is full ($capacity)');
-				#end
-				
-				grow();
-			}
+			if (mSize == capacity) grow();
 			
 			var i = mFree << 1;
 			mFree = getNext(mFree);
@@ -499,12 +483,7 @@ class IntHashSet implements Set<Int>
 					return false;
 				else
 				{
-					if (mSize == capacity)
-					{
-						if (!mIsResizable)
-							throw 'hash set is full ($capacity)';
-						grow();
-					}
+					if (mSize == capacity) grow();
 					var i = mFree << 1;
 					mFree = getNext(mFree);
 					setData(i, x);
@@ -593,7 +572,7 @@ class IntHashSet implements Set<Int>
 				
 				mSize--;
 				
-				if (mSize == (capacity >> 2) && capacity > mMinCapacity && mIsResizable) shrink();
+				if (mSize == (capacity >> 2) && capacity > mMinCapacity) shrink();
 				
 				return true;
 			}
@@ -648,7 +627,7 @@ class IntHashSet implements Set<Int>
 					
 					--mSize;
 					
-					if (mSize == (capacity >> 2) && capacity > mMinCapacity && mIsResizable) shrink();
+					if (mSize == (capacity >> 2) && capacity > mMinCapacity) shrink();
 					
 					return true;
 				}

@@ -78,7 +78,7 @@ class ArrayedQueue<T> implements Queue<T>
 		This is also the minimum size of this queue.
 		The `capacity` is automatically adjusted according to the storage requirements based on three rules:
 		<ul>
-		<li>If this queue runs out of space, `capacity` is doubled (if `isResizable` is true)</li>
+		<li>If this queue runs out of space, `capacity` is doubled.</li>
 		<li>If the ``size()`` falls below a quarter of the current `capacity`, the `capacity` is cut in half</li>
 		<li>The minimum `capacity` equals `capacity`</li>
 		</ul>

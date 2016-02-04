@@ -140,16 +140,11 @@ class IntIntHashTable implements Map<Int, Int>
 		This is also the minimum allowed size of the hash table and cannot be changed in the future. If omitted, the initial `capacity` equals `slotCount`.
 		The `initialCapacity` is automatically adjusted according to the storage requirements based on two rules:
 		<ul>
-		<li>If the hash table runs out of space, the `capacity` is doubled (if `isResizable` is true).</li>
+		<li>If the hash table runs out of space, the `capacity` is doubled.</li>
 		<li>If the size falls below a quarter of the current `capacity`, the `capacity` is cut in half while the minimum `capacity` can't fall below `capacity`.</li>
 		</ul>
-		
-		@param isResizable if false, the hash table is treated as fixed size table.
-		Thus adding a value when ``size()`` equals `capacity` throws an error.
-		Otherwise the `capacity` is automatically adjusted.
-		Default is true.
 	**/
-	public function new(slotCount:Int, initialCapacity = -1, isResizable = true)
+	public function new(slotCount:Int, initialCapacity = -1)
 	{
 		if (slotCount == M.INT16_MIN) return;
 		
