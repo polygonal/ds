@@ -265,14 +265,16 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	**/
 	public function toKeyArray():Array<K>
 	{
-		var a:Array<K> = ArrayUtil.alloc(size());
-		var j = 0;
+		if (isEmpty()) return [];
+		
+		var out = ArrayUtil.alloc(size());
+		var j = 0, keys = mKeys, k;
 		for (i in 0...capacity)
 		{
-			if (mKeys[i] != null)
-				a[j++] = mKeys[i];
+			k = keys.get(i);
+			if (k != null) out[j++] = k;
 		}
-		return a;
+		return out;
 	}
 	
 	/**
@@ -663,14 +665,14 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	**/
 	public function toArray():Array<T>
 	{
-		var a:Array<T> = ArrayUtil.alloc(size());
-		var j = 0;
+		if (isEmpty()) return [];
+		
+		var out = ArrayUtil.alloc(size());
+		var j = 0, keys = mKeys, vals = mVals, k;
 		for (i in 0...capacity)
-		{
-			if (mKeys[i] != null)
-				a[j++] = mVals[i];
-		}
-		return a;
+			if (keys.get(i) != null)
+				out[j++] = vals.get(i);
+		return out;
 	}
 	
 	/**
@@ -842,26 +844,23 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 @:dox(hide)
 class HashTableKeyIterator<K:Hashable, T> implements de.polygonal.ds.Itr<K>
 {
-	var mF:HashTable<K, T>;
-	
+	var mHash:HashTable<K, T>;
 	var mKeys:Container<K>;
-	
 	var mI:Int;
 	var mS:Int;
 	
-	public function new(f:HashTable<K, T>)
+	public function new(x:HashTable<K, T>)
 	{
-		mF = f;
+		mHash = x;
 		reset();
 	}
 	
 	public function reset():Itr<K>
 	{
-		mKeys = mF.mKeys;
+		mKeys = mHash.mKeys;
 		mI = 0;
-		mS = mF.mH.capacity;
-		while (mI < mS && mKeys[mI] == null) mI++;
-		
+		mS = mHash.mH.capacity;
+		while (mI < mS && mKeys.get(mI) == null) mI++;
 		return this;
 	}
 	
@@ -872,9 +871,8 @@ class HashTableKeyIterator<K:Hashable, T> implements de.polygonal.ds.Itr<K>
 
 	inline public function next():K
 	{
-		var v = mKeys[mI];
-		while (++mI < mS && mKeys[mI] == null) {}
-		
+		var v = mKeys.get(mI);
+		while (++mI < mS && mKeys.get(mI) == null) {}
 		return v;
 	}
 	
@@ -891,28 +889,25 @@ class HashTableKeyIterator<K:Hashable, T> implements de.polygonal.ds.Itr<K>
 @:dox(hide)
 class HashTableValIterator<K:Hashable, T> implements de.polygonal.ds.Itr<T>
 {
-	var mF:HashTable<K, T>;
-	
+	var mHash:HashTable<K, T>;
 	var mKeys:Container<K>;
 	var mVals:Container<T>;
-	
 	var mI:Int;
 	var mS:Int;
 	
-	public function new(f:HashTable<K, T>)
+	public function new(x:HashTable<K, T>)
 	{
-		mF = f;
+		mHash = x;
 		reset();
 	}
 	
 	public function reset():Itr<T>
 	{
-		mVals = mF.mVals;
-		mKeys = mF.mKeys;
+		mVals = mHash.mVals;
+		mKeys = mHash.mKeys;
 		mI = 0;
-		mS = mF.mH.capacity;
-		while (mI < mS && mKeys[mI] == null) mI++;
-		
+		mS = mHash.mH.capacity;
+		while (mI < mS && mKeys.get(mI) == null) mI++;
 		return this;
 	}
 	
@@ -923,9 +918,8 @@ class HashTableValIterator<K:Hashable, T> implements de.polygonal.ds.Itr<T>
 	
 	inline public function next():T
 	{
-		var v = mVals[mI];
-		while (++mI < mS && mKeys[mI] == null) {}
-		
+		var v = mVals.get(mI);
+		while (++mI < mS && mKeys.get(mI) == null) {}
 		return v;
 	}
 	

@@ -449,14 +449,16 @@ class HashSet<T:Hashable> implements Set<T>
 	**/
 	public function toArray():Array<T>
 	{
-		var a:Array<T> = ArrayUtil.alloc(size());
-		var j = 0;
+		if (isEmpty()) return [];
+		
+		var out = ArrayUtil.alloc(size());
+		var j = 0, vals = mVals, v;
 		for (i in 0...capacity)
 		{
-			var v = mVals[i];
-			if (v != null) a[j++] = v;
+			v = vals.get(i);
+			if (v != null) out[j++] = v;
 		}
-		return a;
+		return out;
 	}
 	
 	/**
@@ -624,24 +626,23 @@ class HashSet<T:Hashable> implements Set<T>
 @:dox(hide)
 class HashSetIterator<T:Hashable> implements de.polygonal.ds.Itr<T>
 {
-	var mF:HashSet<T>;
+	var mHash:HashSet<T>;
 	var mVals:Container<T>;
 	var mI:Int;
 	var mS:Int;
 	
-	public function new(f:HashSet<T>)
+	public function new(x:HashSet<T>)
 	{
-		mF = f;
+		mHash = x;
 		reset();
 	}
 	
 	public function reset():Itr<T>
 	{
-		mVals = mF.mVals;
+		mVals = mHash.mVals;
 		mI = 0;
-		mS = mF.mH.capacity;
-		while (mI < mS && mVals[mI] == null) mI++;
-		
+		mS = mHash.mH.capacity;
+		while (mI < mS && mVals.get(mI) == null) mI++;
 		return this;
 	}
 	
@@ -653,8 +654,7 @@ class HashSetIterator<T:Hashable> implements de.polygonal.ds.Itr<T>
 	inline public function next():T
 	{
 		var v = mVals[mI];
-		while (++mI < mS && mVals[mI] == null) {}
-		
+		while (++mI < mS && mVals.get(mI) == null) {}
 		return v;
 	}
 	

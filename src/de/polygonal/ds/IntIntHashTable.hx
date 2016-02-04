@@ -655,22 +655,22 @@ class IntIntHashTable implements Map<Int, Int>
 	**/
 	public function toKeyArray():Array<Int>
 	{
-		if (size() == 0) return new Array<Int>();
+		if (isEmpty()) return [];
 		
-		var a:Array<Int> = ArrayUtil.alloc(size());
-		var j = 0;
+		var out = ArrayUtil.alloc(size());
+		var j = 0, o, d = mData;
 		for (i in 0...capacity)
 		{
 			#if (flash && alchemy)
-			var o = mData.getAddr(i * 3);
+			o = d.getAddr(i * 3);
 			if (Memory.getI32(o + 4) != VAL_ABSENT)
-				a[j++] = Memory.getI32(o);
+				out[j++] = Memory.getI32(o);
 			#else
-			if (getData((i * 3) + 1) != VAL_ABSENT)
-				a[j++] = getData(i * 3);
+			if (d.get((i * 3) + 1) != VAL_ABSENT)
+				out[j++] = d.get(i * 3);
 			#end
 		}
-		return a;
+		return out;
 	}
 	
 	/**
@@ -1473,14 +1473,16 @@ class IntIntHashTable implements Map<Int, Int>
 	**/
 	public function toArray():Array<Int>
 	{
-		var a:Array<Int> = ArrayUtil.alloc(size());
-		var j = 0;
+		if (isEmpty()) return [];
+		
+		var out = ArrayUtil.alloc(size());
+		var j = 0, v, d = mData;
 		for (i in 0...capacity)
 		{
-			var v = getData((i * 3) + 1);
-				if (v != VAL_ABSENT) a[j++] = v;
+			v = d.get((i * 3) + 1);
+			if (v != VAL_ABSENT) out[j++] = v;
 		}
-		return a;
+		return out;
 	}
 	
 	/**
@@ -1718,32 +1720,30 @@ class IntIntHashTable implements Map<Int, Int>
 @:dox(hide)
 class IntIntHashTableValIterator implements de.polygonal.ds.Itr<Int>
 {
-	var mF:IntIntHashTable;
+	var mHash:IntIntHashTable;
 	var mI:Int;
 	var mS:Int;
-	
 	#if alchemy
 	var mData:IntMemory;
 	#else
 	var mData:Container<Int>;
 	#end
 	
-	public function new(hash:IntIntHashTable)
+	public function new(x:IntIntHashTable)
 	{
-		mF = hash;
-		mData = mF.mData;
+		mHash = x;
+		mData = x.mData;
 		mI = 0;
-		mS = mF.capacity;
+		mS = x.capacity;
 		scan();
 	}
 	
 	public function reset():Itr<Int>
 	{
-		mData = mF.mData;
+		mData = mHash.mData;
 		mI = 0;
-		mS = mF.capacity;
+		mS = mHash.capacity;
 		scan();
-		
 		return this;
 	}
 	
@@ -1754,9 +1754,8 @@ class IntIntHashTableValIterator implements de.polygonal.ds.Itr<Int>
 	
 	inline public function next():Int
 	{
-		var val = getData((mI++ * 3) + 1);
+		var val = mData.get((mI++ * 3) + 1);
 		scan();
-		
 		return val;
 	}
 	
@@ -1765,14 +1764,9 @@ class IntIntHashTableValIterator implements de.polygonal.ds.Itr<Int>
 		throw "unsupported operation";
 	}
 	
-	inline function scan()
+	function scan()
 	{
-		while ((mI < mS) && (getData((mI * 3) + 1) == IntIntHashTable.VAL_ABSENT)) mI++;
-	}
-	
-	inline function getData(i:Int)
-	{
-		return mData.get(i);
+		while ((mI < mS) && (mData.get((mI * 3) + 1) == IntIntHashTable.VAL_ABSENT)) mI++;
 	}
 }
 
@@ -1780,7 +1774,7 @@ class IntIntHashTableValIterator implements de.polygonal.ds.Itr<Int>
 @:dox(hide)
 class IntIntHashTableKeyIterator implements de.polygonal.ds.Itr<Int>
 {
-	var mF:IntIntHashTable;
+	var mHash:IntIntHashTable;
 	var mI:Int;
 	var mS:Int;
 	
@@ -1790,20 +1784,20 @@ class IntIntHashTableKeyIterator implements de.polygonal.ds.Itr<Int>
 	var mData:Container<Int>;
 	#end
 	
-	public function new(hash:IntIntHashTable)
+	public function new(x:IntIntHashTable)
 	{
-		mF = hash;
-		mData = mF.mData;
+		mHash = x;
+		mData = x.mData;
 		mI = 0;
-		mS = mF.capacity;
+		mS = x.capacity;
 		scan();
 	}
 	
 	public function reset():Itr<Int>
 	{
-		mData = mF.mData;
+		mData = mHash.mData;
 		mI = 0;
-		mS = mF.capacity;
+		mS = mHash.capacity;
 		scan();
 		return this;
 	}
@@ -1815,7 +1809,7 @@ class IntIntHashTableKeyIterator implements de.polygonal.ds.Itr<Int>
 	
 	inline public function next():Int
 	{
-		var key = getData((mI++ * 3));
+		var key = mData.get((mI++ * 3));
 		scan();
 		return key;
 	}
@@ -1825,17 +1819,8 @@ class IntIntHashTableKeyIterator implements de.polygonal.ds.Itr<Int>
 		throw "unsupported operation";
 	}
 	
-	inline function scan()
+	function scan()
 	{
-		while ((mI < mS) && (getData((mI * 3) + 1) == IntIntHashTable.VAL_ABSENT)) mI++;
-	}
-	
-	inline function getData(i:Int)
-	{
-		#if (flash && alchemy)
-		return mData.get(i);
-		#else
-		return mData[i];
-		#end
+		while ((mI < mS) && (mData.get((mI * 3) + 1) == IntIntHashTable.VAL_ABSENT)) mI++;
 	}
 }

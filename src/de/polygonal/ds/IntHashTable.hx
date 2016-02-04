@@ -673,14 +673,14 @@ class IntHashTable<T> implements Map<Int, T>
 	**/
 	public function toArray():Array<T>
 	{
-		var a:Array<T> = ArrayUtil.alloc(size());
-		var j = 0;
+		if (size() == 0) return [];
+		
+		var out = ArrayUtil.alloc(size());
+		var j = 0, vals = mVals;
 		for (i in 0...capacity)
-		{
 			if (_hasKey(i))
-				a[j++] = mVals[i];
-		}
-		return a;
+				out[j++] = vals.get(i);
+		return out;
 	}
 	
 	/**
