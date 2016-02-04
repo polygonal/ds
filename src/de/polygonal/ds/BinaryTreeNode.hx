@@ -761,10 +761,10 @@ class BinaryTreeNode<T> implements Collection<T>
 	**/
 	public function toArray():Array<T>
 	{
-		var a:Array<T> = ArrayUtil.alloc(size());
+		var out = ArrayUtil.alloc(size());
 		var i = 0;
-		preorder(function(node:BinaryTreeNode<T>, userData:Dynamic):Bool { a[i++] = node.val; return true; });
-		return a;
+		preorder(function(node:BinaryTreeNode<T>, userData:Dynamic):Bool { out[i++] = node.val; return true; });
+		return out;
 	}
 	
 	/**
@@ -873,21 +873,21 @@ class BinaryTreeNode<T> implements Collection<T>
 @:dox(hide)
 class BinaryTreeNodeIterator<T> implements de.polygonal.ds.Itr<T>
 {
-	var mNode:BinaryTreeNode<T>;
+	var mObject:BinaryTreeNode<T>;
 	var mStack:Array<BinaryTreeNode<T>>;
 	var mTop:Int;
 	var mC:Int;
 	
-	public function new(node:BinaryTreeNode<T>)
+	public function new(x:BinaryTreeNode<T>)
 	{
+		mObject = x;
 		mStack = new Array<BinaryTreeNode<T>>();
-		mNode = node;
 		reset();
 	}
 	
 	inline public function reset():Itr<T>
 	{
-		mStack[0] = mNode;
+		mStack[0] = mObject;
 		mTop = 1;
 		mC = 0;
 		return this;

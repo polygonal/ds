@@ -319,21 +319,21 @@ class ListSet<T> implements Set<T>
 @:dox(hide)
 class ListSetIterator<T> implements de.polygonal.ds.Itr<T>
 {
-	var mF:ListSet<T>;
+	var mObject:ListSet<T>;
 	var mData:Array<T>;
 	var mI:Int;
 	var mS:Int;
 	
-	public function new(f:ListSet<T>)
+	public function new(x:ListSet<T>)
 	{
-		mF = f;
+		mObject = x;
 		reset();
 	}
 	
 	inline public function reset():Itr<T>
 	{
-		mData = mF.mData;
-		mS = mF.mSize;
+		mData = mObject.mData;
+		mS = mObject.mSize;
 		mI = 0;
 		return this;
 	}

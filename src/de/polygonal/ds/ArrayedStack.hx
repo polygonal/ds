@@ -778,20 +778,20 @@ class ArrayedStack<T> implements Stack<T>
 @:dox(hide)
 class ArrayedStackIterator<T> implements de.polygonal.ds.Itr<T>
 {
-	var mStack:ArrayedStack<T>;
+	var mObject:ArrayedStack<T>;
 	var mData:Container<T>;
 	var mI:Int;
 	
 	public function new(x:ArrayedStack<T>)
 	{
-		mStack = x;
+		mObject = x;
 		reset();
 	}
 	
 	inline public function reset():Itr<T>
 	{
-		mData = mStack.mData;
-		mI = mStack.mTop - 1;
+		mData = mObject.mData;
+		mI = mObject.mTop - 1;
 		return this;
 	}
 	
@@ -807,16 +807,16 @@ class ArrayedStackIterator<T> implements de.polygonal.ds.Itr<T>
 	
 	inline public function remove()
 	{
-		assert(mI != (mStack.mTop - 1), "call next() before removing an element");
+		assert(mI != (mObject.mTop - 1), "call next() before removing an element");
 		
 		var i = mI + 1;
-		var top = mStack.mTop - 1;
+		var top = mObject.mTop - 1;
 		if (i == top)
-			mStack.mTop = top;
+			mObject.mTop = top;
 		else
 		{
 			while (i < top) mData.set(i++, mData.get(i));
-			mStack.mTop = top;
+			mObject.mTop = top;
 		}
 	}
 }

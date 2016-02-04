@@ -1022,14 +1022,15 @@ class Sll<T> implements Collection<T>
 	**/
 	public function toArray():Array<T>
 	{
-		var a:Array<T> = ArrayUtil.alloc(size());
+		if (isEmpty()) return [];
+		var out = ArrayUtil.alloc(size());
 		var node = head;
 		for (i in 0...mSize)
 		{
-			a[i] = node.val;
+			out[i] = node.val;
 			node = node.next;
 		}
-		return a;
+		return out;
 	}
 	
 	/**
@@ -1415,19 +1416,19 @@ class Sll<T> implements Collection<T>
 @:dox(hide)
 class SllIterator<T> implements de.polygonal.ds.Itr<T>
 {
-	var mF:Sll<T>;
+	var mObject:Sll<T>;
 	var mWalker:SllNode<T>;
 	var mHook:SllNode<T>;
 	
-	public function new(f:Sll<T>)
+	public function new(x:Sll<T>)
 	{
-		mF = f;
+		mObject = x;
 		reset();
 	}
 	
 	inline public function reset():Itr<T>
 	{
-		mWalker = mF.head;
+		mWalker = mObject.head;
 		mHook = null;
 		return this;
 	}
@@ -1449,7 +1450,7 @@ class SllIterator<T> implements de.polygonal.ds.Itr<T>
 	{
 		assert(mHook != null, "call next() before removing an element");
 		
-		mF.unlink(mHook);
+		mObject.unlink(mHook);
 	}
 }
 
@@ -1459,24 +1460,24 @@ class SllIterator<T> implements de.polygonal.ds.Itr<T>
 @:dox(hide)
 class CircularSllIterator<T> implements de.polygonal.ds.Itr<T>
 {
-	var mF:Sll<T>;
+	var mObject:Sll<T>;
 	var mWalker:SllNode<T>;
 	var mI:Int;
 	var mS:Int;
 	var mHook:SllNode<T>;
 	
-	public function new(f:Sll<T>)
+	public function new(x:Sll<T>)
 	{
-		mF = f;
+		mObject = x;
 		reset();
 	}
 	
 	inline public function reset():Itr<T>
 	{
-		mWalker = mF.head;
-		mS = mF.size();
-		mI = 0;
+		mWalker = mObject.head;
+		mS = mObject.size();
 		mHook = null;
+		mI = 0;
 		return this;
 	}
 	
@@ -1498,7 +1499,7 @@ class CircularSllIterator<T> implements de.polygonal.ds.Itr<T>
 	{
 		assert(mI > 0, "call next() before removing an element");
 		
-		mF.unlink(mHook);
+		mObject.unlink(mHook);
 		mI--;
 		mS--;
 	}

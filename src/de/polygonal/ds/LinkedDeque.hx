@@ -538,15 +538,17 @@ class LinkedDeque<T> implements Deque<T>
 	**/
 	public function toArray():Array<T>
 	{
-		var a = ArrayUtil.alloc(size());
+		if (isEmpty()) return [];
+		
+		var out = ArrayUtil.alloc(size());
 		var i = 0;
 		var node = mHead;
 		while (node != null)
 		{
-			a[i++] = node.val;
+			out[i++] = node.val;
 			node = node.next;
 		}
-		return a;
+		return out;
 	}
 	
 	/**
@@ -762,19 +764,19 @@ class LinkedDequeNode<T>
 @:dox(hide)
 class LinkedDequeIterator<T> implements de.polygonal.ds.Itr<T>
 {
-	var mF:LinkedDeque<T>;
+	var mObject:LinkedDeque<T>;
 	var mWalker:LinkedDequeNode<T>;
 	var mHook:LinkedDequeNode<T>;
 	
-	public function new(f:LinkedDeque<T>)
+	public function new(x:LinkedDeque<T>)
 	{
-		mF = f;
+		mObject = x;
 		reset();
 	}
 	
 	inline public function reset():Itr<T>
 	{
-		mWalker = mF.mHead;
+		mWalker = mObject.mHead;
 		mHook = null;
 		return this;
 	}
@@ -796,6 +798,6 @@ class LinkedDequeIterator<T> implements de.polygonal.ds.Itr<T>
 	{
 		assert(mHook != null, "call next() before removing an element");
 		
-		mF.removeNode(mHook);
+		mObject.removeNode(mHook);
 	}
 }

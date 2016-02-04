@@ -854,8 +854,7 @@ class IntHashTable<T> implements Map<Int, T>
 @:dox(hide)
 class IntHashTableIterator<T> implements de.polygonal.ds.Itr<T>
 {
-	var mF:IntHashTable<T>;
-	
+	var mObject:IntHashTable<T>;
 	var mVals:Container<T>;
 	
 	#if alchemy
@@ -867,18 +866,18 @@ class IntHashTableIterator<T> implements de.polygonal.ds.Itr<T>
 	var mI:Int;
 	var mS:Int;
 	
-	public function new(f:IntHashTable<T>)
+	public function new(x:IntHashTable<T>)
 	{
-		mF = f;
+		mObject = x;
 		reset();
 	}
 	
 	public function reset():Itr<T>
 	{
-		mVals = mF.mVals;
-		mKeys = mF.mKeys;
+		mVals = mObject.mVals;
+		mKeys = mObject.mKeys;
+		mS = mObject.mH.capacity;
 		mI = 0;
-		mS = mF.mH.capacity;
 		
 		#if (flash && alchemy)
 		while (mI < mS && mKeys.get(mI) == IntIntHashTable.KEY_ABSENT) mI++;

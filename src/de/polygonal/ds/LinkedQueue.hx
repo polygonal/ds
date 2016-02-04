@@ -523,15 +523,17 @@ class LinkedQueue<T> implements Queue<T>
 	**/
 	public function toArray():Array<T>
 	{
-		var a:Array<T> = ArrayUtil.alloc(size());
+		if (isEmpty()) return [];
+		
+		var out = ArrayUtil.alloc(size());
 		var i = 0;
 		var node = mHead;
 		while (node != null)
 		{
-			a[i++] = node.val;
+			out[i++] = node.val;
 			node = node.next;
 		}
-		return a;
+		return out;
 	}
 	
 	/**
@@ -712,19 +714,19 @@ class LinkedQueueNode<T>
 @:dox(hide)
 class LinkedQueueIterator<T> implements de.polygonal.ds.Itr<T>
 {
-	var mF:LinkedQueue<T>;
+	var mObject:LinkedQueue<T>;
 	var mWalker:LinkedQueueNode<T>;
 	var mHook:LinkedQueueNode<T>;
 	
-	public function new(f:LinkedQueue<T>)
+	public function new(x:LinkedQueue<T>)
 	{
-		mF = f;
+		mObject = x;
 		reset();
 	}
 	
 	inline public function reset():Itr<T>
 	{
-		mWalker = mF.mHead;
+		mWalker = mObject.mHead;
 		mHook = null;
 		return this;
 	}
@@ -746,6 +748,6 @@ class LinkedQueueIterator<T> implements de.polygonal.ds.Itr<T>
 	{
 		assert(mHook != null, "call next() before removing an element");
 		
-		mF.removeNode(mHook);
+		mObject.removeNode(mHook);
 	}
 }

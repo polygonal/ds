@@ -2115,10 +2115,12 @@ class TreeNode<T> implements Collection<T>
 	**/
 	public function toArray():Array<T>
 	{
-		var a:Array<T> = ArrayUtil.alloc(size());
+		if (isEmpty()) return [];
+		
+		var out = ArrayUtil.alloc(size());
 		var i = 0;
-		preorder(function(node:TreeNode<T>, _, _):Bool { a[i++] = node.val; return true; }, null);
-		return a;
+		preorder(function(node:TreeNode<T>, _, _):Bool { out[i++] = node.val; return true; }, null);
+		return out;
 	}
 	
 	/**
@@ -2263,21 +2265,21 @@ class TreeNode<T> implements Collection<T>
 @:dox(hide)
 class TreeIterator<T> implements de.polygonal.ds.Itr<T>
 {
-	var mNode:TreeNode<T>;
+	var mObject:TreeNode<T>;
 	var mStack:Array<TreeNode<T>>;
 	var mTop:Int;
 	var mC:Int;
 	
 	public function new(node:TreeNode<T>)
 	{
-		mNode = node;
+		mObject = node;
 		mStack = new Array<TreeNode<T>>();
 		reset();
 	}
 	
 	inline public function reset():Itr<T>
 	{
-		mStack[0] = mNode;
+		mStack[0] = mObject;
 		mTop = 1;
 		mC = 0;
 		return this;
@@ -2314,19 +2316,19 @@ class TreeIterator<T> implements de.polygonal.ds.Itr<T>
 @:dox(hide)
 class ChildTreeIterator<T> implements de.polygonal.ds.Itr<T>
 {
-	var mF:TreeNode<T>;
+	var mObject:TreeNode<T>;
 	var mWalker:TreeNode<T>;
 	var mHook:TreeNode<T>;
 	
-	public function new(f:TreeNode<T>)
+	public function new(x:TreeNode<T>)
 	{
-		mF = f;
+		mObject = f;
 		reset();
 	}
 	
 	inline public function reset():Itr<T>
 	{
-		mWalker = mF.children;
+		mWalker = mObject.children;
 		mHook = null;
 		return this;
 	}

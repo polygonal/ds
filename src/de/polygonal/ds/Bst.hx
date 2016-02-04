@@ -383,10 +383,12 @@ class Bst<T:Comparable<T>> implements Collection<T>
 	**/
 	public function toArray():Array<T>
 	{
-		var a:Array<T> = ArrayUtil.alloc(size());
+		if (isEmpty()) return [];
+		
+		var out = ArrayUtil.alloc(size());
 		var i = 0;
-		mRoot.preorder(function(node:BinaryTreeNode<T>, userData:Dynamic):Bool { a[i++] = node.val; return true; });
-		return a;
+		mRoot.preorder(function(node:BinaryTreeNode<T>, _):Bool { out[i++] = node.val; return true; });
+		return out;
 	}
 	
 	/**
@@ -424,21 +426,21 @@ class Bst<T:Comparable<T>> implements Collection<T>
 @:dox(hide)
 class BSTIterator<T> implements de.polygonal.ds.Itr<T>
 {
-	var mNode:BinaryTreeNode<T>;
+	var mObject:BinaryTreeNode<T>;
 	var mStack:Array<BinaryTreeNode<T>>;
 	var mTop:Int;
 	var mC:Int;
 	
-	public function new(node:BinaryTreeNode<T>)
+	public function new(x:BinaryTreeNode<T>)
 	{
-		mNode = node;
+		mObject = x;
 		mStack = new Array<BinaryTreeNode<T>>();
 		reset();
 	}
 	
 	inline public function reset():Itr<T>
 	{
-		mStack[0] = mNode;
+		mStack[0] = mObject;
 		mTop = 1;
 		mC = 0;
 		return this;

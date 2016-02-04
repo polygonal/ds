@@ -272,7 +272,7 @@ class GraphNode<T> implements Hashable
 	**/
 	public function toString():String
 	{
-		var t = new Array<String>();
+		var t = [];
 		if (arcList != null)
 		{
 			var arc = arcList;
@@ -295,18 +295,18 @@ class GraphNode<T> implements Hashable
 @:dox(hide)
 class NodeValIterator<T> implements de.polygonal.ds.Itr<T>
 {
-	var mNode:GraphNode<T>;
+	var mObject:GraphNode<T>;
 	var mArcList:GraphArc<T>;
 	
-	public function new(node:GraphNode<T>)
+	public function new(x:GraphNode<T>)
 	{
-		mNode = node;
+		mObject = x;
 		reset();
 	}
 	
 	inline public function reset():Itr<T>
 	{
-		mArcList = mNode.arcList;
+		mArcList = mObject.arcList;
 		return this;
 	}
 	

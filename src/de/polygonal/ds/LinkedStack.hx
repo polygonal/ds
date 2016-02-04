@@ -694,15 +694,16 @@ class LinkedStack<T> implements Stack<T>
 	**/
 	public function toArray():Array<T>
 	{
-		var a:Array<T> = ArrayUtil.alloc(size());
-		ArrayUtil.fill(a, cast null, size());
+		if (isEmpty()) return [];
+		
+		var out = ArrayUtil.alloc(size());
 		var node = mHead;
 		for (i in 0...mTop)
 		{
-			a[mTop - i - 1] = node.val;
+			out[mTop - i - 1] = node.val;
 			node = node.next;
 		}
-		return a;
+		return out;
 	}
 	
 	/**
@@ -858,19 +859,19 @@ class LinkedStackNode<T>
 @:dox(hide)
 class LinkedStackIterator<T> implements de.polygonal.ds.Itr<T>
 {
-	var mF:LinkedStack<T>;
+	var mObject:LinkedStack<T>;
 	var mWalker:LinkedStackNode<T>;
 	var mHook:LinkedStackNode<T>;
 	
-	public function new(f:LinkedStack<T>)
+	public function new(x:LinkedStack<T>)
 	{
-		mF = f;
+		mObject = x;
 		reset();
 	}
 	
 	inline public function reset():Itr<T>
 	{
-		mWalker = mF.mHead;
+		mWalker = mObject.mHead;
 		mHook = null;
 		return this;
 	}
@@ -892,6 +893,6 @@ class LinkedStackIterator<T> implements de.polygonal.ds.Itr<T>
 	{
 		assert(mHook != null, "call next() before removing an element");
 		
-		mF.removeNode(mHook);
+		mObject.removeNode(mHook);
 	}
 }

@@ -1160,14 +1160,16 @@ class Dll<T> implements Collection<T>
 	**/
 	public function toArray():Array<T>
 	{
-		var a:Array<T> = ArrayUtil.alloc(size());
+		if (isEmpty()) return [];
+		
+		var out = ArrayUtil.alloc(size());
 		var node = head;
 		for (i in 0...mSize)
 		{
-			a[i] = node.val;
+			out[i] = node.val;
 			node = node.next;
 		}
-		return a;
+		return out;
 	}
 	
 	/**
@@ -1621,19 +1623,19 @@ class Dll<T> implements Collection<T>
 @:dox(hide)
 class DllIterator<T> implements de.polygonal.ds.Itr<T>
 {
-	var mF:Dll<T>;
+	var mObject:Dll<T>;
 	var mWalker:DllNode<T>;
 	var mHook:DllNode<T>;
 	
-	public function new(f:Dll<T>)
+	public function new(x:Dll<T>)
 	{
-		mF = f;
+		mObject = x;
 		reset();
 	}
 	
 	inline public function reset():Itr<T>
 	{
-		mWalker = mF.head;
+		mWalker = mObject.head;
 		mHook = null;
 		return this;
 	}
@@ -1655,7 +1657,7 @@ class DllIterator<T> implements de.polygonal.ds.Itr<T>
 	{
 		assert(mHook != null, "call next() before removing an element");
 		
-		mF.unlink(mHook);
+		mObject.unlink(mHook);
 	}
 }
 
@@ -1665,22 +1667,22 @@ class DllIterator<T> implements de.polygonal.ds.Itr<T>
 @:dox(hide)
 class CircularDllIterator<T> implements de.polygonal.ds.Itr<T>
 {
-	var mF:Dll<T>;
+	var mObject:Dll<T>;
 	var mWalker:DllNode<T>;
+	var mHook:DllNode<T>;
 	var mI:Int;
 	var mS:Int;
-	var mHook:DllNode<T>;
 	
-	public function new(f:Dll<T>)
+	public function new(x:Dll<T>)
 	{
-		mF = f;
+		mObject = x;
 		reset();
 	}
 	
 	inline public function reset():Itr<T>
 	{
-		mWalker = mF.head;
-		mS = mF.size();
+		mWalker = mObject.head;
+		mS = mObject.size();
 		mI = 0;
 		mHook = null;
 		return this;
@@ -1704,7 +1706,7 @@ class CircularDllIterator<T> implements de.polygonal.ds.Itr<T>
 	{
 		assert(mI > 0, "call next() before removing an element");
 		
-		mF.unlink(mHook);
+		mObject.unlink(mHook);
 		mI--;
 		mS--;
 	}

@@ -1140,11 +1140,7 @@ class DynamicVector<T> implements Collection<T>
 	**/
 	public function toArray():Array<T>
 	{
-		//TODO use blit for cpp
-		var d = mData;
-		var out = ArrayUtil.alloc(mSize);
-		for (i in 0...mSize) out[i] = d.get(i);
-		return out;
+		return NativeArray.toArray(mData, 0, mSize);
 	}
 	
 	public function toVector():Container<T>
@@ -1210,22 +1206,21 @@ class DynamicVector<T> implements Collection<T>
 @:dox(hide)
 class DynamicVectorIterator<T> implements de.polygonal.ds.Itr<T>
 {
-	var mF:DynamicVector<T>;
+	var mObject:DynamicVector<T>;
 	var mData:Container<T>;
 	var mI:Int;
 	var mS:Int;
 	
-	public function new(f:DynamicVector<T>)
+	public function new(x:DynamicVector<T>)
 	{
-		mF = f;
-		
+		mObject = x;
 		reset();
 	}
 	
 	inline public function reset():Itr<T>
 	{
-		mData = mF.getContainer();
-		mS = mF.size();
+		mData = mObject.getContainer();
+		mS = mObject.size();
 		mI = 0;
 		return this;
 	}
@@ -1244,7 +1239,7 @@ class DynamicVectorIterator<T> implements de.polygonal.ds.Itr<T>
 	{
 		assert(mI > 0, "call next() before removing an element");
 		
-		mF.removeAt(--mI);
+		mObject.removeAt(--mI);
 		mS--;
 	}
 }

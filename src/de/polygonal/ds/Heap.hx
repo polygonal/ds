@@ -717,29 +717,29 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 @:dox(hide)
 class HeapIterator<T:(Heapable<T>)> implements de.polygonal.ds.Itr<T>
 {
-	var mHeap:Heap<T>;
+	var mObject:Heap<T>;
 	var mData:Container<T>;
 	var mI:Int;
 	var mS:Int;
 	
 	public function new(x:Heap<T>)
 	{
-		mHeap = x;
+		mObject = x;
 		reset();
 	}
 	
 	public function free()
 	{
-		mHeap = null;
+		mObject = null;
 		mData = null;
 	}
 	
 	public function reset():Itr<T>
 	{
-		mS = mHeap.size();
+		mS = mObject.size();
 		mI = 0;
 		mData = NativeArray.init(mS);
-		NativeArray.blit(mHeap.mData, 1, mData, 0, mS);
+		NativeArray.blit(mObject.mData, 1, mData, 0, mS);
 		return this;
 	}
 	
@@ -757,6 +757,6 @@ class HeapIterator<T:(Heapable<T>)> implements de.polygonal.ds.Itr<T>
 	{
 		assert(mI > 0, "call next() before removing an element");
 		
-		mHeap.remove(mData.get(mI - 1));
+		mObject.remove(mData.get(mI - 1));
 	}
 }

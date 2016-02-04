@@ -618,22 +618,22 @@ class HashSet<T:Hashable> implements Set<T>
 @:dox(hide)
 class HashSetIterator<T:Hashable> implements de.polygonal.ds.Itr<T>
 {
-	var mHash:HashSet<T>;
+	var mObject:HashSet<T>;
 	var mVals:Container<T>;
 	var mI:Int;
 	var mS:Int;
 	
 	public function new(x:HashSet<T>)
 	{
-		mHash = x;
+		mObject = x;
 		reset();
 	}
 	
 	public function reset():Itr<T>
 	{
-		mVals = mHash.mVals;
+		mVals = mObject.mVals;
+		mS = mObject.mH.capacity;
 		mI = 0;
-		mS = mHash.mH.capacity;
 		while (mI < mS && mVals.get(mI) == null) mI++;
 		return this;
 	}

@@ -71,12 +71,12 @@ class ArrayedDeque<T> implements Deque<T>
 	var mPoolSize:Int;
 	var mPoolCapacity:Int;
 	
-	var mBlocks:Array<Array<T>>;
-	var mHeadBlock:Array<T>;
-	var mTailBlock:Array<T>;
-	var mHeadBlockNext:Array<T>;
-	var mTailBlockPrev:Array<T>;
-	var mBlockPool:Array<Array<T>>;
+	var mBlocks:Array<Container<T>>;
+	var mHeadBlock:Container<T>;
+	var mTailBlock:Container<T>;
+	var mHeadBlockNext:Container<T>;
+	var mTailBlockPrev:Container<T>;
+	var mBlockPool:Array<Container<T>>;
 	var mIterator:ArrayedDequeIterator<T>;
 	
 	/**
@@ -113,12 +113,12 @@ class ArrayedDeque<T> implements Deque<T>
 		mPoolSize = 0;
 		mPoolCapacity = blockPoolCapacity;
 		mBlocks = new Array();
-		mBlocks[0] = ArrayUtil.alloc(blockSize);
+		mBlocks[0] = NativeArray.init(blockSize);
 		mHeadBlock = mBlocks[0];
 		mTailBlock = mHeadBlock;
 		mHeadBlockNext = null;
 		mTailBlockPrev = null;
-		mBlockPool = new Array<Array<T>>();
+		mBlockPool = new Array<Container<T>>();
 		mIterator = null;
 		key = HashKey.next();
 		reuseIterator = false;
@@ -298,7 +298,7 @@ class ArrayedDeque<T> implements Deque<T>
 		for (i in 0...mHead + 1) mHeadBlock[i] = cast null;
 		for (i in mTail...mBlockSize) mTailBlock[i] = cast null;
 		mPoolSize = 0;
-		mBlockPool = new Array<Array<T>>();
+		mBlockPool = new Array<Container<T>>();
 	}
 	
 	/**
@@ -786,12 +786,12 @@ class ArrayedDeque<T> implements Deque<T>
 				mBlocks[i] = null;
 			}
 			mBlocks = new Array();
-			mBlocks[0] = ArrayUtil.alloc(mBlockSize);
+			mBlocks[0] = NativeArray.init(mBlockSize);
 			mHeadBlock = mBlocks[0];
 			
 			for (i in 0...mBlockPool.length)
 				mBlockPool[i] = null;
-			mBlockPool = new Array<Array<T>>();
+			mBlockPool = new Array<Container<T>>();
 			mPoolSize = 0;
 		}
 		
@@ -850,29 +850,31 @@ class ArrayedDeque<T> implements Deque<T>
 	**/
 	public function toArray():Array<T>
 	{
-		var a:Array<T> = ArrayUtil.alloc(size());
+		if (isEmpty()) return [];
+		
+		var out = ArrayUtil.alloc(size());
 		var i = 0;
 		if (mTailBlockIndex == 0)
 		{
-			for (j in mHead + 1...mTail) a[i++] = mHeadBlock[j];
+			for (j in mHead + 1...mTail) out[i++] = mHeadBlock[j];
 		}
 		else
 		if (mTailBlockIndex == 1)
 		{
-			for (j in mHead + 1...mBlockSize) a[i++] = mHeadBlock[j];
-			for (j in 0...mTail) a[i++] = mTailBlock[j];
+			for (j in mHead + 1...mBlockSize) out[i++] = mHeadBlock[j];
+			for (j in 0...mTail) out[i++] = mTailBlock[j];
 		}
 		else
 		{
-			for (j in mHead + 1...mBlockSize) a[i++] = mHeadBlock[j];
+			for (j in mHead + 1...mBlockSize) out[i++] = mHeadBlock[j];
 			for (j in 1...mTailBlockIndex)
 			{
 				var block = mBlocks[j];
-				for (k in 0...mBlockSize) a[i++] = block[k];
+				for (k in 0...mBlockSize) out[i++] = block[k];
 			}
-			for (j in 0...mTail) a[i++] = mTailBlock[j];
+			for (j in 0...mTail) out[i++] = mTailBlock[j];
 		}
-		return a;
+		return out;
 	}
 	
 	/**
@@ -928,7 +930,7 @@ class ArrayedDeque<T> implements Deque<T>
 		
 		var blocks = c.mBlocks = ArrayUtil.alloc(mTailBlockIndex + 1);
 		for (i in 0...mTailBlockIndex + 1)
-			blocks[i] = ArrayUtil.alloc(mBlockSize);
+			blocks[i] = NativeArray.init(mBlockSize);
 		c.mHeadBlock = blocks[0];
 		c.mTailBlock = blocks[mTailBlockIndex];
 		if (mTailBlockIndex > 0)
@@ -1052,27 +1054,27 @@ class ArrayedDeque<T> implements Deque<T>
 			mHeadBlockNext = mBlocks[1];
 	}
 	
-	inline function getBlock():Array<T>
+	inline function getBlock():Container<T>
 	{
 		if (mPoolSize > 0)
 			return mBlockPool[--mPoolSize];
 		else
-			return ArrayUtil.alloc(mBlockSize);
+			return NativeArray.init(mBlockSize);
 	}
 	
-	inline function putBlock(x:Array<T>)
+	inline function putBlock(x:Container<T>)
 	{
 		if (mPoolSize < mPoolCapacity)
 			mBlockPool[mPoolSize++] = x;
 	}
 	
-	inline function copy(src:Array<T>, dst:Array<T>, min:Int, max:Int)
+	inline function copy(src:Container<T>, dst:Container<T>, min:Int, max:Int)
 	{
 		for (j in min...max)
 			dst[j] = src[j];
 	}
 	
-	inline function copyCloneable(src:Array<T>, dst:Array<T>, min:Int, max:Int)
+	inline function copyCloneable(src:Container<T>, dst:Container<T>, min:Int, max:Int)
 	{
 		for (j in min...max)
 		{
@@ -1082,7 +1084,7 @@ class ArrayedDeque<T> implements Deque<T>
 		}
 	}
 	
-	inline function copyCopier(copier:T->T, src:Array<T>, dst:Array<T>, min:Int, max:Int)
+	inline function copyCopier(copier:T->T, src:Container<T>, dst:Container<T>, min:Int, max:Int)
 	{
 		for (j in min...max)
 			dst[j] = copier(src[j]);
@@ -1096,29 +1098,29 @@ class ArrayedDeque<T> implements Deque<T>
 @:dox(hide)
 class ArrayedDequeIterator<T> implements de.polygonal.ds.Itr<T>
 {
-	var mF:ArrayedDeque<T>;
-	var mBlocks:Array<Array<T>>;
-	var mBlock:Array<T>;
+	var mObject:ArrayedDeque<T>;
+	var mBlocks:Array<Container<T>>;
+	var mBlock:Container<T>;
 	var mI:Int;
 	var mS:Int;
 	var mB:Int;
 	var mBlockSize:Int;
 	
-	public function new(f:ArrayedDeque<T>)
+	public function new(x:ArrayedDeque<T>)
 	{
-		mF = f;
+		mObject = x;
 		reset();
 	}
 	
 	public function reset():Itr<T>
 	{
-		mBlockSize = mF.mBlockSize;
-		mBlocks = mF.mBlocks;
-		mI = mF.mHead + 1;
-		mB = mI >> mF.mBlockSizeShift;
-		mS = mF.size();
+		mBlockSize = mObject.mBlockSize;
+		mBlocks = mObject.mBlocks;
+		mI = mObject.mHead + 1;
+		mB = mI >> mObject.mBlockSizeShift;
+		mS = mObject.size();
 		mBlock = mBlocks[mB];
-		mI -= mB << mF.mBlockSizeShift;
+		mI -= mB << mObject.mBlockSizeShift;
 		return this;
 	}
 	
@@ -1129,7 +1131,7 @@ class ArrayedDequeIterator<T> implements de.polygonal.ds.Itr<T>
 	
 	inline public function next():T
 	{
-		var x = mBlock[mI++];
+		var x = mBlock.get(mI++);
 		if (mI == mBlockSize)
 		{
 			mI = 0;

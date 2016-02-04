@@ -1222,14 +1222,17 @@ class Graph<T> implements Collection<T>
 	**/
 	public function toArray():Array<T>
 	{
-		var a:Array<T> = ArrayUtil.alloc(size());
+		if (isEmpty()) return [];
+		
+		var i = 0;
+		var out = ArrayUtil.alloc(size());
 		var node = mNodeList;
 		while (node != null)
 		{
-			a.push(node.val);
+			out[i++] = node.val;
 			node = node.next;
 		}
-		return a;
+		return out;
 	}
 	
 	/**
@@ -1399,18 +1402,18 @@ class Graph<T> implements Collection<T>
 @:dox(hide)
 class GraphIterator<T> implements de.polygonal.ds.Itr<T>
 {
-	var mF:Graph<T>;
+	var mObject:Graph<T>;
 	var mNode:GraphNode<T>;
 	
-	public function new(f:Graph<T>)
+	public function new(x:Graph<T>)
 	{
-		mF = f;
+		mObject = x;
 		reset();
 	}
 	
 	inline public function reset():Itr<T>
 	{
-		mNode = mF.mNodeList;
+		mNode = mObject.mNodeList;
 		return this;
 	}
 	
@@ -1439,18 +1442,18 @@ class GraphIterator<T> implements de.polygonal.ds.Itr<T>
 @:dox(hide)
 class GraphNodeIterator<T> implements de.polygonal.ds.Itr<GraphNode<T>>
 {
-	var mF:Graph<T>;
+	var mObject:Graph<T>;
 	var mNode:GraphNode<T>;
 	
-	public function new(f:Graph<T>)
+	public function new(x:Graph<T>)
 	{
-		mF = f;
+		mObject = x;
 		reset();
 	}
 	
 	inline public function reset():Itr<GraphNode<T>>
 	{
-		mNode = mF.mNodeList;
+		mNode = mObject.mNodeList;
 		return this;
 	}
 	
@@ -1479,19 +1482,19 @@ class GraphNodeIterator<T> implements de.polygonal.ds.Itr<GraphNode<T>>
 @:dox(hide)
 class GraphArcIterator<T> implements de.polygonal.ds.Itr<GraphArc<T>>
 {
-	var mF:Graph<T>;
+	var mObject:Graph<T>;
 	var mNode:GraphNode<T>;
 	var mArc:GraphArc<T>;
 	
-	public function new(f:Graph<T>)
+	public function new(x:Graph<T>)
 	{
-		mF = f;
+		mObject = x;
 		reset();
 	}
 	
 	inline public function reset():Itr<GraphArc<T>>
 	{
-		mNode = mF.mNodeList;
+		mNode = mObject.mNodeList;
 		mArc = mNode.arcList;
 		return this;
 	}

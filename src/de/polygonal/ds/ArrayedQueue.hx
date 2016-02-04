@@ -731,7 +731,7 @@ class ArrayedQueue<T> implements Queue<T>
 @:dox(hide)
 class ArrayedQueueIterator<T> implements de.polygonal.ds.Itr<T>
 {
-	var mQueue:ArrayedQueue<T>;
+	var mObject:ArrayedQueue<T>;
 	var mData:Container<T>;
 	var mFront:Int;
 	var mCapacity:Int;
@@ -740,17 +740,17 @@ class ArrayedQueueIterator<T> implements de.polygonal.ds.Itr<T>
 	
 	public function new(x:ArrayedQueue<T>)
 	{
-		mQueue = x;
+		mObject = x;
 		reset();
 	}
 	
 	public function reset():Itr<T>
 	{
-		mFront = mQueue.mFront;
-		mCapacity = mQueue.capacity;
-		mSize = mQueue.mSize;
+		mFront = mObject.mFront;
+		mCapacity = mObject.capacity;
+		mSize = mObject.mSize;
 		mI = 0;
-		mData = NativeArray.copy(mQueue.mData);
+		mData = NativeArray.copy(mObject.mData);
 		return this;
 	}
 	
@@ -768,6 +768,6 @@ class ArrayedQueueIterator<T> implements de.polygonal.ds.Itr<T>
 	{
 		assert(mI > 0, "call next() before removing an element");
 		
-		mQueue.remove(mData.get(((mI - 1) + mFront) % mCapacity));
+		mObject.remove(mData.get(((mI - 1) + mFront) % mCapacity));
 	}
 }

@@ -541,10 +541,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	**/
 	public function toArray():Array<T>
 	{
-		var d = mData;
-		var a:Array<T> = ArrayUtil.alloc(size());
-		for (i in 1...size() + 1) a[i - 1] = d.get(i);
-		return a;
+		return NativeArray.toArray(mData, 1, size());
 	}
 	
 	/**
@@ -753,29 +750,29 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 @:dox(hide)
 class PriorityQueueIterator<T:(Prioritizable)> implements de.polygonal.ds.Itr<T>
 {
-	var mPriorityQueue:PriorityQueue<T>;
+	var mObject:PriorityQueue<T>;
 	var mData:Container<T>;
 	var mI:Int;
 	var mS:Int;
 	
 	public function new(x:PriorityQueue<T>)
 	{
-		mPriorityQueue = x;
+		mObject = x;
 		reset();
 	}
 	
 	public function free()
 	{
-		mPriorityQueue = null;
+		mObject = null;
 		mData = null;
 	}
 	
 	public function reset():Itr<T>
 	{
-		mS = mPriorityQueue.size();
 		mI = 1;
+		mS = mObject.size();
 		mData = NativeArray.init(mS);
-		NativeArray.blit(mPriorityQueue.mData, 1, mData, 0, mS);
+		NativeArray.blit(mObject.mData, 1, mData, 0, mS);
 		return this;
 	}
 	
@@ -793,6 +790,6 @@ class PriorityQueueIterator<T:(Prioritizable)> implements de.polygonal.ds.Itr<T>
 	{
 		assert(mI > 0, "call next() before removing an element");
 		
-		mPriorityQueue.remove(mData.get(mI - 1));
+		mObject.remove(mData.get(mI - 1));
 	}
 }
