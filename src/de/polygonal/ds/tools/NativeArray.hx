@@ -80,6 +80,45 @@ class NativeArray
 		#end
 	}
 	
+	public static function toArray<T>(x:Container<T>, first:Int = 0, len:Int = 0):Array<T>
+	{
+		assert(first < size(x), "first index is out of range");
+		assert(first + len <= size(x), "len is out of range");
+		
+		if (first > 0 && len > 0)
+		{
+			var out = ArrayUtil.alloc(len);
+			for (i in 0...len) out[i] = get(x, first + i);
+			return out;
+		}
+		else
+		if (first > 0)
+		{
+			var s = size(x) - first;
+			var out = ArrayUtil.alloc(s);
+			for (i in 0...s) out[i] = get(x, first + i);
+			return out;
+		}
+		else
+		if (len > 0)
+		{
+			var out = ArrayUtil.alloc(len);
+			for (i in 0...len) out[i] = get(x, i);
+			return out;
+		}
+		else
+		{
+			#if (cpp || python)
+			return x.copy();
+			#else
+			var s = size(x);
+			var out = ArrayUtil.alloc(s);
+			for (i in 0...s) out[i] = get(x, i);
+			return out;
+			#end
+		}
+	}
+	
 	#if (cs || java || neko || cpp)
 	inline
 	#end
