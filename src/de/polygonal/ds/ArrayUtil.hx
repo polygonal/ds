@@ -41,11 +41,14 @@ class ArrayUtil
 		#if (flash || js)
 		a = untyped __new__(Array, x);
 		#elseif cpp
-		var a = new Array<T>();
+		a = new Array<T>();
 		a.setSize(x);
 		return a;
 		#else
 		a = new Array<T>();
+		#if neko
+		a[x - 1] = cast null;
+		#end
 		for (i in 0...x) a[i] = cast null;
 		#end
 		return a;
