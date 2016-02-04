@@ -302,21 +302,21 @@ class ObjectPool<T> implements Hashable
 @:dox(hide)
 class ObjectPoolIterator<T> implements de.polygonal.ds.Itr<T>
 {
-	var mF:ObjectPool<T>;
+	var mObject:ObjectPool<T>;
 	var mData:Array<T>;
 	var mS:Int;
 	var mI:Int;
 	
-	public function new(f:ObjectPool<T>)
+	public function new(x:ObjectPool<T>)
 	{
-		mF = f;
+		mObject = x;
 		reset();
 	}
 
 	inline public function reset():Itr<T>
 	{
-		mData = mF.mPool;
-		mS = mF.mSize;
+		mData = mObject.mObject;
+		mS = mObject.mSize;
 		mI = 0;
 		return this;
 	}

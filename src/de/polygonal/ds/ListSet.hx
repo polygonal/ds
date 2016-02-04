@@ -47,13 +47,17 @@ class ListSet<T> implements Set<T>
 	**/
 	public var reuseIterator:Bool;
 	
-	var mData:Array<T>;
+	var mData:Container<T>;
 	var mSize:Int;
 	var mIterator:ListSetIterator<T>;
 	
-	public function new()
+	var capacity:Int;
+	
+	public function new(initialCapacity:Int = 16)
 	{
-		mData = new Array<T>();
+		capacity = initialCapacity;
+		
+		mData = NativeArray.init(16);
 		mSize = 0;
 		key = HashKey.next();
 		reuseIterator = false;
@@ -96,9 +100,9 @@ class ListSet<T> implements Set<T>
 	**/
 	public function has(x:T):Bool
 	{
-		if (mSize == 0) return false;
-		for (i in mData) if (i == x) return true;
-		
+		if (isEmpty()) return false;
+		var d = mData;
+		for (i in 0...mSize) if (d.get(i) == x) return true;
 		return false;
 	}
 	
@@ -109,11 +113,9 @@ class ListSet<T> implements Set<T>
 	**/
 	public function set(x:T):Bool
 	{
-		for (i in 0...mSize) if (mData[i] == x) return false;
-		
-		mData.push(x);
-		mSize++;
-		
+		var d = mData;
+		for (i in 0...mSize) if (d.get(i) == x) return false;
+		mData.set(mSize++, x);
 		return true;
 	}
 	
@@ -164,7 +166,7 @@ class ListSet<T> implements Set<T>
 	**/
 	public function free()
 	{
-		for (i in 0...mData.length) mData[i] = null;
+		for (i in 0...NativeArray.size(mData)) mData.set(i, null);
 		mIterator = null;
 		mData = null;
 	}
@@ -175,9 +177,7 @@ class ListSet<T> implements Set<T>
 	**/
 	public function contains(x:T):Bool
 	{
-		for (i in 0...mSize) if (mData[i] == x) return true;
-		
-		return false;
+		return has(x);
 	}
 	
 	/**
@@ -187,15 +187,13 @@ class ListSet<T> implements Set<T>
 	**/
 	public function remove(x:T):Bool
 	{
+		var d = mData;
 		for (i in 0...mSize)
-		{
-			if (mData[i] == x)
+			if (d.get(i) == x)
 			{
-				mData[i] = mData[--mSize];
+				d.set(i, mData.get(--mSize));
 				return true;
 			}
-		}
-		
 		return false;
 	}
 	
@@ -207,7 +205,7 @@ class ListSet<T> implements Set<T>
 	public function clear(purge = false)
 	{
 		mSize = 0;
-		if (purge) mData = [];
+		if (purge) mData = NativeArray.init(16); //TODO initialCapacity
 	}
 	
 	/**
@@ -254,11 +252,8 @@ class ListSet<T> implements Set<T>
 	**/
 	public function toArray():Array<T>
 	{
-		var output = [];
-		var t = mData;
-		for (i in 0...mSize) output[i] = t[i];
-		
-		return output;
+		if (isEmpty()) return [];
+		return NativeArray.toArray(mData);
 	}
 	
 	/**
@@ -269,7 +264,6 @@ class ListSet<T> implements Set<T>
 		var output = NativeArray.init(mSize);
 		var t = mData;
 		for (i in 0...mSize) output.set(i, t[i]);
-		
 		return output;
 	}
 	
@@ -282,14 +276,21 @@ class ListSet<T> implements Set<T>
 	**/
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{
-		var copy = new ListSet<T>();
-		copy.mSize = mSize;
+		var out = new ListSet<T>();
+		out.capacity = capacity;
+		out.mSize = mSize;
+		//mCapacityIncrement = -1;
+		out.mData = NativeArray.init(mSize);
+		//out.mShrinkSize = mShrinkSize;
+		//out.mAllowShrink = mAllowShrink;
+		
+		var src = mData;
+		var dst = out.mData;
+		
 		if (assign)
 		{
-			for (i in 0...mSize)
-			{
-				copy.mData[i] = mData[i];
-			}
+			//NativeArray
+			for (i in 0...mSize) dst.set(i, src.get(i));
 		}
 		else
 		if (copier == null)
@@ -297,18 +298,20 @@ class ListSet<T> implements Set<T>
 			var c:Cloneable<Dynamic> = null;
 			for (i in 0...mSize)
 			{
-				assert(Std.is(mData[i], Cloneable), 'element is not of type Cloneable (${mData[i]})');
+				assert(Std.is(src.get(i), Cloneable), 'element is not of type Cloneable (${src.get(i)})');
 				
-				copy.mData[i] = cast(mData[i], Cloneable<Dynamic>).clone();
+				c = cast(src.get(i), Cloneable<Dynamic>);
+				dst.set(i, c.clone());
 			}
 		}
 		else
 		{
+			var src = mData;
 			for (i in 0...mSize)
-				copy.mData[i] = copier(mData[i]);
+				dst.set(i, copier(src.get(i)));
 		}
 		
-		return copy;
+		return cast out;
 	}
 }
 
@@ -320,7 +323,7 @@ class ListSet<T> implements Set<T>
 class ListSetIterator<T> implements de.polygonal.ds.Itr<T>
 {
 	var mObject:ListSet<T>;
-	var mData:Array<T>;
+	var mData:Container<T>;
 	var mI:Int;
 	var mS:Int;
 	
@@ -345,13 +348,13 @@ class ListSetIterator<T> implements de.polygonal.ds.Itr<T>
 	
 	inline public function next():T
 	{
-		return mData[mI++];
+		return mData.get(mI++);
 	}
 	
 	inline public function remove()
 	{
 		assert(mI > 0, "call next() before removing an element");
 		
-		mData[mI] = mData[--mS];
+		mData.set(mI, mData.get(--mS));
 	}
 }
