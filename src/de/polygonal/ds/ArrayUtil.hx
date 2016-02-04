@@ -322,8 +322,8 @@ class ArrayUtil
 	{
 		var results = [];
 		
-		var a:Array<Int> = [];
-		var p:Array<Int> = [];
+		var a = [];
+		var p = [];
 		
 		var i:Int, j:Int, tmp:Int;
 		

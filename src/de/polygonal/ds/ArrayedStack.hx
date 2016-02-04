@@ -387,7 +387,7 @@ class ArrayedStack<T> implements Stack<T>
 	{
 		assert(n >= 0);
 		
-		n = size();
+		if (n == 0) n = size();
 		
 		if (args == null) args = [];
 		for (i in 0...n) mData.set(i, Type.createInstance(cl, args));
@@ -405,7 +405,7 @@ class ArrayedStack<T> implements Stack<T>
 	{
 		assert(n >= 0);
 		
-		n = size();
+		if (n == 0) n = size();
 		
 		for (i in 0...n)
 			mData.set(i, x);

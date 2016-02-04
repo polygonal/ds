@@ -543,7 +543,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	**/
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{
-		var copy = new PriorityQueue<T>(capacity, mCapacityIncrement, mInverse, size());
+		var copy = new PriorityQueue<T>(capacity, mCapacityIncrement, mInverse);
 		
 		var src = mData;
 		if (mSize == 0) return copy;
@@ -747,7 +747,7 @@ class PriorityQueueIterator<T:(Prioritizable)> implements de.polygonal.ds.Itr<T>
 	
 	public function reset():Itr<T>
 	{
-		mI = 1;
+		mI = 0;
 		mS = mObject.size();
 		mData = NativeArray.init(mS);
 		NativeArray.blit(mObject.mData, 1, mData, 0, mS);

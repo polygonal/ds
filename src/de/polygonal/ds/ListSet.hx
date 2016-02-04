@@ -53,11 +53,14 @@ class ListSet<T> implements Set<T>
 	
 	var capacity:Int;
 	
+	var mCapacityIncrement:Int = -1;
+	var mShrinkSize:Int;
+	
 	public function new(initialCapacity:Int = 16)
 	{
 		capacity = initialCapacity;
 		
-		mData = NativeArray.init(16);
+		mData = NativeArray.init(capacity);
 		mSize = 0;
 		key = HashKey.next();
 		reuseIterator = false;
@@ -115,6 +118,8 @@ class ListSet<T> implements Set<T>
 	{
 		var d = mData;
 		for (i in 0...mSize) if (d.get(i) == x) return false;
+		
+		if (mSize == capacity) grow();
 		mData.set(mSize++, x);
 		return true;
 	}
@@ -277,10 +282,13 @@ class ListSet<T> implements Set<T>
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{
 		var out = new ListSet<T>();
-		out.capacity = capacity;
+		out.capacity = mSize;
 		out.mSize = mSize;
 		//mCapacityIncrement = -1;
 		out.mData = NativeArray.init(mSize);
+		
+		
+		
 		//out.mShrinkSize = mShrinkSize;
 		//out.mAllowShrink = mAllowShrink;
 		
@@ -312,6 +320,31 @@ class ListSet<T> implements Set<T>
 		}
 		
 		return cast out;
+	}
+	
+	function grow()
+	{
+		capacity =
+		if (mCapacityIncrement == -1)
+		{
+			if (true)
+				Std.int((capacity * 3) / 2 + 1); //1.5
+			else
+				capacity + ((capacity >> 3) + (capacity < 9 ? 3 : 6)); //1.125
+		}
+		else
+			capacity + mCapacityIncrement;
+		
+		mShrinkSize = capacity >> 2;
+		
+		resize(capacity);
+	}
+	
+	function resize(newSize:Int)
+	{
+		var tmp = NativeArray.init(newSize);
+		NativeArray.blit(mData, 0, tmp, 0, mSize);
+		mData = tmp;
 	}
 }
 

@@ -17,7 +17,7 @@ class TestHashTable extends AbstractTest
 	
 	function testGetFront()
 	{
-		var h = new HashTable<E, Null<Int>>(16, 16, true);
+		var h = new HashTable<E, Null<Int>>(16, 16);
 		
 		var items = new Array<E>();
 		for (i in 0...5) items.push(new E(i));

@@ -175,7 +175,11 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	**/
 	public function add(x:T)
 	{
+		#if debug
 		assert(x != null, "x is null");
+		assert(!mMap.exists(x), "x already exists");
+		mMap.set(x, true);
+		#end
 		
 		if (mSize == capacity) grow();
 		mData.set(++mSize, x);

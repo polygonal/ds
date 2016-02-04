@@ -1,7 +1,5 @@
 ﻿import de.polygonal.ds.Array2;
 import de.polygonal.ds.ArrayConvert;
-import de.polygonal.ds.ListSet;
-import de.polygonal.ds.Set;
 import de.polygonal.ds.tools.NativeArray;
 
 class TestArray2 extends AbstractTest
@@ -478,21 +476,35 @@ class TestArray2 extends AbstractTest
 		}
 		assertEquals(c, a.size());
 		
-		var s = new ListSet<String>();
 		var a = getStrArray();
+		var tmp1 = [];
+		var tmp2 = [];
+		var tmp3 = [];
 		a.iter(function(val:String, x:Int, y:Int):String
 		{
-			s.set(x + "." + y);
-			return x + "." + y;
+			var s = x + "." + y;
+			tmp1.push(s);
+			tmp2.push(s);
+			tmp3.push(s);
+			return s;
 		});
-		var s1:Set<String> = cast s.clone(true);
-		var s2:Set<String> = cast s.clone(true);
-		var itr:de.polygonal.ds.ResettableIterator<String> = cast a.iterator();
-		for (i in itr) assertEquals(true, s1.remove(i));
-		assertTrue(s1.isEmpty());
+		
+		var itr = a.iterator();
+		for (i in itr) assertEquals(true, tmp1.remove(i));
+		assertEquals(0, tmp1.length);
+		
 		itr.reset();
-		for (i in itr) assertEquals(true, s2.remove(i));
-		assertTrue(s2.isEmpty());
+		for (i in itr) assertEquals(true, tmp2.remove(i));
+		assertEquals(0, tmp2.length);
+		
+		var itr = a.iterator();
+		while (itr.hasNext())
+		{
+			itr.hasNext();
+			var e = itr.next();
+			assertEquals(true, tmp3.remove(e));
+		}
+		assertEquals(0, tmp3.length);
 	}
 	
 	function testIteratorRemove()
@@ -510,7 +522,7 @@ class TestArray2 extends AbstractTest
 			assertEquals(i, null);
 	}
 	
-	function  testShuffle()
+	function testShuffle()
 	{
 		var a = getIntArray();
 		var counter = 0;
@@ -518,13 +530,22 @@ class TestArray2 extends AbstractTest
 		{
 			return counter++;
 		});
+		
 		assertEquals(a.size(), counter);
-		var s = new ListSet<Int>();
-		for (i in a) assertTrue(s.set(i));
+		
+		var tmp = [];
+		for (i in a)
+		{
+			assertFalse(contains(tmp, i));
+			tmp.push(i);
+		}
+		
 		var rval = [];
 		for (i in 0...a.size()) rval.push(Math.random());
 		a.shuffle(rval);
-		for (i in a) assertEquals(true, s.remove(i));
+		
+		for (i in a) assertEquals(true, tmp.remove(i));
+		assertEquals(0, tmp.length);
 	}
 	
 	function testClone()
