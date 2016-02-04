@@ -44,17 +44,6 @@ class LinkedDeque<T> implements Deque<T>
 	public var key:Int;
 	
 	/**
-		The maximum allowed size of this deque.
-		
-		Once the maximum size is reached, adding an element will fail with an error (debug only).
-		
-		A value of -1 indicates that the size is unbound.
-		
-		<warn>Always equals -1 in release mode.</warn>
-	**/
-	public var maxSize:Int;
-	
-	/**
 		If true, reuses the iterator object instead of allocating a new one when calling ``iterator()``.
 		
 		The default is false.
@@ -78,22 +67,9 @@ class LinkedDeque<T> implements Deque<T>
 		<assert>reserved size is greater than allowed size</assert>
 		@param reservedSize if > 0, this queue maintains an object pool of node objects.
 		Prevents frequent node allocation and thus increases performance at the cost of using more memory.
-		@param maxSize the maximum allowed size of this queue.
-		The default value of -1 indicates that there is no upper limit.
 	**/
-	public function new(reservedSize = 0, maxSize = -1)
+	public function new(reservedSize = 0)
 	{
-		#if debug
-		if (reservedSize > 0)
-		{
-			if (maxSize != -1)
-				assert(reservedSize <= maxSize, "reserved size is greater than allowed size");
-		}
-		this.maxSize = (maxSize == -1) ? M.INT32_MAX : maxSize;
-		#else
-		this.maxSize = -1;
-		#end
-		
 		mPoolSize = 0;
 		mReservedSize = reservedSize;
 		mSize = 0;
@@ -119,15 +95,9 @@ class LinkedDeque<T> implements Deque<T>
 	/**
 		Inserts the element `x` at the front of this deque.
 		<o>1</o>
-		<assert>``size()`` equals ``maxSize``</assert>
 	**/
 	inline public function pushFront(x:T)
 	{
-		#if debug
-		if (maxSize != -1)
-			assert(size() < maxSize, 'size equals max size ($maxSize)');
-		#end
-		
 		var node = getNode(x);
 		node.next = mHead;
 		if (mHead != null) mHead.prev = node;
@@ -169,15 +139,9 @@ class LinkedDeque<T> implements Deque<T>
 	/**
 		Inserts the element `x` at the back of the deque.
 		<o>1</o>
-		<assert>``size()`` equals ``maxSize``</assert>
 	**/
 	inline public function pushBack(x:T)
 	{
-		#if debug
-		if (maxSize != -1)
-			assert(size() < maxSize, 'size equals max size ($maxSize)');
-		#end
-		
 		var node = getNode(x);
 		node.prev = mTail;
 		if (mTail != null) mTail.next = node;
@@ -576,11 +540,10 @@ class LinkedDeque<T> implements Deque<T>
 	**/
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{
-		if (mSize == 0) return new LinkedDeque<T>(mReservedSize, maxSize);
+		if (mSize == 0) return new LinkedDeque<T>(mReservedSize);
 		
-		var copy = new LinkedDeque<T>(mReservedSize, maxSize);
+		var copy = new LinkedDeque<T>(mReservedSize);
 		copy.key = HashKey.next();
-		copy.maxSize = maxSize;
 		copy.mSize = mSize;
 		copy.mReservedSize = mReservedSize;
 		copy.mPoolSize = mPoolSize;

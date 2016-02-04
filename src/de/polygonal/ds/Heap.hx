@@ -41,17 +41,6 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	public var key:Int;
 	
 	/**
-		The maximum allowed size of this heap.
-		
-		Once the maximum size is reached, adding an element will fail with an error (debug only).
-		
-		A value of -1 indicates that the size is unbound.
-		
-		<warn>Always equals -1 in release mode.</warn>
-	**/
-	public var maxSize:Int;
-	
-	/**
 		If true, reuses the iterator object instead of allocating a new one when calling ``iterator()``.
 		
 		The default is false.
@@ -74,19 +63,10 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	#end
 	
 	/**
-		<assert>`reservedSize` > ``maxSize``</assert>
 		@param reservedSize the initial capacity of the internal container. See ``reserve()``.
-		@param maxSize the maximum allowed size of this heap.
-		The default value of -1 indicates that there is no upper limit.
 	**/
-	public function new(initialCapacity:Int = 16, capacityIncrement:Int = -1, maxSize = -1)
+	public function new(initialCapacity:Int = 16, capacityIncrement:Int = -1)
 	{
-		#if debug
-		this.maxSize = (maxSize == -1) ? M.INT32_MAX : maxSize;
-		#else
-		this.maxSize = -1;
-		#end
-		
 		capacity = initialCapacity;
 		mCapacityIncrement = capacityIncrement;
 		
@@ -192,17 +172,10 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 		<o>log n</o>
 		<assert>heap is full</assert>
 		<assert>`x` is null or `x` already exists</assert>
-		<assert>``size()`` equals ``maxSize``</assert>
 	**/
 	public function add(x:T)
 	{
 		assert(x != null, "x is null");
-		
-		#if debug
-		if (maxSize != -1) assert(size() <= maxSize, 'size equals max size ($maxSize)');
-		assert(!mMap.exists(x), "x already exists");
-		mMap.set(x, true);
-		#end
 		
 		if (mSize == capacity) grow();
 		mData.set(++mSize, x);
@@ -559,7 +532,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	**/
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{
-		var copy = new Heap<T>(mSize, maxSize);
+		var copy = new Heap<T>(mSize);
 		if (mSize == 0) return copy;
 		if (assign)
 		{

@@ -70,17 +70,6 @@ class IntIntHashTable implements Map<Int, Int>
 	public var key:Int;
 	
 	/**
-		The maximum allowed size of this hash table.
-		
-		Once the maximum size is reached, adding an element will fail with an error (debug only).
-		
-		A value of -1 indicates that the size is unbound.
-		
-		<warn>Always equals -1 in release mode.</warn>
-	**/
-	public var maxSize:Int;
-	
-	/**
 		If true, reuses the iterator object instead of allocating a new one when calling ``iterator()``.
 		
 		The default is false.
@@ -117,8 +106,6 @@ class IntIntHashTable implements Map<Int, Int>
 		The total number of allocated slots.
 	**/
 	public var slotCount(default, null):Int;
-	
-	var mIsResizable:Bool;
 	
 	var mMinCapacity:Int;
 	
@@ -161,11 +148,8 @@ class IntIntHashTable implements Map<Int, Int>
 		Thus adding a value when ``size()`` equals `capacity` throws an error.
 		Otherwise the `capacity` is automatically adjusted.
 		Default is true.
-		
-		@param maxSize the maximum allowed size of the stack.
-		The default value of -1 indicates that there is no upper limit.
 	**/
-	public function new(slotCount:Int, initialCapacity = -1, isResizable = true, maxSize = -1)
+	public function new(slotCount:Int, initialCapacity = -1, isResizable = true)
 	{
 		if (slotCount == M.INT16_MIN) return;
 		
@@ -181,7 +165,6 @@ class IntIntHashTable implements Map<Int, Int>
 		}
 		
 		mMinCapacity = initialCapacity;
-		mIsResizable = isResizable;
 		mFree = 0;
 		capacity = initialCapacity;
 		mSize = 0;
@@ -189,12 +172,6 @@ class IntIntHashTable implements Map<Int, Int>
 		mMask = slotCount - 1;
 		mIterator = null;
 		mTmpArr = [];
-		
-		#if debug
-		this.maxSize = (maxSize == -1) ? M.INT32_MAX : maxSize;
-		#else
-		this.maxSize = -1;
-		#end
 		
 		#if alchemy
 		mHash = new IntMemory(slotCount, "IntIntHashTable.mHash");
@@ -315,7 +292,6 @@ class IntIntHashTable implements Map<Int, Int>
 		Maps `val` to `key` in this map, but only if `key` does not exist yet.
 		<o>1</o>
 		<assert>out of space - hash table is full but not resizable</assert>
-		<assert>``size()`` equals ``maxSize``</assert>
 		@return true if `key` was mapped to `val` for the first time.
 	**/
 	inline public function setIfAbsent(key:Int, val:Int):Bool
@@ -332,18 +308,7 @@ class IntIntHashTable implements Map<Int, Int>
 		#end
 		if (j == EMPTY_SLOT)
 		{
-			assert(size() < maxSize, 'size equals max size ($maxSize)');
-			
-			if (mSize == capacity)
-			{
-				#if debug
-				if (!mIsResizable)
-					assert(false, 'out of space ($capacity)');
-				#end
-				
-				if (mIsResizable)
-					grow();
-			}
+			if (mSize == capacity) grow();
 			
 			var i = mFree * 3;
 			mFree = getNext(mFree);
@@ -405,16 +370,7 @@ class IntIntHashTable implements Map<Int, Int>
 					return false;
 				else
 				{
-					if (mSize == capacity)
-					{
-						#if debug
-						if (!mIsResizable)
-							assert(false, 'out of space ($capacity)');
-						#end
-						
-						if (mIsResizable)
-							grow();
-					}
+					if (mSize == capacity) grow();
 					
 					var i = mFree * 3;
 					mFree = getNext(mFree);
@@ -585,7 +541,7 @@ class IntIntHashTable implements Map<Int, Int>
 				
 				mSize--;
 				
-				if (mSize == (capacity >> 2) && capacity > mMinCapacity && mIsResizable) shrink();
+				if (mSize == (capacity >> 2) && capacity > mMinCapacity) shrink();
 				
 				return val;
 			}
@@ -640,7 +596,7 @@ class IntIntHashTable implements Map<Int, Int>
 					
 					--mSize;
 					
-					if (mSize == (capacity >> 2) && capacity > mMinCapacity && mIsResizable) shrink();
+					if (mSize == (capacity >> 2) && capacity > mMinCapacity) shrink();
 					
 					return val;
 				}
@@ -1020,7 +976,7 @@ class IntIntHashTable implements Map<Int, Int>
 				
 				mSize--;
 				
-				if (mSize == (capacity >> 2) && capacity > mMinCapacity && mIsResizable) shrink();
+				if (mSize == (capacity >> 2) && capacity > mMinCapacity) shrink();
 				
 				return true;
 			}
@@ -1075,7 +1031,7 @@ class IntIntHashTable implements Map<Int, Int>
 					
 					--mSize;
 					
-					if (mSize == (capacity >> 2) && capacity > mMinCapacity && mIsResizable) shrink();
+					if (mSize == (capacity >> 2) && capacity > mMinCapacity) shrink();
 					
 					return true;
 				}
@@ -1093,24 +1049,13 @@ class IntIntHashTable implements Map<Int, Int>
 		<warn>To ensure unique keys either use ``hasKey()`` before ``set()`` or ``setIfAbsent()``</warn>
 		<assert>out of space - hash table is full but not resizable</assert>
 		<assert>key/value 0x80000000 is reserved</assert>
-		<assert>``size()`` equals ``maxSize``</assert>
 		@return true if `key` was added for the first time, false if another instance of `key` was inserted.
 	**/
 	inline public function set(key:Int, val:Int):Bool
 	{
 		assert(val != KEY_ABSENT, "val 0x80000000 is reserved");
-		assert(size() < maxSize, 'size equals max size ($maxSize)');
 		
-		if (mSize == capacity)
-		{
-			#if debug
-			if (!mIsResizable)
-				assert(false, 'out of space ($capacity)');
-			#end
-			
-			if (mIsResizable)
-				grow();
-		}
+		if (mSize == capacity) grow();
 		
 		var i = mFree * 3;
 		mFree = getNext(mFree);
@@ -1222,7 +1167,7 @@ class IntIntHashTable implements Map<Int, Int>
 				
 				mSize--;
 				
-				if (mSize == (capacity >> 2) && capacity > mMinCapacity && mIsResizable) shrink();
+				if (mSize == (capacity >> 2) && capacity > mMinCapacity) shrink();
 				
 				return true;
 			}
@@ -1277,7 +1222,7 @@ class IntIntHashTable implements Map<Int, Int>
 					
 					--mSize;
 					
-					if (mSize == (capacity >> 2) && capacity > mMinCapacity && mIsResizable) shrink();
+					if (mSize == (capacity >> 2) && capacity > mMinCapacity) shrink();
 					
 					return true;
 				}
@@ -1509,7 +1454,6 @@ class IntIntHashTable implements Map<Int, Int>
 	{
 		var c = new IntIntHashTable(M.INT16_MIN);
 		c.key = HashKey.next();
-		c.maxSize = maxSize;
 		
 		#if alchemy
 		c.mHash = mHash.clone();

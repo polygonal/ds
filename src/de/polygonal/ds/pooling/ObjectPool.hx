@@ -315,7 +315,7 @@ class ObjectPoolIterator<T> implements de.polygonal.ds.Itr<T>
 
 	inline public function reset():Itr<T>
 	{
-		mData = mObject.mObject;
+		mData = mObject.mPool;
 		mS = mObject.mSize;
 		mI = 0;
 		return this;

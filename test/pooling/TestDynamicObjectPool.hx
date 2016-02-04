@@ -1,4 +1,4 @@
-package test.pooling;
+package pooling;
 
 import de.polygonal.ds.pooling.DynamicObjectPool;
 

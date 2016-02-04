@@ -43,17 +43,6 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	public var key:Int;
 	
 	/**
-		The maximum allowed size of this priority queue.
-		
-		Once the maximum size is reached, adding an element will fail with an error (debug only).
-		
-		A value of -1 indicates that the size is unbound.
-		
-		<warn>Always equals -1 in release mode.</warn>
-	**/
-	public var maxSize:Int;
-	
-	/**
 		If true, reuses the iterator object instead of allocating a new one when calling ``iterator()``.
 		
 		The default is false.
@@ -80,17 +69,9 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 		@param inverse if true, the lower the number, the higher the priority.
 		By default a higher number means a higher priority.
 		@param reservedSize the initial capacity of the internal container. See `reserve()`.
-		@param maxSize the maximum allowed size of the priority queue.
-		The default value of -1 indicates that there is no upper limit.
 	**/
-	public function new(initialCapacity:Null<Int> = 16, capacityIncrement:Null<Int> = -1, inverse = false, maxSize = -1)
+	public function new(initialCapacity:Null<Int> = 16, capacityIncrement:Null<Int> = -1, inverse = false)
 	{
-		#if debug
-		this.maxSize = (maxSize == -1) ? M.INT32_MAX : maxSize;
-		#else
-		this.maxSize = -1;
-		#end
-		
 		capacity = initialCapacity;
 		mCapacityIncrement = capacityIncrement;
 		
@@ -194,14 +175,11 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	/**
 		Enqueues the element `x`.
 		<o>log n</o>
-		<assert>``size()`` equals ``maxSize``</assert>
 		<assert>`x` is null or `x` already exists</assert>
 	**/
 	public function enqueue(x:T)
 	{
 		#if debug
-		if (maxSize != -1)
-			assert(size() <= maxSize, 'size equals max size ($maxSize)');
 		assert(x != null, "element is null");
 		assert(!mMap.exists(x), "element already exists");
 		mMap.set(x, true);

@@ -48,17 +48,6 @@ class ArrayedQueue<T> implements Queue<T>
 	public var key:Int;
 	
 	/**
-		The maximum allowed size of this queque.
-		
-		Once the maximum size is reached, adding an element will fail with an error (debug only).
-		
-		A value of -1 indicates that the size is unbound.
-		
-		<warn>Always equals -1 in release mode.</warn>
-	**/
-	public var maxSize:Int;
-	
-	/**
 		If true, reuses the iterator object instead of allocating a new one when calling ``iterator()``.
 		
 		The default is false.
@@ -93,19 +82,10 @@ class ArrayedQueue<T> implements Queue<T>
 		<li>If the ``size()`` falls below a quarter of the current `capacity`, the `capacity` is cut in half</li>
 		<li>The minimum `capacity` equals `capacity`</li>
 		</ul>
-		@param maxSize the maximum allowed size of this queue.
-		The default value of -1 indicates that there is no upper limit.
 	**/
-	public function new(initialCapacity:Int = 16, capacityIncrement:Int = -1, maxSize = -1)
+	public function new(initialCapacity:Int = 16, capacityIncrement:Int = -1)
 	{
 		if (initialCapacity == M.INT16_MIN) return; //skip constructor for clone()
-		
-		#if debug
-		mOp0 = mOp1 = 0;
-		this.maxSize = (maxSize == -1) ? M.INT32_MAX : maxSize;
-		#else
-		this.maxSize = -1;
-		#end
 		
 		#if debug
 		mOp0 = 0;
@@ -152,14 +132,11 @@ class ArrayedQueue<T> implements Queue<T>
 	/**
 		Enqueues the element `x`.
 		<o>1</o>
-		<assert>``size()`` equals ``maxSize``</assert>
 		<assert>out of space - queue is full but not resizable</assert>
 	**/
 	public function enqueue(x:T)
 	{
 		#if debug
-		if (maxSize != -1)
-			assert(mSize < maxSize, 'size equals max size ($maxSize)');
 		++mOp1;
 		#end
 		
@@ -649,7 +626,7 @@ class ArrayedQueue<T> implements Queue<T>
 	**/
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{
-		var copy = new ArrayedQueue<T>(capacity, maxSize);
+		var copy = new ArrayedQueue<T>(capacity);
 		copy.mSizeLevel = mSizeLevel;
 		if (capacity == 0) return copy;
 		

@@ -45,17 +45,6 @@ class Graph<T> implements Collection<T>
 	public var key:Int;
 	
 	/**
-		The maximum allowed size of this graph.
-		
-		Once the maximum size is reached, adding an element will fail with an error (debug only).
-		
-		A value of -1 indicates that the size is unbound.
-		
-		<warn>Always equals -1 in release mode.</warn>
-	**/
-	public var maxSize:Int;
-	
-	/**
 		If true, automatically clears the mark-flag on all graph nodes prior to starting a new traversal.
 		
 		Default is false.
@@ -101,18 +90,8 @@ class Graph<T> implements Collection<T>
 	var mNodeSet:Set<GraphNode<T>>;
 	#end
 	
-	/**
-		@param maxSize the maximum allowed size of this graph.
-		The default value of -1 indicates that there is no upper limit.
-	**/
-	public function new(maxSize = -1)
+	public function new()
 	{
-		#if debug
-		this.maxSize = (maxSize == -1) ? M.INT32_MAX : maxSize;
-		#else
-		this.maxSize = -1;
-		#end
-		
 		clear();
 		
 		mSize = 0;
@@ -170,15 +149,9 @@ class Graph<T> implements Collection<T>
 	/**
 		Adds the node `x` to this graph.
 		<o>1</o>
-		<assert>``size()`` equals maxSize</assert>
 	**/
 	public function addNode(x:GraphNode<T>):GraphNode<T>
 	{
-		#if debug
-		if (maxSize != -1)
-			assert(size() < maxSize, 'size equals max size ($maxSize)');
-		#end
-		
 		assert(mNodeSet.set(x), "node exists");
 		
 		mSize++;
@@ -1260,7 +1233,7 @@ class Graph<T> implements Collection<T>
 	**/
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{
-		var copy = new Graph<T>(maxSize);
+		var copy = new Graph<T>();
 		if (mNodeList == null) return copy;
 		
 		var t = new Array<GraphNode<T>>();

@@ -45,17 +45,6 @@ class LinkedStack<T> implements Stack<T>
 	public var key:Int;
 	
 	/**
-		The maximum allowed size of this stack.
-		
-		Once the maximum size is reached, adding an element will fail with an error (debug only).
-		
-		A value of -1 indicates that the size is unbound.
-		
-		<warn>Always equals -1 in release mode.</warn>
-	**/
-	public var maxSize:Int;
-	
-	/**
 		If true, reuses the iterator object instead of allocating a new one when calling ``iterator()``.
 		
 		The default is false.
@@ -79,22 +68,9 @@ class LinkedStack<T> implements Stack<T>
 		<assert>reserved size is greater than allowed size</assert>
 		@param reservedSize if > 0, this stack maintains an object pool of node objects.
 		Prevents frequent node allocation and thus increases performance at the cost of using more memory.
-		@param maxSize the maximum allowed size of the stack.
-		The default value of -1 indicates that there is no upper limit.
 	**/
-	public function new(reservedSize = 0, maxSize = -1)
+	public function new(reservedSize = 0)
 	{
-		#if debug
-		if (reservedSize > 0)
-		{
-			if (maxSize != -1)
-				assert(reservedSize <= maxSize, "reserved size is greater than allowed size");
-		}
-		this.maxSize = (maxSize == -1) ? M.INT32_MAX : maxSize;
-		#else
-		this.maxSize = -1;
-		#end
-		
 		mReservedSize = reservedSize;
 		mTop = 0;
 		mPoolSize = 0;
@@ -132,13 +108,9 @@ class LinkedStack<T> implements Stack<T>
 	/**
 		Pushes the element `x` onto the stack.
 		<o>1</o>
-		<assert>``size()`` equals ``maxSize``</assert>
 	**/
 	inline public function push(x:T)
 	{
-		if (maxSize != -1)
-			assert(size() < maxSize, 'size equals max size ($maxSize)');
-		
 		var node = getNode(x);
 		node.next = mHead;
 		mHead = node;
@@ -166,16 +138,10 @@ class LinkedStack<T> implements Stack<T>
 		Pops the top element of the stack, and pushes it back twice, so that an additional copy of the former top item is now on top, with the original below it.
 		<o>1</o>
 		<assert>stack is empty</assert>
-		<assert>``size()`` equals ``maxSize``</assert>
 	**/
 	inline public function dup()
 	{
 		assert(mTop > 0, "stack is empty");
-		
-		#if debug
-		if (maxSize != -1)
-			assert(size() < maxSize, 'size equals max size ($maxSize)');
-		#end
 		
 		var node = getNode(mHead.val);
 		node.next = mHead;
@@ -391,15 +357,7 @@ class LinkedStack<T> implements Stack<T>
 	{
 		assert(n >= 0);
 		
-		if (n > 0)
-		{
-			#if debug
-			if (maxSize != -1)
-				assert(n <= maxSize, 'n out of range ($n)');
-			#end
-		}
-		else
-			n = size();
+		n = size();
 		
 		if (args == null) args = [];
 		var node = mHead;
@@ -420,15 +378,7 @@ class LinkedStack<T> implements Stack<T>
 	{
 		assert(n >= 0);
 		
-		if (n > 0)
-		{
-			#if debug
-			if (maxSize != -1)
-				assert(n <= maxSize, 'n out of range ($n)');
-			#end
-		}
-		else
-			n = size();
+		n = size();
 		
 		var node = mHead;
 		for (i in 0...n)
@@ -732,10 +682,10 @@ class LinkedStack<T> implements Stack<T>
 	**/
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{
-		var copy = new LinkedStack<T>(mReservedSize, maxSize);
+		var copy = new LinkedStack<T>(mReservedSize);
 		if (mTop == 0) return copy;
 		
-		var copy = new LinkedStack<T>(mReservedSize, maxSize);
+		var copy = new LinkedStack<T>(mReservedSize);
 		copy.mTop = mTop;
 		
 		if (assign)

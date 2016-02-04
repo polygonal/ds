@@ -150,45 +150,6 @@ class TestLinkedQueue extends AbstractTest
 		assertEquals(null, l.mTail);
 	}
 	
-	#if debug
-	function testMaxSize()
-	{
-		var queue = new LinkedQueue<Int>(0, 3);
-		queue.enqueue(0);
-		queue.enqueue(1);
-		queue.enqueue(2);
-		
-		var failed = false;
-		
-		try
-		{
-			queue.enqueue(4);
-		}
-		catch (unknown:Dynamic)
-		{
-			failed = true;
-		}
-		
-		assertTrue(failed);
-		
-		queue = new LinkedQueue<Int>(0, 3);
-		for (i in 0...3) queue.enqueue(i);
-		
-		var failed = false;
-		
-		try
-		{
-			queue.fill(0, 10);
-		}
-		catch (unknown:Dynamic)
-		{
-			failed = true;
-		}
-		
-		assertTrue(failed);
-	}
-	#end
-	
 	function testFill()
 	{
 		var l = new LinkedQueue<Int>();

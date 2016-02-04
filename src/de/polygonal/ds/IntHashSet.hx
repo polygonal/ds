@@ -52,17 +52,6 @@ class IntHashSet implements Set<Int>
 	public var key:Int;
 	
 	/**
-		The maximum allowed size of this hash set.
-		
-		Once the maximum size is reached, adding an element will fail with an error (debug only).
-		
-		A value of -1 indicates that the size is unbound.
-		
-		<warn>Always equals -1 in release mode.</warn>
-	**/
-	public var maxSize:Int;
-	
-	/**
 		If true, reuses the iterator object instead of allocating a new one when calling ``iterator()``.
 		
 		The default is false.
@@ -141,11 +130,8 @@ class IntHashSet implements Set<Int>
 		Thus adding an element when ``size()`` equals `capacity` throws an error.
 		Otherwise the `capacity` is automatically adjusted.
 		Default is true.
-		
-		@param maxSize the maximum allowed size of this hash set.
-		The default value of -1 indicates that there is no upper limit.
 	**/
-	public function new(slotCount:Int, initialCapacity = -1, isResizable = true, maxSize = -1)
+	public function new(slotCount:Int, initialCapacity = -1, isResizable = true)
 	{
 		if (slotCount == M.INT16_MIN) return;
 		assert(slotCount > 0);
@@ -170,12 +156,6 @@ class IntHashSet implements Set<Int>
 		mMask = slotCount - 1;
 		
 		mIterator = null;
-		
-		#if debug
-		this.maxSize = (maxSize == -1) ? M.INT32_MAX : maxSize;
-		#else
-		this.maxSize = -1;
-		#end
 		
 		#if alchemy
 		mHash = new IntMemory(slotCount, "IntHashSet.mHash");
@@ -433,14 +413,12 @@ class IntHashSet implements Set<Int>
 		Adds the element `x` to this set if possible.
 		<o>1</o>
 		<assert>value 0x80000000 is reserved</assert>
-		<assert>``size()`` equals ``maxSize``</assert>
 		<assert>hash set is full (if not resizable)</assert>
 		@return true if `x` was added to this set, false if `x` already exists.
 	**/
 	public function set(x:Int):Bool
 	{
 		assert(x != VAL_ABSENT, "value 0x80000000 is reserved");
-		assert(size() < maxSize, 'size equals max size ($maxSize)');
 		
 		var b = hashCode(x);
 		
@@ -800,7 +778,6 @@ class IntHashSet implements Set<Int>
 	{
 		var c = new IntHashSet(M.INT16_MIN);
 		c.key = HashKey.next();
-		c.maxSize = maxSize;
 		
 		#if alchemy
 		c.mHash = mHash.clone();

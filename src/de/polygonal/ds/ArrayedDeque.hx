@@ -44,16 +44,6 @@ class ArrayedDeque<T> implements Deque<T>
 	public var key:Int;
 	
 	/**
-		The maximum allowed size of this deque.
-		
-		Once the maximum size is reached, adding an element will fail with an error (debug only).
-		A value of -1 indicates that the size is unbound.
-		
-		<warn>Always equals -1 in release mode.</warn>
-	**/
-	public var maxSize:Int;
-	
-	/**
 		If true, reuses the iterator object instead of allocating a new one when calling ``iterator()``.
 		
 		The default is false.
@@ -87,22 +77,14 @@ class ArrayedDeque<T> implements Deque<T>
 		<warn>`blockSize` has to be a power of two.</warn>
 		@param blockPoolSize the total number of blocks to reuse when blocks are removed or relocated (from front to back or vice-versa). This improves performances but uses more memory.
 		The default value is 4; a value of 0 disables block pooling.
-		@param maxSize the maximum allowed size of this deque.
-		The default value of -1 indicates that there is no upper limit.
 	**/
-	public function new(blockSize = 64, blockPoolCapacity = 4, maxSize = -1)
+	public function new(blockSize = 64, blockPoolCapacity = 4)
 	{
 		if (blockSize == M.INT16_MIN) return;
 		assert(blockSize > 0);
 		
 		assert(M.isPow2(blockSize), "blockSize is not a power of 2");
 		assert(blockSize >= 4, "blockSize is too small");
-		
-		#if debug
-		this.maxSize = (maxSize == -1) ? M.INT32_MAX : maxSize;
-		#else
-		this.maxSize = -1;
-		#end
 		
 		mBlockSize = blockSize;
 		mBlockSizeMinusOne = blockSize - 1;
@@ -139,15 +121,9 @@ class ArrayedDeque<T> implements Deque<T>
 	/**
 		Inserts the element `x` at the front of this deque.
 		<o>1</o>
-		<assert>``size()`` equals ``maxSize``</assert>
 	**/
 	inline public function pushFront(x:T)
 	{
-		#if debug
-		if (maxSize != -1)
-			assert(size() < maxSize, 'size equals max size ($maxSize)');
-		#end
-		
 		mHeadBlock[mHead--] = x;
 		if (mHead == -1) unshiftBlock();
 	}
@@ -185,15 +161,9 @@ class ArrayedDeque<T> implements Deque<T>
 	/**
 		Inserts the element `x` at the back of the deque.
 		<o>1</o>
-		<assert>``size()`` equals ``maxSize``</assert>
 	**/
 	inline public function pushBack(x:T)
 	{
-		#if debug
-		if (maxSize != -1)
-			assert(size() < maxSize, 'size equals max size ($maxSize)');
-		#end
-		
 		mTailBlock[mTail++] = x;
 		if (mTail == mBlockSize)
 			pushBlock();
@@ -306,7 +276,6 @@ class ArrayedDeque<T> implements Deque<T>
 		
 		If ``size()`` < `n`, additional elements are added to the back of this deque.
 		<o>n</o>
-		<assert>`n` > ``maxSize``</assert>
 		@param cl the class to instantiate for each element.
 		@param args passes additional constructor arguments to the class `cl`.
 		@param n the number of elements to replace. If 0, `n` is set to ``size()``.
@@ -318,11 +287,6 @@ class ArrayedDeque<T> implements Deque<T>
 		if (args == null) args = [];
 		if (n >= size())
 		{
-			#if debug
-			if (maxSize != -1)
-				assert(n < maxSize, 'n > max size ($maxSize)');
-			#end
-			
 			var i = mHead + 1;
 			while (i < mBlockSize)
 				mHeadBlock[i++] = Type.createInstance(cl, args);
@@ -385,11 +349,6 @@ class ArrayedDeque<T> implements Deque<T>
 		if (n == 0) return this;
 		if (n >= size())
 		{
-			#if debug
-			if (maxSize != -1)
-				assert(n < maxSize, 'n > max size ($maxSize)');
-			#end
-			
 			var i = mHead + 1;
 			while (i < mBlockSize)
 				mHeadBlock[i++] = x;
@@ -926,7 +885,6 @@ class ArrayedDeque<T> implements Deque<T>
 		c.mPoolSize = 0;
 		c.mPoolCapacity = 0;
 		c.key = HashKey.next();
-		c.maxSize = M.INT32_MAX;
 		
 		var blocks = c.mBlocks = ArrayUtil.alloc(mTailBlockIndex + 1);
 		for (i in 0...mTailBlockIndex + 1)

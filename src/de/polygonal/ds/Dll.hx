@@ -54,17 +54,6 @@ class Dll<T> implements Collection<T>
 	public var tail(default, null):DllNode<T>;
 	
 	/**
-		The maximum allowed size of this list.
-		
-		Once the maximum size is reached, adding an element will fail with an error (debug only).
-		
-		A value of -1 indicates that the size is unbound.
-		
-		<warn>Always equals -1 in release mode.</warn>
-	**/
-	public var maxSize:Int;
-	
-	/**
 		If true, reuses the iterator object instead of allocating a new one when calling ``iterator()``.
 		
 		The default is false.
@@ -87,22 +76,9 @@ class Dll<T> implements Collection<T>
 		<assert>reserved size is greater than allowed size</assert>
 		@param reservedSize if > 0, this list maintains an object pool of node objects.
 		Prevents frequent node allocation and thus increases performance at the cost of using more memory.
-		@param maxSize the maximum allowed size of this list.
-		The default value of -1 indicates that there is no upper limit.
 	**/
-	public function new(reservedSize = 0, maxSize = -1)
+	public function new(reservedSize = 0)
 	{
-		#if debug
-		if (reservedSize > 0)
-		{
-			if (maxSize != -1)
-				assert(reservedSize <= maxSize, "reserved size is greater than allowed size");
-		}
-		this.maxSize = (maxSize == -1) ? M.INT32_MAX : maxSize;
-		#else
-		this.maxSize = -1;
-		#end
-		
 		mReservedSize = reservedSize;
 		mSize = 0;
 		mPoolSize = 0;
@@ -176,16 +152,10 @@ class Dll<T> implements Collection<T>
 	/**
 		Appends the element `x` to the tail of this list by creating a ``DllNode`` object storing `x`.
 		<o>1</o>
-		<assert>``size()`` equals ``maxSize``</assert>
 		@return the appended node storing `x`.
 	**/
 	public function append(x:T):DllNode<T>
 	{
-		#if debug
-		if (maxSize != -1)
-			assert(size() < maxSize, 'size equals max size ($maxSize)');
-		#end
-		
 		var node = getNode(x);
 		if (valid(tail))
 		{
@@ -235,16 +205,10 @@ class Dll<T> implements Collection<T>
 	/**
 		Prepends the element `x` to the head of this list by creating a ``DllNode`` object storing `x`.
 		<o>1</o>
-		<assert>``size()`` equals ``maxSize``</assert>
 		@return the prepended node storing `x`.
 	**/
 	public function prepend(x:T):DllNode<T>
 	{
-		#if debug
-		if (maxSize != -1)
-			assert(size() < maxSize, 'size equals max size ($maxSize)');
-		#end
-		
 		var node = getNode(x);
 		node.next = head;
 		if (valid(head))
@@ -295,11 +259,6 @@ class Dll<T> implements Collection<T>
 	**/
 	public function insertAfter(node:DllNode<T>, x:T):DllNode<T>
 	{
-		#if debug
-		if (maxSize != -1)
-			assert(size() < maxSize, 'size equals max size ($maxSize)');
-		#end
-		
 		assert(valid(node), "node is null");
 		assert(node.getList() == this, "node is not managed by this list");
 		
@@ -324,11 +283,6 @@ class Dll<T> implements Collection<T>
 	**/
 	public function insertBefore(node:DllNode<T>, x:T):DllNode<T>
 	{
-		#if debug
-		if (maxSize != -1)
-			assert(size() < maxSize, 'size equals max size ($maxSize)');
-		#end
-		
 		assert(valid(node), "node is null");
 		assert(node.getList() == this, "node is not managed by this list");
 		
@@ -673,11 +627,6 @@ class Dll<T> implements Collection<T>
 	**/
 	public function merge(x:Dll<T>)
 	{
-		#if debug
-		if (maxSize != -1)
-			assert(size() + x.size() <= maxSize, 'size equals max size ($maxSize)');
-		#end
-		
 		assert(x != this, "x equals this list");
 		assert(x != null, "x is null");
 		
@@ -847,15 +796,7 @@ class Dll<T> implements Collection<T>
 	{
 		assert(n >= 0);
 		
-		if (n > 0)
-		{
-			#if debug
-			if (maxSize != -1)
-				assert(n <= size(), 'n out of range ($n)');
-			#end
-		}
-		else
-			n = size();
+		n = size();
 		
 		if (args == null) args = [];
 		var node = head;
@@ -876,15 +817,7 @@ class Dll<T> implements Collection<T>
 	{
 		assert(n >= 0);
 		
-		if (n > 0)
-		{
-			#if debug
-			if (maxSize != -1)
-				assert(n <= size(), 'n out of range ($n)');
-			#end
-		}
-		else
-			n = size();
+		n = size();
 		
 		var node = head;
 		for (i in 0...n)
@@ -1200,7 +1133,7 @@ class Dll<T> implements Collection<T>
 	{
 		if (mSize == 0)
 		{
-			var copy = new Dll<T>(mReservedSize, maxSize);
+			var copy = new Dll<T>(mReservedSize);
 			if (mCircular) copy.mCircular = true;
 			return copy;
 		}

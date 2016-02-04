@@ -48,17 +48,6 @@ class IntHashTable<T> implements Map<Int, T>
 	public var key:Int;
 	
 	/**
-		The maximum allowed size of this hash table.
-		
-		Once the maximum size is reached, adding an element will fail with an error (debug only).
-		
-		A value of -1 indicates that the size is unbound.
-		
-		<warn>Always equals -1 in release mode.</warn>
-	**/
-	public var maxSize:Int;
-	
-	/**
 		If true, reuses the iterator object instead of allocating a new one when calling ``iterator()``.
 		
 		The default is false.
@@ -149,11 +138,8 @@ class IntHashTable<T> implements Map<Int, T>
 		Thus adding a value when ``size()`` equals `capacity` throws an error.
 		Otherwise the `capacity` is automatically adjusted.
 		Default is true.
-		
-		@param maxSize the maximum allowed size of the stack.
-		The default value of -1 indicates that there is no upper limit.
 	**/
-	public function new(slotCount:Int, capacity = -1, isResizable = true, maxSize = -1)
+	public function new(slotCount:Int, capacity = -1, isResizable = true)
 	{
 		if (slotCount == M.INT16_MIN) return;
 		assert(slotCount > 0);
@@ -164,14 +150,8 @@ class IntHashTable<T> implements Map<Int, T>
 		
 		mMinCapacity = capacity;
 		
-		mH = new IntIntHashTable(slotCount, capacity, isResizable, maxSize);
+		mH = new IntIntHashTable(slotCount, capacity, isResizable);
 		mVals = NativeArray.init(capacity);
-		
-		#if debug
-		this.maxSize = (maxSize == -1) ? M.INT32_MAX : maxSize;
-		#else
-		this.maxSize = -1;
-		#end
 		
 		#if alchemy
 		mNext = new IntMemory(capacity, "IntHashTable.mNext");
@@ -232,7 +212,6 @@ class IntHashTable<T> implements Map<Int, T>
 		Maps `val` to `key` in this map, but only if `key` does not exist yet.
 		<o>1</o>
 		<assert>out of space - hash table is full but not resizable</assert>
-		<assert>``size()`` equals ``maxSize``</assert>
 		@return true if `key` was mapped to `val` for the first time.
 	**/
 	inline public function setIfAbsent(key:Int, val:T):Bool
@@ -456,13 +435,11 @@ class IntHashTable<T> implements Map<Int, T>
 		<o>1</o>
 		<assert>out of space - hash table is full but not resizable</assert>
 		<assert>key 0x80000000 is reserved</assert>
-		<assert>``size()`` equals ``maxSize``</assert>
 		@return true if `key` was added for the first time, false if another instance of `key` was inserted.
 	**/
 	public function set(key:Int, val:T):Bool
 	{
 		assert(key != IntIntHashTable.KEY_ABSENT, "key 0x80000000 is reserved");
-		assert(size() < maxSize, 'size equals max size (${maxSize})');
 		
 		invalidate();
 		if (size() == capacity)
@@ -710,7 +687,6 @@ class IntHashTable<T> implements Map<Int, T>
 	{
 		var c = new IntHashTable<T>(M.INT16_MIN);
 		c.key = HashKey.next();
-		c.maxSize = maxSize;
 		c.mH = cast mH.clone(false);
 		
 		var capacity = capacity;

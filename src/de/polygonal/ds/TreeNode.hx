@@ -2322,7 +2322,7 @@ class ChildTreeIterator<T> implements de.polygonal.ds.Itr<T>
 	
 	public function new(x:TreeNode<T>)
 	{
-		mObject = f;
+		mObject = x;
 		reset();
 	}
 	

@@ -398,45 +398,6 @@ class TestLinkedStack extends AbstractTest
 		}
 	}
 	
-	#if debug
-	function testMaxSize()
-	{
-		var stack = new LinkedStack<Int>(0, 3);
-		stack.push(0);
-		stack.push(1);
-		stack.push(2);
-		
-		var failed = false;
-		
-		try
-		{
-			stack.push(4);
-		}
-		catch (unknown:Dynamic)
-		{
-			failed = true;
-		}
-		
-		assertTrue(failed);
-		
-		var stack = new ArrayedStack<Int>(16, 16);
-		for (i in 0...3) stack.push(i);
-		
-		var failed = false;
-		
-		try
-		{
-			stack.fill(0, 17);
-		}
-		catch (unknown:Dynamic)
-		{
-			failed = true;
-		}
-		
-		assertTrue(failed);
-	}
-	#end
-	
 	function testAssign()
 	{
 		var l = new LinkedStack<Int>();

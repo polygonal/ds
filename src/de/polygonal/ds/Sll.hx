@@ -55,17 +55,6 @@ class Sll<T> implements Collection<T>
 	public var tail:SllNode<T>;
 	
 	/**
-		The maximum allowed size of this list.
-		
-		Once the maximum size is reached, adding an element will fail with an error (debug only).
-		
-		A value of -1 indicates that the size is unbound.
-		
-		<warn>Always equals -1 in release mode.</warn>
-	**/
-	public var maxSize:Int;
-	
-	/**
 		If true, reuses the iterator object instead of allocating a new one when calling ``iterator()``.
 		
 		The default is false.
@@ -88,22 +77,9 @@ class Sll<T> implements Collection<T>
 		<assert>reserved size is greater than allowed size</assert>
 		@param reservedSize if > 0, this list maintains an object pool of node objects.
 		Prevents frequent node allocation and thus increases performance at the cost of using more memory.
-		@param maxSize the maximum allowed size of this list.
-		The default value of -1 indicates that there is no upper limit.
 	**/
-	public function new(reservedSize = 0, maxSize = -1)
+	public function new(reservedSize = 0)
 	{
-		#if debug
-		if (reservedSize > 0)
-		{
-			if (maxSize != -1)
-				assert(reservedSize <= maxSize, "reserved size is greater than allowed size");
-		}
-		this.maxSize = (maxSize == -1) ? M.INT32_MAX : maxSize;
-		#else
-		this.maxSize = -1;
-		#end
-		
 		mReservedSize = reservedSize;
 		mSize = 0;
 		mPoolSize = 0;
@@ -172,16 +148,10 @@ class Sll<T> implements Collection<T>
 	/**
 		Appends the element `x` to the tail of this list by creating a ``SllNode`` object storing `x`.
 		<o>1</o>
-		<assert>``size()`` equals ``maxSize``</assert>
 		@return the appended node storing `x`.
 	**/
 	inline public function append(x:T):SllNode<T>
 	{
-		#if debug
-		if (maxSize != -1)
-			assert(size() < maxSize, 'size equals max size ($maxSize)');
-		#end
-		
 		var node = getNode(x);
 		if (valid(tail))
 			tail.next = node;
@@ -219,16 +189,10 @@ class Sll<T> implements Collection<T>
 	/**
 		Prepends the element `x` to the head of this list by creating a ``SllNode`` object storing `x`.
 		<o>1</o>
-		<assert>``size()`` equals ``maxSize``</assert>
 		@return the prepended node storing `x`.
 	**/
 	inline public function prepend(x:T):SllNode<T>
 	{
-		#if debug
-		if (maxSize != -1)
-			assert(size() < maxSize, 'size equals max size ($maxSize)');
-		#end
-		
 		var node = getNode(x);
 		if (valid(tail))
 			node.next = head;
@@ -271,11 +235,6 @@ class Sll<T> implements Collection<T>
 	**/
 	inline public function insertAfter(node:SllNode<T>, x:T):SllNode<T>
 	{
-		#if debug
-		if (maxSize != -1)
-			assert(size() < maxSize, 'size equals max size ($maxSize)');
-		#end
-		
 		assert(valid(node), "node is null");
 		assert(node.getList() == this, "node is not managed by this list");
 		
@@ -300,10 +259,6 @@ class Sll<T> implements Collection<T>
 	**/
 	inline public function insertBefore(node:SllNode<T>, x:T):SllNode<T>
 	{
-		#if debug
-		if (maxSize != -1)
-			assert(size() < maxSize, 'size equals max size ($maxSize)');
-		#end
 		
 		assert(valid(node), "node is null");
 		assert(node.getList() == this, "node is not managed by this list");
@@ -564,11 +519,6 @@ class Sll<T> implements Collection<T>
 	**/
 	public function merge(x:Sll<T>)
 	{
-		#if debug
-		if (maxSize != -1)
-			assert(size() + x.size() <= maxSize, 'size equals max size ($maxSize)');
-		#end
-		
 		assert(x != this, "x equals this list");
 		assert(x != null, "x is null");
 		
@@ -688,15 +638,7 @@ class Sll<T> implements Collection<T>
 	{
 		assert(n >= 0);
 		
-		if (n > 0)
-		{
-			#if debug
-			if (maxSize != -1)
-				assert(n <= size(), 'n out of range ($n)');
-			#end
-		}
-		else
-			n = size();
+		n = size();
 		
 		if (args == null) args = [];
 		var node = head;
@@ -717,15 +659,7 @@ class Sll<T> implements Collection<T>
 	{
 		assert(n >= 0);
 		
-		if (n > 0)
-		{
-			#if debug
-			if (maxSize != -1)
-				assert(n <= size(), 'n out of range ($n)');
-			#end
-		}
-		else
-			n = size();
+		n = size();
 		
 		var node = head;
 		for (i in 0...n)
@@ -1061,7 +995,7 @@ class Sll<T> implements Collection<T>
 	{
 		if (mSize == 0)
 		{
-			var copy = new Sll<T>(mReservedSize, maxSize);
+			var copy = new Sll<T>(mReservedSize);
 			if (mCircular) copy.mCircular = true;
 			return copy;
 		}

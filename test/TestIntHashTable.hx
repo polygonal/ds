@@ -20,7 +20,7 @@ class TestIntHashTable extends AbstractTest
 	
 	function testGetFront()
 	{
-		var h = new IntHashTable<Null<Int>>(16, 16, true, 10);
+		var h = new IntHashTable<Null<Int>>(16, 16, true);
 		for (i in 0...4)
 		{
 			h.set(i, i);

@@ -130,11 +130,8 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		Thus adding a value when ``size()`` equals `capacity` throws an error.
 		Otherwise the `capacity` is automatically adjusted.
 		Default is true.
-		
-		@param maxSize the maximum allowed size of this hash table.
-		The default value of -1 indicates that there is no upper limit.
 	**/
-	public function new(slotCount:Int, capacity = -1, isResizable = true, maxSize = -1)
+	public function new(slotCount:Int, capacity = -1, isResizable = true)
 	{
 		if (slotCount == M.INT16_MIN) return;
 		assert(slotCount > 0);
@@ -145,7 +142,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		
 		mMinCapacity = capacity;
 		
-		mH = new IntIntHashTable(slotCount, capacity, isResizable, maxSize);
+		mH = new IntIntHashTable(slotCount, capacity, isResizable);
 		mKeys = NativeArray.init(capacity);
 		mVals = NativeArray.init(capacity);
 		
@@ -196,7 +193,6 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		<o>n</o>
 		<assert>out of space - hash table is full but not resizable</assert>
 		<assert>`key` is null</assert>
-		<assert>``size()`` equals ``maxSize``</assert>
 		@return true if `key` was mapped to `val` for the first time.
 	**/
 	inline public function setIfAbsent(key:K, val:T):Bool
@@ -432,7 +428,6 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		<o>n</o>
 		<assert> out of space - hash table is full but not resizable</assert>
 		<assert>`key` is null</assert>
-		<assert>``size()`` equals ``maxSize``</assert>
 		@return true if `key` was added for the first time, false if another instance of `key` was inserted.
 	**/
 	inline public function set(key:K, val:T):Bool

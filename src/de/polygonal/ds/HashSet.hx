@@ -46,17 +46,6 @@ class HashSet<T:Hashable> implements Set<T>
 	public var key:Int;
 	
 	/**
-		The maximum allowed size of this hash set.
-		
-		Once the maximum size is reached, adding an element to a array will fail with an error (debug only).
-		
-		A value of -1 indicates that the size is unbound.
-		
-		<warn>Always equals -1 in release mode.</warn>
-	**/
-	public var maxSize:Int;
-	
-	/**
 		If true, reuses the iterator object instead of allocating a new one when calling ``iterator()``.
 		
 		The default is false.
@@ -139,11 +128,8 @@ class HashSet<T:Hashable> implements Set<T>
 		Thus adding an element when ``size()`` equals `capacity` throws an error.
 		Otherwise the `capacity` is automatically adjusted.
 		Default is true.
-		
-		@param maxSize the maximum allowed size of this hash set.
-		The default value of -1 indicates that there is no upper limit.
 	**/
-	public function new(slotCount:Int, capacity = -1, isResizable = true, maxSize = -1)
+	public function new(slotCount:Int, capacity = -1, isResizable = true)
 	{
 		if (slotCount == M.INT16_MIN) return;
 		assert(slotCount > 0);
@@ -154,14 +140,8 @@ class HashSet<T:Hashable> implements Set<T>
 		
 		mMinCapacity = capacity;
 		
-		mH = new IntIntHashTable(slotCount, capacity, mIsResizable, maxSize);
+		mH = new IntIntHashTable(slotCount, capacity, mIsResizable);
 		mVals = NativeArray.init(capacity);
-		
-		#if debug
-		this.maxSize = (maxSize == -1) ? M.INT32_MAX : maxSize;
-		#else
-		this.maxSize = -1;
-		#end
 		
 		#if alchemy
 		mNext = new IntMemory(capacity, "HashSet.mNext");
@@ -279,14 +259,11 @@ class HashSet<T:Hashable> implements Set<T>
 		Adds the element `x` to this set if possible.
 		<o>n</o>
 		<assert>`x` is null</assert>
-		<assert>``size()`` equals ``maxSize``</assert>
 		<assert>hash set is full (if not resizable)</assert>
 		@return true if `x` was added to this set, false if `x` already exists.
 	**/
 	inline public function set(x:T):Bool
 	{
-		assert(size() != maxSize, 'size equals max size ($maxSize)');
-		
 		if ((size() == capacity))
 		{
 			if (mH.setIfAbsent(_key(x), size()))
@@ -489,7 +466,6 @@ class HashSet<T:Hashable> implements Set<T>
 		var c = new HashSet<T>(M.INT16_MIN);
 		
 		c.mIsResizable = mIsResizable;
-		c.maxSize = maxSize;
 		c.key = HashKey.next();
 		c.mH = cast mH.clone(false);
 		

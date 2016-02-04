@@ -46,17 +46,6 @@ class ArrayedStack<T> implements Stack<T>
 	public var key:Int;
 	
 	/**
-		The maximum allowed size of this stack.
-		
-		Once the maximum size is reached, adding an element will fail with an error (debug only).
-		
-		A value of -1 indicates that the size is unbound.
-		
-		<warn>Always equals -1 in release mode.</warn>
-	**/
-	public var maxSize:Int;
-	
-	/**
 		If true, reuses the iterator object instead of allocating a new one when calling ``iterator()``.
 		
 		The default is false.
@@ -88,14 +77,9 @@ class ArrayedStack<T> implements Stack<T>
 		<assert>`initialCapacity` is greater than allowed size</assert>
 		<assert>`initialCapacity` is below minimum capacity of 16</assert>
 		@param initialCapacity the initial capacity of the internal container. This is also the minimum internal stack size. See ``reserve()``.
-		@param maxSize the maximum allowed size of this stack.
-		The default value of -1 indicates that there is no upper limit.
 	**/
-	public function new(initialCapacity:Int = 64, capacityIncrement:Int = -1, maxSize = -1)
+	public function new(initialCapacity:Int = 64, capacityIncrement:Int = -1)
 	{
-		#if debug
-		if (maxSize != -1) assert(maxSize > 0, "invalid maxSize");
-		#end
 		//assert(initialCapacity >= 16, "initial capacity below minimum capacity (16)");
 		
 		capacity = mInitialCapacity = initialCapacity;
@@ -108,12 +92,6 @@ class ArrayedStack<T> implements Stack<T>
 		mIterator = null;
 		key = HashKey.next();
 		reuseIterator = false;
-		
-		#if debug
-		this.maxSize = (maxSize == -1) ? M.INT32_MAX : maxSize;
-		#else
-		this.maxSize = -1;
-		#end
 		
 		#if debug
 		mOp0 = 0;
@@ -199,13 +177,10 @@ class ArrayedStack<T> implements Stack<T>
 	/**
 		Pushes the element `x` onto the stack.
 		<o>1</o>
-		<assert>``size()`` equals ``maxSize``</assert>
 	**/
 	inline public function push(x:T)
 	{
 		#if debug
-		if (maxSize != -1)
-			assert(size() < maxSize, 'size equals max size ($maxSize)');
 		++mOp1;
 		#end
 		
@@ -234,16 +209,10 @@ class ArrayedStack<T> implements Stack<T>
 		Pops the top element of the stack, and pushes it back twice, so that an additional copy of the former top item is now on top, with the original below it.
 		<o>1</o>
 		<assert>stack is empty</assert>
-		<assert>``size()`` equals ``maxSize``</assert>
 	**/
 	inline public function dup()
 	{
 		assert(mTop > 0, "stack is empty");
-		
-		#if debug
-		if (maxSize != -1)
-			assert(size() < maxSize, 'size equals max size ($maxSize)');
-		#end
 		
 		if (size() == capacity) grow();
 		var d = mData;
@@ -418,15 +387,7 @@ class ArrayedStack<T> implements Stack<T>
 	{
 		assert(n >= 0);
 		
-		if (n > 0)
-		{
-			#if debug
-			if (maxSize != -1)
-				assert(n <= maxSize, 'n out of range ($n)');
-			#end
-		}
-		else
-			n = size();
+		n = size();
 		
 		if (args == null) args = [];
 		for (i in 0...n) mData.set(i, Type.createInstance(cl, args));
@@ -444,15 +405,7 @@ class ArrayedStack<T> implements Stack<T>
 	{
 		assert(n >= 0);
 		
-		if (n > 0)
-		{
-			#if debug
-			if (maxSize != -1)
-				assert(n <= maxSize, 'n out of range ($n)');
-			#end
-		}
-		else
-			n = size();
+		n = size();
 		
 		for (i in 0...n)
 			mData.set(i, x);
@@ -697,7 +650,7 @@ class ArrayedStack<T> implements Stack<T>
 	**/
 	public function clone(assign = true, copier:T->T = null):Collection<T>
 	{
-		var c = new ArrayedStack<T>(capacity, mCapacityIncrement, maxSize);
+		var c = new ArrayedStack<T>(capacity, mCapacityIncrement);
 		
 		if (isEmpty()) return c;
 		
