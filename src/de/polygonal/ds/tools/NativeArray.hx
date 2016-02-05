@@ -124,67 +124,70 @@ class NativeArray
 	#end
 	public static function blit<T>(src:Container<T>, srcPos:Int, dst:Container<T>, dstPos:Int, len:Int)
 	{
-		assert(srcPos < size(src), "srcPos is out of range");
-		assert(dstPos < size(dst), "dstPos is out of range");
-		assert(srcPos + len <= size(src) && dstPos + len <= size(dst), "len is out of range");
-		
-		#if neko
-		untyped __dollar__ablit(dst,dstPos,src,srcPos,len);
-		//#elseif java
-		//TODO java.lang.System.arraycopy(src, srcPos, dst, dstPos, len);
-		#elseif cs
-		cs.system.Array.Copy(cast src, srcPos, cast dst, dstPos, len);
-		#elseif cpp
-		dst.blit(dstPos, src, srcPos, len);
-		#else
-		if (src == dst)
+		if (len > 0)
 		{
-			if (srcPos < dstPos)
+			assert(srcPos < size(src), "srcPos is out of range");
+			assert(dstPos < size(dst), "dstPos is out of range");
+			assert(srcPos + len <= size(src) && dstPos + len <= size(dst), "len is out of range");
+			
+			#if neko
+			untyped __dollar__ablit(dst,dstPos,src,srcPos,len);
+			//#elseif java
+			//TODO java.lang.System.arraycopy(src, srcPos, dst, dstPos, len);
+			#elseif cs
+			cs.system.Array.Copy(cast src, srcPos, cast dst, dstPos, len);
+			#elseif cpp
+			dst.blit(dstPos, src, srcPos, len);
+			#else
+			if (src == dst)
 			{
-				var i = srcPos + len;
-				var j = dstPos + len;
-				for (k in 0...len)
+				if (srcPos < dstPos)
 				{
-					i--;
-					j--;
-					set(src, j, get(src, i));
+					var i = srcPos + len;
+					var j = dstPos + len;
+					for (k in 0...len)
+					{
+						i--;
+						j--;
+						set(src, j, get(src, i));
+					}
+				}
+				else
+				if (srcPos > dstPos)
+				{
+					var i = srcPos;
+					var j = dstPos;
+					for (k in 0...len)
+					{
+						set(src, j, get(src, i));
+						i++;
+						j++;
+					}
 				}
 			}
 			else
-			if (srcPos > dstPos)
 			{
-				var i = srcPos;
-				var j = dstPos;
-				for (k in 0...len)
+				if (srcPos == 0 && dstPos == 0)
 				{
-					set(src, j, get(src, i));
-					i++;
-					j++;
+					for (i in 0...len) dst[i] = src[i];
+				}
+				else
+				if (srcPos == 0)
+				{
+					for (i in 0...len) dst[dstPos + i] = src[i];
+				}
+				else
+				if (dstPos == 0)
+				{
+					for (i in 0...len) dst[i] = src[srcPos + i];
+				}
+				else
+				{
+					for (i in 0...len) dst[dstPos + i] = src[srcPos + i];
 				}
 			}
+			#end
 		}
-		else
-		{
-			if (srcPos == 0 && dstPos == 0)
-			{
-				for (i in 0...len) dst[i] = src[i];
-			}
-			else
-			if (srcPos == 0)
-			{
-				for (i in 0...len) dst[dstPos + i] = src[i];
-			}
-			else
-			if (dstPos == 0)
-			{
-				for (i in 0...len) dst[i] = src[srcPos + i];
-			}
-			else
-			{
-				for (i in 0...len) dst[dstPos + i] = src[srcPos + i];
-			}
-		}
-		#end
 	}
 	
 	public static function copy<T>(src:Container<T>):Container<T>
