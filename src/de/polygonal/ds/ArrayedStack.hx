@@ -210,7 +210,8 @@ class ArrayedStack<T> implements Stack<T>
 		<o>1</o>
 		<assert>stack is empty</assert>
 	**/
-	inline public function dup()
+	#if (!cpp) inline #end //TODO fixme
+	public function dup()
 	{
 		assert(mTop > 0, "stack is empty");
 		
@@ -225,7 +226,8 @@ class ArrayedStack<T> implements Stack<T>
 		<o>1</o>
 		<assert>``size()`` < 2</assert>
 	**/
-	inline public function exchange()
+	#if (!cpp) inline #end //TODO fixme
+	public function exchange()
 	{
 		assert(mTop > 1, "size() < 2");
 		
@@ -340,7 +342,8 @@ class ArrayedStack<T> implements Stack<T>
 		<assert>`i`/`j` out of range</assert>
 		<assert>`i` equals `j`</assert>
 	**/
-	inline public function swp(i:Int, j:Int)
+	#if (!cpp) inline #end //TODO fixme
+	public function swp(i:Int, j:Int)
 	{
 		assert(mTop > 0, "stack is empty");
 		assert(i >= 0 && i < mTop, 'i index out of range ($i)');
@@ -364,7 +367,8 @@ class ArrayedStack<T> implements Stack<T>
 		<assert>`i`/`j` out of range</assert>
 		<assert>`i` equals `j`</assert>
 	**/
-	inline public function cpy(i:Int, j:Int)
+	#if (!cpp) inline #end //TODO fixme
+	public function cpy(i:Int, j:Int)
 	{
 		assert(mTop > 0, "stack is empty");
 		assert(i >= 0 && i < mTop, 'i index out of range ($i)');
