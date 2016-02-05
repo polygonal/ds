@@ -42,7 +42,7 @@ class Sll<T> implements Collection<T>
 		
 		<warn>This value should never be changed by the user.</warn>
 	**/
-	public var key:Int;
+	public var key(default, null):Int;
 	
 	/**
 		The head of this list or null if this list is empty.

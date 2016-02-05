@@ -92,7 +92,7 @@ class DynamicObjectPool<T>
 		A hash table transforms this key into an index of an array element by using a hash function.
 		<warn>This value should never be changed by the user.</warn>
 	**/
-	public var key:Int;
+	public var key(default, null):Int;
 	
 	var mSize:Int;
 	var mOldSize:Int;

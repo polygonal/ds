@@ -39,7 +39,7 @@ class Array3<T> implements Collection<T>
 		
 		<warn>This value should never be changed by the user.</warn>
 	**/
-	public var key:Int;
+	public var key(default, null):Int;
 	
 	/**
 		If true, reuses the iterator object instead of allocating a new one when calling ``iterator()``.

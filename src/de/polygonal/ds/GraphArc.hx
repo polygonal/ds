@@ -39,7 +39,7 @@ class GraphArc<T> implements Hashable
 		
 		<warn>This value should never be changed by the user.</warn>
 	**/
-	public var key:Int;
+	public var key(default, null):Int;
 	
 	/**
 		The node that this arc points to.
