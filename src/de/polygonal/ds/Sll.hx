@@ -638,7 +638,7 @@ class Sll<T> implements Collection<T>
 	{
 		assert(n >= 0);
 		
-		n = size();
+		if (n == 0) n = size();
 		
 		if (args == null) args = [];
 		var node = head;
@@ -659,7 +659,7 @@ class Sll<T> implements Collection<T>
 	{
 		assert(n >= 0);
 		
-		n = size();
+		if (n == 0) n = size();
 		
 		var node = head;
 		for (i in 0...n)
