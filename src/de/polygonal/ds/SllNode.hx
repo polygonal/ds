@@ -1,5 +1,5 @@
 ﻿/*
-Copyright (c) 2008-2014 Michael Baczynski, http://www.polygonal.de
+Copyright (c) 2008-2016 Michael Baczynski, http://www.polygonal.de
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -18,7 +18,7 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 */
 package de.polygonal.ds;
 
-import de.polygonal.ds.error.Assert.assert;
+import de.polygonal.ds.tools.Assert.assert;
 
 /**
 	A singly linked list node
@@ -26,8 +26,6 @@ import de.polygonal.ds.error.Assert.assert;
 	Each node wraps an element and stores a reference to the next list node.
 	
 	``SllNode`` objects are created and managed by the ``Sll`` class.
-	
-	_<o>Worst-case running time in Big O notation</o>_
 **/
 #if generic
 @:generic
@@ -60,7 +58,6 @@ class SllNode<T>
 		Destroys this object by explicitly nullifying all pointers and elements for GC'ing used resources.
 		
 		Improves GC efficiency/performance (optional).
-		<o>1</o>
 	**/
 	public function free()
 	{
@@ -70,10 +67,9 @@ class SllNode<T>
 	
 	/**
 		Returns true if this node is the head of a list.
-		<o>1</o>
 		<assert>node is not managed by a list</assert>
 	**/
-	inline public function isHead():Bool
+	public inline function isHead():Bool
 	{
 		assert(mList != null, "node is not managed by a list");
 		
@@ -82,10 +78,9 @@ class SllNode<T>
 	
 	/**
 		Returns true if this node is the tail of a list.
-		<o>1</o>
 		<assert>node is not managed by a list</assert>
 	**/
-	inline public function isTail():Bool
+	public inline function isTail():Bool
 	{
 		assert(mList != null, "node is not managed by a list");
 		
@@ -94,19 +89,17 @@ class SllNode<T>
 	
 	/**
 		Returns true if this node points to a next node.
-		<o>1</o>
 	**/
-	inline public function hasNext():Bool
+	public inline function hasNext():Bool
 	{
 		return next != null;
 	}
 	
 	/**
 		Returns the element of the next node.
-		<o>1</o>
 		<assert>next node is null</assert>
 	**/
-	inline public function nextVal():T
+	public inline function nextVal():T
 	{
 		assert(hasNext(), "invalid next node");
 		
@@ -115,19 +108,17 @@ class SllNode<T>
 	
 	/**
 		The list that owns this node or null if this node is not part of a list.
-		<o>1</o>
 	**/
-	inline public function getList():Sll<T>
+	public inline function getList():Sll<T>
 	{
 		return mList;
 	}
 	
 	/**
 		Unlinks this node from its list and returns node.`next`.
-		<o>n</o>
 		<assert>list is null</assert>
 	**/
-	inline public function unlink():SllNode<T>
+	public inline function unlink():SllNode<T>
 	{
 		assert(mList != null);
 		

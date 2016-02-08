@@ -1,5 +1,5 @@
 ﻿/*
-Copyright (c) 2008-2014 Michael Baczynski, http://www.polygonal.de
+Copyright (c) 2008-2016 Michael Baczynski, http://www.polygonal.de
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -18,8 +18,9 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 */
 package de.polygonal.ds;
 
-import de.polygonal.ds.error.Assert.assert;
-import de.polygonal.ds.tools.NativeArray;
+import de.polygonal.ds.tools.ArrayTools;
+import de.polygonal.ds.tools.Assert.assert;
+import de.polygonal.ds.tools.NativeArrayTools;
 
 /**
 	A queue based on a linked list
@@ -29,8 +30,6 @@ import de.polygonal.ds.tools.NativeArray;
 	This is called a FIFO structure (First In, First Out).
 	
 	See <a href="http://lab.polygonal.de/2007/05/23/data-structures-example-the-queue-class/" target="mBlank">http://lab.polygonal.de/2007/05/23/data-structures-example-the-queue-class/</a>
-	
-	_<o>Worst-case running time in Big O notation</o>_
 **/
 #if generic
 @:generic
@@ -44,7 +43,7 @@ class LinkedQueue<T> implements Queue<T>
 		
 		<warn>This value should never be changed by the user.</warn>
 	**/
-	public var key(default, null):Int;
+	public var key(default, null):Int = HashKey.next();
 	
 	/**
 		If true, reuses the iterator object instead of allocating a new one when calling ``iterator()``.
@@ -53,34 +52,28 @@ class LinkedQueue<T> implements Queue<T>
 		
 		<warn>If true, nested iterations are likely to fail as only one iteration is allowed at a time.</warn>
 	**/
-	public var reuseIterator:Bool;
+	public var reuseIterator:Bool = false;
 	
 	var mHead:LinkedQueueNode<T>;
 	var mTail:LinkedQueueNode<T>;
 	
-	var mSize:Int;
+	var mSize:Int = 0;
 	var mReservedSize:Int;
-	var mPoolSize:Int;
+	var mPoolSize:Int = 0;
 	
 	var mHeadPool:LinkedQueueNode<T>;
 	var mTailPool:LinkedQueueNode<T>;
 	
-	var mIterator:LinkedQueueIterator<T>;
+	var mIterator:LinkedQueueIterator<T> = null;
 	
 	/**
 		<assert>reserved size is greater than allowed size</assert>
 		@param reservedSize if > 0, this queue maintains an object pool of node objects.
 		Prevents frequent node allocation and thus increases performance at the cost of using more memory.
 	**/
-	public function new(reservedSize = 0)
+	public function new(reservedSize:Null<Int> = 0, ?source:Array<T>)
 	{
 		mReservedSize = reservedSize;
-		mSize = 0;
-		mPoolSize = 0;
-		mIterator = null;
-		mHead = null;
-		mTail = null;
-		
 		if (reservedSize > 0)
 		{
 			mHeadPool = mTailPool = new LinkedQueueNode<T>(cast null);
@@ -91,18 +84,24 @@ class LinkedQueue<T> implements Queue<T>
 			mTailPool = null;
 		}
 		
-		key = HashKey.next();
-		reuseIterator = false;
+		if (source != null && source.length > 0)
+		{
+			mSize = source.length;
+			mHead = mTail = getNode(source[0]);
+			for (i in 1...size)
+				mTail = mTail.next = getNode(source[i]);
+		}
+		else
+			mHead = mTail = null;
 	}
 	
 	/**
 		Returns the front element.
 		
 		This is the "oldest" element.
-		<o>1</o>
 		<assert>queue is empty</assert>
 	**/
-	inline public function peek():T
+	public inline function peek():T
 	{
 		assert(mHead != null, "queue is empty");
 		
@@ -113,10 +112,9 @@ class LinkedQueue<T> implements Queue<T>
 		Returns the rear element.
 		
 		This is the "newest" element.
-		<o>1</o>
 		<assert>queue is empty</assert>
 	**/
-	inline public function back():T
+	public inline function back():T
 	{
 		assert(mTail != null, "queue is empty");
 		
@@ -125,9 +123,8 @@ class LinkedQueue<T> implements Queue<T>
 	
 	/**
 		Enqueues the element `x`.
-		<o>1</o>
 		**/
-	inline public function enqueue(x:T)
+	public inline function enqueue(x:T)
 	{
 		mSize++;
 		
@@ -146,10 +143,9 @@ class LinkedQueue<T> implements Queue<T>
 	
 	/**
 		Dequeues and returns the front element.
-		<o>1</o>
 		<assert>queue is empty</assert>
 	**/
-	inline public function dequeue():T
+	public inline function dequeue():T
 	{
 		assert(mHead != null, "queue is empty");
 		
@@ -163,66 +159,29 @@ class LinkedQueue<T> implements Queue<T>
 		}
 		else
 			mHead = mHead.next;
-		
 		return putNode(node);
 	}
 	
-	/**
-		Replaces up to `n` existing elements with objects of type `cl`.
-		<o>n</o>
-		<assert>`n` out of range</assert>
-		@param cl the class to instantiate for each element.
-		@param args passes additional constructor arguments to the class `cl`.
-		@param n the number of elements to replace. If 0, `n` is set to ``size()``.
-	**/
-	public function assign(cl:Class<T>, args:Array<Dynamic> = null, n = 0)
+	public function forEach(f:T->Int->T)
 	{
-		assert(n >= 0);
-		
-		n = size();
-		
-		if (args == null) args = [];
 		var node = mHead;
-		for (i in 0...n)
+		for (i in 0...size)
 		{
-			node.val = Type.createInstance(cl, args);
+			node.val = f(node.val, i);
 			node = node.next;
 		}
-	}
-	
-	/**
-		Replaces up to `n` existing elements with the instance `x`.
-		<o>n</o>
-		<assert>`n` out of range</assert>
-		@param n the number of elements to replace. If 0, `n` is set to ``size()``.
-	**/
-	public function fill(x:T, n = 0):LinkedQueue<T>
-	{
-		assert(n >= 0);
-		
-		n = size();
-		
-		var node = mHead;
-		for (i in 0...n)
-		{
-			node.val = x;
-			node = node.next;
-		}
-		
-		return this;
 	}
 	
 	/**
 		Shuffles the elements of this collection by using the Fisher-Yates algorithm.
-		<o>n</o>
 		<assert>insufficient random values</assert>
-		@param rval a list of random double values in the range between 0 (inclusive) to 1 (exclusive) defining the new positions of the elements.
+		@param rvals a list of random double values in the range between 0 (inclusive) to 1 (exclusive) defining the new positions of the elements.
 		If omitted, random values are generated on-the-fly by calling `Math::random()`.
 	**/
-	public function shuffle(rval:Array<Float> = null)
+	public function shuffle(rvals:Array<Float> = null)
 	{
-		var s = mSize;
-		if (rval == null)
+		var s = size;
+		if (rvals == null)
 		{
 			var m = Math;
 			while (s > 1)
@@ -243,13 +202,13 @@ class LinkedQueue<T> implements Queue<T>
 		}
 		else
 		{
-			assert(rval.length >= size(), "insufficient random values");
+			assert(rvals.length >= size, "insufficient random values");
 			
 			var j = 0;
 			while (s > 1)
 			{
 				s--;
-				var i = Std.int(rval[j++] * s);
+				var i = Std.int(rvals[j++] * s);
 				var node1 = mHead;
 				for (j in 0...s) node1 = node1.next;
 				
@@ -284,7 +243,7 @@ class LinkedQueue<T> implements Queue<T>
 	**/
 	public function toString():String
 	{
-		var s = '{ LinkedQueue size: ${size()} }';
+		var s = '{ LinkedQueue size: ${size} }';
 		if (isEmpty()) return s;
 		s += "\n[\n";
 		var node = mHead;
@@ -298,15 +257,21 @@ class LinkedQueue<T> implements Queue<T>
 		return s;
 	}
 	
-	/*///////////////////////////////////////////////////////
-	// collection
-	///////////////////////////////////////////////////////*/
+	/* INTERFACE Collection */
+	
+	/**
+		The total number of elements.
+	**/
+	public var size(get, never):Int;
+	inline function get_size():Int
+	{
+		return mSize;
+	}
 	
 	/**
 		Destroys this object by explicitly nullifying all nodes, pointers and elements.
 		
 		Improves GC efficiency/performance (optional).
-		<o>n</o>
 	**/
 	public function free()
 	{
@@ -331,12 +296,15 @@ class LinkedQueue<T> implements Queue<T>
 		}
 		
 		mHeadPool = mTailPool = null;
-		mIterator = null;
+		if (mIterator != null)
+		{
+			mIterator.free();
+			mIterator = null;
+		}
 	}
 	
 	/**
 		Returns true if this queue contains the element `x`.
-		<o>n</o>
 	**/
 	public function contains(x:T):Bool
 	{
@@ -352,7 +320,6 @@ class LinkedQueue<T> implements Queue<T>
 	
 	/**
 		Removes and nullifies all occurrences of the element `x`.
-		<o>n</o>
 		@return true if at least one occurrence of `x` was removed.
 	**/
 	public function remove(x:T):Bool
@@ -373,7 +340,6 @@ class LinkedQueue<T> implements Queue<T>
 				mTail = null;
 				return true;
 			}
-			
 			return false;
 		}
 		
@@ -405,18 +371,16 @@ class LinkedQueue<T> implements Queue<T>
 			if (mHead == null) mTail = null;
 			mSize--;
 		}
-		
 		return found;
 	}
 	
 	/**
 		Removes all elements.
-		<o>1 or n if `purge` is true</o>
-		@param purge if true, elements are nullified upon removal.
+		@param gc if true, elements are nullified upon removal so the garbage collector can reclaim used memory.
 	**/
-	public function clear(purge = false)
+	public function clear(gc:Bool = false)
 	{
-		if (purge || mReservedSize > 0)
+		if (gc || mReservedSize > 0)
 		{
 			var node = mHead;
 			while (node != null)
@@ -426,7 +390,6 @@ class LinkedQueue<T> implements Queue<T>
 				node = node.next;
 			}
 		}
-		
 		mHead = mTail = null;
 		mSize = 0;
 	}
@@ -453,21 +416,11 @@ class LinkedQueue<T> implements Queue<T>
 	}
 	
 	/**
-		The total number of elements.
-		<o>1</o>
-	**/
-	inline public function size():Int
-	{
-		return mSize;
-	}
-	
-	/**
 		Returns true if this queue is empty.
-		<o>1</o>
 	**/
-	inline public function isEmpty():Bool
+	public inline function isEmpty():Bool
 	{
-		return mSize == 0;
+		return size == 0;
 	}
 	
 	/**
@@ -479,7 +432,7 @@ class LinkedQueue<T> implements Queue<T>
 	{
 		if (isEmpty()) return [];
 		
-		var out = ArrayUtil.alloc(size());
+		var out = ArrayTools.alloc(size);
 		var i = 0;
 		var node = mHead;
 		while (node != null)
@@ -491,34 +444,16 @@ class LinkedQueue<T> implements Queue<T>
 	}
 	
 	/**
-		Returns a `Vector<T>` object containing all elements in this queue.
-		
-		Preserves the natural order of this queue (First-In-First-Out).
-	**/
-	public function toVector():Container<T>
-	{
-		var v = NativeArray.init(size());
-		var i = 0;
-		var node = mHead;
-		while (node != null)
-		{
-			v[i++] = node.val;
-			node = node.next;
-		}
-		return v;
-	}
-	
-	/**
 		Duplicates this queue. Supports shallow (structure only) and deep copies (structure & elements).
 		<assert>element is not of type `Cloneable`</assert>
 		@param assign if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
 		If false, the ``clone()`` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
 		@param copier a custom function for copying elements. Replaces ``element::clone()`` if `assign` is false.
 	**/
-	public function clone(assign = true, copier:T->T = null):Collection<T>
+	public function clone(assign:Bool = true, copier:T->T = null):Collection<T>
 	{
 		var copy = new LinkedQueue<T>(mReservedSize);
-		if (mSize == 0) return copy;
+		if (size == 0) return copy;
 		
 		if (assign)
 		{
@@ -529,7 +464,7 @@ class LinkedQueue<T> implements Queue<T>
 				copy.mHead.next = copy.mTail;
 			}
 			
-			if (mSize > 1)
+			if (size > 1)
 			{
 				node = node.next;
 				while (node != null)
@@ -553,7 +488,7 @@ class LinkedQueue<T> implements Queue<T>
 				copy.mHead.next = copy.mTail;
 			}
 			
-			if (mSize > 1)
+			if (size > 1)
 			{
 				node = node.next;
 				while (node != null)
@@ -575,7 +510,7 @@ class LinkedQueue<T> implements Queue<T>
 				copy.mHead = copy.mTail = new LinkedQueueNode<T>(copier(node.val));
 				copy.mHead.next = copy.mTail;
 			}
-			if (mSize > 1)
+			if (size > 1)
 			{
 				node = node.next;
 				while (node != null)
@@ -587,7 +522,7 @@ class LinkedQueue<T> implements Queue<T>
 			}
 		}
 		
-		copy.mSize = mSize;
+		copy.mSize = size;
 		return copy;
 	}
 	
@@ -678,19 +613,26 @@ class LinkedQueueIterator<T> implements de.polygonal.ds.Itr<T>
 		reset();
 	}
 	
-	inline public function reset():Itr<T>
+	public function free()
+	{
+		mObject = null;
+		mWalker = null;
+		mHook = null;
+	}
+	
+	public inline function reset():Itr<T>
 	{
 		mWalker = mObject.mHead;
 		mHook = null;
 		return this;
 	}
 	
-	inline public function hasNext():Bool
+	public inline function hasNext():Bool
 	{
 		return mWalker != null;
 	}
 	
-	inline public function next():T
+	public inline function next():T
 	{
 		var x = mWalker.val;
 		mHook = mWalker;
@@ -698,7 +640,7 @@ class LinkedQueueIterator<T> implements de.polygonal.ds.Itr<T>
 		return x;
 	}
 	
-	inline public function remove()
+	public function remove()
 	{
 		assert(mHook != null, "call next() before removing an element");
 		

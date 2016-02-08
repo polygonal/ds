@@ -1,15 +1,28 @@
-﻿import de.polygonal.ds.PriorityQueue;
+﻿import de.polygonal.ds.Container;
+import de.polygonal.ds.PriorityQueue;
+import de.polygonal.ds.tools.NativeArrayTools;
 
 @:access(de.polygonal.ds.PriorityQueue)
 class TestPriorityQueue extends AbstractTest
 {
+	function testSource()
+	{
+		var pq = new PriorityQueue<E>(true, [new E(1), new E(3), new E(0), new E(2)]);
+		assertEquals(4, pq.size);
+		for (i in 0...4) assertEquals(i, Std.int(pq.dequeue().priority));
+		
+		var pq = new PriorityQueue<E>(false, [new E(1), new E(3), new E(0), new E(2)]);
+		assertEquals(4, pq.size);
+		for (i in 0...4) assertEquals((4 - i) - 1, Std.int(pq.dequeue().priority));
+	}
+	
 	function test()
 	{
-		var pq = new PriorityQueue<E>(false, 3);
+		var pq = new PriorityQueue<E>(false);
 		pq.enqueue(new E(1));
 		pq.enqueue(new E(2));
 		pq.enqueue(new E(3));
-		assertEquals(3, pq.size());
+		assertEquals(3, pq.size);
 		assertEquals(3., pq.dequeue().priority);
 		assertEquals(2., pq.dequeue().priority);
 		assertEquals(1., pq.dequeue().priority);
@@ -18,65 +31,79 @@ class TestPriorityQueue extends AbstractTest
 	
 	function testReserve()
 	{
-		var a = new E(1);
-		var b = new E(2);
-		var c = new E(3);
-		var pq = new PriorityQueue<E>(4, true);
-		pq.enqueue(a);
-		pq.enqueue(b);
-		pq.enqueue(c);
+		var l = new PriorityQueue<E>(4, true);
+		for (i in 0...4) l.enqueue(new E(i));
+		assertEquals(4, l.capacity);
+		#if (flash && generic && !no_inline)
+		var d:Container<E> = flash.Vector.convert(l.mData);
+		#else
+		var d = l.mData;
+		#end
+		assertEquals(null, d[0]);
+		assertEquals(0., d[1].priority);
+		assertEquals(1., d[2].priority);
+		assertEquals(2., d[3].priority);
+		assertEquals(3., d[4].priority);
+		assertEquals(5., NativeArrayTools.size(d));
 		
-		var a:Array<E> = pq.mData;
+		l.reserve(8);
+		assertEquals(8, l.capacity);
+		#if (flash && generic && !no_inline)
+		var d:Container<E> = flash.Vector.convert(l.mData);
+		#else
+		var d = l.mData;
+		#end
+		assertEquals(null, d[0]);
+		assertEquals(0., d[1].priority);
+		assertEquals(1., d[2].priority);
+		assertEquals(2., d[3].priority);
+		assertEquals(3., d[4].priority);
+		assertEquals(null, d[5]);
+		assertEquals(null, d[6]);
+		assertEquals(null, d[7]);
+		assertEquals(null, d[8]);
+		assertEquals(9, NativeArrayTools.size(d));
 		
-		assertEquals(null, a[0]);
-		assertEquals(1.  , a[1].priority);
-		assertEquals(2.  , a[2].priority);
-		assertEquals(3.  , a[3].priority);
+		for (i in 0...4) l.enqueue(new E(i + 4));
 		
-		pq.reserve(10);
+		#if (flash && generic && !no_inline)
+		var d:Container<E> = flash.Vector.convert(l.mData);
+		#else
+		var d = l.mData;
+		#end
 		
-		assertEquals(null, a[0]);
-		assertEquals(1.  , a[1].priority);
-		assertEquals(2.  , a[2].priority);
-		assertEquals(3.  , a[3].priority);
-		
-		var i = 1;
-		while (!pq.isEmpty())
-		{
-			var foo = pq.dequeue();
-			assertEquals(cast i++, foo.priority);
-		}
+		for (i in 1...8) assertEquals(i - 1., d[i].priority);
 	}
 	
-	function testPack()
+	function _testPack()
 	{
-		var pq = new de.polygonal.ds.PriorityQueue<E>(false, 3);
+		/*var pq = new de.polygonal.ds.PriorityQueue<E>(false, 3);
 		pq.enqueue(new E(0));
 		pq.enqueue(new E(1));
 		pq.enqueue(new E(2));
 		pq.clear();
 		
-		var a:Array<E> = pq.mData;
+		var a:Container<E> = pq.mData;
 		assertEquals(null, a[0]);
 		assertEquals(2.  , a[1].priority);
 		assertEquals(0.  , a[2].priority);
 		assertEquals(1.  , a[3].priority);
 		pq.pack();
 		
-		var a:Array<E> = pq.mData;
+		var a:Container<E> = pq.mData;
 		assertEquals(null, a[0]);
 		assertEquals(null, a[1]);
 		assertEquals(null, a[2]);
-		assertEquals(null, a[3]);
+		assertEquals(null, a[3]);*/
 	}
 	
 	function testInverse()
 	{
-		var pq = new PriorityQueue<E>(true, 3);
+		var pq = new PriorityQueue<E>(3, true);
 		pq.enqueue(new E(1));
 		pq.enqueue(new E(2));
 		pq.enqueue(new E(3));
-		assertEquals(3, pq.size());
+		assertEquals(3, pq.size);
 		assertEquals(1., pq.dequeue().priority);
 		assertEquals(2., pq.dequeue().priority);
 		assertEquals(3., pq.dequeue().priority);
@@ -108,7 +135,7 @@ class TestPriorityQueue extends AbstractTest
 	
 	function testClone()
 	{
-		var pq = new PriorityQueue<E>(false, 3);
+		var pq = new PriorityQueue<E>(3, false);
 		pq.enqueue(new E(1));
 		pq.enqueue(new E(2));
 		pq.enqueue(new E(3));
@@ -167,7 +194,7 @@ class TestPriorityQueue extends AbstractTest
 	{
 		var a;
 		
-		var pq = new PriorityQueue<E>(false, 3);
+		var pq = new PriorityQueue<E>(3, false);
 		pq.enqueue(a = new E(1));
 		pq.enqueue(new E(2));
 		pq.enqueue(new E(3));
@@ -177,7 +204,7 @@ class TestPriorityQueue extends AbstractTest
 		assertEquals(2., pq.dequeue().priority);
 		assertTrue(pq.isEmpty());
 		
-		var pq = new PriorityQueue<E>(false, 3);
+		var pq = new PriorityQueue<E>(3, false);
 		pq.enqueue(new E(1));
 		pq.enqueue(a = new E(2));
 		pq.enqueue(new E(3));
@@ -187,7 +214,7 @@ class TestPriorityQueue extends AbstractTest
 		assertEquals(1., pq.dequeue().priority);
 		assertTrue(pq.isEmpty());
 		
-		var pq = new PriorityQueue<E>(false, 3);
+		var pq = new PriorityQueue<E>(3, false);
 		pq.enqueue(new E(1));
 		pq.enqueue(new E(2));
 		pq.enqueue(a = new E(3));
@@ -207,7 +234,7 @@ class TestPriorityQueue extends AbstractTest
 	function testReprioritize()
 	{
 		var a = new E(1);
-		var pq = new PriorityQueue<E>(false, 3);
+		var pq = new PriorityQueue<E>(3, false);
 		pq.enqueue(a);
 		pq.enqueue(new E(2));
 		pq.enqueue(new E(3));
@@ -220,7 +247,7 @@ class TestPriorityQueue extends AbstractTest
 	
 	function testToString()
 	{
-		var pq = new PriorityQueue<E>(false, 3);
+		var pq = new PriorityQueue<E>(3, false);
 		pq.enqueue(new E(1));
 		pq.enqueue(new E(2));
 		pq.enqueue(new E(3));
@@ -242,7 +269,7 @@ class TestPriorityQueue extends AbstractTest
 	
 	function testIterator()
 	{
-		var pq = new PriorityQueue<E>(false, 3);
+		var pq = new PriorityQueue<E>(3, false);
 		pq.enqueue(new E(1));
 		pq.enqueue(new E(2));
 		pq.enqueue(new E(3));
@@ -253,7 +280,7 @@ class TestPriorityQueue extends AbstractTest
 	
 	function testIteratorRemove()
 	{
-		var pq = new PriorityQueue<E>(false, 3);
+		var pq = new PriorityQueue<E>(3, false);
 		pq.enqueue(new E(1));
 		pq.enqueue(new E(2));
 		pq.enqueue(new E(3));

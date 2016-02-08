@@ -1,14 +1,15 @@
 package de.polygonal.ds.tools;
 
-import de.polygonal.ds.error.Assert.assert;
+import de.polygonal.ds.tools.ArrayTools;
+import de.polygonal.ds.tools.Assert.assert;
 
 #if cpp
 using cpp.NativeArray;
 #end
 
-class NativeArray
+class NativeArrayTools
 {
-	inline public static function init<T>(len:Int):Container<T>
+	public static inline function init<T>(len:Int):Container<T>
 	{
 		#if flash10
 			#if (generic && !no_inline)
@@ -39,7 +40,7 @@ class NativeArray
 		#end
 	}
 	
-	inline public static function get<T>(x:Container<T>, i:Int):T
+	public static inline function get<T>(x:Container<T>, i:Int):T
 	{
 		return
 		#if (cpp && generic)
@@ -51,7 +52,7 @@ class NativeArray
 		#end
 	}
 	
-	inline public static function set<T>(x:Container<T>, i:Int, v:T)
+	public static inline function set<T>(x:Container<T>, i:Int, v:T)
 	{
 		#if (cpp && generic)
 		x.unsafeSet(i, v);
@@ -62,7 +63,7 @@ class NativeArray
 		#end
 	}
 	
-	inline public static function size<T>(x:Container<T>):Int
+	public static inline function size<T>(x:Container<T>):Int
 	{
 		return
 		#if neko
@@ -80,43 +81,53 @@ class NativeArray
 		#end
 	}
 	
-	public static function toArray<T>(x:Container<T>, first:Int = 0, len:Int = 0):Array<T>
+	public static function toArray<T>(x:Container<T>, first:Int, count:Int):Array<T>
 	{
-		assert(first < size(x), "first index is out of range");
-		assert(first + len <= size(x), "len is out of range");
+		assert(first >= 0 && first < size(x), "first index out of range");
+		assert(count >= 0 && first + count <= size(x), "count out of range");
 		
-		if (first > 0 && len > 0)
+		#if (cpp || python)
+		if (first == 0 && count == size(x)) return x.copy();
+		#end
+		
+		if (count == 0) return [];
+		var out = ArrayTools.alloc(count);
+		if (first == 0)
 		{
-			var out = ArrayUtil.alloc(len);
-			for (i in 0...len) out[i] = get(x, first + i);
-			return out;
-		}
-		else
-		if (first > 0)
-		{
-			var s = size(x) - first;
-			var out = ArrayUtil.alloc(s);
-			for (i in 0...s) out[i] = get(x, first + i);
-			return out;
-		}
-		else
-		if (len > 0)
-		{
-			var out = ArrayUtil.alloc(len);
-			for (i in 0...len) out[i] = get(x, i);
-			return out;
+			for (i in 0...count) out[i] = get(x, i);
 		}
 		else
 		{
-			#if (cpp || python)
-			return x.copy();
+			var j;
+			for (i in first...first + count) out[i - first] = get(x, i);
+		}
+		
+		return out;
+	}
+	
+	public static inline function ofArray<T>(x:Array<T>):Container<T>
+	{
+		#if (python || cs)
+		return cast x.copy();
+		#elseif flash10
+			return
+			#if (generic && !no_inline)
+			flash.Vector.ofArray(x);
 			#else
-			var s = size(x);
-			var out = ArrayUtil.alloc(s);
-			for (i in 0...s) out[i] = get(x, i);
-			return out;
+			x.copy();
 			#end
-		}
+		//#elseif java
+		//#elseif java
+		//return cast (java.Lib.nativeArray(x, false));
+		#elseif cs
+		//return cast (cs.Lib.nativeArray(x, false));
+		#elseif js
+		return x.slice(0, x.length);
+		#else
+		var out = init(x.length);
+		for (i in 0...x.length) set(out, i, x[i]);
+		return out;
+		#end
 	}
 	
 	#if (cs || java || neko || cpp)
@@ -126,9 +137,9 @@ class NativeArray
 	{
 		if (len > 0)
 		{
-			assert(srcPos < size(src), "srcPos is out of range");
-			assert(dstPos < size(dst), "dstPos is out of range");
-			assert(srcPos + len <= size(src) && dstPos + len <= size(dst), "len is out of range");
+			assert(srcPos < size(src), "srcPos out of range");
+			assert(dstPos < size(dst), "dstPos out of range");
+			assert(srcPos + len <= size(src) && dstPos + len <= size(dst), "len out of range");
 			
 			#if neko
 			untyped __dollar__ablit(dst,dstPos,src,srcPos,len);
@@ -211,31 +222,6 @@ class NativeArray
 		#end
 	}
 	
-	static public inline function fromArrayCopy<T>(array:Array<T>):Container<T>
-	{
-		#if python
-		return cast array.copy();
-		#elseif flash10
-			return
-			#if (generic && !no_inline)
-			flash.Vector.ofArray(array);
-			#else
-			array.copy();
-			#end
-		//#elseif java
-		//#elseif java
-		//return fromData(java.Lib.nativeArray(array, false));
-		#elseif cs
-		return fromData(cs.Lib.nativeArray(array, false));
-		#elseif js
-		return array.slice(0, array.length);
-		#else
-		var out = NativeArray.init(array.length);
-		for (i in 0...array.length) out[i] = array[i];
-		return out;
-		#end
-	}
-	
 	#if flash
 	inline
 	#end
@@ -251,7 +237,7 @@ class NativeArray
 	};
 	
 	/**
-		Sets up to `k` elements in `dst` to the instance `x`.
+		Sets up to `k` elements in `dst` to `x`.
 		@param k the number of elements to put into `dst`.
 		If omitted `k` is set to `dst`::length;
 	**/
@@ -260,6 +246,21 @@ class NativeArray
 		if (k == null) k = size(dst);
 		for (i in first...first + k) set(dst, i, x);
 		return dst;
+	}
+	
+	/**
+		Nullifies all elements in `dst`.
+	**/
+	public static function nullify<T>(dst:Container<T>, count:Int = 0)
+	{
+		assert(count <= size(dst), "count out of range");
+		
+		#if cpp
+		cpp.NativeArray.zero(dst, 0, count);
+		#else
+		if (count == 0) count = size(dst);
+		for (i in 0...count) set(dst, i, cast null);
+		#end
 	}
 	
 	/**

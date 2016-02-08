@@ -1,5 +1,5 @@
 ﻿/*
-Copyright (c) 2008-2014 Michael Baczynski, http://www.polygonal.de
+Copyright (c) 2008-2016 Michael Baczynski, http://www.polygonal.de
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -25,10 +25,10 @@ package de.polygonal.ds;
 	<pre class="prettyprint">
 	class Foo implements de.polygonal.ds.Comparable<Foo>
 	{
-	    public var value:Int;
+	    public var val:Int;
 	    public function new() {}
 	    public function compare(other:Foo):Int {
-	        return value - other.value;
+	        return val - other.val;
 	    }
 	}</pre>
 **/

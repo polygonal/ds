@@ -1,5 +1,5 @@
 ﻿/*
-Copyright (c) 2008-2014 Michael Baczynski, http://www.polygonal.de
+Copyright (c) 2008-2016 Michael Baczynski, http://www.polygonal.de
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -18,16 +18,15 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 */
 package de.polygonal.ds;
 
-import de.polygonal.ds.error.Assert.assert;
+import de.polygonal.ds.tools.ArrayTools;
+import de.polygonal.ds.tools.Assert.assert;
 
-using de.polygonal.ds.tools.NativeArray;
+using de.polygonal.ds.tools.NativeArrayTools;
 
 /**
 	A deque is a "double-ended queue"
 	
 	This is a linear list for which all insertions and deletions (and usually all accesses) are made at ends of the list.
-	
-	_<o>Worst-case running time in Big O notation</o>_
 **/
 #if generic
 @:generic
@@ -41,7 +40,7 @@ class LinkedDeque<T> implements Deque<T>
 		
 		<warn>This value should never be changed by the user.</warn>
 	**/
-	public var key(default, null):Int;
+	public var key(default, null):Int = HashKey.next();
 	
 	/**
 		If true, reuses the iterator object instead of allocating a new one when calling ``iterator()``.
@@ -50,53 +49,62 @@ class LinkedDeque<T> implements Deque<T>
 		
 		<warn>If true, nested iterations are likely to fail as only one iteration is allowed at a time.</warn>
 	**/
-	public var reuseIterator:Bool;
+	public var reuseIterator:Bool = false;
 	
-	var mHead:LinkedDequeNode<T>;
-	var mTail:LinkedDequeNode<T>;
+	var mHead:LinkedDequeNode<T> = null;
+	var mTail:LinkedDequeNode<T> = null;
 	
 	var mHeadPool:LinkedDequeNode<T>;
 	var mTailPool:LinkedDequeNode<T>;
 	
-	var mSize:Int;
+	var mSize:Int = 0;
 	var mReservedSize:Int;
-	var mPoolSize:Int;
-	var mIterator:LinkedDequeIterator<T>;
+	var mPoolSize:Int = 0;
+	var mIterator:LinkedDequeIterator<T> = null;
 	
 	/**
 		<assert>reserved size is greater than allowed size</assert>
 		@param reservedSize if > 0, this queue maintains an object pool of node objects.
 		Prevents frequent node allocation and thus increases performance at the cost of using more memory.
 	**/
-	public function new(reservedSize = 0)
+	public function new(reservedSize:Null<Int> = 0, ?source:Array<T>)
 	{
-		mPoolSize = 0;
 		mReservedSize = reservedSize;
-		mSize = 0;
-		mHead = null;
-		mTail = null;
-		mIterator = null;
 		mHeadPool = mTailPool = new LinkedDequeNode<T>(cast null);
-		reuseIterator = false;
+		
+		if (source != null)
+		{
+			if (source.length == 0) return;
+			
+			mSize = source.length;
+			
+			var node = getNode(source[0]);
+			mHead = mTail = node;
+			for (i in 1...mSize)
+			{
+				var node = getNode(source[i]);
+				node.next = mHead;
+				mHead.prev = node;
+				mHead = node;
+			}
+		}
 	}
 	
 	/**
 		Returns the first element of this deque.
-		<o>1</o>
 		<assert>deque is empty</assert>
 	**/
-	inline public function front():T
+	public inline function front():T
 	{
-		assert(size() > 0, "deque is empty");
+		assert(size > 0, "deque is empty");
 		
 		return mHead.val;
 	}
 	
 	/**
 		Inserts the element `x` at the front of this deque.
-		<o>1</o>
 	**/
-	inline public function pushFront(x:T)
+	public inline function pushFront(x:T)
 	{
 		var node = getNode(x);
 		node.next = mHead;
@@ -108,39 +116,35 @@ class LinkedDeque<T> implements Deque<T>
 	
 	/**
 		Removes and returns the element at the beginning of this deque.
-		<o>1</o>
 		<assert>deque is empty</assert>
 	**/
-	inline public function popFront():T
+	public inline function popFront():T
 	{
-		assert(size() > 0, "deque is empty");
+		assert(size > 0, "deque is empty");
 		
 		var node = mHead;
 		mHead = mHead.next;
 		if (mHead != null) mHead.prev = null;
 		node.next = null;
 		if (--mSize == 0) mTail = null;
-		
 		return putNode(node, true);
 	}
 	
 	/**
 		Returns the last element of the deque.
-		<o>1</o>
 		<assert>deque is empty</assert>
 	**/
-	inline public function back():T
+	public inline function back():T
 	{
-		assert(size() > 0, "deque is empty");
+		assert(size > 0, "deque is empty");
 		
 		return mTail.val;
 	}
 	
 	/**
 		Inserts the element `x` at the back of the deque.
-		<o>1</o>
 	**/
-	inline public function pushBack(x:T)
+	public inline function pushBack(x:T)
 	{
 		var node = getNode(x);
 		node.prev = mTail;
@@ -152,33 +156,30 @@ class LinkedDeque<T> implements Deque<T>
 	
 	/**
 		Deletes the element at the end of the deque.
-		<o>1</o>
 		<assert>deque is empty</assert>
 	**/
-	inline public function popBack():T
+	public inline function popBack():T
 	{
-		assert(size() > 0, "deque is empty");
+		assert(size > 0, "deque is empty");
 		
 		var node = mTail;
 		mTail = mTail.prev;
 		node.prev = null;
 		if (mTail != null) mTail.next = null;
 		if (--mSize == 0) mHead = null;
-		
 		return putNode(node, true);
 	}
 	
 	/**
 		Returns the element at index `i` relative to the front of this deque.
 		
-		The front element is at index [0], the back element is at index [``size()`` - 1].
-		<o>n</o>
+		The front element is at index [0], the back element is at index [``size`` - 1].
 		<assert>deque is empty</assert>
 		<assert>`i` out of range</assert>
 	**/
 	public function getFront(i:Int):T
 	{
-		assert(i < size(), 'index out of range ($i)');
+		assert(i < size, 'index out of range ($i)');
 		
 		var node = mHead;
 		for (j in 0...i) node = node.next;
@@ -188,13 +189,12 @@ class LinkedDeque<T> implements Deque<T>
 	/**
 		Returns the index of the first occurence of the element `x` or -1 if `x` does not exist.
 		
-		The front element is at index [0], the back element is at index [``size()`` - 1].
-		<o>n</o>
+		The front element is at index [0], the back element is at index [``size`` - 1].
 	**/
 	public function indexOfFront(x:T):Int
 	{
 		var node = mHead;
-		for (i in 0...mSize)
+		for (i in 0...size)
 		{
 			if (node.val == x) return i;
 			node = node.next;
@@ -205,14 +205,13 @@ class LinkedDeque<T> implements Deque<T>
 	/**
 		Returns the element at index `i` relative to the back of this deque.
 		
-		The back element is at index [0], the front element is at index [``size()`` - 1].
-		<o>n</o>
+		The back element is at index [0], the front element is at index [``size`` - 1].
 		<assert>deque is empty</assert>
 		<assert>`i` out of range</assert>
 	**/
 	public function getBack(i:Int):T
 	{
-		assert(i < size(), 'index out of range ($i)');
+		assert(i < size, 'index out of range ($i)');
 		
 		var node = mTail;
 		for (j in 0...i) node = node.prev;
@@ -222,13 +221,12 @@ class LinkedDeque<T> implements Deque<T>
 	/**
 		Returns the index of the first occurence of the element `x` or -1 if `x` does not exist.
 		
-		The back element is at index [0], the front element is at index [``size()`` - 1].
-		<o>n</o>
+		The back element is at index [0], the front element is at index [``size`` - 1].
 	**/
 	public function indexOfBack(x:T):Int
 	{
 		var node = mTail;
-		for (i in 0...mSize)
+		for (i in 0...size)
 		{
 			if (node.val == x) return i;
 			node = node.prev;
@@ -236,68 +234,14 @@ class LinkedDeque<T> implements Deque<T>
 		return -1;
 	}
 	
-	/**
-		Replaces up to `n` existing elements with objects of type `cl`.
-		<o>n</o>
-		@param cl the class to instantiate for each element.
-		@param args passes additional constructor arguments to the class `cl`.
-		@param n the number of elements to replace. If 0, `n` is set to ``size()``.
-	**/
-	public function assign(cl:Class<T>, args:Array<Dynamic> = null, n = 0)
+	public function forEach(f:T->Int->T):LinkedDeque<T>
 	{
-		if (n == 0) n = size();
-		if (n == 0) return;
-		
-		if (args == null) args = [];
-		var k = M.min(mSize, n);
 		var node = mHead;
-		for (i in 0...k)
+		for (i in 0...size)
 		{
-			node.val = Type.createInstance(cl, args);
+			node.val = f(node.val, i);
 			node = node.next;
 		}
-		
-		n -= k;
-		for (i in 0...n)
-		{
-			node = getNode(Type.createInstance(cl, args));
-			node.prev = mTail;
-			if (mTail != null) mTail.next = node;
-			mTail = node;
-			if (mSize++ == 0) mHead = mTail;
-		}
-	}
-	
-	/**
-		Replaces up to `n` existing elements with the instance `x`.
-		
-		If ``size()`` < `n`, additional elements are added to the back of this deque.
-		<o>n</o>
-		@param n the number of elements to replace. If 0, `n` is set to ``size()``.
-	**/
-	public function fill(x:T, n = 0):LinkedDeque<T>
-	{
-		if (n == 0) n = size();
-		if (n == 0) return this;
-		
-		var k = M.min(mSize, n);
-		var node = mHead;
-		for (i in 0...k)
-		{
-			node.val = x;
-			node = node.next;
-		}
-		
-		n -= k;
-		for (i in 0...n)
-		{
-			node = getNode(x);
-			node.prev = mTail;
-			if (mTail != null) mTail.next = node;
-			mTail = node;
-			if (mSize++ == 0) mHead = mTail;
-		}
-		
 		return this;
 	}
 	
@@ -322,7 +266,7 @@ class LinkedDeque<T> implements Deque<T>
 	**/
 	public function toString():String
 	{
-		var s = '{ LinkedDeque size: ${size()} }';
+		var s = '{ LinkedDeque size: ${size} }';
 		if (isEmpty()) return s;
 		s += "\n[ front\n";
 		var i = 0;
@@ -336,15 +280,21 @@ class LinkedDeque<T> implements Deque<T>
 		return s;
 	}
 	
-	/*///////////////////////////////////////////////////////
-	// collection
-	///////////////////////////////////////////////////////*/
+	/* INTERFACE Collection */
+	
+	/**
+		The total number of elements.
+	**/
+	public var size(get, never):Int;
+	inline function get_size():Int
+	{
+		return mSize;
+	}
 	
 	/**
 		Destroys this object by explicitly nullifying all elements for GC'ing used resources.
 		
 		Improves GC efficiency/performance (optional).
-		<o>n</o>
 	**/
 	public function free()
 	{
@@ -369,12 +319,15 @@ class LinkedDeque<T> implements Deque<T>
 		}
 		
 		mHeadPool = mTailPool = null;
-		mIterator = null;
+		if (mIterator != null)
+		{
+			mIterator.free();
+			mIterator = null;
+		}
 	}
 	
 	/**
 		Returns true if this deque contains the element `x`.
-		<o>n</o>
 	**/
 	public function contains(x:T):Bool
 	{
@@ -389,13 +342,11 @@ class LinkedDeque<T> implements Deque<T>
 			}
 			node = node.next;
 		}
-		
 		return found;
 	}
 	
 	/**
 		Removes and nullifies all occurrences of the element `x`.
-		<o>n</o>
 		@return true if at least one occurrence of `x` was removed.
 	**/
 	public function remove(x:T):Bool
@@ -426,12 +377,11 @@ class LinkedDeque<T> implements Deque<T>
 	
 	/**
 		Removes all elements.
-		<o>n</o>
-		@param purge if true, elements are nullified upon removal and the node pool is cleared.
+		@param gc if true, elements are nullified upon removal so the garbage collector can reclaim used memory.
 	**/
-	public function clear(purge = false)
+	public function clear(gc:Bool = false)
 	{
-		if (purge)
+		if (gc)
 		{
 			var node = mHead;
 			while (node != null)
@@ -481,20 +431,10 @@ class LinkedDeque<T> implements Deque<T>
 	
 	/**
 		Returns true if this deque is empty.
-		<o>1</o>
 	**/
-	inline public function isEmpty():Bool
+	public inline function isEmpty():Bool
 	{
-		return mSize == 0;
-	}
-	
-	/**
-		The total number of elements.
-		<o>1</o>
-	**/
-	inline public function size():Int
-	{
-		return mSize;
+		return size == 0;
 	}
 	
 	/**
@@ -504,7 +444,7 @@ class LinkedDeque<T> implements Deque<T>
 	{
 		if (isEmpty()) return [];
 		
-		var out = ArrayUtil.alloc(size());
+		var out = ArrayTools.alloc(size);
 		var i = 0;
 		var node = mHead;
 		while (node != null)
@@ -516,35 +456,18 @@ class LinkedDeque<T> implements Deque<T>
 	}
 	
 	/**
-		Returns a `Vector<T>` object containing all elements in this deque in the natural order.
-	**/
-	public function toVector():Container<T>
-	{
-		var v = NativeArray.init(size());
-		var i = 0;
-		var node = mHead;
-		while (node != null)
-		{
-			v.set(i++, node.val);
-			node = node.next;
-		}
-		return v;
-	}
-	
-	/**
 		Duplicates this deque. Supports shallow (structure only) and deep copies (structure & elements).
 		<assert>element is not of type `Cloneable`</assert>
 		@param assign if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
 		If false, the ``clone()`` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
 		@param copier a custom function for copying elements. Replaces ``element::clone()`` if `assign` is false.
 	**/
-	public function clone(assign = true, copier:T->T = null):Collection<T>
+	public function clone(assign:Bool = true, copier:T->T = null):Collection<T>
 	{
-		if (mSize == 0) return new LinkedDeque<T>(mReservedSize);
+		if (size == 0) return new LinkedDeque<T>(mReservedSize);
 		
 		var copy = new LinkedDeque<T>(mReservedSize);
-		copy.key = HashKey.next();
-		copy.mSize = mSize;
+		copy.mSize = size;
 		copy.mReservedSize = mReservedSize;
 		copy.mPoolSize = mPoolSize;
 		copy.mHeadPool = new LinkedDequeNode<T>(cast null);
@@ -555,7 +478,7 @@ class LinkedDeque<T> implements Deque<T>
 			var srcNode = mHead;
 			var dstNode = copy.mHead = new LinkedDequeNode<T>(mHead.val);
 			
-			if (mSize == 1)
+			if (size == 1)
 			{
 				copy.mTail = copy.mHead;
 				return copy;
@@ -563,7 +486,7 @@ class LinkedDeque<T> implements Deque<T>
 			
 			var dstNode0, srcNode0;
 			srcNode = srcNode.next;
-			for (i in 1...mSize - 1)
+			for (i in 1...size - 1)
 			{
 				dstNode0 = dstNode;
 				srcNode0 = srcNode;
@@ -589,7 +512,7 @@ class LinkedDeque<T> implements Deque<T>
 			var c = cast(mHead.val, Cloneable<Dynamic>);
 			var dstNode = copy.mHead = new LinkedDequeNode<T>(c.clone());
 			
-			if (mSize == 1)
+			if (size == 1)
 			{
 				copy.mTail = copy.mHead;
 				return copy;
@@ -597,7 +520,7 @@ class LinkedDeque<T> implements Deque<T>
 			
 			var dstNode0;
 			srcNode = srcNode.next;
-			for (i in 1...mSize - 1)
+			for (i in 1...size - 1)
 			{
 				dstNode0 = dstNode;
 				var srcNode0 = srcNode;
@@ -624,7 +547,7 @@ class LinkedDeque<T> implements Deque<T>
 			var srcNode = mHead;
 			var dstNode = copy.mHead = new LinkedDequeNode<T>(copier(mHead.val));
 			
-			if (mSize == 1)
+			if (size == 1)
 			{
 				copy.mTail = copy.mHead;
 				return copy;
@@ -632,7 +555,7 @@ class LinkedDeque<T> implements Deque<T>
 			
 			var dstNode0;
 			srcNode = srcNode.next;
-			for (i in 1...mSize - 1)
+			for (i in 1...size - 1)
 			{
 				dstNode0 = dstNode;
 				var srcNode0 = srcNode;
@@ -648,7 +571,6 @@ class LinkedDeque<T> implements Deque<T>
 			copy.mTail = dstNode.next = new LinkedDequeNode<T>(copier(srcNode.val));
 			copy.mTail.prev = dstNode0;
 		}
-		
 		return copy;
 	}
 	
@@ -737,19 +659,26 @@ class LinkedDequeIterator<T> implements de.polygonal.ds.Itr<T>
 		reset();
 	}
 	
-	inline public function reset():Itr<T>
+	public function free()
+	{
+		mObject = null;
+		mWalker = null;
+		mHook = null;
+	}
+	
+	public inline function reset():Itr<T>
 	{
 		mWalker = mObject.mHead;
 		mHook = null;
 		return this;
 	}
 	
-	inline public function hasNext():Bool
+	public inline function hasNext():Bool
 	{
 		return mWalker != null;
 	}
 	
-	inline public function next():T
+	public inline function next():T
 	{
 		var x:T = mWalker.val;
 		mHook = mWalker;
@@ -757,7 +686,7 @@ class LinkedDequeIterator<T> implements de.polygonal.ds.Itr<T>
 		return x;
 	}
 	
-	inline public function remove()
+	public function remove()
 	{
 		assert(mHook != null, "call next() before removing an element");
 		

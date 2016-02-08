@@ -1,5 +1,5 @@
 ﻿/*
-Copyright (c) 2008-2014 Michael Baczynski, http://www.polygonal.de
+Copyright (c) 2008-2016 Michael Baczynski, http://www.polygonal.de
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -18,7 +18,7 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 */
 package de.polygonal.ds.mem;
 
-import de.polygonal.ds.error.Assert.assert;
+import de.polygonal.ds.tools.Assert.assert;
 
 /**
 	Abstract class that grants read/write access to a chunk of fast "alchemy memory".
@@ -30,7 +30,7 @@ class MemoryAccess implements Hashable
 		A hash table transforms this key into an index of an array element by using a hash function.
 		<warn>This value should never be changed by the user.</warn>
 	**/
-	public var key:Int;
+	public var key(default, null):Int = HashKey.next();
 	
 	/**
 		The number of allocated bytes.
@@ -58,8 +58,6 @@ class MemoryAccess implements Hashable
 		#else
 		mMemory = {};
 		#end
-		
-		key = HashKey.next();
 		
 		#if verbose
 		trace('allocated $bytes bytes for $name');

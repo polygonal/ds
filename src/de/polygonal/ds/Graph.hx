@@ -1,5 +1,5 @@
 ﻿/*
-Copyright (c) 2008-2014 Michael Baczynski, http://www.polygonal.de
+Copyright (c) 2008-2016 Michael Baczynski, http://www.polygonal.de
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -18,8 +18,9 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 */
 package de.polygonal.ds;
 
-import de.polygonal.ds.error.Assert.assert;
-import de.polygonal.ds.tools.NativeArray;
+import de.polygonal.ds.tools.ArrayTools;
+import de.polygonal.ds.tools.Assert.assert;
+import de.polygonal.ds.tools.NativeArrayTools;
 
 /**
 	A weighted graph
@@ -27,8 +28,6 @@ import de.polygonal.ds.tools.NativeArray;
 	A graph is composed of `GraphNode` and `GraphArc` objects.
 	
 	See <a href="http://lab.polygonal.de/?p=185" target="mBlank">http://lab.polygonal.de/?p=185/</a>
-	
-	_<o>Worst-case running time in Big O notation</o>_
 **/
 #if generic
 @:generic
@@ -42,14 +41,14 @@ class Graph<T> implements Collection<T>
 		
 		<warn>This value should never be changed by the user.</warn>
 	**/
-	public var key(default, null):Int;
+	public var key(default, null):Int = HashKey.next();
 	
 	/**
 		If true, automatically clears the mark-flag on all graph nodes prior to starting a new traversal.
 		
 		Default is false.
 	**/
-	public var autoClearMarks:Bool;
+	public var autoClearMarks:Bool = false;
 	
 	/**
 		If true, reuses the iterator object instead of allocating a new one when calling ``iterator()``.
@@ -58,7 +57,7 @@ class Graph<T> implements Collection<T>
 		
 		<warn>If true, nested iterations are likely to fail as only one iteration is allowed at a time.</warn>
 	**/
-	public var reuseIterator:Bool;
+	public var reuseIterator:Bool = false;
 	
 	/**
 		If specified, ``borrowArc()`` is called in order to create `GraphArc` objects.
@@ -78,12 +77,12 @@ class Graph<T> implements Collection<T>
 	**/
 	public var returnArc:GraphArc<T>->Void;
 	
-	var mNodeList:GraphNode<T>;
-	var mSize:Int;
+	var mNodeList:GraphNode<T> = null;
+	var mSize:Int = 0;
 	
-	var mStack:Array<GraphNode<T>>;
-	var mQue:Array<GraphNode<T>>;
-	var mIterator:GraphIterator<T>;
+	var mStack:Array<GraphNode<T>> = [];
+	var mQue:Array<GraphNode<T>> = [];
+	var mIterator:GraphIterator<T> = null;
 	
 	#if debug
 	var mBusy:Bool;
@@ -92,34 +91,23 @@ class Graph<T> implements Collection<T>
 	
 	public function new()
 	{
-		clear();
-		
-		mSize = 0;
-		mIterator = null;
-		
 		#if debug
 		mBusy = false;
 		mNodeSet = new ListSet<GraphNode<T>>();
 		#end
-		
-		autoClearMarks = false;
-		key = HashKey.next();
-		reuseIterator = false;
 	}
 	
 	/**
 		The graph nodes stored as a doubly linked list of `GraphNode` objects.
-		<o>1</o>
 		@return the first node in a list of `GraphNode` objects or null if the graph is empty.
 	**/
-	inline public function getNodeList():GraphNode<T>
+	public inline function getNodeList():GraphNode<T>
 	{
 		return mNodeList;
 	}
 	
 	/**
 		Finds and returns the node storing the element `x` or null if such a node does not exist.
-		<o>n</o>
 	**/
 	public function findNode(x:T):GraphNode<T>
 	{
@@ -139,7 +127,6 @@ class Graph<T> implements Collection<T>
 	
 	/**
 		Creates and returns a node object storing the element `x`.
-		<o>1</o>
 	**/
 	public function createNode(x:T):GraphNode<T>
 	{
@@ -148,7 +135,6 @@ class Graph<T> implements Collection<T>
 	
 	/**
 		Adds the node `x` to this graph.
-		<o>1</o>
 	**/
 	public function addNode(x:GraphNode<T>):GraphNode<T>
 	{
@@ -159,7 +145,6 @@ class Graph<T> implements Collection<T>
 		x.next = mNodeList;
 		if (x.next != null) x.next.prev = x;
 		mNodeList = x;
-		
 		return x;
 	}
 	
@@ -167,12 +152,11 @@ class Graph<T> implements Collection<T>
 		Removes the node `x` from this graph.
 		
 		This clears all outgoing and incoming arcs and removes `x` from the node list.
-		<o>1</o>
 		<assert>graph is empty</assert>
 	**/
 	public function removeNode(x:GraphNode<T>)
 	{
-		assert(size() > 0, "graph is empty");
+		assert(size > 0, "graph is empty");
 		
 		unlink(x);
 		
@@ -186,11 +170,10 @@ class Graph<T> implements Collection<T>
 		Creates an uni-directional link between two nodes with a weight of `cost` (default is 1.0).
 		
 		This creates an arc pointing from the `source` node to the `target` node.
-		<o>n</o>
 		<assert>`source` or `target` is null</assert>
 		<assert>`source` equals `target`</assert>
 	**/
-	public function addSingleArc(source:GraphNode<T>, target:GraphNode<T>, cost = 1.)
+	public function addSingleArc(source:GraphNode<T>, target:GraphNode<T>, cost:Float = 1.)
 	{
 		assert(source != null, "source is null");
 		assert(target != null, "target is null");
@@ -222,11 +205,10 @@ class Graph<T> implements Collection<T>
 		Creates a bi-directional link between two nodes with a weight of `cost` (default is 1.0).
 		
 		This creates two arcs - an arc that points from the `source` node to the `target` node and vice versa.
-		<o>n</o>
 		<assert>`source` or `target` is null</assert>
 		<assert>`source` equals `target`</assert>
 	**/
-	public function addMutualArc(source:GraphNode<T>, target:GraphNode<T>, cost = 1.)
+	public function addMutualArc(source:GraphNode<T>, target:GraphNode<T>, cost:Float = 1.)
 	{
 		assert(source != null, "source is null");
 		assert(target != null, "target is null");
@@ -262,7 +244,6 @@ class Graph<T> implements Collection<T>
 		Isolates `node` from this graph by unlinking it from all outgoing and incoming arcs.
 		
 		The size remains unchanged as the node is not removed from the graph.
-		<o>(n&sup2; - n) / 2</o>
 		<assert>`node` is null</assert>
 		<assert>graph is empty</assert>
 		<assert>`node` does not belong to this graph</assert>
@@ -309,7 +290,6 @@ class Graph<T> implements Collection<T>
 		}
 		
 		node.arcList = null;
-		
 		return node;
 	}
 	
@@ -317,7 +297,6 @@ class Graph<T> implements Collection<T>
 		Clears the mark-flag on all graph nodes that were set in a BFS/DFS traversal.
 		
 		<warn>Call this method to start a fresh traversal.</warn>
-		<o>n</o>
 	**/
 	public function clearMarks()
 	{
@@ -331,7 +310,6 @@ class Graph<T> implements Collection<T>
 	
 	/**
 		Clears the parent pointers on all graph nodes.
-		<o>n</o>
 	**/
 	public function clearParent()
 	{
@@ -363,9 +341,9 @@ class Graph<T> implements Collection<T>
 		@param userData custom data that is passed to every visited node via `process` or ``element::visit()``. If omitted, null is used.
 		@param recursive if true, performs a recursive traversal (default traversal style is iterative).
 	**/
-	public function DFS(preflight = false, seed:GraphNode<T> = null, process:GraphNode<T>->Bool->Dynamic->Bool = null, userData:Dynamic = null, recursive = false)
+	public function DFS(preflight:Bool = false, seed:GraphNode<T> = null, process:GraphNode<T>->Bool->Dynamic->Bool = null, userData:Dynamic = null, recursive:Bool = false)
 	{
-		if (mSize == 0) return;
+		if (size == 0) return;
 		
 		#if debug
 		assert(mBusy == false, "recursive call to iterative DFS");
@@ -549,9 +527,9 @@ class Graph<T> implements Collection<T>
 		<warn>In this case the elements of all nodes have to implement `Visitable`.</warn>
 		@param userData custom data that is passed to every visited node via `process` or ``element::visit()``. If omitted, null is used.
 	**/
-	public function BFS(preflight = false, seed:GraphNode<T> = null, process:GraphNode<T>->Bool->Dynamic->Bool = null, userData:Dynamic = null)
+	public function BFS(preflight:Bool = false, seed:GraphNode<T> = null, process:GraphNode<T>->Bool->Dynamic->Bool = null, userData:Dynamic = null)
 	{
-		if (mSize == 0) return;
+		if (size == 0) return;
 		
 		#if debug
 		assert(mBusy == false, "recursive call to iterative BFS");
@@ -758,9 +736,9 @@ class Graph<T> implements Collection<T>
 		<warn>In this case the elements of all nodes have to implement `Visitable`.</warn>
 		@param userData custom data that is passed to every visited node via `process` or ``element::visit()``. If omitted, null is used.
 	**/
-	public function DLBFS(maxDepth:Int, preflight = false, seed:GraphNode<T> = null, process:GraphNode<T>->Bool->Dynamic->Bool = null, userData:Dynamic = null)
+	public function DLBFS(maxDepth:Int, preflight:Bool = false, seed:GraphNode<T> = null, process:GraphNode<T>->Bool->Dynamic->Bool = null, userData:Dynamic = null)
 	{
-		if (mSize == 0) return;
+		if (size == 0) return;
 		
 		#if debug
 		assert(mBusy == false, "recursive call to iterative BFS");
@@ -986,7 +964,7 @@ class Graph<T> implements Collection<T>
 	**/
 	public function toString():String
 	{
-		var s = '{ Graph size: ${size()} }';
+		var s = '{ Graph size: ${size} }';
 		if (isEmpty()) return s;
 		s += "\n[\n";
 		var node = mNodeList;
@@ -999,15 +977,23 @@ class Graph<T> implements Collection<T>
 		return s;
 	}
 	
-	/*///////////////////////////////////////////////////////
-	// collection
-	///////////////////////////////////////////////////////*/
+	/* INTERFACE Collection */
+	
+	/**
+		The total number of elements in this graph.
+		
+		Equals the number of graph nodes.
+	**/
+	public var size(get, never):Int;
+	inline function get_size():Int
+	{
+		return mSize;
+	}
 	
 	/**
 		Destroys this object by explicitly nullifying all nodes, elements and pointers for GC'ing used resources.
 		
 		Improves GC efficiency/performance (optional).
-		<o>n</o>
 	**/
 	public function free()
 	{
@@ -1034,7 +1020,11 @@ class Graph<T> implements Collection<T>
 		for (i in 0...mStack.length) mStack[i] = null; mStack = null;
 		for (i in 0...mQue.length) mQue[i] = null; mQue = null;
 		
-		mIterator = null;
+		if (mIterator != null)
+		{
+			mIterator.free();
+			mIterator = null;
+		}
 		
 		#if debug
 		mNodeSet.free();
@@ -1044,7 +1034,6 @@ class Graph<T> implements Collection<T>
 	
 	/**
 		Returns true if this graph contains a node storing the element `x`.
-		<o>n</o>
 	**/
 	public function contains(x:T):Bool
 	{
@@ -1063,7 +1052,6 @@ class Graph<T> implements Collection<T>
 		Removes all nodes storing the element `x`.
 		
 		Nodes and elements are nullified.
-		<o>n</o>
 		@return true if at least one node storing `x` was removed.
 	**/
 	public function remove(x:T):Bool
@@ -1087,20 +1075,17 @@ class Graph<T> implements Collection<T>
 			
 			node = nextNode;
 		}
-		
 		return found;
 	}
 	
 	/**
 		Removes all elements.
 		
-		<o>1 or n if `purge` is true</o>
-		@param purge if true, explicitly nullifies nodes and elements upon removal.
-		Improves GC efficiency/performance (optional).
+		@param gc if true, explicitly nullifies nodes and elements upon removal so the garbage collector can reclaim used memory.
 	**/
-	public function clear(purge = false)
+	public function clear(gc:Bool = false)
 	{
-		if (purge)
+		if (gc)
 		{
 			var node = mNodeList;
 			while (node != null)
@@ -1116,13 +1101,13 @@ class Graph<T> implements Collection<T>
 				node.free();
 				node = hook;
 			}
+			
+			for (i in 0...mStack.length) mStack[i] = null;
+			for (i in 0...mQue.length) mQue[i] = null;
 		}
 		
 		mNodeList = null;
 		mSize = 0;
-		
-		mStack = new Array<GraphNode<T>>();
-		mQue = new Array<GraphNode<T>>();
 	}
 	
 	/**
@@ -1171,23 +1156,11 @@ class Graph<T> implements Collection<T>
 	}
 	
 	/**
-		The total number of elements in this graph.
-		
-		Equals the number of graph nodes.
-		<o>1</o>
-	**/
-	inline public function size():Int
-	{
-		return mSize;
-	}
-	
-	/**
 		Returns true if this graph is empty.
-		<o>1</o>
 	**/
-	inline public function isEmpty():Bool
+	public inline function isEmpty():Bool
 	{
-		return mSize == 0;
+		return size == 0;
 	}
 	
 	/**
@@ -1198,7 +1171,7 @@ class Graph<T> implements Collection<T>
 		if (isEmpty()) return [];
 		
 		var i = 0;
-		var out = ArrayUtil.alloc(size());
+		var out = ArrayTools.alloc(size);
 		var node = mNodeList;
 		while (node != null)
 		{
@@ -1209,29 +1182,13 @@ class Graph<T> implements Collection<T>
 	}
 	
 	/**
-		Returns an unordered `Vector<T>` object containing all elements stored in the graph nodes of this graph.
-	**/
-	public function toVector():Container<T>
-	{
-		var v = NativeArray.init(size());
-		var node = mNodeList;
-		var i = 0;
-		while (node != null)
-		{
-			v[i++] = node.val;
-			node = node.next;
-		}
-		return v;
-	}
-	
-	/**
 		Duplicates this graph. Supports shallow (structure only) and deep copies (structure & elements).
 		<assert>element is not of type `Cloneable`</assert>
 		@param assign if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
 		If false, the ``clone()`` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
 		@param copier a custom function for copying elements. Replaces ``element::clone()`` if `assign` is false.
 	**/
-	public function clone(assign = true, copier:T->T = null):Collection<T>
+	public function clone(assign:Bool = true, copier:T->T = null):Collection<T>
 	{
 		var copy = new Graph<T>();
 		if (mNodeList == null) return copy;
@@ -1286,7 +1243,6 @@ class Graph<T> implements Collection<T>
 			}
 			n = n.next;
 		}
-		
 		return copy;
 	}
 	
@@ -1326,7 +1282,6 @@ class Graph<T> implements Collection<T>
 			
 			a = a.next;
 		}
-		
 		return true;
 	}
 	
@@ -1363,7 +1318,6 @@ class Graph<T> implements Collection<T>
 			
 			a = a.next;
 		}
-		
 		return true;
 	}
 }
@@ -1384,25 +1338,31 @@ class GraphIterator<T> implements de.polygonal.ds.Itr<T>
 		reset();
 	}
 	
-	inline public function reset():Itr<T>
+	public function free()
+	{
+		mObject = null;
+		mNode = null;
+	}
+	
+	public inline function reset():Itr<T>
 	{
 		mNode = mObject.mNodeList;
 		return this;
 	}
 	
-	inline public function hasNext():Bool
+	public inline function hasNext():Bool
 	{
 		return mNode != null;
 	}
 	
-	inline public function next():T
+	public inline function next():T
 	{
 		var x = mNode.val;
 		mNode = mNode.next;
 		return x;
 	}
 	
-	inline public function remove()
+	public function remove()
 	{
 		throw "unsupported operation";
 	}
@@ -1424,25 +1384,25 @@ class GraphNodeIterator<T> implements de.polygonal.ds.Itr<GraphNode<T>>
 		reset();
 	}
 	
-	inline public function reset():Itr<GraphNode<T>>
+	public inline function reset():Itr<GraphNode<T>>
 	{
 		mNode = mObject.mNodeList;
 		return this;
 	}
 	
-	inline public function hasNext():Bool
+	public inline function hasNext():Bool
 	{
 		return mNode != null;
 	}
 	
-	inline public function next():GraphNode<T>
+	public inline function next():GraphNode<T>
 	{
 		var x = mNode;
 		mNode = mNode.next;
 		return x;
 	}
 	
-	inline public function remove()
+	public function remove()
 	{
 		throw "unsupported operation";
 	}
@@ -1465,19 +1425,19 @@ class GraphArcIterator<T> implements de.polygonal.ds.Itr<GraphArc<T>>
 		reset();
 	}
 	
-	inline public function reset():Itr<GraphArc<T>>
+	public inline function reset():Itr<GraphArc<T>>
 	{
 		mNode = mObject.mNodeList;
 		mArc = mNode.arcList;
 		return this;
 	}
 	
-	inline public function hasNext():Bool
+	public inline function hasNext():Bool
 	{
 		return mArc != null && mNode != null;
 	}
 	
-	inline public function next():GraphArc<T>
+	public inline function next():GraphArc<T>
 	{
 		var x = mArc;
 		mArc = mArc.next;
@@ -1487,11 +1447,10 @@ class GraphArcIterator<T> implements de.polygonal.ds.Itr<GraphArc<T>>
 			mNode = mNode.next;
 			if (mNode != null) mArc = mNode.arcList;
 		}
-		
 		return x;
 	}
 	
-	inline public function remove()
+	public function remove()
 	{
 		throw "unsupported operation";
 	}

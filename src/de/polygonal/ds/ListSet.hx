@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2008-2014 Michael Baczynski, http://www.polygonal.de
+Copyright (c) 2008-2016 Michael Baczynski, http://www.polygonal.de
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -18,14 +18,13 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 */
 package de.polygonal.ds;
 
-import de.polygonal.ds.error.Assert.assert;
+import de.polygonal.ds.tools.Assert.assert;
+import de.polygonal.ds.tools.GrowthRate;
 
-using de.polygonal.ds.tools.NativeArray;
+using de.polygonal.ds.tools.NativeArrayTools;
 
 /**
 	A simple set using an array
-	
-	_<o>Worst-case running time in Big O notation</o>_
 **/
 class ListSet<T> implements Set<T>
 {
@@ -36,7 +35,25 @@ class ListSet<T> implements Set<T>
 		
 		<warn>This value should never be changed by the user.</warn>
 	**/
-	public var key(default, null):Int;
+	public var key(default, null):Int = HashKey.next();
+	
+	/**
+		The capacity of the internal container.
+		
+		The capacity is usually a bit larger than `size` (_mild overallocation_).
+	**/
+	public var capacity(default, null):Int;
+	
+	/**
+		The growth rate of the container.
+		
+		+  0: fixed size
+		+ -1: grows at a rate of 1.125x plus a constant.
+		+ -2: grows at a rate of 1.5x (default value).
+		+ -3: grows at a rate of 2.0x.
+		+ >0: grows at a constant rate: capacity += growthRate
+	**/
+	public var growthRate:Int = GrowthRate.NORMAL;
 	
 	/**
 		If true, reuses the iterator object instead of allocating a new one when calling ``iterator()``.
@@ -45,25 +62,38 @@ class ListSet<T> implements Set<T>
 		
 		<warn>If true, nested iterations are likely to fail as only one iteration is allowed at a time.</warn>
 	**/
-	public var reuseIterator:Bool;
+	public var reuseIterator:Bool = false;
 	
 	var mData:Container<T>;
-	var mSize:Int;
-	var mIterator:ListSetIterator<T>;
+	var mInitialCapacity:Int;
+	var mSize:Int = 0;
+	var mIterator:ListSetIterator<T> = null;
 	
-	var capacity:Int;
-	
-	var mCapacityIncrement:Int = -1;
-	var mShrinkSize:Int;
-	
-	public function new(initialCapacity:Int = 16)
+	public function new(initialCapacity:Null<Int> = 16, ?source:Array<T>)
 	{
-		capacity = initialCapacity;
+		mInitialCapacity = M.max(1, initialCapacity);	
+		capacity = mInitialCapacity;
 		
-		mData = NativeArray.init(capacity);
-		mSize = 0;
-		key = HashKey.next();
-		reuseIterator = false;
+		if (source != null && source.length > 0)
+		{
+			var map = new haxe.ds.ObjectMap<Dynamic, Bool>();
+			var set = [];
+			var e, j = 0;
+			for (i in 0...source.length)
+			{
+				e = source[i];
+				if (!map.exists(e))
+				{
+					map.set(e, true);
+					set.push(e);
+				}
+			}
+			mSize = set.length;
+			var d = mData = NativeArrayTools.init(mSize);
+			for (i in 0...mSize) d.set(i, set[i]);
+		}
+		else
+			mData = NativeArrayTools.init(capacity);
 	}
 	
 	/**
@@ -84,49 +114,44 @@ class ListSet<T> implements Set<T>
 	**/
 	public function toString():String
 	{
-		var s = '{ ListSet size: ${size()} }';
+		var s = '{ ListSet size: ${size} }';
 		if (isEmpty()) return s;
 		s += "\n[\n";
-		for (i in 0...size())
+		for (i in 0...size)
 			s += '  ${Std.string(mData[i])}\n';
 		s += "]";
 		return s;
 	}
 	
-	/*///////////////////////////////////////////////////////
-	// set
-	///////////////////////////////////////////////////////*/
+	/* INTERFACE Set */
 	
 	/**
 		Returns true if this set contains the element `x`.
-		<o>n</o>
 	**/
 	public function has(x:T):Bool
 	{
 		if (isEmpty()) return false;
 		var d = mData;
-		for (i in 0...mSize) if (d.get(i) == x) return true;
+		for (i in 0...size) if (d.get(i) == x) return true;
 		return false;
 	}
 	
 	/**
 		Adds the element `x` to this set if possible.
-		<o>n</o>
 		@return true if `x` was added to this set, false if `x` already exists.
 	**/
 	public function set(x:T):Bool
 	{
 		var d = mData;
-		for (i in 0...mSize) if (d.get(i) == x) return false;
+		for (i in 0...size) if (d.get(i) == x) return false;
 		
-		if (mSize == capacity) grow();
+		if (size == capacity) resize();
 		mData.set(mSize++, x);
 		return true;
 	}
 	
 	/**
 		Adds all elements of the set `x` to this set.
-		<o>n</o>
 		<assert>element is not of type `Cloneable`</assert>
 		@param assign if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
 		If false, the ``clone()`` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
@@ -159,26 +184,33 @@ class ListSet<T> implements Set<T>
 		
 	}
 	
-	/*///////////////////////////////////////////////////////
-	// collection
-	///////////////////////////////////////////////////////*/
+	/**
+		The total number of elements.
+	**/
+	public var size(get, never):Int;
+	inline function get_size():Int
+	{
+		return mSize;
+	}
 	
 	/**
 		Destroys this object by explicitly nullifying all elements.
 		
 		Improves GC efficiency/performance (optional).
-		<o>n</o>
 	**/
 	public function free()
 	{
-		for (i in 0...NativeArray.size(mData)) mData.set(i, null);
-		mIterator = null;
+		mData.nullify();
 		mData = null;
+		if (mIterator != null)
+		{
+			mIterator.free();
+			mIterator = null;
+		}
 	}
 	
 	/**
 		Same as ``has()``.
-		<o>n</o>
 	**/
 	public function contains(x:T):Bool
 	{
@@ -187,13 +219,12 @@ class ListSet<T> implements Set<T>
 	
 	/**
 		Removes the element `x`.
-		<o>n</o>
 		@return true if `x` was successfully removed.
 	**/
 	public function remove(x:T):Bool
 	{
 		var d = mData;
-		for (i in 0...mSize)
+		for (i in 0...size)
 			if (d.get(i) == x)
 			{
 				d.set(i, mData.get(--mSize));
@@ -204,13 +235,12 @@ class ListSet<T> implements Set<T>
 	
 	/**
 		Removes all elements.
-		<o>1 or n if `purge` is true</o>
-		@param purge if true, nullifies references upon removal.
+		@param gc if true, nullifies references upon removal so the garbage collector can reclaim used memory.
 	**/
-	public function clear(purge = false)
+	public function clear(gc:Bool = false)
 	{
+		if (gc) mData.nullify();
 		mSize = 0;
-		if (purge) mData = NativeArray.init(16); //TODO initialCapacity
 	}
 	
 	/**
@@ -236,20 +266,10 @@ class ListSet<T> implements Set<T>
 	
 	/**
 		Returns true if this set is empty.
-		<o>1</o>
 	**/
 	public function isEmpty():Bool
 	{
-		return mSize == 0;
-	}
-	
-	/**
-		The total number of elements.
-		<o>1</o>
-	**/
-	public function size():Int
-	{
-		return mSize;
+		return size == 0;
 	}
 	
 	/**
@@ -257,19 +277,7 @@ class ListSet<T> implements Set<T>
 	**/
 	public function toArray():Array<T>
 	{
-		if (isEmpty()) return [];
-		return NativeArray.toArray(mData);
-	}
-	
-	/**
-		Returns a `Vector<T>` object containing all elements in this set.
-	**/
-	public function toVector():Container<T>
-	{
-		var output = NativeArray.init(mSize);
-		var t = mData;
-		for (i in 0...mSize) output.set(i, t[i]);
-		return output;
+		return NativeArrayTools.toArray(mData, 0, size);
 	}
 	
 	/**
@@ -279,32 +287,26 @@ class ListSet<T> implements Set<T>
 		If false, the ``clone()`` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
 		@param copier a custom function for copying elements. Replaces ``element::clone()`` if `assign` is false.
 	**/
-	public function clone(assign = true, copier:T->T = null):Collection<T>
+	public function clone(assign:Bool = true, copier:T->T = null):Collection<T>
 	{
 		var out = new ListSet<T>();
-		out.capacity = mSize;
-		out.mSize = mSize;
-		//mCapacityIncrement = -1;
-		out.mData = NativeArray.init(mSize);
-		
-		
-		
-		//out.mShrinkSize = mShrinkSize;
-		//out.mAllowShrink = mAllowShrink;
+		out.capacity = size;
+		out.mSize = size;
+		out.mData = NativeArrayTools.init(size);
 		
 		var src = mData;
 		var dst = out.mData;
 		
 		if (assign)
 		{
-			//NativeArray
-			for (i in 0...mSize) dst.set(i, src.get(i));
+			//NativeArrayTools
+			for (i in 0...size) dst.set(i, src.get(i));
 		}
 		else
 		if (copier == null)
 		{
 			var c:Cloneable<Dynamic> = null;
-			for (i in 0...mSize)
+			for (i in 0...size)
 			{
 				assert(Std.is(src.get(i), Cloneable), 'element is not of type Cloneable (${src.get(i)})');
 				
@@ -315,36 +317,23 @@ class ListSet<T> implements Set<T>
 		else
 		{
 			var src = mData;
-			for (i in 0...mSize)
+			for (i in 0...size)
 				dst.set(i, copier(src.get(i)));
 		}
-		
 		return cast out;
 	}
 	
-	function grow()
+	function resize()
 	{
-		capacity =
-		if (mCapacityIncrement == -1)
-		{
-			if (true)
-				Std.int((capacity * 3) / 2 + 1); //1.5
-			else
-				capacity + ((capacity >> 3) + (capacity < 9 ? 3 : 6)); //1.125
-		}
-		else
-			capacity + mCapacityIncrement;
-		
-		mShrinkSize = capacity >> 2;
-		
-		resize(capacity);
+		capacity = GrowthRate.compute(growthRate, capacity);
+		resizeContainer(capacity);
 	}
 	
-	function resize(newSize:Int)
+	function resizeContainer(newSize:Int)
 	{
-		var tmp = NativeArray.init(newSize);
-		NativeArray.blit(mData, 0, tmp, 0, mSize);
-		mData = tmp;
+		var t = NativeArrayTools.init(newSize);
+		NativeArrayTools.blit(mData, 0, t, 0, mSize);
+		mData = t;
 	}
 }
 
@@ -366,25 +355,31 @@ class ListSetIterator<T> implements de.polygonal.ds.Itr<T>
 		reset();
 	}
 	
-	inline public function reset():Itr<T>
+	public function free()
+	{
+		mObject = null;
+		mData = null;
+	}
+	
+	public inline function reset():Itr<T>
 	{
 		mData = mObject.mData;
-		mS = mObject.mSize;
+		mS = mObject.size;
 		mI = 0;
 		return this;
 	}
 	
-	inline public function hasNext():Bool
+	public inline function hasNext():Bool
 	{
 		return mI < mS;
 	}
 	
-	inline public function next():T
+	public inline function next():T
 	{
 		return mData.get(mI++);
 	}
 	
-	inline public function remove()
+	public function remove()
 	{
 		assert(mI > 0, "call next() before removing an element");
 		

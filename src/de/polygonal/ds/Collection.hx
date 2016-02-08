@@ -1,5 +1,5 @@
 ﻿/*
-Copyright (c) 2008-2014 Michael Baczynski, http://www.polygonal.de
+Copyright (c) 2008-2016 Michael Baczynski, http://www.polygonal.de
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -24,6 +24,11 @@ package de.polygonal.ds;
 interface Collection<T> extends Hashable
 {
 	/**
+		The total number of elements in this collection.
+	**/
+	var size(get, never):Int;
+	
+	/**
 		Deconstructs this collection by explicitly nullifying all internal references for GC'ing used resources.
 		
 		Improves GC efficiency/performance (optional).
@@ -46,10 +51,10 @@ interface Collection<T> extends Hashable
 		
 		For performance reasons, elements are not nullified upon removal.
 		
-		This means that elements won't be available for the garbage collector immediately unless `purge` is true.
-		@param purge if true, elements are nullifies upon removal (slower).
+		This means that elements won't be available for the garbage collector immediately unless `gc` is true.
+		@param gc if true, elements are nullifies upon removal (slower).
 	**/
-	function clear(purge:Bool = false):Void;
+	function clear(gc:Bool = false):Void;
 	
 	/**
 		Iterates over all elements in this collection.
@@ -78,19 +83,9 @@ interface Collection<T> extends Hashable
 	function isEmpty():Bool;
 	
 	/**
-		Returns the total number of elements in this collection.
-	**/
-	function size():Int;
-	
-	/**
 		Returns an array storing all elements in this collection.
 	**/
 	function toArray():Array<T>;
-	
-	/**
-		Returns the inner `Container<T>` storing all elements in this collection.
-	**/
-	function toVector():Container<T>;
 	
 	/**
 		Duplicates this collection. Supports shallow (structure only) and deep copies (structure & elements).
@@ -99,12 +94,12 @@ interface Collection<T> extends Hashable
 		<pre class="prettyprint">
 		class Foo implements de.polygonal.ds.Cloneable<Foo>
 		{
-		    public var value:Int;
-		    public function new(value:Int) {
-		        this.value = value;
+		    public var val:Int;
+		    public function new(val:Int) {
+		        this.val = val;
 		    }
 		    public function clone():Foo {
-		        return new Foo(value);
+		        return new Foo(val);
 		    }
 		}
 		class Main
@@ -115,7 +110,7 @@ interface Collection<T> extends Hashable
 		    //deep copy
 		    var clone = c.clone(false);
 		    //deep copy using a custom function to do the actual work
-		    var clone = c.clone(false, function(existingValue:Foo) { return new Foo(existingValue.value); })
+		    var clone = c.clone(false, function(existingValue:Foo) { return new Foo(existingValue.val); })
 		}</pre>
 		@param assign if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
 		If false, the ``clone()`` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>

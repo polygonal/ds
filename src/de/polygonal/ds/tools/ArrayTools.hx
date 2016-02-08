@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2008-2014 Michael Baczynski, http://www.polygonal.de
+Copyright (c) 2008-2016 Michael Baczynski, http://www.polygonal.de
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -16,9 +16,9 @@ NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FO
 DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT
 OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
-package de.polygonal.ds;
+package de.polygonal.ds.tools;
 
-import de.polygonal.ds.error.Assert.assert;
+import de.polygonal.ds.tools.Assert.assert;
 
 #if cpp
 using cpp.NativeArray;
@@ -27,7 +27,7 @@ using cpp.NativeArray;
 /**
 	Various utility functions for working with arrays
 **/
-class ArrayUtil
+class ArrayTools
 {
 	/**
 		Allocates an array with a length of `x`.
@@ -57,7 +57,7 @@ class ArrayUtil
 	/**
 		Shrinks the array `a` to the size `x` and returns the modified array.
 	**/
-	inline public static function shrink<T>(a:Array<T>, x:Int):Array<T>
+	public static inline function shrink<T>(a:Array<T>, x:Int):Array<T>
 	{
 		if (a.length > x)
 		{
@@ -254,15 +254,15 @@ class ArrayUtil
 	/**
 		Shuffles the elements of the array `a` by using the Fisher-Yates algorithm.
 		<assert>insufficient random values</assert>
-		@param rval a list of random double values in the range between [0,1) defining the new positions of the elements.
+		@param rvals a list of random double values in the range between [0,1) defining the new positions of the elements.
 		If omitted, random values are generated on-the-fly by calling `Math::random()`.
 	**/
-	public static function shuffle<T>(a:Array<T>, rval:Array<Float> = null)
+	public static function shuffle<T>(a:Array<T>, rvals:Array<Float> = null)
 	{
 		assert(a != null);
 		
 		var s = a.length;
-		if (rval == null)
+		if (rvals == null)
 		{
 			var m = Math;
 			while (--s > 1)
@@ -275,12 +275,12 @@ class ArrayUtil
 		}
 		else
 		{
-			assert(rval.length >= a.length, "insufficient random values");
+			assert(rvals.length >= a.length, "insufficient random values");
 			
 			var j = 0;
 			while (--s > 1)
 			{
-				var i = Std.int(rval[j++] * s);
+				var i = Std.int(rvals[j++] * s);
 				var t = a[s];
 				a[s] = a[i];
 				a[i] = t;
@@ -290,20 +290,20 @@ class ArrayUtil
 	
 	/**
 		Sorts the elements of the array `a` by using the quick sort algorithm.
-		<assert>`first` or `count` out of bound</assert>
+		<assert>`first` or `count` out of range</assert>
 		@param compare a comparison function.
 		@param useInsertionSort if true, the array is sorted using the insertion sort algorithm. This is faster for nearly sorted lists.
 		@param first sort start index. The default value is 0.
 		@param count the number of elements to sort (range: [`first`, `first` + `count`]).
-		If omitted, `count` is set to ``size()``.
+		If omitted, `count` is set to ``size``.
 	**/
 	public static function sortRange(a:Array<Float>, compare:Float->Float->Int, useInsertionSort:Bool, first:Int, count:Int)
 	{
 		var k = a.length;
 		if (k > 1)
 		{
-			assert(first >= 0 && first <= k - 1 && first + count <= k, "first out of bound");
-			assert(count >= 0 && count <= k, "count out of bound");
+			assert(first >= 0 && first <= k - 1 && first + count <= k, "first out of range");
+			assert(count >= 0 && count <= k, "count out of range");
 			
 			if (useInsertionSort)
 				_insertionSort(a, first, count, compare);
@@ -325,7 +325,7 @@ class ArrayUtil
 		var a = [];
 		var p = [];
 		
-		var i:Int, j:Int, tmp:Int;
+		var i:Int, j:Int, t:Int;
 		
 		for (i in 0...n)
 		{
@@ -341,9 +341,9 @@ class ArrayUtil
 			if (p[i] < i)
 			{
 				j = i % 2 * p[i];
-				tmp = a[j];
+				t = a[j];
 				a[j] = a[i];
-				a[i] = tmp;
+				a[i] = t;
 				results.push(a.copy());
 				p[i]++;
 				i = 1;
@@ -354,7 +354,6 @@ class ArrayUtil
 				i++;
 			}
 		}
-		
 		return results;
 	}
 
@@ -378,15 +377,15 @@ class ArrayUtil
 	{
 		assert(n % k == 0, "n is not a multiple of k");
 		
-		var output = new Array<Array<T>>();
+		var out = new Array<Array<T>>();
 		var b:Array<T> = null;
 		for (i in 0...n)
 		{
 			if (i % k == 0)
-				output[Std.int(i / k)] = b = [];
+				out[Std.int(i / k)] = b = [];
 			b.push(a[i]);
 		}
-		return output;
+		return out;
 	}
 	
 	static function _insertionSort(a:Array<Float>, first:Int, k:Int, cmp:Float->Float->Int)

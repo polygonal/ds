@@ -1,6 +1,6 @@
 ﻿import de.polygonal.ds.Array2;
-import de.polygonal.ds.ArrayConvert;
-import de.polygonal.ds.tools.NativeArray;
+import de.polygonal.ds.Cloneable;
+import de.polygonal.ds.tools.NativeArrayTools;
 
 class TestArray2 extends AbstractTest
 {
@@ -14,6 +14,15 @@ class TestArray2 extends AbstractTest
 		super();
 		mW = w;
 		mH = h;
+	}
+	
+	function testSource()
+	{
+		var a = new Array2<Int>(2, 2, [0, 1, 2, 3]);
+		assertEquals(0, a.get(0, 0));
+		assertEquals(1, a.get(1, 0));
+		assertEquals(2, a.get(0, 1));
+		assertEquals(3, a.get(1, 1));
 	}
 	
 	function testRemove()
@@ -70,23 +79,10 @@ class TestArray2 extends AbstractTest
 		assertEquals(3, c.y);
 	}
 	
-	#if !generic
-	function testConvert()
-	{
-		var a = ArrayConvert.toArray2([0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3], 4, 3);
-		assertEquals(a.size(), 4 * 3);
-		assertEquals(a.getW(), 4);
-		assertEquals(a.getH(), 3);
-		for (y in 0...3)
-			for (x in 0...4)
-				assertEquals(x, a.get(x, y));
-	}
-	#end
-	
 	function testToString()
 	{
 		var array2 = new de.polygonal.ds.Array2<String>(4, 4);
-		array2.iter(function(val:String, x:Int, y:Int):String { return Std.string(x) + "." + Std.string(y); });
+		array2.forEach(function(val:String, x:Int, y:Int):String { return Std.string(x) + "." + Std.string(y); });
 		array2.toString();
 		assertTrue(true);
 	}
@@ -103,80 +99,44 @@ class TestArray2 extends AbstractTest
 	function testWidthHeight()
 	{
 		var a = getIntArray();
-		assertEquals(mW, a.getW());
-		assertEquals(mH, a.getH());
-		a.setW(mW * 2);
-		assertEquals(mW * 2, a.getW());
-		a.setH(mW * 2);
-		assertEquals(mW * 2, a.getH());
+		assertEquals(mW, a.cols);
+		assertEquals(mH, a.rows);
+		a.width = mW * 2;
+		assertEquals(mW * 2, a.cols);
+		a.height = mW * 2;
+		assertEquals(mW * 2, a.rows);
 	}
 	
 	function testRow()
 	{
 		var a = getIntArray();
-		for (i in 0...a.getW()) a.set(i, 0, i);
+		for (i in 0...a.cols) a.set(i, 0, i);
 		var output = new Array<Int>();
 		a.getRow(0, output);
 		var input = new Array<Int>();
 		for (i in 0...output.length)
 		{
 			assertEquals(i, output[i]);
-			input.push((a.size()) + i);
+			input.push((a.size) + i);
 		}
 		a.setRow(1, input);
-		for (i in 0...a.getW()) assertEquals((a.size()) + i, a.get(i, 1));
+		for (i in 0...a.cols) assertEquals((a.size) + i, a.get(i, 1));
 	}
 	
 	function testCol()
 	{
 		var a = getIntArray();
-		for (i in 0...a.getH()) a.set(0, i, i);
+		for (i in 0...a.rows) a.set(0, i, i);
 		var output = new Array<Int>();
 		a.getCol(0, output);
 		var input = new Array<Int>();
 		for (i in 0...output.length)
 		{
 			assertEquals(i, output[i]);
-			input.push((a.size()) + i);
+			input.push((a.size) + i);
 		}
 		a.setCol(1, input);
-		for (i in 0...a.getH()) assertEquals((a.size()) + i, a.get(1, i));
-	}
-	
-	function testAssign()
-	{
-		var a = new Array2<E>(mW, mH);
-		a.assign(E, [1]);
-		for (y in 0...mH)
-			for (x in 0...mW)
-				assertEquals(E, cast Type.getClass(a.get(x, y)));
-		
-		var a = new Array2<E>(mW, mH);
-		a.assign(E, [5]);
-		for (y in 0...mH)
-		{
-			for (x in 0...mW)
-			{
-				assertEquals(E, cast Type.getClass(a.get(x, y)));
-				assertEquals(5, a.get(x, y).x);
-			}
-		}
-	}
-	
-	function testFill()
-	{
-		var a = getIntArray();
-		a.fill(99);
-		for (y in 0...mH)
-			for (x in 0...mW)
-				assertEquals(99, a.get(x, y));
-		
-		var a = new Array2<E>(mW, mH);
-		var v = new E(0);
-		a.fill(v);
-		for (y in 0...mH)
-			for (x in 0...mW)
-				assertEquals(v, a.get(x, y));
+		for (i in 0...a.rows) assertEquals((a.size) + i, a.get(1, i));
 	}
 	
 	function testWalk()
@@ -192,13 +152,13 @@ class TestArray2 extends AbstractTest
 		var w2 = mW >> 1;
 		var h2 = mH >> 1;
 		var a = getIntArray(w2, h2);
-		a.fill(5);
-		for (y in 0...a.getH())
-			for (x in 0...a.getW())
+		a.forEach(function(e, x, y) return 5);
+		for (y in 0...a.rows)
+			for (x in 0...a.cols)
 				assertEquals(5, a.get(x, y));
 		a.resize(mW, mH);
-		assertEquals(a.getW(), mW);
-		assertEquals(a.getH(), mH);
+		assertEquals(a.cols, mW);
+		assertEquals(a.rows, mH);
 		for (y in 0...mH)
 		{
 			for (x in 0...mW)
@@ -275,7 +235,7 @@ class TestArray2 extends AbstractTest
 		var input = new Array<Int>();
 		for (i in 0...mW) input.push(i);
 		a.appendRow(input);
-		assertEquals(a.getH(), mH);
+		assertEquals(a.rows, mH);
 		for (x in 0...mW) assertEquals(x, a.get(x, 0));
 		for (x in 0...mW) assertEquals(x, a.get(x, mH - 1));
 	}
@@ -290,7 +250,7 @@ class TestArray2 extends AbstractTest
 		
 		a.appendCol(input);
 		
-		assertEquals(a.getW(), mW);
+		assertEquals(a.cols, mW);
 		for (y in 0...mH) assertEquals(y, a.get(0, y));
 		for (y in 0...mH) assertEquals(y, a.get(mW - 1, y));
 	}
@@ -309,7 +269,7 @@ class TestArray2 extends AbstractTest
 		
 		a.prependRow(input);
 		
-		assertEquals(a.getH(), mH);
+		assertEquals(a.rows, mH);
 		
 		var c = 0;
 		for (j in 1...mH)
@@ -334,7 +294,7 @@ class TestArray2 extends AbstractTest
 		for (i in 0...mH) input.push(i);
 		a.prependCol(input);
 		
-		assertEquals(a.getW(), mW);
+		assertEquals(a.cols, mW);
 		for (y in 0...mH) assertEquals(y, a.get(0, y));
 		for (y in 0...mH) assertEquals(10 + y * 10, a.get(mW - 1, y));
 	}
@@ -431,7 +391,7 @@ class TestArray2 extends AbstractTest
 	function testContains()
 	{
 		var a = getStrArray();
-		a.fill("?");
+		a.forEach(function(e, x, y) return "?");
 		for (y in 0...mH)
 			for (x in 0...mW)
 				assertEquals(true, a.contains("?"));
@@ -440,77 +400,68 @@ class TestArray2 extends AbstractTest
 	function testToArray()
 	{
 		var a = getStrArray();
-		a.fill("?");
+		a.forEach(function(e, x, y) return "?");
 		var out = new Array<String>();
 		var out = a.toArray();
 		for (i in out)
 			assertEquals("?", i);
-		assertEquals(out.length, a.size());
-	}
-	
-	function testToVector()
-	{
-		var a = getStrArray();
-		a.fill("?");
-		var arr = a.toVector();
-		for (i in 0...NativeArray.size(arr)) assertEquals("?", arr[i]);
-		assertEquals(NativeArray.size(arr), a.size());
+		assertEquals(out.length, a.size);
 	}
 	
 	function testIterator()
 	{
 		var a = getStrArray();
-		a.fill("?");
+		a.forEach(function(e, x, y) return "?");
 		var c = 0;
 		for (val in a)
 		{
 			assertEquals(val, "?");
 			c++;
 		}
-		assertEquals(c, a.size());
+		assertEquals(c, a.size);
 		var c = 0;
 		for (val in a)
 		{
 			assertEquals(val, "?");
 			c++;
 		}
-		assertEquals(c, a.size());
+		assertEquals(c, a.size);
 		
 		var a = getStrArray();
-		var tmp1 = [];
-		var tmp2 = [];
-		var tmp3 = [];
-		a.iter(function(val:String, x:Int, y:Int):String
+		var set1 = [];
+		var set2 = [];
+		var set3 = [];
+		a.forEach(function(val:String, x:Int, y:Int):String
 		{
 			var s = x + "." + y;
-			tmp1.push(s);
-			tmp2.push(s);
-			tmp3.push(s);
+			set1.push(s);
+			set2.push(s);
+			set3.push(s);
 			return s;
 		});
 		
 		var itr = a.iterator();
-		for (i in itr) assertEquals(true, tmp1.remove(i));
-		assertEquals(0, tmp1.length);
+		for (i in itr) assertEquals(true, set1.remove(i));
+		assertEquals(0, set1.length);
 		
 		itr.reset();
-		for (i in itr) assertEquals(true, tmp2.remove(i));
-		assertEquals(0, tmp2.length);
+		for (i in itr) assertEquals(true, set2.remove(i));
+		assertEquals(0, set2.length);
 		
 		var itr = a.iterator();
 		while (itr.hasNext())
 		{
 			itr.hasNext();
 			var e = itr.next();
-			assertEquals(true, tmp3.remove(e));
+			assertEquals(true, set3.remove(e));
 		}
-		assertEquals(0, tmp3.length);
+		assertEquals(0, set3.length);
 	}
 	
 	function testIteratorRemove()
 	{
 		var a = getStrArray();
-		a.fill("?");
+		a.forEach(function(e, x, y) return "?");
 		var itr = a.iterator();
 		while (itr.hasNext())
 		{
@@ -526,26 +477,26 @@ class TestArray2 extends AbstractTest
 	{
 		var a = getIntArray();
 		var counter = 0;
-		a.iter(function(x:Int, y:Int, val:Int):Int
+		a.forEach(function(x:Int, y:Int, val:Int):Int
 		{
 			return counter++;
 		});
 		
-		assertEquals(a.size(), counter);
+		assertEquals(a.size, counter);
 		
-		var tmp = [];
+		var set = [];
 		for (i in a)
 		{
-			assertFalse(contains(tmp, i));
-			tmp.push(i);
+			assertFalse(contains(set, i));
+			set.push(i);
 		}
 		
 		var rval = [];
-		for (i in 0...a.size()) rval.push(Math.random());
+		for (i in 0...a.size) rval.push(Math.random());
 		a.shuffle(rval);
 		
-		for (i in a) assertEquals(true, tmp.remove(i));
-		assertEquals(0, tmp.length);
+		for (i in a) assertEquals(true, set.remove(i));
+		assertEquals(0, set.length);
 	}
 	
 	function testClone()
@@ -553,16 +504,22 @@ class TestArray2 extends AbstractTest
 		var a = getIntArray();
 		a.set(0, 0, 1);
 		a.set(mW - 1 , mH - 1, 1);
-		var copier = function(input:Int):Int
-		{
-			return input;
-		}
+		var copier = function(input:Int):Int return input;
+		
 		var myCopy:Array2<Int> = cast a.clone(false, copier);
 		assertEquals(myCopy.get(0, 0), 1);
 		assertEquals(myCopy.get(mW - 1, mH - 1), 1);
 		myCopy = cast myCopy.clone(true);
 		assertEquals(myCopy.get(0, 0), 1);
 		assertEquals(myCopy.get(mW - 1, mH - 1), 1);
+		
+		var i = 0;
+		var a = new Array2<E>(2, 2);
+		a.forEach(function(e, x, y) return new E(i++));
+		var clone:Array2<E> = cast a.clone(false);
+		assertEquals(4, clone.size);
+		i = 0;
+		clone.forEach(function(e, x, y) {assertEquals(i++, e.x); return e; });
     }
 	
 	function testCollection()
@@ -583,7 +540,7 @@ class TestArray2 extends AbstractTest
 		if (w == -1) w = mW;
 		if (h == -1) h = mH;
 		var a = new Array2<String>(w, h);
-		a.iter(function(val, x, y):String return x + "." + y);
+		a.forEach(function(val, x, y):String return x + "." + y);
 		return a;
 	}
 	
@@ -607,13 +564,40 @@ class TestArray2 extends AbstractTest
 		var output = a.getRect(-1, -1, -1, -1, []);
 		assertEquals(0, output.length);
 	}
+	
+	function testForEach()
+	{
+		var a = getStrArray(3, 3);
+		for (y in 0...3)
+			for (x in 0...3)
+				a.set(x, y, '$x$y');
+		
+		a.forEach(
+			function(v, x, y)
+			{
+				assertEquals(v, '$x$y');
+				return 'v$x$y';
+			});
+		
+		a.forEach(
+			function(v, x, y)
+			{
+				assertEquals(v, 'v$x$y');
+				return v;
+			});
+	}
 }
 
-private class E
+private class E implements Cloneable<E>
 {
 	public var x:Int;
 	public function new(x:Int)
 	{
 		this.x = x;
+	}
+	
+	public function clone():E
+	{
+		return new E(x);
 	}
 }

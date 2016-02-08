@@ -1,5 +1,5 @@
 ﻿/*
-Copyright (c) 2008-2014 Michael Baczynski, http://www.polygonal.de
+Copyright (c) 2008-2016 Michael Baczynski, http://www.polygonal.de
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -18,16 +18,14 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 */
 package de.polygonal.ds;
 
-import de.polygonal.ds.error.Assert.assert;
+import de.polygonal.ds.tools.Assert.assert;
 
-using de.polygonal.ds.tools.NativeArray;
+using de.polygonal.ds.tools.NativeArrayTools;
 
 using de.polygonal.ds.Bits;
 
 /**
 	An array data structure that compactly stores individual bits (boolean values)
-	
-	_<o>Worst-case running time in Big O notation</o>_
 **/
 class BitVector implements Hashable
 {
@@ -38,7 +36,16 @@ class BitVector implements Hashable
 		
 		<warn>This value should never be changed by the user.</warn>
 	**/
-	public var key(default, null):Int;
+	public var key(default, null):Int = HashKey.next();
+	
+	/**
+		The exact number of bits that the bit-vector can store.
+	**/
+	public var capacity(get, never):Int;
+	inline function get_capacity():Int
+	{
+		return mBitSize;
+	}
 	
 	var mData:Container<Int>;
 	var mArrSize:Int;
@@ -57,12 +64,10 @@ class BitVector implements Hashable
 		mBitSize = 0;
 		mArrSize = 0;
 		resize(numBits);
-		key = HashKey.next();
 	}
 	
 	/**
 		Destroys this object by explicitly nullifying the array storing the bits.
-		<o>1</o>
 	**/
 	public function free()
 	{
@@ -70,19 +75,9 @@ class BitVector implements Hashable
 	}
 	
 	/**
-		The exact number of bits that the bit-vector can store.
-		<o>1</o>
-	**/
-	inline public function capacity():Int
-	{
-		return mBitSize;
-	}
-	
-	/**
 		The total number of bits set to one.
-		<o>n</o>
 	**/
-	inline public function size():Int
+	public function ones():Int
 	{
 		var c = 0, d = mData;
 		for (i in 0...mArrSize) c += d.get(i).ones();
@@ -91,33 +86,30 @@ class BitVector implements Hashable
 	
 	/**
 		The total number of 32-bit integers allocated for storing the bits.
-		<o>1</o>
 	**/
-	inline public function bucketSize():Int
+	public inline function bucketSize():Int
 	{
 		return mArrSize;
 	}
 	
 	/**
 		Returns true if the bit at index `i` is 1.
-		<o>1</o>
 		<assert>`i` out of range</assert>
 	**/
-	inline public function has(i:Int):Bool
+	public inline function has(i:Int):Bool
 	{
-		assert(i < capacity(), 'i index out of range ($i)');
+		assert(i < capacity, 'i index out of range ($i)');
 		
 		return ((mData.get(i >> 5) & (1 << (i & (32 - 1)))) >> (i & (32 - 1))) != 0;
 	}
 	
 	/**
 		Sets the bit at index `i` to one.
-		<o>1</o>
 		<assert>`i` out of range</assert>
 	**/
-	inline public function set(i:Int)
+	public inline function set(i:Int)
 	{
-		assert(i < capacity(), 'i index out of range ($i)');
+		assert(i < capacity, 'i index out of range ($i)');
 		
 		var p = i >> 5, d = mData;
 		d.set(p, d.get(p) | (1 << (i & (32 - 1))));
@@ -125,12 +117,11 @@ class BitVector implements Hashable
 	
 	/**
 		Sets the bit at index `i` to zero.
-		<o>1</o>
 		<assert>`i` out of range</assert>
 	**/
-	inline public function clr(i:Int)
+	public inline function clr(i:Int)
 	{
-		assert(i < capacity(), 'i index out of range ($i)');
+		assert(i < capacity, 'i index out of range ($i)');
 		
 		var p = i >> 5, d = mData;
 		d.set(p, d.get(p) & (~(1 << (i & (32 - 1)))));
@@ -138,14 +129,13 @@ class BitVector implements Hashable
 	
 	/**
 		Sets all bits in the bit-vector to zero.
-		<o>n</o>
 	**/
-	inline public function clrAll()
+	public inline function clrAll()
 	{
 		var d = mData;
 		
 		#if cpp
-		cpp.NativeArray.zero(mData, 0, mArrSize);
+		cpp.NativeArrayTools.zero(mData, 0, mArrSize);
 		#else
 		var d = mData;
 		for (i in 0...mArrSize) d.set(i, 0);
@@ -154,9 +144,8 @@ class BitVector implements Hashable
 	
 	/**
 		Sets all bits in the bit-vector to one.
-		<o>n</o>
 	**/
-	inline public function setAll()
+	public inline function setAll()
 	{
 		var d = mData;
 		for (i in 0...mArrSize) d.set(i, -1);
@@ -166,7 +155,6 @@ class BitVector implements Hashable
 		Clears all bits in the range [`min`, `max`).
 		
 		This is faster than clearing individual bits by using ``clr()``.
-		<o>n</o>
 		<assert>`min` out of range</assert>
 		<assert>`max` out of range</assert>
 	**/
@@ -190,7 +178,6 @@ class BitVector implements Hashable
 		Sets all bits in the range [`min`, `max`).
 		
 		This is faster than setting individual bits by using ``set()``.
-		<o>n</o>
 		<assert>`min` out of range</assert>
 		<assert>`max` out of range</assert>
 	**/
@@ -214,10 +201,9 @@ class BitVector implements Hashable
 	
 	/**
 		Sets the bit at index `i` to one if `cond` is true or clears the bit at index `i` if `cond` is false.
-		<o>1</o>
 		<assert>`i` out of range</assert>
 	**/
-	inline public function ofBool(i:Int, cond:Bool)
+	public inline function ofBool(i:Int, cond:Bool)
 	{
 		cond ? set(i) : clr(i);
 	}
@@ -228,7 +214,7 @@ class BitVector implements Hashable
 		A bucket is a 32-bit integer for storing the bit flags.
 		<assert>`i` out of range</assert>
 	**/
-	inline public function getBucketAt(i:Int):Int
+	public inline function getBucketAt(i:Int):Int
 	{
 		assert(i >= 0 && i < mArrSize, 'i index out of range ($i)');
 		
@@ -236,15 +222,15 @@ class BitVector implements Hashable
 	}
 	
 	/**
-		Writes all buckets to `output`.
+		Writes all buckets to `out`.
 		
 		A bucket is a 32-bit integer for storing the bit flags.
 		@return the total number of buckets.
 	**/
-	inline public function getBuckets(output:Array<Int>):Int
+	public inline function getBuckets(out:Array<Int>):Int
 	{
 		var d = mData;
-		for (i in 0...mArrSize) output[i] = d.get(i);
+		for (i in 0...mArrSize) out[i] = d.get(i);
 		return mArrSize;
 	}
 	
@@ -252,7 +238,6 @@ class BitVector implements Hashable
 		Resizes the bit-vector to `numBits` bits.
 		
 		Preserves existing values if new size > old size.
-		<o>n</o>
 	**/
 	public function resize(numBits:Int)
 	{
@@ -263,16 +248,16 @@ class BitVector implements Hashable
 		
 		if (mData == null || newArrSize < mArrSize)
 		{
-			mData = NativeArray.init(newArrSize);
+			mData = NativeArrayTools.init(newArrSize);
 			mData.zero(0, newArrSize);
 		}
 		else
 		if (newArrSize > mArrSize)
 		{
-			var tmp = NativeArray.init(newArrSize);
-			tmp.zero(0, newArrSize);
-			mData.blit(0, tmp, 0, mArrSize);
-			mData = tmp;
+			var t = NativeArrayTools.init(newArrSize);
+			t.zero(0, newArrSize);
+			mData.blit(0, t, 0, mArrSize);
+			mData = t;
 		}
 		else
 		if (numBits < mBitSize)
@@ -285,24 +270,23 @@ class BitVector implements Hashable
 	/**
 		Writes the data in this bit-vector to a byte array.
 		
-		The number of bytes equals ``bucketSize()`` * 4 and the number of bits equals ``capacity()``.
-		<o>n</o>
+		The number of bytes equals ``bucketSize()`` * 4 and the number of bits equals ``capacity``.
 		@param bigEndian the byte order (default is little endian)
 	**/
-	public function toBytes(bigEndian = false):haxe.io.BytesData
+	public function toBytes(bigEndian:Bool = false):haxe.io.BytesData
 	{
 		#if flash
-		var output = new flash.utils.ByteArray();
-		if (!bigEndian) output.endian = flash.utils.Endian.LITTLE_ENDIAN;
+		var out = new flash.utils.ByteArray();
+		if (!bigEndian) out.endian = flash.utils.Endian.LITTLE_ENDIAN;
 		for (i in 0...mArrSize)
-			output.writeInt(mData[i]);
-		return output;
+			out.writeInt(mData[i]);
+		return out;
 		#else
-		var output = new haxe.io.BytesOutput();
-		output.bigEndian = bigEndian;
+		var out = new haxe.io.BytesOutput();
+		out.bigEndian = bigEndian;
 		for (i in 0...mArrSize)
-			output.writeInt32(mData[i]);
-		return output.getBytes().getData();
+			out.writeInt32(mData[i]);
+		return out.getBytes().getData();
 		#end
 	}
 	
@@ -310,11 +294,10 @@ class BitVector implements Hashable
 		Copies the bits from `bytes` into this bit vector.
 		
 		The bit-vector is resized to the size of `bytes`.
-		<o>n</o>
 		<assert>`input` is null</assert>
 		@param bigEndian the input byte order (default is little endian)
 	**/
-	public function ofBytes(bytes:haxe.io.BytesData, bigEndian = false)
+	public function ofBytes(bytes:haxe.io.BytesData, bigEndian:Bool = false)
 	{
 		#if flash
 		var input = bytes;
@@ -338,7 +321,7 @@ class BitVector implements Hashable
 		var numIntegers = (k - numBytes) >> 2;
 		mArrSize = numIntegers + (numBytes > 0 ? 1 : 0);
 		mBitSize = mArrSize << 5;
-		mData = NativeArray.init(mArrSize);
+		mData = NativeArrayTools.init(mArrSize);
 		for (i in 0...mArrSize) mData[i] = 0;
 		for (i in 0...numIntegers)
 		{
@@ -370,7 +353,7 @@ class BitVector implements Hashable
 		Example:
 		<pre class="prettyprint">
 		var bv = new de.polygonal.ds.BitVector(40);
-		for (i in 0...bv.capacity()) {
+		for (i in 0...bv.capacity) {
 		    if (i & 1 == 0) {
 		        bv.set(i);
 		    }
@@ -385,8 +368,8 @@ class BitVector implements Hashable
 	**/
 	public function toString():String
 	{
-		var s = '{ BitVector set/all: ${size()}/${capacity()} }';
-		if (size() == 0) return s;
+		var s = '{ BitVector set/all: ${ones()}/${capacity} }';
+		if (ones() == 0) return s;
 		s += "\n[\n";
 		for (i in 0...mArrSize)
 			s += Printf.format("  %4d -> %#.32b\n", [i, mData[i]]);
@@ -396,7 +379,6 @@ class BitVector implements Hashable
 	
 	/**
 		Creates a copy of this bit vector.
-		<o>n</o>
 	**/
 	public function clone():BitVector
 	{

@@ -1,5 +1,5 @@
 ﻿/*
-Copyright (c) 2008-2014 Michael Baczynski, http://www.polygonal.de
+Copyright (c) 2008-2016 Michael Baczynski, http://www.polygonal.de
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -18,14 +18,12 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 */
 package de.polygonal.ds;
 
-import de.polygonal.ds.error.Assert.assert;
+import de.polygonal.ds.tools.Assert.assert;
 
 /**
 	A graph node manages a doubly linked list of GraphArc objects
 	
 	`GraphNode` objects are created and managed by the `Graph` class.
-	
-	_<o>Worst-case running time in Big O notation</o>_
 **/
 #if generic
 @:generic
@@ -39,7 +37,7 @@ class GraphNode<T> implements Hashable
 		
 		<warn>This value should never be changed by the user.</warn>
 	**/
-	public var key(default, null):Int;
+	public var key(default, null):Int = HashKey.next();
 	
 	/**
 		The node's data.
@@ -93,7 +91,6 @@ class GraphNode<T> implements Hashable
 		val = x;
 		arcList = null;
 		marked = false;
-		key = HashKey.next();
 		mGraph = graph;
 	}
 	
@@ -101,7 +98,6 @@ class GraphNode<T> implements Hashable
 		Destroys this object by explicitly nullifying the element and all pointers for GC'ing used resources.
 		
 		Improves GC efficiency/performance (optional).
-		<o>1</o>
 	**/
 	public function free()
 	{
@@ -123,10 +119,9 @@ class GraphNode<T> implements Hashable
 	
 	/**
 		Returns true if this node is connected to the `target` node.
-		<o>n</o>
 		<assert>`target` is null</assert>
 	**/
-	inline public function isConnected(target:GraphNode<T>):Bool
+	public inline function isConnected(target:GraphNode<T>):Bool
 	{
 		assert(target != null, "target is null");
 		
@@ -135,10 +130,9 @@ class GraphNode<T> implements Hashable
 	
 	/**
 		Returns true if this node and the `target` node are pointing to each other.
-		<o>n</o>
 		<assert>`target` is null</assert>
 	**/
-	inline public function isMutuallyConnected(target:GraphNode<T>):Bool
+	public inline function isMutuallyConnected(target:GraphNode<T>):Bool
 	{
 		assert(target != null, "target is null");
 		
@@ -147,7 +141,6 @@ class GraphNode<T> implements Hashable
 	
 	/**
 		Finds the arc that is pointing to the `target` node or returns null if such an arc does not exist.
-		<o>n</o>
 		<assert>`target` is null</assert>
 		<assert>`target` equals this</assert>
 	**/
@@ -176,11 +169,10 @@ class GraphNode<T> implements Hashable
 	
 	/**
 		Adds an arc pointing from this node to the specified `target` node.
-		<o>1</o>
 		<assert>`target` is null or arc to `target` already exists</assert>
 		@param cost defines how "hard" it is to get from one node to the other. Default is 1.0.
 	**/
-	public function addArc(target:GraphNode<T>, cost = 1.)
+	public function addArc(target:GraphNode<T>, cost:Float = 1)
 	{
 		assert(target != this, "target is null");
 		assert(getArc(target) == null, "arc to target already exists");
@@ -197,7 +189,6 @@ class GraphNode<T> implements Hashable
 	
 	/**
 		Removes the arc that is pointing to the specified `target` node.
-		<o>n</o>
 		<assert>`target`</assert>
 		@return true if the arc is successfully removed, false if such an arc does not exist.
 	**/
@@ -223,7 +214,6 @@ class GraphNode<T> implements Hashable
 	
 	/**
 		Removes all outgoing arcs from this node.
-		<o>n</o>
 	**/
 	public function removeSingleArcs()
 	{
@@ -237,7 +227,6 @@ class GraphNode<T> implements Hashable
 	
 	/**
 		Remove all outgoing and incoming arcs from this node.
-		<o>n</o>
 	**/
 	public function removeMutualArcs()
 	{
@@ -253,7 +242,6 @@ class GraphNode<T> implements Hashable
 	
 	/**
 		Counts the total number of arcs.
-		<o>n</o>
 	**/
 	public function getArcCount():Int
 	{
@@ -304,25 +292,25 @@ class NodeValIterator<T> implements de.polygonal.ds.Itr<T>
 		reset();
 	}
 	
-	inline public function reset():Itr<T>
+	public inline function reset():Itr<T>
 	{
 		mArcList = mObject.arcList;
 		return this;
 	}
 	
-	inline public function hasNext():Bool
+	public inline function hasNext():Bool
 	{
 		return mArcList != null;
 	}
 	
-	inline public function next():T
+	public inline function next():T
 	{
 		var val = mArcList.node.val;
 		mArcList = mArcList.next;
 		return val;
 	}
 	
-	inline public function remove()
+	public function remove()
 	{
 		throw "unsupported operation";
 	}

@@ -1,5 +1,5 @@
 ﻿/*
-Copyright (c) 2008-2014 Michael Baczynski, http://www.polygonal.de
+Copyright (c) 2008-2016 Michael Baczynski, http://www.polygonal.de
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -18,15 +18,14 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 */
 package de.polygonal.ds;
 
-import de.polygonal.ds.error.Assert.assert;
-import de.polygonal.ds.tools.NativeArray;
+import de.polygonal.ds.tools.ArrayTools;
+import de.polygonal.ds.tools.Assert.assert;
+import de.polygonal.ds.tools.NativeArrayTools;
 
 /**
 	A binary tree
 	
 	A tree data structure in which each node has at most two child nodes.
-	
-	_<o>Worst-case running time in Big O notation</o>_
 **/
 #if generic
 @:generic
@@ -40,7 +39,7 @@ class BinaryTreeNode<T> implements Collection<T>
 		
 		<warn>This value should never be changed by the user.</warn>
 	**/
-	public var key(default, null):Int;
+	public var key(default, null):Int = HashKey.next();
 	
 	/**
 		The node's data.
@@ -62,7 +61,7 @@ class BinaryTreeNode<T> implements Collection<T>
 	**/
 	public var r:BinaryTreeNode<T>;
 	
-	var mTimestamp:Int;
+	var mTimestamp:Int = 0;
 	
 	#if debug
 	var mBusy:Bool;
@@ -79,9 +78,6 @@ class BinaryTreeNode<T> implements Collection<T>
 		#if debug
 		mBusy = false;
 		#end
-		
-		mTimestamp = 0;
-		key = HashKey.next();
 	}
 	
 	/**
@@ -93,7 +89,6 @@ class BinaryTreeNode<T> implements Collection<T>
 		2. Traverse the left subtree of the node
 		3. Traverse the right subtree of the node
 		
-		<o>n</o>
 		@param process a function that is invoked on every traversed node.
 		If omitted, ``element::visit()`` is used instead. <warn>In this case all elements have to implement `Visitable`.</warn>
 		The first argument holds a reference to the current node, while the second argument stores custom data specified by the userData parameter (default is null).
@@ -101,7 +96,7 @@ class BinaryTreeNode<T> implements Collection<T>
 		@param iterative if true, an iterative traversal is used (default traversal style is recursive).
 		@param userData custom data that is passed to every visited node via `process` or ``element::visit()``. If omitted, null is used.
 	**/
-	public function preorder(process:BinaryTreeNode<T>->Dynamic->Bool = null, iterative = false, userData:Dynamic = null)
+	public function preorder(process:BinaryTreeNode<T>->Dynamic->Bool = null, iterative:Bool = false, userData:Dynamic = null)
 	{
 		if (iterative == false)
 		{
@@ -165,7 +160,6 @@ class BinaryTreeNode<T> implements Collection<T>
 		2. Visit the node
 		3. Traverse the right subtree of the node
 		
-		<o>n</o>
 		@param process a function that is invoked on every traversed node.
 		If omitted, element:``visit()`` is used instead. <warn>In this case all elements have to implement `Visitable`.</warn>
 		The first argument holds a reference to the current node, while the second argument stores custom data specified by the userData parameter (default is null).
@@ -173,7 +167,7 @@ class BinaryTreeNode<T> implements Collection<T>
 		@param iterative if true, an iterative traversal is used (default traversal style is recursive).
 		@param userData custom data that is passed to every visited node via `process` or element:``visit()``. If omitted, null is used.
 	**/
-	public function inorder(process:BinaryTreeNode<T>->Dynamic->Bool = null, iterative = false, userData:Dynamic = null)
+	public function inorder(process:BinaryTreeNode<T>->Dynamic->Bool = null, iterative:Bool = false, userData:Dynamic = null)
 	{
 		if (iterative == false)
 		{
@@ -269,7 +263,6 @@ class BinaryTreeNode<T> implements Collection<T>
 		2. Traverse the right subtree of the node
 		3. Visit the node
 		
-		<o>n</o>
 		@param process a function that is invoked on every traversed node.
 		If omitted, ``element::visit()`` is used instead. <warn>In this case all elements have to implement `Visitable`.</warn>
 		The first argument holds a reference to the current node, while the second argument stores custom data specified by the userData parameter (default is null).
@@ -277,7 +270,7 @@ class BinaryTreeNode<T> implements Collection<T>
 		@param iterative if true, an iterative traversal is used (default traversal style is recursive).
 		@param userData custom data that is passed to every visited node via `process` or ``element::visit()``. If omitted, null is used.
 	**/
-	public function postorder(process:BinaryTreeNode<T>->Dynamic->Bool = null, iterative = false, userData:Dynamic = null)
+	public function postorder(process:BinaryTreeNode<T>->Dynamic->Bool = null, iterative:Bool = false, userData:Dynamic = null)
 	{
 		if (iterative == false)
 		{
@@ -380,9 +373,8 @@ class BinaryTreeNode<T> implements Collection<T>
 	
 	/**
 		Returns true if this node has a left child node.
-		<o>1</o>
 	**/
-	inline public function hasL():Bool
+	public inline function hasL():Bool
 	{
 		return l != null;
 	}
@@ -391,9 +383,8 @@ class BinaryTreeNode<T> implements Collection<T>
 		Adds a left child node storing the element `x`.
 		
 		If a left child exists, only the element is updated to `x`.
-		<o>1</o>
 	**/
-	inline public function setL(x:T)
+	public inline function setL(x:T)
 	{
 		if (l == null)
 		{
@@ -406,9 +397,8 @@ class BinaryTreeNode<T> implements Collection<T>
 	
 	/**
 		Returns true if this node has a right child node.
-		<o>1</o>
 	**/
-	inline public function hasR():Bool
+	public inline function hasR():Bool
 	{
 		return r != null;
 	}
@@ -417,9 +407,8 @@ class BinaryTreeNode<T> implements Collection<T>
 		Adds a right child node storing the element `x`.
 		
 		If a right child exists, only the element is updated to `x`.
-		<o>1</o>
 	**/
-	inline public function setR(x:T)
+	public inline function setR(x:T)
 	{
 		if (r == null)
 		{
@@ -432,9 +421,8 @@ class BinaryTreeNode<T> implements Collection<T>
 	
 	/**
 		Returns true if this node is a left child as seen from its parent node.
-		<o>1</o>
 	**/
-	inline public function isL():Bool
+	public inline function isL():Bool
 	{
 		if (p == null)
 			return false;
@@ -444,9 +432,8 @@ class BinaryTreeNode<T> implements Collection<T>
 	
 	/**
 		Returns true if this node is a right child as seen from its parent node.
-		<o>1</o>
 	**/
-	inline public function isR():Bool
+	public inline function isR():Bool
 	{
 		if (p == null)
 			return false;
@@ -456,9 +443,8 @@ class BinaryTreeNode<T> implements Collection<T>
 	
 	/**
 		Returns true if this node is a root node (``p`` is null).
-		<o>1</o>
 	**/
-	inline public function isRoot():Bool
+	public inline function isRoot():Bool
 	{
 		return p == null;
 	}
@@ -469,9 +455,8 @@ class BinaryTreeNode<T> implements Collection<T>
 		The depth is defined as the length of the path from the root node to this node.
 		
 		The root node is at depth 0.
-		<o>n</o>
 	**/
-	inline public function depth():Int
+	public inline function depth():Int
 	{
 		var node = p;
 		var c = 0;
@@ -489,7 +474,6 @@ class BinaryTreeNode<T> implements Collection<T>
 		The height is defined as the path from the root node to the deepest node in a tree.
 		
 		A tree with only a root node has a height of one.
-		<o>n</o>
 	**/
 	public function height():Int
 	{
@@ -498,9 +482,8 @@ class BinaryTreeNode<T> implements Collection<T>
 	
 	/**
 		Disconnects this node from this subtree.
-		<o>1</o>
 	**/
-	inline public function unlink()
+	public inline function unlink()
 	{
 		if (p != null)
 		{
@@ -535,8 +518,8 @@ class BinaryTreeNode<T> implements Collection<T>
 	**/
 	public function toString():String
 	{
-		var s = '{ BinaryTreeNode val: ${Std.string(val)}, size: ${size()}, node depth: ${depth()}, tree height: ${height()} }';
-		if (size() == 1) return s;
+		var s = '{ BinaryTreeNode val: ${Std.string(val)}, size: ${size}, node depth: ${depth()}, tree height: ${height()} }';
+		if (size == 1) return s;
 		s += "\n\n[\n";
 		var f = function(node:BinaryTreeNode<T>, userData:Dynamic):Bool
 		{
@@ -636,15 +619,24 @@ class BinaryTreeNode<T> implements Collection<T>
 		return M.max(cl, cr) + 1;
 	}
 	
-	/*///////////////////////////////////////////////////////
-	// collection
-	///////////////////////////////////////////////////////*/
+	/* INTERFACE Collection */
+	
+	/**
+		Recursively counts the number of nodes in this subtree (including this node).
+	**/
+	public var size(get, never):Int;
+	function get_size():Int
+	{
+		var c = 1;
+		if (hasL()) c += l.size;
+		if (hasR()) c += r.size;
+		return c;
+	}
 	
 	/**
 		Destroys this object by explicitly nullifying all nodes, pointers and elements for GC'ing used resources.
 		
 		Improves GC efficiency/performance (optional).
-		<o>n</o>
 	**/
 	public function free()
 	{
@@ -657,7 +649,6 @@ class BinaryTreeNode<T> implements Collection<T>
 	
 	/**
 		Returns true if the subtree rooted at this node contains the element `x`.
-		<o>n</o>
 	**/
 	public function contains(x:T):Bool
 	{
@@ -683,7 +674,6 @@ class BinaryTreeNode<T> implements Collection<T>
 		Runs a recursive preorder traversal that removes all occurrences of `x`.
 		
 		Tree nodes are not rearranged, so if a node storing `x` is removed, the subtree rooted at that node is unlinked and lost.
-		<o>n</o>
 		@return true if at least one occurrence of `x` was removed.
 	**/
 	public function remove(x:T):Bool
@@ -697,29 +687,25 @@ class BinaryTreeNode<T> implements Collection<T>
 		
 		if (hasL()) found = found || l.remove(x);
 		if (hasR()) found = found || r.remove(x);
-		
 		return found;
 	}
 	
 	/**
 		Removes all child nodes.
-		<o>1 or n if `purge` is true</o>
-		@param purge if true, all nodes and elements of this subtree are recursively nullified.
+		
+		@param gc if true, all nodes and elements of this subtree are recursively nullified so the garbage collector can reclaim used memory.
 	**/
-	public function clear(purge = false)
+	public function clear(gc:Bool = false)
 	{
-		if (purge)
+		if (gc)
 		{
-			if (hasL()) l.clear(purge);
-			if (hasR()) r.clear(purge);
-			
+			if (hasL()) l.clear(gc);
+			if (hasR()) r.clear(gc);
 			l = r = p = null;
 			val = cast null;
 		}
 		else
-		{
 			l = r = null;
-		}
 	}
 	
 	/**
@@ -735,21 +721,9 @@ class BinaryTreeNode<T> implements Collection<T>
 	}
 	
 	/**
-		Recursively counts the number of nodes in this subtree (including this node).
-		<o>n</o>
-	**/
-	public function size():Int
-	{
-		var c = 1;
-		if (hasL()) c += l.size();
-		if (hasR()) c += r.size();
-		return c;
-	}
-	
-	/**
 		<warn>Unsupported operation - always returns false.</warn>
 	**/
-	inline public function isEmpty():Bool
+	public inline function isEmpty():Bool
 	{
 		return false;
 	}
@@ -761,23 +735,12 @@ class BinaryTreeNode<T> implements Collection<T>
 	**/
 	public function toArray():Array<T>
 	{
-		var out = ArrayUtil.alloc(size());
+		if (isEmpty()) return [];
+		
+		var out = ArrayTools.alloc(size);
 		var i = 0;
 		preorder(function(node:BinaryTreeNode<T>, userData:Dynamic):Bool { out[i++] = node.val; return true; });
 		return out;
-	}
-	
-	/**
-		Returns a `Vector<T>` object containing all elements in this subtree.
-		
-		The elements are added by applying a preorder traversal.
-	**/
-	public function toVector():Container<T>
-	{
-		var v = NativeArray.init(size());
-		var i = 0;
-		preorder(function(node:BinaryTreeNode<T>, userData:Dynamic):Bool { v[i++] = node.val; return true; });
-		return v;
 	}
 	
 	/**
@@ -787,7 +750,7 @@ class BinaryTreeNode<T> implements Collection<T>
 		If false, the ``clone()`` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
 		@param copier a custom function for copying elements. Replaces ``element::clone()`` if `assign` is false.
 	**/
-	public function clone(assign = true, copier:T->T = null):Collection<T>
+	public function clone(assign:Bool = true, copier:T->T = null):Collection<T>
 	{
 		var stack = new Array<BinaryTreeNode<T>>();
 		var copy = new BinaryTreeNode<T>(copier != null ? copier(val) : val);
@@ -885,7 +848,7 @@ class BinaryTreeNodeIterator<T> implements de.polygonal.ds.Itr<T>
 		reset();
 	}
 	
-	inline public function reset():Itr<T>
+	public inline function reset():Itr<T>
 	{
 		mStack[0] = mObject;
 		mTop = 1;
@@ -893,12 +856,12 @@ class BinaryTreeNodeIterator<T> implements de.polygonal.ds.Itr<T>
 		return this;
 	}
 	
-	inline public function hasNext():Bool
+	public inline function hasNext():Bool
 	{
 		return mTop > 0;
 	}
 	
-	inline public function next():T
+	public inline function next():T
 	{
 		var node = mStack[--mTop];
 		mC = 0;
@@ -915,7 +878,7 @@ class BinaryTreeNodeIterator<T> implements de.polygonal.ds.Itr<T>
 		return node.val;
 	}
 	
-	inline public function remove()
+	public function remove()
 	{
 		mTop -= mC;
 	}

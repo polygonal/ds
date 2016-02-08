@@ -1,5 +1,5 @@
 ﻿/*
-Copyright (c) 2008-2014 Michael Baczynski, http://www.polygonal.de
+Copyright (c) 2008-2016 Michael Baczynski, http://www.polygonal.de
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -26,7 +26,7 @@ class Compare
 	/**
 		Comparison function for sorting floats in descending order.
 	**/
-	public static function compareNumberFall<T>(a:Float, b:Float):Int
+	public static function cmpNumberFall<T>(a:Float, b:Float):Int
 	{
 		return Std.int(b - a);
 	}
@@ -34,7 +34,7 @@ class Compare
 	/**
 		Comparison function for sorting floats in ascending order.
 	**/
-	public static function compareNumberRise<T>(a:Float, b:Float):Int
+	public static function cmpNumberRise<T>(a:Float, b:Float):Int
 	{
 		return Std.int(a - b);
 	}
@@ -42,7 +42,7 @@ class Compare
 	/**
 		Comparison function for sorting strings in case insensitive descending order.
 	**/
-	public static function compareStringCaseInSensitiveFall(a:String, b:String):Int
+	public static function cmpStringCaseInSensitiveFall(a:String, b:String):Int
 	{
 		a = a.toLowerCase();
 		b = b.toLowerCase();
@@ -65,15 +65,15 @@ class Compare
 	/**
 		Comparison function for sorting strings in case insensitive ascending order.
 	**/
-	public static function compareStringCaseInSensitiveRise(a:String, b:String):Int
+	public static function cmpStringCaseInSensitiveRise(a:String, b:String):Int
 	{
-		return compareStringCaseInSensitiveFall(b, a);
+		return cmpStringCaseInSensitiveFall(b, a);
 	}
 	
 	/**
 		Comparison function for sorting strings in case sensitive descending order.
 	**/
-	public static function compareStringCaseSensitiveFall(a:String, b:String):Int
+	public static function cmpStringCaseSensitiveFall(a:String, b:String):Int
 	{
 		if (a.length + b.length > 2)
 		{
@@ -93,9 +93,9 @@ class Compare
 	/**
 		Comparison function for sorting strings in case sensitive ascending order.
 	**/
-	public static function compareStringCaseSensitiveRise(a:String, b:String):Int
+	public static function cmpStringCaseSensitiveRise(a:String, b:String):Int
 	{
-		return compareStringCaseSensitiveFall(b, a);
+		return cmpStringCaseSensitiveFall(b, a);
 	}
 	
 	/**
@@ -117,7 +117,6 @@ class Compare
 			d = ca - cb;
 			if (d != 0) return d;
 		}
-		
 		return ak - bk;
 	}
 }

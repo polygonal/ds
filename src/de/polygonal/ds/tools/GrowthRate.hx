@@ -1,4 +1,4 @@
-﻿/*
+/*
 Copyright (c) 2008-2016 Michael Baczynski, http://www.polygonal.de
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -16,15 +16,39 @@ NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FO
 DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT
 OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
-package de.polygonal.ds;
+package de.polygonal.ds.tools;
 
-/**
-	An object that creates objects of type T
-**/
-interface Factory<T>
+import de.polygonal.ds.tools.Assert.assert;
+
+class GrowthRate
 {
-	/**
-		Creates and returns a new object of type T.
-	**/
-	function create():T;
+	inline public static var FIXED  =  0;
+	inline public static var MILD   = -1; //1.125x
+	inline public static var NORMAL = -2; //1.5x
+	inline public static var DOUBLE = -3; //2x
+	
+	public static function compute(rate:Int, capacity:Int):Int
+	{
+		assert(rate >= -3, "invalid growth rate");
+		
+		if (rate > 0)
+			capacity += rate;
+		else
+		{
+			switch (rate)
+			{
+				case FIXED: throw "out of space";
+				
+				case MILD:
+					var newSize = capacity + 1;
+					capacity = (newSize >> 3) + (newSize < 9 ? 3 : 6);
+					capacity += newSize;
+				
+				case NORMAL: capacity = ((capacity * 3) >> 1) + 1;
+				
+				case DOUBLE: capacity <<= 1;
+			}
+		}
+		return capacity;
+	}
 }

@@ -1,5 +1,5 @@
 ﻿/*
-Copyright (c) 2008-2014 Michael Baczynski, http://www.polygonal.de
+Copyright (c) 2008-2016 Michael Baczynski, http://www.polygonal.de
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -18,16 +18,16 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 */
 package de.polygonal.ds;
 
-import de.polygonal.ds.error.Assert.assert;
+import de.polygonal.ds.tools.ArrayTools;
+import de.polygonal.ds.tools.Assert.assert;
+import de.polygonal.ds.tools.GrowthRate;
 
-using de.polygonal.ds.tools.NativeArray;
+using de.polygonal.ds.tools.NativeArrayTools;
 
 /**
 	A heap is a special kind of binary tree in which every node is greater than all of its children
 	
 	The implementation is based on an arrayed binary tree.
-	
-	_<o>Worst-case running time in Big O notation</o>_
 **/
 class Heap<T:(Heapable<T>)> implements Collection<T>
 {
@@ -38,7 +38,25 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 		
 		<warn>This value should never be changed by the user.</warn>
 	**/
-	public var key(default, null):Int;
+	public var key(default, null):Int = HashKey.next();
+	
+	/**
+		The capacity of the internal container.
+		
+		The capacity is usually a bit larger than `size` (_mild overallocation_).
+	**/
+	public var capacity(default, null):Int;
+	
+	/**
+		The growth rate of the container.
+		
+		+  0: fixed size
+		+ -1: grows at a rate of 1.125x plus a constant.
+		+ -2: grows at a rate of 1.5x (default value).
+		+ -3: grows at a rate of 2.0x.
+		+ >0: grows at a constant rate: capacity += growthRate
+	**/
+	public var growthRate:Int = GrowthRate.NORMAL;
 	
 	/**
 		If true, reuses the iterator object instead of allocating a new one when calling ``iterator()``.
@@ -47,98 +65,52 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 		
 		<warn>If true, nested iterations are likely to fail as only one iteration is allowed at a time.</warn>
 	**/
-	public var reuseIterator:Bool;
-	
-	public var capacity(default, null):Int;
+	public var reuseIterator:Bool = false;
 	
 	var mData:Container<T>;
-	var mSize:Int;
-	var mIterator:HeapIterator<T>;
-	var mShrinkSize:Int;
-	
-	var mCapacityIncrement:Int;
+	var mInitialCapacity:Int;
+	var mSize:Int = 0;
+	var mIterator:HeapIterator<T> = null;
 	
 	#if debug
 	var mMap:haxe.ds.ObjectMap<T, Bool>;
 	#end
 	
-	/**
-		@param reservedSize the initial capacity of the internal container. See ``reserve()``.
-	**/
-	public function new(initialCapacity:Int = 16, capacityIncrement:Int = -1)
+	public function new(initalCapacity:Null<Int> = 1, ?source:Array<T>)
 	{
-		capacity = initialCapacity;
-		mCapacityIncrement = capacityIncrement;
+		mInitialCapacity = M.max(1, initalCapacity);
+		capacity = initalCapacity;
 		
-		#if debug
-		mMap = new haxe.ds.ObjectMap<T, Bool>();
-		#end
-		
-		mData = NativeArray.init(capacity + 1);
-		mData.set(0, cast null); //reserved
-		mSize = 0;
-		mIterator = null;
-		
-		key = HashKey.next();
-		reuseIterator = false;
-	}
-	
-	/**
-		For performance reasons the heap does nothing to ensure that empty locations contain null; ``pack()`` therefore
-		nullifies all obsolete references and shrinks the container to the actual size allowing the garbage collector to reclaim used memory.
-		<o>n</o>
-	**/
-	public function pack()
-	{
-		if (mData.length - 1 == size()) return;
-		
-		#if debug
-		mMap = new haxe.ds.ObjectMap<T, Bool>();
-		#end
-		
-		var tmp = mData;
-		mData = NativeArray.init(size() + 1);
-		
-		var d = mData;
-		
-		d.set(0, cast null);
-		for (i in 1...size() + 1)
+		if (source != null)
 		{
-			d.set(i, tmp.get(i));
-			
-			#if debug
-			mMap.set(tmp.get(i), true);
-			#end
+			mSize = source.length;
+			capacity = M.max(mSize, capacity);
 		}
-		for (i in size() + 1...NativeArray.size(tmp)) tmp.set(i, cast null);
-	}
-	
-	/**
-		Preallocates storage for `n` elements.
 		
-		Useful before inserting a large number of elements as this reduces the amount of incremental reallocation.
-	**/
-	public function reserve(n:Int):Heap<T>
-	{
-		if (n <= capacity) return this;
+		mData = NativeArrayTools.init(capacity + 1);
+		mData.set(0, cast null); //reserved
 		
-		capacity = n;
-		mShrinkSize = n >> 2;
-		resize(n);
+		#if debug
+		mMap = new haxe.ds.ObjectMap<T, Bool>();
+		#end
 		
-		return this;
+		if (source != null)
+		{
+			var d = mData;
+			for (i in 1...mSize + 1) d.set(i, source[i - 1]);
+			repair();
+		}
 	}
 	
 	/**
 		Returns the item on top of the heap without removing it from the heap.
 		
 		This is the smallest element (assuming ascending order).
-		<o>1</o>
 		<assert>heap is empty</assert>
 	**/
-	inline public function top():T
+	public inline function top():T
 	{
-		assert(size() > 0, "heap is empty");
+		assert(size > 0, "heap is empty");
 		
 		return mData.get(1);
 	}
@@ -147,29 +119,26 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 		Returns the item on the bottom of the heap without removing it from the heap.
 		
 		This is the largest element (assuming ascending order).
-		<o>n</o>
 		<assert>heap is empty</assert>
 	**/
 	public function bottom():T
 	{
-		assert(size() > 0, "heap is empty");
+		assert(size > 0, "heap is empty");
 		
-		if (mSize == 1) return mData.get(1);
+		if (size == 1) return mData.get(1);
 		
 		var d = mData;
 		var a = d.get(1), b;
-		for (i in 2...mSize + 1)
+		for (i in 2...size + 1)
 		{
 			b = d.get(i);
 			if (a.compare(b) > 0) a = b;
 		}
-		
 		return a;
 	}
 	
 	/**
 		Adds the element `x`.
-		<o>log n</o>
 		<assert>heap is full</assert>
 		<assert>`x` is null or `x` already exists</assert>
 	**/
@@ -181,22 +150,21 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 		mMap.set(x, true);
 		#end
 		
-		if (mSize == capacity) grow();
+		if (size == capacity) resize();
 		mData.set(++mSize, x);
-		x.position = mSize;
-		upheap(mSize);
+		x.position = size;
+		upheap(size);
 	}
 	
 	/**
 		Removes the element on top of the heap.
 		
 		This is the smallest element (assuming ascending order).
-		<o>log n</o>
 		<assert>heap is empty</assert>
 	**/
 	public function pop():T
 	{
-		assert(size() > 0, "heap is empty");
+		assert(size > 0, "heap is empty");
 		
 		var d = mData;
 		var x = d.get(1);
@@ -207,7 +175,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 		
 		//TODO shrink
 		
-		d.set(1, d.get(mSize));
+		d.set(1, d.get(size));
 		downheap(1);
 		mSize--;
 		return x;
@@ -215,7 +183,6 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	
 	/**
 		Replaces the item at the top of the heap with a new element `x`.
-		<o>log n</o>
 		<assert>`x` already exists</assert>
 	**/
 	public function replace(x:T)
@@ -234,7 +201,6 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 		Rebuilds the heap in case an existing element was modified.
 		
 		This is faster than removing and readding an element.
-		<o>log n</o>
 		<assert>`x` does not exist</assert>
 		@param hint a value >= 0 indicates that `x` is now smaller (ascending order) or bigger (descending order) and should be moved towards the root of the tree to rebuild the heap property.
 		Likewise, a value < 0 indicates that `x` is now bigger (ascending order) or smaller (descending order) and should be moved towards the leaf nodes of the tree.
@@ -251,46 +217,45 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 		else
 		{
 			downheap(x.position);
-			upheap(mSize);
+			upheap(size);
 		}
 	}
 	
 	/**
 		Returns a sorted array of all elements.
-		<o>n log n</o>
 	**/
 	public function sort():Array<T>
 	{
 		if (isEmpty()) return [];
 		
-		var out = ArrayUtil.alloc(mSize);
-		var tmp = NativeArray.copy(mData);
-		var k = mSize;
+		var out = ArrayTools.alloc(size);
+		var t = NativeArrayTools.copy(mData);
+		var k = size;
 		var j = 0, i, c, v, s, u;
 		while (k > 0)
 		{
-			out[j++] = tmp.get(1);
-			tmp.set(1, tmp.get(k));
+			out[j++] = t.get(1);
+			t.set(1, t.get(k));
 			i = 1;
 			c = i << 1;
-			v = tmp.get(i);
+			v = t.get(i);
 			s = k - 1;
 			while (c < k)
 			{
 				if (c < s)
-					if (tmp.get(c).compare(tmp.get(c + 1)) < 0)
+					if (t.get(c).compare(t.get(c + 1)) < 0)
 						c++;
 				
-				u = tmp.get(c);
+				u = t.get(c);
 				if (v.compare(u) < 0)
 				{
-					tmp.set(i, u);
+					t.set(i, u);
 					i = c;
 					c <<= 1;
 				}
 				else break;
 			}
-			tmp.set(i, v);
+			t.set(i, v);
 			k--;
 		}
 		return out;
@@ -298,11 +263,86 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	
 	/**
 		Computes the height of the heap tree.
-		<o>1</o>
 	**/
 	public function height():Int
 	{
-		return 32 - Bits.nlz(mSize);
+		return 32 - Bits.nlz(size);
+	}
+	
+	/**
+		Preallocates storage for `n` elements.
+		
+		May cause a reallocation, but has no effect on the vector size and its elements.
+		Useful before inserting a large number of elements as this reduces the amount of incremental reallocation.
+	**/
+	public function reserve(n:Int):Heap<T>
+	{
+		if (n > capacity)
+		{
+			capacity = n;
+			resizeContainer(n);
+		}
+		return this;
+	}
+	
+	/**
+		For performance reasons the heap does nothing to ensure that empty locations contain null; ``pack()`` therefore
+		nullifies all obsolete references and shrinks the container to the actual size allowing the garbage collector to reclaim used memory.
+	**/
+	/**
+		Reduces the capacity of the internal container to the initial capacity.
+		
+		May cause a reallocation, but has no effect on the vector size and its elements.
+		An application can use this operation to free up memory by GC'ing used resources.
+	**/
+	public function pack():Heap<T>
+	{
+		if (capacity > mInitialCapacity)
+		{
+			capacity = M.max(mInitialCapacity, mSize);
+			resizeContainer(capacity);
+		}
+		else
+		{
+			var d = mData;
+			for (i in mSize...capacity) d.set(i, cast null);
+		}
+		
+		/*if (mData.length - 1 == size) return;
+		
+		#if debug
+		mMap = new haxe.ds.ObjectMap<T, Bool>();
+		#end
+		
+		var t = mData;
+		mData = NativeArrayTools.init(size + 1);
+		
+		var d = mData;
+		
+		d.set(0, cast null);
+		for (i in 1...size + 1)
+		{
+			d.set(i, t.get(i));
+			
+			#if debug
+			mMap.set(t.get(i), true);
+			#end
+		}*/
+		return this;
+	}
+	
+	/**
+		Uses the Floyd algorithm (bottom-up) to repair the heap tree by restoring the heap property.
+	**/
+	public function repair():Heap<T>
+	{
+		var i = size >> 1;
+		while (i >= 1)
+		{
+			heapify(i, size);
+			i--;
+		}
+		return this;
 	}
 	
 	/**
@@ -348,244 +388,16 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	**/
 	public function toString():String
 	{
-		var s = '{ Heap size: ${size()} }';
+		var s = '{ Heap size: ${size} }';
 		if (isEmpty()) return s;
 		
-		var tmp = sort();
+		var t = sort();
 		s += "\n[ front\n";
 		var i = 0;
-		for (i in 0...size())
-			s += Printf.format("  %4d -> %s\n", [i, Std.string(tmp[i])]);
+		for (i in 0...size)
+			s += Printf.format("  %4d -> %s\n", [i, Std.string(t[i])]);
 		s += "]";
 		return s;
-	}
-	
-	/**
-		Uses the Floyd algorithm (bottom-up) to repair the heap tree by restoring the heap property.
-		<o>n</o>
-	**/
-	public function repair():Heap<T>
-	{
-		var i = mSize >> 1;
-		while (i >= 1)
-		{
-			heapify(i, mSize);
-			i--;
-		}
-		return this;
-	}
-	
-	/*///////////////////////////////////////////////////////
-	// collection
-	///////////////////////////////////////////////////////*/
-	
-	/**
-		Destroys this object by explicitly nullifying all elements for GC'ing used resources.
-		
-		Improves GC efficiency/performance (optional).
-		<o>n</o>
-	**/
-	public function free()
-	{
-		var d = mData;
-		for (i in 0...NativeArray.size(d)) d.set(i, cast null);
-		mData = null;
-		
-		if (mIterator != null)
-		{
-			mIterator.free();
-			mIterator = null;
-		}
-		
-		#if debug
-		mMap = null;
-		#end
-	}
-	
-	/**
-		Returns true if this heap contains the element `x`.
-		<o>1</o>
-		<assert>`x` is invalid</assert>
-	**/
-	inline public function contains(x:T):Bool
-	{
-		assert(x != null, "x is null");
-		
-		var position = x.position;
-		return (position > 0 && position <= mSize) && (mData.get(position) == x);
-	}
-	
-	/**
-		Removes the element `x`.
-		<o>2 * log n</o>
-		<assert>`x` is invalid or does not exist</assert>
-		@return true if `x` was removed.
-	**/
-	public function remove(x:T):Bool
-	{
-		if (isEmpty()) return false;
-
-		assert(x != null, "x is null");
-		
-		#if debug
-		var exists = mMap.exists(x);
-		assert(exists, "x does not exist");
-		mMap.remove(x);
-		#end
-		
-		if (x.position == 1)
-			pop();
-		else
-		{
-			var p = x.position, d = mData;
-			d.set(p, d.get(mSize));
-			downheap(p);
-			upheap(p);
-			mSize--;
-		}
-		
-		//TODO shrink
-		
-		return true;
-	}
-	
-	/**
-		Removes all elements.
-		<o>1 or n if `purge` is true</o>
-		@param purge if true, elements are nullified upon removal.
-	**/
-	inline public function clear(purge = false)
-	{
-		#if debug
-		mMap = new haxe.ds.ObjectMap<T, Bool>();
-		#end
-		
-		if (purge)
-		{
-			var d = mData;
-			for (i in 1...NativeArray.size(mData)) d.set(i, cast null);
-		}
-		mSize = 0;
-	}
-	
-	/**
-		Returns a new `HeapIterator` object to iterate over all elements contained in this heap.
-		
-		The values are visited in an unsorted order.
-		
-		See <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
-	**/
-	public function iterator():Itr<T>
-	{
-		if (reuseIterator)
-		{
-			if (mIterator == null)
-				mIterator = new HeapIterator<T>(this);
-			else
-				mIterator.reset();
-			return mIterator;
-		}
-		else
-			return new HeapIterator<T>(this);
-	}
-	
-	/**
-		The total number of elements.
-		<o>1</o>
-	**/
-	inline public function size():Int
-	{
-		return mSize;
-	}
-	
-	/**
-		Returns true if this heap is empty.
-		<o>1</o>
-	**/
-	inline public function isEmpty():Bool
-	{
-		return mSize == 0;
-	}
-	
-	/**
-		Returns an unordered array containing all elements in this heap.
-	**/
-	public function toArray():Array<T>
-	{
-		return NativeArray.toArray(mData, 1, size());
-	}
-	
-	/**
-		Returns a `Vector<T>` object containing all elements in this heap.
-	**/
-	public function toVector():Container<T>
-	{
-		var v = NativeArray.init(size());
-		var d = mData;
-		for (i in 1...mSize + 1) v.set(i - 1, d.get(i));
-		return v;
-	}
-	
-	/**
-		Duplicates this heap. Supports shallow (structure only) and deep copies (structure & elements).
-		<assert>element is not of type `Cloneable`</assert>
-		@param assign if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
-		If false, the ``clone()`` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
-		@param copier a custom function for copying elements. Replaces ``element::clone()`` if `assign` is false.
-		<warn>If `assign` is true, only the copied version should be used from now on.</warn>
-	**/
-	public function clone(assign = true, copier:T->T = null):Collection<T>
-	{
-		var copy = new Heap<T>(mSize);
-		if (mSize == 0) return copy;
-		if (assign)
-		{
-			//TODo optimize
-			for (i in 1...mSize + 1)
-			{
-				copy.mData.set(i, mData.get(i));
-				
-				#if debug
-				copy.mMap.set(mData.get(i), true);
-				#end
-			}
-		}
-		else
-		if (copier == null)
-		{
-			for (i in 1...mSize + 1)
-			{
-				var e = mData.get(i);
-				
-				assert(Std.is(e, Cloneable), 'element is not of type Cloneable (${mData.get(i)})');
-				
-				var cl:Cloneable<T> = cast e;
-				var c = cl.clone();
-				c.position = e.position;
-				copy.mData.set(i, cast c);
-				
-				#if debug
-				copy.mMap.set(c, true);
-				#end
-			}
-		}
-		else
-		{
-			for (i in 1...mSize + 1)
-			{
-				var e = mData.get(i);
-				var c = copier(e);
-				c.position = e.position;
-				copy.mData.set(i, c);
-				
-				#if debug
-				copy.mMap.set(c, true);
-				#end
-			}
-		}
-		
-		copy.mSize = mSize;
-		return copy;
 	}
 	
 	inline function upheap(i:Int)
@@ -615,9 +427,9 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 		var d = mData;
 		var c = i << 1;
 		var a = d.get(i);
-		var s = mSize - 1;
+		var s = size - 1;
 		
-		while (c < mSize)
+		while (c < size)
 		{
 			if (c < s)
 				if (d.get(c).compare(d.get(c + 1)) < 0)
@@ -647,46 +459,220 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 		if (l <= s && d.get(l).compare(d.get(max)) > 0) max = l;
 		if (l + 1 <= s && d.get(l + 1).compare(d.get(max)) > 0) max = r;
 		
+		var a, b, t;
 		if (max != p)
 		{
-			var a = d.get(max);
-			var b = d.get(p);
+			a = d.get(max);
+			b = d.get(p);
 			d.set(max, b);
 			d.set(p, a);
-			var tmp = a.position;
+			t = a.position;
 			a.position = b.position;
-			b.position = tmp;
+			b.position = t;
 			
 			heapify(max, s);
 		}
 	}
 	
-	function grow()
+	function resize()
 	{
-		var tmp = capacity;
-		
-		capacity =
-		if (mCapacityIncrement == -1)
-		{
-			if (true)
-				Std.int((capacity * 3) / 2 + 1); //1.5
-			else
-				capacity + ((capacity >> 3) + (capacity < 9 ? 3 : 6)); //1.125
-		}
-		else
-			capacity + mCapacityIncrement;
-		
-		//trace('heap resized from $tmp -> $capacity');
-		//mShrinkSize = capacity >> 2;
-		
-		resize(capacity + 1);
+		capacity = GrowthRate.compute(growthRate, capacity);
+		resizeContainer(capacity);
 	}
 	
-	function resize(newSize:Int)
+	function resizeContainer(newSize:Int)
 	{
-		var tmp = NativeArray.init(newSize + 1);
-		NativeArray.blit(mData, 0, tmp, 0, mSize + 1);
-		mData = tmp;
+		var t = NativeArrayTools.init(newSize + 1);
+		NativeArrayTools.blit(mData, 0, t, 0, mSize + 1);
+		mData = t;
+	}
+	
+	/* INTERFACE Collection */
+	
+	/**
+		The total number of elements.
+	**/
+	public var size(get, never):Int;
+	inline function get_size():Int
+	{
+		return mSize;
+	}
+	
+	/**
+		Destroys this object by explicitly nullifying all elements for GC'ing used resources.
+		
+		Improves GC efficiency/performance (optional).
+	**/
+	public function free()
+	{
+		mData.nullify();
+		mData = null;
+		
+		if (mIterator != null)
+		{
+			mIterator.free();
+			mIterator = null;
+		}
+		
+		#if debug
+		mMap = null;
+		#end
+	}
+	
+	/**
+		Returns true if this heap contains the element `x`.
+		<assert>`x` is invalid</assert>
+	**/
+	public inline function contains(x:T):Bool
+	{
+		assert(x != null, "x is null");
+		
+		var position = x.position;
+		return (position > 0 && position <= size) && (mData.get(position) == x);
+	}
+	
+	/**
+		Removes the element `x`.
+		<assert>`x` is invalid or does not exist</assert>
+		@return true if `x` was removed.
+	**/
+	public function remove(x:T):Bool
+	{
+		if (isEmpty()) return false;
+
+		assert(x != null, "x is null");
+		
+		#if debug
+		var exists = mMap.exists(x);
+		assert(exists, "x does not exist");
+		mMap.remove(x);
+		#end
+		
+		if (x.position == 1)
+			pop();
+		else
+		{
+			var p = x.position, d = mData;
+			d.set(p, d.get(size));
+			downheap(p);
+			upheap(p);
+			mSize--;
+		}
+		//TODO shrink
+		return true;
+	}
+	
+	/**
+		Removes all elements.
+		@param gc if true, elements are nullified upon removal so the garbage collector can reclaim used memory.
+	**/
+	public function clear(gc:Bool = false)
+	{
+		#if debug
+		mMap = new haxe.ds.ObjectMap<T, Bool>();
+		#end
+		
+		if (gc) mData.nullify();
+		mSize = 0;
+	}
+	
+	/**
+		Returns a new `HeapIterator` object to iterate over all elements contained in this heap.
+		
+		The values are visited in an unsorted order.
+		
+		See <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
+	**/
+	public function iterator():Itr<T>
+	{
+		if (reuseIterator)
+		{
+			if (mIterator == null)
+				mIterator = new HeapIterator<T>(this);
+			else
+				mIterator.reset();
+			return mIterator;
+		}
+		else
+			return new HeapIterator<T>(this);
+	}
+	
+	/**
+		Returns true if this heap is empty.
+	**/
+	public inline function isEmpty():Bool
+	{
+		return size == 0;
+	}
+	
+	/**
+		Returns an unordered array containing all elements in this heap.
+	**/
+	public function toArray():Array<T>
+	{
+		return NativeArrayTools.toArray(mData, 1, size);
+	}
+	
+	/**
+		Duplicates this heap. Supports shallow (structure only) and deep copies (structure & elements).
+		<assert>element is not of type `Cloneable`</assert>
+		@param assign if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
+		If false, the ``clone()`` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
+		@param copier a custom function for copying elements. Replaces ``element::clone()`` if `assign` is false.
+		<warn>If `assign` is true, only the copied version should be used from now on.</warn>
+	**/
+	public function clone(assign:Bool = true, copier:T->T = null):Collection<T>
+	{
+		var copy = new Heap<T>(size);
+		if (size == 0) return copy;
+		if (assign)
+		{
+			//TODo optimize
+			for (i in 1...size + 1)
+			{
+				copy.mData.set(i, mData.get(i));
+				
+				#if debug
+				copy.mMap.set(mData.get(i), true);
+				#end
+			}
+		}
+		else
+		if (copier == null)
+		{
+			for (i in 1...size + 1)
+			{
+				var e = mData.get(i);
+				
+				assert(Std.is(e, Cloneable), 'element is not of type Cloneable (${mData.get(i)})');
+				
+				var cl:Cloneable<T> = cast e;
+				var c = cl.clone();
+				c.position = e.position;
+				copy.mData.set(i, cast c);
+				
+				#if debug
+				copy.mMap.set(c, true);
+				#end
+			}
+		}
+		else
+		{
+			for (i in 1...size + 1)
+			{
+				var e = mData.get(i);
+				var c = copier(e);
+				c.position = e.position;
+				copy.mData.set(i, c);
+				
+				#if debug
+				copy.mMap.set(c, true);
+				#end
+			}
+		}
+		
+		copy.mSize = size;
+		return copy;
 	}
 }
 
@@ -713,24 +699,24 @@ class HeapIterator<T:(Heapable<T>)> implements de.polygonal.ds.Itr<T>
 	
 	public function reset():Itr<T>
 	{
-		mS = mObject.size();
+		mS = mObject.size;
 		mI = 0;
-		mData = NativeArray.init(mS);
-		NativeArray.blit(mObject.mData, 1, mData, 0, mS);
+		mData = NativeArrayTools.init(mS);
+		NativeArrayTools.blit(mObject.mData, 1, mData, 0, mS);
 		return this;
 	}
 	
-	inline public function hasNext():Bool
+	public inline function hasNext():Bool
 	{
 		return mI < mS;
 	}
 	
-	inline public function next():T
+	public inline function next():T
 	{
 		return mData.get(mI++);
 	}
 	
-	inline public function remove()
+	public function remove()
 	{
 		assert(mI > 0, "call next() before removing an element");
 		

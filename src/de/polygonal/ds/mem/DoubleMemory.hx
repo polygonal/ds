@@ -1,5 +1,5 @@
 ﻿/*
-Copyright (c) 2008-2014 Michael Baczynski, http://www.polygonal.de
+Copyright (c) 2008-2016 Michael Baczynski, http://www.polygonal.de
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -18,7 +18,7 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 */
 package de.polygonal.ds.mem;
 
-import de.polygonal.ds.error.Assert.assert;
+import de.polygonal.ds.tools.Assert.assert;
 
 #if (alchemy && !flash)
 "DoubleMemory is only available when targeting flash"
@@ -53,19 +53,19 @@ class DoubleMemory extends MemoryAccess
 		min = input.getAddr(t);
 		max = input.getAddr(max - 1);
 		
-		var output = new flash.utils.ByteArray();
-		output.endian = flash.utils.Endian.LITTLE_ENDIAN;
+		var out = new flash.utils.ByteArray();
+		out.endian = flash.utils.Endian.LITTLE_ENDIAN;
 		#if alchemy
 		while (min <= max)
 		{
-			output.writeDouble(flash.Memory.getDouble(min));
+			out.writeDouble(flash.Memory.getDouble(min));
 			min += 8;
 		}
 		#else
-		for (i in 0...(max - min) + 1) output.writeDouble(input.get(min + i));
+		for (i in 0...(max - min) + 1) out.writeDouble(input.get(min + i));
 		#end
-		output.position = 0;
-		return output;
+		out.position = 0;
+		return out;
 	}
 	#end
 	
@@ -90,9 +90,9 @@ class DoubleMemory extends MemoryAccess
 		input.position = min;
 		min >>= 3;
 		max >>= 3;
-		var output = new DoubleMemory(max - min, "ofByteArray");
-		for (i in min...max) output.set(i - min, input.readDouble());
-		return output;
+		var out = new DoubleMemory(max - min, "ofByteArray");
+		for (i in min...max) out.set(i - min, input.readDouble());
+		return out;
 	}
 	#end
 	
@@ -114,10 +114,10 @@ class DoubleMemory extends MemoryAccess
 		assert(max <= input.size, 'max out of range ($max)');
 		assert(max - min > 0, 'min equals max ($min)');
 		
-		var output = new haxe.io.BytesOutput();
+		var out = new haxe.io.BytesOutput();
 		for (i in 0...max - min)
-			output.writeDouble(input.get(min + i));
-		return output.getBytes().getData();
+			out.writeDouble(input.get(min + i));
+		return out.getBytes().getData();
 	}
 	
 	/**
@@ -150,10 +150,9 @@ class DoubleMemory extends MemoryAccess
 		var bytesInput = new haxe.io.BytesInput(haxe.io.Bytes.ofData(input), min);
 		min >>= 3;
 		max >>= 3;
-		var output = new DoubleMemory(max - min, "ofBytesData");
-		for (i in min...max) output.set(i - min, bytesInput.readDouble());
-		
-		return output;
+		var out = new DoubleMemory(max - min, "ofBytesData");
+		for (i in min...max) out.set(i - min, bytesInput.readDouble());
+		return out;
 	}
 	
 	/**
@@ -174,20 +173,20 @@ class DoubleMemory extends MemoryAccess
 		assert(max <= input.size, 'max out of range ($max)');
 		assert(max - min > 0, 'min equals max ($min)');
 		
-		var output = new Array();
+		var out = new Array();
 		
 		#if alchemy
 		min = input.getAddr(min);
 		max = input.getAddr(max - 1);
 		while (min <= max)
 		{
-			output.push(flash.Memory.getDouble(min));
+			out.push(flash.Memory.getDouble(min));
 			min += 8;
 		}
 		#else
-		for (i in 0...max - min) output[i] = input.get(min + i);
+		for (i in 0...max - min) out[i] = input.get(min + i);
 		#end
-		return output;
+		return out;
 	}
 	
 	/**
@@ -207,10 +206,9 @@ class DoubleMemory extends MemoryAccess
 		assert(min >= 0);
 		assert(max <= Std.int(input.length), "max <= input.length");
 		
-		var output = new DoubleMemory(max - min, "ofArray");
-		for (i in min...max) output.set(i - min, input[i]);
-		
-		return output;
+		var out = new DoubleMemory(max - min, "ofArray");
+		for (i in min...max) out.set(i - min, input[i]);
+		return out;
 	}
 	
 	/**
@@ -218,10 +216,10 @@ class DoubleMemory extends MemoryAccess
 		If no range is specified, all `input` bytes are copied.</i>
 		@param min index pointing to the first double.
 		@param max index pointing to the last double.
-		@param output the `Vector` object to write into. If null, a new Vector object is created on-the-fly.
+		@param out the `Vector` object to write into. If null, a new Vector object is created on-the-fly.
 		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
-	public static function toVector(input:DoubleMemory, min = -1, max = -1, output:Vector<Float> = null):Vector<Float>
+	public static function toVector(input:DoubleMemory, min:Int = -1, max:Int = -1, out:Vector<Float> = null):Vector<Float>
 	{
 		assert(input != null, "invalid input");
 		
@@ -233,12 +231,12 @@ class DoubleMemory extends MemoryAccess
 		assert(max - min > 0, 'min equals max ($min)');
 		
 		#if (debug && flash && generic)
-		if (output != null)
-			if (output.fixed)
-				assert(Std.int(output.length) >= max - min, "output vector is too small");
+		if (out != null)
+			if (out.fixed)
+				assert(Std.int(out.length) >= max - min, "out vector is too small");
 		#end
 		
-		if (output == null) output = new Vector<Float>(max - min);
+		if (out == null) out = new Vector<Float>(max - min);
 		
 		#if alchemy
 		min = input.getAddr(min);
@@ -246,13 +244,13 @@ class DoubleMemory extends MemoryAccess
 		var i = 0;
 		while (min <= max)
 		{
-			output[i++] = flash.Memory.getDouble(min);
+			out[i++] = flash.Memory.getDouble(min);
 			min += 8;
 		}
 		#else
-		for (i in 0...max - min) output[i] = input.get(min + i);
+		for (i in 0...max - min) out[i] = input.get(min + i);
 		#end
-		return output;
+		return out;
 	}
 	
 	/**
@@ -272,10 +270,9 @@ class DoubleMemory extends MemoryAccess
 		assert(min >= 0);
 		assert(max <= Std.int(input.length), "max <= input.length");
 		
-		var output = new DoubleMemory(max - min, "ofVector");
-		for (i in min...max) output.set(i - min, input[i]);
-		
-		return output;
+		var out = new DoubleMemory(max - min, "ofVector");
+		for (i in min...max) out.set(i - min, input[i]);
+		return out;
 	}
 	
 	#if !alchemy
@@ -337,7 +334,6 @@ class DoubleMemory extends MemoryAccess
 		#else
 		for (i in 0...size) mData[i] = x;
 		#end
-		
 		return this;
 	}
 	
@@ -353,9 +349,9 @@ class DoubleMemory extends MemoryAccess
 		#if alchemy
 		super.resize(newSize << 3);
 		#else
-		var tmp = new Vector<Float>(newSize);
-		for (i in 0...M.min(newSize, size)) tmp[i] = mData[i];
-		mData = tmp;
+		var t = new Vector<Float>(newSize);
+		for (i in 0...M.min(newSize, size)) t[i] = mData[i];
+		mData = t;
 		#end
 		
 		size = newSize;
@@ -366,7 +362,7 @@ class DoubleMemory extends MemoryAccess
 		<assert>index out of range</assert>
 		<assert>memory deallocated</assert>
 	**/
-	inline public function get(i:Int):Float
+	public inline function get(i:Int):Float
 	{
 		#if alchemy
 		return flash.Memory.getDouble(getAddr(i));
@@ -380,7 +376,7 @@ class DoubleMemory extends MemoryAccess
 		<assert>index out of range</assert>
 		<assert>memory deallocated</assert>
 	**/
-	inline public function set(i:Int, x:Float)
+	public inline function set(i:Int, x:Float)
 	{
 		#if alchemy
 		flash.Memory.setDouble(getAddr(i), x);
@@ -394,18 +390,18 @@ class DoubleMemory extends MemoryAccess
 		<assert>index out of range</assert>
 		<assert>`i` equals `j`</assert>
 	**/
-	inline public function swp(i:Int, j:Int)
+	public inline function swap(i:Int, j:Int)
 	{
 		assert(i != j, 'i equals j ($i)');
 		
 		#if alchemy
 		var ai = getAddr(i);
 		var aj = getAddr(j);
-		var tmp = flash.Memory.getDouble(ai);
+		var t = flash.Memory.getDouble(ai);
 		flash.Memory.setDouble(ai, flash.Memory.getDouble(aj));
-		flash.Memory.setDouble(ai, tmp);
+		flash.Memory.setDouble(ai, t);
 		#else
-		var tmp = mData[i]; mData[i] = mData[j]; mData[j] = tmp;
+		var t = mData[i]; mData[i] = mData[j]; mData[j] = t;
 		#end
 	}
 	
@@ -414,7 +410,7 @@ class DoubleMemory extends MemoryAccess
 		<assert>index out of range</assert>
 		<assert>memory deallocated</assert>
 	**/
-	inline public function getAddr(i:Int):Int
+	public inline function getAddr(i:Int):Int
 	{
 		assert(i >= 0 && i < size, 'segfault, index $i');
 		assert(mMemory != null, "memory deallocated");

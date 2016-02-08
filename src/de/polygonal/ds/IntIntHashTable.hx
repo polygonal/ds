@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2008-2014 Michael Baczynski, http://www.polygonal.de
+Copyright (c) 2008-2016 Michael Baczynski, http://www.polygonal.de
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -18,9 +18,11 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 */
 package de.polygonal.ds;
 
-import de.polygonal.ds.error.Assert.assert;
+import de.polygonal.ds.tools.ArrayTools;
+import de.polygonal.ds.tools.Assert.assert;
+import de.polygonal.ds.tools.GrowthRate;
 
-using de.polygonal.ds.tools.NativeArray;
+using de.polygonal.ds.tools.NativeArrayTools;
 
 #if (flash && alchemy)
 import de.polygonal.ds.mem.IntMemory;
@@ -35,30 +37,28 @@ import flash.Memory;
 	- The hash table is dynamic: the capacity is automatically increased and decreased.
 	- The hash table is never rehashed automatically, because this operation is time-consuming. Instead the user can decide if rehashing is necessary by checking the load factor.
 	- The value 0x80000000 is reserved and cannot be associated with a key.
-	
-	_<o>Amortized running time in Big O notation</o>_
 **/
 class IntIntHashTable implements Map<Int, Int>
 {
 	/**
 		Return code for a non-existing key.
 	**/
-	inline public static var KEY_ABSENT = M.INT32_MIN;
+	public static inline var KEY_ABSENT = M.INT32_MIN;
 	
 	/**
 		Return code for a non-existing value.
 	**/
-	inline public static var VAL_ABSENT = M.INT32_MIN;
+	public static inline var VAL_ABSENT = M.INT32_MIN;
 	
 	/**
 		Used internally.
 	**/
-	inline public static var EMPTY_SLOT = -1;
+	public static inline var EMPTY_SLOT = -1;
 	
 	/**
 		Used internally.
 	**/
-	inline public static var NULL_POINTER = -1;
+	public static inline var NULL_POINTER = -1;
 	
 	/**
 		A unique identifier for this object.
@@ -67,7 +67,27 @@ class IntIntHashTable implements Map<Int, Int>
 		
 		<warn>This value should never be changed by the user.</warn>
 	**/
-	public var key(default, null):Int;
+	public var key(default, null):Int = HashKey.next();
+	
+	/**
+		The size of the allocated storage space for the key/value pairs.
+		
+		If more space is required to accomodate new elements, ``getCapacity()`` is doubled every time ``size`` grows beyond capacity, and split in half when ``size`` is a quarter of capacity.
+		
+		The capacity never falls below the initial size defined in the constructor.
+	**/
+	public var capacity(default, null):Int;
+	
+	/**
+		The growth rate of the container.
+		
+		+  0: fixed size
+		+ -1: grows at a rate of 1.125x plus a constant.
+		+ -2: grows at a rate of 1.5x (default value).
+		+ -3: grows at a rate of 2.0x.
+		+ >0: grows at a constant rate: capacity += growthRate
+	**/
+	public var growthRate:Int = GrowthRate.DOUBLE;
 	
 	/**
 		If true, reuses the iterator object instead of allocating a new one when calling ``iterator()``.
@@ -76,16 +96,7 @@ class IntIntHashTable implements Map<Int, Int>
 		
 		<warn>If true, nested iterations are likely to fail as only one iteration is allowed at a time.</warn>
 	**/
-	public var reuseIterator:Bool;
-	
-	/**
-		The size of the allocated storage space for the key/value pairs.
-		
-		If more space is required to accomodate new elements, ``getCapacity()`` is doubled every time ``size()`` grows beyond capacity, and split in half when ``size()`` is a quarter of capacity.
-		
-		The capacity never falls below the initial size defined in the constructor.
-	**/
-	public var capacity(default, null):Int;
+	public var reuseIterator:Bool = false;
 	
 	/**
 		The load factor measure the "denseness" of a hash table and is proportional to the time cost to look up an entry.
@@ -99,15 +110,13 @@ class IntIntHashTable implements Map<Int, Int>
 	public var loadFactor(get, never):Float;
 	function get_loadFactor():Float
 	{
-		return size() / slotCount;
+		return size / slotCount;
 	}
 	
 	/**
 		The total number of allocated slots.
 	**/
 	public var slotCount(default, null):Int;
-	
-	var mMinCapacity:Int;
 	
 	#if alchemy
 	var mHash:IntMemory;
@@ -119,12 +128,11 @@ class IntIntHashTable implements Map<Int, Int>
 	var mNext:Container<Int>;
 	#end
 	
+	var mInitialCapacity:Int;
 	var mMask:Int;
-	var mFree:Int;
-	
-	var mSize:Int;
+	var mFree:Int = 0;
+	var mSize:Int = 0;
 	var mIterator:IntIntHashTableValIterator;
-	
 	var mTmpArr:Array<Int>;
 	
 	/**
@@ -159,13 +167,12 @@ class IntIntHashTable implements Map<Int, Int>
 			assert(M.isPow2(slotCount), "capacity is not a power of 2");
 		}
 		
-		mMinCapacity = initialCapacity;
-		mFree = 0;
+		mInitialCapacity = initialCapacity;
 		capacity = initialCapacity;
-		mSize = 0;
+		
 		this.slotCount = slotCount;
+		
 		mMask = slotCount - 1;
-		mIterator = null;
 		mTmpArr = [];
 		
 		#if alchemy
@@ -174,9 +181,9 @@ class IntIntHashTable implements Map<Int, Int>
 		mData = new IntMemory(capacity * 3, "IntIntHashTable.mData");
 		mNext = new IntMemory(capacity, "IntIntHashTable.mNext");
 		#else
-		mHash = NativeArray.init(slotCount).assign(EMPTY_SLOT);
-		mData = NativeArray.init(capacity * 3);
-		mNext = NativeArray.init(capacity);
+		mHash = NativeArrayTools.init(slotCount).assign(EMPTY_SLOT);
+		mData = NativeArrayTools.init(capacity * 3);
+		mNext = NativeArrayTools.init(capacity);
 		#end
 		
 		var j = 2;
@@ -189,16 +196,12 @@ class IntIntHashTable implements Map<Int, Int>
 		
 		for (i in 0...capacity - 1) setNext(i, i + 1);
 		setNext(capacity - 1, NULL_POINTER);
-		
-		key = HashKey.next();
-		reuseIterator = false;
 	}
 	
 	/**
 		Counts the total number of collisions.
 		
 		A collision occurs when two distinct keys are hashed into the same slot.
-		<o>n</o>
 	**/
 	public function getCollisionCount():Int
 	{
@@ -221,9 +224,8 @@ class IntIntHashTable implements Map<Int, Int>
 		Returns the value that is mapped to `key` or ``IntIntHashTable.KEY_ABSENT`` if `key` does not exist.
 		
 		Uses move-to-front-on-access which reduces access time when similar keys are frequently queried.
-		<o>1</o>
 	**/
-	inline public function getFront(key:Int):Int
+	public inline function getFront(key:Int):Int
 	{
 		var b = hashCode(key);
 		var i = getHash(b);
@@ -285,11 +287,10 @@ class IntIntHashTable implements Map<Int, Int>
 	
 	/**
 		Maps `val` to `key` in this map, but only if `key` does not exist yet.
-		<o>1</o>
 		<assert>out of space - hash table is full but not resizable</assert>
 		@return true if `key` was mapped to `val` for the first time.
 	**/
-	inline public function setIfAbsent(key:Int, val:Int):Bool
+	public inline function setIfAbsent(key:Int, val:Int):Bool
 	{
 		assert(val != KEY_ABSENT, "val 0x80000000 is reserved");
 		
@@ -303,7 +304,7 @@ class IntIntHashTable implements Map<Int, Int>
 		#end
 		if (j == EMPTY_SLOT)
 		{
-			if (mSize == capacity) grow();
+			if (size == capacity) resize();
 			
 			var i = mFree * 3;
 			mFree = getNext(mFree);
@@ -365,7 +366,7 @@ class IntIntHashTable implements Map<Int, Int>
 					return false;
 				else
 				{
-					if (mSize == capacity) grow();
+					if (size == capacity) resize();
 					
 					var i = mFree * 3;
 					mFree = getNext(mFree);
@@ -392,7 +393,6 @@ class IntIntHashTable implements Map<Int, Int>
 		Redistributes all keys over `slotCount`.
 		
 		This is an expensive operations as the hash table is rebuild from scratch.
-		<o>n</o>
 		<assert>`slotCount` is not a power of two</assert>
 	**/
 	public function rehash(slotCount:Int)
@@ -401,21 +401,21 @@ class IntIntHashTable implements Map<Int, Int>
 		
 		if (this.slotCount == slotCount) return;
 		
-		var tmp = new IntIntHashTable(slotCount, capacity);
+		var t = new IntIntHashTable(slotCount, capacity);
 		
 		#if (flash && alchemy)
 		var o = mData.getAddr(0);
 		for (i in 0...capacity)
 		{
 			var v = Memory.getI32(o + 4);
-			if (v != VAL_ABSENT) tmp.set(Memory.getI32(o), v);
+			if (v != VAL_ABSENT) t.set(Memory.getI32(o), v);
 			o += 12;
 		}
 		#else
 		for (i in 0...capacity)
 		{
 			var v = getData((i * 3) + 1);
-			if (v != VAL_ABSENT) tmp.set(getData(i * 3), v);
+			if (v != VAL_ABSENT) t.set(getData(i * 3), v);
 		}
 		#end
 		
@@ -424,21 +424,20 @@ class IntIntHashTable implements Map<Int, Int>
 		mData.free();
 		mNext.free();
 		#end
-		mHash = tmp.mHash;
-		mData = tmp.mData;
-		mNext = tmp.mNext;
+		mHash = t.mHash;
+		mData = t.mData;
+		mNext = t.mNext;
 		
 		this.slotCount = slotCount;
-		mMask = tmp.mMask;
-		mFree = tmp.mFree;
+		mMask = t.mMask;
+		mFree = t.mFree;
 	}
 	
 	/**
 		Remaps the first occurrence of `key` to a new value `val`.
-		<o>1</o>
 		@return true if `val` was successfully remapped to `key`.
 	**/
-	inline public function remap(key:Int, val:Int):Bool
+	public inline function remap(key:Int, val:Int):Bool
 	{
 		var i = getHash(hashCode(key));
 		if (i == EMPTY_SLOT)
@@ -492,10 +491,9 @@ class IntIntHashTable implements Map<Int, Int>
 	
 	/**
 		Removes the first occurrence of `key` and returns the value mapped to it.
-		<o>1</o>
 		@return the value mapped to key or ``IntIntHashTable.KEY_ABSENT`` if `key` does not exist.
 	**/
-	inline public function extract(key:Int):Int
+	public inline function extract(key:Int):Int
 	{
 		var b = hashCode(key);
 		var i = getHash(b);
@@ -536,8 +534,7 @@ class IntIntHashTable implements Map<Int, Int>
 				
 				mSize--;
 				
-				if (mSize == (capacity >> 2) && capacity > mMinCapacity) shrink();
-				
+				if (size == (capacity >> 2) && capacity > mInitialCapacity) shrink();
 				return val;
 			}
 			else
@@ -591,8 +588,7 @@ class IntIntHashTable implements Map<Int, Int>
 					
 					--mSize;
 					
-					if (mSize == (capacity >> 2) && capacity > mMinCapacity) shrink();
-					
+					if (size == (capacity >> 2) && capacity > mInitialCapacity) shrink();
 					return val;
 				}
 				else
@@ -608,7 +604,7 @@ class IntIntHashTable implements Map<Int, Int>
 	{
 		if (isEmpty()) return [];
 		
-		var out = ArrayUtil.alloc(size());
+		var out = ArrayTools.alloc(size);
 		var j = 0, o, d = mData;
 		for (i in 0...capacity)
 		{
@@ -622,29 +618,6 @@ class IntIntHashTable implements Map<Int, Int>
 			#end
 		}
 		return out;
-	}
-	
-	/**
-		Creates and returns an unordered vector of all keys or null if there are no keys.
-	**/
-	public function toKeyVector():Container<Int>
-	{
-		if (isEmpty()) return null;
-		
-		var a = NativeArray.init(size());
-		var j = 0;
-		for (i in 0...capacity)
-		{
-			#if (flash && alchemy)
-			var o = mData.getAddr(i * 3);
-			if (Memory.getI32(o + 4) != VAL_ABSENT)
-				a[j++] = Memory.getI32(o);
-			#else
-			if (getData((i * 3) + 1) != VAL_ABSENT)
-				a[j++] = getData(i * 3);
-			#end
-		}
-		return a;
 	}
 	
 	/**
@@ -668,7 +641,7 @@ class IntIntHashTable implements Map<Int, Int>
 	**/
 	public function toString():String
 	{
-		var s = Printf.format("[ IntIntHashTable size/capacity: %d/%d, load factor: %.2f }", [size(), capacity, loadFactor]);
+		var s = Printf.format("[ IntIntHashTable size/capacity: %d/%d, load factor: %.2f }", [size, capacity, loadFactor]);
 		if (isEmpty()) return s;
 		s += "\n[\n";
 		
@@ -688,9 +661,7 @@ class IntIntHashTable implements Map<Int, Int>
 		return s;
 	}
 	
-	/*///////////////////////////////////////////////////////
-	// map
-	///////////////////////////////////////////////////////*/
+	/* INTERFACE Map */
 	
 	/**
 		Returns true if this map contains a mapping for the value `val`.
@@ -716,7 +687,7 @@ class IntIntHashTable implements Map<Int, Int>
 	/**
 		Returns true if this map contains `key`.
 	**/
-	inline public function hasKey(key:Int):Bool
+	public inline function hasKey(key:Int):Bool
 	{
 		var i = getHash(hashCode(key));
 		if (i == EMPTY_SLOT)
@@ -795,7 +766,7 @@ class IntIntHashTable implements Map<Int, Int>
 	/**
 		Returns the first value that is mapped to `key` or `IntIntHashTable.KEY_ABSENT` if `key` does not exist.
 	**/
-	inline public function get(key:Int):Int
+	public inline function get(key:Int):Int
 	{
 		var i = getHash(hashCode(key));
 		if (i == EMPTY_SLOT)
@@ -843,10 +814,10 @@ class IntIntHashTable implements Map<Int, Int>
 	}
 	
 	/**
-		Stores all values that are mapped to `key` in `output` or returns 0 if `key` does not exist.
+		Stores all values that are mapped to `key` in `out` or returns 0 if `key` does not exist.
 		@return the total number of values mapped to `key`.
 	**/
-	public function getAll(key:Int, output:Array<Int>):Int
+	public function getAll(key:Int, out:Array<Int>):Int
 	{
 		var i = getHash(hashCode(key));
 		if (i == EMPTY_SLOT)
@@ -857,23 +828,23 @@ class IntIntHashTable implements Map<Int, Int>
 			#if (flash && alchemy)
 			var o = mData.getAddr(i);
 			if (Memory.getI32(o) == key)
-				output[c++] = Memory.getI32(o + 4);
+				out[c++] = Memory.getI32(o + 4);
 			i = Memory.getI32(o + 8);
 			while (i != NULL_POINTER)
 			{
 				o = mData.getAddr(i);
 				if (Memory.getI32(o) == key)
-					output[c++] = Memory.getI32(o + 4);
+					out[c++] = Memory.getI32(o + 4);
 				i = Memory.getI32(o + 8);
 			}
 			#else
 			if (getData(i) == key)
-				output[c++] = getData(i + 1);
+				out[c++] = getData(i + 1);
 			i = getData(i + 2);
 			while (i != NULL_POINTER)
 			{
 				if (getData(i) == key)
-					output[c++] = getData(i + 1);
+					out[c++] = getData(i + 1);
 				i = getData(i + 2);
 			}
 			#end
@@ -971,8 +942,7 @@ class IntIntHashTable implements Map<Int, Int>
 				
 				mSize--;
 				
-				if (mSize == (capacity >> 2) && capacity > mMinCapacity) shrink();
-				
+				if (size == (capacity >> 2) && capacity > mInitialCapacity) shrink();
 				return true;
 			}
 			else
@@ -1026,8 +996,7 @@ class IntIntHashTable implements Map<Int, Int>
 					
 					--mSize;
 					
-					if (mSize == (capacity >> 2) && capacity > mMinCapacity) shrink();
-					
+					if (size == (capacity >> 2) && capacity > mInitialCapacity) shrink();
 					return true;
 				}
 				else
@@ -1046,11 +1015,11 @@ class IntIntHashTable implements Map<Int, Int>
 		<assert>key/value 0x80000000 is reserved</assert>
 		@return true if `key` was added for the first time, false if another instance of `key` was inserted.
 	**/
-	inline public function set(key:Int, val:Int):Bool
+	public inline function set(key:Int, val:Int):Bool
 	{
 		assert(val != KEY_ABSENT, "val 0x80000000 is reserved");
 		
-		if (mSize == capacity) grow();
+		if (size == capacity) resize();
 		
 		var i = mFree * 3;
 		mFree = getNext(mFree);
@@ -1124,7 +1093,7 @@ class IntIntHashTable implements Map<Int, Int>
 		Removes the first occurrence of `key`.
 		@return true if `key` is successfully removed.
 	**/
-	inline public function clr(key:Int):Bool
+	public inline function delete(key:Int):Bool
 	{
 		var b = hashCode(key);
 		var i = getHash(b);
@@ -1162,8 +1131,7 @@ class IntIntHashTable implements Map<Int, Int>
 				
 				mSize--;
 				
-				if (mSize == (capacity >> 2) && capacity > mMinCapacity) shrink();
-				
+				if (size == (capacity >> 2) && capacity > mInitialCapacity) shrink();
 				return true;
 			}
 			else
@@ -1217,8 +1185,7 @@ class IntIntHashTable implements Map<Int, Int>
 					
 					--mSize;
 					
-					if (mSize == (capacity >> 2) && capacity > mMinCapacity) shrink();
-					
+					if (size == (capacity >> 2) && capacity > mInitialCapacity) shrink();
 					return true;
 				}
 				else
@@ -1238,7 +1205,6 @@ class IntIntHashTable implements Map<Int, Int>
 			var v = getData((i * 3) + 1);
 			if (v != VAL_ABSENT) s.set(v);
 		}
-		
 		return s;
 	}
 	
@@ -1256,7 +1222,6 @@ class IntIntHashTable implements Map<Int, Int>
 				s.set(getData(i * 3));
 			}
 		}
-		
 		return s;
 	}
 	
@@ -1272,9 +1237,16 @@ class IntIntHashTable implements Map<Int, Int>
 		return new IntIntHashTableKeyIterator(this);
 	}
 	
-	/*///////////////////////////////////////////////////////
-	// collection
-	///////////////////////////////////////////////////////*/
+	/* INTERFACE Collection */
+	
+	/**
+		The total number of key/value pairs.
+	**/
+	public var size(get, never):Int;
+	inline function get_size():Int
+	{
+		return mSize;
+	}
 	
 	/**
 		Destroys this object by explicitly nullifying all key/values.
@@ -1292,14 +1264,18 @@ class IntIntHashTable implements Map<Int, Int>
 		mHash = null;
 		mData = null;
 		mNext = null;
-		mIterator = null;
+		if (mIterator != null)
+		{
+			mIterator.free();
+			mIterator = null;
+		}
 		mTmpArr = null;
 	}
 	
 	/**
 		Same as ``has()``.
 	**/
-	inline public function contains(val:Int):Bool
+	public inline function contains(val:Int):Bool
 	{
 		return has(val);
 	}
@@ -1328,41 +1304,34 @@ class IntIntHashTable implements Map<Int, Int>
 			#end
 		}
 		
-		for (i in 0...c) clr(keys[i]);
+		for (i in 0...c) delete(keys[i]);
 		return c > 0;
 	}
 	
 	/**
-		The total number of key/value pairs.
-	**/
-	inline public function size():Int
-	{
-		return mSize;
-	}
-	
-	/**
 		Removes all key/value pairs.
-		@param purge If true, the hash table shrinks to the initial capacity defined in the constructor.
+		
+		The `gc` parameter has no effect.
 	**/
-	public function clear(purge = false)
+	public function clear(gc:Bool = false)
 	{
-		if (purge)
+		if (gc)
 		{
-			capacity = mMinCapacity;
+			capacity = mInitialCapacity;
 			
 			#if alchemy
 			mData.resize(capacity * 3);
 			mNext.resize(capacity);
 			#else
-			mData = NativeArray.init(capacity * 3);
-			mNext = NativeArray.init(capacity);
+			mData = NativeArrayTools.init(capacity * 3);
+			mNext = NativeArrayTools.init(capacity);
 			#end
 		}
 		
 		#if alchemy
 		mHash.fill(EMPTY_SLOT);
 		#else
-		for (i in 0...slotCount) mHash[i] = EMPTY_SLOT;
+		for (i in 0...slotCount) mHash.set(i, EMPTY_SLOT);
 		#end
 		
 		var j = 2;
@@ -1377,6 +1346,26 @@ class IntIntHashTable implements Map<Int, Int>
 		
 		mFree = 0;
 		mSize = 0;
+	}
+	
+	public function pack()
+	{
+		return;
+		
+		/*if (isEmpty())
+		{
+			//var oldSize = capacity;
+			//var newSize = oldSize >> 1;
+			//capacity = newSize;
+			
+			if (capacity > mInitialCapacity) shrink(capacity, mInitialCapacity);
+			return;
+		}
+		
+		if (size == (capacity >> 2) && capacity > mInitialCapacity)
+		{
+			shrink(capacity, capacity >> 1);
+		}*/
 	}
 	
 	/**
@@ -1403,9 +1392,9 @@ class IntIntHashTable implements Map<Int, Int>
 	/**
 		Returns true if this hash table is empty.
 	**/
-	inline public function isEmpty():Bool
+	public inline function isEmpty():Bool
 	{
-		return mSize == 0;
+		return size == 0;
 	}
 	
 	/**
@@ -1415,7 +1404,7 @@ class IntIntHashTable implements Map<Int, Int>
 	{
 		if (isEmpty()) return [];
 		
-		var out = ArrayUtil.alloc(size());
+		var out = ArrayTools.alloc(size);
 		var j = 0, v, d = mData;
 		for (i in 0...capacity)
 		{
@@ -1426,49 +1415,34 @@ class IntIntHashTable implements Map<Int, Int>
 	}
 	
 	/**
-		Returns an unordered `Vector<T>` object containing all values in this hash table.
-	**/
-	public function toVector():Container<Int>
-	{
-		var v = NativeArray.init(size());
-		var j = 0, val;
-		for (i in 0...capacity)
-		{
-			val = getData((i * 3) + 1);
-			if (val != VAL_ABSENT) v.set(j++, val);
-		}
-		return v;
-	}
-	
-	/**
 		Duplicates this hash table by creating a deep copy.
 		
 		The `assign` and `copier` parameters are ignored.
 	**/
-	public function clone(assign = true, copier:Int->Int = null):Collection<Int>
+	public function clone(assign:Bool = true, copier:Int->Int = null):Collection<Int>
 	{
-		var c = new IntIntHashTable(M.INT16_MIN);
+		var c = Type.createEmptyInstance(IntIntHashTable);
 		c.key = HashKey.next();
+		c.capacity = capacity;
+		c.growthRate = GrowthRate.NORMAL;
+		c.reuseIterator = false;
+		c.slotCount = slotCount;
+		c.mInitialCapacity = mInitialCapacity;
+		c.mMask = mMask;
+		c.mFree = mFree;
+		c.mSize = size;
+		c.mIterator = null;
+		c.mTmpArr = [];
 		
 		#if alchemy
 		c.mHash = mHash.clone();
 		c.mData = mData.clone();
 		c.mNext = mNext.clone();
 		#else
-		c.mHash = NativeArray.init(NativeArray.size(mHash));
-		c.mData = NativeArray.init(NativeArray.size(mData));
-		c.mNext = NativeArray.init(NativeArray.size(mNext));
-		for (i in 0...NativeArray.size(mHash)) c.mHash[i] = mHash[i];
-		for (i in 0...NativeArray.size(mData)) c.mData[i] = mData[i];
-		for (i in 0...NativeArray.size(mNext)) c.mNext[i] = mNext[i];
+		c.mHash = NativeArrayTools.copy(mHash);
+		c.mData = NativeArrayTools.copy(mData);
+		c.mNext = NativeArrayTools.copy(mNext);
 		#end
-		
-		c.slotCount = slotCount;
-		c.mMask = mMask;
-		c.capacity = capacity;
-		c.mFree = mFree;
-		c.mSize = mSize;
-		
 		return c;
 	}
 	
@@ -1478,30 +1452,36 @@ class IntIntHashTable implements Map<Int, Int>
 		return (x * 73856093) & mMask;
 	}
 	
-	function grow()
+	function resize()
 	{
-		var oldSize = capacity;
-		var newSize = oldSize << 1;
-		capacity = newSize;
+		var t = capacity;
+		capacity = GrowthRate.compute(growthRate, capacity);
+		resizeContainer(t, capacity);
+	}
+	
+	function resizeContainer(oldSize:Int, newSize:Int)
+	{
+		//trace('grow $oldSize -> $newSize');
 		
 		#if alchemy
 		mNext.resize(newSize);
 		mData.resize(newSize * 3);
 		#else
-		var copy = NativeArray.init(newSize);
-		for (i in 0...oldSize) copy[i] = mNext[i];
-		mNext = copy;
-		var copy = NativeArray.init(newSize  * 3);
-		for (i in 0...oldSize * 3) copy[i] = mData[i];
-		mData = copy;
+		var dst = NativeArrayTools.init(newSize);
+		NativeArrayTools.blit(mNext, 0, dst, 0, oldSize);
+		mNext = dst;
+		
+		var dst = NativeArrayTools.init(newSize * 3);
+		NativeArrayTools.blit(mData, 0, dst, 0, oldSize * 3);
+		mData = dst;
 		#end
 		
 		for (i in oldSize - 1...newSize - 1) setNext(i, i + 1);
 		setNext(newSize - 1, NULL_POINTER);
 		mFree = oldSize;
 		
-		var j = (oldSize * 3) + 2;
-		for (i in 0...oldSize)
+		var j = oldSize * 3 + 2;
+		for (i in 0...newSize - oldSize)
 		{
 			#if (flash && alchemy)
 			var o = mData.getAddr(j - 1);
@@ -1511,7 +1491,6 @@ class IntIntHashTable implements Map<Int, Int>
 			setData(j - 1, VAL_ABSENT);
 			setData(j    , NULL_POINTER);
 			#end
-			
 			j += 3;
 		}
 	}
@@ -1584,30 +1563,28 @@ class IntIntHashTable implements Map<Int, Int>
 		mNext.resize(newSize);
 		#else
 		var k = newSize * 3;
-		var tmp = NativeArray.init(k);
-		mNext = NativeArray.init(newSize);
+		var t = NativeArrayTools.init(k);
+		mNext = NativeArrayTools.init(newSize);
 		
-		var e = 0;
+		var e = 0, j;
 		for (i in 0...slotCount)
 		{
-			var j = getHash(i);
+			j = getHash(i);
 			if (j == EMPTY_SLOT) continue;
 			
 			setHash(i, e);
-			
-			tmp[e    ] = getData(j    );
-			tmp[e + 1] = getData(j + 1);
-			tmp[e + 2] = NULL_POINTER;
+			t.set(e    , getData(j    ));
+			t.set(e + 1, getData(j + 1));
+			t.set(e + 2, NULL_POINTER);
 			
 			e += 3;
 			j = getData(j + 2);
 			while (j != NULL_POINTER)
 			{
-				tmp[e - 1] = e;
-				tmp[e    ] = getData(j    );
-				tmp[e + 1] = getData(j + 1);
-				tmp[e + 2] = NULL_POINTER;
-				
+				t.set(e - 1, e);
+				t.set(e    , getData(j    ));
+				t.set(e + 1, getData(j + 1));
+				t.set(e + 2, NULL_POINTER);
 				e += 3;
 				j = getData(j + 2);
 			}
@@ -1615,11 +1592,11 @@ class IntIntHashTable implements Map<Int, Int>
 		var i = k >> 1;
 		while (i < k)
 		{
-			tmp[i + 1] = VAL_ABSENT;
-			tmp[i + 2] = NULL_POINTER;
+			t.set(i + 1, VAL_ABSENT);
+			t.set(i + 2, NULL_POINTER);
 			i += 3;
 		}
-		mData = tmp;
+		mData = t;
 		#end
 		
 		for (i in 0...newSize - 1) setNext(i, i + 1);
@@ -1641,7 +1618,7 @@ class IntIntHashTable implements Map<Int, Int>
 @:dox(hide)
 class IntIntHashTableValIterator implements de.polygonal.ds.Itr<Int>
 {
-	var mHash:IntIntHashTable;
+	var mObject:IntIntHashTable;
 	var mI:Int;
 	var mS:Int;
 	#if alchemy
@@ -1652,35 +1629,41 @@ class IntIntHashTableValIterator implements de.polygonal.ds.Itr<Int>
 	
 	public function new(x:IntIntHashTable)
 	{
-		mHash = x;
+		mObject = x;
 		mData = x.mData;
 		mI = 0;
 		mS = x.capacity;
 		scan();
 	}
 	
+	public function free()
+	{
+		mObject = null;
+		mData = null;
+	}
+	
 	public function reset():Itr<Int>
 	{
-		mData = mHash.mData;
+		mData = mObject.mData;
 		mI = 0;
-		mS = mHash.capacity;
+		mS = mObject.capacity;
 		scan();
 		return this;
 	}
 	
-	inline public function hasNext():Bool
+	public inline function hasNext():Bool
 	{
 		return mI < mS;
 	}
 	
-	inline public function next():Int
+	public inline function next():Int
 	{
 		var val = mData.get((mI++ * 3) + 1);
 		scan();
 		return val;
 	}
 	
-	inline public function remove()
+	public function remove()
 	{
 		throw "unsupported operation";
 	}
@@ -1695,7 +1678,7 @@ class IntIntHashTableValIterator implements de.polygonal.ds.Itr<Int>
 @:dox(hide)
 class IntIntHashTableKeyIterator implements de.polygonal.ds.Itr<Int>
 {
-	var mHash:IntIntHashTable;
+	var mObject:IntIntHashTable;
 	var mI:Int;
 	var mS:Int;
 	
@@ -1707,35 +1690,41 @@ class IntIntHashTableKeyIterator implements de.polygonal.ds.Itr<Int>
 	
 	public function new(x:IntIntHashTable)
 	{
-		mHash = x;
+		mObject = x;
 		mData = x.mData;
 		mI = 0;
 		mS = x.capacity;
 		scan();
 	}
 	
+	public function free()
+	{
+		mObject = null;
+		mData = null;
+	}
+	
 	public function reset():Itr<Int>
 	{
-		mData = mHash.mData;
+		mData = mObject.mData;
 		mI = 0;
-		mS = mHash.capacity;
+		mS = mObject.capacity;
 		scan();
 		return this;
 	}
 	
-	inline public function hasNext():Bool
+	public inline function hasNext():Bool
 	{
 		return mI < mS;
 	}
 	
-	inline public function next():Int
+	public inline function next():Int
 	{
 		var key = mData.get((mI++ * 3));
 		scan();
 		return key;
 	}
 	
-	inline public function remove()
+	public function remove()
 	{
 		throw "unsupported operation";
 	}

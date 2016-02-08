@@ -1,5 +1,5 @@
 ﻿/*
-Copyright (c) 2008-2014 Michael Baczynski, http://www.polygonal.de
+Copyright (c) 2008-2016 Michael Baczynski, http://www.polygonal.de
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -19,14 +19,12 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 package de.polygonal.ds;
 
 import de.polygonal.ds.Array2.Array2Cell;
-import de.polygonal.ds.error.Assert.assert;
+import de.polygonal.ds.tools.Assert.assert;
 
-using de.polygonal.ds.tools.NativeArray;
+using de.polygonal.ds.tools.NativeArrayTools;
 
 /**
 	A two-dimensional array based on a rectangular sequential array
-	
-	_<o>Worst-case running time in Big O notation</o>_
 **/
 #if generic
 @:generic
@@ -34,13 +32,73 @@ using de.polygonal.ds.tools.NativeArray;
 class Array2<T> implements Collection<T>
 {
 	/**
+		The width (#columns).
+		
+		The minimum value is 2.
+		<assert>invalid width</assert>
+	**/
+	public var width(get, set):Int;
+	inline function get_width():Int
+	{
+		return mW;
+	}
+	function set_width(val:Int):Int
+	{
+		resize(val, mH);
+		return val;
+	}
+	
+	/**
+		The height (#rows).
+		
+		The minimum value is 2.
+		<assert>invalid height</assert>
+	**/
+	public var height(get, set):Int;
+	inline function get_height():Int
+	{
+		return mH;
+	}
+	function set_height(val:Int):Int
+	{
+		resize(mW, val);
+		return val;
+	}
+	
+	/**
+		Equals `width`.
+	**/
+	public var cols(get, set):Int;
+	inline function get_cols():Int
+	{
+		return width;
+	}
+	function set_cols(val:Int):Int
+	{
+		return width = val;
+	}
+	
+	/**
+		Equals `height`.
+	**/
+	public var rows(get, set):Int;
+	inline function get_rows():Int
+	{
+		return height;
+	}
+	function set_rows(val:Int):Int
+	{
+		return height = val;
+	}
+	
+	/**
 		A unique identifier for this object.
 		
 		A hash table transforms this key into an index of an array element by using a hash function.
 		
 		<warn>This value should never be changed by the user.</warn>
 	**/
-	public var key(default, null):Int;
+	public var key(default, null):Int = HashKey.next();
 	
 	/**
 		If true, reuses the iterator object instead of allocating a new one when calling ``iterator()``.
@@ -49,12 +107,12 @@ class Array2<T> implements Collection<T>
 		
 		<warn>If true, nested iterations are likely to fail as only one iteration is allowed at a time.</warn>
 	**/
-	public var reuseIterator:Bool;
+	public var reuseIterator:Bool = false;
 	
 	var mData:Container<T>;
 	var mW:Int;
 	var mH:Int;
-	var mIterator:Array2Iterator<T>;
+	var mIterator:Array2Iterator<T> = null;
 	
 	/**
 		Creates a two-dimensional array with dimensions `width` and `height`.
@@ -62,145 +120,109 @@ class Array2<T> implements Collection<T>
 		The minimum size is 2x2.
 		<assert>invalid `width` or `height`</assert>
 	**/
-	public function new(width:Int, height:Int)
+	public function new(width:Int, ?height:Null<Int>, ?source:Array<T>)
 	{
 		assert(width >= 2 && height >= 2, 'invalid size (width:$width, height:$height)');
 		
-		mW = width;
-		mH = height;
-		mData = NativeArray.init(size());
-		mIterator = null;
-		key = HashKey.next();
-		reuseIterator = false;
+		if (source != null)
+		{
+			assert(source.length >= 4, "invalid source");
+			
+			if (height == null) height = Std.int(source.length / width);
+			
+			mW = width;
+			mH = height;
+			
+			var d = mData = NativeArrayTools.init(size);
+			for (i in 0...size) d.set(i, source[i]);
+		}
+		else
+		{
+			assert(width >= 2 && height >= 2, 'invalid size (width:$width, height:$height)');
+			mW = width;
+			mH = height;
+			mData = NativeArrayTools.init(size);
+		}
 	}
 	
 	/**
 		Returns the element that is stored in column `x` and row `y`.
-		<o>1</o>
 		<assert>`x`/`y` out of range</assert>
 	**/
-	inline public function get(x:Int, y:Int):T
+	public inline function get(x:Int, y:Int):T
 	{
-		assert(x >= 0 && x < getW(), 'x index out of range ($x)');
-		assert(y >= 0 && y < getH(), 'y index out of range ($y)');
+		assert(x >= 0 && x < cols, 'x index out of range ($x)');
+		assert(y >= 0 && y < rows, 'y index out of range ($y)');
 		
 		return mData.get(getIndex(x, y));
 	}
 	
 	/**
 		Returns the element that is stored in column ``cell::x`` and row ``cell::y``.
-		<o>1</o>
 		<assert>`cell` is null</assert>
 		<assert>`x`/`y` out of range</assert>
 	**/
-	inline public function getAtCell(cell:Array2Cell):T
+	public inline function getAtCell(cell:Array2Cell):T
 	{
 		assert(cell != null, "cell is null");
-		assert(cell.x >= 0 && cell.x < getW(), 'cell.x out of range (${cell.x})');
-		assert(cell.y >= 0 && cell.y < getH(), 'cell.y out of range (${cell.y})');
+		assert(cell.x >= 0 && cell.x < cols, 'cell.x out of range (${cell.x})');
+		assert(cell.y >= 0 && cell.y < rows, 'cell.y out of range (${cell.y})');
 		
 		return mData.get(getIndex(cell.x, cell.y));
 	}
 	
 	/**
 		Replaces the element at column `x` and row `y` with `val`.
-		<o>1</o>
 		<assert>`x`/`y` out of range</assert>
 	**/
-	inline public function set(x:Int, y:Int, val:T)
+	public inline function set(x:Int, y:Int, val:T)
 	{
-		assert(x >= 0 && x < getW(), 'x index out of range ($x)');
-		assert(y >= 0 && y < getH(), 'y index out of range ($y)');
+		assert(x >= 0 && x < cols, 'x index out of range ($x)');
+		assert(y >= 0 && y < rows, 'y index out of range ($y)');
 		
 		mData.set(getIndex(x, y), val);
 	}
 	
 	/**
 		Returns the element at index `i`.
-		<o>1</o>
 		<assert>`i` out of range</assert>
 	**/
-	inline public function getAtIndex(i:Int):T
+	public inline function getAtIndex(i:Int):T
 	{
-		assert(i >= 0 && i < size(), 'index out of range ($i)');
+		assert(i >= 0 && i < size, 'index out of range ($i)');
 		
 		return mData.get(getIndex(i % mW, Std.int(i / mW)));
 	}
 	
 	/**
 		Replaces the element that is stored in column ``cell::x`` and row ``cell::y`` with `val`.
-		<o>1</o>
 		<assert>`cell` is null</assert>
 		<assert>`x`/`y` out of range</assert>
 	**/
-	inline public function setAtCell(cell:Array2Cell, val:T)
+	public inline function setAtCell(cell:Array2Cell, val:T)
 	{
 		assert(cell != null, "cell is null");
-		assert(cell.x >= 0 && cell.x < getW(), 'cell.x out of range (${cell.x})');
-		assert(cell.y >= 0 && cell.y < getH(), 'cell.y out of range (${cell.y})');
+		assert(cell.x >= 0 && cell.x < cols, 'cell.x out of range (${cell.x})');
+		assert(cell.y >= 0 && cell.y < rows, 'cell.y out of range (${cell.y})');
 		
 		return mData.set(getIndex(cell.x, cell.y), val);
 	}
 	
 	/**
 		Replaces the element at index `i` with `val`.
-		<o>1</o>
 		<assert>`i` out of range</assert>
 	**/
-	inline public function setAtIndex(i:Int, val:T)
+	public inline function setAtIndex(i:Int, val:T)
 	{
-		assert(i >= 0 && i < size(), 'index out of range ($i)');
+		assert(i >= 0 && i < size, 'index out of range ($i)');
 		
 		mData.set(getIndex(i % mW, Std.int(i / mW)), val);
 	}
 	
 	/**
-		The width (#columns).
-		<o>1</o>
-	**/
-	inline public function getW():Int
-	{
-		return mW;
-	}
-	
-	/**
-		Sets the width to `x`.
-		
-		The minimum value is 2.
-		<o>1</o>
-		<assert>invalid width</assert>
-	**/
-	inline public function setW(x:Int)
-	{
-		resize(x, mH);
-	}
-	
-	/**
-		The height (#rows).
-		<o>1</o>
-	**/
-	inline public function getH():Int
-	{
-		return mH;
-	}
-	
-	/**
-		Sets the height to `x`.
-		
-		The minimum value is 2.
-		<o>1</o>
-		<assert>invalid height</assert>
-	**/
-	inline public function setH(x:Int)
-	{
-		resize(mW, x);
-	}
-	
-	/**
 		Computes an index into the linear array from the `x` and `y` index.
-		<o>1</o>
 	**/
-	inline public function getIndex(x:Int, y:Int):Int
+	public inline function getIndex(x:Int, y:Int):Int
 	{
 		return y * mW + x;
 	}
@@ -208,12 +230,11 @@ class Array2<T> implements Collection<T>
 	/**
 		Returns the index of the first occurrence of the element `x` or returns -1 if element `x` does not exist.
 		
-		The index is in the range [0, ``size()`` - 1].
-		<o>n</o>
+		The index is in the range [0, ``size`` - 1].
 	**/
 	public function indexOf(x:T):Int
 	{
-		var i = 0, j = size(), d = mData;
+		var i = 0, j = size, d = mData;
 		while (i < j)
 		{
 			if (d.get(i) == x) break;
@@ -225,168 +246,132 @@ class Array2<T> implements Collection<T>
 	/**
 		Returns true if `x` and `y` are valid indices.
 	**/
-	inline public function inRange(x:Int, y:Int):Bool
+	public inline function inRange(x:Int, y:Int):Bool
 	{
 		return x >= 0 && x < mW && y >= 0 && y < mH;
 	}
 	
 	/**
 		Returns the cell coordinates of the first occurrence of the element `x` or null if element `x` does not exist.
-		<o>n</o>
-		<assert>`output` is null</assert>
-		@param output stores the result.
-		@return a reference to `output`.
+		<assert>`out` is null</assert>
+		@param out stores the result.
+		@return a reference to `out`.
 	**/
-	inline public function cellOf(x:T, output:Array2Cell):Array2Cell
+	public inline function cellOf(x:T, out:Array2Cell):Array2Cell
 	{
-		assert(output != null);
+		assert(out != null);
 		
 		var i = indexOf(x);
-		return i == -1 ? null : indexToCell(i, output);
+		return i == -1 ? null : indexToCell(i, out);
 	}
 	
 	/**
-		Transforms the index `i` into `output` coordinates.
-		<o>1</o>
+		Transforms the index `i` into `out` coordinates.
 		<assert>`i` out of range</assert>
-		<assert>`output` is null</assert>
-		@param output stores the result.
-		@return a reference to `output`.
+		<assert>`out` is null</assert>
+		@param out stores the result.
+		@return a reference to `out`.
 	**/
-	inline public function indexToCell(i:Int, output:Array2Cell):Array2Cell
+	public inline function indexToCell(i:Int, out:Array2Cell):Array2Cell
 	{
-		assert(i >= 0 && i < size(), 'index out of range ($i)');
-		assert(output != null, "output is null");
+		assert(i >= 0 && i < size, 'index out of range ($i)');
+		assert(out != null, "out is null");
 		
-		output.y = Std.int(i / mW);
-		output.x = i % mW;
-		return output;
+		out.y = Std.int(i / mW);
+		out.x = i % mW;
+		return out;
 	}
 	
 	/**
 		Computes an array index into the linear array from the `cell` coordinates.
-		<o>1</o>
 		<assert>`cell` index out of range</assert>
 		<assert>`cell` is null</assert>
 	**/
-	inline public function cellToIndex(cell:Array2Cell):Int
+	public inline function cellToIndex(cell:Array2Cell):Int
 	{
 		assert(cell != null);
-		assert(cell.x >= 0 && cell.x < getW(), 'x index out of range (${cell.x})');
-		assert(cell.y >= 0 && cell.y < getH(), 'y index out of range (${cell.y})');
+		assert(cell.x >= 0 && cell.x < cols, 'x index out of range (${cell.x})');
+		assert(cell.y >= 0 && cell.y < rows, 'y index out of range (${cell.y})');
 		
 		return getIndex(cell.x, cell.y);
 	}
 	
 	/**
-		Copies all elements stored in row `y` by reference to the `output` array.
-		<o>n</o>
+		Copies all elements stored in row `y` by reference to the `out` array.
 		<assert>`y` out of range</assert>
-		<assert>`output` is null</assert>
-		@return a reference to the `output` array.
+		<assert>`out` is null</assert>
+		@return a reference to the `out` array.
 	**/
-	public function getRow(y:Int, output:Array<T>):Array<T>
+	public function getRow(y:Int, out:Array<T>):Array<T>
 	{
-		assert(y >= 0 && y < getH(), 'y index out of range ($y)');
-		assert(output != null, "output is null");
+		assert(y >= 0 && y < rows, 'y index out of range ($y)');
+		assert(out != null, "out is null");
 		
 		var offset = y * mW, d = mData;
-		for (x in 0...mW) output[x] = d.get(offset + x);
-		return output;
+		for (x in 0...mW) out[x] = d.get(offset + x);
+		return out;
 	}
 	
 	/**
 		Overwrites all elements in row `y` with the elements stored in the `input` array.
-		<o>n</o>
 		<assert>`y` out of range or `input` is null or insufficient input values</assert>
 	**/
 	public function setRow(y:Int, input:Array<T>)
 	{
-		assert(y >= 0 && y < getH(), 'y index out of range ($y)');
+		assert(y >= 0 && y < rows, 'y index out of range ($y)');
 		assert(input != null, "input is null");
-		assert(input.length >= getW(), "insufficient input values");
+		assert(input.length >= cols, "insufficient input values");
 		
 		var offset = y * mW, d = mData;
 		for (x in 0...mW) d.set(offset + x, input[x]);
 	}
 	
 	/**
-		Copies all elements stored in column `x` by reference to the `output` array.
-		<o>n</o>
+		Copies all elements stored in column `x` by reference to the `out` array.
 		<assert>`x` out of range</assert>
-		<assert>`output` is null</assert>
-		@return a reference to the `output` array.
+		<assert>`out` is null</assert>
+		@return a reference to the `out` array.
 	**/
-	public function getCol(x:Int, output:Array<T>):Array<T>
+	public function getCol(x:Int, out:Array<T>):Array<T>
 	{
-		assert(x >= 0 && x < getW(), 'x index out of range ($x)');
-		assert(output != null, "output is null");
+		assert(x >= 0 && x < cols, 'x index out of range ($x)');
+		assert(out != null, "out is null");
 		
 		var d = mData;
-		for (i in 0...mH) output[i] = d.get(getIndex(x, i));
-		return output;
+		for (i in 0...mH) out[i] = d.get(getIndex(x, i));
+		return out;
 	}
 	
 	/**
 		Overwrites all elements in column `x` with the elements stored in the `input` array.
-		<o>n</o>
 		<assert>`x` out of range</assert>
 		<assert>`input` is null or insufficient input values</assert>
 	**/
 	public function setCol(x:Int, input:Array<T>)
 	{
-		assert(x >= 0 && x < getW(), 'x index out of range ($x)');
+		assert(x >= 0 && x < cols, 'x index out of range ($x)');
 		assert(input != null, "input is null");
-		assert(input.length >= getH(), "insufficient input values");
+		assert(input.length >= rows, "insufficient input values");
 		
 		var d = mData;
 		for (y in 0...mH) d.set(getIndex(x, y), input[y]);
 	}
 	
 	/**
-		Replaces all existing elements with objects of type `cl`.
-		<o>n</o>
-		@param cl the class to instantiate for each element.
-		@param args passes additional constructor arguments to the class `cl`.
+		Calls the `f` function on all elements.
+		
+		The function signature is: `f(element, xIndex, yIndex):element`
+		<assert>`f` is null</assert>
 	**/
-	public function assign(cl:Class<T>, args:Array<Dynamic> = null)
-	{
-		if (args == null) args = [];
-		var d = mData;
-		for (i in 0...size()) d.set(i, Type.createInstance(cl, args));
-	}
-	
-	/**
-		Replaces all existing elements with the instance `x`.
-		<o>n</o>
-	**/
-	public function fill(x:T):Array2<T>
+	public function forEach(f:T->Int->Int->T):Array2<T>
 	{
 		var d = mData;
-		for (i in 0...size()) d.set(i, x);
+		for (i in 0...size) d.set(i, f(d.get(i), i % mW, Std.int(i / mW)));
 		return this;
 	}
 	
 	/**
-		Invokes the `process` function for each element.
-		
-		The function signature is: ``process(oldValue, xIndex, yIndex):newValue``
-		<o>n</o>
-	**/
-	public function iter(process:T->Int->Int->T)
-	{
-		var i, d = mData;
-		for (y in 0...mH)
-			for (x in 0...mW)
-			{
-				i = getIndex(x, y);
-				d.set(i, process(d.get(i), x, y));
-			}
-	}
-	
-	/**
 		Resizes this two-dimensional array.
-		<o>n</o>
 		<assert>invalid dimensions</assert>
 		@param width the new width (minimum is 2).
 		@param height the new height (minimum is 2).
@@ -397,8 +382,8 @@ class Array2<T> implements Collection<T>
 		
 		if (width == mW && height == mH) return;
 		
-		var tmp = mData;
-		mData = NativeArray.init(width * height);
+		var t = mData;
+		mData = NativeArrayTools.init(width * height);
 		
 		var minX = width < mW ? width : mW;
 		var minY = height < mH ? height : mH;
@@ -410,7 +395,7 @@ class Array2<T> implements Collection<T>
 			t1 = y * width;
 			t2 = y * mW;
 			for (x in 0...minX)
-				d.set(t1 + x, tmp.get(t2 + x));
+				d.set(t1 + x, t.get(t2 + x));
 		}
 		
 		mW = width;
@@ -421,7 +406,6 @@ class Array2<T> implements Collection<T>
 		Shifts all columns to the west by one position.
 		
 		Columns are wrapped so the column at index 0 is not lost but appended to the rightmost column.
-		<o>n</o>
 	**/
 	public function shiftW()
 	{
@@ -439,8 +423,7 @@ class Array2<T> implements Collection<T>
 	/**
 		Shifts all columns to the east by one position.
 		
-		Columns are wrapped, so the column at index [``getW()`` - 1] is not lost but prepended to the leftmost column.
-		<o>n</o>
+		Columns are wrapped, so the column at index [``cols`` - 1] is not lost but prepended to the leftmost column.
 	**/
 	public function shiftE()
 	{
@@ -460,7 +443,6 @@ class Array2<T> implements Collection<T>
 		Shifts all rows to the north by one position.
 		
 		Rows are wrapped, so the row at index 0 is not lost but appended to the bottommost row.
-		<o>n</o>
 	**/
 	public function shiftN()
 	{
@@ -477,8 +459,7 @@ class Array2<T> implements Collection<T>
 	/**
 		Shifts all rows to the south by one position.
 		
-		Rows are wrapped, so row at index [``getH()`` - 1] is not lost but prepended to the topmost row.
-		<o>n</o>
+		Rows are wrapped, so row at index [``rows`` - 1] is not lost but prepended to the topmost row.
 	**/
 	public function shiftS()
 	{
@@ -495,17 +476,16 @@ class Array2<T> implements Collection<T>
 	
 	/**
 		Swaps the element at column/row `x0`, `y0` with the element at column/row `x1`, `y1`.
-		<o>1</o>
 		<assert>`x0`/`y0` or `x1`/`y1` out of range</assert>
 		<assert>`x0`, `y0` equals `x1`, `y1`</assert>
 	**/
 	#if !cpp inline #end //TODO cpp bug
 	public function swap(x0:Int, y0:Int, x1:Int, y1:Int)
 	{
-		assert(x0 >= 0 && x0 < getW(), 'x0 index out of range ($x0)');
-		assert(y0 >= 0 && y0 < getH(), 'y0 index out of range ($y0)');
-		assert(x1 >= 0 && x1 < getW(), 'x1 index out of range ($x1)');
-		assert(y1 >= 0 && y1 < getH(), 'y1 index out of range ($y1)');
+		assert(x0 >= 0 && x0 < cols, 'x0 index out of range ($x0)');
+		assert(y0 >= 0 && y0 < rows, 'y0 index out of range ($y0)');
+		assert(x1 >= 0 && x1 < cols, 'x1 index out of range ($x1)');
+		assert(y1 >= 0 && y1 < rows, 'y1 index out of range ($y1)');
 		assert(!(x0 == x1 && y0 == y1), 'source indices equal target indices (x: $x0, y: $y0)');
 		
 		var i = getIndex(x0, y0);
@@ -517,37 +497,35 @@ class Array2<T> implements Collection<T>
 	}
 	
 	/**
-		Appends the elements of the `input` array in the range [0, ``getW()``] by adding a new row.
-		<o>n</o>
+		Appends the elements of the `input` array in the range [0, ``cols``] by adding a new row.
 		<assert>`input` is null or too short</assert>
 	**/
 	public function appendRow(input:Array<T>)
 	{
 		assert(input != null, "input is null");
-		assert(input.length >= getW(), "insufficient input values");
+		assert(input.length >= cols, "insufficient input values");
 		
-		var tmp = NativeArray.init(mW * (mH + 1));
-		mData.blit(0, tmp, 0, size());
-		mData = tmp;
-		var t = size(), d = mData;
+		var t = NativeArrayTools.init(mW * (mH + 1));
+		mData.blit(0, t, 0, size);
+		mData = t;
+		var s = size, d = mData;
 		mH++;
-		for (i in 0...mW) d.set(t + i, input[i]);
+		for (i in 0...mW) d.set(s + i, input[i]);
 	}
 	
 	/**
-		Appends the elements of the `input` array in the range [0, ``getH()``] by adding a new column.
-		<o>n</o>
+		Appends the elements of the `input` array in the range [0, ``rows``] by adding a new column.
 		<assert>`input` is null or too short</assert>
 	**/
 	public function appendCol(input:Array<T>)
 	{
 		assert(input != null, "input is null");
-		assert(input.length >= getH(), "insufficient input values");
+		assert(input.length >= rows, "insufficient input values");
 		
-		var tmp = NativeArray.init((mW + 1) * mH);
-		mData.blit(0, tmp, 0, size());
-		mData = tmp;
-		var y = size() + mH, i = mH - 1, j = mH, x = mW, d = mData;
+		var t = NativeArrayTools.init((mW + 1) * mH);
+		mData.blit(0, t, 0, size);
+		mData = t;
+		var y = size + mH, i = mH - 1, j = mH, x = mW, d = mData;
 		while (y-- > 0)
 		{
 			if (++x > mW)
@@ -563,37 +541,35 @@ class Array2<T> implements Collection<T>
 	}
 	
 	/**
-		Prepends the elements of the `input` array in the range [0, ``getW()``] by adding a new row.
-		<o>n</o>
+		Prepends the elements of the `input` array in the range [0, ``cols``] by adding a new row.
 		<assert>`input` is null or too short</assert>
 	**/
 	public function prependRow(input:Array<T>)
 	{
 		assert(input != null, "input is null");
-		assert(input.length >= getW(), "insufficient input values");
+		assert(input.length >= cols, "insufficient input values");
 		
-		var tmp = NativeArray.init(mW * (mH + 1));
-		mData.blit(0, tmp, mW, size());
-		mData = tmp;
+		var t = NativeArrayTools.init(mW * (mH + 1));
+		mData.blit(0, t, mW, size);
+		mData = t;
 		mH++;
 		var d = mData;
 		for (i in 0...mW) d.set(i, input[i]);
 	}
 	
 	/**
-		Prepends the elements of the `input` array in the range [0, ``getH()``] by adding a new column.
-		<o>n</o>
+		Prepends the elements of the `input` array in the range [0, ``rows``] by adding a new column.
 		<assert>`input` is null or too short</assert>
 	**/
 	public function prependCol(input:Array<T>)
 	{
 		assert(input != null, "input is null");
-		assert(input.length >= getH(), "insufficient input values");
+		assert(input.length >= rows, "insufficient input values");
 		
-		var tmp = NativeArray.init((mW + 1) * mH);
-		mData.blit(0, tmp, 0, size());
-		mData = tmp;
-		var y = size() + mH, i = mH - 1, j = mH, x = 0, d = mData;
+		var t = NativeArrayTools.init((mW + 1) * mH);
+		mData.blit(0, t, 0, size);
+		mData = t;
+		var y = size + mH, i = mH - 1, j = mH, x = 0, d = mData;
 		while (y-- > 0)
 		{
 			if (++x > mW)
@@ -610,13 +586,12 @@ class Array2<T> implements Collection<T>
 	
 	/**
 		Copies row elements from row `i` to row `j`.
-		<o>n</o>
 		<assert>`i`/`j` out of range</assert>
 	**/
 	public function copyRow(i:Int, j:Int)
 	{
-		assert(i >= 0 && i < getH(), 'i index out of range ($i)');
-		assert(j >= 0 && j < getH(), 'j index out of range ($j)');
+		assert(i >= 0 && i < rows, 'i index out of range ($i)');
+		assert(j >= 0 && j < rows, 'j index out of range ($j)');
 		
 		if (i != j)
 		{
@@ -629,38 +604,36 @@ class Array2<T> implements Collection<T>
 	
 	/**
 		Swaps row elements at row `i` with row elements at row `j`.
-		<o>n</o>
 		<assert>`i`/`j` out of range</assert>
 	**/
 	public function swapRow(i:Int, j:Int)
 	{
-		assert(i >= 0 && i < getH(), 'i index out of range ($i)');
-		assert(j >= 0 && j < getH(), 'j index out of range ($j)');
+		assert(i >= 0 && i < rows, 'i index out of range ($i)');
+		assert(j >= 0 && j < rows, 'j index out of range ($j)');
 		
 		if (i != j)
 		{
 			var srcOffset = mW * i;
 			var dstOffset = mW * j;
-			var t, k, tmp, d = mData;
+			var t, k, d = mData;
 			for (x in 0...mW)
 			{
-				tmp = d.get(srcOffset + x);
+				t = d.get(srcOffset + x);
 				k = dstOffset + x;
 				d.set(srcOffset + x, d.get(k));
-				d.set(k, tmp);
+				d.set(k, t);
 			}
 		}
 	}
 	
 	/**
 		Copies column elements from column `i` to column `j`.
-		<o>n</o>
 		<assert>`i`/`j` out of range</assert>
 	**/
 	public function copyCol(i:Int, j:Int)
 	{
-		assert(i >= 0 && i < getW(), 'i index out of range ($i)');
-		assert(j >= 0 && j < getW(), 'j index out of range ($j)');
+		assert(i >= 0 && i < cols, 'i index out of range ($i)');
+		assert(j >= 0 && j < cols, 'j index out of range ($j)');
 		
 		if (i != j)
 		{
@@ -675,32 +648,30 @@ class Array2<T> implements Collection<T>
 	
 	/**
 		Swaps column elements at column `i` with column elements at row `j`.
-		<o>n</o>
 		<assert>`i`/`j` out of range</assert>
 	**/
 	public function swapCol(i:Int, j:Int)
 	{
-		assert(i >= 0 && i < getW(), 'i index out of range ($i)');
-		assert(j >= 0 && j < getW(), 'j index out of range ($j)');
+		assert(i >= 0 && i < cols, 'i index out of range ($i)');
+		assert(j >= 0 && j < cols, 'j index out of range ($j)');
 		
 		if (i != j)
 		{
-			var t, k, l, tmp, d = mData;
+			var k, l, m, t, d = mData;
 			for (y in 0...mH)
 			{
-				t = y * mW;
-				k = t + i;
-				l = t + j;
-				tmp = d.get(k);
+				m = y * mW;
+				k = m + i;
+				l = m + j;
+				t = d.get(k);
 				d.set(k, d.get(l));
-				d.set(l, tmp);
+				d.set(l, t);
 			}
 		}
 	}
 	
 	/**
 		Transposes this two-dimensional array.
-		<o>n</o>
 	**/
 	public function transpose()
 	{
@@ -712,11 +683,11 @@ class Array2<T> implements Collection<T>
 		}
 		else
 		{
-			var tmp = NativeArray.init(size());
+			var t = NativeArrayTools.init(size);
 			for (y in 0...mH)
 				for (x in 0...mW)
-					tmp.set(x * mH + y, get(x, y));
-			mData = tmp;
+					t.set(x * mH + y, get(x, y));
+			mData = t;
 			mW ^= mH;
 			mH ^= mW;
 			mW ^= mH;
@@ -727,9 +698,8 @@ class Array2<T> implements Collection<T>
 		Grants access to the rectangular sequential array storing the elements of this two-dimensional array.
 		
 		Useful for fast iteration or low-level operations.
-		<o>1</o>
 	**/
-	inline public function getStorage():Container<T>
+	public inline function getStorage():Container<T>
 	{
 		return mData;
 	}
@@ -740,7 +710,7 @@ class Array2<T> implements Collection<T>
 	**/
 	public function ofNestedArray(a:Array<Array<T>>)
 	{
-		assert(a.length == getH() && a[0] != null && a[0].length == getW(), "invalid input");
+		assert(a.length == rows && a[0] != null && a[0].length == cols, "invalid input");
 		
 		var w = a[0].length, row, d = mData;
 		for (y in 0...a.length)
@@ -753,16 +723,15 @@ class Array2<T> implements Collection<T>
 	
 	/**
 		Shuffles the elements of this collection by using the Fisher-Yates algorithm.
-		<o>n</o>
 		<assert>insufficient random values</assert>
-		@param rval a list of random double values in the range between 0 (inclusive) to 1 (exclusive) defining the new positions of the elements.
+		@param rvals a list of random double values in the range between 0 (inclusive) to 1 (exclusive) defining the new positions of the elements.
 		If omitted, random values are generated on-the-fly by calling `Math::random()`.
 	**/
-	public function shuffle(rval:Array<Float> = null)
+	public function shuffle(rvals:Array<Float> = null)
 	{
-		var s = size();
+		var s = size;
 		var d = mData;
-		if (rval == null)
+		if (rvals == null)
 		{
 			var m = Math, i, t;
 			while (--s > 1)
@@ -775,12 +744,12 @@ class Array2<T> implements Collection<T>
 		}
 		else
 		{
-			assert(rval.length >= size(), "insufficient random values");
+			assert(rvals.length >= size, "insufficient random values");
 			
 			var j = 0, i, t;
 			while (--s > 1)
 			{
-				i = Std.int(rval[j++] * s);
+				i = Std.int(rvals[j++] * s);
 				t = d.get(s);
 				d.set(s, d.get(i));
 				d.set(i, t);
@@ -789,12 +758,11 @@ class Array2<T> implements Collection<T>
 	}
 	
 	/**
-		Copies all elements inside the rectangular region bounded by [`minX`, `minY`] and [`maxX`, `maxY`] by reference to the `output` array.
-		<o>n</o>
+		Copies all elements inside the rectangular region bounded by [`minX`, `minY`] and [`maxX`, `maxY`] by reference to the `out` array.
 		<assert>`minX` or `minY` out of range</assert>
-		@return a reference to the `output` array.
+		@return a reference to the `out` array.
 	**/
-	public function getRect(minX:Int, minY:Int, maxX:Int, maxY:Int, output:Array<T>):Array<T>
+	public function getRect(minX:Int, minY:Int, maxX:Int, maxY:Int, out:Array<T>):Array<T>
 	{
 		assert(minX <= maxX, 'minX index out of range ($minX)');
 		assert(minY <= maxY, 'minY index out of range ($minY)');
@@ -811,12 +779,12 @@ class Array2<T> implements Collection<T>
 			x = minX;
 			while (x <= maxX)
 			{
-				output[i++] = d.get(offset + x);
+				out[i++] = d.get(offset + x);
 				x++;
 			}
 			y++;
 		}
-		return output;
+		return out;
 	}
 	
 	/**
@@ -839,7 +807,7 @@ class Array2<T> implements Collection<T>
 	public function toString():String
 	{
 		var l = 0, d = mData;
-		for (i in 0...size())
+		for (i in 0...size)
 		{
 			var s = Std.string(d.get(i));
 			l = Std.int(Math.max(s.length, l));
@@ -847,7 +815,7 @@ class Array2<T> implements Collection<T>
 		var s = '{ Array2 ${mW}x${mH} }';
 		s += "\n[\n";
 		
-		var offset, value;
+		var offset;
 		var row = 0;
 		for (y in 0...mH)
 		{
@@ -862,32 +830,42 @@ class Array2<T> implements Collection<T>
 		return s;
 	}
 	
-	/*///////////////////////////////////////////////////////
-	// collection
-	///////////////////////////////////////////////////////*/
+	/* INTERFACE Collection */
+	
+	/**
+		The number of elements in this two-dimensional array.
+		
+		Always equals ``cols`` * ``rows``.
+	**/
+	public var size(get, never):Int;
+	inline function get_size():Int
+	{
+		return mW * mH;
+	}
 	
 	/**
 		Destroys this object by explicitly nullifying all elements for GC'ing used resources.
 		
 		Improves GC efficiency/performance (optional).
-		<o>n</o>
 	**/
 	public function free()
 	{
-		var d = mData;
-		for (i in 0...size()) d.set(i, cast null);
+		mData.nullify();
 		mData = null;
-		mIterator = null;
+		if (mIterator != null)
+		{
+			mIterator.free();
+			mIterator = null;
+		}
 	}
 	
 	/**
 		Returns true if this two-dimensional array contains the element `x`.
-		<o>n</o>
 	**/
 	public function contains(x:T):Bool
 	{
 		var d = mData;
-		for (i in 0...size())
+		for (i in 0...size)
 		{
 			if (d.get(i) == x)
 				return true;
@@ -898,13 +876,12 @@ class Array2<T> implements Collection<T>
 	/**
 		Nullifies all occurrences of `x`.
 		The size is not altered.
-		<o>n</o>
 		@return true if at least one occurrence of `x` was nullified.
 	**/
 	public function remove(x:T):Bool
 	{
 		var found = false, d = mData;
-		for (i in 0...size())
+		for (i in 0...size)
 		{
 			if (d.get(i) == x)
 			{
@@ -918,13 +895,11 @@ class Array2<T> implements Collection<T>
 	/**
 		Clears this two-dimensional array by nullifying all elements.
 		
-		The `purge` parameter has no effect.
-		<o>1 or n if `purge` is true</o>
+		The `gc` parameter has no effect.
 	**/
-	public function clear(purge = false)
+	public function clear(gc:Bool = false)
 	{
-		var d = mData;
-		for (i in 0...size()) d.set(i, cast null);
+		mData.nullify(size);
 	}
 	
 	/**
@@ -949,19 +924,7 @@ class Array2<T> implements Collection<T>
 	}
 	
 	/**
-		The number of elements in this two-dimensional array.
-		
-		Always equals ``getW()`` * ``getH()``.
-		<o>1</o>
-	**/
-	inline public function size():Int
-	{
-		return mW * mH;
-	}
-	
-	/**
 		<warn>Unsupported operation - always returns false.</warn>
-		<o>1</o>
 	**/
 	public function isEmpty():Bool
 	{
@@ -975,19 +938,7 @@ class Array2<T> implements Collection<T>
 	**/
 	public function toArray():Array<T>
 	{
-		return NativeArray.toArray(mData);
-	}
-	
-	/**
-		Returns a `Vector<T>` object containing all elements in this two-dimensional array.
-		
-		Order: Row-major order (row-by-row).
-	**/
-	public function toVector():Container<T>
-	{
-		var v = NativeArray.init(size()), d = mData;
-		for (i in 0...size()) v.set(i, d.get(i));
-		return v;
+		return NativeArrayTools.toArray(mData, 0, size);
 	}
 	
 	/**
@@ -999,39 +950,37 @@ class Array2<T> implements Collection<T>
 		<warn>In this case all elements have to implement `Cloneable`.</warn>
 		@param copier a custom function for copying elements. Replaces ``element::clone()`` if `assign` is false.
 	**/
-	public function clone(assign = true, copier:T->T = null):Collection<T>
+	public function clone(assign:Bool = true, copier:T->T = null):Collection<T>
 	{
-		var c = new Array2<T>(mW, mH);
+		var out = new Array2<T>(mW, mH);
+		var src = mData;
+		var dst = out.mData;
 		
 		if (assign)
-			c.mData = NativeArray.copy(mData);
+			NativeArrayTools.blit(src, 0, dst, 0, size);
 		else
 		{
-			c.mData = NativeArray.init(size());
-			var src = mData;
-			var dst = c.mData;
-			
 			if (copier == null)
 			{
-				var e:Cloneable<Dynamic> = null;
-				var d:Dynamic; //required for -cpp
-				
-				for (i in 0...size())
+				try
 				{
-					assert(Std.is(src.get(i), Cloneable), 'element is not of type Cloneable (${src.get(i)})');
-					
-					d = src.get(i);
-					e = cast d;
-					dst.set(i, e.clone());
+					var e:Cloneable<Dynamic>;
+					for (i in 0...size)
+					{
+						e = cast(src.get(i), Cloneable<Dynamic>);
+						dst.set(i, e.clone());
+					}
 				}
+				catch(error:Dynamic)
+					throw 'element is not of type Cloneable';
 			}
 			else
 			{
-				for (i in 0...size())
+				for (i in 0...size)
 					dst.set(i, copier(src.get(i)));
 			}
 		}
-		return c;
+		return out;
 	}
 }
 
@@ -1051,27 +1000,33 @@ class Array2Iterator<T> implements de.polygonal.ds.Itr<T>
 	{
 		mObject = x;
 		reset();
-	} 
+	}
 	
-	inline public function reset():Itr<T>
+	public function free()
+	{
+		mObject = null;
+		mData = null;
+	}
+	
+	public inline function reset():Itr<T>
 	{
 		mData = mObject.mData;
-		mS = mObject.size();
+		mS = mObject.size;
 		mI = 0;
 		return this;
 	}
 	
-	inline public function hasNext():Bool
+	public inline function hasNext():Bool
 	{
 		return mI < mS;
 	}
 	
-	inline public function next():T
+	public inline function next():T
 	{
 		return mData.get(mI++);
 	}
 	
-	inline public function remove()
+	public function remove()
 	{
 		assert(mI > 0, "call next() before removing an element");
 		
@@ -1094,7 +1049,7 @@ class Array2Cell
 	**/
 	public var y:Int;
 	
-	public function new(x = 0, y = 0)
+	public function new(x:Int = 0, y:Int = 0)
 	{
 		this.x = x;
 		this.y = y;

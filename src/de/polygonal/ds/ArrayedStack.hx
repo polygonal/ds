@@ -1,5 +1,5 @@
 ﻿/*
-Copyright (c) 2008-2014 Michael Baczynski, http://www.polygonal.de
+Copyright (c) 2008-2016 Michael Baczynski, http://www.polygonal.de
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -18,9 +18,11 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 */
 package de.polygonal.ds;
 
-import de.polygonal.ds.error.Assert.assert;
+import de.polygonal.ds.tools.ArrayTools;
+import de.polygonal.ds.tools.Assert.assert;
+import de.polygonal.ds.tools.GrowthRate;
 
-using de.polygonal.ds.tools.NativeArray;
+using de.polygonal.ds.tools.NativeArrayTools;
 
 /**
 	A dynamic arrayed stack
@@ -28,8 +30,6 @@ using de.polygonal.ds.tools.NativeArray;
 	A stack is a linear list for which all insertions and deletions (and usually all accesses) are made at one end of the list.
 	
 	This is called a LIFO structure (Last In, First Out).
-	
-	_<o>Worst-case running time in Big O notation</o>_
 **/
 #if generic
 @:generic
@@ -43,7 +43,25 @@ class ArrayedStack<T> implements Stack<T>
 		
 		<warn>This value should never be changed by the user.</warn>
 	**/
-	public var key(default, null):Int;
+	public var key(default, null):Int = HashKey.next();
+	
+	/**
+		The capacity of the internal container.
+		
+		The capacity is usually a bit larger than `size` (_mild overallocation_).
+	**/
+	public var capacity(default, null):Int;
+	
+	/**
+		The growth rate of the container.
+		
+		+  0: fixed size
+		+ -1: grows at a rate of 1.125x plus a constant.
+		+ -2: grows at a rate of 1.5x (default value).
+		+ -3: grows at a rate of 2.0x.
+		+ >0: grows at a constant rate: capacity += growthRate
+	**/
+	public var growthRate:Int = GrowthRate.NORMAL;
 	
 	/**
 		If true, reuses the iterator object instead of allocating a new one when calling ``iterator()``.
@@ -52,61 +70,45 @@ class ArrayedStack<T> implements Stack<T>
 		
 		<warn>If true, nested iterations are likely to fail as only one iteration is allowed at a time.</warn>
 	**/
-	public var reuseIterator:Bool;
-	
-	public var capacity(default, null):Int;
-	
+	public var reuseIterator:Bool = false;
 	
 	var mData:Container<T>;
 	var mInitialCapacity:Int;
-	
-	
-	var mCapacityIncrement:Int;
-	
-	var mShrinkSize:Int;
-	var mShrinkCapacity:Int;
-	var mTop:Int;
-	var mIterator:ArrayedStackIterator<T>;
-	
-	#if debug
-	var mOp0:Int;
-	var mOp1:Int;
-	#end
+	var mTop:Int = 0;
+	var mIterator:ArrayedStackIterator<T> = null;
 	
 	/**
 		<assert>`initialCapacity` is greater than allowed size</assert>
 		<assert>`initialCapacity` is below minimum capacity of 16</assert>
 		@param initialCapacity the initial capacity of the internal container. This is also the minimum internal stack size. See ``reserve()``.
 	**/
-	public function new(initialCapacity:Int = 64, capacityIncrement:Int = -1)
+	public function new(initialCapacity:Null<Int> = 16, ?source:Array<T>)
 	{
-		//assert(initialCapacity >= 16, "initial capacity below minimum capacity (16)");
+		mInitialCapacity = M.max(1, initialCapacity);
+		capacity = mInitialCapacity;
 		
-		capacity = mInitialCapacity = initialCapacity;
-		mShrinkCapacity = capacity >> 2;
-		mCapacityIncrement = capacityIncrement;
+		if (source != null)
+		{
+			mTop = source.length;
+			capacity = M.max(mTop, capacity);
+		}
 		
-		mData = NativeArray.init(capacity);
+		mData = NativeArrayTools.init(capacity);
 		
-		mTop = 0;
-		mIterator = null;
-		key = HashKey.next();
-		reuseIterator = false;
-		
-		#if debug
-		mOp0 = 0;
-		mOp1 = 0;
-		#end
+		if (source != null)
+		{
+			var d = mData;
+			for (i in 0...mTop) d.set(i, source[i]);
+		}
 	}
 	
 	/**
 		For performance reasons the stack does nothing to ensure that empty locations contain null;
 		``pack()`` therefore nullifies all obsolete references and shrinks the array to the actual size allowing the garbage collector to reclaim used memory.
-		<o>n</o>
 	**/
 	public function pack()
 	{
-		//if (mData.length == size()) return;
+		//if (mData.length == size) return;
 		//
 		//trace('pack()!');
 		//
@@ -120,43 +122,35 @@ class ArrayedStack<T> implements Stack<T>
 		//
 		//trace(mCapacity);
 		
-		//var tmp = VectorUtil.alloc(mCapacity);
-		//VectorUtil.blit(mData, 0, tmp, 0, mCapacity);
-		//mData = tmp;
+		//var t = VectorUtil.alloc(mCapacity);
+		//VectorUtil.blit(mData, 0, t, 0, mCapacity);
+		//mData = t;
 		//throw 1;
-	}
-	/**
-		Nullifies the last popped off element so it can be instantly garbage collected.
 		
-		<warn>Use only directly after ``pop()``.</warn>
-		<o>1</o>
-		<assert>`pop()` wasn't directly called after ``dequeue()``</assert>
-	**/
-	inline public function dispose()
+			//Nullifies the last popped off element so it can be instantly garbage collected.
+		//<warn>Use only directly after ``pop()``.</warn>
+		//<assert>`pop()` wasn't directly called after ``dequeue()``</assert>
+	/*public inline function dispose()
 	{
 		assert(mTop > 0, "stack is empty");
-		assert(mOp0 == mOp1, "dispose() is only allowed directly after pop()");
 		
 		mData.set(mTop, cast null);
+	}*/
 	}
 	
 	/**
 		Preallocates internal space for storing `x` elements.
 		
 		This is useful if the expected size is known in advance.
-		<o>n</o>
 	**/
 	public function reserve(x:Int):ArrayedStack<T>
 	{
-		if (size() == x) return this;
+		if (size == x) return this;
 		
-		var tmp = NativeArray.init(x);
-		NativeArray.blit(mData, 0, tmp, 0, capacity);
-		mData = tmp;
-		
+		var t = NativeArrayTools.init(x);
+		NativeArrayTools.blit(mData, 0, t, 0, capacity);
+		mData = t;
 		capacity = x;
-		mShrinkCapacity = capacity >> 2;
-		
 		return this;
 	}
 	
@@ -164,10 +158,9 @@ class ArrayedStack<T> implements Stack<T>
 		Returns the top element of this stack.
 		
 		This is the "newest" element.
-		<o>1</o>
 		<assert>stack is empty</assert>
 	**/
-	inline public function top():T
+	public inline function top():T
 	{
 		assert(mTop > 0, "stack is empty");
 		
@@ -176,38 +169,27 @@ class ArrayedStack<T> implements Stack<T>
 	
 	/**
 		Pushes the element `x` onto the stack.
-		<o>1</o>
 	**/
-	inline public function push(x:T)
+	public inline function push(x:T)
 	{
-		#if debug
-		++mOp1;
-		#end
-		
-		if (size() == capacity) grow();
+		if (size == capacity) resize();
 		mData.set(mTop++, x);
 	}
 	
 	/**
 		Pops data off the stack.
-		<o>1</o>
 		<assert>stack is empty</assert>
 		@return the top element.
 	**/
-	inline public function pop():T
+	public inline function pop():T
 	{
 		assert(mTop > 0, "stack is empty");
-		
-		#if debug
-		mOp0 = ++mOp1;
-		#end
 		
 		return mData.get(--mTop);
 	}
 	
 	/**
 		Pops the top element of the stack, and pushes it back twice, so that an additional copy of the former top item is now on top, with the original below it.
-		<o>1</o>
 		<assert>stack is empty</assert>
 	**/
 	#if (!cpp) inline #end //TODO fixme
@@ -215,7 +197,7 @@ class ArrayedStack<T> implements Stack<T>
 	{
 		assert(mTop > 0, "stack is empty");
 		
-		if (size() == capacity) grow();
+		if (size == capacity) resize();
 		var d = mData;
 		d.set(mTop, d.get(mTop - 1));
 		mTop++;
@@ -223,20 +205,19 @@ class ArrayedStack<T> implements Stack<T>
 	
 	/**
 		Swaps the two topmost items on the stack.
-		<o>1</o>
-		<assert>``size()`` < 2</assert>
+		<assert>``size`` < 2</assert>
 	**/
 	#if (!cpp) inline #end //TODO fixme
 	public function exchange()
 	{
-		assert(mTop > 1, "size() < 2");
+		assert(mTop > 1, "size < 2");
 		
 		var i = mTop - 1;
 		var j = i - 1;
 		var d = mData;
-		var tmp = d.get(i);
+		var t = d.get(i);
 		d.set(i, d.get(j));
-		d.set(j, tmp);
+		d.set(j, t);
 	}
 	
 	/**
@@ -249,23 +230,22 @@ class ArrayedStack<T> implements Stack<T>
 		|2|  rotate right |3|
 		|1|      -->      |2|
 		|0|               |1|</pre>
-		<o>n</o>
-		<assert>``size()`` >= `n`</assert>
+		<assert>``size`` >= `n`</assert>
 	**/
 	public function rotRight(n:Int)
 	{
-		assert(mTop >= n, "size() < n");
+		assert(mTop >= n, "size < n");
 		
 		var i = mTop - n;
 		var k = mTop - 1;
 		var d = mData;
-		var tmp = d.get(i);
+		var t = d.get(i);
 		while (i < k)
 		{
 			d.set(i, d.get(i + 1));
 			i++;
 		}
-		d.set(mTop - 1, tmp);
+		d.set(mTop - 1, t);
 	}
 	
 	/**
@@ -278,23 +258,22 @@ class ArrayedStack<T> implements Stack<T>
 		|2|  rotate left |1|
 		|1|      -->     |0|
 		|0|              |3|</pre>
-		<o>n</o>
-		<assert>``size()`` >= `n`</assert>
+		<assert>``size`` >= `n`</assert>
 	**/
 	public function rotLeft(n:Int)
 	{
-		assert(mTop >= n, "size() < n");
+		assert(mTop >= n, "size < n");
 		
 		var i = mTop - 1;
 		var k = mTop - n;
 		var d = mData;
-		var tmp = d.get(i);
+		var t = d.get(i);
 		while (i > k)
 		{
 			d.set(i, d.get(i - 1));
 			i--;
 		}
-		d.set(mTop - n, tmp);
+		d.set(mTop - n, t);
 	}
 	
 	/**
@@ -302,11 +281,10 @@ class ArrayedStack<T> implements Stack<T>
 		
 		An index of 0 indicates the bottommost element.
 		
-		An index of ``size()`` - 1 indicates the topmost element.
-		<o>1</o>
+		An index of ``size`` - 1 indicates the topmost element.
 		<assert>stack is empty or `i` out of range</assert>
 	**/
-	inline public function get(i:Int):T
+	public inline function get(i:Int):T
 	{
 		assert(mTop > 0, "stack is empty");
 		assert(i >= 0 && i < mTop, 'i index out of range ($i)');
@@ -319,11 +297,10 @@ class ArrayedStack<T> implements Stack<T>
 		
 		An index of 0 indicates the bottommost element.
 		
-		An index of ``size()`` - 1 indicates the topmost element.
-		<o>1</o>
+		An index of ``size`` - 1 indicates the topmost element.
 		<assert>stack is empty or `i` out of range</assert>
 	**/
-	inline public function set(i:Int, x:T)
+	public inline function set(i:Int, x:T)
 	{
 		assert(mTop > 0, "stack is empty");
 		assert(i >= 0 && i < mTop, 'i index out of range ($i)');
@@ -336,14 +313,13 @@ class ArrayedStack<T> implements Stack<T>
 		
 		An index of 0 indicates the bottommost element.
 		
-		An index of ``size()`` - 1 indicates the topmost element.
-		<o>1</o>
+		An index of ``size`` - 1 indicates the topmost element.
 		<assert>stack is empty</assert>
 		<assert>`i`/`j` out of range</assert>
 		<assert>`i` equals `j`</assert>
 	**/
 	#if (!cpp) inline #end //TODO fixme
-	public function swp(i:Int, j:Int)
+	public function swap(i:Int, j:Int)
 	{
 		assert(mTop > 0, "stack is empty");
 		assert(i >= 0 && i < mTop, 'i index out of range ($i)');
@@ -361,14 +337,13 @@ class ArrayedStack<T> implements Stack<T>
 		
 		An index of 0 indicates the bottommost element.
 		
-		An index of ``size()`` - 1 indicates the topmost element.
-		<o>1</o>
+		An index of ``size`` - 1 indicates the topmost element.
 		<assert>stack is empty</assert>
 		<assert>`i`/`j` out of range</assert>
 		<assert>`i` equals `j`</assert>
 	**/
 	#if (!cpp) inline #end //TODO fixme
-	public function cpy(i:Int, j:Int)
+	public function copy(i:Int, j:Int)
 	{
 		assert(mTop > 0, "stack is empty");
 		assert(i >= 0 && i < mTop, 'i index out of range ($i)');
@@ -380,67 +355,28 @@ class ArrayedStack<T> implements Stack<T>
 	}
 	
 	/**
-		Replaces up to `n` existing elements with objects of type `cl`.
-		<o>n</o>
-		<assert>`n` out of range</assert>
-		@param cl the class to instantiate for each element.
-		@param args passes additional constructor arguments to the class `cl`.
-		@param n the number of elements to replace. If 0, `n` is set to ``size()``.
+		Calls the `f` function on all elements.
+		
+		The function signature is: `f(element, index):element`
+		<assert>`f` is null</assert>
 	**/
-	public function assign(cl:Class<T>, args:Array<Dynamic> = null, n = 0)
+	public function forEach(f:T->Int->T):ArrayedStack<T>
 	{
-		assert(n >= 0);
-		
-		if (n == 0) n = size();
-		
-		if (args == null) args = [];
-		for (i in 0...n) mData.set(i, Type.createInstance(cl, args));
-		
-		mTop = n;
-	}
-	
-	/**
-		Replaces up to `n` existing elements with the instance `x`.
-		<o>n</o>
-		<assert>`n` out of range</assert>
-		@param n the number of elements to replace. If 0, `n` is set to ``size()``.
-	**/
-	public function fill(x:T, n = 0):ArrayedStack<T>
-	{
-		assert(n >= 0);
-		
-		if (n == 0) n = size();
-		
-		for (i in 0...n)
-			mData.set(i, x);
-		
-		mTop = n;
+		var d = mData;
+		for (i in 0...mTop) d.set(i, f(d.get(i), i));
 		return this;
 	}
 	
 	/**
-		Invokes the `process` function for each element.
-		
-		The function signature is: ``process(oldValue, index):newValue``
-		<o>n</o>
-	**/
-	public function iter(process:T->Int->T)
-	{
-		var d = mData;
-		for (i in 0...mTop) d.set(i, process(d.get(i), i));
-	}
-	
-	/**
 		Shuffles the elements of this collection by using the Fisher-Yates algorithm.
-		<o>n</o>
 		<assert>insufficient random values</assert>
-		@param rval a list of random double values in the range between 0 (inclusive) to 1 (exclusive) defining the new positions of the elements.
+		@param rvals a list of random double values in the range between 0 (inclusive) to 1 (exclusive) defining the new positions of the elements.
 		If omitted, random values are generated on-the-fly by calling `Math::random()`.
 	**/
-	public function shuffle(rval:Array<Float> = null)
+	public function shuffle(rvals:Array<Float> = null)
 	{
 		var s = mTop, d = mData;
-		if (rval == null)
+		if (rvals == null)
 		{
 			var m = Math, i, t;
 			while (s > 1)
@@ -453,12 +389,12 @@ class ArrayedStack<T> implements Stack<T>
 		}
 		else
 		{
-			assert(rval.length >= size(), "insufficient random values");
+			assert(rvals.length >= size, "insufficient random values");
 			
 			var j = 0, i, t;
 			while (s > 1)
 			{
-				i = Std.int(rval[j++] * (--s));
+				i = Std.int(rvals[j++] * (--s));
 				t = d.get(s);
 				d.set(s, d.get(i));
 				d.set(i, t);
@@ -487,7 +423,7 @@ class ArrayedStack<T> implements Stack<T>
 	**/
 	public function toString():String
 	{
-		var s = '{ ArrayedStack size: ${size()} }';
+		var s = '{ ArrayedStack size: ${size} }';
 		if (isEmpty()) return s;
 		s += "\n[ top\n";
 		var i = mTop - 1;
@@ -498,26 +434,35 @@ class ArrayedStack<T> implements Stack<T>
 		return s;
 	}
 	
-	/*///////////////////////////////////////////////////////
-	// collection
-	///////////////////////////////////////////////////////*/
+	/* INTERFACE Collection */
+	
+	/**
+		The total number of elements.
+	**/
+	public var size(get, never):Int;
+	inline function get_size():Int
+	{
+		return mTop;
+	}
 	
 	/**
 		Destroys this object by explicitly nullifying all elements for GC'ing used resources.
 		
 		Improves GC efficiency/performance (optional).
-		<o>n</o>
 	**/
 	public function free()
 	{
-		//for (i in 0...mData.length) d.set(i, cast null);
+		mData.nullify();
 		mData = null;
-		mIterator = null;
+		if (mIterator != null)
+		{
+			mIterator.free();
+			mIterator = null;
+		}
 	}
 	
 	/**
 		Returns true if this stack contains the element `x`.
-		<o>n</o>
 	**/
 	public function contains(x:T):Bool
 	{
@@ -532,7 +477,6 @@ class ArrayedStack<T> implements Stack<T>
 	
 	/**
 		Removes and nullifies all occurrences of the element `x`.
-		<o>n</o>
 		@return true if at least one occurrence of `x` was removed.
 	**/
 	public function remove(x:T):Bool
@@ -558,25 +502,18 @@ class ArrayedStack<T> implements Stack<T>
 			
 			if (!found) break;
 		}
-		
 		mTop = t;
-		
 		return found;
 	}
 	
 	/**
 		Removes all elements.
-		<o>1 or n if `purge` is true</o>
-		@param purge if true, elements are nullified upon removal.
+		
+		@param gc if true, elements are nullified upon removal so the garbage collector can reclaim used memory.
 	**/
-	public function clear(purge = false)
+	public function clear(gc:Bool = false)
 	{
-		if (purge)
-		{
-			var d = mData;
-			for (i in 0...NativeArray.size(mData))
-				d.set(i, cast null);
-		}
+		if (gc) mData.nullify();
 		mTop = 0;
 	}
 	
@@ -603,20 +540,10 @@ class ArrayedStack<T> implements Stack<T>
 	
 	/**
 		Returns true if this stack is empty.
-		<o>1</o>
 	**/
-	inline public function isEmpty():Bool
+	public inline function isEmpty():Bool
 	{
 		return mTop == 0;
-	}
-	
-	/**
-		The total number of elements.
-		<o>1</o>
-	**/
-	inline public function size():Int
-	{
-		return mTop;
 	}
 	
 	/**
@@ -626,23 +553,12 @@ class ArrayedStack<T> implements Stack<T>
 	**/
 	public function toArray():Array<T>
 	{
-		var out = ArrayUtil.alloc(size());
+		if (isEmpty()) return [];
+		
+		var out = ArrayTools.alloc(size);
 		var i = mTop, j = 0, d = mData;
 		while (i > 0) out[j++] = d.get(--i);
 		return out;
-	}
-	
-	/**
-		Returns a `Vector<T>` object containing all elements in this stack.
-		
-		Preserves the natural order of this stack (First-In-Last-Out).
-	**/
-	public function toVector():Container<T>
-	{
-		var v = NativeArray.init(size());
-		var i = mTop, j = 0, d = mData;
-		while (i > 0) v[j++] = d.get(--i);
-		return v;
 	}
 
 	/**
@@ -652,16 +568,16 @@ class ArrayedStack<T> implements Stack<T>
 		If false, the ``clone()`` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
 		@param copier a custom function for copying elements. Replaces ``element::clone()`` if `assign` is false.
 	**/
-	public function clone(assign = true, copier:T->T = null):Collection<T>
+	public function clone(assign:Bool = true, copier:T->T = null):Collection<T>
 	{
-		var c = new ArrayedStack<T>(capacity, mCapacityIncrement);
+		var c = new ArrayedStack<T>(capacity);
 		
 		if (isEmpty()) return c;
 		
 		c.mTop = mTop;
 		
 		if (assign)
-			mData.blit(0, c.mData, 0, size());
+			mData.blit(0, c.mData, 0, size);
 		else
 		{
 			var src = mData;
@@ -672,7 +588,7 @@ class ArrayedStack<T> implements Stack<T>
 				var e:Cloneable<Dynamic> = null;
 				var d:Dynamic; //required for -cpp
 				
-				for (i in 0...size())
+				for (i in 0...size)
 				{
 					assert(Std.is(src.get(i), Cloneable), 'element is not of type Cloneable (${src.get(i)})');
 					
@@ -683,48 +599,24 @@ class ArrayedStack<T> implements Stack<T>
 			}
 			else
 			{
-				for (i in 0...size())
+				for (i in 0...size)
 					dst.set(i, copier(src.get(i)));
 			}
 		}
-		
 		return c;
 	}
 	
-	function shrink()
+	function resize()
 	{
-		if (capacity <= 16) return;
-		
-		capacity >>= 1;
-		mShrinkSize = capacity >> 2;
-		resize(capacity);
+		capacity = GrowthRate.compute(growthRate, capacity);
+		resizeContainer(capacity);
 	}
 	
-	function grow()
+	function resizeContainer(newSize:Int)
 	{
-		var tmp = capacity;
-		
-		capacity =
-		if (mCapacityIncrement == -1)
-		{
-			if (true)
-				Std.int((capacity * 3) / 2 + 1); //1.5
-			else
-				capacity + ((capacity >> 3) + (capacity < 9 ? 3 : 6)); //1.125
-		}
-		else
-			capacity + mCapacityIncrement;
-		
-		mShrinkSize = capacity >> 2;
-		
-		resize(capacity);
-	}
-	
-	function resize(newSize:Int)
-	{
-		var tmp = NativeArray.init(newSize);
-		NativeArray.blit(mData, 0, tmp, 0, size());
-		mData = tmp;
+		var t = NativeArrayTools.init(newSize);
+		NativeArrayTools.blit(mData, 0, t, 0, size);
+		mData = t;
 	}
 }
 
@@ -745,24 +637,30 @@ class ArrayedStackIterator<T> implements de.polygonal.ds.Itr<T>
 		reset();
 	}
 	
-	inline public function reset():Itr<T>
+	public function free()
+	{
+		mObject = null;
+		mData = null;
+	}
+	
+	public inline function reset():Itr<T>
 	{
 		mData = mObject.mData;
 		mI = mObject.mTop - 1;
 		return this;
 	}
 	
-	inline public function hasNext():Bool
+	public inline function hasNext():Bool
 	{
 		return mI >= 0;
 	}
 	
-	inline public function next():T
+	public inline function next():T
 	{
 		return mData.get(mI--);
 	}
 	
-	inline public function remove()
+	public function remove()
 	{
 		assert(mI != (mObject.mTop - 1), "call next() before removing an element");
 		

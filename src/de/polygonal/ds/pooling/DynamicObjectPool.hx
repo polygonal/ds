@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2008-2014 Michael Baczynski, http://www.polygonal.de
+Copyright (c) 2008-2016 Michael Baczynski, http://www.polygonal.de
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -18,7 +18,7 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 */
 package de.polygonal.ds.pooling;
 
-import de.polygonal.ds.error.Assert.assert;
+import de.polygonal.ds.tools.Assert.assert;
 
 /**
 	An dynamic, arrayed object pool with an unbounded size that creates new objects on-the-fly and stores them for repeated use.
@@ -92,9 +92,13 @@ class DynamicObjectPool<T>
 		A hash table transforms this key into an index of an array element by using a hash function.
 		<warn>This value should never be changed by the user.</warn>
 	**/
-	public var key(default, null):Int;
+	public var key(default, null):Int = HashKey.next();
 	
-	var mSize:Int;
+	/**
+		The total number of objects in this pool.
+	**/
+	public var size(default, null):Int = 0;
+	
 	var mOldSize:Int;
 	var mCapacity:Int;
 	var mTop:Int;
@@ -131,7 +135,6 @@ class DynamicObjectPool<T>
 		mPool = new Array<T>();
 		mAllocType = 0;
 		mTop = 0;
-		mSize = 0;
 		mOldSize = 0;
 		mUsed = 0;
 		mUsedMax = 0;
@@ -141,8 +144,6 @@ class DynamicObjectPool<T>
 		if (factory   != null) mAllocType |= Bits.BIT_03;
 		
 		assert(Bits.ones(mAllocType) == 1, "invalid arguments");
-		
-		key = HashKey.next();
 		
 		#if debug
 		mSet = new de.polygonal.ds.ListSet<T>();
@@ -155,7 +156,7 @@ class DynamicObjectPool<T>
 	**/
 	public function free()
 	{
-		for (i in 0...mSize) mPool[i] = null;
+		for (i in 0...size) mPool[i] = null;
 		mClass = null;
 		mArgs = null;
 		mFabricate = null;
@@ -164,18 +165,10 @@ class DynamicObjectPool<T>
 	}
 	
 	/**
-		The total number of objects in this pool.
-	**/
-	inline public function size():Int
-	{
-		return mSize;
-	}
-	
-	/**
 		The maximum allowed number of pooled resources.
 		This is an optional upper limit to counteract memory leaks.
 	**/
-	inline public function capacity():Int
+	public inline function capacity():Int
 	{
 		return mCapacity;
 	}
@@ -183,7 +176,7 @@ class DynamicObjectPool<T>
 	/**
 		The total number of objects in use.
 	**/
-	inline public function used():Int
+	public inline function used():Int
 	{
 		return mUsed;
 	}
@@ -191,7 +184,7 @@ class DynamicObjectPool<T>
 	/**
 		The maximum number of objects in use between calls to code>reclaim()`.
 	**/
-	inline public function maxUsageCount():Int
+	public inline function maxUsageCount():Int
 	{
 		return mUsedMax;
 	}
@@ -199,9 +192,9 @@ class DynamicObjectPool<T>
 	/**
 		Acquires the next object from this pool or creates a new object if all objects are in use.
 		To minimize object creation, return objects back to the pool as soon as their life cycle ends by calling `put()`.
-		<warn>If ``size()`` equals `capacity()`, `get()` still allocates a new object but does not pool it. This effectively disables pooling.</warn>
+		<warn>If ``size`` equals `capacity()`, `get()` still allocates a new object but does not pool it. This effectively disables pooling.</warn>
 	**/
-	inline public function get():T
+	public inline function get():T
 	{
 		var x = null;
 		
@@ -216,8 +209,8 @@ class DynamicObjectPool<T>
 		else
 		{
 			x = alloc();
-			if (mSize < mCapacity)
-				mPool[mSize++] = x;
+			if (size < mCapacity)
+				mPool[size++] = x;
 		}
 		
 		mUsed++;
@@ -229,7 +222,7 @@ class DynamicObjectPool<T>
 		Objects are pushed onto a stack, so `get()` returns `x` if called immediately after `put()`.
 		<assert>`x` was returned twice to the pool</assert>
 	**/
-	inline public function put(x:T)
+	public inline function put(x:T)
 	{
 		#if debug
 		assert(!mSet.has(x), 'object $x was returned twice to the pool');
@@ -246,19 +239,18 @@ class DynamicObjectPool<T>
 		<warn>Don't call this method while objects are still in use or `get()` will return a used object.</warn>
 		@return The total number of allocated objects since the last call to `reclaim()`.
 	**/
-	inline public function reclaim():Int
+	public inline function reclaim():Int
 	{
-		mTop = mSize;
+		mTop = size;
 		
 		#if debug
 		mSet.clear();
 		#end
 		
-		var c = mSize - mOldSize;
-		mOldSize = mSize;
+		var c = size - mOldSize;
+		mOldSize = size;
 		mUsedMax = M.max(mUsedMax, mUsed);
 		mUsed = 0;
-		
 		return c;
 	}
 	
@@ -277,7 +269,7 @@ class DynamicObjectPool<T>
 	**/
 	public function toString():String
 	{
-		return '{ DynamicObjectPool, size/capacity: ${size()}/${capacity()} }';
+		return '{ DynamicObjectPool, size/capacity: $size/${capacity()} }';
 	}
 	
 	inline function alloc()
@@ -290,7 +282,6 @@ class DynamicObjectPool<T>
 			case Bits.BIT_02: x = mFabricate();
 			case Bits.BIT_03: x = mFactory.create();
 		}
-		
 		return x;
 	}
 }
@@ -313,25 +304,25 @@ class DynamicObjectPoolIterator<T> implements de.polygonal.ds.Itr<T>
 		reset();
 	}
 	
-	inline public function reset():Itr<T>
+	public inline function reset():Itr<T>
 	{
 		mData = mObject.mPool;
-		mS = mObject.mSize;
+		mS = mObject.size;
 		mI = 0;
 		return this;
 	}
 	
-	inline public function hasNext():Bool
+	public inline function hasNext():Bool
 	{
 		return mI < mS;
 	}
 	
-	inline public function remove()
+	public function remove()
 	{
 		throw "unsupported operation";
 	}
 	
-	inline public function next():T
+	public inline function next():T
 	{
 		return mData[mI++];
 	}

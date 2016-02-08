@@ -15,15 +15,22 @@ class TestArrayedStack extends AbstractTest
 		super();
 	}
 	
+	function testSource()
+	{
+		var s = new ArrayedStack<Int>([0, 1, 2, 3]);
+		assertEquals(4, s.size);
+		for (i in 0...4) assertEquals((4 - i) - 1, s.pop());
+	}
+	
 	function testGrow()
 	{
 		var s = new ArrayedStack<Int>(4);
 		for (i in 0...4) s.push(i);
-		assertEquals(4, s.size());
+		assertEquals(4, s.size);
 		assertEquals(4, s.capacity);
 		
 		s.push(4);
-		assertEquals(5, s.size());
+		assertEquals(5, s.size);
 		assertTrue(s.capacity > 4);
 	}
 	
@@ -40,10 +47,10 @@ class TestArrayedStack extends AbstractTest
 		var s:ArrayedStack<Int> = new ArrayedStack<Int>();
 		for (i in 0...2) s.push(i);
 		s.dup();
-		assertEquals(3, s.size());
+		assertEquals(3, s.size);
 		assertEquals(1, s.top());
-		assertEquals(1, s.get(s.size() - 2));
-		assertEquals(0, s.get(s.size() - 3));
+		assertEquals(1, s.get(s.size - 2));
+		assertEquals(0, s.get(s.size - 3));
 	}
 	
 	function testExchange()
@@ -53,14 +60,14 @@ class TestArrayedStack extends AbstractTest
 		s.push(1);
 		s.exchange();
 		assertEquals(0, s.top());
-		assertEquals(1, s.get(s.size() - 2));
+		assertEquals(1, s.get(s.size - 2));
 		var s:ArrayedStack<Int> = new ArrayedStack<Int>();
 		s.push(0);
 		s.push(1);
 		s.push(2);
 		s.exchange();
 		assertEquals(1, s.top());
-		assertEquals(2, s.get(s.size() - 2));
+		assertEquals(2, s.get(s.size - 2));
 	}
 	
 	function testRotRight()
@@ -186,20 +193,20 @@ class TestArrayedStack extends AbstractTest
 		for (i in 0...5)
 		{
 			s.remove(values.shift());
-			assertEquals(s.size(), --k);
+			assertEquals(s.size, --k);
 			for (j in values) assertTrue(s.contains(j));
 		}
 		assertTrue(s.isEmpty());
 	}
 	
-	function testReserve()
+	/*function testReserve()
 	{
 		var stack = new ArrayedStack<Int>(16, 20);
 		for (i in 0...10) stack.push(i);
 		stack.reserve(20);
-		assertEquals(10, stack.size());
+		assertEquals(10, stack.size);
 		for (i in 0...10) assertEquals(9 - i, stack.pop());
-	}
+	}*/
 	
 	function _testPack() //TODO
 	{
@@ -252,7 +259,7 @@ class TestArrayedStack extends AbstractTest
 	{
 		var stack = getStack();
 		for (i in 0...10) stack.push(i);
-		stack.swp(0, 1);
+		stack.swap(0, 1);
 		assertEquals(1, stack.get(0));
 		assertEquals(0, stack.get(1));
 	}
@@ -261,7 +268,7 @@ class TestArrayedStack extends AbstractTest
 	{
 		var stack = getStack();
 		for (i in 0...10) stack.push(i);
-		stack.cpy(0, 1);
+		stack.copy(0, 1);
 		assertEquals(1, stack.get(0));
 		assertEquals(1, stack.get(1));
 	}
@@ -274,7 +281,7 @@ class TestArrayedStack extends AbstractTest
 		{
 			return val * i;
 		}
-		stack.iter(f);
+		stack.forEach(f);
 		for (i in 0...10) assertEquals(i * i , stack.get(i));
 	}
 	
@@ -290,11 +297,11 @@ class TestArrayedStack extends AbstractTest
 		var stack = getStack();
 		for (i in 0...10) stack.push(i);
 		stack.clear();
-		assertEquals(0, stack.size());
+		assertEquals(0, stack.size);
 		assertEquals(true, stack.isEmpty());
 	}
 	
-	function testDispose()
+	/*function testDispose()
 	{
 		var stack = getStack();
 		for (i in 0...3) stack.push(i);
@@ -305,14 +312,14 @@ class TestArrayedStack extends AbstractTest
 		var x = stack.mData[stack.mTop];
 		//var value = #if (flash) 0 #else null #end;
 		//assertEquals(value, x);
-	}
+	}*/
 	
 	function testIterator()
 	{
 		var stack = getStack(100);
 		for (i in 0...10) stack.push(i);
 		var c = 10;
-		var itr:de.polygonal.ds.ResettableIterator<Int> = cast stack.iterator();
+		var itr = stack.iterator();
 		for (i in itr) assertEquals(i, --c);
 		assertEquals(c, 0);
 		c = 10;
@@ -364,45 +371,22 @@ class TestArrayedStack extends AbstractTest
 	{
 		var stack = getStack();
 		for (i in 0...10) stack.push(i);
-		assertEquals(10, stack.size());
+		assertEquals(10, stack.size);
 		for (i in 0...mSize - 10) stack.push(i);
 	}
 	
-	function testAssign()
+	function testForEach()
 	{
-		var q = new ArrayedStack<E>(mSize);
-		assertEquals(0, q.size());
-		q.assign(E, [0], mSize);
-		
-		assertEquals(mSize, q.size());
-		for (i in 0...mSize) assertEquals(E, cast Type.getClass(q.pop()));
-		
-		assertTrue(q.isEmpty());
-		q.assign(E, [0], 10);
-		assertEquals(10, q.size());
-		for (i in 0...10) assertEquals(E, cast Type.getClass(q.pop()));
-		
-		assertTrue(q.isEmpty());
-		q.assign(E, [5], mSize);
-		assertEquals(mSize, q.size());
-		for (i in 0...mSize) assertEquals(5, q.pop().x);
-		assertTrue(q.isEmpty());
-	}
-	
-	function testFill()
-	{
-		var q = getStack();
-		assertEquals(0, q.size());
-		q.fill(99, mSize);
-		assertEquals(mSize, q.size());
-		for (i in 0...mSize) assertEquals(99, q.pop());
-		
-		assertTrue(q.isEmpty());
-		q.fill(88, 10);
-		assertEquals(10, q.size());
-		for (i in 0...10) assertEquals(88, q.pop());
-		
-		assertTrue(q.isEmpty());
+		var s = new ArrayedStack<Int>(mSize);
+		s.push(0);
+		s.push(1);
+		s.push(2);
+		s.forEach(
+			function(v, i)
+			{
+				assertEquals(i, v);
+				return v;
+			});
 	}
 	
 	function testToArray()
@@ -430,7 +414,7 @@ class TestArrayedStack extends AbstractTest
 		
 		var copy:de.polygonal.ds.ArrayedStack<Int> = cast stack.clone(true);
 		for (i in 0...10) assertEquals(copy.get(i), stack.get(i));
-		assertEquals(10, copy.size());
+		assertEquals(10, copy.size);
 	}
 	
 	function testCollection()

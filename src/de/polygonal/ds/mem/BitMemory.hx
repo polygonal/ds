@@ -1,5 +1,5 @@
 ﻿/*
-Copyright (c) 2008-2014 Michael Baczynski, http://www.polygonal.de
+Copyright (c) 2008-2016 Michael Baczynski, http://www.polygonal.de
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -18,7 +18,7 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 */
 package de.polygonal.ds.mem;
 
-import de.polygonal.ds.error.Assert.assert;
+import de.polygonal.ds.tools.Assert.assert;
 
 #if (alchemy && !flash)
 "BitMemory is only available when targeting flash"
@@ -37,8 +37,8 @@ class BitMemory extends MemoryAccess
 	#if flash
 	public static function toByteArray(input:BitMemory):flash.utils.ByteArray
 	{
-		var output = new flash.utils.ByteArray();
-		output.endian = flash.utils.Endian.LITTLE_ENDIAN;
+		var out = new flash.utils.ByteArray();
+		out.endian = flash.utils.Endian.LITTLE_ENDIAN;
 		
 		var x = 0;
 		var b = 0;
@@ -48,15 +48,15 @@ class BitMemory extends MemoryAccess
 			b++;
 			if (b & 7 == 0)
 			{
-				output.writeByte(x);
+				out.writeByte(x);
 				x = 0;
 				b = 0;
 			}
 		}
 		
-		if (b > 0) output.writeByte(x);
-		output.position = 0;
-		return output;
+		if (b > 0) out.writeByte(x);
+		out.position = 0;
+		return out;
 	}
 	#end
 	
@@ -76,9 +76,9 @@ class BitMemory extends MemoryAccess
 		assert(min >= 0);
 		assert(max <= Std.int(input.length), "max <= input.length");
 		
-		var output = new BitMemory((max - min) << 3, "ofByteArray");
+		var out = new BitMemory((max - min) << 3, "ofByteArray");
 		#if alchemy
-		var a = output.getAddr(0);
+		var a = out.getAddr(0);
 		for (i in min...max) flash.Memory.setByte(a++, cast input[i]);
 		#else
 		var i = 0;
@@ -89,12 +89,12 @@ class BitMemory extends MemoryAccess
 			{
 				var bit = b & 1;
 				b >>= 1;
-				if (bit == 1) output.set(i);
+				if (bit == 1) out.set(i);
 				i++;
 			}
 		}
 		#end
-		return output;
+		return out;
 	}
 	#end
 	
@@ -105,8 +105,8 @@ class BitMemory extends MemoryAccess
 	**/
 	public static function toBytesData(input:BitMemory):haxe.io.BytesData
 	{
-		var output = new haxe.io.BytesOutput();
-		output.bigEndian = false;
+		var out = new haxe.io.BytesOutput();
+		out.bigEndian = false;
 		
 		var x = 0;
 		var b = 0;
@@ -116,14 +116,14 @@ class BitMemory extends MemoryAccess
 			b++;
 			if (b & 7 == 0)
 			{
-				output.writeByte(x);
+				out.writeByte(x);
 				x = 0;
 				b = 0;
 			}
 		}
 		
-		if (b > 0) output.writeByte(x);
-		return output.getBytes().getData();
+		if (b > 0) out.writeByte(x);
+		return out.getBytes().getData();
 	}
 	
 	/**
@@ -151,9 +151,9 @@ class BitMemory extends MemoryAccess
 		assert(max <= Std.int(input.length), "max <= input.length");
 		#end
 		
-		var output = new BitMemory((max - min) << 3, "ofByteArray");
+		var out = new BitMemory((max - min) << 3, "ofByteArray");
 		#if alchemy
-		var a = output.getAddr(0);
+		var a = out.getAddr(0);
 		for (i in min...max)
 			flash.Memory.setByte(a++, cast input[i]);
 		#else
@@ -166,7 +166,7 @@ class BitMemory extends MemoryAccess
 				{
 					var bit = b & 1;
 					b >>= 1;
-					if (bit == 1) output.set(i);
+					if (bit == 1) out.set(i);
 					i++;
 				}
 			}
@@ -180,13 +180,13 @@ class BitMemory extends MemoryAccess
 				{
 					var bit = b & 1;
 					b >>= 1;
-					if (bit == 1) output.set(i);
+					if (bit == 1) out.set(i);
 					i++;
 				}
 			}
 			#end
 		#end
-		return output;
+		return out;
 	}
 	
 	/**
@@ -275,7 +275,6 @@ class BitMemory extends MemoryAccess
 		else
 			for (i in 0...bytes >> 2) mData[i] =-1;
 		#end
-		
 		return this;
 	}
 	
@@ -293,9 +292,9 @@ class BitMemory extends MemoryAccess
 		#if alchemy
 		super.resize(newBytes);
 		#else
-			var tmp = new Vector<Int>(newBytes >> 2);
-			for (i in 0...M.min(newSize, size)) tmp[i] = mData[i];
-			mData = tmp;
+			var t = new Vector<Int>(newBytes >> 2);
+			for (i in 0...M.min(newSize, size)) t[i] = mData[i];
+			mData = t;
 		#end
 		
 		size = newSize;
@@ -306,7 +305,7 @@ class BitMemory extends MemoryAccess
 		<assert>index out of range</assert>
 		<assert>memory deallocated</assert>
 	**/
-	inline public function has(i:Int):Bool
+	public inline function has(i:Int):Bool
 	{
 		#if alchemy
 		return ((flash.Memory.getI32(getAddr(i)) & (1 << (i & (32 - 1)))) >> (i & (32 - 1))) != 0;
@@ -320,7 +319,7 @@ class BitMemory extends MemoryAccess
 		<assert>index out of range</assert>
 		<assert>memory deallocated</assert>
 	**/
-	inline public function get(i:Int):Int
+	public inline function get(i:Int):Int
 	{
 		#if alchemy
 			return ((flash.Memory.getI32(getAddr(i)) & (1 << (i & (32 - 1)))) >> (i & (32 - 1)));
@@ -334,7 +333,7 @@ class BitMemory extends MemoryAccess
 		<assert>index out of range</assert>
 		<assert>memory deallocated</assert>
 	**/
-	inline public function set(i:Int)
+	public inline function set(i:Int)
 	{
 		var idx = getAddr(i);
 		#if alchemy
@@ -349,7 +348,7 @@ class BitMemory extends MemoryAccess
 		<assert>index out of range</assert>
 		<assert>memory deallocated</assert>
 	**/
-	inline public function clr(i:Int)
+	public inline function clr(i:Int)
 	{
 		var idx = getAddr(i);
 		#if alchemy
@@ -363,7 +362,7 @@ class BitMemory extends MemoryAccess
 		Sets all bits to 0.
 		<assert>memory deallocated</assert>
 	**/
-	inline public function clrAll()
+	public inline function clrAll()
 	{
 		#if alchemy
 		for (i in 0...size) flash.Memory.setI32(getAddr(i), 0);
@@ -376,7 +375,7 @@ class BitMemory extends MemoryAccess
 		Sets all bits to 1.
 		<assert>memory deallocated</assert>
 	**/
-	inline public function setAll()
+	public inline function setAll()
 	{
 		#if alchemy
 		for (i in 0...size) flash.Memory.setI32(getAddr(i), -1);
@@ -390,7 +389,7 @@ class BitMemory extends MemoryAccess
 		<assert>index out of range</assert>
 		<assert>memory deallocated</assert>
 	**/
-	inline public function ofBool(i:Int, cond:Bool)
+	public inline function ofBool(i:Int, cond:Bool)
 	{
 		cond ? set(i) : clr(i);
 	}
@@ -400,7 +399,7 @@ class BitMemory extends MemoryAccess
 		<assert>segmentation fault</assert>
 		<assert>memory deallocated</assert>
 	**/
-	inline public function getAddr(i:Int):Int
+	public inline function getAddr(i:Int):Int
 	{
 		assert(i >= 0 && i < size, 'segfault, index $i');
 		assert(mMemory != null, "memory deallocated");

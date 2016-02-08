@@ -1,7 +1,7 @@
 ﻿import de.polygonal.ds.Compare;
 import de.polygonal.ds.TreeBuilder;
 import de.polygonal.ds.TreeNode;
-import de.polygonal.ds.TreeUtil;
+import de.polygonal.ds.tools.TreeTools;
 import haxe.Serializer;
 import haxe.Unserializer;
 
@@ -27,7 +27,7 @@ class TestTree extends AbstractTest
 	function testXmlToTreeNode()
 	{
 		var xml = "<root rootAttr=\"rootAttrValue\"><node1 node1Attr1=\"a\" node1Attr2=\"b\"><node2 node2Attr=\"c\"/></node1></root>";
-		var root = de.polygonal.ds.TreeUtil.ofXml(xml);
+		var root = de.polygonal.ds.tools.TreeTools.ofXml(xml);
 		
 		assertEquals(root.val.name, "root");
 		assertEquals("rootAttrValue", root.val.attributes.rootAttr);
@@ -78,7 +78,7 @@ class TestTree extends AbstractTest
 		itr.appendChild("new.a3");
 		
 		root.appendNode(node);
-		assertEquals(8, root.size());
+		assertEquals(8, root.size);
 	}
 	
 	function testPrependNode()
@@ -96,7 +96,7 @@ class TestTree extends AbstractTest
 		itr.appendChild("new.a3");
 		
 		root.prependNode(node);
-		assertEquals(8, root.size());
+		assertEquals(8, root.size);
 	}
 	
 	function testInsertAfter()
@@ -114,7 +114,7 @@ class TestTree extends AbstractTest
 		
 		root.insertAfterChild(root.children, node);
 		assertEquals(3, root.numChildren());
-		assertEquals(7, root.size());
+		assertEquals(7, root.size);
 	}
 	
 	function testInsertBefore()
@@ -132,7 +132,7 @@ class TestTree extends AbstractTest
 		
 		root.insertBeforeChild(root.children, node);
 		assertEquals(3, root.numChildren());
-		assertEquals(7, root.size());
+		assertEquals(7, root.size);
 	}
 	
 	function testLevelOrder()
@@ -221,7 +221,7 @@ class TestTree extends AbstractTest
 		Visitor.order = order;
 		
 		root.levelorder(null, false);
-		assertEquals(root.size(), Visitor.c);
+		assertEquals(root.size, Visitor.c);
 	}
 	
 	function testPreOrderPreflight()
@@ -349,7 +349,7 @@ class TestTree extends AbstractTest
 		
 		root.preorder(null, null, false);
 		
-		assertEquals(root.size(), Visitor.c);
+		assertEquals(root.size, Visitor.c);
 	}
 	
 	function testPostOrder()
@@ -400,7 +400,7 @@ class TestTree extends AbstractTest
 		Visitor.order = order;
 		
 		root.postorder(null, false);
-		assertEquals(root.size(), Visitor.c);
+		assertEquals(root.size, Visitor.c);
 	}
 	
 	function testCreate()
@@ -598,7 +598,7 @@ class TestTree extends AbstractTest
 		var data:Array<Int> = [2, 3, 4, 9, 5, 1, 7, 6, 8, 0];
 		var builder = root.getBuilder();
 		for (i in 0...10) builder.appendChild(i);
-		root.sort(Compare.compareNumberRise, false);
+		root.sort(Compare.cmpNumberRise, false);
 		
 		var c = 10;
 		var node = root.getLastChild();
@@ -835,7 +835,7 @@ class TestTree extends AbstractTest
 		root.appendNode(a);
 		root.removeChildAt(0);
 		
-		assertEquals(1, root.size());
+		assertEquals(1, root.size);
 		assertEquals(null, root.children);
 		
 		var root = new TreeNode<Int>(100);
@@ -845,7 +845,7 @@ class TestTree extends AbstractTest
 		root.appendNode(b);
 		root.removeChildAt(0);
 		
-		assertEquals(2, root.size());
+		assertEquals(2, root.size);
 		assertEquals(b, root.children);
 		
 		var root = new TreeNode<Int>(100);
@@ -855,7 +855,7 @@ class TestTree extends AbstractTest
 		root.appendNode(b);
 		root.removeChildAt(1);
 		
-		assertEquals(2, root.size());
+		assertEquals(2, root.size);
 		assertEquals(a, root.children);
 		
 		var root = new TreeNode<Int>(100);
@@ -867,7 +867,7 @@ class TestTree extends AbstractTest
 		root.appendNode(c);
 		root.removeChildAt(1);
 		
-		assertEquals(3, root.size());
+		assertEquals(3, root.size);
 		assertEquals(a, root.children);
 		assertEquals(c, root.children.next);
 	}
@@ -1066,7 +1066,7 @@ class TestTree extends AbstractTest
 		assertEquals("g", output.getChildAt(0).getChildAt(1).getChildAt(0).val);
 		assertEquals("x", output.getChildAt(2).getChildAt(0).val);
 		assertEquals("y", output.getChildAt(2).getChildAt(1).val);
-		assertEquals(9, output.size());
+		assertEquals(9, output.size);
 	}
 }
 

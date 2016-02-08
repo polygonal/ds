@@ -1,5 +1,5 @@
 ﻿/*
-Copyright (c) 2008-2014 Michael Baczynski, http://www.polygonal.de
+Copyright (c) 2008-2016 Michael Baczynski, http://www.polygonal.de
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -18,9 +18,11 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 */
 package de.polygonal.ds;
 
-import de.polygonal.ds.error.Assert.assert;
+import de.polygonal.ds.tools.ArrayTools;
+import de.polygonal.ds.tools.Assert.assert;
+import de.polygonal.ds.tools.GrowthRate;
 
-using de.polygonal.ds.tools.NativeArray;
+using de.polygonal.ds.tools.NativeArrayTools;
 
 /**
 	An arrayed queue based on an arrayed circular queue
@@ -30,8 +32,6 @@ using de.polygonal.ds.tools.NativeArray;
 	This is called a FIFO structure (First In, First Out).
 	
 	See <a href="http://lab.polygonal.de/?p=189" target="mBlank">http://lab.polygonal.de/?p=189</a>
-	
-	_<o>Worst-case running time in Big O notation</o>_
 **/
 #if generic
 @:generic
@@ -45,7 +45,25 @@ class ArrayedQueue<T> implements Queue<T>
 		
 		<warn>This value should never be changed by the user.</warn>
 	**/
-	public var key(default, null):Int;
+	public var key(default, null):Int = HashKey.next();
+	
+	/**
+		The capacity of the internal container.
+		
+		The capacity is usually a bit larger than `size` (_mild overallocation_).
+	**/
+	public var capacity(default, null):Int;
+	
+	/**
+		The growth rate of the container.
+		
+		+  0: fixed size
+		+ -1: grows at a rate of 1.125x plus a constant.
+		+ -2: grows at a rate of 1.5x (default value).
+		+ -3: grows at a rate of 2.0x.
+		+ >0: grows at a constant rate: capacity += growthRate
+	**/
+	public var growthRate:Int = GrowthRate.NORMAL;
 	
 	/**
 		If true, reuses the iterator object instead of allocating a new one when calling ``iterator()``.
@@ -54,23 +72,13 @@ class ArrayedQueue<T> implements Queue<T>
 		
 		<warn>If true, nested iterations are likely to fail as only one iteration is allowed at a time.</warn>
 	**/
-	public var reuseIterator:Bool;
+	public var reuseIterator:Bool = false;
 	
 	var mData:Container<T>;
-	
-	var mSize:Int;
-	var mSizeLevel:Int;
-	var mFront:Int;
-	var mIterator:ArrayedQueueIterator<T>;
-	
-	public var capacity(default, null):Int;
-	
-	public var mCapacityIncrement:Int;
-	
-	#if debug
-	var mOp0:Int;
-	var mOp1:Int;
-	#end
+	var mInitialCapacity:Int;
+	var mSize:Int = 0;
+	var mFront:Int = 0;
+	var mIterator:ArrayedQueueIterator<T> = null;
 	
 	/**
 		<assert>reserved size is greater than allowed size</assert>
@@ -79,38 +87,37 @@ class ArrayedQueue<T> implements Queue<T>
 		The `capacity` is automatically adjusted according to the storage requirements based on three rules:
 		<ul>
 		<li>If this queue runs out of space, `capacity` is doubled.</li>
-		<li>If the ``size()`` falls below a quarter of the current `capacity`, the `capacity` is cut in half</li>
+		<li>If the ``size`` falls below a quarter of the current `capacity`, the `capacity` is cut in half</li>
 		<li>The minimum `capacity` equals `capacity`</li>
 		</ul>
 	**/
-	public function new(initialCapacity:Int = 16, capacityIncrement:Int = -1)
+	public function new(initialCapacity:Null<Int> = 16, ?source:Array<T>)
 	{
-		if (initialCapacity == M.INT16_MIN) return; //skip constructor for clone()
+		mInitialCapacity = M.max(1, initialCapacity);
+		capacity = mInitialCapacity;
 		
-		#if debug
-		mOp0 = 0;
-		mOp1 = 0;
-		#end
+		if (source != null)
+		{
+			mSize = source.length;
+			capacity = M.max(mSize, capacity);
+		}
 		
-		capacity = initialCapacity;
-		mCapacityIncrement = capacityIncrement;
+		mData = NativeArrayTools.init(capacity);
 		
-		mSizeLevel = 0;
-		mSize = mFront = 0;
-		mData = NativeArray.init(capacity);
-		mIterator = null;
-		key = HashKey.next();
-		reuseIterator = false;
+		if (source != null)
+		{
+			var d = mData;
+			for (i in 0...mSize) mData[i] = source[i];
+		}
 	}
 	
 	/**
 		Returns the front element. This is the "oldest" element.
-		<o>1</o>
 		<assert>queue is empty</assert>
 	**/
-	inline public function peek():T
+	public inline function peek():T
 	{
-		assert(mSize > 0, "queue is empty");
+		assert(size > 0, "queue is empty");
 		
 		return mData.get(mFront);
 	}
@@ -119,102 +126,66 @@ class ArrayedQueue<T> implements Queue<T>
 		Returns the rear element.
 		
 		This is the "newest" element.
-		<o>1</o>
 		<assert>queue is empty</assert>
 	**/
-	inline public function back():T
+	public inline function back():T
 	{
-		assert(mSize > 0, "queue is empty");
+		assert(size > 0, "queue is empty");
 		
-		return mData.get(((mSize - 1) + mFront) % capacity);
+		return mData.get(((size - 1) + mFront) % capacity);
 	}
 	
 	/**
 		Enqueues the element `x`.
-		<o>1</o>
 		<assert>out of space - queue is full but not resizable</assert>
 	**/
 	public function enqueue(x:T)
 	{
-		#if debug
-		++mOp1;
-		#end
-		
-		if (capacity == mSize) grow();
+		if (capacity == size) resize();
 		mData.set((mSize++ + mFront) % capacity, x);
 	}
 	
 	/**
 		Dequeues and returns the front element.
-		
-		To allow instant garbage collection of the dequeued element call ``dequeue()`` followed by ``dispose()``.
-		<o>1</o>
 		<assert>queue is empty</assert>
 	**/
 	public function dequeue():T
 	{
-		assert(mSize > 0, "queue is empty");
-		
-		#if debug
-		mOp0 = ++mOp1;
-		#end
+		assert(size > 0, "queue is empty");
 		
 		var x = mData.get(mFront++);
 		if (mFront == capacity) mFront = 0;
 		mSize--;
-		
-		/*if (mSizeLevel > 0)
-		{
-			if (mSize == capacity >> 2)
-			{
-				mSizeLevel--;
-				_pack(capacity >> 2);
-				mFront = 0;
-				capacity >>= 2;
-			}
-		}*/
-		
 		return x;
-	}
-	
-	/**
-		Nullifies the last dequeued element so it can be garbage collected.
-		
-		<warn>Use only directly after ``dequeue()``.</warn>
-		<o>1</o>
-		<assert>``dispose()`` wasn't directly called after ``dequeue()``</assert>
-	**/
-	inline public function dispose()
-	{
-		assert(mOp0 == mOp1, "dispose() is only allowed directly after dequeue()");
-		
-		mData.set((mFront == 0 ? capacity : mFront) - 1, cast null);
 	}
 	
 	/**
 		For performance reasons the queue does nothing to ensure that empty locations contain null;
 		``pack()`` therefore nullifies all obsolete references.
-		<o>n</o>
 	**/
 	public function pack()
 	{
-		var i = mFront + mSize, d = mData;
-		for (j in 0...capacity - mSize)
+		var i = mFront + size, d = mData;
+		for (j in 0...capacity - size)
 			d.set((j + i) % capacity, cast null);
+		
+		//Nullifies the last dequeued element so it can be garbage collected.
+		//<warn>Use only directly after ``dequeue()``.</warn>
+		//<assert>``dispose()`` wasn't directly called after ``dequeue()``</assert>
+		//mData.set((mFront == 0 ? capacity : mFront) - 1, cast null);
 	}
 	
 	/**
 		Returns the element at index `i`.
 		
 		The index is measured relative to the index of the front element (= 0).
-		<o>1</o>
 		<assert>queue is empty</assert>
 		<assert>`i` out of range</assert>
 	**/
-	inline public function get(i:Int):T
+	public inline function get(i:Int):T
 	{
-		assert(mSize > 0, "queue is empty");
-		assert(i < mSize, 'i index out of range ($i)');
+		assert(size > 0, "queue is empty");
+		assert(i < size, 'i index out of range ($i)');
 		
 		return mData.get((i + mFront) % capacity);
 	}
@@ -223,14 +194,13 @@ class ArrayedQueue<T> implements Queue<T>
 		Replaces the element at index `i` with the element `x`.
 		
 		The index is measured relative to the index of the front element (= 0).
-		<o>1</o>
 		<assert>queue is empty</assert>
 		<assert>`i` out of range</assert>
 	**/
-	inline public function set(i:Int, x:T)
+	public inline function set(i:Int, x:T)
 	{
-		assert(mSize > 0, "queue is empty");
-		assert(i < mSize, 'i index out of range ($i)');
+		assert(size > 0, "queue is empty");
+		assert(i < size, 'i index out of range ($i)');
 		
 		mData.set((i + mFront) % capacity, x);
 	}
@@ -239,20 +209,19 @@ class ArrayedQueue<T> implements Queue<T>
 		Swaps the element at index `i` with the element at index `j`.
 		
 		The index is measured relative to the index of the front element (= 0).
-		<o>1</o>
 		<assert>queue is empty</assert>
 		<assert>`i`/`j` out of range</assert>
 		<assert>`i` equals `j`</assert>
 	**/
-	inline public function swp(i:Int, j:Int)
+	public inline function swap(i:Int, j:Int)
 	{
-		assert(mSize > 0, "queue is empty");
-		assert(i < mSize, 'i index out of range ($i)');
-		assert(j < mSize, 'j index out of range ($j)');
+		assert(size > 0, "queue is empty");
+		assert(i < size, 'i index out of range ($i)');
+		assert(j < size, 'j index out of range ($j)');
 		assert(i != j, 'i index equals j index ($i)');
 		
 		var t = get(i);
-		cpy(i, j);
+		copy(i, j);
 		set(j, t);
 	}
 	
@@ -260,92 +229,47 @@ class ArrayedQueue<T> implements Queue<T>
 		Replaces the element at index `i` with the element from index `j`.
 		
 		The index is measured relative to the index of the front element (= 0).
-		<o>1</o>
 		<assert>queue is empty</assert>
 		<assert>`i`/`j` out of range</assert>
 		<assert>`i` equals `j`</assert>
 	**/
-	inline public function cpy(i:Int, j:Int)
+	public inline function copy(i:Int, j:Int)
 	{
-		assert(mSize > 0, "queue is empty");
-		assert(i < mSize, 'i index out of range ($i)');
-		assert(j < mSize, 'j index out of range ($j)');
+		assert(size > 0, "queue is empty");
+		assert(i < size, 'i index out of range ($i)');
+		assert(j < size, 'j index out of range ($j)');
 		assert(i != j, 'i index equals j index ($i)');
 		
 		set(i, get(j));
 	}
 	
 	/**
-		Replaces up to `n` existing elements with objects of type `cl`.
-		<o>n</o>
-		<assert>`n` out of range</assert>
-		@param cl the class to instantiate for each element.
-		@param args passes additional constructor arguments to the class `cl`.
-		@param n the number of elements to replace. If 0, `n` is set to ``getCapacity()``.
+		Calls the `f` function on all elements.
+		
+		The function signature is: `f(element, index):element`
+		<assert>`f` is null</assert>
 	**/
-	public function assign(cl:Class<T>, args:Array<Dynamic> = null, n = 0)
+	public function forEach(f:T->Int->T):ArrayedQueue<T>
 	{
-		assert(n >= 0);
-		
-		var k = n > 0 ? n : capacity;
-		
-		assert(k <= capacity, 'n out of range ($n)');
-		
-		if (args == null) args = [];
-		for (i in 0...k)
-			mData.set((i + mFront) % capacity, Type.createInstance(cl, args));
-		
-		mSize = k;
-	}
-	
-	/**
-		Replaces up to `n` existing elements with the instance `x`.
-		<o>n</o>
-		<assert>`n` out of range</assert>
-		@param n the number of elements to replace. If 0, `n` is set to ``getCapacity()``.
-	**/
-	public function fill(x:T, n = 0):ArrayedQueue<T>
-	{
-		assert(n >= 0);
-		
-		var k = n > 0 ? n : capacity;
-		
-		assert(k <= capacity, 'n out of range ($n)');
-		
-		for (i in 0...k)
-			mData.set((i + mFront) % capacity, x);
-		
-		mSize = k;
+		var j, front = mFront, d = mData;
+		for (i in 0...size)
+		{
+			j = (i + front) % capacity;
+			d.set(j, f(d.get(j), i));
+		}
 		return this;
 	}
 	
 	/**
-		Invokes the `process` function for each element.
-		
-		The function signature is: ``process(oldValue, index):newValue``
-		<o>n</o>
-	**/
-	public function iter(process:T->Int->T)
-	{
-		var j, d = mData;
-		for (i in 0...capacity)
-		{
-			j = (i + mFront) % capacity;
-			d.set(j, process(d.get(j), i));
-		}
-	}
-	
-	/**
 		Shuffles the elements of this collection by using the Fisher-Yates algorithm.
-		<o>n</o>
 		<assert>insufficient random values</assert>
-		@param rval a list of random double values in the range between 0 (inclusive) to 1 (exclusive) defining the new positions of the elements.
+		@param rvals a list of random double values in the range between 0 (inclusive) to 1 (exclusive) defining the new positions of the elements.
 		If omitted, random values are generated on-the-fly by calling `Math::random()`.
 	**/
-	public function shuffle(rval:Array<Float> = null)
+	public function shuffle(rvals:Array<Float> = null)
 	{
-		var s = mSize, d = mData;
-		if (rval == null)
+		var s = size, d = mData;
+		if (rvals == null)
 		{
 			var m = Math, i, t;
 			while (s > 1)
@@ -359,13 +283,13 @@ class ArrayedQueue<T> implements Queue<T>
 		}
 		else
 		{
-			assert(rval.length >= mSize, "insufficient random values");
+			assert(rvals.length >= size, "insufficient random values");
 			
 			var j = 0, i, t;
 			while (s > 1)
 			{
 				s--;
-				i = (Std.int(rval[j++] * s) + mFront) % capacity;
+				i = (Std.int(rvals[j++] * s) + mFront) % capacity;
 				t = d.get(s);
 				d.set(s, d.get(i));
 				d.set(i, t);
@@ -394,10 +318,10 @@ class ArrayedQueue<T> implements Queue<T>
 	**/
 	public function toString():String
 	{
-		var s = '{ ArrayedQueue size/capacity: $mSize/$capacity }';
+		var s = '{ ArrayedQueue size/capacity: $size/$capacity }';
 		if (isEmpty()) return s;
 		s += "\n[ front\n";
-		for (i in 0...mSize)
+		for (i in 0...size)
 			s += Printf.format("  %4d -> %s\n", [i, Std.string(get(i))]);
 		s += "]";
 		return s;
@@ -406,50 +330,56 @@ class ArrayedQueue<T> implements Queue<T>
 	/**
 		The size of the allocated storage space for the elements.
 		
-		If more space is required to accomodate new elements, the capacity is doubled every time ``size()`` grows beyond capacity, and split in half when ``size()`` is a quarter of capacity.
+		If more space is required to accomodate new elements, the capacity is doubled every time ``size`` grows beyond capacity, and split in half when ``size`` is a quarter of capacity.
 		The capacity never falls below the initial size defined in the constructor.
-		<o>1</o>
 	**/
-	inline public function getCapacity():Int
+	public inline function getCapacity():Int
 	{
 		return capacity;
 	}
 	
 	/**
 		Returns true if this queue is full.
-		<o>1</o>
 	**/
-	inline public function isFull():Bool
+	public inline function isFull():Bool
 	{
-		return mSize == capacity;
+		return size == capacity;
 	}
 	
-	/*///////////////////////////////////////////////////////
-	// collection
-	///////////////////////////////////////////////////////*/
+	/* INTERFACE Collection */
+	
+	/**
+		The total number of elements.
+	**/
+	public var size(get, never):Int;
+	inline function get_size():Int
+	{
+		return mSize;
+	}
 	
 	/**
 		Destroys this object by explicitly nullifying all elements for GC'ing used resources.
 		
 		Improves GC efficiency/performance (optional).
-		<o>n</o>
 	**/
 	public function free()
 	{
-		var d = mData;
-		for (i in 0...capacity) d.set(i, cast null);
+		mData.nullify();
 		mData = null;
-		mIterator = null;
+		if (mIterator != null)
+		{
+			mIterator.free();
+			mIterator = null;
+		}
 	}
 	
 	/**
 		Returns true if this queue contains the element `x`.
-		<o>n</o>
 	**/
 	public function contains(x:T):Bool
 	{
 		var d = mData;
-		for (i in 0...mSize)
+		for (i in 0...size)
 		{
 			if (d.get((i + mFront) % capacity) == x)
 				return true;
@@ -459,88 +389,55 @@ class ArrayedQueue<T> implements Queue<T>
 	
 	/**
 		Removes and nullifies all occurrences of the element `x`.
-		<o>n</o>
 		@return true if at least one occurrence of `x` was removed.
 	**/
 	public function remove(x:T):Bool
 	{
 		if (isEmpty()) return false;
 		
-		var s = mSize, found = false, d = mData;
-		while (mSize > 0)
+		var s = size, success = true, d = mData;
+		while (s > 0 && success)
 		{
-			found = false;
-			for (i in 0...mSize)
+			success = false;
+			for (i in 0...s)
 			{
 				if (d.get((i + mFront) % capacity) == x)
 				{
-					found = true;
-					d.set((i + mFront) % capacity, cast null);
-					
+					success = true;
 					if (i == 0)
 					{
 						if (++mFront == capacity) mFront = 0;
-						mSize--;
+						s--;
 					}
 					else
-					if (i == mSize - 1)
-						mSize--;
+					if (i == s - 1)
+						s--;
 					else
 					{
 						var i0 = (mFront + i);
-						var i1 = (mFront + mSize - 1);
-						
-						for (j in i0...i1)
-							d.set(j % capacity, d.get((j + 1) % capacity));
-						d.set(i1 % capacity, cast null);
-						
-						mSize--;
+						var i1 = (mFront + s - 1);
+						for (j in i0...i1) d.set(j % capacity, d.get((j + 1) % capacity));
+						s--;
 					}
 					break;
 				}
 			}
-			
-			if (!found) break;
 		}
-		
-		/*if (mSize < s)
-		{
-			if (mSizeLevel > 0 && capacity > 2)
-			{
-				var s = capacity;
-				while (mSize <= s >> 2)
-				{
-					s >>= 2;
-					mSizeLevel--;
-				}
-				
-				_pack(s);
-				mFront = 0;
-				capacity = s;
-			}
-		}*/
-		
-		return mSize < s;
+		mSize = s;
+		return success;
 	}
 	
 	/**
 		Removes all elements.
-		<o>1 or n if `purge` is true</o>
-		@param purge if true, elements are nullified upon removal and ``getCapacity()`` is set to the initial capacity defined in the constructor.
+		
+		@param gc if true, elements are nullified upon removal so the garbage collector can reclaim used memory.
 	**/
-	public function clear(purge = false)
+	public function clear(gc:Bool = false)
 	{
-		if (purge)
+		if (gc)
 		{
 			var i = mFront, d = mData;
-			for (j in 0...mSize) d.set(i++ % capacity, cast null);
-			
-			if (mSizeLevel > 0)
-			{
-				capacity >>= mSizeLevel;
-				mSizeLevel = 0;
-				mData = NativeArray.init(capacity);
-			}
+			for (j in 0...size) d.set(i++ % capacity, cast null);
 		}
 		mFront = mSize = 0;
 	}
@@ -567,21 +464,11 @@ class ArrayedQueue<T> implements Queue<T>
 	}
 	
 	/**
-		The total number of elements.
-		<o>1</o>
-	**/
-	inline public function size():Int
-	{
-		return mSize;
-	}
-	
-	/**
 		Returns true if this queue is empty.
-		<o>1</o>
 	**/
-	inline public function isEmpty():Bool
+	public inline function isEmpty():Bool
 	{
-		return mSize == 0;
+		return size == 0;
 	}
 	
 	/**
@@ -591,30 +478,20 @@ class ArrayedQueue<T> implements Queue<T>
 	**/
 	public function toArray():Array<T>
 	{
+		if (isEmpty()) return [];
+		
 		#if cpp
-		var out = NativeArray.init(mSize);
-		var n = M.min(capacity, mFront + mSize) - mFront;
-		NativeArray.blit(mData, mFront, out, 0, n);
-		if (mSize - n > 0) NativeArray.blit(mData, 0, out, n, mSize - n);
+		var out = NativeArrayTools.init(size);
+		var n = M.min(capacity, mFront + size) - mFront;
+		NativeArrayTools.blit(mData, mFront, out, 0, n);
+		if (size - n > 0) NativeArrayTools.blit(mData, 0, out, n, size - n);
 		return out;
 		#else
 		var d = mData;
-		var out = ArrayUtil.alloc(mSize);
-		for (i in 0...mSize) out[i] = d.get((i + mFront) % capacity);
+		var out = ArrayTools.alloc(size);
+		for (i in 0...size) out[i] = d.get((i + mFront) % capacity);
 		return out;
 		#end
-	}
-	
-	/**
-		Returns a `Vector<T>` object containing all elements in this queue.
-		
-		Preserves the natural order of this queue (First-In-First-Out).
-	**/
-	public function toVector():Container<T>
-	{
-		var v = NativeArray.init(mSize), d = mData;
-		for (i in 0...mSize) v.set(i, d.get((i + mFront) % capacity));
-		return v;
 	}
 	
 	/**
@@ -624,25 +501,24 @@ class ArrayedQueue<T> implements Queue<T>
 		If false, the ``clone()`` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
 		@param copier a custom function for copying elements. Replaces ``element::clone()`` if `assign` is false.
 	**/
-	public function clone(assign = true, copier:T->T = null):Collection<T>
+	public function clone(assign:Bool = true, copier:T->T = null):Collection<T>
 	{
 		var copy = new ArrayedQueue<T>(capacity);
-		copy.mSizeLevel = mSizeLevel;
-		if (capacity == 0) return copy;
+		if (isEmpty()) return copy;
 		
 		var d = mData;
 		
 		var t = copy.mData;
 		if (assign)
 		{
-			for (i in 0...mSize)
+			for (i in 0...size)
 				t[i] = d.get(i);
 		}
 		else
 		if (copier == null)
 		{
 			var c:Cloneable<Dynamic> = null;
-			for (i in 0...mSize)
+			for (i in 0...size)
 			{
 				assert(Std.is(d.get(i), Cloneable), 'element is not of type Cloneable (${d.get(i)})');
 				
@@ -652,52 +528,30 @@ class ArrayedQueue<T> implements Queue<T>
 		}
 		else
 		{
-			for (i in 0...mSize)
+			for (i in 0...size)
 				t[i] = copier(d.get(i));
 		}
 		
 		copy.mFront = mFront;
-		copy.mSize = mSize;
+		copy.mSize = size;
 		return copy;
 	}
 	
-	function shrink()
-	{
-		if (capacity <= 16) return;
-		
-		capacity >>= 1;
-		//mShrinkSize = capacity >> 2;
-		//resize(capacity);
-	}
-	
-	function grow()
+	function resize()
 	{
 		var t = capacity;
-		capacity =
-		if (mCapacityIncrement == -1)
-		{
-			if (true)
-				Std.int((capacity * 3) / 2 + 1); //1.5
-			else
-				capacity + ((capacity >> 3) + (capacity < 9 ? 3 : 6)); //1.125
-		}
-		else
-			capacity + mCapacityIncrement;
-		
-		//mShrinkSize = capacity >> 2;
-		
-		resize(t, capacity);
-		
-		mFront = 0;
+		capacity = GrowthRate.compute(growthRate, capacity);
+		resizeContainer(t, capacity);
 	}
 	
-	function resize(oldCapacity:Int, newCapacity:Int)
+	function resizeContainer(oldSize:Int, newSize:Int)
 	{
-		var dst = NativeArray.init(newCapacity);
-		var n = (oldCapacity - mFront);
-		NativeArray.blit(mData, mFront, dst, 0, n);
-		NativeArray.blit(mData, 0, dst, n, mSize - n);
+		var dst = NativeArrayTools.init(newSize);
+		var n = (oldSize - mFront);
+		NativeArrayTools.blit(mData, mFront, dst, 0, n);
+		NativeArrayTools.blit(mData, 0, dst, n, size - n);
 		mData = dst;
+		mFront = 0;
 	}
 }
 
@@ -721,27 +575,33 @@ class ArrayedQueueIterator<T> implements de.polygonal.ds.Itr<T>
 		reset();
 	}
 	
+	public function free()
+	{
+		mObject = null;
+		mData = null;
+	}
+	
 	public function reset():Itr<T>
 	{
 		mFront = mObject.mFront;
 		mCapacity = mObject.capacity;
-		mSize = mObject.mSize;
+		mSize = mObject.size;
 		mI = 0;
-		mData = NativeArray.copy(mObject.mData);
+		mData = NativeArrayTools.copy(mObject.mData);
 		return this;
 	}
 	
-	inline public function hasNext():Bool
+	public inline function hasNext():Bool
 	{
 		return mI < mSize;
 	}
 	
-	inline public function next():T
+	public inline function next():T
 	{
 		return mData.get((mI++ + mFront) % mCapacity);
 	}
 	
-	inline public function remove()
+	public function remove()
 	{
 		assert(mI > 0, "call next() before removing an element");
 		

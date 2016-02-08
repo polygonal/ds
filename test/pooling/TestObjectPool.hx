@@ -22,7 +22,7 @@ class TestObjectPool extends AbstractTest
 	{
 		var o = new de.polygonal.ds.pooling.ObjectPool<E>(10);
 		o.allocate(false, E);
-		assertEquals(10, o.size());
+		assertEquals(10, o.size);
 		
 		for (iter in 0...20)
 		{
@@ -47,8 +47,8 @@ class TestObjectPool extends AbstractTest
 			
 			assertEquals(r, o.countUsedObjects());
 			assertEquals(10 - r, o.countUnusedObjects());
-			assertEquals(r, idset.size());
-			assertEquals(r, objset.size());
+			assertEquals(r, idset.size);
+			assertEquals(r, objset.size);
 			assertEquals(r, ids.length);
 			
 			for (i in 0...r)
@@ -63,8 +63,8 @@ class TestObjectPool extends AbstractTest
 			
 			assertEquals(0, o.countUsedObjects());
 			assertEquals(10, o.countUnusedObjects());
-			assertEquals(0, idset.size());
-			assertEquals(0, objset.size());
+			assertEquals(0, idset.size);
+			assertEquals(0, objset.size);
 		}
 	}
 }

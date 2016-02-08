@@ -1,7 +1,6 @@
 ﻿package mem;
 
 import de.polygonal.ds.mem.ByteMemory;
-import de.polygonal.ds.Vector;
 import haxe.io.Bytes;
 import haxe.io.BytesData;
 import haxe.io.BytesInput;

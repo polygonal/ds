@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2008-2014 Michael Baczynski, http://www.polygonal.de
+Copyright (c) 2008-2016 Michael Baczynski, http://www.polygonal.de
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -18,24 +18,22 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 */
 package de.polygonal.ds;
 
-import de.polygonal.ds.error.Assert.assert;
+import de.polygonal.ds.tools.Assert.assert;
 
 /**
 	Generates unique, unsigned integer keys
 **/
 class HashKey
 {
-	static var mCounter = 0;
+	static var _counter = 0;
 	
 	/**
 		Returns the next integer in a list of unique, unsigned integer keys.
 	**/
-	inline public static function next():Int
+	public static inline function next():Int
 	{
-		#if debug
-		assert(mCounter < mCounter + 1);
-		#end
+		assert(_counter < _counter + 1);
 		
-		return mCounter++;
+		return _counter++;
 	}
 }

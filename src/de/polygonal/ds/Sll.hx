@@ -1,5 +1,5 @@
 ﻿/*
-Copyright (c) 2008-2014 Michael Baczynski, http://www.polygonal.de
+Copyright (c) 2008-2016 Michael Baczynski, http://www.polygonal.de
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -18,16 +18,16 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 */
 package de.polygonal.ds;
 
-import de.polygonal.ds.error.Assert.assert;
+import de.polygonal.ds.Sll.SllIterator;
+import de.polygonal.ds.tools.ArrayTools;
+import de.polygonal.ds.tools.Assert.assert;
 
-using de.polygonal.ds.tools.NativeArray;
+using de.polygonal.ds.tools.NativeArrayTools;
 
 /**
 	A singly linked list
 	
 	See <a href="http://lab.polygonal.de/?p=206" target="mBlank">http://lab.polygonal.de/?p=206</a>
-	
-	_<o>Worst-case running time in Big O notation</o>_
 **/
 #if generic
 @:generic
@@ -42,7 +42,7 @@ class Sll<T> implements Collection<T>
 		
 		<warn>This value should never be changed by the user.</warn>
 	**/
-	public var key(default, null):Int;
+	public var key(default, null):Int = HashKey.next();
 	
 	/**
 		The head of this list or null if this list is empty.
@@ -61,47 +61,44 @@ class Sll<T> implements Collection<T>
 		
 		<warn>If true, nested iterations are likely to fail as only one iteration is allowed at a time.</warn>
 	**/
-	public var reuseIterator:Bool;
+	public var reuseIterator:Bool = false;
 	
-	var mSize:Int;
+	var mSize:Int = 0;
 	var mReservedSize:Int;
-	var mPoolSize:Int;
+	var mPoolSize:Int = 0;
 	
 	var mHeadPool:SllNode<T>;
 	var mTailPool:SllNode<T>;
 	
-	var mCircular:Bool;
-	var mIterator:Itr<T>;
+	var mCircular:Bool = false;
+	var mIterator:SllIterator<T> = null;
 	
 	/**
-		<assert>reserved size is greater than allowed size</assert>
 		@param reservedSize if > 0, this list maintains an object pool of node objects.
 		Prevents frequent node allocation and thus increases performance at the cost of using more memory.
 	**/
-	public function new(reservedSize = 0)
+	public function new(reservedSize:Null<Int> = 0, ?source:Array<T>)
 	{
 		mReservedSize = reservedSize;
-		mSize = 0;
-		mPoolSize = 0;
-		mCircular = false;
-		mIterator = null;
 		
 		if (reservedSize > 0)
-		{
 			mHeadPool = mTailPool = new SllNode<T>(cast null, this);
+		
+		if (source != null && source.length > 0)
+		{
+			mSize = source.length;
+			head = tail = getNode(source[0]);
+			for (i in 1...mSize)
+				tail = tail.next = getNode(source[i]);
 		}
-		
-		head = tail = null;
-		
-		key = HashKey.next();
-		reuseIterator = false;
+		else
+			head = tail = null;
 	}
 	
 	/**
 		Returns true if this list is circular.
 		
 		A list is circular if the tail points to the head.
-		<o>1</o>
 	**/
 	public function isCircular():Bool
 	{
@@ -112,7 +109,6 @@ class Sll<T> implements Collection<T>
 		Makes this list circular by connecting the tail to the head.
 		
 		Silently fails if this list is already closed.
-		<o>1</o>
 	**/
 	public function close()
 	{
@@ -126,7 +122,6 @@ class Sll<T> implements Collection<T>
 		Makes this list non-circular by disconnecting the tail from the head and vice versa.
 		
 		Silently fails if this list is already non-circular.
-		<o>1</o>
 	**/
 	public function open()
 	{
@@ -138,19 +133,17 @@ class Sll<T> implements Collection<T>
 	
 	/**
 		Creates and returns a new ``SllNode`` object storing the value `x` and pointing to this list.
-		<o>1</o>
 	**/
-	inline public function createNode(x:T):SllNode<T>
+	public inline function createNode(x:T):SllNode<T>
 	{
 		return new SllNode<T>(x, this);
 	}
 	
 	/**
 		Appends the element `x` to the tail of this list by creating a ``SllNode`` object storing `x`.
-		<o>1</o>
 		@return the appended node storing `x`.
 	**/
-	inline public function append(x:T):SllNode<T>
+	public inline function append(x:T):SllNode<T>
 	{
 		var node = getNode(x);
 		if (valid(tail))
@@ -168,9 +161,8 @@ class Sll<T> implements Collection<T>
 	
 	/**
 		Appends the node `x` to this list.
-		<o>1</o>
 	**/
-	inline public function appendNode(x:SllNode<T>)
+	public inline function appendNode(x:SllNode<T>)
 	{
 		assert(x.getList() == this, "node is not managed by this list");
 		
@@ -188,10 +180,9 @@ class Sll<T> implements Collection<T>
 	
 	/**
 		Prepends the element `x` to the head of this list by creating a ``SllNode`` object storing `x`.
-		<o>1</o>
 		@return the prepended node storing `x`.
 	**/
-	inline public function prepend(x:T):SllNode<T>
+	public inline function prepend(x:T):SllNode<T>
 	{
 		var node = getNode(x);
 		if (valid(tail))
@@ -209,7 +200,6 @@ class Sll<T> implements Collection<T>
 	
 	/**
 		Prepends the node `x` to this list.
-		<o>1</o>
 	**/
 	public function prependNode(x:SllNode<T>)
 	{
@@ -229,11 +219,10 @@ class Sll<T> implements Collection<T>
 	
 	/**
 		Inserts the element `x` after `node` by creating a ``SllNode`` object storing `x`.
-		<o>1</o>
 		<assert>`node` is null or not managed by this list</assert>
 		@return the inserted node storing `x`.
 	**/
-	inline public function insertAfter(node:SllNode<T>, x:T):SllNode<T>
+	public inline function insertAfter(node:SllNode<T>, x:T):SllNode<T>
 	{
 		assert(valid(node), "node is null");
 		assert(node.getList() == this, "node is not managed by this list");
@@ -253,11 +242,10 @@ class Sll<T> implements Collection<T>
 	
 	/**
 		Inserts the element `x` before `node` by creating a ``SllNode`` object storing `x`.
-		<o>1</o>
 		<assert>`node` is null or not managed by this list</assert>
 		@return the inserted node storing `x`.
 	**/
-	inline public function insertBefore(node:SllNode<T>, x:T):SllNode<T>
+	public inline function insertBefore(node:SllNode<T>, x:T):SllNode<T>
 	{
 		
 		assert(valid(node), "node is null");
@@ -281,15 +269,14 @@ class Sll<T> implements Collection<T>
 	
 	/**
 		Unlinks `node` from this list and returns `node`::next.
-		<o>n</o>
 		<assert>list is empty</assert>
 		<assert>`node` is null or not managed by this list</assert>
 	**/
-	inline public function unlink(node:SllNode<T>):SllNode<T>
+	public inline function unlink(node:SllNode<T>):SllNode<T>
 	{
 		assert(valid(node), "node is null");
 		assert(node.getList() == this, "node is not managed by this list");
-		assert(mSize > 0, "list is empty");
+		assert(size > 0, "list is empty");
 		
 		var hook = node.next;
 		
@@ -318,7 +305,6 @@ class Sll<T> implements Collection<T>
 			putNode(node);
 			mSize--;
 		}
-		
 		return hook;
 	}
 	
@@ -326,14 +312,13 @@ class Sll<T> implements Collection<T>
 		Returns the node at "index" `i`.
 		
 		The index is measured relative to the head node (= index 0).
-		<o>n</o>
 		<assert>list is empty</assert>
 		<assert>`i` out of range</assert>
 	**/
 	public function getNodeAt(i:Int):SllNode<T>
 	{
-		assert(mSize > 0, "list is empty");
-		assert(i >= 0 || i < mSize, 'i index out of range ($i)');
+		assert(size > 0, "list is empty");
+		assert(i >= 0 || i < size, 'i index out of range ($i)');
 		
 		var node = head;
 		for (j in 0...i) node = node.next;
@@ -342,15 +327,14 @@ class Sll<T> implements Collection<T>
 	
 	/**
 		Removes the head node and returns the element stored in this node.
-		<o>1</o>
 		<assert>list is empty</assert>
 	**/
-	inline public function removeHead():T
+	public inline function removeHead():T
 	{
-		assert(mSize > 0, "list is empty");
+		assert(size > 0, "list is empty");
 		
 		var node = head;
-		if (mSize > 1)
+		if (size > 1)
 		{
 			head = head.next;
 			
@@ -368,15 +352,14 @@ class Sll<T> implements Collection<T>
 	
 	/**
 		Removes the tail node and returns the element stored in this node.
-		<o>n</o>
 		<assert>list is empty</assert>
 	**/
-	inline public function removeTail():T
+	public inline function removeTail():T
 	{
-		assert(mSize > 0, "list is empty");
+		assert(size > 0, "list is empty");
 		
 		var node = tail;
-		if (mSize > 1)
+		if (size > 1)
 		{
 			var t = getNodeBefore(tail);
 			tail = t;
@@ -399,14 +382,13 @@ class Sll<T> implements Collection<T>
 	
 	/**
 		Unlinks the head node and appends it to the tail.
-		<o>1</o>
 		<assert>list is empty</assert>
 	**/
-	inline public function shiftUp()
+	public inline function shiftUp()
 	{
-		assert(mSize > 0, "list is empty");
+		assert(size > 0, "list is empty");
 		
-		if (mSize > 1)
+		if (size > 1)
 		{
 			var t = head;
 			if (head.next == tail)
@@ -428,14 +410,13 @@ class Sll<T> implements Collection<T>
 	
 	/**
 		Unlinks the tail node and prepends it to the head.
-		<o>n</o>
 		<assert>list is empty</assert>
 	**/
-	inline public function popDown()
+	public inline function popDown()
 	{
-		assert(mSize > 0, "list is empty");
+		assert(size > 0, "list is empty");
 		
-		if (mSize > 1)
+		if (size > 1)
 		{
 			var t = tail;
 			if (head.next == tail)
@@ -460,7 +441,6 @@ class Sll<T> implements Collection<T>
 	
 	/**
 		Searches for the element `x` in this list from head to tail starting at node `from`.
-		<o>n</o>
 		<assert>`from` is not managed by this list</assert>
 		@return the node containing `x` or null if such a node does not exist.
 		If `from` is null, the search starts at the head of this list.
@@ -483,27 +463,26 @@ class Sll<T> implements Collection<T>
 	
 	/**
 		Sorts the elements of this list using the merge sort algorithm.
-		<o>n log n for merge sort and n&sup2; for insertion sort</o>
 		<assert>element does not implement `Comparable`</assert>
-		@param compare a comparison function.
+		@param cmp a comparison function.
 		If null, the elements are compared using ``element::compare()``.
 		<warn>In this case all elements have to implement `Comparable`.</warn>
 		@param useInsertionSort if true, the linked list is sorted using the insertion sort algorithm.
 		This is faster for nearly sorted lists.
 	**/
-	public function sort(compare:T->T->Int, useInsertionSort = false)
+	public function sort(?cmp:T->T->Int, useInsertionSort:Bool = false)
 	{
-		if (mSize > 1)
+		if (size > 1)
 		{
 			if (mCircular) tail.next = null;
 			
-			if (compare == null)
+			if (cmp == null)
 			{
 				head = useInsertionSort ? insertionSortComparable(head) : mergeSortComparable(head);
 			}
 			else
 			{
-				head = useInsertionSort ? insertionSort(head, compare) : mergeSort(head, compare);
+				head = useInsertionSort ? insertionSort(head, cmp) : mergeSort(head, cmp);
 			}
 			
 			if (mCircular) tail.next = head;
@@ -514,7 +493,6 @@ class Sll<T> implements Collection<T>
 		Merges this list with the list `x` by linking both lists together.
 		
 		<warn>The merge operation destroys x so it should be discarded.</warn>
-		<o>n</o>
 		<assert>`x` is null or this list equals `x`</assert>
 	**/
 	public function merge(x:Sll<T>)
@@ -525,7 +503,7 @@ class Sll<T> implements Collection<T>
 		if (valid(x.head))
 		{
 			var node = x.head;
-			for (i in 0...x.size())
+			for (i in 0...x.size)
 			{
 				node.mList = this;
 				node = node.next;
@@ -542,7 +520,7 @@ class Sll<T> implements Collection<T>
 				tail = x.tail;
 			}
 			
-			mSize += x.size();
+			mSize += x.size;
 			
 			if (mCircular)
 				tail.next = head;
@@ -553,7 +531,6 @@ class Sll<T> implements Collection<T>
 		Concatenates this list with the list `x` by appending all elements of `x` to this list.
 		
 		This list and `x` are untouched.
-		<o>n</o>
 		<assert>`x` is null or this equals `x`</assert>
 		@return a new list containing the elements of both lists.
 	**/
@@ -564,43 +541,41 @@ class Sll<T> implements Collection<T>
 		
 		var c = new Sll<T>();
 		var node = head;
-		for (i in 0...mSize)
+		for (i in 0...size)
 		{
 			c.append(node.val);
 			node = node.next;
 		}
 		node = x.head;
-		for (i in 0...x.mSize)
+		for (i in 0...x.size)
 		{
 			c.append(node.val);
 			node = node.next;
 		}
-		
 		return c;
 	}
 	
 	/**
 		Reverses the linked list in place.
-		<o>n</o>
 	**/
 	public function reverse()
 	{
-		if (mSize > 1)
+		if (size > 1)
 		{
-			var v = new Array<T>();
+			var t = new Array<T>();
 			var node = head;
-			for (i in 0...mSize)
+			for (i in 0...size)
 			{
-				v[i] = node.val;
+				t[i] = node.val;
 				node = node.next;
 			}
 			
-			v.reverse();
+			t.reverse();
 			
 			var node = head;
-			for (i in 0...mSize)
+			for (i in 0...size)
 			{
-				node.val = v[i];
+				node.val = t[i];
 				node = node.next;
 			}
 		}
@@ -608,15 +583,14 @@ class Sll<T> implements Collection<T>
 	
 	/**
 		Converts the data in the linked list to strings, inserts `x` between the elements, concatenates them, and returns the resulting string.
-		<o>n</o>
 	**/
 	public function join(x:String):String
 	{
 		var s = "";
-		if (mSize > 0)
+		if (size > 0)
 		{
 			var node = head;
-			for (i in 0...mSize - 1)
+			for (i in 0...size - 1)
 			{
 				s += Std.string(node.val) + x;
 				node = node.next;
@@ -625,68 +599,38 @@ class Sll<T> implements Collection<T>
 		}
 		return s;
 	}
-	
+
 	/**
-		Replaces up to `n` existing elements with objects of type `cl`.
-		<o>n</o>
-		<assert>`n` out of range</assert>
-		@param cl the class to instantiate for each element.
-		@param args passes additional constructor arguments to `cl`.
-		@param n the number of elements to replace. If 0, `n` is set to ``size()``.
+		Calls the `f` function on all elements.
+		
+		The function signature is: `f(element, index):element`
+		<assert>`f` is null</assert>
 	**/
-	public function assign(cl:Class<T>, args:Array<Dynamic> = null, n = 0)
+	public function forEach(f:T->Int->T)
 	{
-		assert(n >= 0);
-		
-		if (n == 0) n = size();
-		
-		if (args == null) args = [];
 		var node = head;
-		for (i in 0...n)
+		for (i in 0...size)
 		{
-			node.val = Type.createInstance(cl, args);
+			node.val = f(node.val, i);
 			node = node.next;
 		}
-	}
-	
-	/**
-		Replaces up to `n` existing elements with the instance `x`.
-		<o>n</o>
-		<assert>`n` out of range</assert>
-		@param n the number of elements to replace. If 0, `n` is set to ``size()``.
-	**/
-	public function fill(x:T, args:Array<Dynamic> = null, n = 0):Sll<T>
-	{
-		assert(n >= 0);
-		
-		if (n == 0) n = size();
-		
-		var node = head;
-		for (i in 0...n)
-		{
-			node.val = x;
-			node = node.next;
-		}
-		
-		return this;
 	}
 	
 	/**
 		Shuffles the elements of this collection by using the Fisher-Yates algorithm.
-		<o>n</o>
 		<assert>insufficient random values</assert>
-		@param rval a list of random double values in the range between 0 (inclusive) to 1 (exclusive) defining the new positions of the elements.
+		@param rvals a list of random double values in the range between 0 (inclusive) to 1 (exclusive) defining the new positions of the elements.
 		If omitted, random values are generated on-the-fly by calling `Math::random()`.
 	**/
-	public function shuffle(rval:Array<Float> = null)
+	public function shuffle(rvals:Array<Float> = null)
 	{
-		var s = mSize;
+		var s = size;
 		
 		if (s == 1) return;
 		
 		if (mCircular) tail.next = null;
 		
-		if (rval == null)
+		if (rvals == null)
 		{
 			var m = Math;
 			while (s > 1)
@@ -707,13 +651,13 @@ class Sll<T> implements Collection<T>
 		}
 		else
 		{
-			assert(rval.length >= size(), "insufficient random values");
+			assert(rvals.length >= size, "insufficient random values");
 			
 			var j = 0;
 			while (s > 1)
 			{
 				s--;
-				var i = Std.int(rval[j++] * s);
+				var i = Std.int(rvals[j++] * s);
 				var node1 = head;
 				for (j in 0...s) node1 = node1.next;
 				
@@ -751,11 +695,11 @@ class Sll<T> implements Collection<T>
 	**/
 	public function toString():String
 	{
-		var s = '{ Sll size: ${size()}, circular: ${isCircular()} }';
+		var s = '{ Sll size: ${size}, circular: ${isCircular()} }';
 		if (isEmpty()) return s;
 		s += "\n[ head \n";
 		var node = head;
-		for (i in 0...mSize)
+		for (i in 0...size)
 		{
 			s += '  ${Std.string(node.val)}\n';
 			node = node.next;
@@ -764,20 +708,26 @@ class Sll<T> implements Collection<T>
 		return s;
 	}
 	
-	/*///////////////////////////////////////////////////////
-	// collection
-	///////////////////////////////////////////////////////*/
+	/* INTERFACE Collection */
+	
+	/**
+		The total number of elements.
+	**/
+	public var size(get, never):Int;
+	inline function get_size():Int
+	{
+		return mSize;
+	}
 	
 	/**
 		Destroys this object by explicitly nullifying all nodes, pointers and data for GC'ing used resources.
 		
 		Improves GC efficiency/performance (optional).
-		<o>n</o>
 	**/
 	public function free()
 	{
 		var node = head;
-		for (i in 0...mSize)
+		for (i in 0...size)
 		{
 			var next = node.next;
 			node.free();
@@ -794,17 +744,20 @@ class Sll<T> implements Collection<T>
 		}
 		
 		mHeadPool = mTailPool = null;
-		mIterator = null;
+		if (mIterator != null)
+		{
+			mIterator.free();
+			mIterator = null;
+		}
 	}
 	
 	/**
 		Returns true if this list contains a node storing the element `x`.
-		<o>n</o>
 	**/
 	public function contains(x:T):Bool
 	{
 		var node = head;
-		for (i in 0...mSize)
+		for (i in 0...size)
 		{
 			if (node.val == x) return true;
 			node = node.next;
@@ -814,18 +767,17 @@ class Sll<T> implements Collection<T>
 	
 	/**
 		Removes all nodes storing the element `x`.
-		<o>n</o>
 		@return true if at least one occurrence of `x` was removed.
 	**/
 	public function remove(x:T):Bool
 	{
-		var s = size();
+		var s = size;
 		if (s == 0) return false;
 		
 		var node0 = head;
 		var node1 = head.next;
 		
-		for (i in 1...mSize)
+		for (i in 1...size)
 		{
 			if (node1.val == x)
 			{
@@ -862,21 +814,19 @@ class Sll<T> implements Collection<T>
 			
 			mSize--;
 		}
-		
-		return size() < s;
+		return size < s;
 	}
 	
 	/**
 		Removes all elements.
-		<o>1 or n if `purge` is true</o>
-		@param purge if true, nodes, pointers and elements are nullified upon removal.
+		@param gc if true, nodes, pointers and elements are nullified upon removal so the garbage collector can reclaim used memory.
 	**/
-	inline public function clear(purge = false)
+	public function clear(gc:Bool = false)
 	{
-		if (purge || mReservedSize > 0)
+		if (gc || mReservedSize > 0)
 		{
 			var node = head;
-			for (i in 0...mSize)
+			for (i in 0...size)
 			{
 				var next = node.next;
 				node.next = null;
@@ -932,21 +882,11 @@ class Sll<T> implements Collection<T>
 	}
 	
 	/**
-		The total number of elements.
-		<o>1</o>
-	**/
-	inline public function size():Int
-	{
-		return mSize;
-	}
-	
-	/**
 		Returns true if this list is empty.
-		<o>1</o>
 	**/
-	inline public function isEmpty():Bool
+	public inline function isEmpty():Bool
 	{
-		return mSize == 0;
+		return size == 0;
 	}
 	
 	/**
@@ -957,31 +897,15 @@ class Sll<T> implements Collection<T>
 	public function toArray():Array<T>
 	{
 		if (isEmpty()) return [];
-		var out = ArrayUtil.alloc(size());
+		
+		var out = ArrayTools.alloc(size);
 		var node = head;
-		for (i in 0...mSize)
+		for (i in 0...size)
 		{
 			out[i] = node.val;
 			node = node.next;
 		}
 		return out;
-	}
-	
-	/**
-		Returns a `Vector<T>` objec containing all elements in this singly linked list.
-		
-		The elements are ordered head-to-tail.
-	**/
-	public function toVector():Container<T>
-	{
-		var v = NativeArray.init(size());
-		var node = head;
-		for (i in 0...mSize)
-		{
-			v.set(i, node.val);
-			node = node.next;
-		}
-		return v;
 	}
 	
 	/**
@@ -991,9 +915,9 @@ class Sll<T> implements Collection<T>
 		If false, the ``clone()`` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
 		@param copier a custom function for copying elements. Replaces ``element::clone()`` if `assign` is false.
 	**/
-	public function clone(assign = true, copier:T->T = null):Collection<T>
+	public function clone(assign:Bool = true, copier:T->T = null):Collection<T>
 	{
-		if (mSize == 0)
+		if (size == 0)
 		{
 			var copy = new Sll<T>(mReservedSize);
 			if (mCircular) copy.mCircular = true;
@@ -1002,20 +926,20 @@ class Sll<T> implements Collection<T>
 		
 		var copy = new Sll<T>();
 		if (mCircular) copy.mCircular = true;
-		copy.mSize = mSize;
+		copy.mSize = size;
 		
 		if (assign)
 		{
 			var srcNode = head;
 			var dstNode = copy.head = new SllNode<T>(head.val, copy);
-			if (mSize == 1)
+			if (size == 1)
 			{
 				copy.tail = copy.head;
 				if (mCircular) copy.tail.next = copy.head;
 				return copy;
 			}
 			srcNode = srcNode.next;
-			for (i in 1...mSize - 1)
+			for (i in 1...size - 1)
 			{
 				dstNode = dstNode.next = new SllNode<T>(srcNode.val, copy);
 				srcNode = srcNode.next;
@@ -1031,14 +955,14 @@ class Sll<T> implements Collection<T>
 			
 			var c = cast(head.val, Cloneable<Dynamic>);
 			var dstNode = copy.head = new SllNode<T>(c.clone(), copy);
-			if (mSize == 1)
+			if (size == 1)
 			{
 				copy.tail = copy.head;
 				if (mCircular) copy.tail.next = copy.head;
 				return copy;
 			}
 			srcNode = srcNode.next;
-			for (i in 1...mSize - 1)
+			for (i in 1...size - 1)
 			{
 				assert(Std.is(srcNode.val, Cloneable), 'element is not of type Cloneable (${srcNode.val})');
 				
@@ -1057,14 +981,14 @@ class Sll<T> implements Collection<T>
 		{
 			var srcNode = head;
 			var dstNode = copy.head = new SllNode<T>(copier(head.val), copy);
-			if (mSize == 1)
+			if (size == 1)
 			{
 				if (mCircular) copy.tail.next = copy.head;
 				copy.tail = copy.head;
 				return copy;
 			}
 			srcNode = srcNode.next;
-			for (i in 1...mSize - 1)
+			for (i in 1...size - 1)
 			{
 				dstNode = dstNode.next = new SllNode<T>(copier(srcNode.val), copy);
 				srcNode = srcNode.next;
@@ -1115,7 +1039,7 @@ class Sll<T> implements Collection<T>
 					}
 					else
 					{
-						assert(Std.is(p.val, Comparable), 'element is not of type Comparable (${p.val})');
+						assert(Std.is(p.val, Comparable), "element is not of type Comparable");
 						
 						if (cast(p.val, Comparable<Dynamic>).compare(q.val) >= 0)
 						{
@@ -1227,12 +1151,12 @@ class Sll<T> implements Collection<T>
 		var h = node;
 		var j;
 		var val;
-		for (i in 1...mSize)
+		for (i in 1...size)
 		{
 			val = v[i];
 			j = i;
 			
-			assert(Std.is(v[j - 1], Comparable), 'element is not of type Comparable (${v[j - 1]})');
+			assert(Std.is(v[j - 1], Comparable), "element is not of type Comparable");
 			
 			while ((j > 0) && cast(v[j - 1], Comparable<Dynamic>).compare(val) < 0)
 			{
@@ -1241,7 +1165,7 @@ class Sll<T> implements Collection<T>
 				
 				#if debug
 				if (j > 0)
-					assert(Std.is(v[j - 1], Comparable), 'element is not of type Comparable (${v[j - 1]})');
+					assert(Std.is(v[j - 1], Comparable), "element is not of type Comparable");
 				#end
 				
 			}
@@ -1272,7 +1196,7 @@ class Sll<T> implements Collection<T>
 		var h = node;
 		var j;
 		var val;
-		for (i in 1...mSize)
+		for (i in 1...size)
 		{
 			val = v[i];
 			j = i;
@@ -1339,7 +1263,6 @@ class Sll<T> implements Collection<T>
 		}
 		else
 			x.mList = null;
-		
 		return val;
 	}
 }
@@ -1360,19 +1283,26 @@ class SllIterator<T> implements de.polygonal.ds.Itr<T>
 		reset();
 	}
 	
-	inline public function reset():Itr<T>
+	public function free()
+	{
+		mObject = null;
+		mWalker = null;
+		mHook = null;
+	}
+	
+	public inline function reset():Itr<T>
 	{
 		mWalker = mObject.head;
 		mHook = null;
 		return this;
 	}
 	
-	inline public function hasNext():Bool
+	public inline function hasNext():Bool
 	{
 		return mWalker != null;
 	}
 	
-	inline public function next():T
+	public inline function next():T
 	{
 		var x = mWalker.val;
 		mHook = mWalker;
@@ -1380,7 +1310,7 @@ class SllIterator<T> implements de.polygonal.ds.Itr<T>
 		return x;
 	}
 	
-	inline public function remove()
+	public function remove()
 	{
 		assert(mHook != null, "call next() before removing an element");
 		
@@ -1406,21 +1336,21 @@ class CircularSllIterator<T> implements de.polygonal.ds.Itr<T>
 		reset();
 	}
 	
-	inline public function reset():Itr<T>
+	public inline function reset():Itr<T>
 	{
 		mWalker = mObject.head;
-		mS = mObject.size();
+		mS = mObject.size;
 		mHook = null;
 		mI = 0;
 		return this;
 	}
 	
-	inline public function hasNext():Bool
+	public inline function hasNext():Bool
 	{
 		return mI < mS;
 	}
 	
-	inline public function next():T
+	public inline function next():T
 	{
 		var x = mWalker.val;
 		mHook = mWalker;
@@ -1429,7 +1359,7 @@ class CircularSllIterator<T> implements de.polygonal.ds.Itr<T>
 		return x;
 	}
 	
-	inline public function remove()
+	public function remove()
 	{
 		assert(mI > 0, "call next() before removing an element");
 		

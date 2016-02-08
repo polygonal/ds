@@ -144,8 +144,8 @@ class TestBitVector extends AbstractTest
 	function testSize()
 	{
 		var b = new BitVector(16);
-		assertEquals(b.capacity(), 16);
-		assertEquals(b.size(), 0);
+		assertEquals(b.capacity, 16);
+		assertEquals(b.ones(), 0);
     }
 	
 	function testHasBit()

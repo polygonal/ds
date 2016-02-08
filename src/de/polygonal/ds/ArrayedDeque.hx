@@ -1,5 +1,5 @@
 ﻿/*
-Copyright (c) 2008-2014 Michael Baczynski, http://www.polygonal.de
+Copyright (c) 2008-2016 Michael Baczynski, http://www.polygonal.de
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -18,16 +18,15 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 */
 package de.polygonal.ds;
 
-import de.polygonal.ds.error.Assert.assert;
+import de.polygonal.ds.tools.ArrayTools;
+import de.polygonal.ds.tools.Assert.assert;
 
-using de.polygonal.ds.tools.NativeArray;
+using de.polygonal.ds.tools.NativeArrayTools;
 
 /**
 	A deque is a "double-ended queue"
 	
 	This is a linear list for which all insertions and deletions (and usually all accesses) are made at ends of the list.
-	
-	_<o>Worst-case running time in Big O notation</o>_
 **/
 #if generic
 @:generic
@@ -41,7 +40,7 @@ class ArrayedDeque<T> implements Deque<T>
 		
 		<warn>This value should never be changed by the user.</warn>
 	**/
-	public var key(default, null):Int;
+	public var key(default, null):Int = HashKey.next();
 	
 	/**
 		If true, reuses the iterator object instead of allocating a new one when calling ``iterator()``.
@@ -50,24 +49,24 @@ class ArrayedDeque<T> implements Deque<T>
 		
 		<warn>If true, nested iterations are likely to fail as only one iteration is allowed at a time.</warn>
 	**/
-	public var reuseIterator:Bool;
+	public var reuseIterator:Bool = false;
 	
 	var mBlockSize:Int;
 	var mBlockSizeMinusOne:Int;
 	var mBlockSizeShift:Int;
-	var mHead:Int;
-	var mTail:Int;
-	var mTailBlockIndex:Int;
-	var mPoolSize:Int;
+	var mHead:Int = 0;
+	var mTail:Int = 1;
+	var mTailBlockIndex:Int = 0;
+	var mPoolSize:Int = 0;
 	var mPoolCapacity:Int;
 	
 	var mBlocks:Array<Container<T>>;
 	var mHeadBlock:Container<T>;
 	var mTailBlock:Container<T>;
-	var mHeadBlockNext:Container<T>;
-	var mTailBlockPrev:Container<T>;
+	var mHeadBlockNext:Container<T> = null;
+	var mTailBlockPrev:Container<T> = null;
 	var mBlockPool:Array<Container<T>>;
-	var mIterator:ArrayedDequeIterator<T>;
+	var mIterator:ArrayedDequeIterator<T> = null;
 	
 	/**
 		<assert>invalid `blockSize`</assert>
@@ -78,51 +77,44 @@ class ArrayedDeque<T> implements Deque<T>
 		@param blockPoolSize the total number of blocks to reuse when blocks are removed or relocated (from front to back or vice-versa). This improves performances but uses more memory.
 		The default value is 4; a value of 0 disables block pooling.
 	**/
-	public function new(blockSize = 64, blockPoolCapacity = 4)
+	public function new(blockSize:Int = 64, blockPoolCapacity:Int = 4, ?source:Array<T>)
 	{
-		if (blockSize == M.INT16_MIN) return;
-		assert(blockSize > 0);
+		if (blockSize == M.INT16_MIN) return; //TODO remove
 		
+		assert(blockSize > 0);
 		assert(M.isPow2(blockSize), "blockSize is not a power of 2");
 		assert(blockSize >= 4, "blockSize is too small");
 		
 		mBlockSize = blockSize;
 		mBlockSizeMinusOne = blockSize - 1;
 		mBlockSizeShift = Bits.ntz(blockSize);
-		mHead = 0;
-		mTail = 1;
-		mTailBlockIndex = 0;
-		mPoolSize = 0;
 		mPoolCapacity = blockPoolCapacity;
 		mBlocks = new Array();
-		mBlocks[0] = NativeArray.init(blockSize);
+		mBlocks[0] = NativeArrayTools.init(blockSize);
 		mHeadBlock = mBlocks[0];
 		mTailBlock = mHeadBlock;
-		mHeadBlockNext = null;
-		mTailBlockPrev = null;
 		mBlockPool = new Array<Container<T>>();
-		mIterator = null;
-		key = HashKey.next();
-		reuseIterator = false;
+		
+		if (source != null)
+			for (i in 0...source.length)
+				pushBack(source[i]);
 	}
 	
 	/**
 		Returns the first element of this deque.
-		<o>1</o>
 		<assert>deque is empty</assert>
 	**/
-	inline public function front():T
+	public inline function front():T
 	{
-		assert(size() > 0, "deque is empty");
+		assert(size > 0, "deque is empty");
 		
 		return (mHead == mBlockSizeMinusOne) ? mHeadBlockNext[0] : mHeadBlock[mHead + 1];
 	}
 	
 	/**
 		Inserts the element `x` at the front of this deque.
-		<o>1</o>
 	**/
-	inline public function pushFront(x:T)
+	public inline function pushFront(x:T)
 	{
 		mHeadBlock[mHead--] = x;
 		if (mHead == -1) unshiftBlock();
@@ -130,12 +122,11 @@ class ArrayedDeque<T> implements Deque<T>
 	
 	/**
 		Removes and returns the element at the beginning of this deque.
-		<o>1</o>
 		<assert>deque is empty</assert>
 	**/
-	inline public function popFront():T
+	public inline function popFront():T
 	{
-		assert(size() > 0, "deque is empty");
+		assert(size > 0, "deque is empty");
 		
 		if (mHead == mBlockSizeMinusOne)
 		{
@@ -148,21 +139,19 @@ class ArrayedDeque<T> implements Deque<T>
 	
 	/**
 		Returns the last element of the deque.
-		<o>1</o>
 		<assert>deque is empty</assert>
 	**/
-	inline public function back():T
+	public inline function back():T
 	{
-		assert(size() > 0, "deque is empty");
+		assert(size > 0, "deque is empty");
 		
 		return (mTail == 0) ? (mTailBlockPrev[mBlockSizeMinusOne]) : mTailBlock[mTail - 1];
 	}
 	
 	/**
 		Inserts the element `x` at the back of the deque.
-		<o>1</o>
 	**/
-	inline public function pushBack(x:T)
+	public inline function pushBack(x:T)
 	{
 		mTailBlock[mTail++] = x;
 		if (mTail == mBlockSize)
@@ -171,12 +160,11 @@ class ArrayedDeque<T> implements Deque<T>
 	
 	/**
 		Deletes the element at the end of the deque.
-		<o>1</o>
 		<assert>deque is empty</assert>
 	**/
 	public function popBack():T
 	{
-		assert(size() > 0, "deque is empty");
+		assert(size > 0, "deque is empty");
 		
 		if (mTail == 0)
 		{
@@ -190,14 +178,13 @@ class ArrayedDeque<T> implements Deque<T>
 	/**
 		Returns the element at index `i` relative to the front of this deque.
 		
-		The front element is at index [0], the back element is at index [``size()`` - 1].
-		<o>1</o>
+		The front element is at index [0], the back element is at index [``size`` - 1].
 		<assert>deque is empty</assert>
 		<assert>`i` out of range</assert>
 	**/
 	public function getFront(i:Int):T
 	{
-		assert(i < size(), 'index out of range ($i)');
+		assert(i < size, 'index out of range ($i)');
 		
 		var c = (mHead + 1) + i;
 		var b = (c >> mBlockSizeShift);
@@ -207,12 +194,11 @@ class ArrayedDeque<T> implements Deque<T>
 	/**
 		Returns the index of the first occurence of the element `x` or -1 if `x` does not exist.
 		
-		The front element is at index [0], the back element is at index [``size()`` - 1].
-		<o>n</o>
+		The front element is at index [0], the back element is at index [``size`` - 1].
 	**/
 	public function indexOfFront(x:T):Int
 	{
-		for (i in 0...size())
+		for (i in 0...size)
 		{
 			var c = (mHead + 1) + i;
 			var b = (c >> mBlockSizeShift);
@@ -226,14 +212,13 @@ class ArrayedDeque<T> implements Deque<T>
 	/**
 		Returns the element at index `i` relative to the back of this deque.
 		
-		The back element is at index [0], the front element is at index [``size()`` - 1].
-		<o>1</o>
+		The back element is at index [0], the front element is at index [``size`` - 1].
 		<assert>deque is empty</assert>
 		<assert>`i` out of range</assert>
 	**/
 	public function getBack(i:Int):T
 	{
-		assert(i < size(), 'index out of range ($i)');
+		assert(i < size, 'index out of range ($i)');
 		
 		var c = mTail - 1 - i;
 		var b = c >> mBlockSizeShift;
@@ -243,12 +228,11 @@ class ArrayedDeque<T> implements Deque<T>
 	/**
 		Returns the index of the first occurence of the element `x` or -1 if `x` does not exist.
 		
-		The back element is at index [0], the front element is at index [``size()`` - 1].
-		<o>n</o>
+		The back element is at index [0], the front element is at index [``size`` - 1].
 	**/
 	public function indexOfBack(x:T):Int
 	{
-		for (i in 0...size())
+		for (i in 0...size)
 		{
 			var c = mTail - 1 - i;
 			var b = c >> mBlockSizeShift;
@@ -261,7 +245,6 @@ class ArrayedDeque<T> implements Deque<T>
 	
 	/**
 		Removes all superfluous blocks and overwrites elements stored in empty locations with null.
-		<o>n</o>
 	**/
 	public function pack()
 	{
@@ -272,131 +255,29 @@ class ArrayedDeque<T> implements Deque<T>
 	}
 	
 	/**
-		Replaces up to `n` existing elements with objects of type `cl`.
+		Calls the `f` function on all elements.
 		
-		If ``size()`` < `n`, additional elements are added to the back of this deque.
-		<o>n</o>
-		@param cl the class to instantiate for each element.
-		@param args passes additional constructor arguments to the class `cl`.
-		@param n the number of elements to replace. If 0, `n` is set to ``size()``.
+		The function signature is: `f(element, xIndex, yIndex):element`
+		<assert>`f` is null</assert>
 	**/
-	public function assign(cl:Class<T>, args:Array<Dynamic> = null, n = 0)
+	public function forEach(f:T->Int->T):ArrayedDeque<T>
 	{
-		if (n == 0) n = size();
-		if (n == 0) return;
-		if (args == null) args = [];
-		if (n >= size())
+		var s = size;
+		var i = mHead + 1;
+		var j = i >> mBlockSizeShift;
+		var k = 0;
+		var b = mBlocks[j], bs = mBlockSize, blocks = mBlocks;
+		i -= j << mBlockSizeShift;
+		while (s > 0)
 		{
-			var i = mHead + 1;
-			while (i < mBlockSize)
-				mHeadBlock[i++] = Type.createInstance(cl, args);
-			
-			var fullBlocks = mTailBlockIndex - 1;
-			for (i in 1...1 + fullBlocks)
+			b.set(i, f(b.get(i), k++));
+			if (++i == bs)
 			{
-				var block = mBlocks[i];
-				for (j in 0...mBlockSize)
-					block[j] = Type.createInstance(cl, args);
+				i = 0;
+				b = blocks[++j];
 			}
-			
-			i = 0;
-			while (i < mTail)
-				mTailBlock[i++] = Type.createInstance(cl, args);
-			
-			for (i in 0...n - size())
-			{
-				mTailBlock[mTail++] = Type.createInstance(cl, args);
-				if (mTail == mBlockSize)
-					pushBlock();
-			}
+			s--;
 		}
-		else
-		{
-			var c = M.min(n, mBlockSize - (mHead + 1));
-			var i = mHead + 1;
-			for (j in i...i + c)
-				mHeadBlock[j] = Type.createInstance(cl, args);
-			n -= c;
-			
-			if (n == 0) return;
-			
-			var b = 1;
-			c = n >> mBlockSizeShift;
-			for (i in 0...n >> mBlockSizeShift)
-			{
-				var block = mBlocks[i + 1];
-				for (j in 0...mBlockSize)
-					block[j] = Type.createInstance(cl, args);
-				b++;
-			}
-			n -= c << mBlockSizeShift;
-			
-			var block = mBlocks[b];
-			for (i in 0...n) block[i] = Type.createInstance(cl, args);
-		}
-	}
-	
-	/**
-		Replaces up to `n` existing elements with the instance `x`.
-		
-		If ``size()`` < `n`, additional elements are added to the back of this deque.
-		<o>n</o>
-		@param n the number of elements to replace. If 0, `n` is set to ``size()``.
-	**/
-	public function fill(x:T, n = 0):ArrayedDeque<T>
-	{
-		if (n == 0) n = size();
-		if (n == 0) return this;
-		if (n >= size())
-		{
-			var i = mHead + 1;
-			while (i < mBlockSize)
-				mHeadBlock[i++] = x;
-			
-			var fullBlocks = mTailBlockIndex - 1;
-			for (i in 1...1 + fullBlocks)
-			{
-				var block = mBlocks[i];
-				for (j in 0...mBlockSize)
-					block[j] = x;
-			}
-			
-			i = 0;
-			while (i < mTail)
-				mTailBlock[i++] = x;
-			
-			for (i in 0...n - size())
-			{
-				mTailBlock[mTail++] = x;
-				if (mTail == mBlockSize)
-					pushBlock();
-			}
-		}
-		else
-		{
-			var c = M.min(n, mBlockSize - (mHead + 1));
-			var i = mHead + 1;
-			for (j in i...i + c)
-				mHeadBlock[j] = x;
-			n -= c;
-			
-			if (n == 0) return this;
-			
-			var b = 1;
-			c = n >> mBlockSizeShift;
-			for (i in 0...n >> mBlockSizeShift)
-			{
-				var block = mBlocks[i + 1];
-				for (j in 0...mBlockSize)
-					block[j] = x;
-				b++;
-			}
-			n -= c << mBlockSizeShift;
-			
-			var block = mBlocks[b];
-			for (i in 0...n) block[i] = x;
-		}
-		
 		return this;
 	}
 	
@@ -421,7 +302,7 @@ class ArrayedDeque<T> implements Deque<T>
 	**/
 	public function toString():String
 	{
-		var s = '{ ArrayedDeque size: ${size()} }';
+		var s = '{ ArrayedDeque size: ${size} }';
 		if (isEmpty()) return s;
 		s += "\n[ front\n";
 		
@@ -458,22 +339,27 @@ class ArrayedDeque<T> implements Deque<T>
 		return s;
 	}
 	
-	/*///////////////////////////////////////////////////////
-	// collection
-	///////////////////////////////////////////////////////*/
+	/* INTERFACE Collection */
+	
+	/**
+		The total number of elements.
+	**/
+	public var size(get, never):Int;
+	function get_size():Int
+	{
+		return (mBlockSize - (mHead + 1)) + ((mTailBlockIndex - 1) << mBlockSizeShift) + mTail;
+	}
 	
 	/**
 		Destroys this object by explicitly nullifying all elements for GC'ing used resources.
 		
 		Improves GC efficiency/performance (optional).
-		<o>n</o>
 	**/
 	public function free()
 	{
 		for (i in 0...mTailBlockIndex + 1)
 		{
-			var block = mBlocks[i];
-			for (j in 0...mBlockSize) block[j] = cast null;
+			mBlocks[i].nullify();
 			mBlocks[i] = null;
 		}
 		mBlocks = null;
@@ -481,12 +367,15 @@ class ArrayedDeque<T> implements Deque<T>
 		mHeadBlockNext = null;
 		mTailBlock = null;
 		mTailBlockPrev = null;
-		mIterator = null;
+		if (mIterator != null)
+		{
+			mIterator.free();
+			mIterator = null;
+		}
 	}
 	
 	/**
 		Returns true if this deque contains the element `x`.
-		<o>n</o>
 	**/
 	public function contains(x:T):Bool
 	{
@@ -519,13 +408,11 @@ class ArrayedDeque<T> implements Deque<T>
 			for (j in 0...mTail)
 				if (mTailBlock[j] == x) return true;
 		}
-		
 		return false;
 	}
 	
 	/**
 		Removes and nullifies all occurrences of the element `x`.
-		<o>n</o>
 		@return true if at least one occurrence of `x` was removed.
 	**/
 	public function remove(x:T):Bool
@@ -725,29 +612,27 @@ class ArrayedDeque<T> implements Deque<T>
 				}
 			}
 		}
-		
 		return found;
 	}
 	
 	/**
 		Removes all elements.
-		<o>1 or n if `purge` is true</o>
-		@param purge if true, elements are nullified upon removal. This also removes all superfluous blocks and clears the pool.
+		
+		@param gc if true, elements are nullified upon removal so the garbage collector can reclaim used memory.
 	**/
-	public function clear(purge = false)
+	public function clear(gc:Bool = false)
 	{
-		if (purge)
+		if (gc)
 		{
 			for (i in 0...mTailBlockIndex + 1)
 			{
 				var block = mBlocks[i];
-				for (j in 0...mBlockSize) block[j] = cast null;
+				for (j in 0...mBlockSize) block.set(j, cast null);
 				mBlocks[i] = null;
 			}
 			mBlocks = new Array();
-			mBlocks[0] = NativeArray.init(mBlockSize);
+			mBlocks[0] = NativeArrayTools.init(mBlockSize);
 			mHeadBlock = mBlocks[0];
-			
 			for (i in 0...mBlockPool.length)
 				mBlockPool[i] = null;
 			mBlockPool = new Array<Container<T>>();
@@ -785,23 +670,13 @@ class ArrayedDeque<T> implements Deque<T>
 	
 	/**
 		Returns true if this deque is empty.
-		<o>1</o>
 	**/
-	inline public function isEmpty():Bool
+	public inline function isEmpty():Bool
 	{
 		if (mTailBlockIndex == 0)
 			return (mTail - mHead) == 1;
 		else
 			return mHead == mBlockSizeMinusOne && mTail == 0;
-	}
-	
-	/**
-		The total number of elements.
-		<o>1</o>
-	**/
-	inline public function size():Int
-	{
-		return (mBlockSize - (mHead + 1)) + ((mTailBlockIndex - 1) << mBlockSizeShift) + mTail;
 	}
 	
 	/**
@@ -811,7 +686,7 @@ class ArrayedDeque<T> implements Deque<T>
 	{
 		if (isEmpty()) return [];
 		
-		var out = ArrayUtil.alloc(size());
+		var out = ArrayTools.alloc(size);
 		var i = 0;
 		if (mTailBlockIndex == 0)
 		{
@@ -837,43 +712,13 @@ class ArrayedDeque<T> implements Deque<T>
 	}
 	
 	/**
-		Returns a `Vector<T>` object containing all elements in this deque in the natural order.
-	**/
-	public function toVector():Container<T>
-	{
-		var v = NativeArray.init(size());
-		var i = 0;
-		if (mTailBlockIndex == 0)
-		{
-			for (j in mHead + 1...mTail) v[i++] = mHeadBlock[j];
-		}
-		else
-		if (mTailBlockIndex == 1)
-		{
-			for (j in mHead + 1...mBlockSize) v[i++] = mHeadBlock[j];
-			for (j in 0...mTail) v[i++] = mTailBlock[j];
-		}
-		else
-		{
-			for (j in mHead + 1...mBlockSize) v[i++] = mHeadBlock[j];
-			for (j in 1...mTailBlockIndex)
-			{
-				var block = mBlocks[j];
-				for (k in 0...mBlockSize) v[i++] = block[k];
-			}
-			for (j in 0...mTail) v[i++] = mTailBlock[j];
-		}
-		return v;
-	}
-	
-	/**
 		Duplicates this deque. Supports shallow (structure only) and deep copies (structure & elements).
 		<assert>element is not of type `Cloneable`</assert>
 		@param assign if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
 		If false, the ``clone()`` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
 		@param copier a custom function for copying elements. Replaces ``element::clone()`` if `assign` is false.
 	**/
-	public function clone(assign = true, copier:T->T = null):Collection<T>
+	public function clone(assign:Bool = true, copier:T->T = null):Collection<T>
 	{
 		var c = new ArrayedDeque<T>(M.INT16_MIN);
 		c.mBlockSize = mBlockSize;
@@ -884,11 +729,10 @@ class ArrayedDeque<T> implements Deque<T>
 		c.mBlockSizeShift = mBlockSizeShift;
 		c.mPoolSize = 0;
 		c.mPoolCapacity = 0;
-		c.key = HashKey.next();
 		
-		var blocks = c.mBlocks = ArrayUtil.alloc(mTailBlockIndex + 1);
+		var blocks = c.mBlocks = ArrayTools.alloc(mTailBlockIndex + 1);
 		for (i in 0...mTailBlockIndex + 1)
-			blocks[i] = NativeArray.init(mBlockSize);
+			blocks[i] = NativeArrayTools.init(mBlockSize);
 		c.mHeadBlock = blocks[0];
 		c.mTailBlock = blocks[mTailBlockIndex];
 		if (mTailBlockIndex > 0)
@@ -954,7 +798,6 @@ class ArrayedDeque<T> implements Deque<T>
 				}
 			}
 		}
-		
 		return c;
 	}
 	
@@ -1017,7 +860,7 @@ class ArrayedDeque<T> implements Deque<T>
 		if (mPoolSize > 0)
 			return mBlockPool[--mPoolSize];
 		else
-			return NativeArray.init(mBlockSize);
+			return NativeArrayTools.init(mBlockSize);
 	}
 	
 	inline function putBlock(x:Container<T>)
@@ -1070,24 +913,31 @@ class ArrayedDequeIterator<T> implements de.polygonal.ds.Itr<T>
 		reset();
 	}
 	
+	public function free()
+	{
+		mObject = null;
+		mBlocks = null;
+		mBlock = null;
+	}
+	
 	public function reset():Itr<T>
 	{
 		mBlockSize = mObject.mBlockSize;
 		mBlocks = mObject.mBlocks;
 		mI = mObject.mHead + 1;
 		mB = mI >> mObject.mBlockSizeShift;
-		mS = mObject.size();
+		mS = mObject.size;
 		mBlock = mBlocks[mB];
 		mI -= mB << mObject.mBlockSizeShift;
 		return this;
 	}
 	
-	inline public function hasNext():Bool
+	public inline function hasNext():Bool
 	{
 		return mS > 0;
 	}
 	
-	inline public function next():T
+	public inline function next():T
 	{
 		var x = mBlock.get(mI++);
 		if (mI == mBlockSize)
@@ -1099,7 +949,7 @@ class ArrayedDequeIterator<T> implements de.polygonal.ds.Itr<T>
 		return x;
 	}
 	
-	inline public function remove()
+	public function remove()
 	{
 		throw "unsupported operation";
 	}

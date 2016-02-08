@@ -44,7 +44,7 @@ class TestDllCircular extends AbstractTest
 		assertEquals(list.head.prev, list.tail);
 		var s:ListSet<Int> = new ListSet<Int>();
 		for (i in list) assertTrue(s.set(i));
-		assertEquals(10, s.size());
+		assertEquals(10, s.size);
 	}
 	
 	function testAppend()
@@ -52,13 +52,13 @@ class TestDllCircular extends AbstractTest
 		var list = new Dll<Int>();
 		list.close();
 		list.append(0);
-		assertEquals(1, list.size());
+		assertEquals(1, list.size);
 		assertEquals(list.tail.next, list.head);
 		assertEquals(list.head.prev, list.tail);
 		
 		list.append(1);
 		list.append(2);
-		assertEquals(3, list.size());
+		assertEquals(3, list.size);
 		assertEquals(list.tail.next, list.head);
 		assertEquals(list.head.prev, list.tail);
 	}
@@ -68,13 +68,13 @@ class TestDllCircular extends AbstractTest
 		var list = new Dll<Int>();
 		list.close();
 		list.prepend(0);
-		assertEquals(1, list.size());
+		assertEquals(1, list.size);
 		assertEquals(list.tail.next, list.head);
 		assertEquals(list.head.prev, list.tail);
 		
 		list.prepend(1);
 		list.prepend(2);
-		assertEquals(3, list.size());
+		assertEquals(3, list.size);
 		assertEquals(list.tail.next, list.head);
 		assertEquals(list.head.prev, list.tail);
 	}
@@ -387,7 +387,7 @@ class TestDllCircular extends AbstractTest
 		
 		list1.merge(list2);
 		
-		assertEquals(4, list1.size());
+		assertEquals(4, list1.size);
 		assertEquals(list1.tail.next, list1.head);
 		assertEquals(list1.head.prev, list1.tail);
 	}
@@ -411,7 +411,7 @@ class TestDllCircular extends AbstractTest
 		assertEquals(null, list3.head.prev);
 		
 		var node = list3.head;
-		for (i in 0...list1.size() + list2.size())
+		for (i in 0...list1.size + list2.size)
 		{
 			assertEquals(i, node.val);
 			node = node.next;
@@ -428,7 +428,7 @@ class TestDllCircular extends AbstractTest
 		assertEquals(null, list3.head.prev);
 		
 		var node = list3.head;
-		for (i in 0...list1.size() + list2.size())
+		for (i in 0...list1.size + list2.size)
 		{
 			assertEquals(i, node.val);
 			node = node.next;

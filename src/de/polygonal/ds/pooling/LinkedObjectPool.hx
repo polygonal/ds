@@ -1,5 +1,5 @@
 ﻿/*
-Copyright (c) 2008-2014 Michael Baczynski, http://www.polygonal.de
+Copyright (c) 2008-2016 Michael Baczynski, http://www.polygonal.de
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -18,7 +18,7 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 */
 package de.polygonal.ds.pooling;
 
-import de.polygonal.ds.error.Assert.assert;
+import de.polygonal.ds.tools.Assert.assert;
 
 /**
 	A dynamic object pool based on a doubly linked list.
@@ -35,7 +35,7 @@ class LinkedObjectPool<T> implements Hashable
 		A hash table transforms this key into an index of an array element by using a hash function.
 		<warn>This value should never be changed by the user.</warn>
 	**/
-	public var key(default, null):Int;
+	public var key(default, null):Int = HashKey.next();
 	
 	var mInitSize:Int;
 	var mCurrSize:Int;
@@ -58,12 +58,10 @@ class LinkedObjectPool<T> implements Hashable
 		Use `allocate()` to fill the pool.
 		@param growable if true, new objects are allocated the first time an object is requested while the pool being empty.
 	**/
-	public function new(x:Int, growable = false)
+	public function new(x:Int, growable:Bool = false)
 	{
 		mInitSize = mCurrSize = x;
 		mGrowable = growable;
-		
-		key = HashKey.next();
 	}
 	
 	/**
@@ -90,7 +88,7 @@ class LinkedObjectPool<T> implements Hashable
 	/**
 		The total number of pre-allocated objects in the pool.
 	**/
-	inline public function getSize():Int
+	public inline function getSize():Int
 	{
 		return mCurrSize;
 	}
@@ -98,16 +96,16 @@ class LinkedObjectPool<T> implements Hashable
 	/**
 		The number of used objects.
 	**/
-	inline public function getUsageCount():Int
+	public inline function getUsageCount():Int
 	{
 		return mUsageCount;
 	}
 	
 	/**
 		The total number of unused thus wasted objects.
-		Use `purge()` to compact the pool.
+		Use `clean()` to compact the pool.
 	**/
-	inline public function getWasteCount():Int
+	public inline function getWasteCount():Int
 	{
 		return mCurrSize - mUsageCount;
 	}
@@ -116,7 +114,7 @@ class LinkedObjectPool<T> implements Hashable
 		Retrieves the next available object from the pool.
 		<assert>object pool exhausted</assert>
 	**/
-	inline public function get():T
+	public inline function get():T
 	{
 		if (mUsageCount == mCurrSize)
 		{
@@ -141,7 +139,7 @@ class LinkedObjectPool<T> implements Hashable
 		Recycles the object `o` so it can be reused by calling `get()`.
 		<assert>object pool is full</assert>
 	**/
-	inline public function put(o:T)
+	public inline function put(o:T)
 	{
 		assert(mUsageCount != 0, "object pool is full");
 		
@@ -193,7 +191,7 @@ class LinkedObjectPool<T> implements Hashable
 		Removes all unused objects from the pool.
 		If the number of remaining used objects is smaller than the initial capacity defined in the constructor, new objects are created to refill the pool.
 	**/
-	public function purge()
+	public function clean()
 	{
 		if (mUsageCount == 0)
 		{

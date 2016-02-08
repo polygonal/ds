@@ -15,7 +15,7 @@ class TestDynamicObjectPool extends AbstractTest
 		var objects = new Array();
 		for (i in 0...3) objects.push(c.get());
 		
-		assertEquals(3, c.size());
+		assertEquals(3, c.size);
 		
 		for (i in 0...3) c.put(objects.pop());
 		
@@ -26,7 +26,7 @@ class TestDynamicObjectPool extends AbstractTest
 		//pool is empty, create objects on-the-fly
 		for (i in 3...6) objects.push(c.get());
 		
-		assertEquals(6, c.size());
+		assertEquals(6, c.size);
 		
 		for (i in 0...6) assertEquals('E' + Std.string(i), Std.string(objects[i]));
 		

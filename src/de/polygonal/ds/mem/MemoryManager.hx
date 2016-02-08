@@ -1,5 +1,5 @@
 ﻿/*
-Copyright (c) 2008-2014 Michael Baczynski, http://www.polygonal.de
+Copyright (c) 2008-2016 Michael Baczynski, http://www.polygonal.de
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -18,7 +18,7 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 */
 package de.polygonal.ds.mem;
 
-import de.polygonal.ds.error.Assert.assert;
+import de.polygonal.ds.tools.Assert.assert;
 
 #if (alchemy && !flash)
 "MemoryManager is only available when targeting flash"
@@ -35,16 +35,16 @@ import de.polygonal.ds.error.Assert.assert;
 class MemoryManager
 {
 	public static var instance(get_instance, never):MemoryManager;
-	static function get_instance():MemoryManager return mInstance == null ? (mInstance = new MemoryManager()) : mInstance;
-	static var mInstance:MemoryManager = null;
+	static function get_instance():MemoryManager return _instance == null ? (_instance = new MemoryManager()) : _instance;
+	static var _instance:MemoryManager = null;
 	
 	/**
 		Releases all allocated memory and nullifies references for GC'ing used resources.
 	**/
 	public static function free()
 	{
-		if (mInstance != null) mInstance._free();
-		mInstance = null;
+		if (_instance != null) _instance._free();
+		_instance = null;
 	}
 	
 	/**
@@ -105,6 +105,22 @@ class MemoryManager
 	**/
 	public var bytesTotal:Int;
 	
+	/**
+		The total number of `ArrayAccess` objects that have access to the heap.
+	**/
+	public var size(get, never):Int;
+	function get_size():Int
+	{
+		var c = 0;
+		var node = mSegmentList;
+		while (node != null)
+		{
+			if (!node.isEmpty) c++;
+			node = node.next;
+		}
+		return c;
+	}
+	
 	#if alchemy
 	var mBytes:flash.utils.ByteArray;
 	#end
@@ -133,12 +149,12 @@ class MemoryManager
 		#if alchemy
 			mBytes = new flash.utils.ByteArray();
 			#if flash
-			var tmp = new Array<Int>();
-			for (i in 0...1024) tmp[i] = flash.Memory.getByte(i);
+			var t = new Array<Int>();
+			for (i in 0...1024) t[i] = flash.Memory.getByte(i);
 			mBytes.length = mBytesRaw + bytesTotal;
 			flash.Memory.select(null);
 			flash.Memory.select(mBytes);
-			for (i in 0...1024) flash.Memory.setByte(i, tmp[i]);
+			for (i in 0...1024) flash.Memory.setByte(i, t[i]);
 			#elseif cpp
 			mBytes.setLength(mBytesRaw + bytesTotal);
 			flash.Memory.select(null);
@@ -156,21 +172,6 @@ class MemoryManager
 	public var bytes(get_bytes, never):flash.utils.ByteArray;
 	inline function get_bytes():flash.utils.ByteArray return mBytes;
 	#end
-	
-	/**
-		The total number of `ArrayAccess` objects that have access to the heap.
-	**/
-	public function size():Int
-	{
-		var c = 0;
-		var node = mSegmentList;
-		while (node != null)
-		{
-			if (!node.isEmpty) c++;
-			node = node.next;
-		}
-		return c;
-	}
 	
 	public function dump():String
 	{
@@ -620,7 +621,7 @@ class MemoryManager
 	
 	function _free()
 	{
-		if (mInstance == null) return;
+		if (_instance == null) return;
 		
 		while (mSegmentList != null)
 		{
@@ -748,7 +749,6 @@ class MemoryManager
 							m.next.prev = m1;
 						
 						m.next = m1;
-						
 						return m1;
 					}
 				}
@@ -756,7 +756,6 @@ class MemoryManager
 			
 			m = m.next;
 		}
-		
 		return null;
 	}
 	
@@ -866,45 +865,45 @@ private class MemorySegment
 		offset = -1;
 	}
 	
-	inline public function shiftLeft(x:Int)
+	public inline function shiftLeft(x:Int)
 	{
 		b -= x;
 		e -= x;
 		setOffset();
 	}
 	
-	inline public function shiftRight(x:Int)
+	public inline function shiftRight(x:Int)
 	{
 		b += x;
 		e += x;
 		setOffset();
 	}
 	
-	inline public function growLeft(s:Int)
+	public inline function growLeft(s:Int)
 	{
 		size += s;
 		b = e - size + 1;
 	}
 	
-	inline public function shrinkLeft(s:Int)
+	public inline function shrinkLeft(s:Int)
 	{
 		size -= s;
 		e = b + size - 1;
 	}
 	
-	inline public function growRight(s:Int)
+	public inline function growRight(s:Int)
 	{
 		size += s;
 		e = b + size - 1;
 	}
 	
-	inline public function shrinkRight(s:Int)
+	public inline function shrinkRight(s:Int)
 	{
 		size -= s;
 		b = e - size + 1;
 	}
 	
-	inline public function setOffset()
+	public inline function setOffset()
 	{
 		#if alchemy
 		var access = getAccess();
@@ -912,14 +911,14 @@ private class MemorySegment
 		#end
 	}
 	
-	inline public function wipe()
+	public inline function wipe()
 	{
 		#if alchemy
 		for (i in offset...offset + size) flash.Memory.setByte(b + i, 0);
 		#end
 	}
 	
-	inline public function getAccess():MemoryAccess
+	public inline function getAccess():MemoryAccess
 	{
 		#if flash
 		if (MemoryManager.AUTO_RECLAIM_MEMORY)
@@ -932,7 +931,7 @@ private class MemorySegment
 			return mAccess;
 	}
 	
-	inline public function setAccess(x:MemoryAccess)
+	public inline function setAccess(x:MemoryAccess)
 	{
 		#if flash
 		if (MemoryManager.AUTO_RECLAIM_MEMORY)

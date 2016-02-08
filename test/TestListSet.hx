@@ -4,13 +4,22 @@ import de.polygonal.ds.Set;
 
 class TestListSet extends AbstractTest
 {
+	function testSource()
+	{
+		var s = new ListSet<String>(["a", "b", "c", "a", "b", "c"]);
+		assertEquals(3, s.size);
+		assertTrue(s.has("a"));
+		assertTrue(s.has("b"));
+		assertTrue(s.has("c"));
+	}
+	
 	function test()
 	{
 		var s1 = new ListSet<String>();
 		
 		s1.set("a");
 		assertTrue(s1.has("a"));
-		assertEquals(1, s1.size());
+		assertEquals(1, s1.size);
 		
 		var s2 = new ListSet<String>();
 		s2.set("b");
@@ -18,16 +27,16 @@ class TestListSet extends AbstractTest
 		assertTrue(s2.has("b"));
 		
 		s1.merge(s2, true);
-		assertEquals(2, s1.size());
+		assertEquals(2, s1.size);
 		assertTrue(s1.contains("b"));
 		assertTrue(s1.has("b"));
 		s1.remove("b");
 		
-		assertEquals(1, s1.size());
+		assertEquals(1, s1.size);
 		s1.merge(s2, false, function(val:String) { return val; });
 		
 		assertTrue(s1.contains("b"));
-		assertEquals(2, s1.size());
+		assertEquals(2, s1.size);
 		
 		s1.remove("a");
 		s1.remove("b");
@@ -45,7 +54,7 @@ class TestListSet extends AbstractTest
 		assertTrue(s2.contains("a"));
 		assertTrue(s2.contains("b"));
 		assertTrue(s2.contains("c"));
-		assertEquals(3, s2.size());
+		assertEquals(3, s2.size);
 	}
 	
 	function testIterator()
@@ -60,7 +69,7 @@ class TestListSet extends AbstractTest
 		
 		var c:de.polygonal.ds.Set<Int> = cast s.clone(true);
 		
-		var itr:de.polygonal.ds.ResettableIterator<Int> = cast S.iterator();
+		var itr = S.iterator();
 		
 		for (i in itr) assertEquals(true, c.remove(i));
 		

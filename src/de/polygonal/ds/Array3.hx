@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2008-2014 Michael Baczynski, http://www.polygonal.de
+Copyright (c) 2008-2016 Michael Baczynski, http://www.polygonal.de
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -18,14 +18,12 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 */
 package de.polygonal.ds;
 
-import de.polygonal.ds.error.Assert.assert;
+import de.polygonal.ds.tools.Assert.assert;
 
-using de.polygonal.ds.tools.NativeArray;
+using de.polygonal.ds.tools.NativeArrayTools;
 
 /**
 	A three-dimensional array based on a rectangular sequential array
-	
-	_<o>Worst-case running time in Big O notation</o>_
 **/
 #if generic
 @:generic
@@ -33,13 +31,87 @@ using de.polygonal.ds.tools.NativeArray;
 class Array3<T> implements Collection<T>
 {
 	/**
+		The width (#columns).
+		The minimum value is 2.
+		<assert>invalid width</assert>
+	**/
+	public var width(get, set):Int;
+	inline function get_width():Int
+	{
+		return mW;
+	}
+	function set_width(val:Int):Int
+	{
+		resize(val, mH, mD);
+		return val;
+	}
+	
+	/**
+		The height (#rows).
+		The minimum value is 2.
+		<assert>invalid width</assert>
+	**/
+	public var height(get, set):Int;
+	inline function get_height():Int
+	{
+		return mH;
+	}
+	function set_height(val:Int):Int
+	{
+		resize(mW, val, mD);
+		return val;
+	}
+	
+	/**
+		The depth (#layers).
+		The minimum value is 2.
+		<assert>invalid depth</assert>
+	**/
+	public var depth(get, set):Int;
+	inline function get_depth():Int
+	{
+		return mD;
+	}
+	function set_depth(val:Int):Int
+	{
+		resize(mW, mH, val);
+		return val;
+	}
+	
+	/**
+		Equals `width`.
+	**/
+	public var cols(get, set):Int;
+	inline function get_cols():Int
+	{
+		return width;
+	}
+	function set_cols(val:Int):Int
+	{
+		return width = val;
+	}
+	
+	/**
+		Equals `height`.
+	**/
+	public var rows(get, set):Int;
+	inline function get_rows():Int
+	{
+		return height;
+	}
+	function set_rows(val:Int):Int
+	{
+		return height = val;
+	}
+	
+	/**
 		A unique identifier for this object.
 		
 		A hash table transforms this key into an index of an array element by using a hash function.
 		
 		<warn>This value should never be changed by the user.</warn>
 	**/
-	public var key(default, null):Int;
+	public var key(default, null):Int = HashKey.next();
 	
 	/**
 		If true, reuses the iterator object instead of allocating a new one when calling ``iterator()``.
@@ -48,13 +120,13 @@ class Array3<T> implements Collection<T>
 		
 		<warn>If true, nested iterations are likely to fail as only one iteration is allowed at a time.</warn>
 	**/
-	public var reuseIterator:Bool;
+	public var reuseIterator:Bool = false;
 	
 	var mData:Container<T>;
 	var mW:Int;
 	var mH:Int;
 	var mD:Int;
-	var mIterator:Array3Iterator<T>;
+	var mIterator:Array3Iterator<T> = null;
 	
 	/**
 		Creates a three-dimensional array with dimensions `width`, `height` and `depth`.
@@ -62,130 +134,68 @@ class Array3<T> implements Collection<T>
 		The minimum size is 2x2x2.
 		<assert>invalid `width`, `height` or `depth`</assert>
 	**/
-	public function new(width:Int, height:Int, depth:Int)
+	public function new(width:Int, height:Int, depth:Int, ?source:Array<T>)
 	{
 		assert(width >= 2 && height >= 2 && depth >= 2, 'invalid size (width: $width, height: $height, depth: $depth)');
 		
 		mW = width;
 		mH = height;
 		mD = depth;
-		mData = NativeArray.init(size());
-		mIterator = null;
-		key = HashKey.next();
-		reuseIterator = false;
+		mData = NativeArrayTools.init(size);
+		
+		if (source != null)
+		{
+			assert(source.length >= size, "invalid source");
+			
+			var d = mData;
+			for (i in 0...size) d.set(i, source[i]);
+		}
 	}
 	
 	/**
 		Returns the element that is stored in column `x`, row `y` and layer `z`.
-		<o>1</o>
 		<assert>`x`/`y`/`z` out of range</assert>
 	**/
-	inline public function get(x:Int, y:Int, z:Int):T
+	public inline function get(x:Int, y:Int, z:Int):T
 	{
-		assert(x >= 0 && x < getW(), 'x index out of range ($x)');
-		assert(y >= 0 && y < getH(), 'y index out of range ($y)');
-		assert(z >= 0 && z < getD(), 'z index out of range ($z)');
+		assert(x >= 0 && x < cols, 'x index out of range ($x)');
+		assert(y >= 0 && y < rows, 'y index out of range ($y)');
+		assert(z >= 0 && z < depth, 'z index out of range ($z)');
 		
 		return mData.get(getIndex(x, y, z));
 	}
 	
 	/**
 		Returns the element that is stored in column cell.`x`, row cell.`y` and layer cell.`z`.
-		<o>1</o>
 		<assert>`x`/`y`/`z` out of range</assert>
 	**/
-	inline public function getAtCell(cell:Array3Cell):T
+	public inline function getAtCell(cell:Array3Cell):T
 	{
 		assert(cell != null, "cell is null");
-		assert(cell.x >= 0 && cell.x < getW(), 'cell.x out of range (${cell.x})');
-		assert(cell.y >= 0 && cell.y < getH(), 'cell.y out of range (${cell.y})');
-		assert(cell.z >= 0 && cell.z < getD(), 'cell.z out of range (${cell.z})');
+		assert(cell.x >= 0 && cell.x < cols, 'cell.x out of range (${cell.x})');
+		assert(cell.y >= 0 && cell.y < rows, 'cell.y out of range (${cell.y})');
+		assert(cell.z >= 0 && cell.z < depth, 'cell.z out of range (${cell.z})');
 		
 		return mData.get(getIndex(cell.x, cell.y, cell.z));
 	}
 	
 	/**
 		Replaces the element at column `x`, row `y` and layer `z` with `val`.
-		<o>1</o>
 		<assert>`x`/`y`/`z` out of range</assert>
 	**/
-	inline public function set(x:Int, y:Int, z:Int, val:T)
+	public inline function set(x:Int, y:Int, z:Int, val:T)
 	{
-		assert(x >= 0 && x < getW(), 'x index out of range ($x)');
-		assert(y >= 0 && y < getH(), 'y index out of range ($y)');
-		assert(z >= 0 && z < getD(), 'z index out of range ($z)');
+		assert(x >= 0 && x < cols, 'x index out of range ($x)');
+		assert(y >= 0 && y < rows, 'y index out of range ($y)');
+		assert(z >= 0 && z < depth, 'z index out of range ($z)');
 		
 		mData.set(getIndex(x, y, z), val);
 	}
 	
 	/**
-		The width (#columns).
-		<o>1</o>
-	**/
-	inline public function getW():Int
-	{
-		return mW;
-	}
-	
-	/**
-		Sets the width to `x`.
-		
-		The minimum value is 2.
-		<o>1</o>
-		<assert>invalid width</assert>
-	**/
-	inline public function setW(x:Int)
-	{
-		resize(x, mH, mD);
-	}
-	
-	/**
-		The height (#rows).
-		<o>1</o>
-	**/
-	inline public function getH():Int
-	{
-		return mH;
-	}
-	
-	/**
-		Sets the height to `x`.
-		
-		The minimum value is 2.
-		<o>1</o>
-		<assert>invalid height</assert>
-	**/
-	inline public function setH(x:Int)
-	{
-		resize(mW, x, mD);
-	}
-	
-	/**
-		The depth (#layers).
-		<o>1</o>
-	**/
-	inline public function getD():Int
-	{
-		return mD;
-	}
-	
-	/**
-		Sets the depth to `x`.
-		
-		The minimum value is 2.
-		<o>1</o>
-		<assert>invalid height</assert>
-	**/
-	inline public function setD(x:Int)
-	{
-		resize(mW, mH, x);
-	}
-	
-	/**
 		Computes an index into the linear array from the `x`, `y` and `z` index.
-		<o>1</o>
 	**/
-	inline public function getIndex(x:Int, y:Int, z:Int):Int
+	public inline function getIndex(x:Int, y:Int, z:Int):Int
 	{
 		return (z * mW * mH) + (y * mW) + x;
 	}
@@ -193,12 +203,11 @@ class Array3<T> implements Collection<T>
 	/**
 		Returns the index of the first occurrence of the element `x` or returns -1 if element `x` does not exist.
 		
-		The index is in the range [0, ``size()`` - 1].
-		<o>n</o>
+		The index is in the range [0, ``size`` - 1].
 	**/
 	public function indexOf(x:T):Int
 	{
-		var i = 0, j = size(), d = mData;
+		var i = 0, j = size, d = mData;
 		while (i < j)
 		{
 			if (d.get(i) == x) break;
@@ -210,184 +219,174 @@ class Array3<T> implements Collection<T>
 	/**
 		Returns true if `x`, `y` and `z` are valid indices.
 	**/
-	inline public function inRange(x:Int, y:Int, z:Int):Bool
+	public inline function inRange(x:Int, y:Int, z:Int):Bool
 	{
 		return x >= 0 && x < mW && y >= 0 && y < mH && z >= 0 && z < mD;
 	}
 	
 	/**
 		Returns the cell coordinates of the first occurrence of the element `x` or null if element `x` does not exist.
-		<o>n</o>
-		<assert>`output` is null</assert>
-		@param output stores the result.
-		@return a reference to `output`.
+		<assert>`out` is null</assert>
+		@param out stores the result.
+		@return a reference to `out`.
 	**/
-	inline public function cellOf(x:T, output:Array3Cell):Array3Cell
+	public inline function cellOf(x:T, out:Array3Cell):Array3Cell
 	{
-		assert(output != null);
+		assert(out != null);
 		
 		var i = indexOf(x);
-		return i == -1 ? null : indexToCell(i, output);
+		return i == -1 ? null : indexToCell(i, out);
 	}
 	
 	/**
-		Transforms the index `i` into `output` coordinates.
-		<o>1</o>
+		Transforms the index `i` into `out` coordinates.
 		<assert>`i` out of range</assert>
-		<assert>`output` is null</assert>
-		@param output stores the result.
-		@return a reference to `output`.
+		<assert>`out` is null</assert>
+		@param out stores the result.
+		@return a reference to `out`.
 	**/
-	inline public function indexToCell(i:Int, output:Array3Cell):Array3Cell
+	public inline function indexToCell(i:Int, out:Array3Cell):Array3Cell
 	{
-		assert(i >= 0 && i < size(), 'index out of range ($i)');
-		assert(output != null, "output is null");
+		assert(i >= 0 && i < size, 'index out of range ($i)');
+		assert(out != null, "out is null");
 		
 		var s = mW * mH;
 		var t = i % s;
-		output.z = Std.int(i / s);
-		output.y = Std.int(t / mW);
-		output.x = t % mW;
-		return output;
+		out.z = Std.int(i / s);
+		out.y = Std.int(t / mW);
+		out.x = t % mW;
+		return out;
 	}
 	
 	/**
 		Computes an array index into the linear array from the `cell` coordinates.
-		<o>1</o>
 		<assert>`cell` index out of range or `cell` is null</assert>
 	**/
-	inline public function cellToIndex(cell:Array3Cell):Int
+	public inline function cellToIndex(cell:Array3Cell):Int
 	{
 		assert(cell != null);
-		assert(cell.x >= 0 && cell.x < getW(), 'x index out of range (${cell.x})');
-		assert(cell.y >= 0 && cell.y < getH(), 'y index out of range (${cell.y})');
-		assert(cell.z >= 0 && cell.z < getD(), 'z index out of range (${cell.z})');
+		assert(cell.x >= 0 && cell.x < cols, 'x index out of range (${cell.x})');
+		assert(cell.y >= 0 && cell.y < rows, 'y index out of range (${cell.y})');
+		assert(cell.z >= 0 && cell.z < depth, 'z index out of range (${cell.z})');
 		
 		return getIndex(cell.x, cell.y, cell.z);
 	}
 	
 	/**
 		Copies all elements stored in layer `z` by reference into a two-dimensional array.
-		<o>n</o>
 		<assert>`z` out of range</assert>
-		<assert>invalid layer or `output` is null or `output` too small</assert>
-		@param output stores the "slice" of this three-dimensional array.
-		@return a reference to `output`.
+		<assert>invalid layer or `out` is null or `out` too small</assert>
+		@param out stores the "slice" of this three-dimensional array.
+		@return a reference to `out`.
 	**/
-	public function getLayer(z:Int, output:Array2<T>):Array2<T>
+	public function getLayer(z:Int, out:Array2<T>):Array2<T>
 	{
-		assert(z >= 0 && z < getD(), 'z index out of range ($z)');
-		assert(output != null);
-		assert(output.getW() == getW() && output.getH() == getH(), 'output too small (w: ${output.getW()}, d: ${output.getH()})');
+		assert(z >= 0 && z < depth, 'z index out of range ($z)');
+		assert(out != null);
+		assert(out.cols == cols && out.rows == rows, 'out too small (w: ${out.cols}, d: ${out.rows})');
 		
 		var offset = z * mW * mH, d = mData;
 		for (x in 0...mW)
 			for (y in 0...mH)
-				output.set(x, y, d.get(offset + (y * mW) + x));
-		return output;
+				out.set(x, y, d.get(offset + (y * mW) + x));
+		return out;
 	}
 	
 	/**
-		Copies all elements stored in row `y` and layer `z` by reference to the `output` array.
-		<o>n</o>
-		<assert>`x`/`y` out of range or `output` is null</assert>
-		@return a reference to the `output` array.
+		Copies all elements stored in row `y` and layer `z` by reference to the `out` array.
+		<assert>`x`/`y` out of range or `out` is null</assert>
+		@return a reference to the `out` array.
 	**/
-	public function getRow(z:Int, y:Int, output:Array<T>):Array<T>
+	public function getRow(z:Int, y:Int, out:Array<T>):Array<T>
 	{
-		assert(y >= 0 && y < getH(), 'y index out of range ($y)');
-		assert(z >= 0 && z < getD(), 'z index out of range ($z)');
-		assert(output != null);
+		assert(y >= 0 && y < rows, 'y index out of range ($y)');
+		assert(z >= 0 && z < depth, 'z index out of range ($z)');
+		assert(out != null);
 		
 		var offset = (z * mW * mH) + (y * mW), d = mData;
-		for (x in 0...mW) output.push(d.get(offset + x));
-		return output;
+		for (x in 0...mW) out.push(d.get(offset + x));
+		return out;
 	}
 	
 	/**
 		Overwrites all elements in row `y` and layer `z` with the elements stored in the `input` array.
-		<o>n</o>
 		<assert>`z`/`y` out of range</assert>
 		<assert>`input` is null or insufficient input values</assert>
 	**/
 	public function setRow(z:Int, y:Int, input:Array<T>)
 	{
-		assert(y >= 0 && y < getH(), 'y index out of range ($y)');
-		assert(z >= 0 && z < getD(), 'z index out of range ($z)');
+		assert(y >= 0 && y < rows, 'y index out of range ($y)');
+		assert(z >= 0 && z < depth, 'z index out of range ($z)');
 		assert(input != null, "input is null");
-		assert(input.length >= size(), "insufficient values");
+		assert(input.length >= size, "insufficient values");
 		
 		var offset = (z * mW * mH) + (y * mW), d = mData;
 		for (x in 0...mW) d.set(offset + x, input[x]);
 	}
 	
 	/**
-		Copies all elements stored in column `x` and layer `z` by reference to the `output` array.
-		<o>n</o>
+		Copies all elements stored in column `x` and layer `z` by reference to the `out` array.
 		<assert>`z`/`x` out of range</assert>
-		<assert>`output` is null</assert>
-		@return a reference to the `output` array.
+		<assert>`out` is null</assert>
+		@return a reference to the `out` array.
 	**/
-	public function getCol(z:Int, x:Int, output:Array<T>):Array<T>
+	public function getCol(z:Int, x:Int, out:Array<T>):Array<T>
 	{
-		assert(x >= 0 && x < getW(), 'x index out of range (${x})');
-		assert(z >= 0 && z < getD(), 'z index out of range (${z})');
-		assert(output != null);
+		assert(x >= 0 && x < cols, 'x index out of range (${x})');
+		assert(z >= 0 && z < depth, 'z index out of range (${z})');
+		assert(out != null);
 		
 		var offset = z * mW * mH, d = mData;
-		for (i in 0...mH) output.push(d.get(offset + (i * mW + x)));
-		return output;
+		for (i in 0...mH) out.push(d.get(offset + (i * mW + x)));
+		return out;
 	}
 
 	/**
 		Overwrites all elements in column `x` and layer `z` with the elements stored in the `input` array.
-		<o>n</o>
 		<assert>`z`/`x` out of range</assert>
 		<assert>`input` is null or insufficient input values</assert>
 	**/
 	public function setCol(z:Int, x:Int, input:Array<T>)
 	{
-		assert(x >= 0 && x < getW(), 'x index out of range ($x)');
-		assert(z >= 0 && z < getD(), 'z index out of range ($z)');
+		assert(x >= 0 && x < cols, 'x index out of range ($x)');
+		assert(z >= 0 && z < depth, 'z index out of range ($z)');
 		assert(input != null, "input is null");
-		assert(input.length >= getH(), "insufficient values");
+		assert(input.length >= rows, "insufficient values");
 		
 		var offset = z * mW * mH, d = mData;
 		for (i in 0...mH) d.set(offset + (i * mW + x), input[i]);
 	}
 	
 	/**
-		Copies all elements stored in the pile at column `x` and row `y` by reference to the `output` array.
-		<o>n</o>
+		Copies all elements stored in the pile at column `x` and row `y` by reference to the `out` array.
 		<assert>`x`/`y` out of range</assert>
-		<assert>`output` is null</assert>
-		@return a reference to the `output` array.
+		<assert>`out` is null</assert>
+		@return a reference to the `out` array.
 	**/
-	public function getPile(x:Int, y:Int, output:Array<T>):Array<T>
+	public function getPile(x:Int, y:Int, out:Array<T>):Array<T>
 	{
-		assert(x >= 0 && x < getW(), 'x index out of range ($x)');
-		assert(y >= 0 && y < getH(), 'y index out of range ($y)');
-		assert(output != null);
+		assert(x >= 0 && x < cols, 'x index out of range ($x)');
+		assert(y >= 0 && y < rows, 'y index out of range ($y)');
+		assert(out != null);
 		
 		var offset1 = mW * mH;
 		var offset2 = (y * mW + x);
 		var d = mData;
-		for (z in 0...mD) output.push(d.get(z * offset1 + offset2));
-		return output;
+		for (z in 0...mD) out.push(d.get(z * offset1 + offset2));
+		return out;
 	}
 	
 	/**
 		Overwrites all elements in column `x` and row `y` with the elements stored in the `input` array.
-		<o>n</o>
 		<assert>`x`/`y` out of range</assert>
 		<assert>`input` is null or insufficient input values</assert>
 	**/
 	public function setPile(x:Int, y:Int, input:Array<T>)
 	{
-		assert(x >= 0 && x < getW(), 'x index out of range ($x)');
-		assert(y >= 0 && y < getH(), 'y index out of range ($y)');
+		assert(x >= 0 && x < cols, 'x index out of range ($x)');
+		assert(y >= 0 && y < rows, 'y index out of range ($y)');
 		assert(input != null, "input is null");
-		assert(input.length >= getD(), "insufficient values");
+		assert(input.length >= depth, "insufficient values");
 		
 		var offset1 = mW * mH;
 		var offset2 = (y * mW + x);
@@ -397,50 +396,38 @@ class Array3<T> implements Collection<T>
 	}
 	
 	/**
-		Replaces all existing elements with objects of type `cl`.
-		<o>n</o>
-		@param cl the class to instantiate for each element.
-		@param args passes additional constructor arguments to the class `cl`.
+		Calls the `f` function on all elements.
+		
+		The function signature is: `f(element, xIndex, yIndex, zIndex):element`
+		<assert>`f` is null</assert>
 	**/
-	public function assign(cl:Class<T>, args:Array<Dynamic> = null)
+	public function forEach(f:T->Int->Int->Int->T, z:Int = -1):Array3<T>
 	{
-		if (args == null) args = [];
+		var w = mW, s = w * mH, invS = 1 / s, invW = 1 / w, t;
+		var i, j;
+		if (z < 0)
+		{
+			i = 0;
+			j = size;
+		}
+		else
+		{
+			i = z * s;
+			j = i = s;
+		}
+		
 		var d = mData;
-		for (i in 0...size()) d.set(i, Type.createInstance(cl, args));
-	}
-	
-	/**
-		Replaces all existing elements with the instance `x`.
-		<o>n</o>
-	**/
-	public function fill(x:T):Array3<T>
-	{
-		var d = mData;
-		for (i in 0...size()) d.set(i, x);
+		while (i < j)
+		{
+			t = i % s;
+			d.set(i, f(d.get(i), t % w, Std.int(t * invW), Std.int(i * invS)));
+			i++;
+		}
 		return this;
 	}
 	
 	/**
-		Invokes the `process` function for each element.
-		
-		The function signature is: ``process(oldValue, xIndex, yIndex, zIndex):newValue``
-		<o>n</o>
-	**/
-	public function iter(process:T->Int->Int->Int->T)
-	{
-		var i, d = mData;
-		for (z in 0...mD)
-			for (y in 0...mH)
-				for (x in 0...mW)
-				{
-					i = z * mW * mH + y * mW + x;
-					d.set(i, process(d.get(i), x, y, z));
-				}
-	}
-	
-	/**
 		Resizes this three-dimensional array.
-		<o>n</o>
 		<assert>invalid dimensions</assert>
 		@param width the new width (minimum is 2).
 		@param height the new height (minimum is 2).
@@ -452,8 +439,8 @@ class Array3<T> implements Collection<T>
 		
 		if (width == mW && height == mH && depth == mD) return;
 		
-		var tmp = mData;
-		mData = NativeArray.init(width * height * depth);
+		var t = mData;
+		mData = NativeArrayTools.init(width * height * depth);
 		
 		var minX = width < mW ? width : mW;
 		var minY = height < mH ? height : mH;
@@ -468,7 +455,7 @@ class Array3<T> implements Collection<T>
 				t3 = y * width;
 				t4 = y * mW;
 				for (x in 0...minX)
-					d.set(t1 + t3 + x, tmp.get(t2 + t4 + x));
+					d.set(t1 + t3 + x, t.get(t2 + t4 + x));
 			}
 		}
 		
@@ -479,18 +466,17 @@ class Array3<T> implements Collection<T>
 	
 	/**
 		Swaps the element at column/row/layer `x0`, `y0`, `z0` with the element at column/row/layer `x1`, `y1`, `z1`.
-		<o>1</o>
 		<assert>`x0`/`y0`/`z0` or `x1`/`y1`/`z1` out of range</assert>
 		<assert>`x0`, `y0`, `z0` equals `x1`, `y1`, `z1`</assert>
 	**/
-	inline public function swap(x0:Int, y0:Int, z0:Int, x1:Int, y1:Int, z1:Int)
+	public inline function swap(x0:Int, y0:Int, z0:Int, x1:Int, y1:Int, z1:Int)
 	{
-		assert(x0 >= 0 && x0 < getW(), 'x0 index out of range ($x0)');
-		assert(y0 >= 0 && y0 < getH(), 'y0 index out of range ($y0)');
-		assert(z0 >= 0 && z0 < getD(), 'z0 index out of range ($z0)');
-		assert(x1 >= 0 && x1 < getW(), 'x1 index out of range ($x1)');
-		assert(y1 >= 0 && y1 < getH(), 'y1 index out of range ($y1)');
-		assert(z1 >= 0 && z1 < getD(), 'z1 index out of range ($z1)');
+		assert(x0 >= 0 && x0 < cols, 'x0 index out of range ($x0)');
+		assert(y0 >= 0 && y0 < rows, 'y0 index out of range ($y0)');
+		assert(z0 >= 0 && z0 < depth, 'z0 index out of range ($z0)');
+		assert(x1 >= 0 && x1 < cols, 'x1 index out of range ($x1)');
+		assert(y1 >= 0 && y1 < rows, 'y1 index out of range ($y1)');
+		assert(z1 >= 0 && z1 < depth, 'z1 index out of range ($z1)');
 		assert(!(x0 == x1 && y0 == y1 && z0 == z1), 'source indices equal target indices (x: $x0, y: $y0, z: $z0)');
 		
 		var i = (z0 * mW * mH) + (y0 * mW) + x0;
@@ -505,25 +491,23 @@ class Array3<T> implements Collection<T>
 		Grants access to the rectangular sequential array storing the elements of this three-dimensional array.
 		
 		Useful for fast iteration or low-level operations.
-		<o>1</o>
 	**/
-	inline public function getStorage():Container<T>
+	public inline function getStorage():Container<T>
 	{
 		return mData;
 	}
 	
 	/**
 		Shuffles the elements of this collection by using the Fisher-Yates algorithm.
-		<o>n</o>
 		<assert>insufficient random values</assert>
-		@param rval a list of random double values in the range between 0 (inclusive) to 1 (exclusive) defining the new positions of the elements.
+		@param rvals a list of random double values in the range between 0 (inclusive) to 1 (exclusive) defining the new positions of the elements.
 		If omitted, random values are generated on-the-fly by calling `Math::random()`.
 	**/
-	public function shuffle(rval:Array<Float> = null)
+	public function shuffle(rvals:Array<Float> = null)
 	{
-		var s = size();
+		var s = size;
 		var d = mData;
-		if (rval == null)
+		if (rvals == null)
 		{
 			var m = Math, i, j, t;
 			while (--s > 1)
@@ -536,12 +520,12 @@ class Array3<T> implements Collection<T>
 		}
 		else
 		{
-			assert(rval.length >= size(), "insufficient random values");
+			assert(rvals.length >= size, "insufficient random values");
 			
 			var i, j = 0, t;
 			while (--s > 1)
 			{
-				i = Std.int(rval[j++] * s);
+				i = Std.int(rvals[j++] * s);
 				t = d.get(s);
 				d.set(s, d.get(i));
 				d.set(i, t);
@@ -564,35 +548,45 @@ class Array3<T> implements Collection<T>
 	**/
 	public function toString():String
 	{
-		return '{ Array3 ${getW()}x${getH()}x${getD()} }';
+		return '{ Array3 ${cols}x${rows}x${depth} }';
 	}
 	
-	/*///////////////////////////////////////////////////////
-	// collection
-	///////////////////////////////////////////////////////*/
+	/* INTERFACE Collection */
+	
+	/**
+		The number of elements in this three-dimensional array.
+		
+		Always equals ``width`` * ``height`` * ``depth``.
+	**/
+	public var size(get, never):Int;
+	inline function get_size():Int
+	{
+		return mW * mH * mD;
+	}
 	
 	/**
 		Destroys this object by explicitly nullifying all elements for GC'ing used resources.
 		
 		Improves GC efficiency/performance (optional).
-		<o>n</o>
 	**/
 	public function free()
 	{
-		var d = mData;
-		for (i in 0...size()) d.set(i, cast null);
+		mData.nullify();
 		mData = null;
-		mIterator = null;
+		if (mIterator != null)
+		{
+			mIterator.free();
+			mIterator = null;
+		}
 	}
 	
 	/**
 		Returns true if this three-dimensional array contains the element `x`.
-		<o>n</o>
 	**/
 	public function contains(x:T):Bool
 	{
 		var d = mData;
-		for (i in 0...size())
+		for (i in 0...size)
 		{
 			if (d.get(i) == x)
 				return true;
@@ -604,13 +598,12 @@ class Array3<T> implements Collection<T>
 		Nullifies all occurrences of `x`.
 		
 		The size is not altered.
-		<o>n</o>
 		@return true if at least one occurrence of `x` is nullified.
 	**/
 	public function remove(x:T):Bool
 	{
 		var found = false, d = mData;
-		for (i in 0...size())
+		for (i in 0...size)
 		{
 			if (d.get(i) == x)
 			{
@@ -624,13 +617,11 @@ class Array3<T> implements Collection<T>
 	/**
 		Clears this three-dimensional array by nullifying all elements.
 		
-		The `purge` parameter has no effect.
-		<o>1 or n if `purge` is true</o>
+		The `gc` parameter has no effect.
 	**/
-	inline public function clear(purge = false)
+	public function clear(gc:Bool = false)
 	{
-		var d = mData;
-		for (i in 0...size()) d.set(i, cast null);
+		mData.nullify(size);
 	}
 	
 	/**
@@ -655,17 +646,6 @@ class Array3<T> implements Collection<T>
 	}
 	
 	/**
-		The number of elements in this three-dimensional array.
-		
-		Always equals ``getW()`` * ``getH()`` * ``getD()``.
-		<o>1</o>
-	**/
-	inline public function size():Int
-	{
-		return mW * mH * mD;
-	}
-	
-	/**
 		<warn>Unsupported operation - always returns false.</warn>
 	**/
 	public function isEmpty():Bool
@@ -680,19 +660,7 @@ class Array3<T> implements Collection<T>
 	**/
 	public function toArray():Array<T>
 	{
-		return NativeArray.toArray(mData);
-	}
-	
-	/**
-		Returns a `Vector<T>` object containing all elements in this three-dimensional array.
-		
-		Order: Row-major order (row-by-row).
-	**/
-	public function toVector():Container<T>
-	{
-		var v = NativeArray.init(size()), d = mData;
-		for (i in 0...size()) v.set(i, d.get(i));
-		return v;
+		return NativeArrayTools.toArray(mData, 0, size);
 	}
 	
 	/**
@@ -703,39 +671,37 @@ class Array3<T> implements Collection<T>
 		<warn>In this case all elements have to implement `Cloneable`.</warn>
 		@param copier a custom function for copying elements. Replaces ``element::clone()`` if `assign` is false.
 	**/
-	public function clone(assign = true, copier:T->T = null):Collection<T>
+	public function clone(assign:Bool = true, copier:T->T = null):Collection<T>
 	{
-		var c = new Array3<T>(mW, mH, mD);
+		var out = new Array3<T>(mW, mH, mD);
+		var src = mData;
+		var dst = out.mData;
 		
 		if (assign)
-			c.mData = NativeArray.copy(mData);
+			NativeArrayTools.blit(src, 0, dst, 0, size);
 		else
 		{
-			c.mData = NativeArray.init(size());
-			var src = mData;
-			var dst = c.mData;
-			
 			if (copier == null)
 			{
-				var e:Cloneable<Dynamic> = null;
-				var d:Dynamic; //required for -cpp
-				
-				for (i in 0...size())
+				try
 				{
-					assert(Std.is(src.get(i), Cloneable), 'element is not of type Cloneable (${src.get(i)})');
-					
-					d = src.get(i);
-					e = cast d;
-					dst.set(i, e.clone());
+					var e:Cloneable<Dynamic> = null;
+					for (i in 0...size)
+					{
+						e = cast(src.get(i), Cloneable<Dynamic>);
+						dst.set(i, e.clone());
+					}
 				}
+				catch(error:Dynamic)
+					throw 'element is not of type Cloneable';
 			}
 			else
 			{
-				for (i in 0...size())
+				for (i in 0...size)
 					dst.set(i, copier(src.get(i)));
 			}
 		}
-		return c;
+		return out;
 	}
 }
 
@@ -757,25 +723,31 @@ class Array3Iterator<T> implements de.polygonal.ds.Itr<T>
 		reset();
 	}
 	
-	inline public function reset():Itr<T>
+	public function free()
+	{
+		mObject = null;
+		mData = null;
+	}
+	
+	public inline function reset():Itr<T>
 	{
 		mData = mObject.mData;
-		mS = mObject.size();
+		mS = mObject.size;
 		mI = 0;
 		return this;
 	}
 	
-	inline public function hasNext():Bool
+	public inline function hasNext():Bool
 	{
 		return mI < mS;
 	}
 	
-	inline public function next():T
+	public inline function next():T
 	{
 		return mData.get(mI++);
 	}
 	
-	inline public function remove()
+	public function remove()
 	{
 		assert(mI > 0, "call next() before removing an element");
 		
@@ -803,7 +775,7 @@ class Array3Cell
 	**/
 	public var z:Int;
 	
-	public function new(x = 0, y = 0, z = 0)
+	public function new(x:Int = 0, y:Int = 0, z:Int = 0)
 	{
 		this.x = x;
 		this.y = y;

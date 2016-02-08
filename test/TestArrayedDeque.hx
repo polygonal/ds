@@ -10,6 +10,13 @@ class TestArrayedDeque extends AbstractTest
 		super();
 	}
 	
+	function testSource()
+	{
+		var d = new ArrayedDeque<Int>(4, 4, [0, 1, 2, 3, 4, 5, 6, 7]);
+		assertEquals(8, d.size);
+		for (i in 0...8) assertEquals(i, d.popFront());
+	}
+	
 	function testAdjacent()
 	{
 		//[x, x, x, h] [t, x, x, ]
@@ -27,46 +34,27 @@ class TestArrayedDeque extends AbstractTest
 		assertEquals(4, d.getBack(0));
 	}
 	
-	function testFill()
+	function testForEach()
 	{
 		var d = createDequeInt();
-		d.fill(9, 10);
-		assertEquals(10, d.size());
-		for (i in 0...10) assertEquals(9, d.getFront(i));
-		var d = createDequeInt(8);
-		for (i in 0...3) d.pushBack(i);
-		d.fill(9, 1);
-		d.fill(9, 2);
-		d.fill(9, 3);
-		var d = createDequeInt(4);
-		for (i in 0...20) d.pushBack(i);
-		d.fill(99);
-		assertEquals(20, d.size());
-		for (i in 0...20)
-			assertEquals(99, d.getFront(i));
-		var d = createDequeInt(4);
-		for (i in 0...30) d.pushBack(i);
-		d.fill(99);
-		assertEquals(30, d.size());
-		for (i in 0...30)
-			assertEquals(99, d.getFront(i));
-		for (s in 0...15)
-		{
-			var d = createDequeInt(4);
-			for (i in 0...20) d.pushBack(i);
-			d.fill(99, s);
-			for (i in 0...s)
-				assertEquals(99, d.getFront(i));
-		}
+		d.pushBack(0);
+		d.pushBack(1);
+		d.pushBack(2);
+		d.forEach(
+			function(v, i)
+			{
+				assertEquals(i, v);
+				return v;
+			});
 	}
 	
 	function testClear()
 	{
 		var d = createDequeInt();
-		d.fill(9, 10);
+		for (i in 0...10) d.pushBack(9);
 		d.clear(true);
 		assertTrue(d.isEmpty());
-		assertEquals(0, d.size());
+		assertEquals(0, d.size);
 	}
 	
 	function testIndexOf()
@@ -155,7 +143,7 @@ class TestArrayedDeque extends AbstractTest
 			var i = 0;
 			for (k in 0...s) d.pushBack(i++);
 			var c:Deque<Int> = cast d.clone(true);
-			assertEquals(d.size(), c.size());
+			assertEquals(d.size, c.size);
 			i = 0;
 			var z = 0;
 			for (x in c)
@@ -174,7 +162,7 @@ class TestArrayedDeque extends AbstractTest
 			var i = 0;
 			for (k in 0...s) d.pushBack(new E(i++));
 			var c:Deque<E> = cast d.clone(false);
-			assertEquals(d.size(), c.size());
+			assertEquals(d.size, c.size);
 			i = 0;
 			var z = 0;
 			for (x in c)
@@ -195,7 +183,7 @@ class TestArrayedDeque extends AbstractTest
 			var i = 0;
 			for (k in 0...s) d.pushBack(new E(i++));
 			var c:Deque<E> = cast d.clone(false, copier);
-			assertEquals(d.size(), c.size());
+			assertEquals(d.size, c.size);
 			i = 0;
 			var z = 0;
 			for (x in c)
@@ -358,7 +346,7 @@ class TestArrayedDeque extends AbstractTest
 		d.pushBack(4);
 		
 		d.remove(0); //block0, head++
-		assertEquals(4, d.size());
+		assertEquals(4, d.size);
 		var i = 1;
 		var c = 0;
 		for (x in d)
@@ -369,7 +357,7 @@ class TestArrayedDeque extends AbstractTest
 		assertEquals(4, c);
 		
 		d.remove(4); //block0, tail--
-		assertEquals(3, d.size());
+		assertEquals(3, d.size);
 		var i = 1;
 		var c = 0;
 		for (x in d)
@@ -380,7 +368,7 @@ class TestArrayedDeque extends AbstractTest
 		assertEquals(3, c);
 		
 		d.remove(2);
-		assertEquals(2, d.size());
+		assertEquals(2, d.size);
 		var i = 1;
 		var c = 0;
 		var data = [1, 3];
@@ -392,7 +380,7 @@ class TestArrayedDeque extends AbstractTest
 		assertEquals(2, c);
 		
 		d.remove(1);
-		assertEquals(1, d.size());
+		assertEquals(1, d.size);
 		var i = 1;
 		var c = 0;
 		var data = [3];
@@ -404,7 +392,7 @@ class TestArrayedDeque extends AbstractTest
 		assertEquals(1, c);
 		
 		d.remove(3);
-		assertEquals(0, d.size());
+		assertEquals(0, d.size);
 	}
 	
 	function testRemoveCase2()
@@ -417,7 +405,7 @@ class TestArrayedDeque extends AbstractTest
 		d.pushBack(4);
 		d.pushBack(5);
 		d.remove(3);
-		assertEquals(5, d.size());
+		assertEquals(5, d.size);
 		var c = 0;
 		var data = [0, 1, 2, 4, 5];
 		for (x in d)
@@ -471,7 +459,7 @@ class TestArrayedDeque extends AbstractTest
 		assertEquals(1, d.back());
 		assertEquals(1, d.popFront());
 		assertTrue(d.isEmpty());
-		assertEquals(0, d.size());
+		assertEquals(0, d.size);
 	}
 	
 	function testPushPopFront2()
@@ -492,14 +480,14 @@ class TestArrayedDeque extends AbstractTest
 			assertEquals(i, d.front());
 			assertEquals(0, d.back());
 		}
-		assertEquals(4, d.size());
+		assertEquals(4, d.size);
 		for (i in 4...8)
 		{
 			d.pushFront(i);
 			assertEquals(i, d.front());
 			assertEquals(0, d.back());
 		}
-		assertEquals(8, d.size());
+		assertEquals(8, d.size);
 		var j = 7;
 		for (i in 0...8)
 		{
@@ -508,7 +496,7 @@ class TestArrayedDeque extends AbstractTest
 			if (j > 0)
 				assertEquals(j, d.front());
 		}
-		assertEquals(0, d.size());
+		assertEquals(0, d.size);
 		
 		//pushFront, popBack
 		var d = createDequeInt();
@@ -529,7 +517,7 @@ class TestArrayedDeque extends AbstractTest
 				assertEquals(i + 1, d.back());
 			}
 		}
-		assertEquals(0, d.size());
+		assertEquals(0, d.size);
 		
 		//pushBack, popFront
 		var d = createDequeInt();

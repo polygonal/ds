@@ -1,7 +1,8 @@
 ﻿import de.polygonal.ds.Array3;
+import de.polygonal.ds.Cloneable;
 import de.polygonal.ds.ListSet;
 import de.polygonal.ds.Set;
-import de.polygonal.ds.tools.NativeArray;
+import de.polygonal.ds.tools.NativeArrayTools;
 
 class TestArray3 extends AbstractTest
 {
@@ -17,6 +18,19 @@ class TestArray3 extends AbstractTest
 		mH = h;
 		mD = d;
 		super();
+	}
+	
+	function testSource()
+	{
+		var a = new Array3<Int>(2, 2, 2, [0, 1, 2, 3, 4, 5, 6, 7]);
+		assertEquals(0, a.get(0, 0, 0));
+		assertEquals(1, a.get(1, 0, 0));
+		assertEquals(2, a.get(0, 1, 0));
+		assertEquals(3, a.get(1, 1, 0));
+		assertEquals(4, a.get(0, 0, 1));
+		assertEquals(5, a.get(1, 0, 1));
+		assertEquals(6, a.get(0, 1, 1));
+		assertEquals(7, a.get(1, 1, 1));
 	}
 	
 	function testRemove()
@@ -78,37 +92,60 @@ class TestArray3 extends AbstractTest
 		assertEquals(3, c.z);
 	}
 	
-	function testAssign()
+	function testForEach()
 	{
-		var a = new Array3<Int>(mW, mH, mD);
-		a.fill(99);
-		for (z in 0...mD)
-			for (y in 0...mH)
-				for (x in 0...mW)
-					assertEquals(99, a.get(x, y, z));
+		var a = new Array3<String>(3, 3, 3);
+		for (z in 0...3)
+			for (y in 0...3)
+				for (x in 0...3)
+					a.set(x, y, z, '$x$y$z');
+		
+		a.forEach(
+			function(v, x, y, z)
+			{
+				assertEquals(v, '$x$y$z');
+				return 'v$x$y$z';
+			});
+		
+		a.forEach(
+			function(v, x, y, z)
+			{
+				assertEquals(v, 'v$x$y$z');
+				return v;
+			});
+		
+		for (i in 0...3)
+		{
+			a.forEach(
+				function(v, x, y, z)
+				{
+					assertEquals(v, 'v$x$y$i');
+					return v;
+				}, i);
+		}
 	}
 	
 	function testIterator()
 	{
 		var a = new Array3<Int>(mW, mH, mD);
-		a.fill(99);
+		a.forEach(function(e, x, y, z) return 99);
 		var c = 0;
 		for (val in a)
 		{
 			assertEquals(val, 99);
 			c++;
 		}
-		assertEquals(c, a.size());
+		assertEquals(c, a.size);
 		var c = 0;
 		for (val in a)
 		{
 			assertEquals(val, 99);
 			c++;
 		}
-		assertEquals(c, a.size());
+		assertEquals(c, a.size);
 		var s = new ListSet<String>();
 		var a = new Array3<String>(mW, mH, mD);
-		a.iter(function(val:String, x:Int, y:Int, z:Int):String
+		a.forEach(function(val:String, x:Int, y:Int, z:Int):String
 		{
 			var t = [x, y, z].join(".");
 			s.set(t);
@@ -116,7 +153,7 @@ class TestArray3 extends AbstractTest
 		});
 		var s1:Set<String> = cast s.clone(true);
 		var s2:Set<String> = cast s.clone(true);
-		var itr:de.polygonal.ds.ResettableIterator<String> = cast a.iterator();
+		var itr = a.iterator();
 		
 		for (i in itr) assertEquals(true, s1.remove(i));
 		assertTrue(s1.isEmpty());
@@ -129,7 +166,7 @@ class TestArray3 extends AbstractTest
 	function testIteratorRemove()
 	{
 		var a = new Array3<String>(mW, mH, mD);
-		a.fill("?");
+		a.forEach(function(e, x, y, z) return "?");
 		
 		var itr = a.iterator();
 		while (itr.hasNext())
@@ -138,6 +175,31 @@ class TestArray3 extends AbstractTest
 			itr.remove();
 		}
 		var arr = a.getStorage();
-		for (i in 0...NativeArray.size(arr)) assertEquals(null, arr[i]);
+		for (i in 0...NativeArrayTools.size(arr)) assertEquals(null, arr[i]);
+	}
+	
+	function testClone()
+	{
+		var i = 0;
+		var a = new Array3<E>(2, 2, 2);
+		a.forEach(function(e, x, y, z) return new E(i++));
+		var clone:Array3<E> = cast a.clone(false);
+		assertEquals(8, clone.size);
+		i = 0;
+		clone.forEach(function(e, x, y, z) {assertEquals(i++, e.x); return e; });
+	}
+}
+
+private class E implements Cloneable<E>
+{
+	public var x:Int;
+	public function new(x:Int)
+	{
+		this.x = x;
+	}
+	
+	public function clone():E
+	{
+		return new E(x);
 	}
 }

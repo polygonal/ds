@@ -1,5 +1,5 @@
 ﻿/*
-Copyright (c) 2008-2014 Michael Baczynski, http://www.polygonal.de
+Copyright (c) 2008-2016 Michael Baczynski, http://www.polygonal.de
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -18,7 +18,7 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 */
 package de.polygonal.ds;
 
-import de.polygonal.ds.error.Assert.assert;
+import de.polygonal.ds.tools.Assert.assert;
 
 /**
 	A doubly linked list node
@@ -26,8 +26,6 @@ import de.polygonal.ds.error.Assert.assert;
 	Each node wraps an element and stores a reference to the next and previous list node.
 	
 	``DllNode`` objects are created and managed by the ``Dll`` class.
-	
-	_<o>Worst-case running time in Big O notation</o>_
 **/
 #if generic
 @:generic
@@ -65,7 +63,6 @@ class DllNode<T>
 		Destroys this object by explicitly nullifying all pointers and elements for GC'ing used resources.
 		
 		Improves GC efficiency/performance (optional).
-		<o>1</o>
 	**/
 	public function free()
 	{
@@ -76,10 +73,9 @@ class DllNode<T>
 	
 	/**
 		Returns true if this node is the head of a list.
-		<o>1</o>
 		<assert>node is not managed by a list</assert>
 	**/
-	inline public function isHead():Bool
+	public inline function isHead():Bool
 	{
 		assert(mList != null, "node is not managed by a list");
 		
@@ -88,10 +84,9 @@ class DllNode<T>
 	
 	/**
 		Returns true if this node is the tail of a list.
-		<o>1</o>
 		<assert>node is not managed by a list</assert>
 	**/
-	inline public function isTail():Bool
+	public inline function isTail():Bool
 	{
 		assert(mList != null, "node is not managed by a list");
 		
@@ -100,28 +95,25 @@ class DllNode<T>
 	
 	/**
 		Returns true if this node points to a next node.
-		<o>1</o>
 	**/
-	inline public function hasNext():Bool
+	public inline function hasNext():Bool
 	{
 		return next != null;
 	}
 	
 	/**
 		Returns true if this node points to a previous node.
-		<o>1</o>
 	**/
-	inline public function hasPrev():Bool
+	public inline function hasPrev():Bool
 	{
 		return prev != null;
 	}
 	
 	/**
 		Returns the element of the next node.
-		<o>1</o>
 		<assert>next node is null</assert>
 	**/
-	inline public function nextVal():T
+	public inline function nextVal():T
 	{
 		assert(hasNext(), "next node is null");
 		
@@ -130,10 +122,9 @@ class DllNode<T>
 	
 	/**
 		Returns the element of the previous node.
-		<o>1</o>
 		<assert>previous node is null</assert>
 	**/
-	inline public function prevVal():T
+	public inline function prevVal():T
 	{
 		assert(hasPrev(), "previous node is null");
 		
@@ -142,19 +133,17 @@ class DllNode<T>
 	
 	/**
 		The list that owns this node or null if this node is not part of a list.
-		<o>1</o>
 	**/
-	inline public function getList():Dll<T>
+	public inline function getList():Dll<T>
 	{
 		return mList;
 	}
 	
 	/**
 		Unlinks this node from its list and returns `next`.
-		<o>1</o>
 		<assert>list is null</assert>
 	**/
-	inline public function unlink():DllNode<T>
+	public inline function unlink():DllNode<T>
 	{
 		assert(mList != null);
 		
@@ -173,12 +162,11 @@ class DllNode<T>
 		var head = b.prepend(a);
 		trace(head.val); //0
 		trace(head.nextVal()); //1</pre>
-		<o>1</o>
 		<assert>`node` is null or managed by a list</assert>
 		<assert>`node`::prev exists</assert>
 		@return the list's new head node.
 	**/
-	inline public function prepend(node:DllNode<T>):DllNode<T>
+	public inline function prepend(node:DllNode<T>):DllNode<T>
 	{
 		assert(node != null, "node is null");
 		assert(prev == null, "prev is not null");
@@ -201,12 +189,11 @@ class DllNode<T>
 		var tail = a.append(b);
 		trace(tail.val); //1
 		trace(tail.prevVal()); //0</pre>
-		<o>1</o>
 		<assert>`node` is null or managed by a list</assert>
 		<assert>`node`::next exists</assert>
 		@return the list's new tail node.
 	**/
-	inline public function append(node:DllNode<T>):DllNode<T>
+	public inline function append(node:DllNode<T>):DllNode<T>
 	{
 		assert(node != null, "node is null");
 		assert(next == null, "next is not null");
@@ -229,12 +216,11 @@ class DllNode<T>
 		var head = a.prependTo(b);
 		trace(head.val); //0
 		trace(head.nextVal()); //1</pre>
-		<o>1</o>
 		<assert>`node` is null or managed by a list</assert>
 		<assert>`node`::prev exists</assert>
 		@return the list's new head node.
 	**/
-	inline public function prependTo(node:DllNode<T>):DllNode<T>
+	public inline function prependTo(node:DllNode<T>):DllNode<T>
 	{
 		assert(node != null, "node is null");
 		assert(mList == null && node.mList == null, "node is managed by a list");
@@ -257,12 +243,11 @@ class DllNode<T>
 		var tail = b.appendTo(a);
 		trace(tail.val); //1
 		trace(tail.prevVal()); //0</pre>
-		<o>1</o>
 		<assert>`node` is null or managed by a list</assert>
 		<assert>`node`::next exists</assert>
 		@return the list's new tail node.
 	**/
-	inline public function appendTo(node:DllNode<T>):DllNode<T>
+	public inline function appendTo(node:DllNode<T>):DllNode<T>
 	{
 		assert(node != null, "node is null");
 		assert(mList == null && node.mList == null, "node is managed by a list");

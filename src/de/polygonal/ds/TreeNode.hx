@@ -1,5 +1,5 @@
 ﻿/*
-Copyright (c) 2008-2014 Michael Baczynski, http://www.polygonal.de
+Copyright (c) 2008-2016 Michael Baczynski, http://www.polygonal.de
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -18,16 +18,15 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 */
 package de.polygonal.ds;
 
-import de.polygonal.ds.error.Assert.assert;
+import de.polygonal.ds.tools.ArrayTools;
+import de.polygonal.ds.tools.Assert.assert;
 
-using de.polygonal.ds.tools.NativeArray;
+using de.polygonal.ds.tools.NativeArrayTools;
 
 /**
 	A tree structure
 	
 	See <a href="http://lab.polygonal.de/?p=184" target="mBlank">http://lab.polygonal.de/?p=184</a>
-	
-	_<o>Worst-case running time in Big O notation</o>_
 **/
 #if generic
 @:generic
@@ -41,7 +40,7 @@ class TreeNode<T> implements Collection<T>
 		
 		<warn>This value should never be changed by the user.</warn>
 	**/
-	public var key(default, null):Int;
+	public var key(default, null):Int = HashKey.next();
 	
 	/**
 		The node's data.
@@ -73,7 +72,7 @@ class TreeNode<T> implements Collection<T>
 	var mTail:TreeNode<T>;
 	var mPrevInStack:TreeNode<T>;
 	var mNextInStack:TreeNode<T>;
-	var mExtraInfo:Int;
+	var mExtraInfo:Int = 0;
 	
 	#if debug
 	var mBusy:Bool;
@@ -98,7 +97,6 @@ class TreeNode<T> implements Collection<T>
 		if (hasParent())
 		{
 			parent.incChildCount();
-			
 			if (parent.hasChildren())
 			{
 				var tail = parent.getLastChild();
@@ -108,26 +106,20 @@ class TreeNode<T> implements Collection<T>
 			}
 			else
 				parent.children = this;
-			
 			parent.mTail = this;
 		}
-		
-		mExtraInfo = 0;
 		
 		#if debug
 		mBusy = false;
 		#end
-		
-		key = HashKey.next();
 	}
 	
 	/**
 		Returns true if this node is the root node of this tree.
 		
 		A root node has no parent node.
-		<o>1</o>
 	**/
-	inline public function isRoot():Bool
+	public inline function isRoot():Bool
 	{
 		return parent == null;
 	}
@@ -136,9 +128,8 @@ class TreeNode<T> implements Collection<T>
 		Returns true if this node is a leaf node of this tree.
 		
 		A leaf node has no children.
-		<o>1</o>
 	**/
-	inline public function isLeaf():Bool
+	public inline function isLeaf():Bool
 	{
 		return children == null;
 	}
@@ -147,9 +138,8 @@ class TreeNode<T> implements Collection<T>
 		Returns true is this node is a child node of this tree.
 		
 		A child node has a parent node.
-		<o>1</o>
 	**/
-	inline public function isChild():Bool
+	public inline function isChild():Bool
 	{
 		return valid(parent);
 	}
@@ -184,27 +174,24 @@ class TreeNode<T> implements Collection<T>
 	
 	/**
 		Returns true if this node has a parent node.
-		<o>1</o>
 	**/
-	inline public function hasParent():Bool
+	public inline function hasParent():Bool
 	{
 		return isChild();
 	}
 	
 	/**
 		Returns true if this node has at least one child node.
-		<o>1</o>
 	**/
-	inline public function hasChildren():Bool
+	public inline function hasChildren():Bool
 	{
 		return valid(children);
 	}
 	
 	/**
 		Returns true if this node has at least one sibling.
-		<o>1</o>
 	**/
-	inline public function hasSiblings():Bool
+	public inline function hasSiblings():Bool
 	{
 		if (valid(parent))
 			return valid(prev) || valid(next);
@@ -214,36 +201,32 @@ class TreeNode<T> implements Collection<T>
 	
 	/**
 		Returns true if this node has a sibling to its right (``next`` != null).
-		<o>1</o>
 	**/
-	inline public function hasNextSibling():Bool
+	public inline function hasNextSibling():Bool
 	{
 		return valid(next);
 	}
 	
 	/**
 		Returns true if this node has a sibling to its left (``prev`` != null).
-		<o>1</o>
 	**/
-	inline public function hasPrevSibling():Bool
+	public inline function hasPrevSibling():Bool
 	{
 		return valid(prev);
 	}
 	
 	/**
 		Returns the leftmost sibling of this node.
-		<o>1</o>
 	**/
-	inline public function getFirstSibling():TreeNode<T>
+	public inline function getFirstSibling():TreeNode<T>
 	{
 		return parent != null ? parent.children : null;
 	}
 	
 	/**
 		Returns the rightmost sibling of this node.
-		<o>1</o>
 	**/
-	inline public function getLastSibling():TreeNode<T>
+	public inline function getLastSibling():TreeNode<T>
 	{
 		return parent != null ? parent.mTail : null;
 	}
@@ -252,9 +235,8 @@ class TreeNode<T> implements Collection<T>
 		Returns the sibling index of this node.
 		
 		The first sibling equals index 0, the last sibling equals index ``numChildren()`` - 1.
-		<o>n</o>
 	**/
-	inline public function getSiblingIndex():Int
+	public inline function getSiblingIndex():Int
 	{
 		var c = 0;
 		var node = prev;
@@ -268,7 +250,6 @@ class TreeNode<T> implements Collection<T>
 	
 	/**
 		Swaps the child `a` with child `b` by swapping their values.
-		<o>1</o>
 		<assert>`a` and `b` are not siblings</assert>
 		<assert>`a` equals `b`</assert>
 		@return this node.
@@ -278,14 +259,12 @@ class TreeNode<T> implements Collection<T>
 		assert(a.parent == b.parent, "a and b are not siblings");
 		assert(a != b, "a equals b");
 		
-		var tmp = a.val; a.val = b.val; b.val = tmp;
-		
+		var t = a.val; a.val = b.val; b.val = t;
 		return this;
 	}
 	
 	/**
 		Swaps the child at index `i` with the child at index `j` by swapping their values.
-		<o>1</o>
 		<assert>index `i` out of range</assert>
 		<assert>index `j` out of range</assert>
 		<assert>`i` equals `j`</assert>
@@ -293,8 +272,8 @@ class TreeNode<T> implements Collection<T>
 	**/
 	public function swapChildrenAt(i:Int, j:Int):TreeNode<T>
 	{
-		assert(i >= 0 && i < numChildren(), 'the index i ($i) is out of range ${numChildren()}');
-		assert(j >= 0 && j < numChildren(), 'the index j ($j) is out of range ${numChildren()}');
+		assert(i >= 0 && i < numChildren(), 'index i ($i) out of range ${numChildren()}');
+		assert(j >= 0 && j < numChildren(), 'index j ($j) out of range ${numChildren()}');
 		assert(i != j, 'index i ($i) equals index j');
 		
 		var t = null;
@@ -324,19 +303,17 @@ class TreeNode<T> implements Collection<T>
 			c++;
 			n = n.next;
 		}
-		
 		return this;
 	}
 	
 	/**
 		Removes the child at index `i` and returns the child.
-		<o>n</o>
 		<assert>index `i` is out of range</assert>
 		@return this node.
 	**/
 	public function removeChildAt(i:Int):TreeNode<T>
 	{
-		assert(i >= 0 && i < numChildren(), 'the index $i is out of range ${numChildren()}');
+		assert(i >= 0 && i < numChildren(), 'index $i out of range ${numChildren()}');
 		
 		var j = 0;
 		var n = children;
@@ -345,9 +322,7 @@ class TreeNode<T> implements Collection<T>
 			n = n.next;
 			j++;
 		}
-		
 		n.unlink();
-		
 		return n;
 	}
 	
@@ -355,11 +330,10 @@ class TreeNode<T> implements Collection<T>
 		Removes `n` children starting at the specified index `i` in the range [`i`, `i` + `n`].
 		
 		If `n` is -1, `n` is set to ``numChildren()`` - `i`.
-		<o>n</o>
 		<assert>`i` or `n` out of range</assert>
 		@return this node.
 	**/
-	public function removeChildren(i = 0, n = -1):TreeNode<T>
+	public function removeChildren(i:Int = 0, n:Int = -1):TreeNode<T>
 	{
 		if (n == -1) n = numChildren() - i;
 		
@@ -383,19 +357,17 @@ class TreeNode<T> implements Collection<T>
 			c = next;
 			j++;
 		}
-		
 		return this;
 	}
 	
 	/**
 		Changes the index of the child `x` to `i`.
-		<o>n</o>
 		<assert>index `i` is out of range</assert>
 		@return this node.
 	**/
 	public function setChildIndex(x:TreeNode<T>, i:Int):TreeNode<T>
 	{
-		assert(i >= 0 && i < numChildren(), 'the index $i is out of range ${numChildren()}');
+		assert(i >= 0 && i < numChildren(), 'index $i out of range ${numChildren()}');
 		
 		var n = null;
 		var k =-1;
@@ -437,18 +409,16 @@ class TreeNode<T> implements Collection<T>
 	
 	/**
 		The total number of child nodes (non-recursive).
-		<o>1</o>
 	**/
-	inline public function numChildren():Int
+	public inline function numChildren():Int
 	{
 		return mExtraInfo >>> 16;
 	}
 	
 	/**
 		Counts the total number of siblings (excluding this).
-		<o>n</o>
 	**/
-	inline public function numSiblings():Int
+	public inline function numSiblings():Int
 	{
 		if (hasParent())
 			return parent.numChildren() - 1;
@@ -458,9 +428,8 @@ class TreeNode<T> implements Collection<T>
 	
 	/**
 		Counts the total number of preceding siblings (excluding this).
-		<o>n</o>
 	**/
-	inline public function numPrevSiblings():Int
+	public inline function numPrevSiblings():Int
 	{
 		var c = 0;
 		var node = prev;
@@ -469,15 +438,13 @@ class TreeNode<T> implements Collection<T>
 			c++;
 			node = node.prev;
 		}
-		
 		return c;
 	}
 	
 	/**
 		Counts the total number of succeeding siblings (excluding this).
-		<o>n</o>
 	**/
-	inline public function numNextSiblings():Int
+	public inline function numNextSiblings():Int
 	{
 		var c = 0;
 		var node = next;
@@ -495,7 +462,6 @@ class TreeNode<T> implements Collection<T>
 		The depth is defined as the length of the path from the root node to this node.
 		
 		The root node is at depth 0.
-		<o>n</o>
 	**/
 	public function depth():Int
 	{
@@ -520,7 +486,6 @@ class TreeNode<T> implements Collection<T>
 		The height is defined as the length of the path from the root node to the deepest node in the tree.
 		
 		A tree with one node has a height of one.
-		<o>n</o>
 	**/
 	public function height():Int
 	{
@@ -536,9 +501,8 @@ class TreeNode<T> implements Collection<T>
 	
 	/**
 		Returns the root node of this tree.
-		<o>n</o>
 	**/
-	inline public function getRoot():TreeNode<T>
+	public inline function getRoot():TreeNode<T>
 	{
 		var n = this;
 		while (n.hasParent()) n = n.parent;
@@ -547,18 +511,16 @@ class TreeNode<T> implements Collection<T>
 	
 	/**
 		Returns the leftmost child of this node or null if this node is a leaf node.
-		<o>1</o>
 	**/
-	inline public function getFirstChild():TreeNode<T>
+	public inline function getFirstChild():TreeNode<T>
 	{
 		return children;
 	}
 	
 	/**
 		Returns the rightmost child of this node or null if this node is a leaf node.
-		<o>1</o>
 	**/
-	inline public function getLastChild():TreeNode<T>
+	public inline function getLastChild():TreeNode<T>
 	{
 		return mTail;
 	}
@@ -566,9 +528,8 @@ class TreeNode<T> implements Collection<T>
 	/**
 		Returns the child at index `i` or null if the node has no children.
 		<assert>`i` out of range</assert>
-		<o>n</o>
 	**/
-	inline public function getChildAt(i:Int):TreeNode<T>
+	public inline function getChildAt(i:Int):TreeNode<T>
 	{
 		if (hasChildren())
 		{
@@ -585,7 +546,7 @@ class TreeNode<T> implements Collection<T>
 	/**
 		Returns the child index of this node.
 	**/
-	inline public function getChildIndex():Int
+	public inline function getChildIndex():Int
 	{
 		var i = 0;
 		var n = this;
@@ -599,7 +560,6 @@ class TreeNode<T> implements Collection<T>
 	
 	/**
 		Unlinks this node.
-		<o>1</o>
 		@return a subtree rooted at this node.
 	**/
 	public function unlink():TreeNode<T>
@@ -619,13 +579,11 @@ class TreeNode<T> implements Collection<T>
 		next = prev = null;
 		mNextInStack = null;
 		mPrevInStack = null;
-		
 		return this;
 	}
 	
 	/**
 		Unlinks `x` and appends `x` as a child to this node.
-		<o>1</o>
 		<assert>`x` is null</assert>
 		@return this node.
 	**/
@@ -649,13 +607,11 @@ class TreeNode<T> implements Collection<T>
 			mTail = x;
 			children = x;
 		}
-		
 		return this;
 	}
 	
 	/**
 		Unlinks `x` and prepends `x` as a child of this node.
-		<o>1</o>
 		@return this node.
 	**/
 	public function prependNode(x:TreeNode<T>):TreeNode<T>
@@ -675,13 +631,11 @@ class TreeNode<T> implements Collection<T>
 			mTail = x;
 		
 		children = x;
-		
 		return this;
 	}
 	
 	/**
 		Unlinks `x` and appends `x` to the specified `child` node.
-		<o>1</o>
 		<assert>`child` node is not a child of this node</assert>
 		@return this node.
 	**/
@@ -707,15 +661,12 @@ class TreeNode<T> implements Collection<T>
 		child.next = x;
 		x.prev = child;
 		
-		if (child == mTail)
-			mTail = x;
-		
+		if (child == mTail) mTail = x;
 		return this;
 	}
 	
 	/**
 		Unlinks `x` and prepends `x` to the specified child `node`.
-		<o>1</o>
 		<assert>`child` node is not a child of this node</assert>
 		@return this node.
 	**/
@@ -742,13 +693,11 @@ class TreeNode<T> implements Collection<T>
 		
 		x.next = child;
 		child.prev = x;
-		
 		return this;
 	}
 	
 	/**
 		Unlinks `x` and inserts `x` at the index position `i`.
-		<o>1</o>
 		<assert>index `i` out of range</assert>
 		@return this node.
 	**/
@@ -763,13 +712,11 @@ class TreeNode<T> implements Collection<T>
 			appendNode(x);
 		else
 			insertBeforeChild(getChildAt(i), x);
-		
 		return this;
 	}
 	
 	/**
 		Successively swaps this node with previous siblings until it reached the head of the sibling list.
-		<o>1</o>
 		@return this node.
 	**/
 	public function setFirst():TreeNode<T>
@@ -780,13 +727,11 @@ class TreeNode<T> implements Collection<T>
 			unlink();
 			p.prependNode(this);
 		}
-		
 		return this;
 	}
 	
 	/**
 		Successively swaps this node with next siblings until it reached the tail of the sibling list.
-		<o>1</o>
 		@return this node.
 	**/
 	public function setLast():TreeNode<T>
@@ -797,13 +742,11 @@ class TreeNode<T> implements Collection<T>
 			unlink();
 			p.appendNode(this);
 		}
-		
 		return this;
 	}
 	
 	/**
 		Recursively finds the first occurrence of the node storing the element `x` in this tree.
-		<o>n</o>
 		@return the node storing the element `x` or null if such a node does not exist.
 	**/
 	public function find(x:T):TreeNode<T>
@@ -826,7 +769,6 @@ class TreeNode<T> implements Collection<T>
 				}
 			}
 		}
-		
 		return null;
 	}
 	
@@ -855,17 +797,17 @@ class TreeNode<T> implements Collection<T>
 	**/
 	public function preorder(process:TreeNode<T>->Bool->Dynamic->Bool, userData:Dynamic, preflight:Bool = false, iterative:Bool = false):TreeNode<T>
 	{
-		inline function asVisitable(value:Dynamic):Visitable
+		inline function asVisitable(val:Dynamic):Visitable
 		{
 			return
 			#if flash
-			flash.Lib.as(value, Visitable);
+			flash.Lib.as(val, Visitable);
 			#else
 			
 			#if (cpp && generic)
-			cast(value, Visitable);
+			cast(val, Visitable);
 			#else
-			cast value;
+			cast val;
 			#end
 			#end
 		}
@@ -1097,7 +1039,6 @@ class TreeNode<T> implements Collection<T>
 				}
 			}
 		}
-		
 		return this;
 	}
 	
@@ -1118,7 +1059,7 @@ class TreeNode<T> implements Collection<T>
 		@param iterative if true, an iterative traversal is used (default traversal style is recursive).
 		@return this node.
 	**/
-	public function postorder(process:TreeNode<T>->Dynamic->Bool, userData:Dynamic, iterative = false):TreeNode<T>
+	public function postorder(process:TreeNode<T>->Dynamic->Bool, userData:Dynamic, iterative:Bool = false):TreeNode<T>
 	{
 		if (parent == null && children == null)
 		{
@@ -1276,7 +1217,6 @@ class TreeNode<T> implements Collection<T>
 			mBusy = false;
 			#end
 		}
-		
 		return this;
 	}
 	
@@ -1353,31 +1293,28 @@ class TreeNode<T> implements Collection<T>
 				nodeHead = nodeHead.mNextInStack;
 			}
 		}
-		
 		return this;
 	}
 	
 	/**
 		Sorts the children of this node using the merge sort algorithm.
-		<o>n log n for merge sort and n&sup2; for insertion sort</o>
 		<assert>element does not implement `Comparable`</assert>
-		@param compare a comparison function.
+		@param cmp a comparison function.
 		If null, the elements are compared using element.`compare()`.
 		<warn>In this case all elements have to implement `Comparable`.</warn>
 		@param useInsertionSort if true, the dense array is sorted using the insertion sort algorithm.
 		This is faster for nearly sorted lists.
 		@return this node.
 	**/
-	public function sort(compare:T->T->Int, useInsertionSort = false):TreeNode<T>
+	public function sort(?cmp:T->T->Int, useInsertionSort:Bool = false):TreeNode<T>
 	{
 		if (hasChildren())
 		{
-			if (compare == null)
+			if (cmp == null)
 				children = useInsertionSort ? insertionSortComparable(children) : mergeSortComparable(children);
 			else
-				children = useInsertionSort ? insertionSort(children, compare) : mergeSort(children, compare);
+				children = useInsertionSort ? insertionSort(children, cmp) : mergeSort(children, cmp);
 		}
-		
 		return this;
 	}
 	
@@ -1424,7 +1361,6 @@ class TreeNode<T> implements Collection<T>
 	
 	/**
 		Creates and returns a ``TreeBuilder`` object pointing to this node.
-		<o>1</o>
 	**/
 	public function getBuilder():TreeBuilder<T>
 	{
@@ -1495,17 +1431,17 @@ class TreeNode<T> implements Collection<T>
 	{
 		assert(Std.is(node.val, Visitable), "element is not of type Visitable");
 		
-		inline function asVisitable(value:Dynamic):Visitable
+		inline function asVisitable(val:Dynamic):Visitable
 		{
 			return
 			#if flash
-			flash.Lib.as(value, Visitable);
+			flash.Lib.as(val, Visitable);
 			#else
 			
 			#if (cpp && generic)
-			cast(value, Visitable);
+			cast(val, Visitable);
 			#else
-			cast value;
+			cast val;
 			#end
 			#end
 		}
@@ -1532,17 +1468,17 @@ class TreeNode<T> implements Collection<T>
 	{
 		assert(Std.is(node.val, Visitable), "element is not of type Visitable");
 		
-		inline function asVisitable(value:Dynamic):Visitable
+		inline function asVisitable(val:Dynamic):Visitable
 		{
 			return
 			#if flash
-			flash.Lib.as(value, Visitable);
+			flash.Lib.as(val, Visitable);
 			#else
 			
 			#if (cpp && generic)
-			cast(value, Visitable);
+			cast(val, Visitable);
 			#else
-			cast value;
+			cast val;
 			#end
 			#end
 		}
@@ -1611,7 +1547,7 @@ class TreeNode<T> implements Collection<T>
 			var p = n.prev;
 			var v = n.val;
 			
-			assert(Std.is(p.val, Comparable), 'element is not of type Comparable (${p.val})');
+			assert(Std.is(p.val, Comparable), "element is not of type Comparable");
 			
 			if (cast(p.val, Comparable<Dynamic>).compare(v) < 0)
 			{
@@ -1619,7 +1555,7 @@ class TreeNode<T> implements Collection<T>
 				
 				while (i.hasPrevSibling())
 				{
-					assert(Std.is(i.prev.val, Comparable), 'element is not of type Comparable (${i.prev.val})');
+					assert(Std.is(i.prev.val, Comparable), "element is not of type Comparable");
 					
 					if (cast(i.prev.val, Comparable<Dynamic>).compare(v) < 0)
 						i = i.prev;
@@ -1656,7 +1592,6 @@ class TreeNode<T> implements Collection<T>
 			}
 			n = m;
 		}
-		
 		return h;
 	}
 	
@@ -1711,7 +1646,6 @@ class TreeNode<T> implements Collection<T>
 			}
 			n = m;
 		}
-		
 		return h;
 	}
 	
@@ -1755,7 +1689,7 @@ class TreeNode<T> implements Collection<T>
 					}
 					else
 					{
-						assert(Std.is(p.val, Comparable), 'element is not of type Comparable (${p.val})');
+						assert(Std.is(p.val, Comparable), "element is not of type Comparable");
 						
 						if (cast(p.val, Comparable<Dynamic>).compare(q.val) >= 0)
 						{
@@ -1785,7 +1719,6 @@ class TreeNode<T> implements Collection<T>
 		
 		h.prev = null;
 		mTail = tail;
-		
 		return h;
 	}
 	
@@ -1855,7 +1788,6 @@ class TreeNode<T> implements Collection<T>
 		
 		h.prev = null;
 		this.mTail = tail;
-		
 		return h;
 	}
 	
@@ -1915,7 +1847,6 @@ class TreeNode<T> implements Collection<T>
 		}
 		else
 			list.push({v: node.val, c: false});
-		
 		return list;
 	}
 	
@@ -1951,19 +1882,31 @@ class TreeNode<T> implements Collection<T>
 			else
 				s--;
 		}
-		
 		return root;
 	}
 	
-	/*///////////////////////////////////////////////////////
-	// collection
-	///////////////////////////////////////////////////////*/
+	/* INTERFACE Collection */
+	
+	/**
+		The total number of nodes in the tree rooted at this node.
+	**/
+	public var size(get, never):Int;
+	function get_size():Int
+	{
+		var c = 1;
+		var node = children;
+		while (valid(node))
+		{
+			c += node.size;
+			node = node.next;
+		}
+		return c;
+	}
 	
 	/**
 		Destroys this object by explicitly nullifying all nodes, pointers and elements for GC'ing used resources.
 		
 		Improves GC efficiency/performance (optional).
-		<o>n</o>
 	**/
 	public function free()
 	{
@@ -1990,7 +1933,6 @@ class TreeNode<T> implements Collection<T>
 	
 	/**
 		Returns true if this tree contains the element `x`.
-		<o>n</o>
 	**/
 	public function contains(x:T):Bool
 	{
@@ -2011,7 +1953,6 @@ class TreeNode<T> implements Collection<T>
 				}
 			}
 		}
-		
 		return false;
 	}
 	
@@ -2019,7 +1960,6 @@ class TreeNode<T> implements Collection<T>
 		Runs a recursive preorder traversal that removes all nodes storing the element `x`.
 		
 		Tree nodes are not rearranged, so if a node stores `x`, the complete subtree rooted at that node is unlinked.
-		<o>n</o>
 		@return true if at least one occurrence of `x` was removed.
 	**/
 	public function remove(x:T):Bool
@@ -2038,18 +1978,17 @@ class TreeNode<T> implements Collection<T>
 			found = found || child.remove(x);
 			child = next;
 		}
-		
 		return found;
 	}
 	
 	/**
 		Removes all child nodes.
-		<o>1 or n if `purge` is true</o>
-		@param purge if true, recursively nullifies this subtree.
+		
+		@param gc if true, recursively nullifies this subtree so the garbage collector can reclaim used memory.
 	**/
-	public function clear(purge = false)
+	public function clear(gc:Bool = false)
 	{
-		if (purge)
+		if (gc)
 		{
 			var node = children;
 			while (valid(node))
@@ -2057,10 +1996,9 @@ class TreeNode<T> implements Collection<T>
 				var hook = node.next;
 				node.prev = null;
 				node.next = null;
-				node.clear(purge);
+				node.clear(gc);
 				node = hook;
 			}
-			
 			val = cast null;
 			parent = null;
 			children = null;
@@ -2084,24 +2022,7 @@ class TreeNode<T> implements Collection<T>
 	}
 	
 	/**
-		The total number of nodes in the tree rooted at this node.
-		<o>n</o>
-	**/
-	public function size():Int
-	{
-		var c = 1;
-		var node = children;
-		while (valid(node))
-		{
-			c += node.size();
-			node = node.next;
-		}
-		return c;
-	}
-	
-	/**
 		Returns true if this tree is empty.
-		<o>1</o>
 	**/
 	public function isEmpty():Bool
 	{
@@ -2117,23 +2038,10 @@ class TreeNode<T> implements Collection<T>
 	{
 		if (isEmpty()) return [];
 		
-		var out = ArrayUtil.alloc(size());
+		var out = ArrayTools.alloc(size);
 		var i = 0;
 		preorder(function(node:TreeNode<T>, _, _):Bool { out[i++] = node.val; return true; }, null);
 		return out;
-	}
-	
-	/**
-		Returns a `Vector<T>` object containing all elements in the tree rooted at this node.
-		
-		The elements are collected using a preorder traversal.
-	**/
-	public function toVector():Container<T>
-	{
-		var v = NativeArray.init(size());
-		var i = 0;
-		preorder(function(node:TreeNode<T>, _, _):Bool { v.set(i++, node.val); return true; }, null);
-		return v;
 	}
 	
 	/**
@@ -2143,7 +2051,7 @@ class TreeNode<T> implements Collection<T>
 		If false, the ``clone()`` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
 		@param copier a custom function for copying elements. Replaces ``element::clone()`` if `assign` is false.
 	**/
-	public function clone(assign = true, copier:T->T = null):Collection<T>
+	public function clone(assign:Bool = true, copier:T->T = null):Collection<T>
 	{
 		var stack = new Array<TreeNode<T>>();
 		var copy = new TreeNode<T>(copier != null ? copier(val) : val);
@@ -2211,10 +2119,10 @@ class TreeNode<T> implements Collection<T>
 	
 	inline function popOffStack(top:TreeNode<T>):TreeNode<T>
 	{
-		var tmp = top;
+		var t = top;
 		top = top.mPrevInStack;
 		if (top != null) top.mNextInStack = null;
-		tmp.mPrevInStack = null;
+		t.mPrevInStack = null;
 		return top;
 	}
 	
@@ -2277,7 +2185,7 @@ class TreeIterator<T> implements de.polygonal.ds.Itr<T>
 		reset();
 	}
 	
-	inline public function reset():Itr<T>
+	public inline function reset():Itr<T>
 	{
 		mStack[0] = mObject;
 		mTop = 1;
@@ -2285,12 +2193,12 @@ class TreeIterator<T> implements de.polygonal.ds.Itr<T>
 		return this;
 	}
 	
-	inline public function hasNext():Bool
+	public inline function hasNext():Bool
 	{
 		return mTop > 0;
 	}
 	
-	inline public function next():T
+	public inline function next():T
 	{
 		var node = mStack[--mTop];
 		var walker = node.children;
@@ -2304,7 +2212,7 @@ class TreeIterator<T> implements de.polygonal.ds.Itr<T>
 		return node.val;
 	}
 	
-	inline public function remove()
+	public function remove()
 	{
 		mTop -= mC;
 	}
@@ -2326,19 +2234,19 @@ class ChildTreeIterator<T> implements de.polygonal.ds.Itr<T>
 		reset();
 	}
 	
-	inline public function reset():Itr<T>
+	public inline function reset():Itr<T>
 	{
 		mWalker = mObject.children;
 		mHook = null;
 		return this;
 	}
 	
-	inline public function hasNext():Bool
+	public inline function hasNext():Bool
 	{
 		return mWalker != null;
 	}
 	
-	inline public function next():T
+	public inline function next():T
 	{
 		var x = mWalker.val;
 		mHook = mWalker;
@@ -2346,7 +2254,7 @@ class ChildTreeIterator<T> implements de.polygonal.ds.Itr<T>
 		return x;
 	}
 	
-	inline public function remove()
+	public function remove()
 	{
 		assert(mHook != null, "call next() before removing an element");
 		

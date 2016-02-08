@@ -254,7 +254,7 @@ class TestBst extends AbstractTest
 		var found = 0;
 		for (i in 0...k)
 			bst.remove(num.pop());
-		assertEquals(0, bst.size());
+		assertEquals(0, bst.size);
 	}
 	
 	function testIterator()
@@ -297,7 +297,7 @@ class TestBst extends AbstractTest
 		var set = new ListSet<E>();
 		for (i in bst) set.set(i);
 		var arr = bst.toArray();
-		assertEquals(bst.size(), arr.length);
+		assertEquals(bst.size, arr.length);
 		
 		for (i in arr) assertEquals(true, set.remove(i));
 		assertTrue(set.isEmpty());
@@ -314,7 +314,7 @@ class TestBst extends AbstractTest
 		for (i in bst) set.set(i);
 		
 		var arr = bst.toArray();
-		assertEquals(bst.size(), arr.length);
+		assertEquals(bst.size, arr.length);
 		for (i in arr) assertEquals(true, set.remove(i));
 		assertTrue(set.isEmpty());
 	}

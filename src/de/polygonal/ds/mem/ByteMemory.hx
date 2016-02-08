@@ -1,5 +1,5 @@
 ﻿/*
-Copyright (c) 2008-2014 Michael Baczynski, http://www.polygonal.de
+Copyright (c) 2008-2016 Michael Baczynski, http://www.polygonal.de
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -18,7 +18,7 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 */
 package de.polygonal.ds.mem;
 
-import de.polygonal.ds.error.Assert.assert;
+import de.polygonal.ds.tools.Assert.assert;
 import haxe.ds.Vector;
 
 #if (alchemy && !flash)
@@ -52,16 +52,16 @@ class ByteMemory extends MemoryAccess
 		min = input.getAddr(t);
 		max = input.getAddr(max - 1);
 		
-		var output = new flash.utils.ByteArray();
-		output.endian = flash.utils.Endian.LITTLE_ENDIAN;
+		var out = new flash.utils.ByteArray();
+		out.endian = flash.utils.Endian.LITTLE_ENDIAN;
 		
 		#if (flash && alchemy)
-		while (min <= max) output.writeByte(flash.Memory.getByte(min++));
+		while (min <= max) out.writeByte(flash.Memory.getByte(min++));
 		#else
-		for (i in 0...(max - min) + 1) output.writeByte(input.get(min + i));
+		for (i in 0...(max - min) + 1) out.writeByte(input.get(min + i));
 		#end
-		output.position = 0;
-		return output;
+		out.position = 0;
+		return out;
 	}
 	
 	/**
@@ -81,9 +81,9 @@ class ByteMemory extends MemoryAccess
 		assert(min >= 0);
 		assert(max <= Std.int(input.length), "max <= input.length");
 		
-		var output = new ByteMemory(max - min, "ofByteArray");
-		for (i in min...max) output.set(i - min, input.readByte());
-		return output;
+		var out = new ByteMemory(max - min, "ofByteArray");
+		for (i in min...max) out.set(i - min, input.readByte());
+		return out;
 	}
 	#end
 	
@@ -104,9 +104,9 @@ class ByteMemory extends MemoryAccess
 		assert(max <= input.size, 'max out of range ($max)');
 		assert(max - min > 0, 'min equals max ($min)');
 		
-		var output = new haxe.io.BytesBuffer();
-		for (i in 0...max - min) output.addByte(input.get(min + i));
-		return output.getBytes().getData();
+		var out = new haxe.io.BytesBuffer();
+		for (i in 0...max - min) out.addByte(input.get(min + i));
+		return out.getBytes().getData();
 	}
 	
 	/**
@@ -126,9 +126,9 @@ class ByteMemory extends MemoryAccess
 		assert(min >= 0);
 		assert(max <= Std.int(bytes.length), "max <= input.length");
 		
-		var output = new ByteMemory(max - min, "ofBytesData");
-		for (i in min...max) output.set(i - min, bytes.get(i));
-		return output;
+		var out = new ByteMemory(max - min, "ofBytesData");
+		for (i in min...max) out.set(i - min, bytes.get(i));
+		return out;
 	}
 	
 	/**
@@ -147,21 +147,20 @@ class ByteMemory extends MemoryAccess
 		assert(max <= input.size, 'max out of range ($max)');
 		assert(max - min > 0, 'min equals max ($min)');
 		
-		var output = new Array();
+		var out = new Array();
 		
 		#if (flash && alchemy)
 		min = input.getAddr(min);
 		max = input.getAddr(max - 1);
 		while (min <= max)
 		{
-			output.push(flash.Memory.getByte(min));
+			out.push(flash.Memory.getByte(min));
 			min++;
 		}
 		#else
-		for (i in 0...max - min) output[i] = input.get(min + i);
+		for (i in 0...max - min) out[i] = input.get(min + i);
 		#end
-		
-		return output;
+		return out;
 	}
 	
 	/**
@@ -179,19 +178,18 @@ class ByteMemory extends MemoryAccess
 		assert(min >= 0);
 		assert(max <= Std.int(input.length), "max <= input.length");
 		
-		var output = new ByteMemory(max - min, "ofArray");
-		for (i in min...max) output.set(i - min, input[i]);
-		
-		return output;
+		var out = new ByteMemory(max - min, "ofArray");
+		for (i in min...max) out.set(i - min, input[i]);
+		return out;
 	}
 	
 	/**
 		Converts `input` in the range [`min`, `max`] to a Vector object.
 		If no range is specified, all `input` bytes are copied.
-		@param output the `Vector` object to write into. If null, a new Vector object is created on-the-fly.
+		@param out the `Vector` object to write into. If null, a new Vector object is created on-the-fly.
 		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
-	public static function toVector(input:ByteMemory, min = -1, max = -1, output:Vector<Int> = null):Vector<Int>
+	public static function toVector(input:ByteMemory, min:Int = -1, max:Int = -1, out:Vector<Int> = null):Vector<Int>
 	{
 		assert(input != null, "invalid input");
 		
@@ -203,12 +201,12 @@ class ByteMemory extends MemoryAccess
 		assert(max - min > 0, 'min equals max ($min)');
 		
 		#if (debug && flash && generic)
-		if (output != null)
-			if (output.fixed)
-				assert(Std.int(output.length) >= max - min, "output vector is too small");
+		if (out != null)
+			if (out.fixed)
+				assert(Std.int(out.length) >= max - min, "out vector is too small");
 		#end
 		
-		if (output == null) output = new Vector<Int>(max - min);
+		if (out == null) out = new Vector<Int>(max - min);
 		
 		#if (flash && alchemy)
 		min = input.getAddr(min);
@@ -216,14 +214,13 @@ class ByteMemory extends MemoryAccess
 		var i = 0;
 		while (min <= max)
 		{
-			output[i++] = flash.Memory.getByte(min);
+			out[i++] = flash.Memory.getByte(min);
 			min++;
 		}
 		#else
-		for (i in 0...max - min) output[i] = input.get(min + i);
+		for (i in 0...max - min) out[i] = input.get(min + i);
 		#end
-		
-		return output;
+		return out;
 	}
 	
 	/**
@@ -241,10 +238,9 @@ class ByteMemory extends MemoryAccess
 		assert(min >= 0);
 		assert(max <= Std.int(input.length), "max <= input.length");
 		
-		var output = new ByteMemory(max - min, "ofVector");
-		for (i in min...max) output.set(i - min, input[i]);
-		
-		return output;
+		var out = new ByteMemory(max - min, "ofVector");
+		for (i in min...max) out.set(i - min, input[i]);
+		return out;
 	}
 	
 	#if (!flash && alchemy)
@@ -343,7 +339,6 @@ class ByteMemory extends MemoryAccess
 		#else
 		for (i in 0...size) set(i, x);
 		#end
-		
 		return this;
 	}
 	
@@ -360,14 +355,14 @@ class ByteMemory extends MemoryAccess
 		super.resize(newSize);
 		#else
 			#if flash
-			var tmp = new flash.utils.ByteArray();
-			tmp.length = newSize;
-			for (i in 0...M.min(newSize, size)) tmp[i] = mData[i];
+			var t = new flash.utils.ByteArray();
+			t.length = newSize;
+			for (i in 0...M.min(newSize, size)) t[i] = mData[i];
 			#else
-			var tmp = haxe.io.Bytes.alloc(newSize);
-			for (i in 0...M.min(newSize, size)) tmp.set(i, mData.get(i));
+			var t = haxe.io.Bytes.alloc(newSize);
+			for (i in 0...M.min(newSize, size)) t.set(i, mData.get(i));
 			#end
-		mData = tmp;
+		mData = t;
 		#end
 		
 		size = newSize;
@@ -378,7 +373,7 @@ class ByteMemory extends MemoryAccess
 		<assert>segmentation Fault</assert>
 		<assert>memory deallocated</assert>
 	**/
-	inline public function get(i:Int):Int
+	public inline function get(i:Int):Int
 	{
 		#if (flash && alchemy)
 		return flash.Memory.getByte(getAddr(i));
@@ -396,7 +391,7 @@ class ByteMemory extends MemoryAccess
 		<assert>segmentation Fault</assert>
 		<assert>memory deallocated</assert>
 	**/
-	inline public function set(i:Int, x:Int)
+	public inline function set(i:Int, x:Int)
 	{
 		#if (flash && alchemy)
 		flash.Memory.setByte(getAddr(i), x);
@@ -415,18 +410,18 @@ class ByteMemory extends MemoryAccess
 		<assert>segmentation Fault</assert>
 		<assert>memory deallocated</assert>
 	**/
-	inline public function swp(i:Int, j:Int)
+	public inline function swap(i:Int, j:Int)
 	{
 		assert(i != j, 'i equals j ($i)');
 		
 		#if (flash && alchemy)
 		var ai = getAddr(i);
 		var aj = getAddr(j);
-		var tmp = flash.Memory.getByte(ai);
+		var t = flash.Memory.getByte(ai);
 		flash.Memory.setByte(ai, flash.Memory.getByte(aj));
-		flash.Memory.setByte(ai, tmp);
+		flash.Memory.setByte(ai, t);
 		#else
-		var tmp = get(i); set(i, get(j)); set(j, tmp);
+		var t = get(i); set(i, get(j)); set(j, t);
 		#end
 	}
 	
@@ -435,7 +430,7 @@ class ByteMemory extends MemoryAccess
 		<assert>segmentation fault</assert>
 		<assert>memory deallocated</assert>
 	**/
-	inline public function getAddr(i:Int):Int
+	public inline function getAddr(i:Int):Int
 	{
 		assert(i >= 0 && i < size, 'segfault, index $i');
 		assert(mMemory != null, "memory deallocated");

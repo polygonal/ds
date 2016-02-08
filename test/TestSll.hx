@@ -1,5 +1,4 @@
-﻿import de.polygonal.ds.ArrayConvert;
-import de.polygonal.ds.Compare;
+﻿import de.polygonal.ds.Compare;
 import de.polygonal.ds.ListSet;
 import de.polygonal.ds.Sll;
 import de.polygonal.ds.SllNode;
@@ -7,6 +6,20 @@ import de.polygonal.ds.SllNode;
 @:access(de.polygonal.ds.Sll)
 class TestSll extends AbstractTest
 {
+	function testSource()
+	{
+		var a = new Sll<Int>([0, 1, 2, 3]);
+		assertEquals(4, a.size);
+		
+		assertEquals(0, a.head.val);
+		assertEquals(1, a.head.next.val);
+		assertEquals(2, a.head.next.next.val); 
+		assertEquals(3, a.tail.val);
+		
+		assertEquals(null, a.tail.next);
+		assertEquals(a.tail, a.head.next.next.next);
+	}
+	
 	function testCircular()
 	{
 		var l = new Sll<Int>();
@@ -191,14 +204,14 @@ class TestSll extends AbstractTest
 		for (i in 0...10) l.prepend(i);
 		assertEquals(0, l.mPoolSize);
 		
-		assertEquals(10, l.size());
+		assertEquals(10, l.size);
 		assertTrue(l.head != null);
 		
 		for (i in 0...10)
 			l.head.unlink();
 		
 		assertEquals(10, l.mPoolSize);
-		assertEquals(0, l.size());
+		assertEquals(0, l.size);
 		assertTrue(l.head == null);
 	}
 	
@@ -213,12 +226,12 @@ class TestSll extends AbstractTest
 		for (i in 0...8) node = node.next;
 		
 		assertTrue(list.remove(9));
-		assertEquals(9, list.size());
+		assertEquals(9, list.size);
 		assertEquals(node, list.tail);
 		assertEquals(list.join(""), "012345678");
 		
 		assertTrue(list.remove(0));
-		assertEquals(8, list.size());
+		assertEquals(8, list.size);
 		assertEquals(list.join(""), "12345678");
 		
 		var list = new Sll<Int>();
@@ -227,7 +240,7 @@ class TestSll extends AbstractTest
 		while (!list.isEmpty())
 		{
 			assertTrue(list.remove(i++));
-			if (list.size() == 1)
+			if (list.size == 1)
 				assertEquals(list.head, list.tail);
 		}
 		
@@ -239,7 +252,7 @@ class TestSll extends AbstractTest
 		while (!list.isEmpty())
 		{
 			assertTrue(list.remove(i--));
-			if (list.size() == 1)
+			if (list.size == 1)
 				assertEquals(list.head, list.tail);
 		}
 		
@@ -259,7 +272,7 @@ class TestSll extends AbstractTest
 		list.close();
 		for (i in 0...10) list.append(i);
 		assertTrue(list.remove(9));
-		assertEquals(9, list.size());
+		assertEquals(9, list.size);
 		
 		var head = list.head;
 		var node = head;
@@ -268,7 +281,7 @@ class TestSll extends AbstractTest
 		assertEquals(list.join(""), "012345678");
 		
 		assertTrue(list.remove(0));
-		assertEquals(8, list.size());
+		assertEquals(8, list.size);
 		assertEquals(list.join(""), "12345678");
 		
 		assertEquals(list.head, list.tail.next);
@@ -281,10 +294,10 @@ class TestSll extends AbstractTest
 		{
 			assertTrue(list.remove(i++));
 			
-			if (list.size() > 0)
+			if (list.size > 0)
 				assertEquals(list.head, list.tail.next);
 			
-			if (list.size() == 1)
+			if (list.size == 1)
 				assertEquals(list.head, list.tail);
 		}
 		
@@ -298,7 +311,7 @@ class TestSll extends AbstractTest
 		{
 			assertTrue(list.remove(i--));
 			
-			if (list.size() == 1)
+			if (list.size == 1)
 				assertEquals(list.head, list.tail);
 		}
 		
@@ -337,7 +350,7 @@ class TestSll extends AbstractTest
 			s.set(node.val);
 			node = node.next;
 		}
-		assertEquals(10, s.size());
+		assertEquals(10, s.size);
 		
 		//circular
 		var list = new Sll<Int>();
@@ -347,117 +360,29 @@ class TestSll extends AbstractTest
 		var s = new ListSet();
 		list.shuffle(null);
 		var node = list.head;
-		for (i in 0...list.size())
+		for (i in 0...list.size)
 		{
 			if (s.has(node.val)) throw "error";
 			s.set(node.val);
 			node = node.next;
 		}
 		
-		assertEquals(10, s.size());
+		assertEquals(10, s.size);
 	}
 	
-	function testFill()
+	function testForEach()
 	{
 		var list = new Sll<Int>();
-		for (i in 0...10) list.append(i);
+		for (i in 0...3) list.append(i);
 		
-		list.fill(0);
-		
-		var n = list.head;
-		for (i in 0...10)
-		{
-			assertEquals(0, n.val);
-			n = n.next;
-		}
-		
-		var list = new Sll<Int>();
-		for (i in 0...10) list.append(i);
-		
-		list.fill(0, 5);
-		
-		var n = list.head;
-		for (i in 0...5)
-		{
-			assertEquals(0, n.val);
-			n = n.next;
-		}
-		for (i in 0...5)
-		{
-			assertEquals(i+5, n.val);
-			n = n.next;
-		}
-		
-		var list = new Sll<Int>();
-		list.close();
-		for (i in 0...10) list.append(i);
-		
-		list.fill(0);
-		
-		var n = list.head;
-		for (i in 0...10)
-		{
-			assertEquals(0, n.val);
-			n = n.next;
-		}
-	}
-	
-	function testAssign()
-	{
-		var list = new Sll<E>();
-		for (i in 0...10) list.append(null);
-		
-		list.assign(E, [0]);
-		
-		var n = list.head;
-		for (i in 0...10)
-		{
-			assertEquals(E, cast Type.getClass(n.val));
-			n = n.next;
-		}
-		
-		var list = new Sll<E>();
-		for (i in 0...10) list.append(null);
-		
-		list.assign(E, [1], 5);
-		
-		var n = list.head;
-		for (i in 0...5)
-		{
-			assertEquals(E, cast Type.getClass(n.val));
-			n = n.next;
-		}
-		
-		for (i in 0...5)
-		{
-			assertEquals(null, n.val);
-			n = n.next;
-		}
-		
-		var list = new Sll<E>();
-		for (i in 0...10) list.append(null);
-		
-		list.assign(E, [5], 10);
-		
-		var n = list.head;
-		for (i in 0...10)
-		{
-			assertEquals(5, n.val.x);
-			n = n.next;
-		}
-		
-		var list = new Sll<E>();
-		list.close();
-		for (i in 0...10) list.append(null);
-		
-		list.assign(E, [0]);
-		
-		var n = list.head;
-		for (i in 0...10)
-		{
-			assertEquals(E, cast Type.getClass(n.val));
-			n = n.next;
-		}
+		var j = 0;
+		list.forEach(
+			function(v, i)
+			{
+				assertEquals(j++, i);
+				assertEquals(i, v);
+				return v;
+			});
 	}
 	
 	function testGetNodeAt()
@@ -476,7 +401,7 @@ class TestSll extends AbstractTest
 		
 		var newNode:SllNode<Int> = list.insertAfter(list.head, 1);
 		
-		assertEquals(2, list.size());
+		assertEquals(2, list.size);
 		assertEquals(0, list.head.val);
 		assertEquals(1, list.head.next.val);
 		assertEquals(list.tail.next, null);
@@ -501,7 +426,7 @@ class TestSll extends AbstractTest
 		list.append(0);
 		var newNode:SllNode<Int> = list.insertBefore(list.head, 1);
 		
-		assertEquals(2, list.size());
+		assertEquals(2, list.size);
 		assertEquals(1, list.head.val);
 		assertEquals(0, list.head.next.val);
 		
@@ -513,7 +438,7 @@ class TestSll extends AbstractTest
 		list.append(1);
 		var newNode:SllNode<Int> = list.insertBefore(list.tail, 2);
 		
-		assertEquals(3, list.size());
+		assertEquals(3, list.size);
 		assertEquals(0, list.head.val);
 		assertEquals(2, list.head.next.val);
 		assertEquals(1, list.head.next.next.val);
@@ -578,7 +503,7 @@ class TestSll extends AbstractTest
 		list1.merge(list2);
 		
 		var c = 0;
-		assertEquals(10, list1.size());
+		assertEquals(10, list1.size);
 		for (i in list1) assertEquals(c++, i);
 		
 		var list1 = new Sll<Int>();
@@ -594,7 +519,7 @@ class TestSll extends AbstractTest
 		list1.merge(list2);
 		
 		var c = 0;
-		assertEquals(10, list1.size());
+		assertEquals(10, list1.size);
 		for (i in list1) assertEquals(c++, i);
 		
 		assertEquals(list1.head, list1.tail.next);
@@ -615,7 +540,7 @@ class TestSll extends AbstractTest
 		list3 = list3.concat(list2);
 		
 		var c = 0;
-		assertEquals(10, list3.size());
+		assertEquals(10, list3.size);
 		for (i in list1) assertEquals(c++, i);
 		
 		//circular, also test concat Dll
@@ -635,7 +560,7 @@ class TestSll extends AbstractTest
 		list3 = list3.concat(list2);
 		
 		var c = 0;
-		assertEquals(10, list3.size());
+		assertEquals(10, list3.size);
 		for (i in list1) assertEquals(c++, i);
 	}
 	
@@ -648,12 +573,12 @@ class TestSll extends AbstractTest
 		list.append(3);
 		list.append(2);
 		
-		list.sort(Compare.compareNumberRise, true);
+		list.sort(Compare.cmpNumberRise, true);
 		
 		var c = 1; for (i in list) assertEquals(c++, i);
 		assertFalse(list.tail.hasNext());
 		
-		list.sort(Compare.compareNumberFall, true);
+		list.sort(Compare.cmpNumberFall, true);
 		
 		var c = 3; for (i in list) assertEquals(c--, i);
 		assertFalse(list.tail.hasNext());
@@ -662,10 +587,10 @@ class TestSll extends AbstractTest
 		list.append(3);
 		list.append(2);
 		list.append(1);
-		list.sort(Compare.compareNumberRise, true);
+		list.sort(Compare.cmpNumberRise, true);
 		var c = 1; for (i in list) assertEquals(c++, i);
 		assertFalse(list.tail.hasNext());
-		list.sort(Compare.compareNumberFall, true);
+		list.sort(Compare.cmpNumberFall, true);
 		var c = 3; for (i in list) assertEquals(c--, i);
 		assertFalse(list.tail.hasNext());
 		
@@ -676,12 +601,12 @@ class TestSll extends AbstractTest
 		list.append(3);
 		list.append(2);
 		
-		list.sort(Compare.compareNumberRise);
+		list.sort(Compare.cmpNumberRise);
 		
 		var c = 1; for (i in list) assertEquals(c++, i);
 		assertFalse(list.tail.hasNext());
 		
-		list.sort(Compare.compareNumberFall);
+		list.sort(Compare.cmpNumberFall);
 		
 		var c = 3; for (i in list) assertEquals(c--, i);
 		assertFalse(list.tail.hasNext());
@@ -690,10 +615,10 @@ class TestSll extends AbstractTest
 		list.append(3);
 		list.append(2);
 		list.append(1);
-		list.sort(Compare.compareNumberRise);
+		list.sort(Compare.cmpNumberRise);
 		var c = 1; for (i in list) assertEquals(c++, i);
 		assertFalse(list.tail.hasNext());
-		list.sort(Compare.compareNumberFall);
+		list.sort(Compare.cmpNumberFall);
 		var c = 3; for (i in list) assertEquals(c--, i);
 		assertFalse(list.tail.hasNext());
 	}
@@ -705,19 +630,19 @@ class TestSll extends AbstractTest
 		var data:Array<Int> = [2, 3, 4, 9, 5, 1, 7, 6, 8, 0];
 		for (i in 0...10) list.append(data[i]);
 		
-		list.sort(Compare.compareNumberRise, false);
+		list.sort(Compare.cmpNumberRise, false);
 		var c = 0;
 		for (i in list) assertEquals(c++, i);
 		
-		list.sort(Compare.compareNumberFall, false);
+		list.sort(Compare.cmpNumberFall, false);
 		var c = 10;
 		for (i in list) assertEquals(--c, i);
 		
-		list.sort(Compare.compareNumberRise, true);
+		list.sort(Compare.cmpNumberRise, true);
 		var c = 0;
 		for (i in list) assertEquals(c++, i);
 		
-		list.sort(Compare.compareNumberFall, true);
+		list.sort(Compare.cmpNumberFall, true);
 		var c = 10;
 		for (i in list) assertEquals(--c, i);
 		
@@ -747,19 +672,19 @@ class TestSll extends AbstractTest
 		var data:Array<Int> = [2, 3, 4, 9, 5, 1, 7, 6, 8, 0];
 		for (i in 0...10) list.append(data[i]);
 		
-		list.sort(Compare.compareNumberRise, false);
+		list.sort(Compare.cmpNumberRise, false);
 		var c = 0;
 		for (i in list) assertEquals(c++, i);
 		
-		list.sort(Compare.compareNumberFall, false);
+		list.sort(Compare.cmpNumberFall, false);
 		var c = 10;
 		for (i in list) assertEquals(--c, i);
 		
-		list.sort(Compare.compareNumberRise, true);
+		list.sort(Compare.cmpNumberRise, true);
 		var c = 0;
 		for (i in list) assertEquals(c++, i);
 		
-		list.sort(Compare.compareNumberFall, true);
+		list.sort(Compare.cmpNumberFall, true);
 		var c = 10;
 		for (i in list) assertEquals(--c, i);
 	}
@@ -771,15 +696,15 @@ class TestSll extends AbstractTest
 		var data:Array<Int> = [2, 3, 4, 9, 5, 1, 7, 6, 8, 0];
 		for (i in 0...10) list.append(data[i]);
 		
-		list.sort(Compare.compareNumberRise, false);
+		list.sort(Compare.cmpNumberRise, false);
 		var c = 0;
 		for (i in list) assertEquals(c++, i);
 		
-		list.sort(Compare.compareNumberFall, false);
+		list.sort(Compare.cmpNumberFall, false);
 		var c = 10;
 		for (i in list) assertEquals(--c, i);
 		
-		list.sort(Compare.compareNumberRise, true);
+		list.sort(Compare.cmpNumberRise, true);
 		var c = 0;
 		for (i in list) assertEquals(c++, i);
 	}
@@ -792,7 +717,7 @@ class TestSll extends AbstractTest
 		for (i in list) assertEquals(i, j++);
 		assertEquals(10, j);
 		
-		var itr:de.polygonal.ds.ResettableIterator<Int> = cast list.iterator();
+		var itr = list.iterator();
 		j = 0;
 		for (i in itr) assertEquals(i, j++);
 		assertEquals(10, j);
@@ -913,13 +838,13 @@ class TestSll extends AbstractTest
 		//size 0
 		var list = new Sll<Int>();
 		var copy:Sll<Int> = cast list.clone(true);
-		assertEquals(0, copy.size());
+		assertEquals(0, copy.size);
 		
 		//size 1
 		var list = new Sll<Int>();
 		list.append(0);
 		var copy:Sll<Int> = cast list.clone(true);
-		assertEquals(1, copy.size());
+		assertEquals(1, copy.size);
 		assertEquals(0, copy.head.val);
 		assertEquals(0, copy.tail.val);
 		assertEquals(copy.head, copy.tail);
@@ -929,7 +854,7 @@ class TestSll extends AbstractTest
 		list.append(0);
 		list.append(1);
 		var copy:Sll<Int> = cast list.clone(true);
-		assertEquals(2, copy.size());
+		assertEquals(2, copy.size);
 		assertEquals(0, copy.head.val);
 		assertEquals(1, copy.tail.val);
 		assertEquals(copy.head.next, copy.tail);
@@ -941,7 +866,7 @@ class TestSll extends AbstractTest
 		for (i in 0...10) list.append(i);
 		
 		var copy:Sll<Int> = cast list.clone(true);
-		assertEquals(10, copy.size());
+		assertEquals(10, copy.size);
 		
 		var j = 0;
 		for (i in copy) assertEquals(i, j++);
@@ -959,14 +884,14 @@ class TestSll extends AbstractTest
 		var list = new Sll<Int>();
 		list.close();
 		var copy:Sll<Int> = cast list.clone(true);
-		assertEquals(0, copy.size());
+		assertEquals(0, copy.size);
 		
 		//size 1
 		var list = new Sll<Int>();
 		list.close();
 		list.append(0);
 		var copy:Sll<Int> = cast list.clone(true);
-		assertEquals(1, copy.size());
+		assertEquals(1, copy.size);
 		assertEquals(0, copy.head.val);
 		assertEquals(0, copy.tail.val);
 		assertEquals(copy.head, copy.tail);
@@ -978,8 +903,8 @@ class TestSll extends AbstractTest
 		list.close();
 		list.append(0);
 		list.append(1);
-		var copy = cast list.clone(true);
-		assertEquals(2, copy.size());
+		var copy:Sll<Int> = cast list.clone(true);
+		assertEquals(2, copy.size);
 		assertEquals(0, copy.head.val);
 		assertEquals(1, copy.tail.val);
 		assertEquals(copy.head.next, copy.tail);
@@ -993,7 +918,7 @@ class TestSll extends AbstractTest
 		for (i in 0...10) list.append(i);
 		
 		var copy:Sll<Int> = cast list.clone(true);
-		assertEquals(10, copy.size());
+		assertEquals(10, copy.size);
 		assertEquals(copy.head, copy.tail.next);
 		assertTrue(copy.isCircular());
 		assertEquals(0, copy.head.val);
@@ -1001,7 +926,7 @@ class TestSll extends AbstractTest
 		var j = 0;
 		for (i in copy) assertEquals(i, j++);
 		var node = copy.head;
-		for (i in 0...copy.size())
+		for (i in 0...copy.size)
 		{
 			assertEquals(i, node.val);
 			node = node.next;
@@ -1021,7 +946,7 @@ class TestSll extends AbstractTest
 		var list = new Sll<Int>();
 		for (i in 0...10) list.append(i);
 		list.clear();
-		assertEquals(list.size(), 0);
+		assertEquals(list.size, 0);
 		assertEquals(list.head, null);
 		assertEquals(list.tail, null);
 		
@@ -1031,7 +956,7 @@ class TestSll extends AbstractTest
 		for (i in 0...10) list.append(i);
 		
 		list.clear(true);
-		assertEquals(list.size(), 0);
+		assertEquals(list.size, 0);
 		assertEquals(list.head, null);
 		assertEquals(list.tail, null);
 		assertEquals(10, list.mPoolSize);
@@ -1046,9 +971,9 @@ class TestSll extends AbstractTest
 	function testAppend()
 	{
 		var list = new Sll<Int>();
-		assertEquals(list.size(), 0);
+		assertEquals(list.size, 0);
 		list.append(0);
-		assertEquals(1, list.size());
+		assertEquals(1, list.size);
 		assertEquals(list.head, list.tail);
 		
 		for (i in 1...10) list.append(i);
@@ -1068,7 +993,7 @@ class TestSll extends AbstractTest
 	function testPrepend()
 	{
 		var list = new Sll<Int>();
-		assertEquals(list.size(), 0);
+		assertEquals(list.size, 0);
 		for (i in 0...10) list.prepend(i);
 		var i = 10;
 		var walker:SllNode<Int> = list.head;
@@ -1085,7 +1010,7 @@ class TestSll extends AbstractTest
 	{
 		var list = new Sll<Int>();
 		
-		assertEquals(list.size(), 0);
+		assertEquals(list.size, 0);
 		for (i in 0...10) list.append(i);
 		
 		var i = 10;
@@ -1094,11 +1019,11 @@ class TestSll extends AbstractTest
 		{
 			var hook:SllNode<Int> = walker.next;
 			list.unlink(walker);
-			assertEquals(list.size(), --i);
+			assertEquals(list.size, --i);
 			walker = hook;
 		}
 		
-		assertEquals(list.size(), 0);
+		assertEquals(list.size, 0);
 		assertEquals(list.head, null);
 		assertEquals(list.tail, null);
 	}
@@ -1106,17 +1031,17 @@ class TestSll extends AbstractTest
 	function testPop()
 	{
 		var list = new Sll<Int>();
-		assertEquals(list.size(), 0);
+		assertEquals(list.size, 0);
 		for (i in 0...10) list.append(i);
 		
 		var i = 10;
-		while (list.size() > 0)
+		while (list.size > 0)
 		{
 			var val:Int = list.removeTail();
 			assertEquals(val, --i);
 		}
 		
-		assertEquals(list.size(), 0);
+		assertEquals(list.size, 0);
 		assertEquals(list.head, null);
 		assertEquals(list.tail, null);
 	}
@@ -1124,15 +1049,15 @@ class TestSll extends AbstractTest
 	function testShift()
 	{
 		var list = new Sll<Int>();
-		assertEquals(list.size(), 0);
+		assertEquals(list.size, 0);
 		for (i in 0...10) list.append(i);
 		var i = 0;
-		while (list.size() > 0)
+		while (list.size > 0)
 		{
 			var val:Int = list.removeHead();
 			assertEquals(val, i++);
 		}
-		assertEquals(list.size(), 0);
+		assertEquals(list.size, 0);
 		assertEquals(list.head, null);
 		assertEquals(list.tail, null);
 	}
@@ -1140,7 +1065,7 @@ class TestSll extends AbstractTest
 	function testShiftUp()
 	{
 		var list = new Sll<Int>();
-		assertEquals(list.size(), 0);
+		assertEquals(list.size, 0);
 		for (i in 0...10) list.append(i);
 		list.shiftUp();
 		assertEquals(list.tail.val, 0);
@@ -1149,7 +1074,7 @@ class TestSll extends AbstractTest
 	function testPopDown()
 	{
 		var list = new Sll<Int>();
-		assertEquals(list.size(), 0);
+		assertEquals(list.size, 0);
 		for (i in 0...10) list.append(i);
 		list.popDown();
 		assertEquals(list.head.val, 9);

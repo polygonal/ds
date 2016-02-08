@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2008-2014 Michael Baczynski, http://www.polygonal.de
+Copyright (c) 2008-2016 Michael Baczynski, http://www.polygonal.de
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -18,15 +18,14 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 */
 package de.polygonal.ds;
 
-import de.polygonal.ds.error.Assert.assert;
-import de.polygonal.ds.tools.NativeArray;
+import de.polygonal.ds.tools.ArrayTools;
+import de.polygonal.ds.tools.Assert.assert;
+import de.polygonal.ds.tools.NativeArrayTools;
 
 /**
 	A binary search tree (BST)
 	
 	A BST automatically arranges `BinaryTreeNode` objects so the resulting tree is a valid BST.
-	
-	_<o>Worst-case running time in Big O notation</o>_
 **/
 #if generic
 @:generic
@@ -40,7 +39,7 @@ class Bst<T:Comparable<T>> implements Collection<T>
 		
 		<warn>This value should never be changed by the user.</warn>
 	**/
-	public var key(default, null):Int;
+	public var key(default, null):Int = HashKey.next();
 	
 	/**
 		If true, reuses the iterator object instead of allocating a new one when calling ``iterator()``.
@@ -49,24 +48,20 @@ class Bst<T:Comparable<T>> implements Collection<T>
 		
 		<warn>If true, nested iterations are likely to fail as only one iteration is allowed at a time.</warn>
 	**/
-	public var reuseIterator:Bool;
+	public var reuseIterator:Bool = false;
 	
 	var mSize:Int;
 	var mRoot:BinaryTreeNode<T>;
-	var mIterator:BSTIterator<T>;
+	var mIterator:BSTIterator<T> = null;
 	
 	public function new()
 	{
 		mRoot = null;
-		mIterator = null;
 		mSize = 0;
-		key = HashKey.next();
-		reuseIterator = false;
 	}
 	
 	/**
 		The root node or null if no root exists.
-		<o>1</o>
 	**/
 	public function root():BinaryTreeNode<T>
 	{
@@ -75,7 +70,6 @@ class Bst<T:Comparable<T>> implements Collection<T>
 	
 	/**
 		Inserts the element `x` into the binary search tree.
-		<o>n</o>
 		<assert>`x` is null</assert>
 		@return the inserted node storing the element `x`.
 	**/
@@ -124,7 +118,6 @@ class Bst<T:Comparable<T>> implements Collection<T>
 	
 	/**
 		Finds the node that stores the element `x`.
-		<o>n</o>
 		<assert>tree is empty</assert>
 		<assert>`x` is null</assert>
 		@return the node storing `x` or null if `x` does not exist.
@@ -146,7 +139,6 @@ class Bst<T:Comparable<T>> implements Collection<T>
 	
 	/**
 		Removes the node storing the element `x`.
-		<o>n</o>
 		<assert>`x` is invalid</assert>
 		@return true if `x` was successfully removed.
 	**/
@@ -211,7 +203,6 @@ class Bst<T:Comparable<T>> implements Collection<T>
 		}
 		
 		if (--mSize == 0) mRoot = null;
-		
 		return true;
 	}
 	
@@ -255,7 +246,7 @@ class Bst<T:Comparable<T>> implements Collection<T>
 	**/
 	public function toString():String
 	{
-		var s = '{ Bst size: ${size()} }';
+		var s = '{ Bst size: ${size} }';
 		if (isEmpty()) return s;
 		s += "\n[\n";
 		var dumpNode = function(node:BinaryTreeNode<T>, userData:Dynamic):Bool
@@ -269,35 +260,43 @@ class Bst<T:Comparable<T>> implements Collection<T>
 		return s;
 	}
 	
-	/*///////////////////////////////////////////////////////
-	// collection
-	///////////////////////////////////////////////////////*/
+	/* INTERFACE Collection */
+	
+	/**
+		The total number of elements.
+	**/
+	public var size(get, never):Int;
+	inline function get_size():Int
+	{
+		return mSize;
+	}
 	
 	/**
 		Destroys this object by explicitly nullifying all nodes, pointers and elements for GC'ing used resources.
 		
 		Improves GC efficiency/performance (optional).
-		<o>n</o>
 	**/
 	public function free()
 	{
 		mRoot.free();
 		mRoot = null;
-		mIterator = null;
+		if (mIterator != null)
+		{
+			mIterator.free();
+			mIterator = null;
+		}
 	}
 	
 	/**
 		Returns true if this BST contains the element `x`.
-		<o>n</o>
 	**/
-	inline public function contains(x:T):Bool
+	public inline function contains(x:T):Bool
 	{
-		return mSize > 0 && (find(x) != null);
+		return size > 0 && (find(x) != null);
 	}
 	
 	/**
 		Removes all nodes containing the element `x`.
-		<o>n</o>
 		<assert>`x` is invalid</assert>
 		@return true if at least one occurrence of `x` is nullified.
 	**/
@@ -305,9 +304,9 @@ class Bst<T:Comparable<T>> implements Collection<T>
 	{
 		assert(x != null, "element is null");
 		
-		if (size() == 0) return false;
+		if (size == 0) return false;
 		
-		var s = mRoot.size();
+		var s = mRoot.size;
 		var found = false;
 		while (s > 0)
 		{
@@ -322,15 +321,15 @@ class Bst<T:Comparable<T>> implements Collection<T>
 	
 	/**
 		Removes all elements.
-		<o>1 or n if `purge` is true</o>
-		@param purge if true, elements are nullified upon removal.
+		
+		@param gc if true, elements are nullified upon removal so the garbage collector can reclaim used memory.
 	**/
-	public function clear(purge = false)
+	public function clear(gc:Bool = false)
 	{
-		if (purge)
+		if (gc)
 		{
 			if (mRoot != null)
-				mRoot.clear(purge);
+				mRoot.clear(gc);
 		}
 		
 		mRoot = null;
@@ -359,21 +358,11 @@ class Bst<T:Comparable<T>> implements Collection<T>
 	}
 	
 	/**
-		The total number of elements.
-		<o>n</o>
-	**/
-	public function size():Int
-	{
-		return mSize;
-	}
-	
-	/**
 		Returns true if this BST is empty.
-		<o>1</o>
 	**/
 	public function isEmpty():Bool
 	{
-		return mSize == 0;
+		return size == 0;
 	}
 	
 	/**
@@ -385,23 +374,10 @@ class Bst<T:Comparable<T>> implements Collection<T>
 	{
 		if (isEmpty()) return [];
 		
-		var out = ArrayUtil.alloc(size());
+		var out = ArrayTools.alloc(size);
 		var i = 0;
 		mRoot.preorder(function(node:BinaryTreeNode<T>, _):Bool { out[i++] = node.val; return true; });
 		return out;
-	}
-	
-	/**
-		Returns a `Vector<T>` object containing all elements in this BST.
-		
-		The elements are added by applying a preorder traversal.
-	**/
-	public function toVector():Container<T>
-	{
-		var v = NativeArray.init(size());
-		var i = 0;
-		mRoot.preorder(function(node:BinaryTreeNode<T>, userData:Dynamic):Bool { v[i++] = node.val; return true; });
-		return v;
 	}
 	
 	/**
@@ -411,11 +387,11 @@ class Bst<T:Comparable<T>> implements Collection<T>
 		If false, the ``clone()`` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
 		@param copier a custom function for copying elements. Replaces ``element::clone()`` if `assign` is false.
 	**/
-	public function clone(assign = true, copier:T->T = null):Collection<T>
+	public function clone(assign:Bool = true, copier:T->T = null):Collection<T>
 	{
 		var copy = new Bst<T>();
 		copy.mRoot = cast mRoot.clone(assign, copier);
-		copy.mSize = mSize;
+		copy.mSize = size;
 		return copy;
 	}
 }
@@ -438,7 +414,13 @@ class BSTIterator<T> implements de.polygonal.ds.Itr<T>
 		reset();
 	}
 	
-	inline public function reset():Itr<T>
+	public function free()
+	{
+		mObject = null;
+		mStack = null;
+	}
+	
+	public inline function reset():Itr<T>
 	{
 		mStack[0] = mObject;
 		mTop = 1;
@@ -446,12 +428,12 @@ class BSTIterator<T> implements de.polygonal.ds.Itr<T>
 		return this;
 	}
 	
-	inline public function hasNext():Bool
+	public inline function hasNext():Bool
 	{
 		return mTop > 0;
 	}
 	
-	inline public function next():T
+	public inline function next():T
 	{
 		var node = mStack[--mTop];
 		if (node.hasL())
@@ -467,7 +449,7 @@ class BSTIterator<T> implements de.polygonal.ds.Itr<T>
 		return node.val;
 	}
 	
-	inline public function remove()
+	public function remove()
 	{
 		mTop -= mC;
 	}

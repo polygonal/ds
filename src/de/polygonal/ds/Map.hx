@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2008-2014 Michael Baczynski, http://www.polygonal.de
+Copyright (c) 2008-2016 Michael Baczynski, http://www.polygonal.de
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -53,7 +53,7 @@ interface Map<K, T> extends Collection<T>
 		Removes a `key`/value pair.
 		@return true if `key` was successfully removed, false if `key` does not exist.
 	**/
-	function clr(key:K):Bool;
+	function delete(key:K):Bool;
 	
 	/**
 		Remaps the first occurrence of `key` to the element `x`.

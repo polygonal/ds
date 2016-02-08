@@ -1,4 +1,5 @@
-﻿import de.polygonal.ds.Compare;
+﻿import de.polygonal.ds.Collection;
+import de.polygonal.ds.Compare;
 import de.polygonal.ds.Dll;
 import de.polygonal.ds.DllNode;
 import de.polygonal.ds.ListSet;
@@ -7,6 +8,23 @@ import de.polygonal.ds.Set;
 @:access(de.polygonal.ds.Dll)
 class TestDll extends AbstractTest
 {
+	function testSource()
+	{
+		var a = new Dll<Int>([0, 1, 2, 3]);
+		assertEquals(4, a.size);
+		
+		assertEquals(0, a.head.val);
+		assertEquals(1, a.head.next.val);
+		assertEquals(2, a.head.next.next.val); 
+		assertEquals(3, a.tail.val);
+		assertEquals(a.head, a.head.next.prev);
+		assertEquals(a.head.next, a.head.next.next.prev);
+		assertEquals(a.head.next.next, a.head.next.next.next.prev);
+		assertEquals(null, a.head.prev);
+		assertEquals(null, a.tail.next);
+		assertEquals(a.tail, a.head.next.next.next);
+	}
+	
 	function testPool()
 	{
 		var l = new Dll<Int>(20);
@@ -24,14 +42,14 @@ class TestDll extends AbstractTest
 		for (i in 0...10) l.prepend(i);
 		assertEquals(0, l.mPoolSize);
 		
-		assertEquals(10, l.size());
+		assertEquals(10, l.size);
 		assertTrue(l.head != null);
 		
 		for (i in 0...10)
 			l.head.unlink();
 		
 		assertEquals(10, l.mPoolSize);
-		assertEquals(0, l.size());
+		assertEquals(0, l.size);
 		assertTrue(l.head == null);
 	}
 	
@@ -42,81 +60,19 @@ class TestDll extends AbstractTest
 		assertEquals(list.join(""), "0123456789");
 	}
 	
-	function testFill()
+	function testForEach()
 	{
 		var list = new Dll<Int>();
-		for (i in 0...10) list.append(i);
+		for (i in 0...3) list.append(i);
 		
-		list.fill(0);
-		
-		var n = list.head;
-		for (i in 0...10)
-		{
-			assertEquals(0, n.val);
-			n = n.next;
-		}
-		
-		var list = new Dll<Int>();
-		for (i in 0...10) list.append(i);
-		
-		list.fill(0, 5);
-		
-		var n = list.head;
-		for (i in 0...5)
-		{
-			assertEquals(0, n.val);
-			n = n.next;
-		}
-		for (i in 0...5)
-		{
-			assertEquals(i+5, n.val);
-			n = n.next;
-		}
-	}
-	
-	function testAssign()
-	{
-		var list = new Dll<E>();
-		for (i in 0...10) list.append(null);
-		
-		list.assign(E, [0]);
-		
-		var n = list.head;
-		for (i in 0...10)
-		{
-			assertEquals(E, cast Type.getClass(n.val));
-			n = n.next;
-		}
-		
-		var list = new Dll<E>();
-		for (i in 0...10) list.append(null);
-		
-		list.assign(E, [0], 5);
-		
-		var n = list.head;
-		for (i in 0...5)
-		{
-			assertEquals(E, cast Type.getClass(n.val));
-			n = n.next;
-		}
-		
-		for (i in 0...5)
-		{
-			assertEquals(null, n.val);
-			n = n.next;
-		}
-		
-		var list = new Dll<E>();
-		for (i in 0...10) list.append(null);
-		
-		list.assign(E, [5], 10);
-		
-		var n = list.head;
-		for (i in 0...10)
-		{
-			assertEquals(5, n.val.x);
-			n = n.next;
-		}
+		var j = 0;
+		list.forEach(
+			function(v, i)
+			{
+				assertEquals(j++, i);
+				assertEquals(i, v);
+				return v;
+			});
 	}
 	
 	function testShuffle()
@@ -126,7 +82,7 @@ class TestDll extends AbstractTest
 		list.shuffle(null);
 		var s:Set<Int> = new ListSet<Int>();
 		for (i in list) assertTrue(s.set(i));
-		assertEquals(10, s.size());
+		assertEquals(10, s.size);
 	}
 	
 	function testGetNodeAt()
@@ -143,7 +99,7 @@ class TestDll extends AbstractTest
 		list.append(0);
 		
 		var newNode = list.insertAfter(list.head, 1);
-		assertEquals(2, list.size());
+		assertEquals(2, list.size);
 		assertEquals(0, list.head.val);
 		assertEquals(1, list.head.next.val);
 		assertEquals(list.tail.next, null);
@@ -160,10 +116,10 @@ class TestDll extends AbstractTest
 		list.append(1);
 		list.append(2);
 		list.insertBefore(list.tail, 0);
-		assertEquals(3, list.size());
+		assertEquals(3, list.size);
 		assertEquals(0, list.head.next.val);
 		list.clear();
-		assertEquals(list.size(), 0);
+		assertEquals(list.size, 0);
 	}
 	
 	function testReverse()
@@ -207,7 +163,7 @@ class TestDll extends AbstractTest
 		list1.merge(list2);
 		
 		var c:Int = 0;
-		assertEquals(10, list1.size());
+		assertEquals(10, list1.size);
 		for (i in list1) assertEquals(c++, i);
 	}
 	
@@ -226,7 +182,7 @@ class TestDll extends AbstractTest
 		list3 = list3.concat(list2);
 		
 		var c:Int = 0;
-		assertEquals(10, list3.size());
+		assertEquals(10, list3.size);
 		for (i in list1) assertEquals(c++, i);
 	}
 	
@@ -263,7 +219,7 @@ class TestDll extends AbstractTest
 		var list = new Dll<Int>();
 		list.append(1);
 		list.append(2);
-		list.sort(Compare.compareNumberRise, true);
+		list.sort(Compare.cmpNumberRise, true);
 		
 		var c = 1; for (i in list) assertEquals(c++, i);
 		assertEquals(2, list.tail.val);
@@ -274,7 +230,7 @@ class TestDll extends AbstractTest
 		var list = new Dll<Int>();
 		list.append(2);
 		list.append(1);
-		list.sort(Compare.compareNumberRise, true);
+		list.sort(Compare.cmpNumberRise, true);
 		
 		var c = 1; for (i in list) assertEquals(c++, i);
 		assertEquals(2, list.tail.val);
@@ -286,7 +242,7 @@ class TestDll extends AbstractTest
 		list.append(1);
 		list.append(2);
 		list.append(3);
-		list.sort(Compare.compareNumberRise, true);
+		list.sort(Compare.cmpNumberRise, true);
 		
 		var c = 1; for (i in list) assertEquals(c++, i);
 		
@@ -300,7 +256,7 @@ class TestDll extends AbstractTest
 		list.append(3);
 		list.append(2);
 		list.append(1);
-		list.sort(Compare.compareNumberRise, true);
+		list.sort(Compare.cmpNumberRise, true);
 		
 		var c = 1; for (i in list) assertEquals(c++, i);
 		
@@ -314,7 +270,7 @@ class TestDll extends AbstractTest
 		list.append(3);
 		list.append(1);
 		list.append(2);
-		list.sort(Compare.compareNumberRise, true);
+		list.sort(Compare.cmpNumberRise, true);
 		
 		var c = 1; for (i in list) assertEquals(c++, i);
 		
@@ -330,7 +286,7 @@ class TestDll extends AbstractTest
 		list.append(2);
 		list.append(1);
 		
-		list.sort(Compare.compareNumberRise, true);
+		list.sort(Compare.cmpNumberRise, true);
 		
 		var c = 1; for (i in list) assertEquals(c++, i);
 		assertEquals(4, list.tail.val);
@@ -348,13 +304,13 @@ class TestDll extends AbstractTest
 		list.append(3);
 		list.append(2);
 		
-		list.sort(Compare.compareNumberRise, true);
+		list.sort(Compare.cmpNumberRise, true);
 		
 		var c = 1; for (i in list) assertEquals(c++, i);
 		assertFalse(list.head.hasPrev());
 		assertFalse(list.tail.hasNext());
 		
-		list.sort(Compare.compareNumberFall, true);
+		list.sort(Compare.cmpNumberFall, true);
 		
 		var c = 3; for (i in list) assertEquals(c--, i);
 		assertFalse(list.head.hasPrev());
@@ -364,11 +320,11 @@ class TestDll extends AbstractTest
 		list.append(3);
 		list.append(2);
 		list.append(1);
-		list.sort(Compare.compareNumberRise, true);
+		list.sort(Compare.cmpNumberRise, true);
 		var c = 1; for (i in list) assertEquals(c++, i);
 		assertFalse(list.head.hasPrev());
 		assertFalse(list.tail.hasNext());
-		list.sort(Compare.compareNumberFall, true);
+		list.sort(Compare.cmpNumberFall, true);
 		var c = 3; for (i in list) assertEquals(c--, i);
 		assertFalse(list.head.hasPrev());
 		assertFalse(list.tail.hasNext());
@@ -380,13 +336,13 @@ class TestDll extends AbstractTest
 		list.append(3);
 		list.append(2);
 		
-		list.sort(Compare.compareNumberRise, false);
+		list.sort(Compare.cmpNumberRise, false);
 		
 		var c = 1; for (i in list) assertEquals(c++, i);
 		assertFalse(list.head.hasPrev());
 		assertFalse(list.tail.hasNext());
 		
-		list.sort(Compare.compareNumberFall);
+		list.sort(Compare.cmpNumberFall);
 		
 		var c = 3; for (i in list) assertEquals(c--, i);
 		assertFalse(list.head.hasPrev());
@@ -396,11 +352,11 @@ class TestDll extends AbstractTest
 		list.append(3);
 		list.append(2);
 		list.append(1);
-		list.sort(Compare.compareNumberRise);
+		list.sort(Compare.cmpNumberRise);
 		var c = 1; for (i in list) assertEquals(c++, i);
 		assertFalse(list.head.hasPrev());
 		assertFalse(list.tail.hasNext());
-		list.sort(Compare.compareNumberFall);
+		list.sort(Compare.cmpNumberFall);
 		var c = 3; for (i in list) assertEquals(c--, i);
 		assertFalse(list.head.hasPrev());
 		assertFalse(list.tail.hasNext());
@@ -411,7 +367,7 @@ class TestDll extends AbstractTest
 		var list = new Dll<Int>();
 		var data:Array<Int> = [2, 3, 4, 9, 5, 1, 7, 6, 8, 0];
 		for (i in 0...10) list.append(data[i]);
-		list.sort(Compare.compareNumberRise, false);
+		list.sort(Compare.cmpNumberRise, false);
 		
 		var c = 10;
 		var node = list.tail;
@@ -442,25 +398,25 @@ class TestDll extends AbstractTest
 		var data:Array<Int> = [2, 3, 4, 9, 5, 1, 7, 6, 8, 0];
 		for (i in 0...10) list.append(data[i]);
 		
-		list.sort(Compare.compareNumberRise, false);
+		list.sort(Compare.cmpNumberRise, false);
 		var c:Int = 0;
 		for (i in list) assertEquals(c++, i);
 		assertFalse(list.head.hasPrev());
 		assertFalse(list.tail.hasNext());
 		
-		list.sort(Compare.compareNumberFall, false);
+		list.sort(Compare.cmpNumberFall, false);
 		var c:Int = 10;
 		for (i in list) assertEquals(--c, i);
 		assertFalse(list.head.hasPrev());
 		assertFalse(list.tail.hasNext());
 		
-		list.sort(Compare.compareNumberRise, true);
+		list.sort(Compare.cmpNumberRise, true);
 		var c:Int = 0;
 		for (i in list) assertEquals(c++, i);
 		assertFalse(list.head.hasPrev());
 		assertFalse(list.tail.hasNext());
 		
-		list.sort(Compare.compareNumberFall, true);
+		list.sort(Compare.cmpNumberFall, true);
 		var c:Int = 10;
 		for (i in list) assertEquals(--c, i);
 		assertFalse(list.head.hasPrev());
@@ -512,7 +468,7 @@ class TestDll extends AbstractTest
 		for (i in list) assertEquals(i, j++);
 		assertEquals(10, j);
 		
-		var itr:de.polygonal.ds.ResettableIterator<Int> = cast list.iterator();
+		var itr = list.iterator();
 		j = 0;
 		for (i in itr) assertEquals(i, j++);
 		assertEquals(10, j);
@@ -584,15 +540,14 @@ class TestDll extends AbstractTest
 	function testClone0()
 	{
 		var list = new Dll<Int>();
-		var copy = cast list.clone(true);
-		assertEquals(0, copy.size());
+		var copy:Dll<Int> = cast list.clone(true);
+		assertEquals(0, copy.size);
 		assertEquals(null, copy.head);
 		assertEquals(null, copy.tail);
-		
 		var list = new Dll<Int>();
 		list.close();
-		var copy = cast list.clone(true);
-		assertEquals(0, copy.size());
+		var copy:Dll<Int> = cast list.clone(true);
+		assertEquals(0, copy.size);
 		assertEquals(null, copy.head);
 		assertEquals(null, copy.tail);
 	}
@@ -602,7 +557,7 @@ class TestDll extends AbstractTest
 		var list = new Dll<Int>();
 		list.append(0);
 		var copy:Dll<Int> = cast list.clone(true);
-		assertEquals(1, copy.size());
+		assertEquals(1, copy.size);
 		assertEquals(0, copy.head.val);
 		assertEquals(0, copy.tail.val);
 		
@@ -610,7 +565,7 @@ class TestDll extends AbstractTest
 		list.close();
 		list.append(0);
 		var copy:Dll<Int> = cast list.clone(true);
-		assertEquals(1, copy.size());
+		assertEquals(1, copy.size);
 		assertEquals(0, copy.head.val);
 		assertEquals(0, copy.tail.val);
 		assertEquals(copy.head, copy.tail.next);
@@ -622,7 +577,7 @@ class TestDll extends AbstractTest
 		list.append(0);
 		list.append(1);
 		var copy:Dll<Int> = cast list.clone(true);
-		assertEquals(2, copy.size());
+		assertEquals(2, copy.size);
 		assertEquals(0, copy.head.val);
 		assertEquals(1, copy.tail.val);
 		assertEquals(0, copy.tail.prev.val);
@@ -632,7 +587,7 @@ class TestDll extends AbstractTest
 		list.append(0);
 		list.append(1);
 		var copy:Dll<Int> = cast list.clone(true);
-		assertEquals(2, copy.size());
+		assertEquals(2, copy.size);
 		assertEquals(0, copy.head.val);
 		assertEquals(1, copy.tail.val);
 		assertEquals(0, copy.tail.prev.val);
@@ -657,7 +612,7 @@ class TestDll extends AbstractTest
 			
 			if (i == 0)
 			{
-				if (copy.size() > 1)
+				if (copy.size > 1)
 				{
 					assertEquals(i + 1, node.next.val);
 					assertEquals(i, node.next.prev.val);
@@ -686,13 +641,6 @@ class TestDll extends AbstractTest
 		for (i in 0...10) list.append(i);
 		var a:Array<Int> = list.toArray();
 		for (i in a) assertEquals(a[i], i);
-		
-		#if flash
-		var list = new Dll<Int>();
-		for (i in 0...10) list.append(i);
-		var a = list.toVector();
-		for (i in a) assertEquals(a[i], i);
-		#end
 	}
 	
 	function testClear()
@@ -700,7 +648,7 @@ class TestDll extends AbstractTest
 		var list = new Dll<Int>();
 		for (i in 0...10) list.append(i);
 		list.clear();
-		assertEquals(list.size(), 0);
+		assertEquals(list.size, 0);
 		assertEquals(list.head, null);
 		assertEquals(list.tail, null);
 		
@@ -710,7 +658,7 @@ class TestDll extends AbstractTest
 		for (i in 0...10) list.append(i);
 		
 		list.clear(true);
-		assertEquals(list.size(), 0);
+		assertEquals(list.size, 0);
 		assertEquals(list.head, null);
 		assertEquals(list.tail, null);
 		assertEquals(10, list.mPoolSize);
@@ -726,7 +674,7 @@ class TestDll extends AbstractTest
 	{
 		var list = new Dll<Int>();
 		
-		assertEquals(list.size(), 0);
+		assertEquals(list.size, 0);
 		
 		for (i in 0...10)
 			list.append(i);
@@ -760,7 +708,7 @@ class TestDll extends AbstractTest
 	function testPrepend()
 	{
 		var list = new Dll<Int>();
-		assertEquals(list.size(), 0);
+		assertEquals(list.size, 0);
 		
 		for (i in 0...10) list.prepend(i);
 		
@@ -780,7 +728,7 @@ class TestDll extends AbstractTest
 	{
 		var list = new Dll<Int>();
 		
-		assertEquals(list.size(), 0);
+		assertEquals(list.size, 0);
 		
 		for (i in 0...10)
 			list.append(i);
@@ -791,16 +739,16 @@ class TestDll extends AbstractTest
 		{
 			var hook = walker.next;
 			list.unlink(walker);
-			assertEquals(list.size(), --i);
+			assertEquals(list.size, --i);
 			walker = hook;
 		}
 		
-		assertEquals(list.size(), 0);
+		assertEquals(list.size, 0);
 		assertEquals(list.head, null);
 		assertEquals(list.tail, null);
 		
 		var list = new Dll<Int>();
-		assertEquals(list.size(), 0);
+		assertEquals(list.size, 0);
 		for (i in 0...10) list.append(0);
 		assertEquals(true, list.remove(0));
 		assertTrue(list.isEmpty());
@@ -809,18 +757,18 @@ class TestDll extends AbstractTest
 	function testPop()
 	{
 		var list = new Dll<Int>();
-		assertEquals(list.size(), 0);
+		assertEquals(list.size, 0);
 		
 		for (i in 0...10) list.append(i);
 		
 		var i:Int = 10;
-		while (list.size() > 0)
+		while (list.size > 0)
 		{
 			var val:Int = list.removeTail();
 			assertEquals(val, --i);
 		}
 		
-		assertEquals(list.size(), 0);
+		assertEquals(list.size, 0);
 		assertEquals(list.head, null);
 		assertEquals(list.tail, null);
 	}
@@ -829,17 +777,17 @@ class TestDll extends AbstractTest
 	{
 		var list = new Dll<Int>();
 		
-		assertEquals(list.size(), 0);
+		assertEquals(list.size, 0);
 		for (i in 0...10) list.append(i);
 			
 		var i:Int = 0;
-		while (list.size() > 0)
+		while (list.size > 0)
 		{
 			var val:Int = list.removeHead();
 			assertEquals(val, i++);
 		}
 		
-		assertEquals(list.size(), 0);
+		assertEquals(list.size, 0);
 		assertEquals(list.head, null);
 		assertEquals(list.tail, null);
 	}
@@ -847,7 +795,7 @@ class TestDll extends AbstractTest
 	function testShiftUp()
 	{
 		var list = new Dll<Int>();
-		assertEquals(list.size(), 0);
+		assertEquals(list.size, 0);
 		for (i in 0...10) list.append(i);
 		list.shiftUp();
 		assertEquals(list.tail.val, 0);
@@ -856,7 +804,7 @@ class TestDll extends AbstractTest
 	function testPopDown()
 	{
 		var list = new Dll<Int>();
-		assertEquals(list.size(), 0);
+		assertEquals(list.size, 0);
 		for (i in 0...10) list.append(i);
 		list.popDown();
 		assertEquals(list.head.val, 9);

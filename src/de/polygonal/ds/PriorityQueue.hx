@@ -1,5 +1,5 @@
 ﻿/*
-Copyright (c) 2008-2014 Michael Baczynski, http://www.polygonal.de
+Copyright (c) 2008-2016 Michael Baczynski, http://www.polygonal.de
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -18,17 +18,17 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 */
 package de.polygonal.ds;
 
-import de.polygonal.ds.error.Assert.assert;
+import de.polygonal.ds.tools.ArrayTools;
+import de.polygonal.ds.tools.Assert.assert;
+import de.polygonal.ds.tools.GrowthRate;
 import haxe.ds.ObjectMap;
 
-using de.polygonal.ds.tools.NativeArray;
+using de.polygonal.ds.tools.NativeArrayTools;
 
 /**
 	A priority queue is heap but with a simplified API for managing prioritized data
 	
 	Adds additional methods for removing and re-prioritizing elements.
-	
-	_<o>Worst-case running time in Big O notation</o>_
 **/
 @:allow(de.polygonal.ds.Heap)
 class PriorityQueue<T:(Prioritizable)> implements Queue<T>
@@ -40,7 +40,25 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 		
 		<warn>This value should never be changed by the user.</warn>
 	**/
-	public var key(default, null):Int;
+	public var key(default, null):Int = HashKey.next();
+	
+	/**
+		The capacity of the internal container.
+		
+		The capacity is usually a bit larger than `size` (_mild overallocation_).
+	**/
+	public var capacity(default, null):Int;
+	
+	/**
+		The growth rate of the container.
+		
+		+  0: fixed size
+		+ -1: grows at a rate of 1.125x plus a constant.
+		+ -2: grows at a rate of 1.5x (default value).
+		+ -3: grows at a rate of 2.0x.
+		+ >0: grows at a constant rate: capacity += growthRate
+	**/
+	public var growthRate:Int = GrowthRate.NORMAL;
 	
 	/**
 		If true, reuses the iterator object instead of allocating a new one when calling ``iterator()``.
@@ -49,17 +67,13 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 		
 		<warn>If true, nested iterations are likely to fail as only one iteration is allowed at a time.</warn>
 	**/
-	public var reuseIterator:Bool;
-	
-	public var capacity:Int;
-	
-	var mCapacityIncrement:Int;
-	var mShrinkSize:Int;
+	public var reuseIterator:Bool = false;
 	
 	var mData:Container<T>;
-	var mSize:Int;
+	var mInitialCapacity:Int;
+	var mSize:Int = 0;
 	var mInverse:Bool;
-	var mIterator:PriorityQueueIterator<T>;
+	var mIterator:PriorityQueueIterator<T> = null;
 	
 	#if debug
 	var mMap:haxe.ds.ObjectMap<T, Bool>;
@@ -70,42 +84,48 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 		By default a higher number means a higher priority.
 		@param reservedSize the initial capacity of the internal container. See `reserve()`.
 	**/
-	public function new(initialCapacity:Null<Int> = 16, capacityIncrement:Null<Int> = -1, inverse = false)
+	public function new(initalCapacity:Null<Int> = 1, ?inverse:Null<Bool> = false, ?source:Array<T>)
 	{
-		capacity = initialCapacity;
-		mCapacityIncrement = capacityIncrement;
-		
+		mInitialCapacity = M.max(1, initalCapacity);
+		capacity = initalCapacity;
 		mInverse = inverse;
+		
+		if (source != null)
+		{
+			mSize = source.length;
+			capacity = M.max(mSize, capacity);
+		}
+		
+		mData = NativeArrayTools.init(capacity + 1);
+		mData.set(0, cast null); //reserved
 		
 		#if debug
 		mMap = new haxe.ds.ObjectMap<T, Bool>();
 		#end
 		
-		mData = NativeArray.init(capacity + 1);
-		mData.set(0, cast null); //reserved
-		mSize = 0;
-		mIterator = null;
-		
-		key = HashKey.next();
-		reuseIterator = false;
+		if (source != null)
+		{
+			var d = mData;
+			for (i in 1...mSize + 1) d.set(i, source[i - 1]);
+			repair();
+		}
 	}
 	
 	/**
 		For performance reasons the priority queue does nothing to ensure that empty locations contain null;
 		`pack()` therefore nullifies all obsolete references and shrinks the container to the actual size allowing the garbage collector to reclaim used memory.
-		<o>n</o>
 	**/
 	public function pack()
 	{
-		/*if (mData.length - 1 == size()) return;
+		/*if (mData.length - 1 == size) return;
 		
-		var tmp = mData;
-		mData = ArrayUtil.alloc(size() + 1);
+		var t = mData;
+		mData = ArrayTools.alloc(size + 1);
 		
 		mData.set(0, cast null);
 		
-		for (i in 1...size() + 1) mData.set(i, tmp.get(i));
-		for (i in size() + 1...tmp.length) tmp.set(i, null);*/
+		for (i in 1...size + 1) mData.set(i, t.get(i));
+		for (i in size + 1...t.length) t.set(i, null);*/
 	}
 	
 	/**
@@ -113,7 +133,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 		
 		Useful before inserting a large number of elements as this reduces the amount of incremental reallocation.
 	**/
-	public function reserve(n:Int):PriorityQueue<T>
+	/*public function reserve(n:Int):PriorityQueue<T>
 	{
 		if (n <= capacity) return this;
 		
@@ -122,18 +142,17 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 		resize(n);
 		
 		return this;
-	}
+	}*/
 	
 	/**
 		Returns the front element.
 		
 		This is the element with the highest priority.
-		<o>1</o>
 		<assert>priority queue is empty</assert>
 	**/
-	inline public function peek():T
+	public inline function peek():T
 	{
-		assert(size() > 0, "priority queue is empty");
+		assert(size > 0, "priority queue is empty");
 		
 		return mData.get(1);
 	}
@@ -142,20 +161,19 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 		Returns the rear element.
 		
 		This is the element with the lowest priority.
-		<o>n</o>
 		<assert>priority queue is empty</assert>
 	**/
 	public function back():T
 	{
-		assert(size() > 0, "priority queue is empty");
+		assert(size > 0, "priority queue is empty");
 		
-		if (mSize == 1) return mData.get(1);
+		if (size == 1) return mData.get(1);
 		
 		var d = mData;
 		var a = d.get(1), b;
 		if (mInverse)
 		{
-			for (i in 2...mSize + 1)
+			for (i in 2...size + 1)
 			{
 				b = d.get(i);
 				if (a.priority < b.priority) a = b;
@@ -163,7 +181,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 		}
 		else
 		{
-			for (i in 2...mSize + 1)
+			for (i in 2...size + 1)
 			{
 				b = d.get(i);
 				if (a.priority > b.priority) a = b;
@@ -174,7 +192,6 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	
 	/**
 		Enqueues the element `x`.
-		<o>log n</o>
 		<assert>`x` is null or `x` already exists</assert>
 	**/
 	public function enqueue(x:T)
@@ -185,25 +202,24 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 		mMap.set(x, true);
 		#end
 		
-		if (mSize == capacity) grow();
+		if (size == capacity) resize();
 		mData.set(++mSize, x);
-		x.position = mSize;
-		upheap(mSize);
+		x.position = size;
+		upheap(size);
 	}
 	
 	/**
 		Dequeues the front element.
-		<o>log n</o>
 		<assert>priority queue is empty</assert>
 	**/
 	public function dequeue():T
 	{
-		assert(size() > 0, "priority queue is empty");
+		assert(size > 0, "priority queue is empty");
 		
 		var d = mData;
 		var x = d.get(1), d = mData;
 		x.position = -1;
-		d.set(1, d.get(mSize));
+		d.set(1, d.get(size));
 		downheap(1);
 		
 		#if debug
@@ -216,14 +232,13 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	
 	/**
 		Reprioritizes the element `x`.
-		<o>log n</o>
 		<assert>priority queue is empty or `x` does not exist</assert>
 		@param x the element to re-prioritize.
 		@param priority the new priority.
 	**/
 	public function reprioritize(x:T, priority:Float)
 	{
-		assert(size() > 0, "priority queue is empty");
+		assert(size > 0, "priority queue is empty");
 		
 		#if debug
 		var exists = mMap.exists(x);
@@ -243,7 +258,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 			else
 			{
 				downheap(pos);
-				upheap(mSize);
+				upheap(size);
 			}
 		}
 		else
@@ -253,50 +268,49 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 			else
 			{
 				downheap(pos);
-				upheap(mSize);
+				upheap(size);
 			}
 		}
 	}
 	
 	/**
 		Returns a sorted array of all elements.
-		<o>n log n</o>
 	**/
 	public function sort():Array<T>
 	{
 		if (isEmpty()) return [];
 		
-		var out = ArrayUtil.alloc(mSize);
-		var tmp = NativeArray.copy(mData);
-		var k = mSize;
+		var out = ArrayTools.alloc(size);
+		var t = NativeArrayTools.copy(mData);
+		var k = size;
 		var j = 0, i, c, v, s, u;
 		
 		if (mInverse)
 		{
 			while (k > 0)
 			{
-				out[j++] = tmp.get(1);
-				tmp.set(1, tmp.get(k));
+				out[j++] = t.get(1);
+				t.set(1, t.get(k));
 				i = 1;
 				c = i << 1;
-				v = tmp.get(i);
+				v = t.get(i);
 				s = k - 1;
 				while (c < k)
 				{
 					if (c < s)
-						if (tmp.get(c).priority - tmp.get(c + 1).priority > 0)
+						if (t.get(c).priority - t.get(c + 1).priority > 0)
 							c++;
 					
-					u = tmp.get(c);
+					u = t.get(c);
 					if (v.priority - u.priority > 0)
 					{
-						tmp.set(i, u);
+						t.set(i, u);
 						i = c;
 						c <<= 1;
 					}
 					else break;
 				}
-				tmp.set(i, v);
+				t.set(i, v);
 				k--;
 			}
 		}
@@ -304,28 +318,28 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 		{
 			while (k > 0)
 			{
-				out[j++] = tmp.get(1);
-				tmp.set(1, tmp.get(k));
+				out[j++] = t.get(1);
+				t.set(1, t.get(k));
 				i = 1;
 				c = i << 1;
-				v = tmp.get(i);
+				v = t.get(i);
 				s = k - 1;
 				while (c < k)
 				{
 					if (c < s)
-						if (tmp.get(c).priority - tmp.get(c + 1).priority < 0)
+						if (t.get(c).priority - t.get(c + 1).priority < 0)
 							c++;
 					
-					u = tmp.get(c);
+					u = t.get(c);
 					if (v.priority - u.priority < 0)
 					{
-						tmp.set(i, u);
+						t.set(i, u);
 						i = c;
 						c <<= 1;
 					}
 					else break;
 				}
-				tmp.set(i, v);
+				t.set(i, v);
 				k--;
 			}
 		}
@@ -370,32 +384,53 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	**/
 	public function toString():String
 	{
-		var s = '{ PriorityQueue size: ${size()} }';
+		var s = '{ PriorityQueue size: ${size} }';
 		if (isEmpty()) return s;
 		
-		var tmp = sort();
+		var t = sort();
 		s += "\n[ front\n";
 		var i = 0;
-		for (i in 0...size())
-			s += Printf.format("  %4d -> %s\n", [i, Std.string(tmp[i])]);
+		for (i in 0...size)
+			s += Printf.format("  %4d -> %s\n", [i, Std.string(t[i])]);
 		s += "]";
 		return s;
 	}
 	
-	/*///////////////////////////////////////////////////////
-	// collection
-	///////////////////////////////////////////////////////*/
+	/**
+		Preallocates storage for `n` elements.
+		
+		May cause a reallocation, but has no effect on the vector size and its elements.
+		Useful before inserting a large number of elements as this reduces the amount of incremental reallocation.
+	**/
+	public function reserve(n:Int):PriorityQueue<T>
+	{
+		if (n > capacity)
+		{
+			capacity = n;
+			resizeContainer(n);
+		}
+		return this;
+	}
+	
+	/* INTERFACE Collection */
+	
+	/**
+		The total number of elements.
+	**/
+	public var size(get, never):Int;
+	inline function get_size():Int
+	{
+		return mSize;
+	}
 	
 	/**
 		Destroys this object by explicitly nullifying all elements for GC'ing used resources.
 		
 		Improves GC efficiency/performance (optional).
-		<o>n</o>
 	**/
 	public function free()
 	{
-		var d = mData;
-		for (i in 0...mData.length) d.set(i, cast null);
+		mData.nullify();
 		mData = null;
 		
 		if (mIterator != null)
@@ -411,20 +446,18 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	
 	/**
 		Returns true if this priority queue contains the element `x`.
-		<o>1</o>
 		<assert>`x` is invalid</assert>
 	**/
-	inline public function contains(x:T):Bool
+	public inline function contains(x:T):Bool
 	{
 		assert(x != null, "x is null");
 		
 		var position = x.position;
-		return (position > 0 && position <= mSize) && (mData.get(position) == x);
+		return (position > 0 && position <= size) && (mData.get(position) == x);
 	}
 	
 	/**
 		Removes the element `x`.
-		<o>n</o>
 		<assert>`x` is invalid or does not exist</assert>
 		@return true if `x` was removed.
 	**/
@@ -447,7 +480,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 			else
 			{
 				var p = x.position, d = mData;
-				d.set(p, d.get(mSize));
+				d.set(p, d.get(size));
 				downheap(p);
 				upheap(p);
 				mSize--;
@@ -458,20 +491,15 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	
 	/**
 		Removes all elements.
-		<o>1 or n if `purge` is true</o>
-		@param purge if true, elements are nullified upon removal.
+		@param gc if true, elements are nullified upon removal so the garbage collector can reclaim used memory.
 	**/
-	inline public function clear(purge = false)
+	public function clear(gc:Bool = false)
 	{
-		if (purge)
-		{
-			for (i in 1...mData.length) mData.set(i, cast null);
-		}
-		
 		#if debug
 		mMap = new haxe.ds.ObjectMap<T, Bool>();
 		#end
 		
+		if (gc) mData.nullify();
 		mSize = 0;
 	}
 	
@@ -497,21 +525,11 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	}
 	
 	/**
-		The total number of elements.
-		<o>1</o>
-	**/
-	inline public function size():Int
-	{
-		return mSize;
-	}
-	
-	/**
 		Returns true if this priority queue is empty.
-		<o>1</o>
 	**/
-	inline public function isEmpty():Bool
+	public inline function isEmpty():Bool
 	{
-		return mSize == 0;
+		return size == 0;
 	}
 	
 	/**
@@ -519,18 +537,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	**/
 	public function toArray():Array<T>
 	{
-		return NativeArray.toArray(mData, 1, size());
-	}
-	
-	/**
-		Returns a `Vector<T>` object containing all elements in this priority queue.
-	**/
-	public function toVector():Container<T>
-	{
-		var d = mData;
-		var v = NativeArray.init(size());
-		for (i in 1...mSize + 1) v.set(i - 1, d.get(i));
-		return v;
+		return NativeArrayTools.toArray(mData, 1, size);
 	}
 	
 	/**
@@ -541,15 +548,15 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 		@param copier a custom function for copying elements. Replaces ``element::clone()`` if `assign` is false.
 		<warn>If `assign` is true, only the copied version should be used from now on.</warn>
 	**/
-	public function clone(assign = true, copier:T->T = null):Collection<T>
+	public function clone(assign:Bool = true, copier:T->T = null):Collection<T>
 	{
-		var copy = new PriorityQueue<T>(capacity, mCapacityIncrement, mInverse);
+		var copy = new PriorityQueue<T>(capacity, mInverse);
 		
 		var src = mData;
-		if (mSize == 0) return copy;
+		if (size == 0) return copy;
 		if (assign)
 		{
-			for (i in 1...mSize + 1)
+			for (i in 1...size + 1)
 			{
 				copy.mData.set(i, src.get(i));
 				
@@ -561,7 +568,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 		else
 		if (copier == null)
 		{
-			for (i in 1...mSize + 1)
+			for (i in 1...size + 1)
 			{
 				var e = src.get(i);
 				
@@ -580,7 +587,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 		}
 		else
 		{
-			for (i in 1...mSize + 1)
+			for (i in 1...size + 1)
 			{
 				var e = src.get(i);
 				var c = copier(e);
@@ -594,7 +601,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 			}
 		}
 		
-		copy.mSize = mSize;
+		copy.mSize = size;
 		return copy;
 	}
 	
@@ -602,8 +609,8 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	{
 		var d = mData;
 		var parent = index >> 1;
-		var tmp = d.get(index);
-		var p = tmp.priority;
+		var t = d.get(index);
+		var p = t.priority;
 		
 		if (mInverse)
 		{
@@ -638,8 +645,8 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 			}
 		}
 		
-		d.set(index, tmp);
-		tmp.position = index;
+		d.set(index, t);
+		t.position = index;
 	}
 	
 	inline function downheap(index:Int)
@@ -647,14 +654,14 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 		var d = mData;
 		var child = index << 1;
 		var childVal:T;
-		var tmp = d.get(index);
-		var p = tmp.priority;
+		var t = d.get(index);
+		var p = t.priority;
 		
 		if (mInverse)
 		{
-			while (child < mSize)
+			while (child < size)
 			{
-				if (child < mSize - 1)
+				if (child < size - 1)
 					if (d.get(child).priority - d.get(child + 1).priority > 0)
 						child++;
 				
@@ -663,7 +670,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 				{
 					d.set(index, childVal);
 					childVal.position = index;
-					tmp.position = child;
+					t.position = child;
 					index = child;
 					child <<= 1;
 				}
@@ -672,9 +679,9 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 		}
 		else
 		{
-			while (child < mSize)
+			while (child < size)
 			{
-				if (child < mSize - 1)
+				if (child < size - 1)
 					if (d.get(child).priority - d.get(child + 1).priority < 0)
 						child++;
 				
@@ -683,7 +690,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 				{
 					d.set(index, childVal);
 					childVal.position = index;
-					tmp.position = child;
+					t.position = child;
 					index = child;
 					child <<= 1;
 				}
@@ -691,36 +698,63 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 			}
 		}
 		
-		d.set(index, tmp);
-		tmp.position = index;
+		d.set(index, t);
+		t.position = index;
 	}
 	
-	function grow()
+	function repair()
 	{
-		var tmp = capacity;
-		
-		capacity =
-		if (mCapacityIncrement == -1)
+		var i = size >> 1;
+		while (i >= 1)
 		{
-			if (true)
-				Std.int((capacity * 3) / 2 + 1); //1.5
-			else
-				capacity + ((capacity >> 3) + (capacity < 9 ? 3 : 6)); //1.125
+			heapify(i, size);
+			i--;
+		}
+	}
+	
+	function heapify(p:Int, s:Int)
+	{
+		var d = mData;
+		var l = p << 1;
+		var r = l + 1;
+		var max = p;
+		
+		if (mInverse)
+		{
+			if (l <= s && (d.get(l).priority - d.get(max).priority) < 0) max = l;
+			if (l + 1 <= s && (d.get(l + 1).priority - d.get(max).priority) < 0) max = r;
 		}
 		else
-			capacity + mCapacityIncrement;
+		{
+			if (l <= s && (d.get(l).priority - d.get(max).priority) > 0) max = l;
+			if (l + 1 <= s && (d.get(l + 1).priority - d.get(max).priority) > 0) max = r;
+		}
 		
-		//trace('heap resized from $tmp -> $capacity');
-		//mShrinkSize = capacity >> 2;
-		
-		resize(capacity + 1);
+		var a, b, t;
+		if (max != p)
+		{
+			a = d.get(max);
+			b = d.get(p);
+			d.set(max, b);
+			d.set(p, a);
+			t = a.position;
+			a.position = b.position;
+			b.position = t;
+			heapify(max, s);
+		}
 	}
 	
-	function resize(newSize:Int)
+	function resize()
 	{
-		var tmp = NativeArray.init(newSize + 1);
-		NativeArray.blit(mData, 0, tmp, 0, mSize + 1);
-		mData = tmp;
+		capacity = GrowthRate.compute(growthRate, capacity);
+		resizeContainer(capacity);
+	}
+	
+	function resizeContainer(newSize:Int)
+	{
+		var t = NativeArrayTools.init(newSize + 1);
+		NativeArrayTools.blit(mData, 0, t, 0, mSize + 1);
+		mData = t;
 	}
 }
 
@@ -748,23 +782,23 @@ class PriorityQueueIterator<T:(Prioritizable)> implements de.polygonal.ds.Itr<T>
 	public function reset():Itr<T>
 	{
 		mI = 0;
-		mS = mObject.size();
-		mData = NativeArray.init(mS);
-		NativeArray.blit(mObject.mData, 1, mData, 0, mS);
+		mS = mObject.size;
+		mData = NativeArrayTools.init(mS);
+		NativeArrayTools.blit(mObject.mData, 1, mData, 0, mS);
 		return this;
 	}
 	
-	inline public function hasNext():Bool
+	public inline function hasNext():Bool
 	{
 		return mI < mS;
 	}
 	
-	inline public function next():T
+	public inline function next():T
 	{
 		return mData.get(mI++);
 	}
 	
-	inline public function remove()
+	public function remove()
 	{
 		assert(mI > 0, "call next() before removing an element");
 		

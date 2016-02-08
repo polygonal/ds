@@ -16,17 +16,33 @@ class TestArrayedQueue extends AbstractTest
 		super();
 	}
 	
+	function testSource()
+	{
+		var q = new ArrayedQueue<Int>(4, [0, 1, 2]);
+		assertEquals(3, q.size);
+		assertEquals(0, q.dequeue());
+		assertEquals(1, q.dequeue());
+		assertEquals(2, q.dequeue());
+		
+		var q = new ArrayedQueue<Int>(2, [0, 1, 2]);
+		assertEquals(3, q.capacity);
+		assertEquals(3, q.size);
+		assertEquals(0, q.dequeue());
+		assertEquals(1, q.dequeue());
+		assertEquals(2, q.dequeue());
+	}
+	
 	function testGrow()
 	{
 		//0123
 		//^
 		var q = new ArrayedQueue<Int>(4);
 		for (i in 0...4) q.enqueue(i);
-		assertEquals(4, q.size());
+		assertEquals(4, q.size);
 		assertEquals(4, q.capacity);
 		for (i in 0...4) assertEquals(i, q.get(i));
 		q.enqueue(4);
-		assertEquals(5, q.size());
+		assertEquals(5, q.size);
 		assertTrue(q.capacity > 4);
 		for (i in 0...5) assertEquals(i, q.get(i));
 		
@@ -38,7 +54,7 @@ class TestArrayedQueue extends AbstractTest
 		q.enqueue(4);
 		q.enqueue(5);
 		for (i in 0...5) assertEquals(i + 1, q.get(i));
-		assertEquals(5, q.size());
+		assertEquals(5, q.size);
 		
 		//0123
 		//  ^
@@ -71,11 +87,17 @@ class TestArrayedQueue extends AbstractTest
 			q.enqueue(s - 1);
 			for (i in 0...s)
 			{
-				assertEquals(s - i, q.size());
+				assertEquals(s - i, q.size);
 				assertEquals(i, q.dequeue());
 			}
 			assertTrue(q.isEmpty());
 		}
+		
+		var q = new ArrayedQueue<Int>(8);
+		for (i in 0...4) q.enqueue(i);
+		for (i in 0...10) q.enqueue((i + 1) * 10);
+		for (i in 0...4) assertEquals(i, q.dequeue());
+		for (i in 0...10) assertEquals((i + 1) * 10, q.dequeue());
 	}
 	
 	function testPack()
@@ -87,7 +109,7 @@ class TestArrayedQueue extends AbstractTest
 		for (i in 0...4) q.dequeue();
 		q.pack();
 		var values = [12, 13, 14, 15, 100, 101, 102, 103];
-		while (q.size() > 0)
+		while (q.size > 0)
 			assertEquals(values.shift(), q.dequeue());
 		
 		var q = new ArrayedQueue<Int>(16);
@@ -95,7 +117,7 @@ class TestArrayedQueue extends AbstractTest
 		for (i in 0...8) q.dequeue();
 		q.pack();
 		var values = [8, 9, 10, 11, 12, 13, 14, 15];
-		while (q.size() > 0)
+		while (q.size > 0)
 			assertEquals(values.shift(), q.dequeue());
 	}
 	
@@ -104,7 +126,7 @@ class TestArrayedQueue extends AbstractTest
 		var q = new ArrayedQueue<Int>(8);
 		for (i in 0...16) q.enqueue(i);
 		for (i in 0...12) assertEquals(i, q.dequeue());
-		assertEquals(4, q.size());
+		assertEquals(4, q.size);
 		for (i in 0...4) assertEquals(12 + i, q.dequeue());
 	}
 	
@@ -114,19 +136,19 @@ class TestArrayedQueue extends AbstractTest
 		for (i in 0...8) q.enqueue(i);
 		for (i in 0...32 - 8) q.enqueue(99);
 		q.remove(99);
-		assertEquals(8, q.size());
+		assertEquals(8, q.size);
 		for (i in 0...8) assertEquals(i, q.dequeue());
 		
 		return;
 		
-		var q = new ArrayedQueue<Int>(2, 2);
+		/*var q = new ArrayedQueue<Int>(2, 2);
 		for (i in 0...3) q.enqueue(i);
 		for (i in 0...32 - 3) q.enqueue(99);
 		q.remove(99);
-		assertEquals(3, q.size());
+		assertEquals(3, q.size);
 		assertEquals(8, q.getCapacity());
 		q.remove(0);
-		assertEquals(2, q.size());
+		assertEquals(2, q.size);
 		assertEquals(2, q.getCapacity());
 		assertEquals(1, q.dequeue());
 		assertEquals(2, q.dequeue());
@@ -136,18 +158,18 @@ class TestArrayedQueue extends AbstractTest
 		for (i in 0...2) q.enqueue(i);
 		for (i in 0...32 - 2) q.enqueue(99);
 		q.remove(99);
-		assertEquals(2, q.size());
+		assertEquals(2, q.size);
 		assertEquals(2, q.getCapacity());
 		q.remove(0);
-		assertEquals(1, q.size());
+		assertEquals(1, q.size);
 		assertEquals(2, q.getCapacity());
 		q.remove(1);
-		assertEquals(0, q.size());
-		assertEquals(2, q.getCapacity());
+		assertEquals(0, q.size);
+		assertEquals(2, q.getCapacity());*/
 	}
 	
-	@:access(de.polygonal.ds.ArrayedQueue)
-	function testDispose()
+	//@:access(de.polygonal.ds.ArrayedQueue)
+	/*function testDispose()
 	{
 		var q = new ArrayedQueue<Int>(16);
 		for (i in 0...16) q.enqueue(i);
@@ -164,9 +186,9 @@ class TestArrayedQueue extends AbstractTest
 		var q = new ArrayedQueue<Int>(16);
 		for (i in 0...16) q.enqueue(i);
 		for (i in 0...10) q.dequeue();
-		assertEquals(6, q.size());
+		assertEquals(6, q.size);
 		for (i in 0...10) q.enqueue(i);
-		assertEquals(16, q.size());
+		assertEquals(16, q.size);
 		for (i in 0...16)
 		{
 			q.dequeue();
@@ -175,7 +197,7 @@ class TestArrayedQueue extends AbstractTest
 		var a:Container<Int> = q.mData;
 		for (i in 0...16)
 			assertEquals(isDynamic() ? null : 0, a[i]);
-	}
+	}*/
 	
 	function testRemove()
 	{
@@ -185,11 +207,7 @@ class TestArrayedQueue extends AbstractTest
 		assertTrue(q.isEmpty());
 		q.clear();
 		for (i in 0...8) q.enqueue(i);
-		for (i in 0...6)
-		{
-			q.dequeue();
-			q.dispose();
-		}
+		for (i in 0...6) q.dequeue();
 		q.remove(7);
 		q.remove(6);
 		assertTrue(q.isEmpty());
@@ -199,11 +217,7 @@ class TestArrayedQueue extends AbstractTest
 		assertTrue(q.isEmpty());
 		q.clear();
 		for (i in 0...8) q.enqueue(i);
-		for (i in 0...7)
-		{
-			q.dequeue();
-			q.dispose();
-		}
+		for (i in 0...7) q.dequeue();
 		
 		for (i in 0...3) q.enqueue(i * 10);
 		q.remove(10);
@@ -211,7 +225,7 @@ class TestArrayedQueue extends AbstractTest
 		assertEquals(q.get(0), 7);
 		assertEquals(q.get(1), 0);
 		assertEquals(q.get(2), 20);
-		assertEquals(3, q.size());
+		assertEquals(3, q.size);
 		
 		var q = new ArrayedQueue<Int>(mSize);
 		for (i in 0...16) q.enqueue(i);
@@ -231,16 +245,12 @@ class TestArrayedQueue extends AbstractTest
 		
 		for (i in 0...16) q.enqueue(i);
 		
-		assertEquals(16, q.size());
+		assertEquals(16, q.size);
 		
-		for (i in 0...8)
-		{
-			q.dequeue();
-			q.dispose();
-		}
+		for (i in 0...8) q.dequeue();
 		
 		q.remove(10);
-		assertEquals(16 - 8 - 1, q.size());
+		assertEquals(16 - 8 - 1, q.size);
 		assertEquals(q.dequeue(), 8);
 		assertEquals(q.dequeue(), 9);
 		assertEquals(q.dequeue(), 11);
@@ -257,7 +267,7 @@ class TestArrayedQueue extends AbstractTest
 		l.enqueue(1);
 		l.enqueue(2);
 		l.enqueue(3);
-		assertEquals(3, l.size());
+		assertEquals(3, l.size);
 	}
 	
 	function testPeek()
@@ -287,46 +297,21 @@ class TestArrayedQueue extends AbstractTest
 		for (i in 0...10) assertEquals(i, q.dequeue());
 	}
 	
-	function testAssign()
+	function testForEach()
 	{
-		var q:ArrayedQueue<E> = new ArrayedQueue<E>(mSize);
-		assertEquals(0, q.size());
-		q.assign(E, [0]);
-		assertEquals(mSize, q.size());
-		for (i in 0...mSize) assertEquals(E, cast Type.getClass(q.dequeue()));
-		
-		assertTrue(q.isEmpty());
-		
-		q.assign(E, [0], 10);
-		assertEquals(10, q.size());
-		for (i in 0...10) assertEquals(E, cast Type.getClass(q.dequeue()));
-		
-		assertTrue(q.isEmpty());
-		
-		q.assign(E, [5], 10);
-		assertEquals(10, q.size());
-		for (i in 0...10)
-		{
-			var e = q.dequeue();
-			assertEquals(E, cast Type.getClass(e));
-			assertEquals(5, e.x);
-		}
-		
-		assertTrue(q.isEmpty());
-	}
-	
-	function testFill()
-	{
-		var q:ArrayedQueue<Int> = new ArrayedQueue<Int>(mSize);
-		assertEquals(0, q.size());
-		q.fill(99);
-		assertEquals(mSize, q.size());
-		for (i in 0...mSize) assertEquals(99, q.dequeue());
-		assertTrue(q.isEmpty());
-		q.fill(88, 10);
-		assertEquals(10, q.size());
-		for (i in 0...10) assertEquals(88, q.dequeue());
-		assertTrue(q.isEmpty());
+		var q = new ArrayedQueue<Int>();
+		for (i in 0...10) q.enqueue(i);
+		for (i in 0...5) q.dequeue();
+		for (i in 0...5) q.enqueue(10 + i);
+		q.forEach(
+			function(v, i)
+			{
+				if (i < 5)
+					assertEquals(5 + i, v);
+				else
+					assertEquals(10 + (i - 5), v);
+				return v;
+			});
 	}
 	
 	function testGetAtSetAt()
@@ -342,7 +327,7 @@ class TestArrayedQueue extends AbstractTest
 	{
 		var q:ArrayedQueue<Int> = new ArrayedQueue<Int>(mSize);
 		for (i in 0...10) q.enqueue(i);
-		q.swp(0, 9);
+		q.swap(0, 9);
 		assertEquals(9, q.get(0));
 		assertEquals(0, q.get(9));
 		for (i in 1...9) assertEquals(i, q.get(i));
@@ -352,7 +337,7 @@ class TestArrayedQueue extends AbstractTest
 	{
 		var q:ArrayedQueue<Int> = new ArrayedQueue<Int>(mSize);
 		for (i in 0...10) q.enqueue(i);
-		q.cpy(0, 1);
+		q.copy(0, 1);
 		assertEquals(1, q.get(0));
 		assertEquals(1, q.get(1));
 		for (i in 1...10) assertEquals(i, q.get(i));
@@ -367,7 +352,7 @@ class TestArrayedQueue extends AbstractTest
 		{
 			return (val+index) * 3;
 		}
-		q.iter(process);
+		q.forEach(process);
 		for (i in 0...10) assertEquals((i + i) * 3, q.get(i));
 	}
 	
@@ -383,7 +368,7 @@ class TestArrayedQueue extends AbstractTest
 		var q:ArrayedQueue<Int> = new ArrayedQueue<Int>(mSize);
 		for (i in 0...10) q.enqueue(5);
 		q.clear();
-		assertEquals(0, q.size());
+		assertEquals(0, q.size);
 	}
 	
 	function testIsEmpty()
@@ -415,7 +400,7 @@ class TestArrayedQueue extends AbstractTest
 		for (i in 0...10) q.enqueue(i);
 		var c = 0;
 		
-		var itr:de.polygonal.ds.ResettableIterator<Int> = cast q.iterator();
+		var itr = q.iterator();
 		
 		for (val in itr) assertEquals(c++, val);
 		assertEquals(c, 10);
@@ -423,13 +408,17 @@ class TestArrayedQueue extends AbstractTest
 		itr.reset();
 		for (val in itr) assertEquals(c++, val);
 		assertEquals(c, 10);
+		
 		var set = new ListSet<Int>();
+		
 		for (val in q) assertTrue(set.set(val));
-		var itr:de.polygonal.ds.ResettableIterator<Int> = cast q.iterator();
+		
+		var itr = q.iterator();
 		var s = cast set.clone(true);
 		var c = 0;
 		for (val in itr) assertTrue(s.remove(val));
 		assertTrue(s.isEmpty());
+		
 		var s:de.polygonal.ds.Set<Int> = cast set.clone(true);
 		itr.reset();
 		for (val in itr) assertTrue(s.remove(val));
@@ -482,8 +471,34 @@ class TestArrayedQueue extends AbstractTest
 		var q:ArrayedQueue<Int> = new ArrayedQueue<Int>(mSize);
 		for (i in 0...10) q.enqueue(i);
 		var a = q.toArray();
-		assertEquals(a.length, 10);
+		assertEquals(10, a.length);
 		for (i in 0...a.length) assertEquals(i, a[i]);
+		
+		var q:ArrayedQueue<Int> = new ArrayedQueue<Int>(4);
+		for (i in 0...4) q.enqueue(i);
+		for (i in 0...2) q.dequeue();
+		for (i in 0...2) q.enqueue((i + 1) * 10);
+		var a = q.toArray();
+		assertEquals(2, a[0]);
+		assertEquals(3, a[1]);
+		assertEquals(10, a[2]);
+		assertEquals(20, a[3]);
+		assertEquals(4, a.length);
+		
+		var q:ArrayedQueue<Int> = new ArrayedQueue<Int>(8);
+		for (i in 0...8) q.enqueue(i);
+		for (i in 0...4) q.dequeue();
+		q.enqueue(10);
+		q.enqueue(20);
+		
+		var a = q.toArray();
+		assertEquals(6, a.length);
+		assertEquals(4, a[0]);
+		assertEquals(5, a[1]);
+		assertEquals(6, a[2]);
+		assertEquals(7, a[3]);
+		assertEquals(10, a[4]);
+		assertEquals(20, a[5]);
 	}
 	
 	function testShuffle()
@@ -500,7 +515,7 @@ class TestArrayedQueue extends AbstractTest
 		var a:ArrayedQueue<Int> = new ArrayedQueue<Int>(16);
 		for (i in 0...10) a.enqueue(i);
 		var clone:ArrayedQueue<Int> = cast a.clone(true);
-		assertEquals(clone.size(), a.size());
+		assertEquals(clone.size, a.size);
 		for (i in 0...10) assertEquals(clone.dequeue(), i);
 	}
 	

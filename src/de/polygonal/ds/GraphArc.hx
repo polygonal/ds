@@ -1,5 +1,5 @@
 ﻿/*
-Copyright (c) 2008-2014 Michael Baczynski, http://www.polygonal.de
+Copyright (c) 2008-2016 Michael Baczynski, http://www.polygonal.de
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -18,14 +18,12 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 */
 package de.polygonal.ds;
 
-import de.polygonal.ds.error.Assert.assert;
+import de.polygonal.ds.tools.Assert.assert;
 
 /**
 	A graph arc represents an uni-directional link between two GraphNode objects
 	
 	`GraphArc` objects are created and managed by the `Graph` class.
-	
-	_<o>Worst-case running time in Big O notation</o>_
 **/
 #if generic
 @:generic
@@ -39,7 +37,7 @@ class GraphArc<T> implements Hashable
 		
 		<warn>This value should never be changed by the user.</warn>
 	**/
-	public var key(default, null):Int;
+	public var key(default, null):Int = HashKey.next();
 	
 	/**
 		The node that this arc points to.
@@ -80,14 +78,12 @@ class GraphArc<T> implements Hashable
 		this.cost = cost;
 		next = null;
 		prev = null;
-		key = HashKey.next();
 	}
 	
 	/**
 		Destroys this object by explicitly nullifying the node and all pointers for GC'ing used resources.
 		
 		Improves GC efficiency/performance (optional).
-		<o>1</o>
 	**/
 	public function free()
 	{

@@ -1,4 +1,4 @@
-﻿/*
+/*
 Copyright (c) 2008-2016 Michael Baczynski, http://www.polygonal.de
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -16,15 +16,25 @@ NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FO
 DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT
 OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
-package de.polygonal.ds;
+package de.polygonal.ds.tools;
 
 /**
-	An object that creates objects of type T
+	Thrown to indicate that an assertion failed
 **/
-interface Factory<T>
+class AssertError
 {
-	/**
-		Creates and returns a new object of type T.
-	**/
-	function create():T;
+	public var message:String;
+	
+	public function new(?message:String, ?info:haxe.PosInfos)
+	{
+		if (message == null) message = "";
+		this.message = message;
+		
+		var stack = haxe.CallStack.toString(haxe.CallStack.callStack());
+		stack = ~/\nCalled from de\.polygonal\.ds\.tools\.AssertError.*$/m.replace(stack, "");
+		
+		this.message = 'Assertation $message failed in file ${info.fileName}, line ${info.lineNumber}, ${info.className}:: ${info.methodName}\nCall stack:${stack}';
+	}
+	
+	public function toString():String return message;
 }

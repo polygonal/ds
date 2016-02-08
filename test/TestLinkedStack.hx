@@ -6,6 +6,13 @@ import de.polygonal.ds.Stack;
 @:access(de.polygonal.ds.LinkedStack)
 class TestLinkedStack extends AbstractTest
 {
+	function testSource()
+	{
+		var l = new LinkedStack<Int>([0, 1, 2, 3]);
+		assertEquals(4, l.size);
+		for (i in 0...4) assertEquals((4 - i) - 1, l.pop());
+	}
+	
 	function testPool()
 	{
 		var l = new LinkedStack<Int>(20);
@@ -26,7 +33,7 @@ class TestLinkedStack extends AbstractTest
 	{
 		var l = new LinkedStack<Int>(5);
 		for (i in 0...5) l.push(i);
-		l.cpy(0, 1);
+		l.copy(0, 1);
 		assertEquals(4, l.get(4));
 		assertEquals(3, l.get(3));
 		assertEquals(2, l.get(2));
@@ -39,7 +46,7 @@ class TestLinkedStack extends AbstractTest
 		var l = new LinkedStack<Int>(5);
 		for (i in 0...5) l.push(i);
 		
-		l.swp(3, 1);
+		l.swap(3, 1);
 		
 		assertEquals(4, l.get(4));
 		assertEquals(1, l.get(3));
@@ -47,7 +54,7 @@ class TestLinkedStack extends AbstractTest
 		assertEquals(3, l.get(1));
 		assertEquals(0, l.get(0));
 		
-		l.swp(3, 1);
+		l.swap(3, 1);
 		
 		assertEquals(4, l.get(4));
 		assertEquals(3, l.get(3));
@@ -55,7 +62,7 @@ class TestLinkedStack extends AbstractTest
 		assertEquals(1, l.get(1));
 		assertEquals(0, l.get(0));
 		
-		l.swp(1, 3);
+		l.swap(1, 3);
 		
 		assertEquals(4, l.get(4));
 		assertEquals(1, l.get(3));
@@ -63,7 +70,7 @@ class TestLinkedStack extends AbstractTest
 		assertEquals(3, l.get(1));
 		assertEquals(0, l.get(0));
 		
-		l.swp(1, 3);
+		l.swap(1, 3);
 		
 		assertEquals(4, l.get(4));
 		assertEquals(3, l.get(3));
@@ -71,7 +78,7 @@ class TestLinkedStack extends AbstractTest
 		assertEquals(1, l.get(1));
 		assertEquals(0, l.get(0));
 		
-		l.swp(0, 4);
+		l.swap(0, 4);
 		
 		assertEquals(0, l.get(4));
 		assertEquals(3, l.get(3));
@@ -79,7 +86,7 @@ class TestLinkedStack extends AbstractTest
 		assertEquals(1, l.get(1));
 		assertEquals(4, l.get(0));
 		
-		l.swp(0, 4);
+		l.swap(0, 4);
 		
 		assertEquals(4, l.get(4));
 		assertEquals(3, l.get(3));
@@ -87,7 +94,7 @@ class TestLinkedStack extends AbstractTest
 		assertEquals(1, l.get(1));
 		assertEquals(0, l.get(0));
 		
-		l.swp(4, 0);
+		l.swap(4, 0);
 		
 		assertEquals(0, l.get(4));
 		assertEquals(3, l.get(3));
@@ -95,7 +102,7 @@ class TestLinkedStack extends AbstractTest
 		assertEquals(1, l.get(1));
 		assertEquals(4, l.get(0));
 		
-		l.swp(4, 0);
+		l.swap(4, 0);
 		
 		assertEquals(4, l.get(4));
 		assertEquals(3, l.get(3));
@@ -103,7 +110,7 @@ class TestLinkedStack extends AbstractTest
 		assertEquals(1, l.get(1));
 		assertEquals(0, l.get(0));
 		
-		l.swp(0, 1);
+		l.swap(0, 1);
 		
 		assertEquals(4, l.get(4));
 		assertEquals(3, l.get(3));
@@ -111,7 +118,7 @@ class TestLinkedStack extends AbstractTest
 		assertEquals(0, l.get(1));
 		assertEquals(1, l.get(0));
 		
-		l.swp(1, 0);
+		l.swap(1, 0);
 		
 		assertEquals(4, l.get(4));
 		assertEquals(3, l.get(3));
@@ -162,10 +169,10 @@ class TestLinkedStack extends AbstractTest
 		for (i in 0...2) s.push(i);
 		s.dup();
 		
-		assertEquals(3, s.size());
+		assertEquals(3, s.size);
 		assertEquals(1, s.top());
-		assertEquals(1, s.get(s.size() - 2));
-		assertEquals(0, s.get(s.size() - 3));
+		assertEquals(1, s.get(s.size - 2));
+		assertEquals(0, s.get(s.size - 3));
 	}
 	
 	function testExchange()
@@ -175,7 +182,7 @@ class TestLinkedStack extends AbstractTest
 		s.push(1);
 		s.exchange();
 		assertEquals(0, s.top());
-		assertEquals(1, s.get(s.size() - 2));
+		assertEquals(1, s.get(s.size - 2));
 		
 		var s = new LinkedStack<Int>(5);
 		s.push(0);
@@ -183,7 +190,7 @@ class TestLinkedStack extends AbstractTest
 		s.push(2);
 		s.exchange();
 		assertEquals(1, s.top());
-		assertEquals(2, s.get(s.size() - 2));
+		assertEquals(2, s.get(s.size - 2));
 	}
 	
 	function testRotRight()
@@ -370,13 +377,7 @@ class TestLinkedStack extends AbstractTest
 		for (i in 0...a.length) assertEquals(i, a[i]);
 		
 		var l = new LinkedStack<Int>();
-		
 		for (i in 0...5) l.push(i);
-		
-		#if flash
-		var a = l.toVector();
-		for (i in 0...a.length) assertEquals(i, a[i]);
-		#end
 	}
 	
 	function testClear()
@@ -385,11 +386,11 @@ class TestLinkedStack extends AbstractTest
 		
 		for (i in 0...3) l.push(i);
 		
-		assertEquals(3, l.size());
+		assertEquals(3, l.size);
 		
 		l.clear();
 		
-		assertEquals(0, l.size());
+		assertEquals(0, l.size);
 		
 		for (i in 0...3)
 		{
@@ -398,13 +399,19 @@ class TestLinkedStack extends AbstractTest
 		}
 	}
 	
-	function testAssign()
+	function testForEach()
 	{
-		var l = new LinkedStack<Int>();
-		for (i in 0...5) l.push(i);
-		l.fill(99);
-		for (i in 0...5) assertEquals(99, l.pop());
-		assertTrue(l.isEmpty());
+		var s = new LinkedStack<Int>();
+		s.push(0);
+		s.push(1);
+		s.push(2);
+		
+		s.forEach(
+			function(v, i)
+			{
+				assertEquals(i, v);
+				return v;
+			});
 	}
 	
 	function testIterator()
@@ -415,7 +422,7 @@ class TestLinkedStack extends AbstractTest
 		var s = new ListSet<Int>();
 		for (i in 0...5) s.set(i);
 		
-		var itr:de.polygonal.ds.ResettableIterator<Int> = cast l.iterator();
+		var itr = l.iterator();
 		
 		var c:de.polygonal.ds.Set<Int> = cast s.clone(true);
 		for (i in itr)
@@ -495,7 +502,7 @@ class TestLinkedStack extends AbstractTest
 			node2 = node2.next;
 		}
 		
-		assertEquals(1, c.size());
+		assertEquals(1, c.size);
 		var a = c.pop();
 		assertEquals(1, a);
 	}
@@ -522,7 +529,7 @@ class TestLinkedStack extends AbstractTest
 			node2 = node2.next;
 		}
 		
-		assertEquals(2, c.size());
+		assertEquals(2, c.size);
 		var a = c.pop();
 		var b = c.pop();
 		assertEquals(2, a);
@@ -552,7 +559,7 @@ class TestLinkedStack extends AbstractTest
 			node2 = node2.next;
 		}
 		
-		assertEquals(3, c.size());
+		assertEquals(3, c.size);
 		var a = c.pop();
 		var b = c.pop();
 		var c = c.pop();

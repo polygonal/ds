@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2008-2014 Michael Baczynski, http://www.polygonal.de
+Copyright (c) 2008-2016 Michael Baczynski, http://www.polygonal.de
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -23,24 +23,24 @@ import de.polygonal.ds.mem.IntMemory;
 import flash.Memory;
 #end
 
-import de.polygonal.ds.error.Assert.assert;
+import de.polygonal.ds.tools.ArrayTools;
+import de.polygonal.ds.tools.Assert.assert;
 
-using de.polygonal.ds.tools.NativeArray;
+using de.polygonal.ds.tools.NativeArrayTools;
 
 /**
 	An array hash set for storing integers
 	
-	<o>Amortized running time in Big O notation</o>
 **/
 class IntHashSet implements Set<Int>
 {
 	/**
 		Return code for a non-existing element.
 	**/
-	inline public static var VAL_ABSENT = M.INT32_MIN;
+	public static inline var VAL_ABSENT = M.INT32_MIN;
 	
-	inline static var EMPTY_SLOT = -1;
-	inline static var NULL_POINTER = -1;
+	static inline var EMPTY_SLOT = -1;
+	static inline var NULL_POINTER = -1;
 	
 	/**
 		A unique identifier for this object.
@@ -49,7 +49,7 @@ class IntHashSet implements Set<Int>
 		
 		<warn>This value should never be changed by the user.</warn>
 	**/
-	public var key(default, null):Int;
+	public var key(default, null):Int = HashKey.next();
 	
 	/**
 		If true, reuses the iterator object instead of allocating a new one when calling ``iterator()``.
@@ -58,12 +58,12 @@ class IntHashSet implements Set<Int>
 		
 		<warn>If true, nested iterations are likely to fail as only one iteration is allowed at a time.</warn>
 	**/
-	public var reuseIterator:Bool;
+	public var reuseIterator:Bool = false;
 	
 	/**
 		The size of the allocated storage space for the elements.
 		
-		If more space is required to accomodate new elements, ``getCapacity()`` is doubled every time ``size()`` grows beyond capacity and split in half when ``size()`` is a quarter of capacity.
+		If more space is required to accomodate new elements, ``getCapacity()`` is doubled every time ``size`` grows beyond capacity and split in half when ``size`` is a quarter of capacity.
 		
 		The capacity never falls below the initial size defined in the constructor.
 	**/
@@ -81,7 +81,7 @@ class IntHashSet implements Set<Int>
 	public var loadFactor(get, never):Float;
 	function get_loadFactor():Float
 	{
-		return size() / slotCount;
+		return size / slotCount;
 	}
 	
 	/**
@@ -100,9 +100,8 @@ class IntHashSet implements Set<Int>
 	#end
 	
 	var mMask:Int;
-	var mFree:Int;
-	
-	var mSize:Int;
+	var mFree:Int = 0;
+	var mSize:Int = 0;
 	
 	var mMinCapacity:Int;
 	var mIterator:IntHashSetIterator;
@@ -122,7 +121,7 @@ class IntHashSet implements Set<Int>
 		The `initialCapacity` is automatically adjusted according to the storage requirements based on two rules:
 		<ul>
 		<li>If the set runs out of space, the `capacity` is doubled.</li>
-		<li>If the ``size()`` falls below a quarter of the current `capacity`, the `capacity` is cut in half while the minimum `capacity` can't fall below `capacity`.</li>
+		<li>If the ``size`` falls below a quarter of the current `capacity`, the `capacity` is cut in half while the minimum `capacity` can't fall below `capacity`.</li>
 		</ul>
 	**/
 	public function new(slotCount:Int, initialCapacity = -1)
@@ -140,14 +139,10 @@ class IntHashSet implements Set<Int>
 			assert(M.isPow2(slotCount), "capacity is not a power of 2");
 		}
 		
-		mFree = 0;
 		capacity = initialCapacity;
 		mMinCapacity = capacity;
-		mSize = 0;
 		this.slotCount = slotCount;
 		mMask = slotCount - 1;
-		
-		mIterator = null;
 		
 		#if alchemy
 		mHash = new IntMemory(slotCount, "IntHashSet.mHash");
@@ -155,10 +150,10 @@ class IntHashSet implements Set<Int>
 		mData = new IntMemory(capacity << 1, "IntHashSet.mData");
 		mNext = new IntMemory(capacity, "IntHashSet.mNext");
 		#else
-		mHash = NativeArray.init(slotCount);
+		mHash = NativeArrayTools.init(slotCount);
 		for (i in 0...slotCount) mHash[i] = EMPTY_SLOT;
-		mData = NativeArray.init(capacity << 1);
-		mNext = NativeArray.init(capacity);
+		mData = NativeArrayTools.init(capacity << 1);
+		mNext = NativeArrayTools.init(capacity);
 		#end
 		
 		var j = 1;
@@ -171,16 +166,12 @@ class IntHashSet implements Set<Int>
 		
 		for (i in 0...capacity - 1) setNext(i, i + 1);
 		setNext(capacity - 1, NULL_POINTER);
-		
-		key = HashKey.next();
-		reuseIterator = false;
 	}
 	
 	/**
 		Counts the total number of collisions.
 		
 		A collision occurs when two distinct elements are hashed into the same slot.
-		<o>n</o>
 	**/
 	public function getCollisionCount():Int
 	{
@@ -203,10 +194,9 @@ class IntHashSet implements Set<Int>
 		Returns true if this set contains the element `x`.
 		
 		Uses move-to-front-on-access which reduces access time when similar elements are frequently queried.
-		<o>1</o>
 		<assert>value 0x80000000 is reserved</assert>
 	**/
-	inline public function hasFront(x:Int):Bool
+	public inline function hasFront(x:Int):Bool
 	{
 		assert(x != VAL_ABSENT, "value 0x80000000 is reserved");
 		
@@ -270,7 +260,6 @@ class IntHashSet implements Set<Int>
 		Redistributes all elements over `slotCount`.
 		
 		This is an expensive operations as the set is rebuild from scratch.
-		<o>n</o>
 		<assert>`slotCount` is not a power of two</assert>
 	**/
 	public function rehash(slotCount:Int)
@@ -279,21 +268,21 @@ class IntHashSet implements Set<Int>
 		
 		if (this.slotCount == slotCount) return;
 		
-		var tmp = new IntHashSet(slotCount, capacity);
+		var t = new IntHashSet(slotCount, capacity);
 		
 		#if (flash && alchemy)
 		var o = mData.getAddr(0);
 		for (i in 0...capacity)
 		{
 			var v = Memory.getI32(o);
-			if (v != VAL_ABSENT) tmp.set(v);
+			if (v != VAL_ABSENT) t.set(v);
 			o += 8;
 		}
 		#else
 		for (i in 0...capacity)
 		{
 			var v = getData(i << 1);
-			if (v != VAL_ABSENT) tmp.set(v);
+			if (v != VAL_ABSENT) t.set(v);
 		}
 		#end
 		
@@ -302,13 +291,13 @@ class IntHashSet implements Set<Int>
 		mData.free();
 		mNext.free();
 		#end
-		mHash = tmp.mHash;
-		mData = tmp.mData;
-		mNext = tmp.mNext;
+		mHash = t.mHash;
+		mData = t.mData;
+		mNext = t.mNext;
 		
 		this.slotCount = slotCount;
-		mMask = tmp.mMask;
-		mFree = tmp.mFree;
+		mMask = t.mMask;
+		mFree = t.mFree;
 	}
 	
 	/**
@@ -332,7 +321,7 @@ class IntHashSet implements Set<Int>
 	**/
 	public function toString():String
 	{
-		var s = Printf.format("{ IntHashSet size/capacity: %d/%d, load factor: %.2f }", [size(), capacity, loadFactor]);
+		var s = Printf.format("{ IntHashSet size/capacity: %d/%d, load factor: %.2f }", [size, capacity, loadFactor]);
 		if (isEmpty()) return s;
 		s += "\n[\n";
 		for (x in this)
@@ -343,16 +332,13 @@ class IntHashSet implements Set<Int>
 		return s;
 	}
 	
-	/*///////////////////////////////////////////////////////
-	// set
-	///////////////////////////////////////////////////////*/
+	/* INTERFACE Set */
 	
 	/**
 		Returns true if this set contains the element `x`.
-		<o>1</o>
 		<assert>value 0x80000000 is reserved</assert>
 	**/
-	inline public function has(x:Int):Bool
+	public inline function has(x:Int):Bool
 	{
 		assert(x != VAL_ABSENT, "value 0x80000000 is reserved");
 		
@@ -403,7 +389,6 @@ class IntHashSet implements Set<Int>
 	
 	/**
 		Adds the element `x` to this set if possible.
-		<o>1</o>
 		<assert>value 0x80000000 is reserved</assert>
 		<assert>hash set is full (if not resizable)</assert>
 		@return true if `x` was added to this set, false if `x` already exists.
@@ -422,7 +407,7 @@ class IntHashSet implements Set<Int>
 		#end
 		if (j == EMPTY_SLOT)
 		{
-			if (mSize == capacity) grow();
+			if (size == capacity) grow();
 			
 			var i = mFree << 1;
 			mFree = getNext(mFree);
@@ -483,7 +468,7 @@ class IntHashSet implements Set<Int>
 					return false;
 				else
 				{
-					if (mSize == capacity) grow();
+					if (size == capacity) grow();
 					var i = mFree << 1;
 					mFree = getNext(mFree);
 					setData(i, x);
@@ -496,15 +481,21 @@ class IntHashSet implements Set<Int>
 		}
 	}
 	
-	/*///////////////////////////////////////////////////////
-	// collection
-	///////////////////////////////////////////////////////*/
+	/* INTERFACE Collection */
+	
+	/**
+		The total number of elements.
+	**/
+	public var size(get, never):Int;
+	inline function get_size():Int
+	{
+		return mSize;
+	}
 	
 	/**
 		Destroys this object by explicitly nullifying all elements.
 		
 		Improves GC efficiency/performance (optional).
-		<o>n</o>
 	**/
 	public function free()
 	{
@@ -517,24 +508,26 @@ class IntHashSet implements Set<Int>
 		mHash = null;
 		mData = null;
 		mNext = null;
-		mIterator = null;
+		if (mIterator != null)
+		{
+			mIterator.free();
+			mIterator = null;
+		}
 	}
 	
 	/**
 		Same as ``has()``.
-		<o>1</o>
 	**/
-	inline public function contains(x:Int):Bool
+	public inline function contains(x:Int):Bool
 	{
 		return has(x);
 	}
 	
 	/**
 		Removes the element `x`.
-		<o>1</o>
 		@return true if `x` was successfully removed, false if `x` does not exist.
 	**/
-	inline public function remove(x:Int):Bool
+	public inline function remove(x:Int):Bool
 	{
 		var b = hashCode(x);
 		var i = getHash(b);
@@ -572,8 +565,7 @@ class IntHashSet implements Set<Int>
 				
 				mSize--;
 				
-				if (mSize == (capacity >> 2) && capacity > mMinCapacity) shrink();
-				
+				if (size == (capacity >> 2) && capacity > mMinCapacity) shrink();
 				return true;
 			}
 			else
@@ -627,8 +619,7 @@ class IntHashSet implements Set<Int>
 					
 					--mSize;
 					
-					if (mSize == (capacity >> 2) && capacity > mMinCapacity) shrink();
-					
+					if (size == (capacity >> 2) && capacity > mMinCapacity) shrink();
 					return true;
 				}
 				else
@@ -638,22 +629,12 @@ class IntHashSet implements Set<Int>
 	}
 	
 	/**
-		The total number of elements.
-		<o>1</o>
-	**/
-	inline public function size():Int
-	{
-		return mSize;
-	}
-	
-	/**
 		Removes all elements.
-		<o>n</o>
-		@param purge If true, the hash set shrinks to the initial capacity defined in the constructor.
+		@param gc If true, the hash set shrinks to the initial capacity defined in the constructor.
 	**/
-	public function clear(purge = false)
+	public function clear(gc:Bool = false)
 	{
-		if (purge)
+		if (gc)
 		{
 			capacity = mMinCapacity;
 			
@@ -661,8 +642,8 @@ class IntHashSet implements Set<Int>
 			mData.resize(capacity << 1);
 			mNext.resize(capacity);
 			#else
-			mData = NativeArray.init(capacity << 1);
-			mNext = NativeArray.init(capacity);
+			mData = NativeArrayTools.init(capacity << 1);
+			mNext = NativeArrayTools.init(capacity);
 			#end
 		}
 		
@@ -709,11 +690,10 @@ class IntHashSet implements Set<Int>
 	
 	/**
 		Returns true if the set is empty.
-		<o>1</o>
 	**/
-	inline public function isEmpty():Bool
+	public inline function isEmpty():Bool
 	{
-		return mSize == 0;
+		return size == 0;
 	}
 	
 	/**
@@ -723,7 +703,7 @@ class IntHashSet implements Set<Int>
 	{
 		if (isEmpty()) return [];
 		
-		var out = ArrayUtil.alloc(size());
+		var out = ArrayTools.alloc(size);
 		var j = 0, v, d = mData;
 		for (i in 0...capacity)
 		{
@@ -734,26 +714,11 @@ class IntHashSet implements Set<Int>
 	}
 	
 	/**
-		Returns an unordered `Vector<T>` object containing all elements in this set.
-	**/
-	public function toVector():Container<Int>
-	{
-		var v = NativeArray.init(size());
-		var j = 0;
-		for (i in 0...capacity)
-		{
-			var val = getData(i << 1);
-			if (val != VAL_ABSENT) v.set(j++, val);
-		}
-		return v;
-	}
-	
-	/**
 		Duplicates this hash set by creating a deep copy.
 		
 		The `assign` and `copier` parameters are ignored.
 	**/
-	public function clone(assign = true, copier:Int->Int = null):Collection<Int>
+	public function clone(assign:Bool = true, copier:Int->Int = null):Collection<Int>
 	{
 		var c = new IntHashSet(M.INT16_MIN);
 		c.key = HashKey.next();
@@ -763,20 +728,19 @@ class IntHashSet implements Set<Int>
 		c.mData = mData.clone();
 		c.mNext = mNext.clone();
 		#else
-		c.mHash = NativeArray.init(NativeArray.size(mHash));
-		c.mData = NativeArray.init(NativeArray.size(mData));
-		c.mNext = NativeArray.init(NativeArray.size(mNext));
-		for (i in 0...NativeArray.size(mHash)) c.mHash[i] = mHash[i];
-		for (i in 0...NativeArray.size(mData)) c.mData[i] = mData[i];
-		for (i in 0...NativeArray.size(mNext)) c.mNext[i] = mNext[i];
+		c.mHash = NativeArrayTools.init(mHash.size());
+		c.mData = NativeArrayTools.init(mData.size());
+		c.mNext = NativeArrayTools.init(mNext.size());
+		for (i in 0...mHash.size()) c.mHash[i] = mHash[i];
+		for (i in 0...mData.size()) c.mData[i] = mData[i];
+		for (i in 0...mNext.size()) c.mNext[i] = mNext[i];
 		#end
 		
 		c.mMask = mMask;
 		c.slotCount = slotCount;
 		c.capacity = capacity;
 		c.mFree = mFree;
-		c.mSize = mSize;
-		
+		c.mSize = size;
 		return c;
 	}
 	
@@ -796,10 +760,10 @@ class IntHashSet implements Set<Int>
 		mNext.resize(newSize);
 		mData.resize(newSize << 1);
 		#else
-		var copy = NativeArray.init(newSize);
+		var copy = NativeArrayTools.init(newSize);
 		for (i in 0...oldSize) copy[i] = mNext[i];
 		mNext = copy;
-		var copy = NativeArray.init(newSize << 1);
+		var copy = NativeArrayTools.init(newSize << 1);
 		for (i in 0...oldSize << 1) copy[i] = mData[i];
 		mData = copy;
 		#end
@@ -889,8 +853,8 @@ class IntHashSet implements Set<Int>
 		mNext.resize(newSize);
 		#else
 		var k = newSize << 1;
-		var tmp = NativeArray.init(k);
-		mNext = NativeArray.init(newSize);
+		var t = NativeArrayTools.init(k);
+		mNext = NativeArrayTools.init(newSize);
 		
 		var e = 0;
 		for (i in 0...slotCount)
@@ -900,25 +864,25 @@ class IntHashSet implements Set<Int>
 			
 			setHash(i, e);
 			
-			tmp[e++] = getData(j);
-			tmp[e++] = NULL_POINTER;
+			t[e++] = getData(j);
+			t[e++] = NULL_POINTER;
 			
 			j = getData(j + 1);
 			while (j != NULL_POINTER)
 			{
-				tmp[e - 1] = e;
-				tmp[e++] = getData(j    );
-				tmp[e++] = NULL_POINTER;
+				t[e - 1] = e;
+				t[e++] = getData(j    );
+				t[e++] = NULL_POINTER;
 				j = getData(j + 1);
 			}
 		}
 		var i = k >> 1;
 		while (i < k)
 		{
-			tmp[i++] = VAL_ABSENT;
-			tmp[i++] = NULL_POINTER;
+			t[i++] = VAL_ABSENT;
+			t[i++] = NULL_POINTER;
 		}
-		mData = tmp;
+		mData = t;
 		#end
 		
 		for (i in 0...newSize - 1) setNext(i, i + 1);
@@ -982,7 +946,7 @@ class IntHashSet implements Set<Int>
 @:dox(hide)
 class IntHashSetIterator implements de.polygonal.ds.Itr<Int>
 {
-	var mHash:IntHashSet;
+	var mObject:IntHashSet;
 	var mI:Int;
 	var mS:Int;
 	
@@ -994,35 +958,41 @@ class IntHashSetIterator implements de.polygonal.ds.Itr<Int>
 	
 	public function new(x:IntHashSet)
 	{
-		mHash = x;
+		mObject = x;
 		mData = x.mData;
 		mI = 0;
 		mS = x.capacity;
 		scan();
 	}
 	
+	public function free()
+	{
+		mObject = null;
+		mData = null;
+	}
+	
 	public function reset():Itr<Int>
 	{
-		mData = mHash.mData;
+		mData = mObject.mData;
 		mI = 0;
-		mS = mHash.capacity;
+		mS = mObject.capacity;
 		scan();
 		return this;
 	}
 	
-	inline public function hasNext():Bool
+	public inline function hasNext():Bool
 	{
 		return mI < mS;
 	}
 	
-	inline public function next():Int
+	public inline function next():Int
 	{
 		var x = mData.get((mI++ << 1));
 		scan();
 		return x;
 	}
 	
-	inline public function remove()
+	public function remove()
 	{
 		throw "unsupported operation";
 	}

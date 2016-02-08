@@ -22,7 +22,7 @@ class TestBinaryTree extends AbstractTest
 		node.l.l.setR("e2");
 		
 		node.clear(false);
-		assertEquals(1, node.size());
+		assertEquals(1, node.size);
 		
 		var node = new BinaryTreeNode<String>("root");
 		node.setL("e1");
@@ -31,7 +31,7 @@ class TestBinaryTree extends AbstractTest
 		node.l.l.setR("e2");
 		
 		node.clear(true);
-		assertEquals(1, node.size());
+		assertEquals(1, node.size);
 	}
 	
 	function testRemove()
@@ -58,7 +58,7 @@ class TestBinaryTree extends AbstractTest
 		assertFalse(node.hasL());
 		assertTrue(node.hasR());
 		
-		assertEquals(2, node.size());
+		assertEquals(2, node.size);
 	}
 }
 

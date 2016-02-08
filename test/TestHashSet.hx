@@ -1,4 +1,4 @@
-import de.polygonal.ds.ArrayUtil;
+import de.polygonal.ds.tools.ArrayTools;
 import de.polygonal.ds.Dll;
 import de.polygonal.ds.HashableItem;
 import de.polygonal.ds.HashSet;
@@ -39,7 +39,7 @@ class TestHashSet extends AbstractTest
 		
 		for (i in 0...32) h.set(values[i]);
 		for (i in 0...32) assertTrue(h.has(values[i]));
-		assertEquals(32, h.size());
+		assertEquals(32, h.size);
 		assertEquals(32, h.capacity);
 		
 		for (i in 0...24) assertTrue(h.remove(values[i]));
@@ -87,7 +87,7 @@ class TestHashSet extends AbstractTest
 		
 		h.rehash(512);
 		
-		assertEquals(8, h.size());
+		assertEquals(8, h.size);
 		assertEquals(8, h.capacity);
 		
 		for (i in 0...8) assertTrue(h.has(values[i]));
@@ -106,19 +106,19 @@ class TestHashSet extends AbstractTest
 			
 			assertTrue(h.has(values[0]));
 			assertTrue(h.has(values[1]));
-			assertEquals(2, h.size());
+			assertEquals(2, h.size);
 			
 			assertTrue(h.remove(values[0]));
 			
 			assertFalse(h.has(values[0]));
 			assertTrue(h.has(values[1]));
-			assertEquals(1, h.size());
+			assertEquals(1, h.size);
 			
 			assertTrue(h.remove(values[1]));
 			
 			assertFalse(h.has(values[0]));
 			assertFalse(h.has(values[1]));
-			assertEquals(0, h.size());
+			assertEquals(0, h.size);
 		}
 	}
 	
@@ -137,28 +137,28 @@ class TestHashSet extends AbstractTest
 			assertTrue(h.has(values[0]));
 			assertTrue(h.has(values[1]));
 			assertTrue(h.has(values[2]));
-			assertEquals(3, h.size());
+			assertEquals(3, h.size);
 			
 			assertTrue(h.remove(values[0]));
 			
 			assertFalse(h.has(values[0]));
 			assertTrue(h.has(values[1]));
 			assertTrue(h.has(values[2]));
-			assertEquals(2, h.size());
+			assertEquals(2, h.size);
 			
 			assertTrue(h.remove(values[1]));
 			
 			assertFalse(h.has(values[0]));
 			assertFalse(h.has(values[1]));
 			assertTrue(h.has(values[2]));
-			assertEquals(1, h.size());
+			assertEquals(1, h.size);
 			
 			assertTrue(h.remove(values[2]));
 			
 			assertFalse(h.has(values[0]));
 			assertFalse(h.has(values[1]));
 			assertFalse(h.has(values[2]));
-			assertEquals(0, h.size());
+			assertEquals(0, h.size);
 		}
 	}
 	
@@ -179,7 +179,7 @@ class TestHashSet extends AbstractTest
 			values.push(item);
 			h.set(item);
 			
-			assertEquals(2, h.size());
+			assertEquals(2, h.size);
 			assertEquals(2, h.capacity);
 			
 			for (i in values) assertTrue(h.has(i));
@@ -188,14 +188,14 @@ class TestHashSet extends AbstractTest
 			values.push(item);
 			h.set(item);
 			
-			assertEquals(3, h.size());
+			assertEquals(3, h.size);
 			assertEquals(4, h.capacity);
 			
 			var item = new E(1);
 			values.push(item);
 			h.set(item);
 			for (i in values) assertTrue(h.has(i));
-			assertEquals(4, h.size());
+			assertEquals(4, h.size);
 			assertEquals(4, h.capacity);
 			
 			for (i in 0...4)
@@ -206,7 +206,7 @@ class TestHashSet extends AbstractTest
 			}
 			
 			for (i in values) assertTrue(h.has(i));
-			assertEquals(8, h.size());
+			assertEquals(8, h.size);
 			assertEquals(8, h.capacity);
 			
 			for (i in 0...8)
@@ -216,26 +216,26 @@ class TestHashSet extends AbstractTest
 				h.set(item);
 			}
 			for (i in values) assertTrue(h.has(i));
-			assertEquals(16, h.size());
+			assertEquals(16, h.size);
 			assertEquals(16, h.capacity);
 			
 			for (i in 0...12)
 				assertTrue(h.remove(values.pop()));
 			assertEquals(8, h.capacity);
-			assertEquals(4, h.size());
+			assertEquals(4, h.size);
 			for (i in values) assertTrue(h.has(i));
 			
 			for (i in 0...2) assertTrue(h.remove(values.pop()));
 			
 			assertEquals(4, h.capacity);
-			assertEquals(2, h.size());
+			assertEquals(2, h.size);
 			for (i in values) assertTrue(h.has(i));
 			
 			assertTrue(h.remove(values.pop()));
 			assertTrue(h.remove(values.pop()));
 			
 			assertEquals(2, h.capacity);
-			assertEquals(0, h.size());
+			assertEquals(0, h.size);
 			assertTrue(h.isEmpty());
 		}
 	}
@@ -257,6 +257,7 @@ class TestHashSet extends AbstractTest
 		}
 	}
 	
+	@:access(E)
 	function testInsertRemoveFind()
 	{
 		var values = new Array<E>();
@@ -301,7 +302,7 @@ class TestHashSet extends AbstractTest
 		for (i in 0...K.length) keys.push(K[i]);
 		for (i in 0...keys.length) h.set(values[keys[i]]);
 		
-		ArrayUtil.shuffle(keys);
+		ArrayTools.shuffle(keys);
 		
 		for (i in 0...keys.length) assertTrue(h.remove(values[keys[i]]));
 	}
@@ -328,7 +329,7 @@ class TestHashSet extends AbstractTest
 			for (i in 0...keys.length) h.set(values[keys[i]]);
 			for (i in 0...keys.length) assertTrue(h.has(values[keys[i]]));
 			
-			ArrayUtil.shuffle(keys);
+			ArrayTools.shuffle(keys);
 			
 			for (i in 0...keys.length) assertTrue(h.remove(values[keys[i]]));
 		}
@@ -357,11 +358,11 @@ class TestHashSet extends AbstractTest
 			
 			for (i in 0...keys.length) h.set(values[keys[i]]);
 			
-			ArrayUtil.shuffle(keys);
+			ArrayTools.shuffle(keys);
 			
 			for (i in 0...keys.length) assertTrue(h.has(values[keys[i]]));
 			
-			ArrayUtil.shuffle(keys);
+			ArrayTools.shuffle(keys);
 			
 			for (i in 0...keys.length) assertTrue(h.remove(values[keys[i]]));
 		}
@@ -369,6 +370,7 @@ class TestHashSet extends AbstractTest
 		assertEquals(100, j);
 	}
 	
+	@:access(E)
 	function testCollision()
 	{
 		var s = 128;
@@ -384,19 +386,19 @@ class TestHashSet extends AbstractTest
 		var h = new HashSet<E>(s);
 		for (i in 0...s) h.set(values[i]);
 		
-		assertEquals(s, h.size());
+		assertEquals(s, h.size);
 		
 		for (i in 0...s) assertTrue(h.remove(values[i]));
 		
-		assertEquals(0, h.size());
+		assertEquals(0, h.size);
 		
 		for (i in 0...s) h.set(values[i]);
 		
-		assertEquals(s, h.size());
+		assertEquals(s, h.size);
 		
 		for (i in 0...s) assertTrue(h.remove(values[i]));
 		
-		assertEquals(0, h.size());
+		assertEquals(0, h.size);
 	}
 	
 	function testFind()
@@ -421,29 +423,29 @@ class TestHashSet extends AbstractTest
 		var h = new HashSet<E>(8);
 		
 		for (i in 0...8) h.set(values[i]);
-		assertTrue(h.size() == h.capacity);
+		assertTrue(h.size == h.capacity);
 		
 		h.set(values[8]);
 		
-		assertEquals(9, h.size());
+		assertEquals(9, h.size);
 		
 		for (i in 0...8 + 1) assertTrue(h.has(values[i]));
 		for (i in 9...16) h.set(values[i]);
 		
-		assertTrue(h.size() == h.capacity);
+		assertTrue(h.size == h.capacity);
 		
 		for (i in 0...16) assertTrue(h.has(values[i]));
 		var i = 16;
 		while (i-- > 0)
 		{
-			if (h.size() == 4) return;
+			if (h.size == 4) return;
 			assertTrue(h.remove(values[i]));
 		}
 		
 		assertTrue(h.isEmpty());
 		
 		for (i in 0...16) h.set(values[i]);
-		assertTrue(h.size() == h.capacity);
+		assertTrue(h.size == h.capacity);
 		for (i in 0...16) assertTrue(h.has(values[i]));
 	}
 	
@@ -544,7 +546,7 @@ class TestHashSet extends AbstractTest
 		
 		assertEquals(16, h.capacity);
 		
-		assertEquals(0, h.size());
+		assertEquals(0, h.size);
 		assertTrue(h.isEmpty());
 		
 		for (i in 0...16) h.set(values[i]);
@@ -561,7 +563,7 @@ class TestHashSet extends AbstractTest
 		h.clear(true);
 		
 		assertEquals(8, h.capacity);
-		assertEquals(0, h.size());
+		assertEquals(0, h.size);
 		
 		for (i in 0...16) h.set(values[i]);
 		assertEquals(16, h.capacity);

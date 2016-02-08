@@ -21,16 +21,38 @@ private class E implements Cloneable<E>
 @:access(de.polygonal.ds.LinkedDeque)
 class TestLinkedDeque extends AbstractTest
 {
-	inline static var BLOCK_SIZE = 4;
-	
-	function createDequeInt(size = BLOCK_SIZE)
+	function createDequeInt(size = 4)
 	{
 		return new LinkedDeque<Int>();
 	}
 	
-	function createDequeFoo(size = BLOCK_SIZE)
+	function createDequeFoo(size = 4)
 	{
 		return new ArrayedDeque<E>(size);
+	}
+	
+	function testSource()
+	{
+		var d = createDequeInt();
+		d.pushBack(0);
+		d.pushBack(1);
+		d.pushBack(2);
+		assertEquals(3, d.size);
+		
+		var a = d.mHead;
+		var b = d.mHead.next;
+		var c = d.mHead.next.next;
+		
+		assertEquals(null, a.prev);
+		assertEquals(null, c.next);
+		assertEquals(b, a.next);
+		assertEquals(c, b.next);
+		assertEquals(a, b.prev);
+		assertEquals(b, c.prev);
+		
+		assertEquals(0, d.popFront());
+		assertEquals(1, d.popFront());
+		assertEquals(2, d.popFront());
 	}
 	
 	function testAdjacent()
@@ -54,55 +76,27 @@ class TestLinkedDeque extends AbstractTest
 		assertEquals(4, d.getBack(0));
 	}
 	
-	function testFill()
+	function testForEach()
 	{
 		var d = createDequeInt();
-		d.fill(9, 10);
-		assertEquals(10, d.size());
-		for (i in 0...10) assertEquals(9, d.getFront(i));
-		
-		var d = createDequeInt(8);
-		for (i in 0...3) d.pushBack(i);
-		
-		d.fill(9, 1);
-		d.fill(9, 2);
-		d.fill(9, 3);
-		
-		var d = createDequeInt(4);
-		for (i in 0...20) d.pushBack(i);
-		d.fill(99);
-		assertEquals(20, d.size());
-		for (i in 0...20)
-			assertEquals(99, d.getFront(i));
-			
-		var d = createDequeInt(4);
-		for (i in 0...30) d.pushBack(i);
-		d.fill(99);
-		assertEquals(30, d.size());
-		for (i in 0...30)
-			assertEquals(99, d.getFront(i));
-			
-		for (s in 0...15)
-		{
-			var d = createDequeInt(4);
-			for (i in 0...20) d.pushBack(i);
-			
-			d.fill(99, s);
-			for (i in 0...s)
+		d.pushFront(2);
+		d.pushFront(1);
+		d.pushFront(0);
+		d.forEach(
+			function(v, i)
 			{
-				assertEquals(99, d.getFront(i));
-			}
-			
-		}
+				assertEquals(i, v);
+				return v;
+			});
 	}
 	
 	function testClear()
 	{
 		var d = createDequeInt();
-		d.fill(9, 10);
+		for (i in 0...10) d.pushBack(9);
 		d.clear(true);
 		assertTrue(d.isEmpty());
-		assertEquals(0, d.size());
+		assertEquals(0, d.size);
 	}
 	
 	function testIndexOf()
@@ -196,7 +190,7 @@ class TestLinkedDeque extends AbstractTest
 			for (k in 0...s) d.pushBack(i++);
 			
 			var c:Deque<Int> = cast d.clone(true);
-			assertEquals(d.size(), c.size());
+			assertEquals(d.size, c.size);
 			i = 0;
 			var z = 0;
 			for (x in c)
@@ -216,7 +210,7 @@ class TestLinkedDeque extends AbstractTest
 			for (k in 0...s) d.pushBack(new E(i++));
 			
 			var c:Deque<E> = cast d.clone(false);
-			assertEquals(d.size(), c.size());
+			assertEquals(d.size, c.size);
 			i = 0;
 			var z = 0;
 			for (x in c)
@@ -241,7 +235,7 @@ class TestLinkedDeque extends AbstractTest
 			for (k in 0...s) d.pushBack(new E(i++));
 			
 			var c:Deque<E> = cast d.clone(false, copier);
-			assertEquals(d.size(), c.size());
+			assertEquals(d.size, c.size);
 			i = 0;
 			var z = 0;
 			for (x in c)
@@ -431,7 +425,7 @@ class TestLinkedDeque extends AbstractTest
 		d.pushBack(4);
 		
 		d.remove(0); //block0, head++
-		assertEquals(4, d.size());
+		assertEquals(4, d.size);
 		var i = 1;
 		var c = 0;
 		for (x in d)
@@ -442,7 +436,7 @@ class TestLinkedDeque extends AbstractTest
 		assertEquals(4, c);
 		
 		d.remove(4); //block0, tail--
-		assertEquals(3, d.size());
+		assertEquals(3, d.size);
 		var i = 1;
 		var c = 0;
 		for (x in d)
@@ -453,7 +447,7 @@ class TestLinkedDeque extends AbstractTest
 		assertEquals(3, c);
 		
 		d.remove(2);
-		assertEquals(2, d.size());
+		assertEquals(2, d.size);
 		var i = 1;
 		var c = 0;
 		var data = [1, 3];
@@ -465,7 +459,7 @@ class TestLinkedDeque extends AbstractTest
 		assertEquals(2, c);
 		
 		d.remove(1);
-		assertEquals(1, d.size());
+		assertEquals(1, d.size);
 		var i = 1;
 		var c = 0;
 		var data = [3];
@@ -477,7 +471,7 @@ class TestLinkedDeque extends AbstractTest
 		assertEquals(1, c);
 		
 		d.remove(3);
-		assertEquals(0, d.size());
+		assertEquals(0, d.size);
 	}
 	
 	function testRemoveCase2()
@@ -491,7 +485,7 @@ class TestLinkedDeque extends AbstractTest
 		d.pushBack(5);
 		
 		d.remove(3);
-		assertEquals(5, d.size());
+		assertEquals(5, d.size);
 		var c = 0;
 		var data = [0, 1, 2, 4, 5];
 		for (x in d)
@@ -546,7 +540,7 @@ class TestLinkedDeque extends AbstractTest
 		assertEquals(1, d.popFront());
 		
 		assertTrue(d.isEmpty());
-		assertEquals(0, d.size());
+		assertEquals(0, d.size);
 	}
 	
 	function testPushPopFront2()
@@ -569,7 +563,7 @@ class TestLinkedDeque extends AbstractTest
 			assertEquals(0, d.back());
 		}
 		
-		assertEquals(4, d.size());
+		assertEquals(4, d.size);
 		
 		for (i in 4...8)
 		{
@@ -578,7 +572,7 @@ class TestLinkedDeque extends AbstractTest
 			assertEquals(0, d.back());
 		}
 		
-		assertEquals(8, d.size());
+		assertEquals(8, d.size);
 		
 		var j = 7;
 		for (i in 0...8)
@@ -589,7 +583,7 @@ class TestLinkedDeque extends AbstractTest
 				assertEquals(j, d.front());
 		}
 		
-		assertEquals(0, d.size());
+		assertEquals(0, d.size);
 		
 		//pushFront, popBack
 		var d = createDequeInt();
@@ -612,7 +606,7 @@ class TestLinkedDeque extends AbstractTest
 			}
 		}
 		
-		assertEquals(0, d.size());
+		assertEquals(0, d.size);
 		
 		//pushBack, popFront
 		var d = createDequeInt();
@@ -711,7 +705,7 @@ class TestLinkedDeque extends AbstractTest
 		
 		var clone:LinkedDeque<Int> = cast d.clone(true);
 		
-		assertEquals(d.size(), clone.size());
+		assertEquals(d.size, clone.size);
 		
 		var node:LinkedDequeNode<Int> = clone.mHead;
 		var i = 9;
@@ -727,7 +721,7 @@ class TestLinkedDeque extends AbstractTest
 		var d = new LinkedDeque<Int>();
 		d.pushFront(0);
 		var clone:LinkedDeque<Int> = cast d.clone(true);
-		assertEquals(d.size(), clone.size());
+		assertEquals(d.size, clone.size);
 		assertEquals(clone.mHead.val, 0);
 		assertEquals(clone.mTail.val, 0);
 		
@@ -735,7 +729,7 @@ class TestLinkedDeque extends AbstractTest
 		d.pushFront(0);
 		d.pushFront(1);
 		var clone:LinkedDeque<Int> = cast d.clone(true);
-		assertEquals(d.size(), clone.size());
+		assertEquals(d.size, clone.size);
 		assertEquals(clone.mHead.val, 1);
 		assertEquals(clone.mTail.val, 0);
 	}
@@ -749,7 +743,7 @@ class TestLinkedDeque extends AbstractTest
 		}
 		
 		var clone:LinkedDeque<E> = cast d.clone(false);
-		assertEquals(d.size(), clone.size());
+		assertEquals(d.size, clone.size);
 		
 		var node:LinkedDequeNode<E> = clone.mHead;
 		var i = 9;
@@ -765,7 +759,7 @@ class TestLinkedDeque extends AbstractTest
 		var d = new LinkedDeque<E>();
 		d.pushFront(new E(0));
 		var clone:LinkedDeque<E> = cast d.clone(false);
-		assertEquals(d.size(), clone.size());
+		assertEquals(d.size, clone.size);
 		assertEquals(clone.mHead.val.id, 0);
 		assertEquals(clone.mTail.val.id, 0);
 		
@@ -773,7 +767,7 @@ class TestLinkedDeque extends AbstractTest
 		d.pushFront(new E(0));
 		d.pushFront(new E(1));
 		var clone:LinkedDeque<E> = cast d.clone(false);
-		assertEquals(d.size(), clone.size());
+		assertEquals(d.size, clone.size);
 		assertEquals(clone.mHead.val.id, 1);
 		assertEquals(clone.mTail.val.id, 0);
 	}
@@ -787,7 +781,7 @@ class TestLinkedDeque extends AbstractTest
 		}
 		
 		var clone:LinkedDeque<E> = cast d.clone(false, function(x:E):E { return new E(x.id); } );
-		assertEquals(d.size(), clone.size());
+		assertEquals(d.size, clone.size);
 		
 		var node:LinkedDequeNode<E> = clone.mHead;
 		var i = 9;
@@ -803,7 +797,7 @@ class TestLinkedDeque extends AbstractTest
 		var d = new LinkedDeque<E>();
 		d.pushFront(new E(0));
 		var clone:LinkedDeque<E> = cast d.clone(false, function(x:E):E { return new E(x.id); } );
-		assertEquals(d.size(), clone.size());
+		assertEquals(d.size, clone.size);
 		assertEquals(clone.mHead.val.id, 0);
 		assertEquals(clone.mTail.val.id, 0);
 		
@@ -811,7 +805,7 @@ class TestLinkedDeque extends AbstractTest
 		d.pushFront(new E(0));
 		d.pushFront(new E(1));
 		var clone:LinkedDeque<E> = cast d.clone(false, function(x:E):E { return new E(x.id); } );
-		assertEquals(d.size(), clone.size());
+		assertEquals(d.size, clone.size);
 		assertEquals(clone.mHead.val.id, 1);
 		assertEquals(clone.mTail.val.id, 0);
 	}
@@ -853,20 +847,20 @@ class TestLinkedDeque extends AbstractTest
 		d.pushFront(2);
 		
 		d.remove(1);
-		assertEquals(2, d.size());
+		assertEquals(2, d.size);
 		
 		d.remove(2);
-		assertEquals(1, d.size());
+		assertEquals(1, d.size);
 		
 		d.remove(0);
-		assertEquals(0, d.size());
+		assertEquals(0, d.size);
 		
 		var d = new LinkedDeque<Int>(10);
 		d.pushFront(0);
 		d.pushFront(0);
 		d.pushFront(0);
 		
-		assertEquals(3, d.size());
+		assertEquals(3, d.size);
 		
 		d.remove(0);
 		assertTrue(d.isEmpty());
@@ -925,12 +919,12 @@ class TestLinkedDeque extends AbstractTest
 		
 		assertEquals(2, d.front());
 		
-		assertEquals(3, d.size());
+		assertEquals(3, d.size);
 		
 		assertEquals(2, d.popFront());
 		assertEquals(1, d.popFront());
 		assertEquals(0, d.popFront());
-		assertEquals(0, d.size());
+		assertEquals(0, d.size);
 		
 		d.pushFront(0);
 		assertEquals(0, d.front());
@@ -939,22 +933,22 @@ class TestLinkedDeque extends AbstractTest
 		d.pushFront(2);
 		assertEquals(2, d.front());
 		
-		assertEquals(3, d.size());
+		assertEquals(3, d.size);
 		
 		assertEquals(2, d.popFront());
 		assertEquals(1, d.popFront());
 		assertEquals(0, d.popFront());
-		assertEquals(0, d.size());
+		assertEquals(0, d.size);
 		
 		d.pushFront(0);
-		assertEquals(1, d.size());
+		assertEquals(1, d.size);
 		assertEquals(0, d.popFront());
-		assertEquals(0, d.size());
+		assertEquals(0, d.size);
 		
 		d.pushFront(0);
-		assertEquals(1, d.size());
+		assertEquals(1, d.size);
 		assertEquals(0, d.popFront());
-		assertEquals(0, d.size());
+		assertEquals(0, d.size);
 	}
 	
 	function testBack()
@@ -966,12 +960,12 @@ class TestLinkedDeque extends AbstractTest
 		
 		assertEquals(2, d.back());
 		
-		assertEquals(3, d.size());
+		assertEquals(3, d.size);
 		
 		assertEquals(2, d.popBack());
 		assertEquals(1, d.popBack());
 		assertEquals(0, d.popBack());
-		assertEquals(0, d.size());
+		assertEquals(0, d.size);
 		
 		d.pushBack(0);
 		assertEquals(0, d.back());
@@ -980,21 +974,21 @@ class TestLinkedDeque extends AbstractTest
 		d.pushBack(2);
 		assertEquals(2, d.back());
 		
-		assertEquals(3, d.size());
+		assertEquals(3, d.size);
 		
 		assertEquals(2, d.popBack());
 		assertEquals(1, d.popBack());
 		assertEquals(0, d.popBack());
-		assertEquals(0, d.size());
+		assertEquals(0, d.size);
 		
 		d.pushBack(0);
-		assertEquals(1, d.size());
+		assertEquals(1, d.size);
 		assertEquals(0, d.popBack());
-		assertEquals(0, d.size());
+		assertEquals(0, d.size);
 		
 		d.pushBack(0);
-		assertEquals(1, d.size());
+		assertEquals(1, d.size);
 		assertEquals(0, d.popBack());
-		assertEquals(0, d.size());
+		assertEquals(0, d.size);
 	}
 }

@@ -1,4 +1,7 @@
-﻿import de.polygonal.ds.Heap;
+﻿import de.polygonal.ds.Container;
+import de.polygonal.ds.Heap;
+import de.polygonal.ds.Heapable;
+import de.polygonal.ds.tools.NativeArrayTools;
 
 @:access(de.polygonal.ds.Heap)
 class TestHeap extends AbstractTest
@@ -13,15 +16,22 @@ class TestHeap extends AbstractTest
 		mSize = size;
 	}
 	
+	function testSource()
+	{
+		var heap = new Heap<E2>([new E2(0), new E2(1), new E2(2), new E2(3)]);
+		assertEquals(4, heap.size);
+		for (i in 0...4) assertEquals((4 - i) - 1, Std.int(heap.pop().y));
+	}
+	
 	function testGrow()
 	{
 		var heap = new Heap<E2>(4);
 		assertEquals(4, heap.capacity);
 		for (i in 0...4) heap.add(new E2(i));
-		assertEquals(4, heap.size());
+		assertEquals(4, heap.size);
 		heap.add(new E2(50));
 		assertTrue(heap.capacity > 4);
-		assertEquals(5, heap.size());
+		assertEquals(5, heap.size);
 	}
 	
 	function testChange()
@@ -162,39 +172,51 @@ class TestHeap extends AbstractTest
 	
 	function testReserve()
 	{
-		var a = new E1(0);
-		var b = new E1(1);
-		var c = new E1(2);
+		var l = new de.polygonal.ds.Heap<E1>(4);
+		for (i in 0...4) l.add(new E1(i));
+		assertEquals(4, l.capacity);
+		#if (flash && generic && !no_inline)
+		var d:Container<E1> = flash.Vector.convert(l.mData);
+		#else
+		var d = l.mData;
+		#end
+		assertEquals(null, d[0]);
+		assertEquals(0, d[1].ID);
+		assertEquals(1, d[2].ID);
+		assertEquals(2, d[3].ID);
+		assertEquals(3, d[4].ID);
+		assertEquals(5, NativeArrayTools.size(d));
 		
-		var l = new de.polygonal.ds.Heap<E1>();
+		l.reserve(8);
+		assertEquals(8, l.capacity);
+		#if (flash && generic && !no_inline)
+		var d:Container<E1> = flash.Vector.convert(l.mData);
+		#else
+		var d = l.mData;
+		#end
+		assertEquals(null, d[0]);
+		assertEquals(0, d[1].ID);
+		assertEquals(1, d[2].ID);
+		assertEquals(2, d[3].ID);
+		assertEquals(3, d[4].ID);
+		assertEquals(null, d[5]);
+		assertEquals(null, d[6]);
+		assertEquals(null, d[7]);
+		assertEquals(null, d[8]);
+		assertEquals(9, NativeArrayTools.size(d));
 		
-		l.add(a);
-		l.add(b);
-		l.add(c);
+		for (i in 0...4) l.add(new E1(i + 4));
 		
-		var a:Array<E1> = l.mData;
+		#if (flash && generic && !no_inline)
+		var d:Container<E1> = flash.Vector.convert(l.mData);
+		#else
+		var d = l.mData;
+		#end
 		
-		assertEquals(null, a[0]);
-		assertEquals(0   , a[1].ID);
-		assertEquals(1   , a[2].ID);
-		assertEquals(2   , a[3].ID);
-		
-		l.reserve(10);
-		
-		assertEquals(null, a[0]);
-		assertEquals(0   , a[1].ID);
-		assertEquals(1   , a[2].ID);
-		assertEquals(2   , a[3].ID);
-		
-		var i = 0;
-		while (!l.isEmpty())
-		{
-			var foo:E1 = l.pop();
-			assertEquals(i++, foo.ID);
-		}
+		for (i in 1...8) assertEquals(i - 1, d[i].ID);
 	}
 	
-	function testPack()
+	/*function _testPack()
 	{
 		var l = new de.polygonal.ds.Heap<E1>();
 		l.add(new E1(0));
@@ -203,7 +225,7 @@ class TestHeap extends AbstractTest
 		
 		l.clear();
 		
-		var a:Array<E1> = l.mData;
+		var a:Container<E1> = l.mData;
 		
 		assertEquals(null, a[0]);
 		assertEquals(0, a[1].ID);
@@ -212,10 +234,10 @@ class TestHeap extends AbstractTest
 		
 		l.pack();
 		
-		var a:Array<E1> = l.mData;
+		var a:Container<E1> = l.mData;
 		assertEquals(1, a.length);
 		assertEquals(null, a[0]);
-	}
+	}*/
 	
 	function testFront()
 	{
@@ -229,10 +251,10 @@ class TestHeap extends AbstractTest
 	{
 		var h = new Heap<E1>();
 		assertTrue(h.isEmpty());
-		assertEquals(0, h.size());
+		assertEquals(0, h.size);
 		h.add(new E1(99));
 		h.add(new E1(77));
-		assertEquals(2, h.size());
+		assertEquals(2, h.size);
 		assertEquals(77, h.top().ID);
 	}
 	
@@ -309,11 +331,11 @@ class TestHeap extends AbstractTest
 		for (i in 0...ids.length) h.remove(foo[i]);
 		
 		assertTrue(h.isEmpty());
-		assertTrue(h.size() == 0);
+		assertTrue(h.size == 0);
 		
 		for (i in 0...ids.length) h.add(foo[i]);
 		
-		assertEquals(h.size(), mSize);
+		assertEquals(h.size, mSize);
 	}
 	
 	function testRemove4()
@@ -335,11 +357,11 @@ class TestHeap extends AbstractTest
 		
 		last = heap.pop().y;
 		
-		var iter = 0;
+		var forEach = 0;
 		
 		while (!heap.isEmpty())
 		{
-			iter++;
+			forEach++;
 			
 			var e = heap.pop(); //e should be smaller than last
 			
@@ -378,12 +400,12 @@ class TestHeap extends AbstractTest
 			assertEquals(i, val.ID);
 		}
 		
-		assertEquals(h.size(), 0);
+		assertEquals(h.size, 0);
 		
 		for (i in 0...10)
 		{
 			h.add(new E1(data[i]));
-			assertEquals(i + 1, h.size());
+			assertEquals(i + 1, h.size);
 		}
 		
 		for (i in 0...10)
@@ -395,7 +417,7 @@ class TestHeap extends AbstractTest
 		assertTrue(h.isEmpty());
 		h.clear();
 		
-		assertEquals(h.size(), 0);
+		assertEquals(h.size, 0);
 		assertTrue(h.isEmpty());
 	}
 	
@@ -415,12 +437,12 @@ class TestHeap extends AbstractTest
 			assertEquals(i, val.ID);
 		}
 		
-		assertEquals(h.size(), 0);
+		assertEquals(h.size, 0);
 		
 		for (i in 0...10)
 		{
 			h.add(new E1(data[i]));
-			assertEquals(i + 1, h.size());
+			assertEquals(i + 1, h.size);
 		}
 		
 		for (i in 0...10)
@@ -432,7 +454,7 @@ class TestHeap extends AbstractTest
 		assertTrue(h.isEmpty());
 		h.clear();
 		
-		assertEquals(h.size(), 0);
+		assertEquals(h.size, 0);
 		assertTrue(h.isEmpty());
 	}
 	
@@ -519,6 +541,8 @@ class TestHeap extends AbstractTest
 		{
 			var x = itr.next();
 			itr.remove();
+			assertFalse(h.contains(x));
+			
 		}
 		assertTrue(h.isEmpty());
 	}
@@ -561,11 +585,7 @@ class TestHeap extends AbstractTest
 	}
 }
 
-#if haxe3
 private class E1 implements de.polygonal.ds.Heapable<E1> implements de.polygonal.ds.Cloneable<E1>
-#else
-private class E1 implements de.polygonal.ds.Heapable<E1>, implements de.polygonal.ds.Cloneable<E1>
-#end
 {
 	public var position:Int;
 	

@@ -1,5 +1,5 @@
 ﻿/*
-Copyright (c) 2008-2014 Michael Baczynski, http://www.polygonal.de
+Copyright (c) 2008-2016 Michael Baczynski, http://www.polygonal.de
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -18,8 +18,9 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 */
 package de.polygonal.ds;
 
-import de.polygonal.ds.error.Assert.assert;
-import de.polygonal.ds.tools.NativeArray;
+import de.polygonal.ds.tools.ArrayTools;
+import de.polygonal.ds.tools.Assert.assert;
+import de.polygonal.ds.tools.NativeArrayTools;
 
 /**
 	A stack based on a linked list
@@ -27,8 +28,6 @@ import de.polygonal.ds.tools.NativeArray;
 	A stack is a linear list for which all insertions and deletions (and usually all accesses) are made at one end of the list.
 	
 	This is called a FIFO structure (First In, First Out).
-	
-	_<o>Worst-case running time in Big O notation</o>_
 **/
 #if generic
 @:generic
@@ -42,7 +41,7 @@ class LinkedStack<T> implements Stack<T>
 		
 		<warn>This value should never be changed by the user.</warn>
 	**/
-	public var key(default, null):Int;
+	public var key(default, null):Int = HashKey.next();
 	
 	/**
 		If true, reuses the iterator object instead of allocating a new one when calling ``iterator()``.
@@ -51,31 +50,27 @@ class LinkedStack<T> implements Stack<T>
 		
 		<warn>If true, nested iterations are likely to fail as only one iteration is allowed at a time.</warn>
 	**/
-	public var reuseIterator:Bool;
+	public var reuseIterator:Bool = false;
 	
-	var mHead:LinkedStackNode<T>;
+	var mHead:LinkedStackNode<T> = null;
 	
-	var mTop:Int;
+	var mTop:Int = 0;
 	var mReservedSize:Int;
-	var mPoolSize:Int;
+	var mPoolSize:Int = 0;
 	
 	var mHeadPool:LinkedStackNode<T>;
 	var mTailPool:LinkedStackNode<T>;
 	
-	var mIterator:LinkedStackIterator<T>;
+	var mIterator:LinkedStackIterator<T> = null;
 	
 	/**
 		<assert>reserved size is greater than allowed size</assert>
 		@param reservedSize if > 0, this stack maintains an object pool of node objects.
 		Prevents frequent node allocation and thus increases performance at the cost of using more memory.
 	**/
-	public function new(reservedSize = 0)
+	public function new(reservedSize:Null<Int> = 0, ?source:Array<T>)
 	{
 		mReservedSize = reservedSize;
-		mTop = 0;
-		mPoolSize = 0;
-		mHead = null;
-		mIterator = null;
 		
 		if (reservedSize > 0)
 		{
@@ -87,29 +82,36 @@ class LinkedStack<T> implements Stack<T>
 			mTailPool = null;
 		}
 		
-		key = HashKey.next();
-		reuseIterator = false;
+		if (source != null)
+		{
+			var node;
+			mTop = source.length;
+			for (i in 0...mTop)
+			{
+				node = getNode(source[i]);
+				node.next = mHead;
+				mHead = node;
+			}
+		}
 	}
 	
 	/**
 		Returns the top element of this stack.
 		
 		This is the "newest" element.
-		<o>1</o>
 		<assert>stack is empty</assert>
 	**/
-	inline public function top():T
+	public inline function top():T
 	{
 		assert(mTop > 0, "stack is empty");
-
+		
 		return mHead.val;
 	}
 	
 	/**
 		Pushes the element `x` onto the stack.
-		<o>1</o>
 	**/
-	inline public function push(x:T)
+	public inline function push(x:T)
 	{
 		var node = getNode(x);
 		node.next = mHead;
@@ -119,27 +121,24 @@ class LinkedStack<T> implements Stack<T>
 	
 	/**
 		Pops data off the stack.
-		<o>1</o>
 		@return the top element.
 		<assert>stack is empty</assert>
 	**/
-	inline public function pop():T
+	public inline function pop():T
 	{
 		assert(mTop > 0, "stack is empty");
 		
 		mTop--;
 		var node = mHead;
 		mHead = mHead.next;
-		
 		return putNode(node);
 	}
 	
 	/**
 		Pops the top element of the stack, and pushes it back twice, so that an additional copy of the former top item is now on top, with the original below it.
-		<o>1</o>
 		<assert>stack is empty</assert>
 	**/
-	inline public function dup()
+	public inline function dup()
 	{
 		assert(mTop > 0, "stack is empty");
 		
@@ -151,16 +150,15 @@ class LinkedStack<T> implements Stack<T>
 	
 	/**
 		Swaps the two topmost items on the stack.
-		<o>1</o>
-		<assert>``size()`` < 2</assert>
+		<assert>``size`` < 2</assert>
 	**/
-	inline public function exchange()
+	public inline function exchange()
 	{
-		assert(mTop > 1, "size() < 2");
+		assert(mTop > 1, "size < 2");
 		
-		var tmp = mHead.val;
+		var t = mHead.val;
 		mHead.val = mHead.next.val;
-		mHead.next.val = tmp;
+		mHead.next.val = t;
 	}
 	
 	/**
@@ -173,12 +171,11 @@ class LinkedStack<T> implements Stack<T>
 		|2|  rotate right |3|
 		|1|      -->      |2|
 		|0|               |1|</pre>
-		<o>n</o>
-		<assert>``size()`` >= `n`</assert>
+		<assert>``size`` >= `n`</assert>
 	**/
-	inline public function rotRight(n:Int)
+	public inline function rotRight(n:Int)
 	{
-		assert(mTop >= n, "size() < n");
+		assert(mTop >= n, "size < n");
 		
 		var node = mHead;
 		for (i in 0...n - 2)
@@ -201,12 +198,11 @@ class LinkedStack<T> implements Stack<T>
 		|2|  rotate left |1|
 		|1|      -->     |0|
 		|0|              |3|</pre>
-		<o>n</o>
-		<assert>``size()`` >= `n`</assert>
+		<assert>``size`` >= `n`</assert>
 	**/
-	inline public function rotLeft(n:Int)
+	public inline function rotLeft(n:Int)
 	{
-		assert(mTop >= n, "size() < n");
+		assert(mTop >= n, "size < n");
 		
 		var top = mHead;
 		mHead = mHead.next;
@@ -224,17 +220,16 @@ class LinkedStack<T> implements Stack<T>
 		
 		An index of 0 indicates the bottommost element.
 		
-		An index of ``size()`` - 1 indicates the topmost element.
-		<o>n</o>
+		An index of ``size`` - 1 indicates the topmost element.
 		<assert>stack is empty or `i` out of range</assert>
 	**/
-	inline public function get(i:Int):T
+	public inline function get(i:Int):T
 	{
 		assert(mTop > 0, "stack is empty");
 		assert(i >= 0 && i < mTop, 'i index out of range ($i)');
 		
 		var node = mHead;
-		i = size() - i;
+		i = size - i;
 		while (--i > 0) node = node.next;
 		return node.val;
 	}
@@ -244,17 +239,16 @@ class LinkedStack<T> implements Stack<T>
 		
 		An index of 0 indicates the bottommost element.
 		
-		An index of ``size()`` - 1 indicates the topmost element.
-		<o>n</o>
+		An index of ``size`` - 1 indicates the topmost element.
 		<assert>stack is empty or `i` out of range</assert>
 	**/
-	inline public function set(i:Int, x:T)
+	public inline function set(i:Int, x:T)
 	{
 		assert(mTop > 0, "stack is empty");
 		assert(i >= 0 && i < mTop, 'i index out of range ($i)');
 		
 		var node = mHead;
-		i = size() - i;
+		i = size - i;
 		while (--i > 0) node = node.next;
 		node.val = x;
 	}
@@ -264,13 +258,12 @@ class LinkedStack<T> implements Stack<T>
 		
 		An index of 0 indicates the bottommost element.
 		
-		An index of ``size()`` - 1 indicates the topmost element.
-		<o>n</o>
+		An index of ``size`` - 1 indicates the topmost element.
 		<assert>stack is empty</assert>
 		<assert>`i`/`j` out of range</assert>
 		<assert>`i` equals `j`</assert>
 	**/
-	inline public function swp(i:Int, j:Int)
+	public inline function swap(i:Int, j:Int)
 	{
 		assert(mTop > 0, "stack is empty");
 		assert(i >= 0 && i < mTop, 'i index out of range ($i)');
@@ -298,9 +291,9 @@ class LinkedStack<T> implements Stack<T>
 			node = node.next;
 			k--;
 		}
-		var tmp = a.val;
+		var t = a.val;
 		a.val = node.val;
-		node.val = tmp;
+		node.val = t;
 	}
 	
 	/**
@@ -308,13 +301,12 @@ class LinkedStack<T> implements Stack<T>
 		
 		An index of 0 indicates the bottommost element.
 		
-		An index of ``size()`` - 1 indicates the topmost element.
-		<o>n</o>
+		An index of ``size`` - 1 indicates the topmost element.
 		<assert>stack is empty</assert>
 		<assert>`i`/`j` out of range</assert>
 		<assert>`i` equals `j`</assert>
 	**/
-	inline public function cpy(i:Int, j:Int)
+	public inline function copy(i:Int, j:Int)
 	{
 		assert(mTop > 0, "stack is empty");
 		assert(i >= 0 && i < mTop, 'i index out of range ($i)');
@@ -346,62 +338,32 @@ class LinkedStack<T> implements Stack<T>
 	}
 	
 	/**
-		Replaces up to `n` existing elements with objects of type `cl`.
-		<o>n</o>
-		<assert>`n` out of range</assert>
-		@param cl the class to instantiate for each element.
-		@param args passes additional constructor arguments to the class `cl`.
-		@param n the number of elements to replace. If 0, `n` is set to ``size()``.
+		Calls the `f` function on all elements.
+		
+		The function signature is: `f(element, xIndex, yIndex):element`
+		<assert>`f` is null</assert>
 	**/
-	public function assign(cl:Class<T>, args:Array<Dynamic> = null, n = 0)
+	public function forEach(f:T->Int->T)
 	{
-		assert(n >= 0);
-		
-		n = size();
-		
-		if (args == null) args = [];
 		var node = mHead;
-		for (i in 0...n)
+		var i = size;
+		while (--i > -1)
 		{
-			node.val = Type.createInstance(cl, args);
+			node.val = f(node.val, i);
 			node = node.next;
 		}
-	}
-	
-	/**
-		Replaces up to `n` existing elements with the instance `x`.
-		<o>n</o>
-		<assert>`n` out of range</assert>
-		@param n the number of elements to replace. If 0, `n` is set to ``size()``.
-	**/
-	public function fill(x:T, n = 0):LinkedStack<T>
-	{
-		assert(n >= 0);
-		
-		n = size();
-		
-		var node = mHead;
-		for (i in 0...n)
-		{
-			node.val = x;
-			node = node.next;
-		}
-		
-		return this;
 	}
 	
 	/**
 		Shuffles the elements of this collection by using the Fisher-Yates algorithm.
-		<o>n</o>
 		<assert>insufficient random values</assert>
-		@param rval a list of random double values in the range between 0 (inclusive) to 1 (exclusive) defining the new positions of the elements.
+		@param rvals a list of random double values in the range between 0 (inclusive) to 1 (exclusive) defining the new positions of the elements.
 		If omitted, random values are generated on-the-fly by calling `Math::random()`.
 	**/
-	public function shuffle(rval:Array<Float> = null)
+	public function shuffle(rvals:Array<Float> = null)
 	{
 		var s = mTop;
-		
-		if (rval == null)
+		if (rvals == null)
 		{
 			var m = Math;
 			while (s > 1)
@@ -422,13 +384,13 @@ class LinkedStack<T> implements Stack<T>
 		}
 		else
 		{
-			assert(rval.length >= size(), "insufficient random values");
+			assert(rvals.length >= size, "insufficient random values");
 			
 			var k = 0;
 			while (s > 1)
 			{
 				s--;
-				var i = Std.int(rval[k++] * s);
+				var i = Std.int(rvals[k++] * s);
 				var node1 = mHead;
 				for (j in 0...s) node1 = node1.next;
 				
@@ -463,7 +425,7 @@ class LinkedStack<T> implements Stack<T>
 	**/
 	public function toString():String
 	{
-		var s = '{ LinkedStack size: ${size()} }';
+		var s = '{ LinkedStack size: ${size} }';
 		if (isEmpty()) return s;
 		s += "\n[ top\n";
 		var node = mHead;
@@ -478,15 +440,21 @@ class LinkedStack<T> implements Stack<T>
 		return s;
 	}
 	
-	/*///////////////////////////////////////////////////////
-	// collection
-	///////////////////////////////////////////////////////*/
+	/* INTERFACE Collection */
+	
+	/**
+		The total number of elements.
+	**/
+	public var size(get, never):Int;
+	inline function get_size():Int
+	{
+		return mTop;
+	}
 	
 	/**
 		Destroys this object by explicitly nullifying all nodes, pointers and elements.
 		
 		Improves GC efficiency/performance (optional).
-		<o>n</o>
 	**/
 	public function free()
 	{
@@ -511,12 +479,15 @@ class LinkedStack<T> implements Stack<T>
 		}
 		
 		mHeadPool = mTailPool = null;
-		mIterator = null;
+		if (mIterator != null)
+		{
+			mIterator.free();
+			mIterator = null;
+		}
 	}
 	
 	/**
 		Returns true if this stack contains the element `x`.
-		<o>n</o>
 	**/
 	public function contains(x:T):Bool
 	{
@@ -532,7 +503,6 @@ class LinkedStack<T> implements Stack<T>
 	
 	/**
 		Removes and nullifies all occurrences of the element `x`.
-		<o>n</o>
 		@return true if at least one occurrence of `x` was removed.
 	**/
 	public function remove(x:T):Bool
@@ -569,20 +539,18 @@ class LinkedStack<T> implements Stack<T>
 			mHead = head1;
 			mTop--;
 		}
-		
 		return found;
 	}
 	
 	/**
 		Removes all elements.
-		<o>1 or n if `purge` is true</o>
-		@param purge if true, elements are nullified upon removal.
+		@param gc if true, elements are nullified upon removal so the garbage collector can reclaim used memory.
 	**/
-	public function clear(purge = false)
+	public function clear(gc:Bool = false)
 	{
 		if (mTop == 0) return;
 		
-		if (purge || mReservedSize > 0)
+		if (gc || mReservedSize > 0)
 		{
 			var node = mHead;
 			while (node != null)
@@ -592,7 +560,6 @@ class LinkedStack<T> implements Stack<T>
 				node = next;
 			}
 		}
-		
 		mHead.next = null;
 		mHead.val = cast null;
 		mTop = 0;
@@ -621,20 +588,10 @@ class LinkedStack<T> implements Stack<T>
 	
 	/**
 		Returns true if this stack is empty.
-		<o>1</o>
 	**/
-	inline public function isEmpty():Bool
+	public inline function isEmpty():Bool
 	{
 		return mTop == 0;
-	}
-	
-	/**
-		The total number of elements.
-		<o>1</o>
-	**/
-	inline public function size():Int
-	{
-		return mTop;
 	}
 	
 	/**
@@ -646,7 +603,7 @@ class LinkedStack<T> implements Stack<T>
 	{
 		if (isEmpty()) return [];
 		
-		var out = ArrayUtil.alloc(size());
+		var out = ArrayTools.alloc(size);
 		var node = mHead;
 		for (i in 0...mTop)
 		{
@@ -657,30 +614,13 @@ class LinkedStack<T> implements Stack<T>
 	}
 	
 	/**
-		Returns a `Vector<T>` object containing all elements in this stack.
-		
-		Preserves the natural order of this stack (First-In-Last-Out).
-	**/
-	public function toVector():Container<T>
-	{
-		var v = NativeArray.init(size());
-		var node = mHead;
-		for (i in 0...mTop)
-		{
-			v[mTop - i - 1] = node.val;
-			node = node.next;
-		}
-		return v;
-	}
-	
-	/**
 		Duplicates this stack. Supports shallow (structure only) and deep copies (structure & elements).
 		<assert>element is not of type `Cloneable`</assert>
 		@param assign if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
 		If false, the ``clone()`` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
 		@param copier a custom function for copying elements. Replaces ``element::clone()`` if `assign` is false.
 	**/
-	public function clone(assign = true, copier:T->T = null):Collection<T>
+	public function clone(assign:Bool = true, copier:T->T = null):Collection<T>
 	{
 		var copy = new LinkedStack<T>(mReservedSize);
 		if (mTop == 0) return copy;
@@ -733,7 +673,6 @@ class LinkedStack<T> implements Stack<T>
 				srcNode = srcNode.next;
 			}
 		}
-		
 		return copy;
 	}
 	
@@ -819,19 +758,26 @@ class LinkedStackIterator<T> implements de.polygonal.ds.Itr<T>
 		reset();
 	}
 	
-	inline public function reset():Itr<T>
+	public function free()
+	{
+		mObject = null;
+		mWalker = null;
+		mHook = null;
+	}
+	
+	public inline function reset():Itr<T>
 	{
 		mWalker = mObject.mHead;
 		mHook = null;
 		return this;
 	}
 	
-	inline public function hasNext():Bool
+	public inline function hasNext():Bool
 	{
 		return mWalker != null;
 	}
 	
-	inline public function next():T
+	public inline function next():T
 	{
 		var x = mWalker.val;
 		mHook = mWalker;
@@ -839,7 +785,7 @@ class LinkedStackIterator<T> implements de.polygonal.ds.Itr<T>
 		return x;
 	}
 	
-	inline public function remove()
+	public function remove()
 	{
 		assert(mHook != null, "call next() before removing an element");
 		

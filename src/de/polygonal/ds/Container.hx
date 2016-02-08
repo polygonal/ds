@@ -1,4 +1,4 @@
-﻿/*
+/*
 Copyright (c) 2008-2016 Michael Baczynski, http://www.polygonal.de
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
@@ -18,13 +18,19 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 */
 package de.polygonal.ds;
 
-/**
-	An object that creates objects of type T
-**/
-interface Factory<T>
-{
-	/**
-		Creates and returns a new object of type T.
-	**/
-	function create():T;
-}
+typedef Container<T> =
+#if flash10
+	#if (generic && !no_inline)
+	flash.Vector<T>;
+	#else
+	Array<T>;
+	#end
+#elseif neko
+neko.NativeArray<T>;
+#elseif cs
+cs.NativeArray<T>;
+#elseif java
+Array<T>
+#else
+Array<T>;
+#end

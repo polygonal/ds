@@ -16,7 +16,7 @@ class TestHashMap extends AbstractTest
 			assertFalse(h.hasKey("a"));
 			assertFalse(h.hasKey("b"));
 			assertFalse(h.hasKey("c"));
-			assertEquals(0, h.size());
+			assertEquals(0, h.size);
 		}
 		
 		var h = new de.polygonal.ds.HashMap<String, Null<Int>>();
@@ -25,7 +25,7 @@ class TestHashMap extends AbstractTest
 		assertEquals(0, h.get("a"));
 		h.remove(0);
 		assertEquals(null, h.get("a"));
-		assertEquals(0, h.size());
+		assertEquals(0, h.size);
 	}
 	
 	function testRemap()
@@ -34,21 +34,21 @@ class TestHashMap extends AbstractTest
 		
 		h.set("a", 1);
 		assertEquals(1, h.get("a"));
-		assertEquals(1, h.size());
+		assertEquals(1, h.size);
 		
 		var result = h.remap("a", 2);
 		assertTrue(result);
 		assertEquals(2, h.get("a"));
-		assertEquals(1, h.size());
+		assertEquals(1, h.size);
 		
 		h.set("b", 1);
 		assertEquals(1, h.get("b"));
-		assertEquals(2, h.size());
+		assertEquals(2, h.size);
 		
 		var result = h.remap("b", 2);
 		assertTrue(result);
 		assertEquals(2, h.get("b"));
-		assertEquals(2, h.size());
+		assertEquals(2, h.size);
 	}
 	
 	function testHasVal()
@@ -154,7 +154,7 @@ class TestHashMap extends AbstractTest
 		
 		h.clear();
 		
-		assertEquals(0, h.size());
+		assertEquals(0, h.size);
 		assertFalse(h.has(1));
 		assertFalse(h.has(2));
 		assertFalse(h.has(3));
@@ -172,7 +172,7 @@ class TestHashMap extends AbstractTest
 		h.set("c", 3);
 		
 		var s:Set<Int> = h.toValSet();
-		assertEquals(3, s.size());
+		assertEquals(3, s.size);
 		assertTrue(s.contains(1));
 		assertTrue(s.contains(2));
 		assertTrue(s.contains(3));
@@ -185,13 +185,13 @@ class TestHashMap extends AbstractTest
 		h.set("b", 2);
 		h.set("c", 3);
 		var s:Set<String> = h.toKeySet();
-		assertEquals(3, s.size());
+		assertEquals(3, s.size);
 		assertTrue(s.contains("a"));
 		assertTrue(s.contains("b"));
 		assertTrue(s.contains("c"));
 		
 		var a = h.toKeyArray();
-		assertEquals(3, s.size());
+		assertEquals(3, s.size);
 		
 		var ref = ["a", "b", "c"];
 		while (a.length > 0)
@@ -233,7 +233,7 @@ class TestHashMap extends AbstractTest
 		}
 		
 		var c:de.polygonal.ds.Set<Int> = cast s.clone(true);
-		var itr:de.polygonal.ds.ResettableIterator<Int> = cast h.iterator();
+		var itr = h.iterator();
 		
 		for (i in itr) assertEquals(true, c.remove(i));
 		
@@ -250,7 +250,7 @@ class TestHashMap extends AbstractTest
 		}
 		
 		var c:de.polygonal.ds.Set<Int> = cast s.clone(true);
-		var itr:de.polygonal.ds.ResettableIterator<Int> = cast h.keys();
+		var itr = h.keys();
 		
 		for (key in itr) assertEquals(true, c.remove(key));
 		
@@ -269,7 +269,7 @@ class TestHashMap extends AbstractTest
 			var x = itr.next();
 			itr.remove();
 		}
-		assertEquals(0, h.size());
+		assertEquals(0, h.size);
 		var h:HashMap<Int, Int> = new HashMap<Int, Int>(true);
 		for (i in 0...10) h.set(i, i);
 		var itr = h.keys();
@@ -278,6 +278,6 @@ class TestHashMap extends AbstractTest
 			var x = itr.next();
 			itr.remove();
 		}
-		assertEquals(0, h.size());
+		assertEquals(0, h.size);
 	}
 }

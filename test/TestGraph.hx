@@ -135,20 +135,20 @@ class TestGraph extends AbstractTest
 		d = 0;
 		graph.clearMarks();
 		graph.DFS(false, graph.getNodeList(), visit);
-		assertEquals(graph.size(), c);
+		assertEquals(graph.size, c);
 		
 		c = 0;
 		d = 0;
 		graph.clearMarks();
 		graph.DFS(true, graph.getNodeList(), visit);
-		assertEquals(graph.size(), c);
+		assertEquals(graph.size, c);
 		
 		//recursive process preflight
 		c = 0;
 		d = 0;
 		graph.clearMarks();
 		graph.DFS(true, graph.getNodeList(), visit, null, true);
-		assertEquals(graph.size(), c);
+		assertEquals(graph.size, c);
 		assertEquals(4, c);
 		assertEquals(4, d);
 		
@@ -157,7 +157,7 @@ class TestGraph extends AbstractTest
 		d = 0;
 		graph.clearMarks();
 		graph.DFS(false, graph.getNodeList(), visit, null, true);
-		assertEquals(graph.size(), c);
+		assertEquals(graph.size, c);
 		assertEquals(4, c);
 		assertEquals(0, d);
 		
@@ -165,13 +165,13 @@ class TestGraph extends AbstractTest
 		d = 0;
 		graph.clearMarks();
 		graph.BFS(false, graph.getNodeList(), visit);
-		assertEquals(graph.size(), c);
+		assertEquals(graph.size, c);
 		
 		c = 0;
 		d = 0;
 		graph.clearMarks();
 		graph.BFS(true, graph.getNodeList(), visit);
-		assertEquals(graph.size(), c);
+		assertEquals(graph.size, c);
 	}
 	
 	function testLargeBFS()
@@ -199,7 +199,7 @@ class TestGraph extends AbstractTest
 		c = 0;
 		graph.BFS(false);
 		
-		assertEquals(graph.size(), c);
+		assertEquals(graph.size, c);
 	}
 	
 	function testRemove()
@@ -221,10 +221,10 @@ class TestGraph extends AbstractTest
 				node.addArc(graph.findNode(nodes[j]), 1);
 			}
 		}
-		assertEquals(10, graph.size());
+		assertEquals(10, graph.size);
 		var k = graph.remove(0);
 		assertEquals(true, k);
-		assertEquals(9, graph.size());
+		assertEquals(9, graph.size);
 		for (i in 1...10)
 		{
 			var k = graph.remove(i);
@@ -378,20 +378,20 @@ class TestGraph extends AbstractTest
 		c = 0;
 		d = 0;
 		graph.DFS(false);
-		assertEquals(graph.size(), c);
+		assertEquals(graph.size, c);
 		
 		c = 0;
 		d = 0;
 		graph.clearMarks();
 		graph.DFS(true);
-		assertEquals(graph.size(), c);
+		assertEquals(graph.size, c);
 		
 		//recursive process preflight
 		c = 0;
 		d = 0;
 		graph.clearMarks();
 		graph.DFS(true, null, null, null, true);
-		assertEquals(graph.size(), c);
+		assertEquals(graph.size, c);
 		assertEquals(4, c);
 		assertEquals(4, d);
 		
@@ -400,7 +400,7 @@ class TestGraph extends AbstractTest
 		d = 0;
 		graph.clearMarks();
 		graph.DFS(false, graph.getNodeList(), null, true);
-		assertEquals(graph.size(), c);
+		assertEquals(graph.size, c);
 		assertEquals(4, c);
 		assertEquals(0, d);
 		
@@ -408,13 +408,13 @@ class TestGraph extends AbstractTest
 		d = 0;
 		graph.clearMarks();
 		graph.BFS(false);
-		assertEquals(graph.size(), c);
+		assertEquals(graph.size, c);
 		
 		c = 0;
 		d = 0;
 		graph.clearMarks();
 		graph.BFS(true);
-		assertEquals(graph.size(), c);
+		assertEquals(graph.size, c);
 	}
 	
 	function testIterator()
@@ -430,11 +430,11 @@ class TestGraph extends AbstractTest
 		var s = new de.polygonal.ds.HashSet<E>(1024);
 		var c = 0;
 		for (i in graph) assertEquals(true, s.set(i));
-		assertEquals(10, s.size());
+		assertEquals(10, s.size);
 		
 		var c:de.polygonal.ds.Set<E> = cast s.clone(true);
 		var itr = graph.iterator();
-		var itr:de.polygonal.ds.ResettableIterator<E> = cast graph.iterator();
+		var itr = graph.iterator();
 		
 		for (i in itr) assertEquals(true, c.remove(i));
 		assertTrue(c.isEmpty());
@@ -463,7 +463,7 @@ class TestGraph extends AbstractTest
 			var s = new de.polygonal.ds.HashSet<E>(1024);
 			var c = 0;
 			for (i in node) assertEquals(true, s.set(i));
-			assertEquals(9, s.size());
+			assertEquals(9, s.size);
 			node = node.next;
 		}
 		
@@ -478,7 +478,7 @@ class TestGraph extends AbstractTest
 		var s = new de.polygonal.ds.IntHashSet(1024);
 		var c = 0;
 		for (i in graph) assertEquals(true, s.set(i));
-		assertEquals(10, s.size());
+		assertEquals(10, s.size);
 		
 		var node:de.polygonal.ds.GraphNode<Int> = graph.getNodeList();
 		while (node != null)
@@ -499,7 +499,7 @@ class TestGraph extends AbstractTest
 			var s = new de.polygonal.ds.IntHashSet(1024);
 			var c = 0;
 			for (i in node) assertEquals(true, s.set(i));
-			assertEquals(9, s.size());
+			assertEquals(9, s.size);
 			node = node.next;
 		}
 	}
@@ -529,7 +529,7 @@ class TestGraph extends AbstractTest
 			}
 		}
 		
-		assertEquals(graph.size(), 10);
+		assertEquals(graph.size, 10);
 		
 		for (i in 0...10)
 		{
@@ -551,12 +551,12 @@ class TestGraph extends AbstractTest
 			graph.unlink(node);
 		}
 		
-		assertEquals(10, graph.size());
+		assertEquals(10, graph.size);
 		
 		for (i in 0...10)
 			graph.remove(nodes[i].val);
 		
-		assertEquals(0, graph.size());
+		assertEquals(0, graph.size);
     }
 	
 	function testCustomGraph()

@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2008-2014 Michael Baczynski, http://www.polygonal.de
+Copyright (c) 2008-2016 Michael Baczynski, http://www.polygonal.de
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -22,16 +22,15 @@ package de.polygonal.ds;
 import de.polygonal.ds.mem.IntMemory;
 #end
 
-import de.polygonal.ds.error.Assert.assert;
+import de.polygonal.ds.tools.ArrayTools;
+import de.polygonal.ds.tools.Assert.assert;
 
-using de.polygonal.ds.tools.NativeArray;
+using de.polygonal.ds.tools.NativeArrayTools;
 
 /**
 	An array hash table for mapping Hashable keys to generic elements
 	
 	The implementation is based on `IntIntHashTable`.
-	
-	_<o>Worst-case running time in Big O notation</o>_
 **/
 #if generic
 @:generic
@@ -45,7 +44,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		
 		<warn>This value should never be changed by the user.</warn>
 	**/
-	public var key(default, null):Int;
+	public var key(default, null):Int = HashKey.next();
 	
 	/**
 		If true, reuses the iterator object instead of allocating a new one when calling ``iterator()``.
@@ -54,12 +53,12 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		
 		<warn>If true, nested iterations are likely to fail as only one iteration is allowed at a time.</warn>
 	**/
-	public var reuseIterator:Bool;
+	public var reuseIterator:Bool = false;
 	
 	/**
 		The size of the allocated storage space for the key/value pairs.
 		
-		If more space is required to accomodate new elements, ``capacity`` is doubled every time ``size()`` grows beyond capacity, and split in half when ``size()`` is a quarter of capacity.
+		If more space is required to accomodate new elements, ``capacity`` is doubled every time ``size`` grows beyond capacity, and split in half when ``size`` is a quarter of capacity.
 		
 		The capacity never falls below the initial size defined in the constructor.
 	**/
@@ -103,10 +102,10 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	var mNext:Container<Int>;
 	#end
 	
-	var mFree:Int;
+	var mFree:Int = 0;
 	var mMinCapacity:Int;
-	var mIterator:HashTableValIterator<K, T>;
-	var mTmpArr:Array<Int>;
+	var mIterator:HashTableValIterator<K, T> = null;
+	var mTmpArr:Array<Int> = [];
 	
 	/**
 		<assert>`slotCount` is not a power of two</assert>
@@ -135,23 +134,17 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		mMinCapacity = capacity;
 		
 		mH = new IntIntHashTable(slotCount, capacity);
-		mKeys = NativeArray.init(capacity);
-		mVals = NativeArray.init(capacity);
+		mKeys = NativeArrayTools.init(capacity);
+		mVals = NativeArrayTools.init(capacity);
 		
 		#if alchemy
 		mNext = new IntMemory(capacity, "HashTable.mNext");
 		#else
-		mNext = NativeArray.init(capacity);
+		mNext = NativeArrayTools.init(capacity);
 		#end
 		
 		for (i in 0...capacity - 1) setNext(i, i + 1);
 		setNext(capacity - 1, IntIntHashTable.NULL_POINTER);
-		mFree = 0;
-		mIterator = null;
-		mTmpArr = [];
-		
-		key = HashKey.next();
-		reuseIterator = false;
 	}
 	
 	/**
@@ -168,10 +161,9 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		Returns the value that is mapped to `key` or null if `key` does not exist.
 		
 		Uses move-to-front-on-access which reduces access time when similar keys are frequently queried.
-		<o>n</o>
 		<assert>`key` is null</assert>
 	**/
-	inline public function getFront(key:K):T
+	public inline function getFront(key:K):T
 	{
 		var i = mH.getFront(_key(key));
 		if (i == IntIntHashTable.KEY_ABSENT)
@@ -182,16 +174,15 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	
 	/**
 		Maps `val` to `key` in this map, but only if `key` does not exist yet.
-		<o>n</o>
 		<assert>out of space - hash table is full but not resizable</assert>
 		<assert>`key` is null</assert>
 		@return true if `key` was mapped to `val` for the first time.
 	**/
-	inline public function setIfAbsent(key:K, val:T):Bool
+	public inline function setIfAbsent(key:K, val:T):Bool
 	{
-		if ((size() == capacity))
+		if ((size == capacity))
 		{
-			if (mH.setIfAbsent(_key(key), size()))
+			if (mH.setIfAbsent(_key(key), size))
 			{
 				grow(capacity >> 1);
 				
@@ -221,7 +212,6 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		Redistributes all keys over `slotCount`.
 		
 		This is an expensive operations as the hash table is rebuild from scratch.
-		<o>n</o>
 		<assert>`slotCount` is not a power of two</assert>
 	**/
 	public function rehash(slotCount:Int)
@@ -231,11 +221,10 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	
 	/**
 		Remaps the first occurrence of `key` to a new value `val`.
-		<o>n</o>
 		<assert>`key` is null</assert>
 		@return true if `val` was successfully remapped to `key`.
 	**/
-	inline public function remap(key:K, val:T):Bool
+	public inline function remap(key:K, val:T):Bool
 	{
 		var i = mH.get(_key(key));
 		if (i != IntIntHashTable.KEY_ABSENT)
@@ -249,13 +238,12 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	
 	/**
 		Creates and returns an unordered array of all keys.
-		<o>n</o>
 	**/
 	public function toKeyArray():Array<K>
 	{
 		if (isEmpty()) return [];
 		
-		var out = ArrayUtil.alloc(size());
+		var out = ArrayTools.alloc(size);
 		var j = 0, keys = mKeys, k;
 		for (i in 0...capacity)
 		{
@@ -266,26 +254,8 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	}
 	
 	/**
-		Creates and returns an unordered vector of all keys.
-		<o>n</o>
-	**/
-	public function toKeyVector():Container<K>
-	{
-		var src = mKeys;
-		var a = NativeArray.init(size());
-		var j = 0;
-		for (i in 0...capacity)
-		{
-			if (src.get(i) != null)
-				a.set(j++, mKeys.get(i));
-		}
-		return a;
-	}
-	
-	/**
 		For performance reasons the hash table does nothing to ensure that empty locations contain null;
 		``pack()`` therefore nullifies all obsolete references.
-		<o>n</o>
 	**/
 	public function pack()
 	{
@@ -300,13 +270,13 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		<pre class="prettyprint">
 		class Foo extends de.polygonal.ds.HashableItem
 		{
-		    var value:Int;
-		    public function new(value:Int) {
+		    var val:Int;
+		    public function new(val:Int) {
 		        super();
-		        this.value = value;
+		        this.val = val;
 		    }
 		    public function toString():String {
-		        return "{ Foo value: " + value + " }";
+		        return "{ Foo val: " + val + " }";
 		    }
 		}
 		
@@ -321,15 +291,15 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		<pre class="console">
 		{ HashTable size/capacity: 4/16, load factor: 0.25 }
 		[
-		  {Foo value: 0} -> foo0
-		  {Foo value: 1} -> foo1
-		  {Foo value: 2} -> foo2
-		  {Foo value: 3} -> foo3
+		  {Foo val: 0} -> foo0
+		  {Foo val: 1} -> foo1
+		  {Foo val: 2} -> foo2
+		  {Foo val: 3} -> foo3
 		]</pre>
 	**/
 	public function toString():String
 	{
-		var s = Printf.format("{ HashTable size/capacity: %d/%d, load factor: %.2f }", [size(), capacity, loadFactor]);
+		var s = Printf.format("{ HashTable size/capacity: %d/%d, load factor: %.2f }", [size, capacity, loadFactor]);
 		if (isEmpty()) return s;
 		s += "\n[\n";
 		
@@ -343,13 +313,10 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		return s;
 	}
 	
-	/*///////////////////////////////////////////////////////
-	// map
-	///////////////////////////////////////////////////////*/
+	/* INTERFACE Map */
 	
 	/**
 		Returns true if this map contains a mapping for the value `val`.
-		<o>n</o>
 	**/
 	public function has(val:T):Bool
 	{
@@ -370,20 +337,18 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	
 	/**
 		Returns true if this map contains `key`.
-		<o>n</o>
 		<assert>`key` is null</assert>
 	**/
-	inline public function hasKey(key:K):Bool
+	public inline function hasKey(key:K):Bool
 	{
 		return mH.hasKey(_key(key));
 	}
 	
 	/**
 		Returns the value that is mapped to `key` or null if `key` does not exist.
-		<o>n</o>
 		<assert>`key` is null</assert>
 	**/
-	inline public function get(key:K):T
+	public inline function get(key:K):T
 	{
 		assert(key != null);
 		
@@ -395,10 +360,10 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	}
 	
 	/**
-		Stores all values that are mapped to `key` in `output` or returns 0 if `key` does not exist.
+		Stores all values that are mapped to `key` in `out` or returns 0 if `key` does not exist.
 		@return the total number of values mapped to `key`.
 	**/
-	public function getAll(key:K, output:Array<T>):Int
+	public function getAll(key:K, out:Array<T>):Int
 	{
 		var i = mH.get(_key(key));
 		if (i == IntIntHashTable.KEY_ABSENT)
@@ -406,7 +371,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		else
 		{
 			var c = mH.getAll(_key(key), mTmpArr);
-			for (i in 0...c) output[i] = mVals[mTmpArr[i]];
+			for (i in 0...c) out[i] = mVals[mTmpArr[i]];
 			return c;
 		}
 	}
@@ -417,14 +382,13 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		The method allows duplicate keys.
 		
 		<warn>To ensure unique keys either use ``hasKey()`` before ``set()`` or ``setIfAbsent()``</warn>
-		<o>n</o>
 		<assert> out of space - hash table is full but not resizable</assert>
 		<assert>`key` is null</assert>
 		@return true if `key` was added for the first time, false if another instance of `key` was inserted.
 	**/
-	inline public function set(key:K, val:T):Bool
+	public inline function set(key:K, val:T):Bool
 	{
-		if (size() == capacity)
+		if (size == capacity)
 			grow(capacity);
 		
 		var first = mH.set(_key(key), mFree);
@@ -439,11 +403,10 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		Removes and nullifies the first occurrence of `key`.
 		
 		Only the key is nullified, to nullifiy the value call ``pack()``.
-		<o>n</o>
 		<assert>`key` is null</assert>
 		@return true if `key` is successfully removed.
 	**/
-	inline public function clr(key:K):Bool
+	public inline function delete(key:K):Bool
 	{
 		var i = mH.get(_key(key));
 		if (i == IntIntHashTable.KEY_ABSENT)
@@ -456,20 +419,18 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 			
 			var doShrink = false;
 			
-			if (size() - 1 == (capacity >> 2) && capacity > mMinCapacity)
+			if (size - 1 == (capacity >> 2) && capacity > mMinCapacity)
 				doShrink = true;
 			
-			mH.clr(_key(key));
+			mH.delete(_key(key));
 			
 			if (doShrink) shrink();
-			
 			return true;
 		}
 	}
 	
 	/**
 		Creates a `ListSet` object of the values in this map.
-		<o>n</o>
 	**/
 	public function toValSet():Set<T>
 	{
@@ -479,13 +440,11 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 			if (mKeys[i] != null)
 				s.set(mVals[i]);
 		}
-		
 		return s;
 	}
 	
 	/**
 		Creates a `ListSet` object of the keys in this map.
-		<o>n</o>
 	**/
 	public function toKeySet():Set<K>
 	{
@@ -495,7 +454,6 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 			if (mKeys[i] != null)
 				s.set(mKeys[i]);
 		}
-		
 		return s;
 	}
 	
@@ -505,31 +463,34 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		The keys are visited in a random order.
 		
 		See <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
-		<o>n</o>
 	**/
 	public function keys():Itr<K>
 	{
 		return new HashTableKeyIterator(this);
 	}
 	
-	/*///////////////////////////////////////////////////////
-	// collection
-	///////////////////////////////////////////////////////*/
+	/* INTERFACE Collection */
+	
+	/**
+		The total number of key/value pairs.
+	**/
+	public var size(get, never):Int;
+	inline function get_size():Int
+	{
+		return mH.size;
+	}
 	
 	/**
 		Destroys this object by explicitly nullifying all key/values.
 		
 		<warn>If "alchemy memory" is used, always call this method when the life cycle of this object ends to prevent a memory leak.</warn>
-		<o>n</o>
 	**/
 	public function free()
 	{
-		for (i in 0...size())
-		{
-			mVals[i] = cast null;
-			mKeys[i] = null;
-		}
+		mVals.nullify();
 		mVals = null;
+		
+		mKeys.nullify();
 		mKeys = null;
 		
 		#if alchemy
@@ -539,13 +500,16 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		
 		mH.free();
 		mH = null;
-		mIterator = null;
+		if (mIterator != null)
+		{
+			mIterator.free();
+			mIterator = null;
+		}
 		mTmpArr = null;
 	}
 	
 	/**
 		Same as ``has()``.
-		<o>n</o>
 	**/
 	public function contains(val:T):Bool
 	{
@@ -554,20 +518,19 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	
 	/**
 		Removes all occurrences of the value `val`.
-		<o>n</o>
 		@return true if `val` was removed, false if `val` does not exist.
 	**/
 	public function remove(val:T):Bool
 	{
 		var found = false;
-		var tmp = new Array<K>();
+		var t = new Array<K>();
 		for (i in 0...capacity)
 		{
 			if (mKeys[i] != null)
 			{
 				if (mVals[i] == val)
 				{
-					tmp.push(mKeys[i]);
+					t.push(mKeys[i]);
 					found = true;
 				}
 			}
@@ -575,7 +538,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		
 		if (found)
 		{
-			for (key in tmp) clr(key);
+			for (key in t) delete(key);
 			return true;
 		}
 		else
@@ -584,15 +547,14 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	
 	/**
 		Removes all key/value pairs.
-		<o>n</o>
-		@param purge if true, nullifies all keys and values and shrinks the hash table to the initial capacity defined in the constructor.
+		@param gc if true, nullifies all keys and values so the garbage collector can reclaim used memory.
 	**/
-	public function clear(purge = false)
+	public function clear(gc:Bool = false)
 	{
-		mH.clear(purge);
+		mH.clear(gc);
 		for (i in 0...capacity) mKeys[i] = null;
 		
-		if (purge)
+		if (gc)
 		{
 			for (i in 0...capacity)
 			{
@@ -631,20 +593,10 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	
 	/**
 		Returns true if this hash table is empty.
-		<o>1</o>
 	**/
-	inline public function isEmpty():Bool
+	public inline function isEmpty():Bool
 	{
 		return mH.isEmpty();
-	}
-	
-	/**
-		The total number of key/value pairs.
-		<o>1</o>
-	**/
-	inline public function size():Int
-	{
-		return mH.size();
 	}
 	
 	/**
@@ -654,29 +606,12 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	{
 		if (isEmpty()) return [];
 		
-		var out = ArrayUtil.alloc(size());
+		var out = ArrayTools.alloc(size);
 		var j = 0, keys = mKeys, vals = mVals, k;
 		for (i in 0...capacity)
 			if (keys.get(i) != null)
 				out[j++] = vals.get(i);
 		return out;
-	}
-	
-	/**
-		Returns a `Vector<T>` object containing all values in this hash table.
-	**/
-	public function toVector():Container<T>
-	{
-		var v = NativeArray.init(size());
-		var j = 0;
-		var keys = mKeys;
-		var vals = mVals;
-		for (i in 0...capacity)
-		{
-			if (keys[i] != null)
-				v.set(j++, vals[i]);
-		}
-		return v;
 	}
 	
 	/**
@@ -686,7 +621,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		If false, the ``clone()`` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
 		@param copier a custom function for copying elements. Replaces ``element::clone()`` if `assign` is false.
 	**/
-	public function clone(assign = true, copier:T->T = null):Collection<T>
+	public function clone(assign:Bool = true, copier:T->T = null):Collection<T>
 	{
 		var c = new HashTable<K, T>(M.INT16_MIN);
 		c.key = HashKey.next();
@@ -696,18 +631,18 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		
 		if (assign)
 		{
-			c.mVals = NativeArray.init(capacity);
+			c.mVals = NativeArrayTools.init(capacity);
 			for (i in 0...capacity) c.mVals[i] = mVals[i];
 		}
 		else
 		{
-			var tmp = NativeArray.init(capacity);
+			var t = NativeArrayTools.init(capacity);
 			if (copier != null)
 			{
 				for (i in 0...capacity)
 				{
 					if (mKeys.get(i) != null)
-						tmp.set(i, copier(mVals.get(i)));
+						t.set(i, copier(mVals.get(i)));
 				}
 			}
 			else
@@ -720,11 +655,11 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 						assert(Std.is(mVals.get(i), Cloneable), 'element is not of type Cloneable (${mVals.get(i)})');
 						
 						c = cast mVals.get(i);
-						tmp.set(i, c.clone());
+						t.set(i, c.clone());
 					}
 				}
 			}
-			c.mVals = tmp;
+			c.mVals = t;
 		}
 		
 		c.mFree = mFree;
@@ -732,12 +667,12 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		#if alchemy
 		c.mNext = mNext.clone();
 		#else
-		c.mNext = NativeArray.copy(mNext);
-		//c.mNext = NativeArray.init(mNext.length);
+		c.mNext = NativeArrayTools.copy(mNext);
+		//c.mNext = NativeArrayTools.init(mNext.length);
 		//for (i in 0...Std.int(mNext.length)) c.mNext[i] = mNext[i];
 		#end
-		c.mKeys = NativeArray.copy(mKeys);
-		//c.mKeys = NativeArray.init(capacity);
+		c.mKeys = NativeArrayTools.copy(mKeys);
+		//c.mKeys = NativeArrayTools.init(capacity);
 		//for (i in 0...capacity) c.mKeys[i] = mKeys[i];
 		return c;
 	}
@@ -749,22 +684,22 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		#if alchemy
 		mNext.resize(newSize);
 		#else
-		var tmp = NativeArray.init(newSize);
-		for (i in 0...oldSize) tmp[i] = mNext[i];
-		mNext = tmp;
+		var t = NativeArrayTools.init(newSize);
+		for (i in 0...oldSize) t[i] = mNext[i];
+		mNext = t;
 		#end
 		
-		var tmp = NativeArray.init(newSize);
-		for (i in 0...oldSize) tmp[i] = mKeys[i];
-		mKeys = tmp;
+		var t = NativeArrayTools.init(newSize);
+		for (i in 0...oldSize) t[i] = mKeys[i];
+		mKeys = t;
 		
 		for (i in oldSize - 1...newSize - 1) setNext(i, i + 1);
 		setNext(newSize - 1, IntIntHashTable.NULL_POINTER);
 		mFree = oldSize;
 		
-		var tmp = NativeArray.init(newSize);
-		for (i in 0...oldSize) tmp[i] = mVals[i];
-		mVals = tmp;
+		var t = NativeArrayTools.init(newSize);
+		for (i in 0...oldSize) t[i] = mVals[i];
+		mVals = t;
 	}
 	
 	inline function shrink()
@@ -775,15 +710,15 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		#if alchemy
 		mNext.resize(newSize);
 		#else
-		mNext = NativeArray.init(newSize);
+		mNext = NativeArrayTools.init(newSize);
 		#end
 		
 		for (i in 0...newSize - 1) setNext(i, i + 1);
 		setNext(newSize - 1, IntIntHashTable.NULL_POINTER);
 		mFree = 0;
 		
-		var tmpKeys = NativeArray.init(newSize);
-		var tmpVals = NativeArray.init(newSize);
+		var tmpKeys = NativeArrayTools.init(newSize);
+		var tmpVals = NativeArrayTools.init(newSize);
 		
 		for (i in mH)
 		{
@@ -828,6 +763,12 @@ class HashTableKeyIterator<K:Hashable, T> implements de.polygonal.ds.Itr<K>
 		reset();
 	}
 	
+	public function free()
+	{
+		mObject = null;
+		mKeys = null;
+	}
+	
 	public function reset():Itr<K>
 	{
 		mKeys = mObject.mKeys;
@@ -837,19 +778,19 @@ class HashTableKeyIterator<K:Hashable, T> implements de.polygonal.ds.Itr<K>
 		return this;
 	}
 	
-	inline public function hasNext():Bool
+	public inline function hasNext():Bool
 	{
 		return mI < mS;
 	}
 
-	inline public function next():K
+	public inline function next():K
 	{
 		var v = mKeys.get(mI);
 		while (++mI < mS && mKeys.get(mI) == null) {}
 		return v;
 	}
 	
-	inline public function remove()
+	public function remove()
 	{
 		throw "unsupported operation";
 	}
@@ -874,6 +815,13 @@ class HashTableValIterator<K:Hashable, T> implements de.polygonal.ds.Itr<T>
 		reset();
 	}
 	
+	public function free()
+	{
+		mObject = null;
+		mKeys = null;
+		mVals = null;
+	}
+	
 	public function reset():Itr<T>
 	{
 		mVals = mObject.mVals;
@@ -884,19 +832,19 @@ class HashTableValIterator<K:Hashable, T> implements de.polygonal.ds.Itr<T>
 		return this;
 	}
 	
-	inline public function hasNext():Bool
+	public inline function hasNext():Bool
 	{
 		return mI < mS;
 	}
 	
-	inline public function next():T
+	public inline function next():T
 	{
 		var v = mVals.get(mI);
 		while (++mI < mS && mKeys.get(mI) == null) {}
 		return v;
 	}
 	
-	inline public function remove()
+	public function remove()
 	{
 		throw "unsupported operation";
 	}

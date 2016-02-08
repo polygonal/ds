@@ -5,6 +5,16 @@ import de.polygonal.ds.Queue;
 @:access(de.polygonal.ds.LinkedQueue)
 class TestLinkedQueue extends AbstractTest
 {
+	function testSource()
+	{
+		var l = new LinkedQueue<Int>([0, 1, 2, 3]);
+		assertEquals(4, l.size);
+		assertEquals(0, l.dequeue());
+		assertEquals(1, l.dequeue());
+		assertEquals(2, l.dequeue());
+		assertEquals(3, l.dequeue());
+	}
+	
 	function testPool()
 	{
 		var l = new LinkedQueue<Int>(20);
@@ -85,7 +95,7 @@ class TestLinkedQueue extends AbstractTest
 		l.enqueue(5);
 		assertFalse(l.remove(4));
 		assertTrue(l.remove(5));
-		assertEquals(0, l.size());
+		assertEquals(0, l.size);
 	}
 	
 	function testIterator()
@@ -96,7 +106,7 @@ class TestLinkedQueue extends AbstractTest
 		var s:de.polygonal.ds.Set<Int> = new ListSet<Int>();
 		for (i in 0...5) s.set(i);
 		
-		var itr:de.polygonal.ds.ResettableIterator<Int> = cast l.iterator();
+		var itr = l.iterator();
 		
 		var c:de.polygonal.ds.Set<Int> = cast s.clone(true);
 		for (i in itr) assertEquals(true, c.remove(i));
@@ -150,34 +160,16 @@ class TestLinkedQueue extends AbstractTest
 		assertEquals(null, l.mTail);
 	}
 	
-	function testFill()
+	function testForEach()
 	{
 		var l = new LinkedQueue<Int>();
 		for (i in 0...5) l.enqueue(i);
-		l.fill(99);
-		
-		assertEquals(5, l.size());
-		for (i in 0...5) assertEquals(99, l.dequeue());
-		assertTrue(l.isEmpty());
-	}
-	
-	function testAssign()
-	{
-		var l = new LinkedQueue<E>();
-		for (i in 0...5) l.enqueue(null);
-		l.assign(E, [5]);
-		
-		assertEquals(5, l.size());
-		for (i in 0...5) assertEquals(E, cast Type.getClass(l.dequeue()));
-		assertTrue(l.isEmpty());
-		
-		var l = new LinkedQueue<E>();
-		for (i in 0...5) l.enqueue(null);
-		l.assign(E, [5]);
-		
-		assertEquals(5, l.size());
-		for (i in 0...5) assertEquals(5, l.dequeue().x);
-		assertTrue(l.isEmpty());
+		l.forEach(
+			function(v, i)
+			{
+				assertEquals(i, v);
+				return v;
+			});
 	}
 	
 	function testQueue()
@@ -186,7 +178,7 @@ class TestLinkedQueue extends AbstractTest
 		l.enqueue(1);
 		l.enqueue(2);
 		l.enqueue(3);
-		assertEquals(3, l.size());
+		assertEquals(3, l.size);
 	}
 	
 	function testClone()

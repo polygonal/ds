@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2008-2014 Michael Baczynski, http://www.polygonal.de
+Copyright (c) 2008-2016 Michael Baczynski, http://www.polygonal.de
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -24,7 +24,7 @@ extern class M
 	/**
 		Min value, signed integer.
 	**/
-	inline public static var INT32_MIN =
+	public static inline var INT32_MIN =
 	#if cpp
 	//warning: this decimal constant is unsigned only in ISO C90
 	-M.INT32_MAX;
@@ -35,42 +35,42 @@ extern class M
 	/**
 		Max value, signed integer.
 	**/
-	inline public static var INT32_MAX = 0x7FFFFFFF;
+	public static inline var INT32_MAX = 0x7FFFFFFF;
 	
 	/**
 		Min value, signed short.
 	**/
-	inline public static var INT16_MIN =-0x8000;
+	public static inline var INT16_MIN =-0x8000;
 	
 	/**
 		Max value, signed short.
 	**/
-	inline public static var INT16_MAX = 0x7FFF;
+	public static inline var INT16_MAX = 0x7FFF;
 	
 	/**
 		Max value, unsigned short.
 	**/
-	inline public static var UINT16_MAX = 0xFFFF;
+	public static inline var UINT16_MAX = 0xFFFF;
 	
 	/**
 		Returns true if `x` is a power of two.
 	**/
-	inline public static function isPow2(x:Int):Bool return x > 0 && (x & (x - 1)) == 0;
+	public static inline function isPow2(x:Int):Bool return x > 0 && (x & (x - 1)) == 0;
 	
 	/**
 		Returns min(`x`, `y`).
 	**/
-	inline public static function min(x:Int, y:Int):Int return x < y ? x : y;
+	public static inline function min(x:Int, y:Int):Int return x < y ? x : y;
 	
 	/**
 		Returns max(`x`, `y`).
 	**/
-	inline public static function max(x:Int, y:Int):Int return x > y ? x : y;
+	public static inline function max(x:Int, y:Int):Int return x > y ? x : y;
 	
 	/**
 		Returns the absolute value of `x`.
 	**/
-	inline public static function abs(x:Int):Int return x < 0 ? -x : x;
+	public static inline function abs(x:Int):Int return x < 0 ? -x : x;
 	
 	/**
 		Calculates the next highest power of 2 of `x`.
@@ -79,7 +79,7 @@ extern class M
 		
 		Returns `x` if already a power of 2.
 	**/
-	inline public static function nextPow2(x:Int):Int
+	public static inline function nextPow2(x:Int):Int
 	{
 		var t = x - 1;
 		t |= (t >> 1);

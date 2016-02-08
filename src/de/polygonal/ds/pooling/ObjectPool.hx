@@ -1,5 +1,5 @@
 ﻿/*
-Copyright (c) 2008-2014 Michael Baczynski, http://www.polygonal.de
+Copyright (c) 2008-2016 Michael Baczynski, http://www.polygonal.de
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -18,8 +18,9 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 */
 package de.polygonal.ds.pooling;
 
-import de.polygonal.ds.error.Assert.assert;
-import de.polygonal.ds.tools.NativeArray;
+import de.polygonal.ds.tools.ArrayTools;
+import de.polygonal.ds.tools.Assert.assert;
+import de.polygonal.ds.tools.NativeArrayTools;
 
 /**
 	A fixed sized, arrayed object pool.
@@ -31,7 +32,12 @@ class ObjectPool<T> implements Hashable
 		A hash table transforms this key into an index of an array element by using a hash function.
 		<warn>This value should never be changed by the user.</warn>
 	**/
-	public var key(default, null):Int;
+	public var key(default, null):Int = HashKey.next();
+	
+	/**
+		The total number of pre-allocated objects in the pool.
+	**/
+	public var size(default, null):Int;
 	
 	#if alchemy
 	var mNext:de.polygonal.ds.mem.IntMemory;
@@ -40,7 +46,6 @@ class ObjectPool<T> implements Hashable
 	#end
 	
 	var mPool:Array<T>;
-	var mSize:Int;
 	var mFree:Int;
 	
 	var mLazy:Bool;
@@ -57,10 +62,8 @@ class ObjectPool<T> implements Hashable
 	**/
 	public function new(x:Int)
 	{
-		mSize = x;
+		size = x;
 		mFree = -1;
-		
-		key = HashKey.next();
 		
 		#if debug
 		mCount = 0;
@@ -75,7 +78,7 @@ class ObjectPool<T> implements Hashable
 	{
 		if (mPool == null) return;
 		
-		for (i in 0...mSize) mPool[i] = null;
+		for (i in 0...size) mPool[i] = null;
 		mPool = null;
 		
 		#if alchemy
@@ -97,17 +100,9 @@ class ObjectPool<T> implements Hashable
 	/**
 		Returns true if all objects are in use.
 	**/
-	inline public function isEmpty():Bool
+	public inline function isEmpty():Bool
 	{
 		return mFree == -1;
-	}
-	
-	/**
-		The total number of pre-allocated objects in the pool.
-	**/
-	inline public function size():Int
-	{
-		return mSize;
 	}
 	
 	/**
@@ -115,7 +110,7 @@ class ObjectPool<T> implements Hashable
 	**/
 	public function countUsedObjects():Int
 	{
-		return size() - countUnusedObjects();
+		return size - countUnusedObjects();
 	}
 	
 	/**
@@ -130,7 +125,6 @@ class ObjectPool<T> implements Hashable
 			i = getNext(i);
 			c++;
 		}
-		
 		return c;
 	}
 	
@@ -139,10 +133,10 @@ class ObjectPool<T> implements Hashable
 		After an id has been obtained, the corresponding object can be retrieved using `get(id)`.
 		<assert>pool exhausted</assert>
 	**/
-	inline public function next():Int
+	public inline function next():Int
 	{
 		#if debug
-		assert(mCount < mSize && mFree != -1, "pool exhausted");
+		assert(mCount < size && mFree != -1, "pool exhausted");
 		++mCount;
 		#end
 		
@@ -152,7 +146,6 @@ class ObjectPool<T> implements Hashable
 		#if debug
 		mUsage.set(id);
 		#end
-		
 		return id;
 	}
 	
@@ -161,7 +154,7 @@ class ObjectPool<T> implements Hashable
 		Call `next()` to request an `id` first.
 		<assert>invalid `id` or object linked to `id` is not used</assert>
 	**/
-	inline public function get(id:Int):T
+	public inline function get(id:Int):T
 	{
 		assert(mUsage.has(id), 'id $id is not used');
 		
@@ -170,7 +163,6 @@ class ObjectPool<T> implements Hashable
 			if (mPool[id] == null)
 				mPool[id] = mLazyConstructor();
 		}
-		
 		return mPool[id];
 	}
 	
@@ -178,7 +170,7 @@ class ObjectPool<T> implements Hashable
 		Puts the object mapped to `id` back into the pool.
 		<assert>pool is full or object linked to `id` is not used</assert>
 	**/
-	inline public function put(id:Int)
+	public inline function put(id:Int)
 	{
 		#if debug
 		assert(mUsage.has(id), 'id $id is not used');
@@ -204,15 +196,15 @@ class ObjectPool<T> implements Hashable
 		mLazy = lazy;
 		
 		#if alchemy
-		mNext = new de.polygonal.ds.mem.IntMemory(mSize, "ObjectPool.mNext");
+		mNext = new de.polygonal.ds.mem.IntMemory(size, "ObjectPool.mNext");
 		#else
-		mNext = NativeArray.init(mSize);
+		mNext = NativeArrayTools.init(size);
 		#end
 		
-		for (i in 0...mSize - 1) setNext(i, i + 1);
-		setNext(mSize - 1, -1);
+		for (i in 0...size - 1) setNext(i, i + 1);
+		setNext(size - 1, -1);
 		mFree = 0;
-		mPool = de.polygonal.ds.ArrayUtil.alloc(mSize);
+		mPool = ArrayTools.alloc(size);
 		
 		assert(cl != null || fabricate != null || factory != null, "invalid arguments");
 		
@@ -230,17 +222,17 @@ class ObjectPool<T> implements Hashable
 		else
 		{
 			if (cl != null)
-				for (i in 0...mSize) mPool[i] = Type.createInstance(cl, []);
+				for (i in 0...size) mPool[i] = Type.createInstance(cl, []);
 			else
 			if (fabricate != null)
-				for (i in 0...mSize) mPool[i] = fabricate();
+				for (i in 0...size) mPool[i] = fabricate();
 			else
 			if (factory != null)
-				for (i in 0...mSize) mPool[i] = factory.create();
+				for (i in 0...size) mPool[i] = factory.create();
 		}
 		
 		#if debug
-		mUsage = new de.polygonal.ds.BitVector(mSize);
+		mUsage = new de.polygonal.ds.BitVector(size);
 		#end
 	}
 	
@@ -261,11 +253,11 @@ class ObjectPool<T> implements Hashable
 	public function toString():String
 	{
 		#if debug
-		var s = '{ ObjectPool used/total: $mCount/$mSize }';
-		if (size() == 0) return s;
+		var s = '{ ObjectPool used/total: $mCount/$size }';
+		if (size == 0) return s;
 		s += "\n[\n";
 		
-		for (i in 0...size())
+		for (i in 0...size)
 		{
 			var t = Std.string(mPool[i]);
 			s += Printf.format("  %4d -> {%s}\n", [i, t]);
@@ -273,7 +265,7 @@ class ObjectPool<T> implements Hashable
 		s += "]";
 		return s;
 		#else
-		return '{ ObjectPool used/total: ${countUsedObjects()}/$mSize }';
+		return '{ ObjectPool used/total: ${countUsedObjects()}/$size }';
 		#end
 	}
 	
@@ -313,25 +305,25 @@ class ObjectPoolIterator<T> implements de.polygonal.ds.Itr<T>
 		reset();
 	}
 
-	inline public function reset():Itr<T>
+	public inline function reset():Itr<T>
 	{
 		mData = mObject.mPool;
-		mS = mObject.mSize;
+		mS = mObject.size;
 		mI = 0;
 		return this;
 	}
 	
-	inline public function hasNext():Bool
+	public inline function hasNext():Bool
 	{
 		return mData != null && mI < mS;
 	}
 	
-	inline public function next():T
+	public inline function next():T
 	{
 		return mData[mI++];
 	}
 	
-	inline public function remove()
+	public function remove()
 	{
 		throw "unsupported operation";
 	}
