@@ -45,13 +45,14 @@ If you want to test the latest beta build, you should pull the dev branch and ad
 ## Changelog
 
 ### 1.5.0 (dev)
-__supports Haxe Compiler 3.2.1__
+_supports Haxe Compiler 3.2.1_
 
- * modified: API: renamed swp() -> swap(), cpy() -> copy()
- * modified: API: Map.clr() renamed to Map.delete() to distinguish from Collection.clear()
+ * added: replaced Da structure with new DynamicVector implementation (growable, vector)
+ * modified: renamed swp() -> swap(), cpy() -> copy()
+ * modified: Map.clr() renamed to Map.delete() to distinguish from Collection.clear()
  * modified: optimized toString()
  * added: various growth rates for vector-based structures (see GrowthRate)
- * modified: API: Array2/3: getW(), getH(), getD() is now a property: width, height, depth
+ * modified: Array2/3: getW(), getH(), getD() is now a property: width, height, depth
  * modified: removed ArrayConvert due to issues with -D generic, instead added ?source:Array<T> to constructor
  * modified: removed toVector() method
  * modified: renamed ArrayUtil to ArrayTools: match Haxe naming style
