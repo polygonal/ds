@@ -44,13 +44,27 @@ If you want to test the latest beta build, you should pull the dev branch and ad
 
 ## Changelog
 
-### 1.x.x (dev)
+### 1.5.0 (dev)
 __supports Haxe Compiler 3.2.1__
 
+ * modified: API: renamed swp() -> swap(), cpy() -> copy()
+ * modified: API: Map.clr() renamed to Map.delete() to distinguish from Collection.clear()
+ * modified: optimized toString()
+ * added: various growth rates for vector-based structures (see GrowthRate)
+ * modified: API: Array2/3: getW(), getH(), getD() is now a property: width, height, depth
+ * modified: removed ArrayConvert due to issues with -D generic, instead added ?source:Array<T> to constructor
+ * modified: removed toVector() method
+ * modified: renamed ArrayUtil to ArrayTools: match Haxe naming style
+ * modified: iter() renamed to forEach() and implement for all structures
+ * modified: removed redundant assign() and fill() methods: use forEach() instead 
+ * modified: size() is now a property: Collection.size
+ * fixed: haxelib package
+ * modified: greatly improved performance for static platforms when compiled with -D generic (-swf and -cpp only)
+ * modified: cpp target: increase performance by skipping bounds checking when acessing arrays internally
  * fixed: always increment iterator state inside next()
  * added: initial python support
  * fixed: Graph.remove()
- * modified: use Vector instead of Array where possible
+ * modified: use vectors instead of arrays for internal storage
  * modified: require flash10; drop support for fp 9.x
  * added: IntIntHashTable.hasPair() for checking if a {key, value} pair exists
  * added: IntIntHashTable.clrPair() for removing a {key, value} pair
@@ -58,12 +72,11 @@ __supports Haxe Compiler 3.2.1__
  * added: Array.getRect() for extracting a rectangular region
  * modified: use access control instead of friend sytax with typedef
  * modified: less agressive inlining
- * modified: API: use plain array to pass random values to shuffle() instead of Da
- * modified: API: Array2/3.getArray() renamed to Array2/3.getVector()
+ * modified: use plain array to pass random values to shuffle() instead of Da
+ * modified: Array2/3.getArray() renamed to Array2/3.getVector()
  * fixed: several bugfixes for neko/cpp
- * modified: API: walk() renamed to iter() to match Haxe Lambda style.
  * modified: switched to dox for documentation
- * modified: API: renamed SLL to Sll, DLL to Dll, BST to Bst, DA to Da: match Haxe naming style
+ * modified: renamed SLL to Sll, DLL to Dll, BST to Bst: match Haxe naming style
  * modified: removed HashMap class (deprecated, Flash only)
  
 ### 1.4.1 (released 2013-07-08)
