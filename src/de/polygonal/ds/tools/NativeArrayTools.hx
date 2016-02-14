@@ -255,10 +255,11 @@ class NativeArrayTools
 	{
 		assert(count <= size(dst), "count out of range");
 		
+		if (count == 0) count = size(dst);
+		
 		#if cpp
 		cpp.NativeArray.zero(dst, 0, count);
 		#else
-		if (count == 0) count = size(dst);
 		for (i in 0...count) set(dst, i, cast null);
 		#end
 	}

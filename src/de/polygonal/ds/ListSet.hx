@@ -73,27 +73,8 @@ class ListSet<T> implements Set<T>
 	{
 		mInitialCapacity = M.max(1, initialCapacity);	
 		capacity = mInitialCapacity;
-		
-		if (source != null && source.length > 0)
-		{
-			var map = new haxe.ds.ObjectMap<Dynamic, Bool>();
-			var set = [];
-			var e, j = 0;
-			for (i in 0...source.length)
-			{
-				e = source[i];
-				if (!map.exists(e))
-				{
-					map.set(e, true);
-					set.push(e);
-				}
-			}
-			mSize = set.length;
-			var d = mData = NativeArrayTools.init(mSize);
-			for (i in 0...mSize) d.set(i, set[i]);
-		}
-		else
-			mData = NativeArrayTools.init(capacity);
+		mData = NativeArrayTools.init(capacity);
+		if (source != null) for (i in source) set(i);
 	}
 	
 	/**

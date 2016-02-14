@@ -132,10 +132,8 @@ class BitVector implements Hashable
 	**/
 	public inline function clrAll()
 	{
-		var d = mData;
-		
 		#if cpp
-		cpp.NativeArrayTools.zero(mData, 0, mArrSize);
+		cpp.NativeArray.zero(mData, 0, mArrSize);
 		#else
 		var d = mData;
 		for (i in 0...mArrSize) d.set(i, 0);

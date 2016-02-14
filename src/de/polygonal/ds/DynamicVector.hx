@@ -988,16 +988,7 @@ class DynamicVector<T> implements Collection<T>
 	**/
 	public function clear(gc:Bool = false)
 	{
-		if (gc)
-		{
-			#if cpp
-			cpp.NativeArrayTools.zero(mData, 0, capacity);
-			#else
-			var d = mData;
-			for (i in 0...d.size()) d.set(i, cast null);
-			#end
-		}
-		
+		if (gc) mData.nullify();
 		mSize = 0;
 	}
 	
