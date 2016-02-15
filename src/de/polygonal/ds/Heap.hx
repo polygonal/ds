@@ -388,16 +388,20 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	**/
 	public function toString():String
 	{
-		var s = '{ Heap size: ${size} }';
-		if (isEmpty()) return s;
-		
+		var b = new StringBuf();
+		b.add('{ Heap size: ${size} }');
+		if (isEmpty()) return b.toString();
 		var t = sort();
-		s += "\n[ front\n";
-		var i = 0;
+		b.add("\n[ front\n");
+		var i = 0, args = new Array<Dynamic>();
 		for (i in 0...size)
-			s += Printf.format("  %4d -> %s\n", [i, Std.string(t[i])]);
-		s += "]";
-		return s;
+		{
+			args[0] = i;
+			args[1] = Std.string(t[i]);
+			b.add(Printf.format("  %4d -> %s\n", args));
+		}
+		b.add("]");
+		return b.toString();
 	}
 	
 	inline function upheap(i:Int)

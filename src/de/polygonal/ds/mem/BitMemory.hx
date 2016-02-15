@@ -443,8 +443,9 @@ class BitMemory extends MemoryAccess
 		#if debug
 		if (mMemory == null) return "{ BitMemory (unassigned) }";
 		var s = '{ BitMemory size: $size, name: $name }';
-		s += "\n[\n";
+		b.add("\n[\n");
 		
+		var args = new Array<Dynamic>();
 		for (i in 0...bytes >> 2)
 		{
 			var t = "";
@@ -456,9 +457,11 @@ class BitMemory extends MemoryAccess
 				else
 					t += "#";
 			}
-			s += Printf.format("  %4d -> %s\n", [i, t]);
+			args[0] = i;
+			args[1] = t;
+			b.add(Printf.format("  %4d -> %s\n", args));
 		}
-		s += "\n]";
+		b.add("\n]");
 		return s;
 		#else
 		return '{ BitMemory size: $size, name: $name }';

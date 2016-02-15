@@ -260,20 +260,21 @@ class GraphNode<T> implements Hashable
 	**/
 	public function toString():String
 	{
-		var t = [];
+		var t = [], arc;
 		if (arcList != null)
 		{
-			var arc = arcList;
+			arc = arcList;
 			while (arc != null)
 			{
 				t.push(Std.string(arc.val));
 				arc = arc.next;
 			}
 		}
+		return
 		if (t.length > 0)
-			return '{ GraphNode val: $val, connected to: ${t.join(",")} }';
+			'{ GraphNode val: $val, connected to: ${t.join(",")} }';
 		else
-			return '{ GraphNode val: $val }';
+			'{ GraphNode val: $val }';
 	}
 }
 

@@ -95,13 +95,13 @@ class ListSet<T> implements Set<T>
 	**/
 	public function toString():String
 	{
-		var s = '{ ListSet size: ${size} }';
-		if (isEmpty()) return s;
-		s += "\n[\n";
-		for (i in 0...size)
-			s += '  ${Std.string(mData[i])}\n';
-		s += "]";
-		return s;
+		var b = new StringBuf();
+		b.add('{ ListSet size: ${size} }');
+		if (isEmpty()) return b.toString();
+		b.add("\n[\n");
+		for (i in 0...size) b.add('  ${Std.string(mData[i])}\n');
+		b.add("]");
+		return b.toString();
 	}
 	
 	/* INTERFACE Set */

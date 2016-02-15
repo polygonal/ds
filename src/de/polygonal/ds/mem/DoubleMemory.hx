@@ -454,10 +454,15 @@ class DoubleMemory extends MemoryAccess
 		#if debug
 		if (mMemory == null) return "{ DoubleMemory (unassigned) }";
 		var s = '{ DoubleMemory size: $size, name: $name }';
-		s += "\n[\n";
+		b.add("\n[\n");
+		var args = new Array<Dynamic>();
 		for (i in 0...size)
-			s += Printf.format("  %3d -> %#.3f\n", [i, get(i)]);
-		s += "\n]";
+		{
+			args[0] = i;
+			args[1] = get(i);
+			b.add(Printf.format("  %3d -> %#.3f\n", args));
+		}
+		b.add("\n]");
 		return s;
 		#else
 		return '{ DoubleMemory size: $size, name: $name }';

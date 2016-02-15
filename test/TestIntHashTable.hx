@@ -28,7 +28,7 @@ class TestIntHashTable extends AbstractTest
 		for (i in 0...4)
 			assertEquals(i, h.getFront(i));
 			
-		assertEquals(null, h.getFront(5));
+		assertEquals(cast null, h.getFront(5));
 	}
 	
 	function testRehash()
@@ -256,7 +256,6 @@ class TestIntHashTable extends AbstractTest
 	function testSize2()
 	{
 		var h = new IntHashTable<Null<Int>>(4, 2);
-		
 		for (i in 0...3)
 		{
 			h.set(0, 0);
@@ -268,14 +267,14 @@ class TestIntHashTable extends AbstractTest
 			
 			assertTrue(h.delete(0));
 			
-			assertEquals(null, h.get(0));
+			assertEquals(cast null, h.get(0));
 			assertEquals(1, h.get(1));
 			assertEquals(1, h.size);
 			
 			assertTrue(h.delete(1));
 			
-			assertEquals(null, h.get(0));
-			assertEquals(null, h.get(1));
+			assertEquals(cast null, h.get(0));
+			assertEquals(cast null, h.get(1));
 			assertEquals(0, h.size);
 		}
 	}
@@ -283,7 +282,6 @@ class TestIntHashTable extends AbstractTest
 	function testSize3()
 	{
 		var h = new IntHashTable<Null<Int>>(4, 3);
-		
 		for (i in 0...3)
 		{
 			h.set(0, 0);
@@ -297,23 +295,23 @@ class TestIntHashTable extends AbstractTest
 			
 			assertTrue(h.delete(0));
 			
-			assertEquals(null, h.get(0));
+			assertEquals(cast null, h.get(0));
 			assertEquals(1, h.get(1));
 			assertEquals(2, h.get(2));
 			assertEquals(2, h.size);
 			
 			assertTrue(h.delete(1));
 			
-			assertEquals(null, h.get(0));
-			assertEquals(null, h.get(1));
+			assertEquals(cast null, h.get(0));
+			assertEquals(cast null, h.get(1));
 			assertEquals(2, h.get(2));
 			assertEquals(1, h.size);
 			
 			assertTrue(h.delete(2));
 			
-			assertEquals(null, h.get(0));
-			assertEquals(null, h.get(1));
-			assertEquals(null, h.get(2));
+			assertEquals(cast null, h.get(0));
+			assertEquals(cast null, h.get(1));
+			assertEquals(cast null, h.get(2));
 			assertEquals(0, h.size);
 		}
 	}
@@ -383,7 +381,6 @@ class TestIntHashTable extends AbstractTest
 	function testDuplicateKeys()
 	{
 		var h = new IntHashTable<Null<Int>>(16, 32);
-		
 		for (i in 0...2)
 		{
 			h.set(0, 1);
@@ -401,7 +398,7 @@ class TestIntHashTable extends AbstractTest
 			assertEquals(3, h.get(0));
 			assertTrue(h.delete(0));
 			assertFalse(h.hasKey(0));
-			assertEquals(null, h.get(0));
+			assertEquals(cast null, h.get(0));
 			
 			assertEquals(1, h.get(1));
 			assertTrue(h.delete(1));
@@ -410,7 +407,7 @@ class TestIntHashTable extends AbstractTest
 			assertEquals(3, h.get(1));
 			assertTrue(h.delete(1));
 			assertFalse(h.hasKey(1));
-			assertEquals(null, h.get(1));
+			assertEquals(cast null, h.get(1));
 		}
 	}
 	

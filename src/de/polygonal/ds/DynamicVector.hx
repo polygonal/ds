@@ -637,18 +637,19 @@ class DynamicVector<T> implements Collection<T>
 	**/
 	public function toString():String
 	{
-		var s = '{ Dv size/capacity: $size/$capacity} }';
-		if (isEmpty()) return s;
-		s += "\n[\n";
+		var b = new StringBuf();
+		b.add('{ Dv size/capacity: $size/$capacity} }');
+		if (isEmpty()) return b.toString();
+		b.add("\n[\n");
 		var d = mData, fmt = "  %4d -> %s\n", args = new Array<Dynamic>();
 		for (i in 0...size)
 		{
 			args[0] = i;
 			args[1] = Std.string(d.get(i));
-			s += Printf.format(fmt, args);
+			b.add(Printf.format(fmt, args));
 		}
-		s += "]";
-		return s;
+		b.add("]");
+		return b.toString();
 	}
 	
 	function quickSort(first:Int, k:Int, cmp:T->T->Int)

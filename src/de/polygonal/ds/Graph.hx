@@ -964,17 +964,18 @@ class Graph<T> implements Collection<T>
 	**/
 	public function toString():String
 	{
-		var s = '{ Graph size: ${size} }';
-		if (isEmpty()) return s;
-		s += "\n[\n";
+		var b = new StringBuf();
+		b.add('{ Graph size: ${size} }');
+		if (isEmpty()) return b.toString();
+		b.add("\n[\n");
 		var node = mNodeList;
 		while (node != null)
 		{
-			s += '  ${node.toString()}\n';
+			b.add('  ${node.toString()}\n');
 			node = node.next;
 		}
-		s += "]";
-		return s;
+		b.add("]");
+		return b.toString();
 	}
 	
 	/* INTERFACE Collection */

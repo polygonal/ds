@@ -806,28 +806,33 @@ class Array2<T> implements Collection<T>
 	**/
 	public function toString():String
 	{
-		var l = 0, d = mData;
+		var l = 0, s, d = mData;
 		for (i in 0...size)
 		{
-			var s = Std.string(d.get(i));
+			s = Std.string(d.get(i));
 			l = Std.int(Math.max(s.length, l));
 		}
-		var s = '{ Array2 ${mW}x${mH} }';
-		s += "\n[\n";
 		
-		var offset;
-		var row = 0;
-		for (y in 0...mH)
+		var b = new StringBuf();
+		b.add('{ Array2 ${cols}x${rows} }');
+		b.add("\n[\n");
+		
+		var offset, row = 0, args = new Array<Dynamic>();
+		for (y in 0...rows)
 		{
-			s += Printf.format("%- 4d: ", [row++]);
-			offset = y * mW;
-			for (x in 0...mW)
-				s += Printf.format("%" + l + "s%s", [Std.string(d.get(offset + x)), x < mW - 1 ? ", " : ""]);
-			s += "\n";
+			args[0] = row++;
+			b.add(Printf.format("%- 4d: ", args));
+			offset = y * cols;
+			for (x in 0...cols)
+			{
+				args[0] = Std.string(d.get(offset + x));
+				args[1] = x < cols - 1 ? ", " : "";
+				b.add(Printf.format('%${l}s%s', args));
+			}
+			b.add("\n");
 		}
-		
-		s += "]";
-		return s;
+		b.add("]");
+		return b.toString();
 	}
 	
 	/* INTERFACE Collection */

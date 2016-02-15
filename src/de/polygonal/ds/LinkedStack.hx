@@ -425,19 +425,19 @@ class LinkedStack<T> implements Stack<T>
 	**/
 	public function toString():String
 	{
-		var s = '{ LinkedStack size: ${size} }';
-		if (isEmpty()) return s;
-		s += "\n[ top\n";
-		var node = mHead;
-		var i = mTop - 1;
+		var b = new StringBuf();
+		b.add('{ LinkedStack size: ${size} }');
+		if (isEmpty()) return b.toString();
+		b.add("\n[ top\n");
+		var node = mHead, i = mTop - 1;
 		while (i >= 0)
 		{
-			s += '  $i -> ${Std.string(node.val)}\n';
+			b.add('  $i -> ${Std.string(node.val)}\n');
 			i--;
 			node = node.next;
 		}
-		s += "]";
-		return s;
+		b.add("]");
+		return b.toString();
 	}
 	
 	/* INTERFACE Collection */

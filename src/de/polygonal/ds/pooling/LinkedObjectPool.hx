@@ -272,17 +272,17 @@ class LinkedObjectPool<T> implements Hashable
 		#if debug
 		var s = 'LinkedObjectPool (${getUsageCount()}/${getSize()} objects used)';
 		if (getSize() == 0) return s;
-		s += "\n[\n";
+		b.add("\n[\n");
 		var node = mHead;
 		var i = 0;
 		while (true)
 		{
-			s += '  ${i} -> ${node.val}\n';
+			b.add('  ${i} -> ${node.val}\n');
 			i++;
 			node = node.next;
 			if (node == mHead) break;
 		}
-		s += "]";
+		b.add("]");
 		return s;
 		#else
 		return 'LinkedObjectPool (${getUsageCount()}/${getSize()} objects used)';

@@ -299,18 +299,23 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	**/
 	public function toString():String
 	{
-		var s = Printf.format("{ HashTable size/capacity: %d/%d, load factor: %.2f }", [size, capacity, loadFactor]);
-		if (isEmpty()) return s;
-		s += "\n[\n";
+		var b = new StringBuf();
+		b.add(Printf.format("{ HashTable size/capacity: %d/%d, load factor: %.2f }", [size, capacity, loadFactor]));
+		if (isEmpty()) return b.toString();
+		b.add("\n[\n");
 		
 		var max = 0;
 		for (key in keys()) max = M.max(max, Std.string(key).length);
 		
+		var args = new Array<Dynamic>();
 		for (key in keys())
-			s += Printf.format("  %- " + max + "s -> %s\n", [key, Std.string(get(key))]);
-		
-		s += "]";
-		return s;
+		{
+			args[0] = key;
+			args[1] = Std.string(get(key));
+			b.add(Printf.format('  %- ${max}s -> %s\n', args));
+		}
+		b.add("]");
+		return b.toString();
 	}
 	
 	/* INTERFACE Map */

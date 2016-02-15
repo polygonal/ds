@@ -252,21 +252,19 @@ class ObjectPool<T> implements Hashable
 	**/
 	public function toString():String
 	{
-		#if debug
-		var s = '{ ObjectPool used/total: $mCount/$size }';
-		if (size == 0) return s;
-		s += "\n[\n";
-		
+		var b = new StringBuf();
+		b.add('{ ObjectPool used/total: $mCount/$size }');
+		if (size == 0) return b.toString();
+		b.add("\n[\n");
+		var args = new Array<Dynamic>();
 		for (i in 0...size)
 		{
-			var t = Std.string(mPool[i]);
-			s += Printf.format("  %4d -> {%s}\n", [i, t]);
+			args[0] = i;
+			args[1] = Std.string(mPool[i]);
+			b.add(Printf.format("  %4d -> {%s}\n", args));
 		}
-		s += "]";
-		return s;
-		#else
-		return '{ ObjectPool used/total: ${countUsedObjects()}/$size }';
-		#end
+		b.add("]");
+		return b.toString();
 	}
 	
 	inline function getNext(i:Int)

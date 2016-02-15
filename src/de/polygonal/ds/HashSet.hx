@@ -214,15 +214,13 @@ class HashSet<T:Hashable> implements Set<T>
 	**/
 	public function toString():String
 	{
-		var s = Printf.format("{ HashSet size/capacity: %d/%d, load factor: %.2f }", [size, capacity, loadFactor]);
-		if (isEmpty()) return s;
-		s += "\n[\n";
-		for (x in this)
-		{
-			s += '  ${Std.string(x)}\n';
-		}
-		s += "]";
-		return s;
+		var b = new StringBuf();
+		b.add(Printf.format("{ HashSet size/capacity: %d/%d, load factor: %.2f }", [size, capacity, loadFactor]));
+		if (isEmpty()) return b.toString();
+		b.add("\n[\n");
+		for (x in this) b.add('  ${Std.string(x)}\n');
+		b.add("]");
+		return b.toString();
 	}
 	
 	/* INTERFACE Set */

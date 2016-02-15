@@ -505,10 +505,15 @@ class ShortMemory extends MemoryAccess
 		#if debug
 		if (mMemory == null) return "{ShortMemory (unassigned) }";
 		var s = '{ ShortMemory size: $size, name: $name }';
-		s += "\n[\n";
+		b.add("\n[\n");
+		var args = new Array<Dynamic>();
 		for (i in 0...size)
-			s += Printf.format("  %3d -> %#.3f\n", [i, get(i)]);
-		s += "\n]";
+		{
+			args[0] = i;
+			args[1] = get(i);
+			b.add(Printf.format("  %3d -> %#.3f\n", args));
+		}
+		b.add("\n]");
 		return s;
 		#else
 		return '{ ShortMemory size: $size, name: $name }';

@@ -747,18 +747,17 @@ class Dll<T> implements Collection<T>
 	**/
 	public function join(x:String):String
 	{
-		var s = "";
-		if (size > 0)
+		if (isEmpty()) return "";
+		
+		var b = new StringBuf();
+		var node = head;
+		for (i in 0...size - 1)
 		{
-			var node = head;
-			for (i in 0...size - 1)
-			{
-				s += Std.string(node.val) + x;
-				node = node.next;
-			}
-			s += Std.string(node.val);
+			b.add(Std.string(node.val) + x);
+			node = node.next;
 		}
-		return s;
+		b.add(Std.string(node.val));
+		return b.toString();
 	}
 	
 	/**
@@ -855,17 +854,18 @@ class Dll<T> implements Collection<T>
 	**/
 	public function toString():String
 	{
-		var s = '{ Dll size: ${size}, circular: ${isCircular()} }';
-		if (isEmpty()) return s;
-		s += "\n[ head \n";
+		var b = new StringBuf();
+		b.add('{ Dll size: ${size}, circular: ${isCircular()} }');
+		if (isEmpty()) return b.toString();
+		b.add("\n[ head \n");
 		var node = head;
 		for (i in 0...size)
 		{
-			s += '  ${Std.string(node.val)}\n';
+			b.add('  ${Std.string(node.val)}\n');
 			node = node.next;
 		}
-		s += "] tail";
-		return s;
+		b.add("] tail");
+		return b.toString();
 	}
 	
 	/* INTERFACE Collection */

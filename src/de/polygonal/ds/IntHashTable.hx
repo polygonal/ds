@@ -182,7 +182,7 @@ class IntHashTable<T> implements Map<Int, T>
 		{
 			var i = mH.getFront(key);
 			if (i == IntIntHashTable.KEY_ABSENT)
-				return null;
+				return cast null;
 			else
 			{
 				mKey0 = key;
@@ -302,10 +302,10 @@ class IntHashTable<T> implements Map<Int, T>
 	**/
 	public function toString():String
 	{
-		var s = Printf.format("{ IntHashTable size/capacity: %d/%d, load factor: %.2f }", [size, capacity, loadFactor]);
-		if (isEmpty()) return s;
-		s += "\n[\n";
-		
+		var b = new StringBuf();
+		b.add(Printf.format("{ IntHashTable size/capacity: %d/%d, load factor: %.2f }", [size, capacity, loadFactor]));
+		if (isEmpty()) return b.toString();
+		b.add("\n[\n");
 		var max = 0.;
 		for (key in keys()) max = Math.max(max, key);
 		var i = 1;
@@ -314,11 +314,15 @@ class IntHashTable<T> implements Map<Int, T>
 			i++;
 			max = Std.int(max / 10);
 		}
-		
+		var args = new Array<Dynamic>();
 		for (key in keys())
-			s += Printf.format("  %- " + i + "d -> %s\n", [key, Std.string(mVals[mH.getFront(key)])]);
-		s += "]";
-		return s;
+		{
+			args[0] = key;
+			args[1] = Std.string(mVals[mH.getFront(key)]);
+			b.add(Printf.format('  %- ${i}d -> %s\n', args));
+		}
+		b.add("]");
+		return b.toString();
 	}
 	
 	/* INTERFACE Map */
@@ -366,7 +370,7 @@ class IntHashTable<T> implements Map<Int, T>
 	{
 		var i = mH.get(key);
 		if (i == IntIntHashTable.KEY_ABSENT)
-			return null;
+			return cast null;
 		else
 			return mVals[i];
 	}
@@ -428,7 +432,7 @@ class IntHashTable<T> implements Map<Int, T>
 		{
 			invalidate();
 			
-			mVals[i] = null;
+			mVals[i] = cast null;
 			clrKey(i);
 			setNext(i, mFree);
 			mFree = i;
@@ -558,7 +562,7 @@ class IntHashTable<T> implements Map<Int, T>
 			
 			for (i in 0...capacity)
 			{
-				mVals[i] = null;
+				mVals[i] = cast null;
 				clrKey(i);
 			}
 		}

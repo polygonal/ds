@@ -177,15 +177,19 @@ class MemoryManager
 	{
 		#if (flash && alchemy)
 		var s = '{ MemoryManager, ${bytesTotal} bytes total, ${bytesFree} bytes free (${mBytes.length - mBlockSizeBytes}) }';
-		s += "\n[ front\n";
+		b.add("\n[ front\n");
 		var i = mSegmentList;
 		var j = 0;
+		var args = new Array<Dynamic>();
 		while (i != null)
 		{
-			s += Printf.format("  %4d -> %s (%s)\n", [j++, Std.string(i), i.mAccess]);
+			args[0] = j++;
+			args[1] = Std.string(i);
+			args[2] = i.mAccess;
+			b.add(Printf.format("  %4d -> %s (%s)\n", args));
 			i = i.next;
 		}
-		s += "]";
+		b.add("]");
 		return s;
 		#else
 		return "{ MemoryManager }";

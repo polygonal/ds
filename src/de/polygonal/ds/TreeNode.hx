@@ -1342,21 +1342,21 @@ class TreeNode<T> implements Collection<T>
 		if (children == null)
 			return '{ TreeNode ${print()} }';
 		
-		var s = "";
+		var b = new StringBuf();
 		preorder(function(node:TreeNode<T>, preflight:Bool, userData:Dynamic):Bool
 		{
 			var d = node.depth();
 			for (i in 0...d)
 			{
 				if (i == d - 1)
-					s += "+--- ";
+					b.add("+--- ");
 				else
-					s += "|    ";
+					b.add("|    ");
 			}
-			s += "{ " + node.print() + " }\n";
+			b.add("{ " + node.print() + " }\n");
 			return true;
 		}, null);
-		return s;
+		return b.toString();
 	}
 	
 	/**

@@ -50,14 +50,12 @@ class Bst<T:Comparable<T>> implements Collection<T>
 	**/
 	public var reuseIterator:Bool = false;
 	
-	var mSize:Int;
-	var mRoot:BinaryTreeNode<T>;
+	var mSize:Int = 0;
+	var mRoot:BinaryTreeNode<T> = null;
 	var mIterator:BSTIterator<T> = null;
 	
 	public function new()
 	{
-		mRoot = null;
-		mSize = 0;
 	}
 	
 	/**
@@ -246,18 +244,18 @@ class Bst<T:Comparable<T>> implements Collection<T>
 	**/
 	public function toString():String
 	{
-		var s = '{ Bst size: ${size} }';
-		if (isEmpty()) return s;
-		s += "\n[\n";
+		var b = new StringBuf();
+		b.add('{ Bst size: ${size} }');
+		if (isEmpty()) return b.toString();
+		b.add("\n[\n");
 		var dumpNode = function(node:BinaryTreeNode<T>, userData:Dynamic):Bool
 		{
-			s += '  ${Std.string(node.val)}\n';
+			b.add('  ${Std.string(node.val)}\n');
 			return true;
 		};
-		
 		mRoot.inorder(dumpNode);
-		s += "]";
-		return s;
+		b.add("]");
+		return b.toString();
 	}
 	
 	/* INTERFACE Collection */

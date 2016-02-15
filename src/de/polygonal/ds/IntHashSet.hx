@@ -321,15 +321,13 @@ class IntHashSet implements Set<Int>
 	**/
 	public function toString():String
 	{
-		var s = Printf.format("{ IntHashSet size/capacity: %d/%d, load factor: %.2f }", [size, capacity, loadFactor]);
-		if (isEmpty()) return s;
-		s += "\n[\n";
-		for (x in this)
-		{
-			s += '  $x\n';
-		}
-		s += "]";
-		return s;
+		var b = new StringBuf();
+		b.add(Printf.format("{ IntHashSet size/capacity: %d/%d, load factor: %.2f }", [size, capacity, loadFactor]));
+		if (isEmpty()) return b.toString();
+		b.add("\n[\n");
+		for (x in this) b.add('  $x\n');
+		b.add("]");
+		return b.toString();
 	}
 	
 	/* INTERFACE Set */

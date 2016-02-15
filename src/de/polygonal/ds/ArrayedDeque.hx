@@ -77,7 +77,7 @@ class ArrayedDeque<T> implements Deque<T>
 		@param blockPoolSize the total number of blocks to reuse when blocks are removed or relocated (from front to back or vice-versa). This improves performances but uses more memory.
 		The default value is 4; a value of 0 disables block pooling.
 	**/
-	public function new(blockSize:Int = 64, blockPoolCapacity:Int = 4, ?source:Array<T>)
+	public function new(blockSize:Null<Int> = 64, blockPoolCapacity:Null<Int> = 4, ?source:Array<T>)
 	{
 		if (blockSize == M.INT16_MIN) return; //TODO remove
 		
@@ -302,41 +302,68 @@ class ArrayedDeque<T> implements Deque<T>
 	**/
 	public function toString():String
 	{
-		var s = '{ ArrayedDeque size: ${size} }';
-		if (isEmpty()) return s;
-		s += "\n[ front\n";
+		var b = new StringBuf();
+		b.add('{ ArrayedDeque size: ${size} }');
+		if (isEmpty()) return b.toString();
 		
+		b.add("\n[ front\n");
+		var args = new Array<Dynamic>();
 		var i = 0;
 		if (mTailBlockIndex == 0)
 		{
 			for (j in mHead + 1...mTail)
-				s += Printf.format("  %4d -> %s\n", [i++, Std.string(mHeadBlock[j])]);
+			{
+				args[0] = i++;
+				args[1] = Std.string(mHeadBlock[j]);
+				b.add(Printf.format("  %4d -> %s\n", args));
+			}
 		}
 		else
 		if (mTailBlockIndex == 1)
 		{
 			for (j in mHead + 1...mBlockSize)
-				s += Printf.format("  %4d -> %s\n", [i++, Std.string(mHeadBlock[j])]);
+			{
+				args[0] = i++;
+				args[1] = Std.string(mHeadBlock[j]);
+				b.add(Printf.format("  %4d -> %s\n", args));
+			}
+			
 			for (j in 0...mTail)
-				s += Printf.format("  %4d -> %s\n", [i++, Std.string(mTailBlock[j])]);
+			{
+				args[0] = i++;
+				args[1] = Std.string(mTailBlock[j]);
+				b.add(Printf.format("  %4d -> %s\n", args));
+			}
 		}
 		else
 		{
 			for (j in mHead + 1...mBlockSize)
-				s += Printf.format("  %4d -> %s\n", [i++, Std.string(mHeadBlock[j])]);
+			{
+				args[0] = i++;
+				args[1] = Std.string(mHeadBlock[j]);
+				b.add(Printf.format("  %4d -> %s\n", args));
+			}
 			
 			for (j in 1...mTailBlockIndex)
 			{
 				var block = mBlocks[j];
 				for (k in 0...mBlockSize)
-					s += Printf.format("  %4d -> %s\n", [i++, Std.string(block[k])]);
+				{
+					args[0] = i++;
+					args[1] = Std.string(block[k]);
+					b.add(Printf.format("  %4d -> %s\n", args));
+				}
 			}
 			
 			for (j in 0...mTail)
-				s += Printf.format("  %4d -> %s\n", [i++, Std.string(mTailBlock[j])]);
+			{
+				args[0] = i++;
+				args[1] = Std.string(mTailBlock[j]);
+				b.add(Printf.format("  %4d -> %s\n", args));
+			}
 		}
-		s += "]";
-		return s;
+		b.add("]");
+		return b.toString();
 	}
 	
 	/* INTERFACE Collection */

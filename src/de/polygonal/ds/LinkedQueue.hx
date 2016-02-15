@@ -243,18 +243,20 @@ class LinkedQueue<T> implements Queue<T>
 	**/
 	public function toString():String
 	{
-		var s = '{ LinkedQueue size: ${size} }';
-		if (isEmpty()) return s;
-		s += "\n[\n";
-		var node = mHead;
-		var i = 0;
+		var b = new StringBuf();
+		b.add('{ LinkedQueue size: ${size} }');
+		if (isEmpty()) return b.toString();
+		b.add("\n[\n");
+		var node = mHead, i = 0, args = new Array<Dynamic>();
 		while (node != null)
 		{
-			s += Printf.format("  %4d -> %s\n", [i++, Std.string(node.val)]);
+			args[0] = i++;
+			args[1] = Std.string(node.val);
+			b.add(Printf.format("  %4d -> %s\n", args));
 			node = node.next;
 		}
-		s += "]";
-		return s;
+		b.add("]");
+		return b.toString();
 	}
 	
 	/* INTERFACE Collection */

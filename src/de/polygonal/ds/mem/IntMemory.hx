@@ -503,10 +503,15 @@ class IntMemory extends MemoryAccess
 		#if debug
 		if (mMemory == null) return "{ IntMemory (unassigned) }";
 		var s = '{ IntMemory size: $size, name: $name }';
-		s += "\n[\n";
+		b.add("\n[\n");
+		var args = new Array<Dynamic>();
 		for (i in 0...size)
-			s += Printf.format("  %3d -> %#d\n", [i, get(i)]);
-		s += "\n]";
+		{
+			args[0] = i;
+			args[1] = get(i);
+			b.add(Printf.format("  %3d -> %#d\n", args));
+		}
+		b.add("\n]");
 		return s;
 		#else
 		return '{ IntMemory size: $size, name: $name }';

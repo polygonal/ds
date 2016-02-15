@@ -366,13 +366,19 @@ class BitVector implements Hashable
 	**/
 	public function toString():String
 	{
-		var s = '{ BitVector set/all: ${ones()}/${capacity} }';
-		if (ones() == 0) return s;
-		s += "\n[\n";
+		var b = new StringBuf();
+		b.add('{ BitVector set/all: ${ones()}/${capacity} }');
+		if (ones() == 0) return b.toString();
+		b.add("\n[\n");
+		var args = new Array<Dynamic>();
 		for (i in 0...mArrSize)
-			s += Printf.format("  %4d -> %#.32b\n", [i, mData[i]]);
-		s += "]";
-		return s;
+		{
+			args[0] = i;
+			args[1] = mData[i];
+			b.add(Printf.format("  %4d -> %#.32b\n", args));
+		}
+		b.add("]");
+		return b.toString();
 	}
 	
 	/**

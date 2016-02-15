@@ -318,13 +318,20 @@ class ArrayedQueue<T> implements Queue<T>
 	**/
 	public function toString():String
 	{
-		var s = '{ ArrayedQueue size/capacity: $size/$capacity }';
-		if (isEmpty()) return s;
-		s += "\n[ front\n";
+		var b = new StringBuf();
+		b.add('{ ArrayedQueue size/capacity: $size/$capacity }');
+		if (isEmpty()) return b.toString();
+		b.add("\n[ front\n");
+		
+		var args = new Array<Dynamic>();
 		for (i in 0...size)
-			s += Printf.format("  %4d -> %s\n", [i, Std.string(get(i))]);
-		s += "]";
-		return s;
+		{
+			args[0] = i;
+			args[1] = Std.string(get(i));
+			b.add(Printf.format("  %4d -> %s\n", args));
+		}
+		b.add("]");
+		return b.toString();
 	}
 	
 	/**
