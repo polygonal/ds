@@ -699,7 +699,7 @@ class Array2<T> implements Collection<T>
 		
 		Useful for fast iteration or low-level operations.
 	**/
-	public inline function getStorage():Container<T>
+	public inline function getData():Container<T>
 	{
 		return mData;
 	}
