@@ -345,12 +345,13 @@ class IntHashSet implements Set<Int>
 			return false;
 		else
 		{
+			var d = mData;
 			#if (flash && alchemy)
-			var o = mData.getAddr(i);
+			var o = d.getAddr(i);
 			if (Memory.getI32(o) == x)
 				return true;
 			#else
-			if (getData(i) == x)
+			if (d.get(i) == x)
 				return true;
 			#end
 			else
@@ -360,7 +361,7 @@ class IntHashSet implements Set<Int>
 				i = Memory.getI32(o + 4);
 				while (i != NULL_POINTER)
 				{
-					o = mData.getAddr(i);
+					o = d.getAddr(i);
 					if (Memory.getI32(o) == x)
 					{
 						exists = true;
@@ -369,15 +370,15 @@ class IntHashSet implements Set<Int>
 					i = Memory.getI32(o + 4);
 				}
 				#else
-				i = getData(i + 1);
+				i = d.get(i + 1);
 				while (i != NULL_POINTER)
 				{
-					if (getData(i) == x)
+					if (d.get(i) == x)
 					{
 						exists = true;
 						break;
 					}
-					i = getData(i + 1);
+					i = d.get(i + 1);
 				}
 				#end
 				return exists;
@@ -405,7 +406,11 @@ class IntHashSet implements Set<Int>
 		#end
 		if (j == EMPTY_SLOT)
 		{
-			if (size == capacity) grow();
+			if (size == capacity)
+			{
+				grow();
+				d = mData;
+			}
 			
 			j = mFree << 1;
 			mFree = getNext(mFree);
@@ -423,7 +428,7 @@ class IntHashSet implements Set<Int>
 		else
 		{
 			#if (flash && alchemy)
-			o = mData.getAddr(j);
+			o = d.getAddr(j);
 			if (Memory.getI32(o) == x) return false;
 			#else
 			if (d.get(j) == x) return false;
@@ -434,13 +439,12 @@ class IntHashSet implements Set<Int>
 				var p = Memory.getI32(o + 4);
 				while (p != NULL_POINTER)
 				{
-					o = mData.getAddr(p);
+					o = d.getAddr(p);
 					if (Memory.getI32(o) == x)
 					{
 						j = -1;
 						break;
 					}
-					
 					j = p;
 					p = Memory.getI32(o + 4);
 				}
@@ -453,7 +457,6 @@ class IntHashSet implements Set<Int>
 						j = -1;
 						break;
 					}
-					
 					j = p;
 					p = d.get(p + 1);
 				}
@@ -463,7 +466,11 @@ class IntHashSet implements Set<Int>
 					return false;
 				else
 				{
-					if (size == capacity) grow();
+					if (size == capacity)
+					{
+						grow();
+						d = mData;
+					}
 					p = mFree << 1;
 					mFree = getNext(mFree);
 					d.set(p, x);
