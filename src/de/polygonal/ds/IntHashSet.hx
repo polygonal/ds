@@ -391,11 +391,11 @@ class IntHashSet implements Set<Int>
 		<assert>hash set is full (if not resizable)</assert>
 		@return true if `x` was added to this set, false if `x` already exists.
 	**/
-	public function set(x:Int):Bool
+	public inline function set(x:Int):Bool
 	{
 		assert(x != VAL_ABSENT, "value 0x80000000 is reserved");
 		
-		var b = hashCode(x);
+		var b = hashCode(x), d = mData;
 		
 		#if (flash && alchemy)
 		var o = mHash.getAddr(b);
@@ -407,17 +407,16 @@ class IntHashSet implements Set<Int>
 		{
 			if (size == capacity) grow();
 			
-			var i = mFree << 1;
+			j = mFree << 1;
 			mFree = getNext(mFree);
 			
 			#if (flash && alchemy)
-			Memory.setI32(o, i);
+			Memory.setI32(o, j);
 			#else
-			setHash(b, i);
+			setHash(b, j);
 			#end
 			
-			setData(i, x);
-			
+			d.set(j, x);
 			mSize++;
 			return true;
 		}
@@ -425,40 +424,38 @@ class IntHashSet implements Set<Int>
 		{
 			#if (flash && alchemy)
 			o = mData.getAddr(j);
-			if (Memory.getI32(o) == x)
-				return false;
+			if (Memory.getI32(o) == x) return false;
 			#else
-			if (getData(j) == x)
-				return false;
+			if (d.get(j) == x) return false;
 			#end
 			else
 			{
 				#if (flash && alchemy)
-				var t = Memory.getI32(o + 4);
-				while (t != NULL_POINTER)
+				var p = Memory.getI32(o + 4);
+				while (p != NULL_POINTER)
 				{
-					o = mData.getAddr(t);
+					o = mData.getAddr(p);
 					if (Memory.getI32(o) == x)
 					{
 						j = -1;
 						break;
 					}
 					
-					j = t;
-					t = Memory.getI32(o + 4);
+					j = p;
+					p = Memory.getI32(o + 4);
 				}
 				#else
-				var t = getData(j + 1);
-				while (t != NULL_POINTER)
+				var p = d.get(j + 1);
+				while (p != NULL_POINTER)
 				{
-					if (getData(t) == x)
+					if (d.get(p) == x)
 					{
 						j = -1;
 						break;
 					}
 					
-					j = t;
-					t = getData(t + 1);
+					j = p;
+					p = d.get(p + 1);
 				}
 				#end
 				
@@ -467,11 +464,10 @@ class IntHashSet implements Set<Int>
 				else
 				{
 					if (size == capacity) grow();
-					var i = mFree << 1;
+					p = mFree << 1;
 					mFree = getNext(mFree);
-					setData(i, x);
-					
-					setData(j + 1, i);
+					d.set(p, x);
+					d.set(j + 1, p);
 					mSize++;
 					return true;
 				}
@@ -888,56 +884,14 @@ class IntHashSet implements Set<Int>
 		mFree = newSize >> 1;
 	}
 	
-	inline function getHash(i:Int)
-	{
-		#if (flash && alchemy)
-		return mHash.get(i);
-		#else
-		return mHash[i];
-		#end
-	}
-	inline function setHash(i:Int, x:Int)
-	{
-		#if (flash && alchemy)
-		mHash.set(i, x);
-		#else
-		mHash[i] = x;
-		#end
-	}
+	inline function getHash(i:Int) return mHash.get(i);
+	inline function setHash(i:Int, x:Int) mHash.set(i, x);
 	
-	inline function getNext(i:Int)
-	{
-		#if (flash && alchemy)
-		return mNext.get(i);
-		#else
-		return mNext[i];
-		#end
-	}
-	inline function setNext(i:Int, x:Int)
-	{
-		#if (flash && alchemy)
-		mNext.set(i, x);
-		#else
-		mNext[i] = x;
-		#end
-	}
+	inline function getNext(i:Int) return mNext.get(i);
+	inline function setNext(i:Int, x:Int) mNext.set(i, x);
 	
-	inline function getData(i:Int)
-	{
-		#if (flash && alchemy)
-		return mData.get(i);
-		#else
-		return mData[i];
-		#end
-	}
-	inline function setData(i:Int, x:Int)
-	{
-		#if (flash && alchemy)
-		mData.set(i, x);
-		#else
-		mData[i] = x;
-		#end
-	}
+	inline function getData(i:Int) return mData.get(i);
+	inline function setData(i:Int, x:Int) mData.set(i, x);
 }
 
 @:access(de.polygonal.ds.IntHashSet)
