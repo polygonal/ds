@@ -19,6 +19,8 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 package de.polygonal.ds.mem;
 
 import de.polygonal.ds.tools.Assert.assert;
+import de.polygonal.ds.tools.M;
+import haxe.ds.Vector;
 
 #if (alchemy && !flash)
 "IntMemory is only available when targeting flash"
@@ -225,7 +227,7 @@ class IntMemory extends MemoryAccess
 		@param out the `Vector` object to write into. If null, a new Vector object is created on-the-fly.
 		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
-	public static function toVector(input:IntMemory, min:Int = -1, max:Int = -1, out:haxe.ds.Vector<Int> = null):haxe.ds.Vector<Int>
+	public static function toVector(input:IntMemory, min:Int = -1, max:Int = -1, out:Vector<Int> = null):Vector<Int>
 	{
 		assert(input != null, "invalid input");
 		
@@ -242,7 +244,7 @@ class IntMemory extends MemoryAccess
 				assert(Std.int(out.length) >= max - min, "out vector is too small");
 		#end*/
 		
-		if (out == null) out = new haxe.ds.Vector<Int>(max - min);
+		if (out == null) out = new Vector<Int>(max - min);
 		
 		#if alchemy
 		min = input.getAddr(min);
@@ -267,7 +269,7 @@ class IntMemory extends MemoryAccess
 		@param max index pointing to the last integer.
 		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
-	public static function toUnsignedVector(input:IntMemory, min = -1, max = -1):haxe.ds.Vector<UInt>
+	public static function toUnsignedVector(input:IntMemory, min = -1, max = -1):Vector<UInt>
 	{
 		assert(input != null, "invalid input");
 		
@@ -278,7 +280,7 @@ class IntMemory extends MemoryAccess
 		assert(max <= input.size, 'max out of range ($max)');
 		assert(max - min > 0, 'min equals max ($min)');
 		
-		var out = new haxe.ds.Vector<UInt>(max - min);
+		var out = new Vector<UInt>(max - min);
 		
 		#if alchemy
 		min = input.getAddr(min);
@@ -303,7 +305,7 @@ class IntMemory extends MemoryAccess
 		@param max index pointing to the last integer.
 		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
-	public static function ofVector(input:Container<Int>, min = -1, max = -1):IntMemory
+	public static function ofVector(input:Vector<Int>, min = -1, max = -1):IntMemory
 	{
 		assert(input != null, "invalid input");
 		
@@ -502,7 +504,8 @@ class IntMemory extends MemoryAccess
 	{
 		#if debug
 		if (mMemory == null) return "{ IntMemory (unassigned) }";
-		var s = '{ IntMemory size: $size, name: $name }';
+		var b = new StringBuf();
+		b.add('{ IntMemory size: $size, name: $name }');
 		b.add("\n[\n");
 		var args = new Array<Dynamic>();
 		for (i in 0...size)
@@ -512,7 +515,7 @@ class IntMemory extends MemoryAccess
 			b.add(Printf.format("  %3d -> %#d\n", args));
 		}
 		b.add("\n]");
-		return s;
+		return b.toString();
 		#else
 		return '{ IntMemory size: $size, name: $name }';
 		#end

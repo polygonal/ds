@@ -19,6 +19,7 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 package de.polygonal.ds.mem;
 
 import de.polygonal.ds.tools.Assert.assert;
+import de.polygonal.ds.tools.M;
 import haxe.ds.Vector;
 
 #if (alchemy && !flash)
@@ -200,10 +201,8 @@ class ByteMemory extends MemoryAccess
 		assert(max <= input.size, 'max out of range ($max)');
 		assert(max - min > 0, 'min equals max ($min)');
 		
-		#if (debug && flash && generic)
-		if (out != null)
-			if (out.fixed)
-				assert(Std.int(out.length) >= max - min, "out vector is too small");
+		#if debug
+		if (out != null) assert(Std.int(out.length) >= max - min, "out vector is too small");
 		#end
 		
 		if (out == null) out = new Vector<Int>(max - min);
@@ -473,7 +472,8 @@ class ByteMemory extends MemoryAccess
 	{
 		#if debug
 		if (mMemory == null) return "{ ByteMemory (unassigned) }";
-		var s = '{ ByteMemory size: $size, name: $name }';
+		var b = new StringBuf();
+		b.add('{ ByteMemory size: $size, name: $name }');
 		b.add("\n[\n");
 		var args = new Array<Dynamic>();
 		for (i in 0...size)
@@ -483,7 +483,7 @@ class ByteMemory extends MemoryAccess
 			b.add(Printf.format("  %3d -> %d\n", args));
 		}
 		b.add("\n]");
-		return s;
+		return b.toString();
 		#else
 		return '{ ByteMemory size: $size, name: $name }';
 		#end

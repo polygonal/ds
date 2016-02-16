@@ -25,6 +25,7 @@ import flash.Memory;
 
 import de.polygonal.ds.tools.ArrayTools;
 import de.polygonal.ds.tools.Assert.assert;
+import de.polygonal.ds.tools.M;
 
 using de.polygonal.ds.tools.NativeArrayTools;
 

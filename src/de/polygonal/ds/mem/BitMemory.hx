@@ -19,6 +19,8 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 package de.polygonal.ds.mem;
 
 import de.polygonal.ds.tools.Assert.assert;
+import de.polygonal.ds.tools.M;
+import haxe.ds.Vector;
 
 #if (alchemy && !flash)
 "BitMemory is only available when targeting flash"
@@ -442,7 +444,8 @@ class BitMemory extends MemoryAccess
 	{
 		#if debug
 		if (mMemory == null) return "{ BitMemory (unassigned) }";
-		var s = '{ BitMemory size: $size, name: $name }';
+		var b = new StringBuf();
+		b.add('{ BitMemory size: $size, name: $name }');
 		b.add("\n[\n");
 		
 		var args = new Array<Dynamic>();
@@ -462,7 +465,7 @@ class BitMemory extends MemoryAccess
 			b.add(Printf.format("  %4d -> %s\n", args));
 		}
 		b.add("\n]");
-		return s;
+		return b.toString();
 		#else
 		return '{ BitMemory size: $size, name: $name }';
 		#end

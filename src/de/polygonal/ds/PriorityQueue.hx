@@ -21,6 +21,7 @@ package de.polygonal.ds;
 import de.polygonal.ds.tools.ArrayTools;
 import de.polygonal.ds.tools.Assert.assert;
 import de.polygonal.ds.tools.GrowthRate;
+import de.polygonal.ds.tools.M;
 import haxe.ds.ObjectMap;
 
 using de.polygonal.ds.tools.NativeArrayTools;

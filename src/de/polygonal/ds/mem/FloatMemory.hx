@@ -19,6 +19,8 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 package de.polygonal.ds.mem;
 
 import de.polygonal.ds.tools.Assert.assert;
+import de.polygonal.ds.tools.M;
+import haxe.ds.Vector;
 
 #if (alchemy && !flash)
 "FloatMemory is only available when targeting flash"
@@ -229,9 +231,7 @@ class FloatMemory extends MemoryAccess
 		assert(max - min > 0, 'min equals max ($min)');
 		
 		#if (debug && flash && generic)
-		if (out != null)
-			if (out.fixed)
-				assert(Std.int(out.length) >= max - min, "out vector is too small");
+		if (out != null) assert(Std.int(out.length) >= max - min, "out vector is too small");
 		#end
 		
 		if (out == null) out = new Vector<Float>(max - min);
@@ -458,7 +458,8 @@ class FloatMemory extends MemoryAccess
 	{
 		#if debug
 		if (mMemory == null) return "{ FloatMemory (unassigned) }";
-		var s = '{ FloatMemory, size: $size, name: $name }';
+		var b = new StringBuf();
+		b.add('{ FloatMemory, size: $size, name: $name }');
 		b.add("\n[\n");
 		var args = new Array<Dynamic>();
 		for (i in 0...size)
@@ -468,7 +469,7 @@ class FloatMemory extends MemoryAccess
 			b.add(Printf.format("  %3d -> %#.3f\n", args));
 		}
 		b.add("\n]");
-		return s;
+		return b.toString();
 		#else
 		return '{ FloatMemory, size: $size, name: $name }';
 		#end

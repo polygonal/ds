@@ -19,6 +19,7 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 package de.polygonal.ds.pooling;
 
 import de.polygonal.ds.tools.Assert.assert;
+import de.polygonal.ds.tools.M;
 
 /**
 	An dynamic, arrayed object pool with an unbounded size that creates new objects on-the-fly and stores them for repeated use.

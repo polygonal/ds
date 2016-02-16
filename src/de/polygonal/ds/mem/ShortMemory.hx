@@ -19,6 +19,8 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 package de.polygonal.ds.mem;
 
 import de.polygonal.ds.tools.Assert.assert;
+import de.polygonal.ds.tools.M;
+import haxe.ds.Vector;
 
 #if (alchemy && !flash)
 "ShortMemory is only available when targeting flash"
@@ -231,10 +233,8 @@ class ShortMemory extends MemoryAccess
 		assert(max <= input.size, 'max out of range ($max)');
 		assert(max - min > 0, 'min equals max ($min)');
 		
-		#if (debug && flash && generic)
-		if (out != null)
-			if (out.fixed)
-				assert(Std.int(out.length) >= max - min, "out vector is too small");
+		#if debug
+		if (out != null) assert(Std.int(out.length) >= max - min, "out vector is too small");
 		#end
 		
 		if (out == null) out = new Vector<Int>(max - min);
@@ -505,6 +505,7 @@ class ShortMemory extends MemoryAccess
 		#if debug
 		if (mMemory == null) return "{ShortMemory (unassigned) }";
 		var s = '{ ShortMemory size: $size, name: $name }';
+		var b = new StringBuf();
 		b.add("\n[\n");
 		var args = new Array<Dynamic>();
 		for (i in 0...size)
@@ -514,7 +515,7 @@ class ShortMemory extends MemoryAccess
 			b.add(Printf.format("  %3d -> %#.3f\n", args));
 		}
 		b.add("\n]");
-		return s;
+		return b.toString();
 		#else
 		return '{ ShortMemory size: $size, name: $name }';
 		#end
