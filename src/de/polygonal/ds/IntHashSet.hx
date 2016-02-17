@@ -25,6 +25,7 @@ import flash.Memory;
 
 import de.polygonal.ds.tools.ArrayTools;
 import de.polygonal.ds.tools.Assert.assert;
+import de.polygonal.ds.tools.GrowthRate;
 import de.polygonal.ds.tools.M;
 
 using de.polygonal.ds.tools.NativeArrayTools;
@@ -53,15 +54,6 @@ class IntHashSet implements Set<Int>
 	public var key(default, null):Int = HashKey.next();
 	
 	/**
-		If true, reuses the iterator object instead of allocating a new one when calling ``iterator()``.
-		
-		The default is false.
-		
-		<warn>If true, nested iterations are likely to fail as only one iteration is allowed at a time.</warn>
-	**/
-	public var reuseIterator:Bool = false;
-	
-	/**
 		The size of the allocated storage space for the elements.
 		
 		If more space is required to accomodate new elements, ``getCapacity()`` is doubled every time ``size`` grows beyond capacity and split in half when ``size`` is a quarter of capacity.
@@ -69,6 +61,26 @@ class IntHashSet implements Set<Int>
 		The capacity never falls below the initial size defined in the constructor.
 	**/
 	public var capacity(default, null):Int;
+	
+	/**
+		The growth rate of the container.
+		
+		+  0: fixed size
+		+ -1: grows at a rate of 1.125x plus a constant.
+		+ -2: grows at a rate of 1.5x (default value).
+		+ -3: grows at a rate of 2.0x.
+		+ >0: grows at a constant rate: capacity += growthRate
+	**/
+	public var growthRate:Int = GrowthRate.NORMAL;
+	
+	/**
+		If true, reuses the iterator object instead of allocating a new one when calling ``iterator()``.
+		
+		The default is false.
+		
+		<warn>If true, nested iterations are likely to fail as only one iteration is allowed at a time.</warn>
+	**/
+	public var reuseIterator:Bool = false;
 	
 	/**
 		The load factor measure the "denseness" of a hash set and is proportional to the time cost to look up an entry.
@@ -157,16 +169,18 @@ class IntHashSet implements Set<Int>
 		mNext = NativeArrayTools.init(capacity);
 		#end
 		
+		var t = mData;
 		var j = 1;
 		for (i in 0...capacity)
 		{
-			setData(j - 1, VAL_ABSENT);
-			setData(j, NULL_POINTER);
+			t.set(j - 1, VAL_ABSENT);
+			t.set(j, NULL_POINTER);
 			j += 2;
 		}
 		
-		for (i in 0...capacity - 1) setNext(i, i + 1);
-		setNext(capacity - 1, NULL_POINTER);
+		t = mNext;
+		for (i in 0...capacity - 1) t.set(i, i + 1);
+		t.set(capacity - 1, NULL_POINTER);
 	}
 	
 	/**
@@ -176,15 +190,15 @@ class IntHashSet implements Set<Int>
 	**/
 	public function getCollisionCount():Int
 	{
-		var c = 0, j;
+		var c = 0, j, d = mData, h = mHash;
 		for (i in 0...slotCount)
 		{
-			j = getHash(i);
+			j = h.get(i);
 			if (j == EMPTY_SLOT) continue;
-			j = getData(j + 1);
+			j = d.get(j + 1);
 			while (j != NULL_POINTER)
 			{
-				j = getData(j + 1);
+				j = d.get(j + 1);
 				c++;
 			}
 		}
@@ -201,18 +215,20 @@ class IntHashSet implements Set<Int>
 	{
 		assert(x != VAL_ABSENT, "value 0x80000000 is reserved");
 		
+		var h = mHash;
 		var b = hashCode(x);
-		var i = getHash(b);
+		var i = h.get(b);
 		if (i == EMPTY_SLOT)
 			return false;
 		else
 		{
+			var d = mData;
 			#if (flash && alchemy)
-			var o = mData.getAddr(i);
+			var o = d.getAddr(i);
 			if (Memory.getI32(o) == x)
 				return true;
 			#else
-			if (getData(i) == x)
+			if (d.get(i) == x)
 				return true;
 			#end
 			else
@@ -224,33 +240,33 @@ class IntHashSet implements Set<Int>
 				#if (flash && alchemy)
 				i = Memory.getI32(o + 4);
 				#else
-				i = getData(i + 1);
+				i = d.get(i + 1);
 				#end
 				
 				while (i != NULL_POINTER)
 				{
 					#if (flash && alchemy)
-					o = mData.getAddr(i);
+					o = d.getAddr(i);
 					if (Memory.getI32(o) == x)
 					#else
-					if (getData(i) == x)
+					if (d.get(i) == x)
 					#end
 					{
 						#if (flash && alchemy)
-						var o1 = mData.getAddr(i0 + 1);
+						var o1 = d.getAddr(i0 + 1);
 						Memory.setI32(o1, Memory.getI32(o + 4));
 						Memory.setI32(o + 4, first);
-						setHash(b, i);
+						h.set(b, i);
 						#else
-						setData(i0 + 1, getData(i + 1));
-						setData(i + 1, first);
-						setHash(b, i);
+						d.set(i0 + 1, d.get(i + 1));
+						d.set(i + 1, first);
+						d.set(b, i);
 						#end
 						
 						exists = true;
 						break;
 					}
-					i = getData((i0 = i) + 1);
+					i = d.get((i0 = i) + 1);
 				}
 				return exists;
 			}
@@ -280,9 +296,10 @@ class IntHashSet implements Set<Int>
 			o += 8;
 		}
 		#else
+		var d = mData;
 		for (i in 0...capacity)
 		{
-			var v = getData(i << 1);
+			var v = d.get(i << 1);
 			if (v != VAL_ABSENT) t.set(v);
 		}
 		#end
@@ -341,7 +358,7 @@ class IntHashSet implements Set<Int>
 	{
 		assert(x != VAL_ABSENT, "value 0x80000000 is reserved");
 		
-		var i = getHash(hashCode(x));
+		var i = mHash.get(hashCode(x));
 		if (i == EMPTY_SLOT)
 			return false;
 		else
@@ -403,7 +420,7 @@ class IntHashSet implements Set<Int>
 		var o = mHash.getAddr(b);
 		var j = Memory.getI32(o);
 		#else
-		var j = getHash(b);
+		var j = mHash.get(b);
 		#end
 		if (j == EMPTY_SLOT)
 		{
@@ -414,12 +431,12 @@ class IntHashSet implements Set<Int>
 			}
 			
 			j = mFree << 1;
-			mFree = getNext(mFree);
+			mFree = mNext.get(mFree);
 			
 			#if (flash && alchemy)
 			Memory.setI32(o, j);
 			#else
-			setHash(b, j);
+			mHash.set(b, j);
 			#end
 			
 			d.set(j, x);
@@ -473,7 +490,7 @@ class IntHashSet implements Set<Int>
 						d = mData;
 					}
 					p = mFree << 1;
-					mFree = getNext(mFree);
+					mFree = mNext.get(mFree);
 					d.set(p, x);
 					d.set(j + 1, p);
 					mSize++;
@@ -532,42 +549,41 @@ class IntHashSet implements Set<Int>
 	public inline function remove(x:Int):Bool
 	{
 		var b = hashCode(x);
-		var i = getHash(b);
+		var i = mHash.get(b);
 		if (i == EMPTY_SLOT)
 			return false;
 		else
 		{
+			var d = mData;
 			#if (flash && alchemy)
-			var o = mData.getAddr(i);
+			var o = d.getAddr(i);
 			if (x == Memory.getI32(o))
 			#else
-			if (x == getData(i))
+			if (x == d.get(i))
 			#end
 			{
 				#if (flash && alchemy)
 				if (Memory.getI32(o + 4) == NULL_POINTER)
 				#else
-				if (getData(i + 1) == NULL_POINTER)
+				if (d.get(i + 1) == NULL_POINTER)
 				#end
-					setHash(b, EMPTY_SLOT);
+					mHash.set(b, EMPTY_SLOT);
 				else
-					setHash(b, getData(i + 1));
+					mHash.set(b, d.get(i + 1));
 				
 				var j = i >> 1;
-				setNext(j, mFree);
+				mNext.set(j, mFree);
 				mFree = j;
 				
 				#if (flash && alchemy)
 				Memory.setI32(o    , VAL_ABSENT);
 				Memory.setI32(o + 4, NULL_POINTER);
 				#else
-				setData(i    , VAL_ABSENT);
-				setData(i + 1, NULL_POINTER);
+				d.set(i    , VAL_ABSENT);
+				d.set(i + 1, NULL_POINTER);
 				#end
 				
 				mSize--;
-				
-				if (size == (capacity >> 2) && capacity > mMinCapacity) shrink();
 				return true;
 			}
 			else
@@ -578,13 +594,13 @@ class IntHashSet implements Set<Int>
 				#if (flash && alchemy)
 				i = Memory.getI32(o + 4);
 				#else
-				i = getData(i + 1);
+				i = d.get(i + 1);
 				#end
 				
 				while (i != NULL_POINTER)
 				{
 					#if (flash && alchemy)
-					o = mData.getAddr(i);
+					o = d.getAddr(i);
 					if (Memory.getI32(o) == x)
 					{
 						exists = true;
@@ -593,35 +609,33 @@ class IntHashSet implements Set<Int>
 					i0 = i;
 					i = Memory.getI32(o + 4);
 					#else
-					if (getData(i) == x)
+					if (d.get(i) == x)
 					{
 						exists = true;
 						break;
 					}
-					i = getData((i0 = i) + 1);
+					i = d.get((i0 = i) + 1);
 					#end
 				}
 				
 				if (exists)
 				{
-					setData(i0 + 1, getData(i + 1));
+					d.set(i0 + 1, d.get(i + 1));
 					
 					var j = i >> 1;
-					setNext(j, mFree);
+					mNext.set(j, mFree);
 					mFree = j;
 					
 					#if (flash && alchemy)
-					o = mData.getAddr(i);
+					o = d.getAddr(i);
 					Memory.setI32(o    , VAL_ABSENT);
 					Memory.setI32(o + 4, NULL_POINTER);
 					#else
-					setData(i    , VAL_ABSENT);
-					setData(i + 1, NULL_POINTER);
+					d.set(i    , VAL_ABSENT);
+					d.set(i + 1, NULL_POINTER);
 					#end
 					
 					--mSize;
-					
-					if (size == (capacity >> 2) && capacity > mMinCapacity) shrink();
 					return true;
 				}
 				else
@@ -630,40 +644,99 @@ class IntHashSet implements Set<Int>
 		}
 	}
 	
+	public function pack():IntHashSet
+	{
+		if (capacity == mMinCapacity) return this;
+		
+		var oldCapacity = capacity;
+		capacity = M.max(size, mMinCapacity);
+		
+		var src = mData, dst;
+		var e = 0, t = mHash, j;
+		
+		#if (flash && alchemy)
+		dst = new IntMemory(capacity << 1, "IntHashSet.mData");
+		var addr = dst.getAddr(e);
+		for (i in 0...slotCount)
+		{
+			j = t.get(i);
+			if (j == EMPTY_SLOT) continue;
+			
+			t.set(i, e);
+			
+			flash.Memory.setI32(addr    , src.get(j));
+			flash.Memory.setI32(addr + 4, NULL_POINTER);
+			addr += 8;
+			e += 2;
+			
+			j = src.get(j + 1);
+			while (j != NULL_POINTER)
+			{
+				flash.Memory.setI32(addr - 4, e);
+				flash.Memory.setI32(addr    , src.get(j));
+				flash.Memory.setI32(addr + 4, NULL_POINTER);
+				addr += 8;
+				e += 2;
+				j = src.get(j + 1);
+			}
+		}
+		mData = dst;
+		mNext.resize(capacity);
+		#else
+		dst = NativeArrayTools.init(capacity << 1);
+		for (i in 0...slotCount)
+		{
+			j = t.get(i);
+			if (j == EMPTY_SLOT) continue;
+			
+			t.set(i, e);
+			dst.set(e++, src.get(j));
+			dst.set(e++, NULL_POINTER);
+			j = src.get(j + 1);
+			while (j != NULL_POINTER)
+			{
+				dst.set(e - 1, e);
+				dst.set(e++, src.get(j));
+				dst.set(e++, NULL_POINTER);
+				j = src.get(j + 1);
+			}
+		}
+		mData = dst;
+		mNext = NativeArrayTools.init(capacity);
+		#end
+		
+		var n = mNext;
+		for (i in 0...capacity - 1) n.set(i, i + 1);
+		n.set(capacity - 1, NULL_POINTER);
+		mFree = -1;
+		return this;
+	}
+	
 	/**
 		Removes all elements.
-		@param gc If true, the hash set shrinks to the initial capacity defined in the constructor.
+		
+		The `gc` parameter has no effect.
 	**/
 	public function clear(gc:Bool = false)
 	{
-		if (gc)
-		{
-			capacity = mMinCapacity;
-			
-			#if alchemy
-			mData.resize(capacity << 1);
-			mNext.resize(capacity);
-			#else
-			mData = NativeArrayTools.init(capacity << 1);
-			mNext = NativeArrayTools.init(capacity);
-			#end
-		}
-		
 		#if alchemy
 		mHash.fill(EMPTY_SLOT);
 		#else
-		for (i in 0...slotCount) mHash[i] = EMPTY_SLOT;
+		var h = mHash;
+		for (i in 0...slotCount) h.set(i, EMPTY_SLOT);
 		#end
 		
-		var j = 1;
+		var j = 1, d = mData;
 		for (i in 0...capacity)
 		{
-			setData(j - 1, VAL_ABSENT);
-			setData(j, NULL_POINTER);
+			d.set(j - 1, VAL_ABSENT);
+			d.set(j    , NULL_POINTER);
 			j += 2;
 		}
-		for (i in 0...capacity - 1) setNext(i, i + 1);
-		setNext(capacity - 1, NULL_POINTER);
+		
+		d = mNext;
+		for (i in 0...capacity - 1) d.set(i, i + 1);
+		d.set(capacity - 1, NULL_POINTER);
 		
 		mFree = 0;
 		mSize = 0;
@@ -730,12 +803,9 @@ class IntHashSet implements Set<Int>
 		c.mData = mData.clone();
 		c.mNext = mNext.clone();
 		#else
-		c.mHash = NativeArrayTools.init(mHash.size());
-		c.mData = NativeArrayTools.init(mData.size());
-		c.mNext = NativeArrayTools.init(mNext.size());
-		for (i in 0...mHash.size()) c.mHash[i] = mHash[i];
-		for (i in 0...mData.size()) c.mData[i] = mData[i];
-		for (i in 0...mNext.size()) c.mNext[i] = mNext[i];
+		c.mHash = mHash.copy();
+		c.mData = mData.copy();
+		c.mNext = mNext.copy();
 		#end
 		
 		c.mMask = mMask;
@@ -755,151 +825,44 @@ class IntHashSet implements Set<Int>
 	function grow()
 	{
 		var oldSize = capacity;
-		var newSize = oldSize << 1;
+		var newSize = GrowthRate.compute(growthRate, capacity);
 		capacity = newSize;
+		
+		var t;
 		
 		#if alchemy
 		mNext.resize(newSize);
 		mData.resize(newSize << 1);
 		#else
-		var copy = NativeArrayTools.init(newSize);
-		for (i in 0...oldSize) copy[i] = mNext[i];
-		mNext = copy;
-		var copy = NativeArrayTools.init(newSize << 1);
-		for (i in 0...oldSize << 1) copy[i] = mData[i];
-		mData = copy;
+		t = NativeArrayTools.init(newSize);
+		mNext.blit(0, t, 0, oldSize);
+		mNext = t;
+		t = NativeArrayTools.init(newSize << 1);
+		mData.blit(0, t, 0, oldSize << 1);
+		mData = t;
 		#end
 		
-		for (i in oldSize - 1...newSize - 1) setNext(i, i + 1);
-		setNext(newSize - 1, NULL_POINTER);
+		t = mNext;
+		for (i in oldSize - 1...newSize - 1) t.set(i, i + 1);
+		t.set(newSize - 1, NULL_POINTER);
 		mFree = oldSize;
 		
+		t = mData;
+		var n = newSize - oldSize;
 		var j = (oldSize << 1) + 1;
-		for (i in 0...oldSize)
+		for (i in 0...n)
 		{
 			#if (flash && alchemy)
 			var o = mData.getAddr(j - 1);
 			Memory.setI32(o    , VAL_ABSENT);
 			Memory.setI32(o + 4, NULL_POINTER);
 			#else
-			setData(j - 1, VAL_ABSENT);
-			setData(j    , NULL_POINTER);
+			t.set(j - 1, VAL_ABSENT);
+			t.set(j    , NULL_POINTER);
 			#end
-			
 			j += 2;
 		}
 	}
-	
-	function shrink()
-	{
-		var oldSize = capacity;
-		var newSize = oldSize >> 1;
-		capacity = newSize;
-		
-		#if (flash && alchemy)
-		mData.resize((oldSize + (newSize >> 1)) << 1);
-		
-		var offset = oldSize << 1;
-		var e = offset;
-		
-		var dst, src;
-		dst = mData.getAddr(e);
-		
-		for (i in 0...slotCount)
-		{
-			var j = getHash(i);
-			if (j == EMPTY_SLOT) continue;
-			
-			setHash(i, e - offset);
-			
-			flash.Memory.setI32(dst    , getData(j));
-			flash.Memory.setI32(dst + 4, NULL_POINTER);
-			dst += 8;
-			
-			e += 2;
-			j = getData(j + 1);
-			while (j != NULL_POINTER)
-			{
-				flash.Memory.setI32(dst - 4, e - offset);
-				flash.Memory.setI32(dst    , getData(j));
-				flash.Memory.setI32(dst + 4, NULL_POINTER);
-				dst += 8;
-				
-				e += 2;
-				j = getData(j + 1);
-			}
-		}
-		
-		var k = (newSize >> 1) << 1;
-		
-		dst = mData.getAddr(0);
-		src = mData.getAddr(offset);
-		var i = 0;
-		var j = k << 2;
-		while (i < j)
-		{
-			flash.Memory.setI32(dst + i, flash.Memory.getI32(src + i));
-			i += 4;
-		}
-		
-		dst = mData.getAddr(k);
-		k = mData.getAddr(newSize << 1);
-		while (dst < k)
-		{
-			flash.Memory.setI32(dst    , VAL_ABSENT);
-			flash.Memory.setI32(dst + 4, NULL_POINTER);
-			dst += 8;
-		}
-		
-		mData.resize(newSize << 1);
-		mNext.resize(newSize);
-		#else
-		var k = newSize << 1;
-		var t = NativeArrayTools.init(k);
-		mNext = NativeArrayTools.init(newSize);
-		
-		var e = 0;
-		for (i in 0...slotCount)
-		{
-			var j = getHash(i);
-			if (j == EMPTY_SLOT) continue;
-			
-			setHash(i, e);
-			
-			t[e++] = getData(j);
-			t[e++] = NULL_POINTER;
-			
-			j = getData(j + 1);
-			while (j != NULL_POINTER)
-			{
-				t[e - 1] = e;
-				t[e++] = getData(j    );
-				t[e++] = NULL_POINTER;
-				j = getData(j + 1);
-			}
-		}
-		var i = k >> 1;
-		while (i < k)
-		{
-			t[i++] = VAL_ABSENT;
-			t[i++] = NULL_POINTER;
-		}
-		mData = t;
-		#end
-		
-		for (i in 0...newSize - 1) setNext(i, i + 1);
-		setNext(newSize - 1, NULL_POINTER);
-		mFree = newSize >> 1;
-	}
-	
-	inline function getHash(i:Int) return mHash.get(i);
-	inline function setHash(i:Int, x:Int) mHash.set(i, x);
-	
-	inline function getNext(i:Int) return mNext.get(i);
-	inline function setNext(i:Int, x:Int) mNext.set(i, x);
-	
-	inline function getData(i:Int) return mData.get(i);
-	inline function setData(i:Int, x:Int) mData.set(i, x);
 }
 
 @:access(de.polygonal.ds.IntHashSet)
