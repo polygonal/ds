@@ -140,7 +140,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 		
 		capacity = n;
 		mShrinkSize = n >> 2;
-		resize(n);
+		grow(n);
 		
 		return this;
 	}*/
@@ -203,7 +203,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 		mMap.set(x, true);
 		#end
 		
-		if (size == capacity) resize();
+		if (size == capacity) grow();
 		mData.set(++mSize, x);
 		x.position = size;
 		upheap(size);
@@ -749,7 +749,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 		}
 	}
 	
-	function resize()
+	function grow()
 	{
 		capacity = GrowthRate.compute(growthRate, capacity);
 		resizeContainer(capacity);

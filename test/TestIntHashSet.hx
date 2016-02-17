@@ -1,6 +1,7 @@
 ﻿import de.polygonal.ds.tools.ArrayTools;
 import de.polygonal.ds.Dll;
 import de.polygonal.ds.IntHashSet;
+import de.polygonal.ds.tools.GrowthRate;
 
 class TestIntHashSet extends AbstractTest
 {
@@ -25,6 +26,46 @@ class TestIntHashSet extends AbstractTest
 		{
 			assertFalse(s.set(i));
 		}
+	}
+	
+	function testPack()
+	{
+		var h = new IntHashSet(4, 16);
+		h.growthRate = GrowthRate.DOUBLE;
+		
+		assertEquals(16, h.capacity);
+		
+		for (i in 0...32) assertTrue(h.set(i));
+		for (i in 0...16) h.remove(i);
+		
+		assertEquals(16, h.size);
+		assertEquals(32, h.capacity);
+		for (i in 16...32) assertTrue(h.has(i));
+		
+		h.pack(); //32->16
+		
+		assertEquals(16, h.size);
+		assertEquals(16, h.capacity);
+		
+		for (i in 16...32) assertTrue(h.has(i));
+		
+		h.free();
+		
+		var h = new IntHashSet(4, 4);
+		h.growthRate = GrowthRate.NORMAL;
+		
+		for (i in 0...8) h.set(i);
+		for (i in 0...8) assertTrue(h.has(i));
+		
+		for (i in 0...6) h.remove(i);
+		assertEquals(2, h.size);
+		assertEquals(11, h.capacity);
+		
+		h.pack();
+		assertEquals(2, h.size);
+		assertEquals(4, h.capacity);
+		assertTrue(h.has(6));
+		assertTrue(h.has(7));
 	}
 	
 	function test()
@@ -73,6 +114,7 @@ class TestIntHashSet extends AbstractTest
 	function testRehash()
 	{
 		var h = new IntHashSet(4);
+		h.growthRate = GrowthRate.DOUBLE;
 		for (i in 0...8) h.set(i);
 		
 		h.rehash(512);
@@ -152,6 +194,7 @@ class TestIntHashSet extends AbstractTest
 	function testResizeSmall()
 	{
 		var h = new IntHashSet(16, 2);
+		h.growthRate = GrowthRate.DOUBLE;
 		var keys = new Array<Int>();
 		var key = 0;
 		
@@ -161,6 +204,7 @@ class TestIntHashSet extends AbstractTest
 			keys.push(key); h.set(key); key++;
 			assertEquals(2, h.size);
 			assertEquals(2, h.capacity);
+			
 			for (i in keys) assertTrue(h.has(i));
 			keys.push(key); h.set(key); key++;
 			for (i in keys) assertTrue(h.has(i));
@@ -183,31 +227,35 @@ class TestIntHashSet extends AbstractTest
 			assertEquals(8, h.capacity);
 			
 			for (i in 0...8)
-			{
 				keys.push(key); h.set(key); key++;
-			}
+			
 			for (i in keys) assertTrue(h.has(i));
-			assertEquals(16, h.size);
+			
+			assertEquals(9, h.size);
 			assertEquals(16, h.capacity);
 			
-			for (i in 0...12)
-				assertTrue(h.remove(keys.pop()));
-			assertEquals(8, h.capacity);
-			assertEquals(4, h.size);
-			for (i in keys) assertTrue(h.has(i));
+			for (i in 0...5) assertTrue(h.remove(i));
 			
-			for (i in 0...2) assertTrue(h.remove(keys.pop()));
-			
+			h.pack();
 			assertEquals(4, h.capacity);
+			assertEquals(4, h.size);
+			
+			assertTrue(h.remove(5));
+			assertTrue(h.remove(6));
+			h.pack();
+			assertEquals(2, h.capacity);
 			assertEquals(2, h.size);
-			for (i in keys) assertTrue(h.has(i));
+			assertTrue(h.has(7));
+			assertTrue(h.has(8));
 			
-			assertTrue(h.remove(keys.pop()));
-			assertTrue(h.remove(keys.pop()));
+			assertTrue(h.remove(7));
+			assertTrue(h.remove(8));
 			
+			h.pack();
 			assertEquals(2, h.capacity);
 			assertEquals(0, h.size);
-			assertTrue(h.isEmpty());
+			keys = [];
+			key = 0;
 		}
 	}
 	
@@ -400,40 +448,21 @@ class TestIntHashSet extends AbstractTest
 	function testResize1()
 	{
 		var h = new IntHashSet(8);
+		h.growthRate = GrowthRate.DOUBLE;
 		
 		for (i in 0...8) h.set(i);
 		assertTrue(h.size == h.capacity);
 		
 		h.set(8);
-		
 		assertEquals(9, h.size);
 		
-		for (i in 0...8 + 1)
-		{
-			assertTrue(h.has(i));
-		}
-		for (i in 9...16)
-		{
-			h.set(i);
-		}
-		
+		for (i in 0...8 + 1) assertTrue(h.has(i));
+		for (i in 9...16) h.set(i);
 		assertTrue(h.size == h.capacity);
 		
-		for (i in 0...16)
-		{
-			assertTrue(h.has(i));
-		}
+		for (i in 0...16) assertTrue(h.has(i));
 		var i = 16;
-		while (i-- > 0)
-		{
-			if (h.size == 4)
-			{
-				return;
-			}
-			
-			assertTrue(h.remove(i));
-		}
-		
+		while (i-- > 0) assertTrue(h.remove(i));
 		assertTrue(h.isEmpty());
 		
 		for (i in 0...16) h.set(i);
@@ -555,48 +584,22 @@ class TestIntHashSet extends AbstractTest
 		var h = new IntHashSet(8);
 		for (i in 0...8) h.set(i);
 		h.clear();
+		
 		var c = 0;
 		for (i in h) c++;
 		assertEquals(c, 0);
 		
 		var h = new IntHashSet(8);
+		h.growthRate = GrowthRate.DOUBLE;
 		for (i in 0...8) h.set(i);
 		assertEquals(8, h.capacity);
 		for (i in 8...16) h.set(i);
 		assertEquals(16, h.capacity);
 		
 		h.clear();
-		
 		assertEquals(16, h.capacity);
-		
-		assertEquals(0, h.size);
 		assertTrue(h.isEmpty());
-		
-		for (i in 0...16) h.set(i);
-		assertEquals(16, h.capacity);
-		
-		for (i in 0...16)
-			assertTrue(h.has(i));
-		
-		//clear with purge
-		var h = new IntHashSet(8);
-		for (i in 0...16) h.set(i);
-		h.clear(true);
-		assertEquals(8, h.capacity);
-		assertEquals(0, h.size);
-		
-		
-		
-		for (i in 0...16) h.set(i);
-		assertEquals(16, h.capacity);
-		for (i in 0...16) assertTrue(h.has(i));
-		
-		h.clear(true);
-		assertEquals(8, h.capacity);
-		
-		for (i in 0...16) h.set(i);
-		assertEquals(16, h.capacity);
-		for (i in 0...16) assertTrue(h.has(i));
+		for (i in 0...16) assertFalse(h.has(i));
 	}
 	
 	function testIterator()

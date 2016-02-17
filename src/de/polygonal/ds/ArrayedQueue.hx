@@ -142,7 +142,7 @@ class ArrayedQueue<T> implements Queue<T>
 	**/
 	public function enqueue(x:T)
 	{
-		if (capacity == size) resize();
+		if (capacity == size) grow();
 		mData.set((mSize++ + mFront) % capacity, x);
 	}
 	
@@ -545,7 +545,7 @@ class ArrayedQueue<T> implements Queue<T>
 		return copy;
 	}
 	
-	function resize()
+	function grow()
 	{
 		var t = capacity;
 		capacity = GrowthRate.compute(growthRate, capacity);

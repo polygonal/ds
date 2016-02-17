@@ -305,7 +305,7 @@ class IntIntHashTable implements Map<Int, Int>
 		#end
 		if (j == EMPTY_SLOT)
 		{
-			if (size == capacity) resize();
+			if (size == capacity) grow();
 			
 			var i = mFree * 3;
 			mFree = getNext(mFree);
@@ -367,7 +367,7 @@ class IntIntHashTable implements Map<Int, Int>
 					return false;
 				else
 				{
-					if (size == capacity) resize();
+					if (size == capacity) grow();
 					
 					var i = mFree * 3;
 					mFree = getNext(mFree);
@@ -1024,7 +1024,7 @@ class IntIntHashTable implements Map<Int, Int>
 	{
 		assert(val != KEY_ABSENT, "val 0x80000000 is reserved");
 		
-		if (size == capacity) resize();
+		if (size == capacity) grow();
 		
 		var i = mFree * 3;
 		mFree = getNext(mFree);
@@ -1457,7 +1457,7 @@ class IntIntHashTable implements Map<Int, Int>
 		return (x * 73856093) & mMask;
 	}
 	
-	function resize()
+	function grow()
 	{
 		var t = capacity;
 		capacity = GrowthRate.compute(growthRate, capacity);

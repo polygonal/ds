@@ -151,7 +151,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 		mMap.set(x, true);
 		#end
 		
-		if (size == capacity) resize();
+		if (size == capacity) grow();
 		mData.set(++mSize, x);
 		x.position = size;
 		upheap(size);
@@ -479,7 +479,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 		}
 	}
 	
-	function resize()
+	function grow()
 	{
 		capacity = GrowthRate.compute(growthRate, capacity);
 		resizeContainer(capacity);

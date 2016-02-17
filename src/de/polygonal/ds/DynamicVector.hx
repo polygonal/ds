@@ -122,7 +122,7 @@ class DynamicVector<T> implements Collection<T>
 	{
 		assert(i >= 0 && i <= size, 'index $i out of range $size');
 		
-		if (i == capacity) resize();
+		if (i == capacity) grow();
 		if (i >= size) mSize++;
 		mData.set(i, x);
 	}
@@ -132,7 +132,7 @@ class DynamicVector<T> implements Collection<T>
 	**/
 	public inline function pushBack(x:T):Int
 	{
-		if (size == capacity) resize();
+		if (size == capacity) grow();
 		mData.set(mSize++, x);
 		return size;
 	}
@@ -182,7 +182,7 @@ class DynamicVector<T> implements Collection<T>
 			return ++mSize;
 		}
 		
-		if (size == capacity) resize();
+		if (size == capacity) grow();
 		
 		#if (neko || java || cs || cpp)
 		NativeArrayTools.blit(mData, 0, mData, 1, size);
@@ -278,7 +278,7 @@ class DynamicVector<T> implements Collection<T>
 	{
 		assert(i >= 0 && i <= size, 'index $i out of range $size');
 		
-		if (size == capacity) resize();
+		if (size == capacity) grow();
 		#if (neko || java || cs || cpp)
 		var srcPos = i;
 		var dstPos = i + 1;
@@ -892,7 +892,12 @@ class DynamicVector<T> implements Collection<T>
 		return this;
 	}
 	
-	function resize()
+	public inline function getData():Container<T>
+	{
+		return mData;
+	}
+	
+	function grow()
 	{
 		capacity = GrowthRate.compute(growthRate, capacity);
 		resizeContainer(capacity);

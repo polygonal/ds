@@ -127,7 +127,7 @@ class ListSet<T> implements Set<T>
 		var d = mData;
 		for (i in 0...size) if (d.get(i) == x) return false;
 		
-		if (size == capacity) resize();
+		if (size == capacity) grow();
 		mData.set(mSize++, x);
 		return true;
 	}
@@ -305,7 +305,7 @@ class ListSet<T> implements Set<T>
 		return cast out;
 	}
 	
-	function resize()
+	function grow()
 	{
 		capacity = GrowthRate.compute(growthRate, capacity);
 		resizeContainer(capacity);

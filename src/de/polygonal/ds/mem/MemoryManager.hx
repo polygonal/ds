@@ -177,7 +177,8 @@ class MemoryManager
 	public function dump():String
 	{
 		#if (flash && alchemy)
-		var s = '{ MemoryManager, ${bytesTotal} bytes total, ${bytesFree} bytes free (${mBytes.length - mBlockSizeBytes}) }';
+		var b = new StringBuf();
+		b.add('{ MemoryManager, ${bytesTotal} bytes total, ${bytesFree} bytes free (${mBytes.length - mBlockSizeBytes}) }');
 		b.add("\n[ front\n");
 		var i = mSegmentList;
 		var j = 0;
@@ -191,7 +192,7 @@ class MemoryManager
 			i = i.next;
 		}
 		b.add("]");
-		return s;
+		return b.toString();
 		#else
 		return "{ MemoryManager }";
 		#end

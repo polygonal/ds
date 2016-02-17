@@ -173,7 +173,7 @@ class ArrayedStack<T> implements Stack<T>
 	**/
 	public inline function push(x:T)
 	{
-		if (size == capacity) resize();
+		if (size == capacity) grow();
 		mData.set(mTop++, x);
 	}
 	
@@ -198,7 +198,7 @@ class ArrayedStack<T> implements Stack<T>
 	{
 		assert(mTop > 0, "stack is empty");
 		
-		if (size == capacity) resize();
+		if (size == capacity) grow();
 		var d = mData;
 		d.set(mTop, d.get(mTop - 1));
 		mTop++;
@@ -613,7 +613,7 @@ class ArrayedStack<T> implements Stack<T>
 		return c;
 	}
 	
-	function resize()
+	function grow()
 	{
 		capacity = GrowthRate.compute(growthRate, capacity);
 		resizeContainer(capacity);

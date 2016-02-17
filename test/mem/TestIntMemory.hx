@@ -1,7 +1,7 @@
 ﻿package mem;
 
 import de.polygonal.ds.mem.IntMemory;
-import de.polygonal.ds.Vector;
+import haxe.ds.Vector;
 import haxe.io.Bytes;
 import haxe.io.BytesData;
 import haxe.io.BytesInput;
@@ -245,7 +245,6 @@ class TestIntMemory extends AbstractTest
 			assertEquals((i + min) % 10, data.get(i));
 	}
 	
-	#if flash
 	inline function checkVector(data:Vector<Int>, min = -1, max = -1)
 	{
 		if (min == -1) min = 0;
@@ -254,7 +253,6 @@ class TestIntMemory extends AbstractTest
 		for (i in 0...max - min)
 			assertEquals((i + min) % 10, data[i]);
 	}
-	#end
 	
 	function checkArray(data:Array<Int>, min = -1, max = -1)
 	{
