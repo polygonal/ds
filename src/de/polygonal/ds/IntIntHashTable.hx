@@ -1329,24 +1329,82 @@ class IntIntHashTable implements Map<Int, Int>
 		mSize = 0;
 	}
 	
-	public function pack()
+	public function pack():IntIntHashTable
 	{
-		return;
+		if (capacity == mMinCapacity) return this;
 		
-		/*if (isEmpty())
+		var oldCapacity = capacity;
+		capacity = M.max(size, mMinCapacity);
+		
+		trace('shrink from $oldCapacity to $capacity');
+		
+		var src = mData, dst;
+		var e = 0, t = mHash, j;
+		
+		#if (flash && alchemy)
+		dst = new IntMemory(capacity * 3, "IntIntHashTable.mData");
+		var addr = dst.getAddr(e);
+		for (i in 0...slotCount)
 		{
-			//var oldSize = capacity;
-			//var newSize = oldSize >> 1;
-			//capacity = newSize;
+			j = t.get(i);
+			if (j == EMPTY_SLOT) continue;
 			
-			if (capacity > mInitialCapacity) shrink(capacity, mInitialCapacity);
-			return;
+			t.set(i, e);
+			
+			flash.Memory.setI32(addr    , src.get(j));
+			flash.Memory.setI32(addr + 4, src.get(j + 1));
+			flash.Memory.setI32(addr + 8, NULL_POINTER);
+			addr += 12;
+			e += 3;
+			
+			j = src.get(j + 2);
+			while (j != NULL_POINTER)
+			{
+				flash.Memory.setI32(addr - 4, e);
+				flash.Memory.setI32(addr    , src.get(j));
+				flash.Memory.setI32(addr + 4, src.get(j + 1));
+				flash.Memory.setI32(addr + 8, NULL_POINTER);
+				addr += 12;
+				e += 3;
+				j = src.get(j + 2);
+			}
 		}
-		
-		if (size == (capacity >> 2) && capacity > mInitialCapacity)
+		mData.free();
+		mData = dst;
+		mNext.resize(capacity);
+		#else
+		dst = NativeArrayTools.init(capacity * 3);
+		for (i in 0...slotCount)
 		{
-			shrink(capacity, capacity >> 1);
-		}*/
+			j = t.get(i);
+			if (j == EMPTY_SLOT) continue;
+			
+			t.set(i, e);
+			dst.set(e    , src.get(j));
+			dst.set(e + 1, src.get(j + 1));
+			dst.set(e + 2, NULL_POINTER);
+			
+			e += 3;
+			j = src.get(j + 2);
+			while (j != NULL_POINTER)
+			{
+				dst.set(e - 1, e);
+				dst.set(e    , src.get(j));
+				dst.set(e + 1, src.get(j + 1));
+				dst.set(e + 2, NULL_POINTER);
+				e += 3;
+				j = src.get(j + 2);
+			}
+		}
+		mData = dst;
+		mNext = NativeArrayTools.init(capacity);
+		#end
+		
+		var n = mNext;
+		for (i in 0...capacity - 1) n.set(i, i + 1);
+		n.set(capacity - 1, NULL_POINTER);
+		mFree = -1;
+		return this;
 	}
 	
 	/**
