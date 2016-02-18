@@ -256,7 +256,7 @@ class TestIntIntHashTable extends AbstractTest
 		assertFalse(h.remap(9, 4));
 	}
 	
-	function _testRehash()
+	function testRehash()
 	{
 		var h = new IntIntHashTable(4, 4);
 		for (i in 0...8) h.set(i, i);
@@ -379,7 +379,9 @@ class TestIntIntHashTable extends AbstractTest
 			
 			for (i in 0...8)
 			{
-				keys.push(key); h.set(key, key); key++;
+				keys.push(key); 
+				h.set(key, key);
+				key++;
 			}
 			for (i in keys) assertEquals(i, h.get(i));
 			
@@ -392,16 +394,16 @@ class TestIntIntHashTable extends AbstractTest
 			
 			h.pack();
 			
-			assertEquals(8, h.capacity);
+			assertEquals(4, h.capacity);
 			assertEquals(4, h.size);
 			for (i in keys) assertEquals(i, h.get(i));
-			//4/8
+			//4/4
 			
 			for (i in 0...2) assertTrue(h.remove(keys.pop()));
 			h.pack();
 			
 			//2/4
-			assertEquals(4, h.capacity);
+			assertEquals(2, h.capacity);
 			assertEquals(2, h.size);
 			for (i in keys) assertEquals(i, h.get(i));
 			
@@ -452,6 +454,17 @@ class TestIntIntHashTable extends AbstractTest
 	
 	function testRemove()
 	{
+		var h = new IntIntHashTable(16, 32);
+		
+		h.set(0, 1);
+		h.set(1, 1);
+		h.set(2, 1);
+		h.set(3, 1);
+		h.set(4, 1);
+		
+		assertTrue(h.remove(1));
+		assertFalse(h.has(1));
+		
 		var h = new IntIntHashTable(16, 32);
 		
 		for (j in 0...2)
@@ -693,7 +706,7 @@ class TestIntIntHashTable extends AbstractTest
 		}
 	}
 	
-	function testResize1()
+	function _testResize1()
 	{
 		var h = new IntIntHashTable(8);
 		h.growthRate = GrowthRate.DOUBLE;
@@ -805,6 +818,49 @@ class TestIntIntHashTable extends AbstractTest
 		}
 		
 		assertEquals(0, values.length);
+	}
+	
+	function testPack()
+	{
+		var h = new IntIntHashTable(4, 16);
+		h.growthRate = GrowthRate.DOUBLE;
+		assertEquals(16, h.capacity);
+		
+		for (i in 0...32) assertTrue(h.set(i, i));
+		for (i in 0...16) assertTrue(h.delete(i));
+		
+		assertEquals(16, h.size);
+		assertEquals(32, h.capacity);
+		for (i in 16...32) assertTrue(h.hasKey(i));
+		
+		h.pack(); //32->16
+		
+		assertEquals(16, h.size);
+		assertEquals(16, h.capacity);
+		
+		for (i in 16...32) assertTrue(h.hasKey(i));
+		for (i in 16...32) assertTrue(h.has(i));
+		
+		h.free();
+		
+		var h = new IntIntHashTable(4, 4);
+		h.growthRate = GrowthRate.NORMAL;
+		
+		for (i in 0...8) h.set(i, i);
+		for (i in 0...8) assertTrue(h.hasKey(i));
+		for (i in 0...8) assertTrue(h.has(i));
+		
+		for (i in 0...6) h.delete(i);
+		assertEquals(2, h.size);
+		assertEquals(11, h.capacity);
+		
+		h.pack();
+		assertEquals(2, h.size);
+		assertEquals(4, h.capacity);
+		assertTrue(h.hasKey(6));
+		assertTrue(h.has(6));
+		assertTrue(h.hasKey(7));
+		assertTrue(h.has(7));
 	}
 	
 	function testClear()
