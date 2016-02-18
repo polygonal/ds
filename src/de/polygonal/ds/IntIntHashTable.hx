@@ -1459,42 +1459,38 @@ class IntIntHashTable implements Map<Int, Int>
 	
 	function grow()
 	{
-		var t = capacity;
+		var oldCapacity = capacity;
 		capacity = GrowthRate.compute(growthRate, capacity);
-		resizeContainer(t, capacity);
-	}
-	
-	function resizeContainer(oldSize:Int, newSize:Int)
-	{
-		//trace('grow $oldSize -> $newSize');
+		
+		var t;
 		
 		#if alchemy
-		mNext.resize(newSize);
-		mData.resize(newSize * 3);
+		mNext.resize(capacity);
+		mData.resize(capacity * 3);
 		#else
-		var dst = NativeArrayTools.init(newSize);
-		NativeArrayTools.blit(mNext, 0, dst, 0, oldSize);
-		mNext = dst;
-		
-		var dst = NativeArrayTools.init(newSize * 3);
-		NativeArrayTools.blit(mData, 0, dst, 0, oldSize * 3);
-		mData = dst;
+		t = NativeArrayTools.init(capacity);
+		NativeArrayTools.blit(mNext, 0, t, 0, oldCapacity);
+		mNext = t;
+		t = NativeArrayTools.init(capacity * 3);
+		NativeArrayTools.blit(mData, 0, t, 0, oldCapacity * 3);
+		mData = t;
 		#end
 		
-		for (i in oldSize - 1...newSize - 1) setNext(i, i + 1);
-		setNext(newSize - 1, NULL_POINTER);
-		mFree = oldSize;
+		t = mNext;
+		for (i in oldCapacity - 1...capacity - 1) t.set(i, i + 1);
+		t.set(capacity - 1, NULL_POINTER);
+		mFree = oldCapacity;
 		
-		var j = oldSize * 3 + 2;
-		for (i in 0...newSize - oldSize)
+		var j = oldCapacity * 3 + 2, t = mData;
+		for (i in 0...capacity - oldCapacity)
 		{
 			#if (flash && alchemy)
-			var o = mData.getAddr(j - 1);
+			var o = t.getAddr(j - 1);
 			Memory.setI32(o    , VAL_ABSENT);
 			Memory.setI32(o + 4, NULL_POINTER);
 			#else
-			setData(j - 1, VAL_ABSENT);
-			setData(j    , NULL_POINTER);
+			t.set(j - 1, VAL_ABSENT);
+			t.set(j    , NULL_POINTER);
 			#end
 			j += 3;
 		}
