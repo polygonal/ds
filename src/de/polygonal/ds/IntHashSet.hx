@@ -846,18 +846,16 @@ class IntHashSet implements Set<Int>
 		t.set(capacity - 1, NULL_POINTER);
 		mFree = oldCapacity;
 		
-		t = mData;
-		var n = capacity - oldCapacity;
-		var j = (oldCapacity << 1) + 1;
-		for (i in 0...n)
+		var j = oldCapacity << 1, t = mData;
+		for (i in 0...capacity - oldCapacity)
 		{
 			#if (flash && alchemy)
-			var o = mData.getAddr(j - 1);
+			var o = t.getAddr(j);
 			Memory.setI32(o    , VAL_ABSENT);
 			Memory.setI32(o + 4, NULL_POINTER);
 			#else
-			t.set(j - 1, VAL_ABSENT);
-			t.set(j    , NULL_POINTER);
+			t.set(j    , VAL_ABSENT);
+			t.set(j + 1, NULL_POINTER);
 			#end
 			j += 2;
 		}
