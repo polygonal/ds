@@ -824,32 +824,31 @@ class IntHashSet implements Set<Int>
 	
 	function grow()
 	{
-		var oldSize = capacity;
-		var newSize = GrowthRate.compute(growthRate, capacity);
-		capacity = newSize;
+		var oldCapacity = capacity;
+		capacity = GrowthRate.compute(growthRate, capacity);
 		
 		var t;
 		
 		#if alchemy
-		mNext.resize(newSize);
-		mData.resize(newSize << 1);
+		mNext.resize(capacity);
+		mData.resize(capacity << 1);
 		#else
-		t = NativeArrayTools.init(newSize);
-		mNext.blit(0, t, 0, oldSize);
+		t = NativeArrayTools.init(capacity);
+		mNext.blit(0, t, 0, oldCapacity);
 		mNext = t;
-		t = NativeArrayTools.init(newSize << 1);
-		mData.blit(0, t, 0, oldSize << 1);
+		t = NativeArrayTools.init(capacity << 1);
+		mData.blit(0, t, 0, oldCapacity << 1);
 		mData = t;
 		#end
 		
 		t = mNext;
-		for (i in oldSize - 1...newSize - 1) t.set(i, i + 1);
-		t.set(newSize - 1, NULL_POINTER);
-		mFree = oldSize;
+		for (i in oldCapacity - 1...capacity - 1) t.set(i, i + 1);
+		t.set(capacity - 1, NULL_POINTER);
+		mFree = oldCapacity;
 		
 		t = mData;
-		var n = newSize - oldSize;
-		var j = (oldSize << 1) + 1;
+		var n = capacity - oldCapacity;
+		var j = (oldCapacity << 1) + 1;
 		for (i in 0...n)
 		{
 			#if (flash && alchemy)
