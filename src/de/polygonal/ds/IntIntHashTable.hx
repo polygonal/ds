@@ -129,12 +129,12 @@ class IntIntHashTable implements Map<Int, Int>
 	var mNext:Container<Int>;
 	#end
 	
-	var mInitialCapacity:Int;
 	var mMask:Int;
 	var mFree:Int = 0;
 	var mSize:Int = 0;
+	var mMinCapacity:Int;
 	var mIterator:IntIntHashTableValIterator;
-	var mTmpArr:Array<Int>;
+	var mTmpArr:Array<Int> = [];
 	
 	/**
 		<assert>`slotCount` is not a power of two</assert>
@@ -168,13 +168,10 @@ class IntIntHashTable implements Map<Int, Int>
 			assert(M.isPow2(slotCount), "capacity is not a power of 2");
 		}
 		
-		mInitialCapacity = initialCapacity;
 		capacity = initialCapacity;
-		
+		mMinCapacity = initialCapacity;
 		this.slotCount = slotCount;
-		
 		mMask = slotCount - 1;
-		mTmpArr = [];
 		
 		#if alchemy
 		mHash = new IntMemory(slotCount, "IntIntHashTable.mHash");
@@ -187,16 +184,17 @@ class IntIntHashTable implements Map<Int, Int>
 		mNext = NativeArrayTools.init(capacity);
 		#end
 		
-		var j = 2;
+		var j = 2, t = mData;
 		for (i in 0...capacity)
 		{
-			setData(j - 1, VAL_ABSENT);
-			setData(j, NULL_POINTER);
+			t.set(j - 1, VAL_ABSENT);
+			t.set(j, NULL_POINTER);
 			j += 3;
 		}
 		
-		for (i in 0...capacity - 1) setNext(i, i + 1);
-		setNext(capacity - 1, NULL_POINTER);
+		t = mNext;
+		for (i in 0...capacity - 1) t.set(i, i + 1);
+		t.set(capacity - 1, NULL_POINTER);
 	}
 	
 	/**
@@ -1422,7 +1420,7 @@ class IntIntHashTable implements Map<Int, Int>
 		c.growthRate = GrowthRate.NORMAL;
 		c.reuseIterator = false;
 		c.slotCount = slotCount;
-		c.mInitialCapacity = mInitialCapacity;
+		c.mMinCapacity = mMinCapacity;
 		c.mMask = mMask;
 		c.mFree = mFree;
 		c.mSize = size;

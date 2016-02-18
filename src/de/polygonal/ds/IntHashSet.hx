@@ -115,7 +115,6 @@ class IntHashSet implements Set<Int>
 	var mMask:Int;
 	var mFree:Int = 0;
 	var mSize:Int = 0;
-	
 	var mMinCapacity:Int;
 	var mIterator:IntHashSetIterator;
 	
@@ -140,8 +139,8 @@ class IntHashSet implements Set<Int>
 	public function new(slotCount:Int, initialCapacity = -1)
 	{
 		if (slotCount == M.INT16_MIN) return;
-		assert(slotCount > 0);
 		
+		assert(slotCount > 0);
 		assert(M.isPow2(slotCount), "slotCount is not a power of 2");
 		
 		if (initialCapacity == -1)
@@ -163,14 +162,12 @@ class IntHashSet implements Set<Int>
 		mData = new IntMemory(capacity << 1, "IntHashSet.mData");
 		mNext = new IntMemory(capacity, "IntHashSet.mNext");
 		#else
-		mHash = NativeArrayTools.init(slotCount);
-		for (i in 0...slotCount) mHash[i] = EMPTY_SLOT;
+		mHash = NativeArrayTools.init(slotCount).assign(EMPTY_SLOT);
 		mData = NativeArrayTools.init(capacity << 1);
 		mNext = NativeArrayTools.init(capacity);
 		#end
 		
-		var t = mData;
-		var j = 1;
+		var j = 1, t = mData;
 		for (i in 0...capacity)
 		{
 			t.set(j - 1, VAL_ABSENT);
