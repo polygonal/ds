@@ -726,17 +726,17 @@ class IntHashSet implements Set<Int>
 		for (i in 0...slotCount) h.set(i, EMPTY_SLOT);
 		#end
 		
-		var j = 1, d = mData;
+		var j = 1, t = mData;
 		for (i in 0...capacity)
 		{
-			d.set(j - 1, VAL_ABSENT);
-			d.set(j    , NULL_POINTER);
+			t.set(j - 1, VAL_ABSENT);
+			t.set(j    , NULL_POINTER);
 			j += 2;
 		}
 		
-		d = mNext;
-		for (i in 0...capacity - 1) d.set(i, i + 1);
-		d.set(capacity - 1, NULL_POINTER);
+		t = mNext;
+		for (i in 0...capacity - 1) t.set(i, i + 1);
+		t.set(capacity - 1, NULL_POINTER);
 		
 		mFree = 0;
 		mSize = 0;

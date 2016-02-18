@@ -1320,34 +1320,24 @@ class IntIntHashTable implements Map<Int, Int>
 	**/
 	public function clear(gc:Bool = false)
 	{
-		if (gc)
-		{
-			capacity = mInitialCapacity;
-			
-			#if alchemy
-			mData.resize(capacity * 3);
-			mNext.resize(capacity);
-			#else
-			mData = NativeArrayTools.init(capacity * 3);
-			mNext = NativeArrayTools.init(capacity);
-			#end
-		}
-		
 		#if alchemy
 		mHash.fill(EMPTY_SLOT);
 		#else
-		for (i in 0...slotCount) mHash.set(i, EMPTY_SLOT);
+		var h = mHash;
+		for (i in 0...slotCount) h.set(i, EMPTY_SLOT);
 		#end
 		
-		var j = 2;
+		var j = 2, t = mData;
 		for (i in 0...capacity)
 		{
-			setData(j - 1, VAL_ABSENT);
-			setData(j, NULL_POINTER);
+			t.set(j - 1, VAL_ABSENT);
+			t.set(j    , NULL_POINTER);
 			j += 3;
 		}
-		for (i in 0...capacity - 1) setNext(i, i + 1);
-		setNext(capacity - 1, NULL_POINTER);
+		
+		t = mNext;
+		for (i in 0...capacity - 1) t.set(i, i + 1);
+		t.set(capacity - 1, NULL_POINTER);
 		
 		mFree = 0;
 		mSize = 0;

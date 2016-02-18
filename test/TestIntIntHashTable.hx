@@ -832,26 +832,6 @@ class TestIntIntHashTable extends AbstractTest
 		for (i in 0...16) h.set(i, i);
 		assertEquals(16, h.capacity);
 		for (i in 0...16) assertEquals(i, h.get(i));
-		
-		//clear with clean
-		var h = new IntIntHashTable(8);
-		h.growthRate = GrowthRate.DOUBLE;
-		for (i in 0...16) h.set(i, i);
-		h.clear(true);
-		
-		assertEquals(8, h.capacity);
-		assertEquals(0, h.size);
-		
-		for (i in 0...16) h.set(i, i);
-		assertEquals(16, h.capacity);
-		for (i in 0...16) assertEquals(i, h.get(i));
-		
-		h.clear(true);
-		assertEquals(8, h.capacity);
-		
-		for (i in 0...16) h.set(i, i);
-		assertEquals(16, h.capacity);
-		for (i in 0...16) assertEquals(i, h.get(i));
 	}
 	
 	function testIterator()
