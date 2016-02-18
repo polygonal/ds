@@ -22,6 +22,7 @@ import de.polygonal.ds.tools.ArrayTools;
 import de.polygonal.ds.tools.Assert.assert;
 import de.polygonal.ds.tools.GrowthRate;
 import de.polygonal.ds.tools.M;
+import haxe.ds.Vector;
 
 using de.polygonal.ds.tools.NativeArrayTools;
 
@@ -134,7 +135,8 @@ class IntIntHashTable implements Map<Int, Int>
 	var mSize:Int = 0;
 	var mMinCapacity:Int;
 	var mIterator:IntIntHashTableValIterator;
-	var mTmpArr:Array<Int> = [];
+	var mTmpBuffer:Container<Int>;
+	var mTmpBufferSize:Int = 16;
 	
 	/**
 		<assert>`slotCount` is not a power of two</assert>
@@ -195,6 +197,8 @@ class IntIntHashTable implements Map<Int, Int>
 		t = mNext;
 		for (i in 0...capacity - 1) t.set(i, i + 1);
 		t.set(capacity - 1, NULL_POINTER);
+		
+		mTmpBuffer = NativeArrayTools.init(mTmpBufferSize);
 	}
 	
 	/**
@@ -1284,7 +1288,7 @@ class IntIntHashTable implements Map<Int, Int>
 			mIterator.free();
 			mIterator = null;
 		}
-		mTmpArr = null;
+		mTmpBuffer = null;
 	}
 	
 	/**
@@ -1304,23 +1308,51 @@ class IntIntHashTable implements Map<Int, Int>
 	{
 		assert(val != KEY_ABSENT, "val 0x80000000 is reserved");
 		
-		var d = mData;
 		var c = 0;
-		var keys = mTmpArr;
+		var keys = mTmpBuffer;
+		var max = mTmpBufferSize;
+		var d = mData, j;
+		
+		#if (flash && alchemy)
+		j = d.getAddr(1);
 		for (i in 0...capacity)
 		{
-			#if (flash && alchemy)
-			var o = d.getAddr(i * 3);
-			if (Memory.getI32(o + 4) == val)
-				keys[c++] = Memory.getI32(o);
-			#else
-			var j = i * 3;
-			if (d.get(j + 1) == val)
-				keys[c++] = d.get(j);
-			#end
+			if (Memory.getI32(j) == val)
+			{
+				if (c == max)
+				{
+					max <<= 1;
+					mTmpBufferSize = max;
+					var t = NativeArrayTools.init(max);
+					mTmpBuffer.blit(0, t, 0, c);
+					mTmpBuffer = keys = t;
+				}
+				
+				keys.set(c++, Memory.getI32(j - 4));
+			}
+			j += 12;
 		}
+		#else
+		for (i in 0...capacity)
+		{
+			j = i * 3;
+			if (d.get(j + 1) == val)
+			{
+				if (c == max)
+				{
+					max <<= 1;
+					mTmpBufferSize = max;
+					var t = NativeArrayTools.init(max);
+					mTmpBuffer.blit(0, t, 0, c);
+					mTmpBuffer = keys = t;
+				}
+				
+				keys.set(c++, d.get(j));
+			}
+		}
+		#end
 		
-		for (i in 0...c) delete(keys[i]);
+		for (i in 0...c) delete(keys.get(i));
 		return c > 0;
 	}
 	
@@ -1360,8 +1392,6 @@ class IntIntHashTable implements Map<Int, Int>
 		
 		var oldCapacity = capacity;
 		capacity = M.max(size, mMinCapacity);
-		
-		trace('shrink from $oldCapacity to $capacity');
 		
 		var src = mData, dst;
 		var e = 0, t = mHash, j;
@@ -1496,7 +1526,7 @@ class IntIntHashTable implements Map<Int, Int>
 		c.mFree = mFree;
 		c.mSize = size;
 		c.mIterator = null;
-		c.mTmpArr = [];
+		c.mTmpBuffer = NativeArrayTools.init(16);
 		
 		#if alchemy
 		c.mHash = mHash.clone();

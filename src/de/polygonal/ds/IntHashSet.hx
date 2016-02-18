@@ -677,6 +677,7 @@ class IntHashSet implements Set<Int>
 				j = src.get(j + 1);
 			}
 		}
+		mData.free();
 		mData = dst;
 		mNext.resize(capacity);
 		#else
