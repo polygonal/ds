@@ -532,8 +532,6 @@ class IntIntHashTable implements Map<Int, Int>
 				#end
 				
 				mSize--;
-				
-				if (size == (capacity >> 2) && capacity > mInitialCapacity) shrink();
 				return val;
 			}
 			else
@@ -586,8 +584,6 @@ class IntIntHashTable implements Map<Int, Int>
 					#end
 					
 					--mSize;
-					
-					if (size == (capacity >> 2) && capacity > mInitialCapacity) shrink();
 					return val;
 				}
 				else
@@ -944,8 +940,6 @@ class IntIntHashTable implements Map<Int, Int>
 				#end
 				
 				mSize--;
-				
-				if (size == (capacity >> 2) && capacity > mInitialCapacity) shrink();
 				return true;
 			}
 			else
@@ -998,8 +992,6 @@ class IntIntHashTable implements Map<Int, Int>
 					#end
 					
 					--mSize;
-					
-					if (size == (capacity >> 2) && capacity > mInitialCapacity) shrink();
 					return true;
 				}
 				else
@@ -1133,8 +1125,6 @@ class IntIntHashTable implements Map<Int, Int>
 				#end
 				
 				mSize--;
-				
-				if (size == (capacity >> 2) && capacity > mInitialCapacity) shrink();
 				return true;
 			}
 			else
@@ -1187,8 +1177,6 @@ class IntIntHashTable implements Map<Int, Int>
 					#end
 					
 					--mSize;
-					
-					if (size == (capacity >> 2) && capacity > mInitialCapacity) shrink();
 					return true;
 				}
 				else
