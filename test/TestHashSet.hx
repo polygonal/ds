@@ -2,6 +2,7 @@ import de.polygonal.ds.tools.ArrayTools;
 import de.polygonal.ds.Dll;
 import de.polygonal.ds.HashableItem;
 import de.polygonal.ds.HashSet;
+import de.polygonal.ds.tools.GrowthRate;
 import haxe.ds.IntMap;
 
 class TestHashSet extends AbstractTest
@@ -165,6 +166,7 @@ class TestHashSet extends AbstractTest
 	function testResizeSmall()
 	{
 		var h = new HashSet<E>(16, 2);
+		h.growthRate = GrowthRate.DOUBLE;
 		var keys = new Array<Int>();
 		var key = 0;
 		
@@ -219,20 +221,26 @@ class TestHashSet extends AbstractTest
 			assertEquals(16, h.size);
 			assertEquals(16, h.capacity);
 			
-			for (i in 0...12)
-				assertTrue(h.remove(values.pop()));
-			assertEquals(8, h.capacity);
+			for (i in 0...12) assertTrue(h.remove(values.pop()));
+			
+			h.pack();
+			
+			assertEquals(4, h.capacity);
 			assertEquals(4, h.size);
 			for (i in values) assertTrue(h.has(i));
 			
 			for (i in 0...2) assertTrue(h.remove(values.pop()));
 			
-			assertEquals(4, h.capacity);
+			h.pack();
+			
+			assertEquals(2, h.capacity);
 			assertEquals(2, h.size);
 			for (i in values) assertTrue(h.has(i));
 			
 			assertTrue(h.remove(values.pop()));
 			assertTrue(h.remove(values.pop()));
+			
+			h.pack();
 			
 			assertEquals(2, h.capacity);
 			assertEquals(0, h.size);
@@ -531,7 +539,9 @@ class TestHashSet extends AbstractTest
 		
 		var h = new HashSet<E>(8);
 		for (i in 0...8) h.set(values[i]);
+		
 		h.clear();
+		
 		var c = 0;
 		for (i in h) c++;
 		assertEquals(0, c);
@@ -548,28 +558,6 @@ class TestHashSet extends AbstractTest
 		
 		assertEquals(0, h.size);
 		assertTrue(h.isEmpty());
-		
-		for (i in 0...16) h.set(values[i]);
-		assertEquals(16, h.capacity);
-		for (i in 0...16) assertTrue(h.has(values[i]));
-		
-		//test with purge
-		var values = new Array<E>();
-		for (i in 0...16) values.push(new E(i));
-		
-		var h = new HashSet<E>(8);
-		for (i in 0...16) h.set(values[i]);
-		
-		h.clear(true);
-		
-		assertEquals(8, h.capacity);
-		assertEquals(0, h.size);
-		
-		for (i in 0...16) h.set(values[i]);
-		assertEquals(16, h.capacity);
-		for (i in 0...16) assertTrue(h.has(values[i]));
-		
-		h.clear(true);
 		
 		for (i in 0...16) h.set(values[i]);
 		assertEquals(16, h.capacity);

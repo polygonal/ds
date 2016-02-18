@@ -497,6 +497,75 @@ class IntHashSet implements Set<Int>
 		}
 	}
 	
+	public function pack():IntHashSet
+	{
+		if (capacity == mMinCapacity) return this;
+		
+		var oldCapacity = capacity;
+		capacity = M.max(size, mMinCapacity);
+		
+		var src = mData, dst;
+		var e = 0, t = mHash, j;
+		
+		#if (flash && alchemy)
+		dst = new IntMemory(capacity << 1, "IntHashSet.mData");
+		var addr = dst.getAddr(e);
+		for (i in 0...slotCount)
+		{
+			j = t.get(i);
+			if (j == EMPTY_SLOT) continue;
+			
+			t.set(i, e);
+			
+			flash.Memory.setI32(addr    , src.get(j));
+			flash.Memory.setI32(addr + 4, NULL_POINTER);
+			addr += 8;
+			e += 2;
+			
+			j = src.get(j + 1);
+			while (j != NULL_POINTER)
+			{
+				flash.Memory.setI32(addr - 4, e);
+				flash.Memory.setI32(addr    , src.get(j));
+				flash.Memory.setI32(addr + 4, NULL_POINTER);
+				addr += 8;
+				e += 2;
+				j = src.get(j + 1);
+			}
+		}
+		mData.free();
+		mData = dst;
+		mNext.resize(capacity);
+		#else
+		dst = NativeArrayTools.init(capacity << 1);
+		for (i in 0...slotCount)
+		{
+			j = t.get(i);
+			if (j == EMPTY_SLOT) continue;
+			
+			t.set(i, e);
+			dst.set(e++, src.get(j));
+			dst.set(e++, NULL_POINTER);
+			j = src.get(j + 1);
+			while (j != NULL_POINTER)
+			{
+				dst.set(e - 1, e);
+				dst.set(e++, src.get(j));
+				dst.set(e++, NULL_POINTER);
+				j = src.get(j + 1);
+			}
+		}
+		mData = dst;
+		mNext = NativeArrayTools.init(capacity);
+		#end
+		
+		var n = mNext;
+		for (i in 0...capacity - 1) n.set(i, i + 1);
+		n.set(capacity - 1, NULL_POINTER);
+		mFree = -1;
+		return this;
+	}
+	
 	/* INTERFACE Collection */
 	
 	/**
@@ -639,75 +708,6 @@ class IntHashSet implements Set<Int>
 					return false;
 			}
 		}
-	}
-	
-	public function pack():IntHashSet
-	{
-		if (capacity == mMinCapacity) return this;
-		
-		var oldCapacity = capacity;
-		capacity = M.max(size, mMinCapacity);
-		
-		var src = mData, dst;
-		var e = 0, t = mHash, j;
-		
-		#if (flash && alchemy)
-		dst = new IntMemory(capacity << 1, "IntHashSet.mData");
-		var addr = dst.getAddr(e);
-		for (i in 0...slotCount)
-		{
-			j = t.get(i);
-			if (j == EMPTY_SLOT) continue;
-			
-			t.set(i, e);
-			
-			flash.Memory.setI32(addr    , src.get(j));
-			flash.Memory.setI32(addr + 4, NULL_POINTER);
-			addr += 8;
-			e += 2;
-			
-			j = src.get(j + 1);
-			while (j != NULL_POINTER)
-			{
-				flash.Memory.setI32(addr - 4, e);
-				flash.Memory.setI32(addr    , src.get(j));
-				flash.Memory.setI32(addr + 4, NULL_POINTER);
-				addr += 8;
-				e += 2;
-				j = src.get(j + 1);
-			}
-		}
-		mData.free();
-		mData = dst;
-		mNext.resize(capacity);
-		#else
-		dst = NativeArrayTools.init(capacity << 1);
-		for (i in 0...slotCount)
-		{
-			j = t.get(i);
-			if (j == EMPTY_SLOT) continue;
-			
-			t.set(i, e);
-			dst.set(e++, src.get(j));
-			dst.set(e++, NULL_POINTER);
-			j = src.get(j + 1);
-			while (j != NULL_POINTER)
-			{
-				dst.set(e - 1, e);
-				dst.set(e++, src.get(j));
-				dst.set(e++, NULL_POINTER);
-				j = src.get(j + 1);
-			}
-		}
-		mData = dst;
-		mNext = NativeArrayTools.init(capacity);
-		#end
-		
-		var n = mNext;
-		for (i in 0...capacity - 1) n.set(i, i + 1);
-		n.set(capacity - 1, NULL_POINTER);
-		mFree = -1;
-		return this;
 	}
 	
 	/**

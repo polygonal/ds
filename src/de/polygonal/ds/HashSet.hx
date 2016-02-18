@@ -46,15 +46,6 @@ class HashSet<T:Hashable> implements Set<T>
 	public var key(default, null):Int = HashKey.next();
 	
 	/**
-		If true, reuses the iterator object instead of allocating a new one when calling ``iterator()``.
-		
-		The default is false.
-		
-		<warn>If true, nested iterations are likely to fail as only one iteration is allowed at a time.</warn>
-	**/
-	public var reuseIterator:Bool = false;
-	
-	/**
 		The size of the allocated storage space for the elements.
 		
 		If more space is required to accomodate new elements, ``capacity`` is doubled every time ``size`` grows beyond capacity, and split in half when ``size`` is a quarter of capacity.
@@ -66,6 +57,34 @@ class HashSet<T:Hashable> implements Set<T>
 	{
 		return mH.capacity;
 	}
+	
+	/**
+		The growth rate of the container.
+		
+		+  0: fixed size
+		+ -1: grows at a rate of 1.125x plus a constant.
+		+ -2: grows at a rate of 1.5x (default value).
+		+ -3: grows at a rate of 2.0x.
+		+ >0: grows at a constant rate: capacity += growthRate
+	**/
+	public var growthRate(get, set):Int;
+	function get_growthRate():Int
+	{
+		return mH.growthRate;
+	}
+	function set_growthRate(value:Int):Int
+	{
+		return mH.growthRate = value;
+	}
+	
+	/**
+		If true, reuses the iterator object instead of allocating a new one when calling ``iterator()``.
+		
+		The default is false.
+		
+		<warn>If true, nested iterations are likely to fail as only one iteration is allowed at a time.</warn>
+	**/
+	public var reuseIterator:Bool = false;
 	
 	/**
 		The load factor measure the "denseness" of a hash set and is proportional to the time cost to look up an entry.
@@ -123,7 +142,7 @@ class HashSet<T:Hashable> implements Set<T>
 		<li>If the ``size`` falls below a quarter of the current `capacity`, the `capacity` is cut in half while the minimum `capacity` can't fall below `capacity`.</li>
 		</ul>
 	**/
-	public function new(slotCount:Int, capacity = -1)
+	public function new(slotCount:Int, capacity = -1) //TODO rename
 	{
 		if (slotCount == M.INT16_MIN) return;
 		assert(slotCount > 0);
@@ -141,18 +160,9 @@ class HashSet<T:Hashable> implements Set<T>
 		mNext = NativeArrayTools.init(capacity);
 		#end
 		
-		for (i in 0...capacity - 1) setNext(i, i + 1);
-		setNext(capacity - 1, IntIntHashTable.NULL_POINTER);
-	}
-	
-	/**
-		Counts the total number of collisions.
-		
-		A collision occurs when two distinct elements are hashed into the same slot.
-	**/
-	public function getCollisionCount():Int
-	{
-		return mH.getCollisionCount();
+		var t = mNext;
+		for (i in 0...capacity - 1) t.set(i, i + 1);
+		t.set(capacity - 1, IntIntHashTable.NULL_POINTER);
 	}
 	
 	/**
@@ -163,8 +173,17 @@ class HashSet<T:Hashable> implements Set<T>
 	**/
 	public inline function hasFront(x:T):Bool
 	{
-		var i = mH.getFront(_key(x));
-		return i != IntIntHashTable.KEY_ABSENT;
+		return mH.getFront(getKey(x)) != IntIntHashTable.KEY_ABSENT;
+	}
+	
+	/**
+		Counts the total number of collisions.
+		
+		A collision occurs when two distinct elements are hashed into the same slot.
+	**/
+	public function getCollisionCount():Int
+	{
+		return mH.getCollisionCount();
 	}
 	
 	/**
@@ -232,7 +251,7 @@ class HashSet<T:Hashable> implements Set<T>
 	**/
 	public inline function has(x:T):Bool
 	{
-		return mH.get(_key(x)) != IntIntHashTable.KEY_ABSENT;
+		return mH.get(x.key) != IntIntHashTable.KEY_ABSENT;
 	}
 	
 	/**
@@ -243,29 +262,51 @@ class HashSet<T:Hashable> implements Set<T>
 	**/
 	public inline function set(x:T):Bool
 	{
-		if ((size == capacity))
-		{
-			if (mH.setIfAbsent(_key(x), size))
-			{
-				grow(capacity >> 1);
-				mVals[mFree] = x;
-				mFree = getNext(mFree);
-				return true;
-			}
-			else
-				return false;
-		}
+		var c = capacity;
+		if (c == size)
+			return setIfFull(x);
 		else
 		{
-			if (mH.setIfAbsent(_key(x), mFree))
+			if (mH.setIfAbsent(getKey(x), mFree))
 			{
-				mVals[mFree] = x;
-				mFree = getNext(mFree);
+				mVals.set(mFree, x);
+				mFree = mNext.get(mFree);
 				return true;
 			}
 			else
 				return false;
 		}
+	}
+	
+	public function pack():HashSet<T>
+	{
+		var c = capacity;
+		mH.pack();
+		if (c == capacity) return this;
+		
+		#if alchemy
+		mNext.resize(capacity);
+		#else
+		mNext = NativeArrayTools.init(capacity);
+		#end
+		
+		var t = mNext;
+		for (i in 0...capacity - 1) t.set(i, i + 1);
+		t.set(capacity - 1, IntIntHashTable.NULL_POINTER);
+		mFree = 0;
+		
+		var next = mNext;
+		var tmpVals = NativeArrayTools.init(capacity);
+		for (i in mH)
+		{
+			tmpVals.set(mFree, mVals.get(i));
+			mFree = next.get(mFree);
+		}
+		
+		mVals = tmpVals;
+		for (i in 0...mFree) mH.remap(getKey(mVals.get(i)), i);
+		
+		return this;
 	}
 	
 	/* INTERFACE Collection */
@@ -320,22 +361,15 @@ class HashSet<T:Hashable> implements Set<T>
 	**/
 	public function remove(x:T):Bool
 	{
-		var i = mH.get(_key(x));
+		var i = mH.get(getKey(x));
 		if (i == IntIntHashTable.KEY_ABSENT)
 			return false;
 		else
 		{
-			mVals[i] = null;
-			setNext(i, mFree);
+			mVals.set(i, null); //required for iterator
+			mNext.set(i, mFree);
 			mFree = i;
-			
-			var doShrink = false;
-			if (size - 1 == (capacity >> 2) && capacity > mMinCapacity)
-				doShrink = true;
-			
-			mH.delete(_key(x));
-			
-			if (doShrink) shrink();
+			mH.delete(getKey(x));
 			return true;
 		}
 	}
@@ -343,23 +377,17 @@ class HashSet<T:Hashable> implements Set<T>
 	/**
 		Removes all elements.
 		
-		@param gc if true, nullifies references upon removal so the garbage collector can reclaim used memory.
+		The `gc` parameter has no effect.
 	**/
 	public function clear(gc:Bool = false)
 	{
 		mH.clear(gc);
-		for (i in 0...capacity) mVals[i] = null;
 		
-		if (gc)
-		{
-			while (capacity > mMinCapacity) shrink();
-			
-			for (i in 0...capacity)
-				mVals[i] = null;
-		}
+		mVals.nullify(); //required for iterator
 		
-		for (i in 0...capacity - 1) setNext(i, i + 1);
-		setNext(capacity - 1, IntIntHashTable.NULL_POINTER);
+		var t = mNext;
+		for (i in 0...capacity - 1) t.set(i, i + 1);
+		t.set(capacity - 1, IntIntHashTable.NULL_POINTER);
 		mFree = 0;
 	}
 	
@@ -427,7 +455,7 @@ class HashSet<T:Hashable> implements Set<T>
 		if (assign)
 		{
 			c.mVals = NativeArrayTools.init(capacity);
-			for (i in 0...capacity) c.mVals[i] = mVals[i];
+			for (i in 0...capacity) c.mVals.set(i, mVals.get(i));
 		}
 		else
 		{
@@ -436,8 +464,8 @@ class HashSet<T:Hashable> implements Set<T>
 			{
 				for (i in 0...capacity)
 				{
-					var v = mVals[i];
-					if (v != null) t[i] = copier(v);
+					var v = mVals.get(i);
+					if (v != null) t.set(i, copier(v));
 				}
 			}
 			else
@@ -445,13 +473,13 @@ class HashSet<T:Hashable> implements Set<T>
 				var c:Cloneable<T> = null;
 				for (i in 0...capacity)
 				{
-					var v = mVals[i];
+					var v = mVals.get(i);
 					if (v != null)
 					{
 						assert(Std.is(v, Cloneable), 'element is not of type Cloneable ($v)');
 						
 						c = cast v;
-						t[i] = c.clone();
+						t.set(i, c.clone());
 					}
 				}
 			}
@@ -470,66 +498,43 @@ class HashSet<T:Hashable> implements Set<T>
 		return c;
 	}
 	
-	inline function grow(oldSize:Int)
+	function grow(oldCapacity:Int)
 	{
-		var newSize = oldSize << 1;
+		var t;
 		
 		#if alchemy
-		mNext.resize(newSize);
+		mNext.resize(capacity);
 		#else
-		var t = NativeArrayTools.init(newSize);
-		for (i in 0...oldSize) t[i] = mNext[i];
+		t = NativeArrayTools.init(capacity);
+		mNext.blit(0, t, 0, oldCapacity);
 		mNext = t;
 		#end
 		
-		for (i in oldSize - 1...newSize - 1) setNext(i, i + 1);
-		setNext(newSize - 1, IntIntHashTable.NULL_POINTER);
-		mFree = oldSize;
+		t = mNext;
+		for (i in oldCapacity - 1...capacity - 1) t.set(i, i + 1);
+		t.set(capacity - 1, IntIntHashTable.NULL_POINTER);
+		mFree = oldCapacity;
 		
-		var t = NativeArrayTools.init(newSize);
-		for (i in 0...oldSize) t[i] = mVals[i];
+		var t = NativeArrayTools.init(capacity);
+		mVals.blit(0, t, 0, oldCapacity);
 		mVals = t;
 	}
 	
-	inline function shrink()
+	function setIfFull(x:T):Bool
 	{
-		var oldSize = capacity << 1;
-		var newSize = capacity;
-		
-		#if alchemy
-		mNext.resize(newSize);
-		#else
-		mNext = NativeArrayTools.init(newSize);
-		#end
-		
-		for (i in 0...newSize - 1) setNext(i, i + 1);
-		setNext(newSize - 1, IntIntHashTable.NULL_POINTER);
-		mFree = 0;
-		
-		var tmpVals = NativeArrayTools.init(newSize);
-		
-		for (i in mH)
+		var s = size;
+		if (mH.setIfAbsent(getKey(x), s))
 		{
-			tmpVals[mFree] = mVals[i];
-			mFree = getNext(mFree);
+			grow(s);
+			mVals.set(mFree, x);
+			mFree = mNext.get(mFree);
+			return true;
 		}
-		
-		mVals = tmpVals;
-		
-		for (i in 0...mFree)
-			mH.remap(_key(mVals[i]), i);
+		else
+			return false;
 	}
 	
-	inline function getNext(i:Int)
-	{
-		return mNext.get(i);
-	}
-	inline function setNext(i:Int, x:Int)
-	{
-		mNext.set(i, x);
-	}
-	
-	inline function _key(x:Hashable)
+	inline function getKey(x:Hashable)
 	{
 		assert(x != null, "element is null");
 		
@@ -577,7 +582,7 @@ class HashSetIterator<T:Hashable> implements de.polygonal.ds.Itr<T>
 	
 	public inline function next():T
 	{
-		var v = mVals[mI];
+		var v = mVals.get(mI);
 		while (++mI < mS && mVals.get(mI) == null) {}
 		return v;
 	}
