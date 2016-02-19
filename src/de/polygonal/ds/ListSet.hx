@@ -156,10 +156,9 @@ class ListSet<T> implements Set<T>
 			{
 				for (val in x)
 				{
-					assert(Std.is(val, Cloneable), 'element is not of type Cloneable ($val)');
+					assert(Std.is(val, Cloneable), "element is not of type Cloneable");
 					
-					var c:Cloneable<T> = cast val;
-					set(c.clone());
+					set(cast(val, Cloneable<Dynamic>).clone());
 				}
 			}
 		}
@@ -280,25 +279,19 @@ class ListSet<T> implements Set<T>
 		var dst = out.mData;
 		
 		if (assign)
-		{
-			//NativeArrayTools
-			for (i in 0...size) dst.set(i, src.get(i));
-		}
+			src.blit(0, dst, 0, size);
 		else
 		if (copier == null)
 		{
-			var c:Cloneable<Dynamic> = null;
 			for (i in 0...size)
 			{
-				assert(Std.is(src.get(i), Cloneable), 'element is not of type Cloneable (${src.get(i)})');
+				assert(Std.is(src.get(i), Cloneable), "element is not of type Cloneable");
 				
-				c = cast(src.get(i), Cloneable<Dynamic>);
-				dst.set(i, c.clone());
+				dst.set(i, cast(src.get(i), Cloneable<Dynamic>).clone());
 			}
 		}
 		else
 		{
-			var src = mData;
 			for (i in 0...size)
 				dst.set(i, copier(src.get(i)));
 		}

@@ -643,24 +643,15 @@ class IntHashTable<T> implements Map<Int, T>
 			if (copier != null)
 			{
 				for (i in 0...capacity)
-				{
 					if (_hasKey(i))
 						t[i] = copier(mVals[i]);
-				}
 			}
 			else
 			{
 				var c:Cloneable<T> = null;
 				for (i in 0...capacity)
-				{
 					if (_hasKey(i))
-					{
-						assert(Std.is(mVals[i], Cloneable), 'element is not of type Cloneable (${mVals[i]})');
-						
-						c = cast mVals[i];
-						t[i] = c.clone();
-					}
-				}
+						t[i] = cast(mVals[i], Cloneable<Dynamic>).clone();
 			}
 			c.mVals = t;
 		}

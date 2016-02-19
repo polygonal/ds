@@ -2057,6 +2057,22 @@ class TreeNode<T> implements Collection<T>
 		var stack = new Array<TreeNode<T>>();
 		var copy = new TreeNode<T>(copier != null ? copier(val) : val);
 		
+		inline function f(x:T)
+		{
+			return
+			if (assign)
+				x;
+			else
+			if (copier == null)
+			{
+				assert(Std.is(x, Cloneable), "element is not of type Cloneable");
+				
+				cast(x, Cloneable<Dynamic>).clone();
+			}
+			else
+				copier(x);
+		}
+		
 		stack[0] = this;
 		stack[1] = copy;
 		var i = 2;
@@ -2070,20 +2086,7 @@ class TreeNode<T> implements Collection<T>
 			if (n.hasChildren())
 			{
 				var nchild = n.children;
-				
-				var x:T;
-				if (assign)
-					x = nchild.val;
-				else
-				if (copier == null)
-				{
-					assert(Std.is(nchild.val, Cloneable), "element is not of type Cloneable ({nchild.val})");
-					
-					x = cast(nchild.val, Cloneable<Dynamic>).clone();
-				}
-				else
-					x = copier(nchild.val);
-				
+				var x = f(nchild.val);
 				var cchild = c.children = new TreeNode<T>(x, c);
 				
 				stack[i++] = nchild;
@@ -2092,17 +2095,7 @@ class TreeNode<T> implements Collection<T>
 				nchild = nchild.next;
 				while (nchild != null)
 				{
-					var x:T;
-					if (assign)
-						x = nchild.val;
-					else
-					if (copier == null)
-					{
-						x = cast(nchild.val, Cloneable<Dynamic>).clone();
-					}
-					else
-						x = copier(nchild.val);
-					
+					x = f(nchild.val);
 					cchild.next = new TreeNode<T>(x, c);
 					cchild = cchild.next;
 					

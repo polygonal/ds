@@ -1103,10 +1103,10 @@ class Dll<T> implements Collection<T>
 		{
 			var srcNode = head;
 			
-			assert(Std.is(head.val, Cloneable), 'element is not of type Cloneable (${head.val})');
+			assert(Std.is(head.val, Cloneable), "element is not of type Cloneable");
 			
-			var c = cast(head.val, Cloneable<Dynamic>);
-			var dstNode = copy.head = new DllNode<T>(c.clone(), copy);
+			var e = cast(head.val, Cloneable<Dynamic>);
+			var dstNode = copy.head = new DllNode<T>(e.clone(), copy);
 			if (size == 1)
 			{
 				copy.tail = copy.head;
@@ -1121,22 +1121,22 @@ class Dll<T> implements Collection<T>
 				dstNode0 = dstNode;
 				var srcNode0 = srcNode;
 				
-				assert(Std.is(srcNode.val, Cloneable), 'element is not of type Cloneable (${srcNode.val})');
+				assert(Std.is(srcNode.val, Cloneable), "element is not of type Cloneable");
 				
-				c = cast(srcNode.val, Cloneable<Dynamic>);
-				
-				dstNode = dstNode.next = new DllNode<T>(c.clone(), copy);
+				e = cast(srcNode.val, Cloneable<Dynamic>);
+				dstNode = dstNode.next = new DllNode<T>(e.clone(), copy);
 				dstNode.prev = dstNode0;
 				
 				srcNode0 = srcNode;
 				srcNode = srcNode0.next;
 			}
 			
-			assert(Std.is(srcNode.val, Cloneable), 'element is not of type Cloneable (${srcNode.val})');
-			
-			c = cast(srcNode.val, Cloneable<Dynamic>);
 			dstNode0 = dstNode;
-			copy.tail = dstNode.next = new DllNode<T>(c.clone(), copy);
+			
+			assert(Std.is(srcNode.val, Cloneable), "element is not of type Cloneable");
+			
+			e = cast(srcNode.val, Cloneable<Dynamic>);
+			copy.tail = dstNode.next = new DllNode<T>(e.clone(), copy);
 			copy.tail.prev = dstNode0;
 		}
 		else

@@ -80,8 +80,6 @@ class ArrayedDeque<T> implements Deque<T>
 	**/
 	public function new(blockSize:Null<Int> = 64, blockPoolCapacity:Null<Int> = 4, ?source:Array<T>)
 	{
-		if (blockSize == M.INT16_MIN) return; //TODO remove
-		
 		assert(blockSize > 0);
 		assert(M.isPow2(blockSize), "blockSize is not a power of 2");
 		assert(blockSize >= 4, "blockSize is too small");
@@ -748,15 +746,11 @@ class ArrayedDeque<T> implements Deque<T>
 	**/
 	public function clone(assign:Bool = true, copier:T->T = null):Collection<T>
 	{
-		var c = new ArrayedDeque<T>(M.INT16_MIN);
-		c.mBlockSize = mBlockSize;
-		c.mBlockSizeMinusOne = mBlockSizeMinusOne;
+		var c = new ArrayedDeque<T>(mBlockSize, 0);
+		
 		c.mHead = mHead;
 		c.mTail = mTail;
 		c.mTailBlockIndex = mTailBlockIndex;
-		c.mBlockSizeShift = mBlockSizeShift;
-		c.mPoolSize = 0;
-		c.mPoolCapacity = 0;
 		
 		var blocks = c.mBlocks = ArrayTools.alloc(mTailBlockIndex + 1);
 		for (i in 0...mTailBlockIndex + 1)
@@ -771,6 +765,9 @@ class ArrayedDeque<T> implements Deque<T>
 		
 		if (assign)
 		{
+			inline function copy(src:Container<T>, dst:Container<T>, min:Int, max:Int)
+				src.blit(min, dst, min, max - min);
+			
 			if (mTailBlockIndex == 0)
 				copy(mHeadBlock, c.mHeadBlock, mHead + 1, mTail);
 			else
@@ -782,8 +779,7 @@ class ArrayedDeque<T> implements Deque<T>
 			else
 			{
 				copy(mHeadBlock, c.mHeadBlock, mHead + 1, mBlockSize);
-				for (j in 1...mTailBlockIndex)
-					copy(mBlocks[j], blocks[j], 0, mBlockSize);
+				for (j in 1...mTailBlockIndex) copy(mBlocks[j], blocks[j], 0, mBlockSize);
 				copy(mTailBlock, c.mTailBlock, 0, mTail);
 			}
 		}
@@ -791,38 +787,48 @@ class ArrayedDeque<T> implements Deque<T>
 		{
 			if (copier != null)
 			{
+				inline function copy(f:T->T, src:Container<T>, dst:Container<T>, min:Int, max:Int)
+					for (j in min...max) dst.set(j, f(src.get(j)));
+				
 				if (mTailBlockIndex == 0)
-					copyCopier(copier, mHeadBlock, c.mHeadBlock, mHead + 1, mTail);
+					copy(copier, mHeadBlock, c.mHeadBlock, mHead + 1, mTail);
 				else
 				if (mTailBlockIndex == 1)
 				{
-					copyCopier(copier,mHeadBlock, c.mHeadBlock, mHead + 1, mBlockSize);
-					copyCopier(copier,mTailBlock, c.mTailBlock, 0, mTail);
+					copy(copier, mHeadBlock, c.mHeadBlock, mHead + 1, mBlockSize);
+					copy(copier, mTailBlock, c.mTailBlock, 0, mTail);
 				}
 				else
 				{
-					copyCopier(copier,mHeadBlock, c.mHeadBlock, mHead + 1, mBlockSize);
-					for (j in 1...mTailBlockIndex)
-						copyCopier(copier,mBlocks[j], blocks[j], 0, mBlockSize);
-					copyCopier(copier, mTailBlock, c.mTailBlock, 0, mTail);
+					copy(copier, mHeadBlock, c.mHeadBlock, mHead + 1, mBlockSize);
+					for (j in 1...mTailBlockIndex) copy(copier, mBlocks[j], blocks[j], 0, mBlockSize);
+					copy(copier, mTailBlock, c.mTailBlock, 0, mTail);
 				}
 			}
 			else
 			{
+				var e:Cloneable<Dynamic>;
+				
+				inline function copy(src:Container<T>, dst:Container<T>, min:Int, max:Int)
+					for (j in min...max)
+					{
+						e = cast(src.get(j), Cloneable<Dynamic>);
+						dst.set(j, e.clone());
+					}
+				
 				if (mTailBlockIndex == 0)
-					copyCloneable(mHeadBlock, c.mHeadBlock, mHead + 1, mTail);
+					copy(mHeadBlock, c.mHeadBlock, mHead + 1, mTail);
 				else
 				if (mTailBlockIndex == 1)
 				{
-					copyCloneable(mHeadBlock, c.mHeadBlock, mHead + 1, mBlockSize);
-					copyCloneable(mTailBlock, c.mTailBlock, 0, mTail);
+					copy(mHeadBlock, c.mHeadBlock, mHead + 1, mBlockSize);
+					copy(mTailBlock, c.mTailBlock, 0, mTail);
 				}
 				else
 				{
-					copyCloneable(mHeadBlock, c.mHeadBlock, mHead + 1, mBlockSize);
-					for (j in 1...mTailBlockIndex)
-						copyCloneable(mBlocks[j], blocks[j], 0, mBlockSize);
-					copyCloneable(mTailBlock, c.mTailBlock, 0, mTail);
+					copy(mHeadBlock, c.mHeadBlock, mHead + 1, mBlockSize);
+					for (j in 1...mTailBlockIndex) copy(mBlocks[j], blocks[j], 0, mBlockSize);
+					copy(mTailBlock, c.mTailBlock, 0, mTail);
 				}
 			}
 		}
@@ -895,28 +901,6 @@ class ArrayedDeque<T> implements Deque<T>
 	{
 		if (mPoolSize < mPoolCapacity)
 			mBlockPool[mPoolSize++] = x;
-	}
-	
-	inline function copy(src:Container<T>, dst:Container<T>, min:Int, max:Int)
-	{
-		for (j in min...max)
-			dst[j] = src[j];
-	}
-	
-	inline function copyCloneable(src:Container<T>, dst:Container<T>, min:Int, max:Int)
-	{
-		for (j in min...max)
-		{
-			assert(Std.is(src[j], Cloneable), 'element is not of type Cloneable (${src[j]})');
-			
-			dst[j] = src[j];
-		}
-	}
-	
-	inline function copyCopier(copier:T->T, src:Container<T>, dst:Container<T>, min:Int, max:Int)
-	{
-		for (j in min...max)
-			dst[j] = copier(src[j]);
 	}
 }
 

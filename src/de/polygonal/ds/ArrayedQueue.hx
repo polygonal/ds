@@ -514,30 +514,24 @@ class ArrayedQueue<T> implements Queue<T>
 		var copy = new ArrayedQueue<T>(capacity);
 		if (isEmpty()) return copy;
 		
-		var d = mData;
-		
-		var t = copy.mData;
+		var src = mData;
+		var dst = copy.mData;
 		if (assign)
-		{
-			for (i in 0...size)
-				t[i] = d.get(i);
-		}
+			src.blit(0, dst, 0, size);
 		else
 		if (copier == null)
 		{
-			var c:Cloneable<Dynamic> = null;
 			for (i in 0...size)
 			{
-				assert(Std.is(d.get(i), Cloneable), 'element is not of type Cloneable (${d.get(i)})');
+				assert(Std.is(src.get(i), Cloneable), "element is not of type Cloneable");
 				
-				c = cast(d.get(i), Cloneable<Dynamic>);
-				t[i] = c.clone();
+				dst.set(i, cast(src.get(i), Cloneable<Dynamic>).clone());
 			}
 		}
 		else
 		{
 			for (i in 0...size)
-				t[i] = copier(d.get(i));
+				dst.set(i, copier(src.get(i)));
 		}
 		
 		copy.mFront = mFront;

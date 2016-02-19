@@ -645,19 +645,16 @@ class LinkedStack<T> implements Stack<T>
 		{
 			var srcNode = mHead;
 			
-			assert(Std.is(srcNode.val, Cloneable), 'element is not of type Cloneable (${srcNode.val})');
+			assert(Std.is(srcNode.val, Cloneable), "element is not of type Cloneable");
 			
-			var c = cast(srcNode.val, Cloneable<Dynamic>);
-			var dstNode = copy.mHead = new LinkedStackNode<T>(c.clone());
+			var dstNode = copy.mHead = new LinkedStackNode<T>(cast(srcNode.val, Cloneable<Dynamic>).clone());
 			
 			srcNode = srcNode.next;
 			while (srcNode != null)
 			{
-				assert(Std.is(srcNode.val, Cloneable), 'element is not of type Cloneable (${srcNode.val})');
+				assert(Std.is(srcNode.val, Cloneable), "element is not of type Cloneable");
 				
-				c = cast(srcNode.val, Cloneable<Dynamic>);
-				
-				dstNode = dstNode.next = new LinkedStackNode<T>(c.clone());
+				dstNode = dstNode.next = new LinkedStackNode<T>(cast(srcNode.val, Cloneable<Dynamic>).clone());
 				srcNode = srcNode.next;
 			}
 		}

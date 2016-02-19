@@ -783,26 +783,23 @@ class BinaryTreeNode<T> implements Collection<T>
 		else
 		if (copier == null)
 		{
-			var t:Dynamic = null;
 			while (top > 0)
 			{
 				var c = stack[--top];
 				var n = stack[--top];
 				if (n.hasR())
 				{
-					assert(Std.is(n.r.val, Cloneable), 'element is not of type Cloneable (${n.r.val})');
+					assert(Std.is(n.r.val, Cloneable), "element is not of type Cloneable");
 					
-					t = cast n.r.val;
-					c.setR(t.clone());
+					c.setR(cast(n.r.val, Cloneable<Dynamic>).clone());
 					stack[top++] = n.r;
 					stack[top++] = c.r;
 				}
 				if (n.hasL())
 				{
-					assert(Std.is(n.l.val, Cloneable), 'element is not of type Cloneable (${n.l.val})');
+					assert(Std.is(n.l.val, Cloneable), "element is not of type Cloneable");
 					
-					t = cast n.l.val;
-					c.setL(t.clone());
+					c.setL(cast(n.l.val, Cloneable<Dynamic>).clone());
 					stack[top++] = n.l;
 					stack[top++] = c.l;
 				}

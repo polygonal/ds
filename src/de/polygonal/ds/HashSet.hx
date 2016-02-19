@@ -459,12 +459,12 @@ class HashSet<T:Hashable> implements Set<T>
 		}
 		else
 		{
-			var t = NativeArrayTools.init(capacity);
+			var t = NativeArrayTools.init(capacity), v;
 			if (copier != null)
 			{
 				for (i in 0...capacity)
 				{
-					var v = mVals.get(i);
+					v = mVals.get(i);
 					if (v != null) t.set(i, copier(v));
 				}
 			}
@@ -473,13 +473,12 @@ class HashSet<T:Hashable> implements Set<T>
 				var c:Cloneable<T> = null;
 				for (i in 0...capacity)
 				{
-					var v = mVals.get(i);
+					v = mVals.get(i);
 					if (v != null)
 					{
-						assert(Std.is(v, Cloneable), 'element is not of type Cloneable ($v)');
+						assert(Std.is(v, Cloneable), "element is not of type Cloneable");
 						
-						c = cast v;
-						t.set(i, c.clone());
+						t.set(i, cast(v, Cloneable<Dynamic>).clone());
 					}
 				}
 			}

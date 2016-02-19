@@ -951,10 +951,9 @@ class Sll<T> implements Collection<T>
 		{
 			var srcNode = head;
 			
-			assert(Std.is(head.val, Cloneable), 'element is not of type Cloneable (${head.val})');
-			
-			var c = cast(head.val, Cloneable<Dynamic>);
-			var dstNode = copy.head = new SllNode<T>(c.clone(), copy);
+			assert(Std.is(head.val, Cloneable), "element is not of type Cloneable");
+			var e = cast(head.val, Cloneable<Dynamic>);
+			var dstNode = copy.head = new SllNode<T>(e.clone(), copy);
 			if (size == 1)
 			{
 				copy.tail = copy.head;
@@ -964,18 +963,15 @@ class Sll<T> implements Collection<T>
 			srcNode = srcNode.next;
 			for (i in 1...size - 1)
 			{
-				assert(Std.is(srcNode.val, Cloneable), 'element is not of type Cloneable (${srcNode.val})');
-				
-				c = cast(srcNode.val, Cloneable<Dynamic>);
-				
-				dstNode = dstNode.next = new SllNode<T>(c.clone(), copy);
+				assert(Std.is(srcNode.val, Cloneable), "element is not of type Cloneable");
+				e = cast(srcNode.val, Cloneable<Dynamic>);
+				dstNode = dstNode.next = new SllNode<T>(e.clone(), copy);
 				srcNode = srcNode.next;
 			}
 			
-			assert(Std.is(srcNode.val, Cloneable), 'element is not of type Cloneable (${srcNode.val})');
-			
-			c = cast(srcNode.val, Cloneable<Dynamic>);
-			copy.tail = dstNode.next = new SllNode<T>(c.clone(), copy);
+			assert(Std.is(srcNode.val, Cloneable), "element is not of type Cloneable");
+			e = cast(srcNode.val, Cloneable<Dynamic>);
+			copy.tail = dstNode.next = new SllNode<T>(e.clone(), copy);
 		}
 		else
 		{

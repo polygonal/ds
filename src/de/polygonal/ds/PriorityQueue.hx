@@ -556,49 +556,47 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	public function clone(assign:Bool = true, copier:T->T = null):Collection<T>
 	{
 		var copy = new PriorityQueue<T>(capacity, mInverse);
+		if (size == 0) return copy;
 		
 		var src = mData;
-		if (size == 0) return copy;
+		var dst = copy.mData;
 		if (assign)
 		{
-			for (i in 1...size + 1)
-			{
-				copy.mData.set(i, src.get(i));
-				
-				#if debug
-				copy.mMap.set(src.get(i), true);
-				#end
-			}
+			src.blit(1, dst, 1, size + 1);
+			
+			#if debug
+			for (i in 1...size + 1) copy.mMap.set(src.get(i), true);
+			#end
 		}
 		else
 		if (copier == null)
 		{
+			var e, c;
 			for (i in 1...size + 1)
 			{
-				var e = src.get(i);
+				e = src.get(i);
+				assert(Std.is(e, Cloneable), "element is not of type Cloneable");
 				
-				assert(Std.is(e, Cloneable), 'element is not of type Cloneable ($e)');
-				
-				var cl:Cloneable<T> = cast e;
-				var c = cl.clone();
+				c = cast(e, Cloneable<Dynamic>).clone();
 				c.position = e.position;
 				c.priority = e.priority;
-				copy.mData.set(i, c);
+				dst.set(i, cast c);
 				
 				#if debug
-				copy.mMap.set(c, true);
+				copy.mMap.set(cast c, true);
 				#end
 			}
 		}
 		else
 		{
+			var e, c;
 			for (i in 1...size + 1)
 			{
-				var e = src.get(i);
-				var c = copier(e);
+				e = src.get(i);
+				c = copier(e);
 				c.position = e.position;
 				c.priority = e.priority;
-				copy.mData.set(i, c);
+				dst.set(i, c);
 				
 				#if debug
 				copy.mMap.set(e, true);

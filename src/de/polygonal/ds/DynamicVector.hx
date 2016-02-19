@@ -1053,21 +1053,15 @@ class DynamicVector<T> implements Collection<T>
 		else
 		if (copier == null)
 		{
-			try
+			for (i in 0...size)
 			{
-				var e:Cloneable<Dynamic>;
-				for (i in 0...size)
-				{
-					e = cast(src.get(i), Cloneable<Dynamic>);
-					dst.set(i, e.clone());
-				}
+				assert(Std.is(src.get(i), Cloneable), "element is not of type Cloneable");
+				
+				dst.set(i, cast(src.get(i), Cloneable<Dynamic>).clone());
 			}
-			catch(error:Dynamic)
-				throw 'element is not of type Cloneable';
 		}
 		else
 		{
-			var src = mData;
 			for (i in 0...size)
 				dst.set(i, copier(src.get(i)));
 		}

@@ -220,6 +220,15 @@ class Array2<T> implements Collection<T>
 	}
 	
 	/**
+		Sets all elements to `val`.
+	**/
+	public function setAll(val:T)
+	{
+		var d = mData;
+		for (i in 0...size) d.set(i, val);
+	}
+	
+	/**
 		Computes an index into the linear array from the `x` and `y` index.
 	**/
 	public inline function getIndex(x:Int, y:Int):Int
@@ -967,17 +976,12 @@ class Array2<T> implements Collection<T>
 		{
 			if (copier == null)
 			{
-				try
+				for (i in 0...size)
 				{
-					var e:Cloneable<Dynamic>;
-					for (i in 0...size)
-					{
-						e = cast(src.get(i), Cloneable<Dynamic>);
-						dst.set(i, e.clone());
-					}
+					assert(Std.is(src.get(i), Cloneable), "element is not of type Cloneable");
+					
+					dst.set(i, cast(src.get(i), Cloneable<Dynamic>).clone());
 				}
-				catch(error:Dynamic)
-					throw 'element is not of type Cloneable';
 			}
 			else
 			{

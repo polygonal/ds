@@ -653,15 +653,13 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 			}
 			else
 			{
-				var c:Cloneable<T> = null;
 				for (i in 0...capacity)
 				{
 					if (mKeys.get(i) != null)
 					{
-						assert(Std.is(mVals.get(i), Cloneable), 'element is not of type Cloneable (${mVals.get(i)})');
+						assert(Std.is(mVals.get(i), Cloneable), "element is not of type Cloneable");
 						
-						c = cast mVals.get(i);
-						t.set(i, c.clone());
+						t.set(i, cast(mVals.get(i), Cloneable<Dynamic>).clone());
 					}
 				}
 			}

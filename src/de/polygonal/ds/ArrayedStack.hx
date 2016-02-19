@@ -582,26 +582,18 @@ class ArrayedStack<T> implements Stack<T>
 		if (isEmpty()) return c;
 		
 		c.mTop = mTop;
-		
+		var src = mData;
+		var dst = c.mData;
 		if (assign)
-			mData.blit(0, c.mData, 0, size);
+			src.blit(0, dst, 0, size);
 		else
 		{
-			var src = mData;
-			var dst = c.mData;
-			
 			if (copier == null)
 			{
-				var e:Cloneable<Dynamic> = null;
-				var d:Dynamic; //required for -cpp
-				
 				for (i in 0...size)
 				{
-					assert(Std.is(src.get(i), Cloneable), 'element is not of type Cloneable (${src.get(i)})');
-					
-					d = src.get(i);
-					e = cast d;
-					dst.set(i, e.clone());
+					assert(Std.is(src.get(i), Cloneable), "element is not of type Cloneable");
+					dst.set(i, cast(src.get(i), Cloneable<Dynamic>).clone());
 				}
 			}
 			else

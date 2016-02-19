@@ -630,45 +630,44 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	{
 		var copy = new Heap<T>(size);
 		if (size == 0) return copy;
+		
+		var src = mData;
+		var dst = copy.mData;
 		if (assign)
 		{
-			//TODo optimize
-			for (i in 1...size + 1)
-			{
-				copy.mData.set(i, mData.get(i));
-				
-				#if debug
-				copy.mMap.set(mData.get(i), true);
-				#end
-			}
+			src.blit(1, dst, 1, size + 1);
+			
+			#if debug
+			for (i in 1...size + 1) copy.mMap.set(src.get(i), true);
+			#end
 		}
 		else
 		if (copier == null)
 		{
+			var e, c;
 			for (i in 1...size + 1)
 			{
-				var e = mData.get(i);
+				e = src.get(i);
+				assert(Std.is(e, Cloneable), "element is not of type Cloneable");
 				
-				assert(Std.is(e, Cloneable), 'element is not of type Cloneable (${mData.get(i)})');
-				
-				var cl:Cloneable<T> = cast e;
-				var c = cl.clone();
+				c = cast(e, Cloneable<Dynamic>).clone();
 				c.position = e.position;
-				copy.mData.set(i, cast c);
+				dst.set(i, cast c);
 				
 				#if debug
-				copy.mMap.set(c, true);
+				copy.mMap.set(e, true);
 				#end
 			}
 		}
 		else
 		{
+			var e, c;
 			for (i in 1...size + 1)
 			{
-				var e = mData.get(i);
-				var c = copier(e);
+				e = src.get(i);
+				c = copier(e);
 				c.position = e.position;
-				copy.mData.set(i, c);
+				dst.set(i, c);
 				
 				#if debug
 				copy.mMap.set(c, true);

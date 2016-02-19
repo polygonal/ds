@@ -1196,13 +1196,13 @@ class Graph<T> implements Collection<T>
 		
 		var t = new Array<GraphNode<T>>();
 		var i = 0;
-		var n = mNodeList;
+		var n = mNodeList, m;
 		
 		if (assign)
 		{
 			while (n != null)
 			{
-				var m = copy.addNode(copy.createNode(n.val));
+				m = copy.addNode(copy.createNode(n.val));
 				t[i++] = m;
 				n = n.next;
 			}
@@ -1210,13 +1210,11 @@ class Graph<T> implements Collection<T>
 		else
 		if (copier == null)
 		{
-			var c:Dynamic = null;
 			while (n != null)
 			{
-				assert(Std.is(n.val, Cloneable), 'element is not of type Cloneable (${n.val})');
+				assert(Std.is(n.val, Cloneable), "element is not of type Cloneable");
 				
-				c = n.val;
-				var m = copy.addNode(copy.createNode(c.clone()));
+				m = copy.addNode(copy.createNode(cast(n.val, Cloneable<Dynamic>).clone()));
 				t[i++] = m;
 				n = n.next;
 			}
@@ -1225,7 +1223,7 @@ class Graph<T> implements Collection<T>
 		{
 			while (n != null)
 			{
-				var m = copy.addNode(copy.createNode(copier(n.val)));
+				m = copy.addNode(copy.createNode(copier(n.val)));
 				t[i++] = m;
 				n = n.next;
 			}
@@ -1233,10 +1231,11 @@ class Graph<T> implements Collection<T>
 		
 		i = 0;
 		n = mNodeList;
+		var a;
 		while (n != null)
 		{
-			var m = t[i++];
-			var a = n.arcList;
+			m = t[i++];
+			a = n.arcList;
 			while (a != null)
 			{
 				m.addArc(a.node, a.cost);
