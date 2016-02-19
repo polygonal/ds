@@ -364,7 +364,7 @@ class ShortMemory extends MemoryAccess
 	/**
 		Sets all shorts to the value `x`.
 	**/
-	public function fill(x:Int):ShortMemory
+	public function setAll(x:Int):ShortMemory
 	{
 		#if alchemy
 		var offset = getAddr(0);

@@ -324,7 +324,7 @@ class FloatMemory extends MemoryAccess
 	/**
 		Sets all floats to the value `x`.
 	**/
-	public function fill(x:Float):FloatMemory
+	public function setAll(x:Float):FloatMemory
 	{
 		#if alchemy
 		flash.Memory.setFloat(0, x);

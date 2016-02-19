@@ -314,7 +314,7 @@ class ByteMemory extends MemoryAccess
 	/**
 		Sets all bytes to the value `x`.
 	**/
-	public function fill(x:Int):ByteMemory
+	public function setAll(x:Int):ByteMemory
 	{
 		#if (flash && alchemy)
 		var offset = getAddr(0);

@@ -326,7 +326,7 @@ class DoubleMemory extends MemoryAccess
 	/**
 		Sets all doubles to the value `x`.
 	**/
-	public function fill(x:Float):DoubleMemory
+	public function setAll(x:Float):DoubleMemory
 	{
 		#if alchemy
 		var offset = getAddr(0);

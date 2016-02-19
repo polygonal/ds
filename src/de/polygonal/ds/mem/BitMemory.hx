@@ -256,7 +256,7 @@ class BitMemory extends MemoryAccess
 		Sets all bits to the value `x`.
 		<assert>`x` is not 0 or 1</assert>
 	**/
-	public function fill(x:Int):BitMemory
+	public function setAll(x:Int):BitMemory
 	{
 		assert(x == 0 || x == 1, "x == 0 || x == 1");
 		

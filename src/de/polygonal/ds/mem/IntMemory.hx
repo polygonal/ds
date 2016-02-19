@@ -371,7 +371,7 @@ class IntMemory extends MemoryAccess
 	/**
 		Sets all integers to the value `x`.
 	**/
-	public function fill(x:Int):IntMemory
+	public function setAll(x:Int):IntMemory
 	{
 		#if alchemy
 		flash.Memory.setI32(0, x);
