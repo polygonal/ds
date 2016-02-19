@@ -254,7 +254,7 @@ class ArrayTools
 	/**
 		Shuffles the elements of the array `a` by using the Fisher-Yates algorithm.
 		<assert>insufficient random values</assert>
-		@param rvals a list of random double values in the range between [0,1) defining the new positions of the elements.
+		@param rvals a list of random double values in the range between [0, 1) defining the new positions of the elements.
 		If omitted, random values are generated on-the-fly by calling `Math::random()`.
 	**/
 	public static function shuffle<T>(a:Array<T>, rvals:Array<Float> = null)

@@ -75,7 +75,7 @@ class ArrayedDeque<T> implements Deque<T>
 		The parameter affects the performance-memory trade-off: a large `blockSize` improves performances but wastes memory if the utilization is low; a small `blockSize` uses memory more efficiently but is slower due to frequent allocation of blocks.
 		The default value is 64; the minimum value is 4.
 		<warn>`blockSize` has to be a power of two.</warn>
-		@param blockPoolSize the total number of blocks to reuse when blocks are removed or relocated (from front to back or vice-versa). This improves performances but uses more memory.
+		@param blockPoolCapacity the total number of blocks to reuse when blocks are removed or relocated (from front to back or vice-versa). This improves performances but uses more memory.
 		The default value is 4; a value of 0 disables block pooling.
 	**/
 	public function new(blockSize:Null<Int> = 64, blockPoolCapacity:Null<Int> = 4, ?source:Array<T>)
@@ -169,7 +169,7 @@ class ArrayedDeque<T> implements Deque<T>
 		{
 			popBlock();
 			return mTailBlock[mBlockSizeMinusOne];
-		} 
+		}
 		else
 			return mTailBlock[--mTail];
 	}

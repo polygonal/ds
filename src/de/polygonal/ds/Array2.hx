@@ -683,7 +683,7 @@ class Array2<T> implements Collection<T>
 		Transposes this two-dimensional array.
 	**/
 	public function transpose()
-	{
+	{	
 		if (mW == mH)
 		{
 			for (y in 0...mH)
@@ -717,14 +717,14 @@ class Array2<T> implements Collection<T>
 		Copies all elements from the nested two-dimensional array `a` into this two-dimensional array.
 		<assert>invalid dimensions of `a`</assert>
 	**/
-	public function ofNestedArray(a:Array<Array<T>>)
+	public function ofNestedArray(input:Array<Array<T>>)
 	{
-		assert(a.length == rows && a[0] != null && a[0].length == cols, "invalid input");
+		assert(input.length == rows && input[0] != null && input[0].length == cols, "invalid input");
 		
-		var w = a[0].length, row, d = mData;
-		for (y in 0...a.length)
+		var w = input[0].length, row, d = mData;
+		for (y in 0...input.length)
 		{
-			row = a[y];
+			row = input[y];
 			for (x in 0...w)
 				d.set(getIndex(x, y), row[x]);
 		}
@@ -1044,7 +1044,7 @@ class Array2Iterator<T> implements de.polygonal.ds.Itr<T>
 }
 
 /**
-	Stores the x,y position of a two-dimensional cell
+	Stores the (x,y) position of a two-dimensional cell
 **/
 class Array2Cell
 {
@@ -1062,5 +1062,10 @@ class Array2Cell
 	{
 		this.x = x;
 		this.y = y;
+	}
+	
+	public inline function equals(other:Array2Cell):Bool
+	{
+		return x == other.x && y == other.y;
 	}
 }

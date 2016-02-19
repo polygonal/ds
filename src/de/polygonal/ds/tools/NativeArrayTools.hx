@@ -142,7 +142,7 @@ class NativeArrayTools
 			assert(srcPos + len <= size(src) && dstPos + len <= size(dst), "len out of range");
 			
 			#if neko
-			untyped __dollar__ablit(dst,dstPos,src,srcPos,len);
+			untyped __dollar__ablit(dst, dstPos, src, srcPos, len);
 			//#elseif java
 			//TODO java.lang.System.arraycopy(src, srcPos, dst, dstPos, len);
 			#elseif cs

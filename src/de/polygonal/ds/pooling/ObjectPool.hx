@@ -253,7 +253,12 @@ class ObjectPool<T> implements Hashable
 	public function toString():String
 	{
 		var b = new StringBuf();
+		
+		#if debug
 		b.add('{ ObjectPool used/total: $mCount/$size }');
+		#else
+		b.add('{ ObjectPool total: size }');
+		#end
 		if (size == 0) return b.toString();
 		b.add("\n[\n");
 		var args = new Array<Dynamic>();

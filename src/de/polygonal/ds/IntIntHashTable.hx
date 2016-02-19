@@ -669,7 +669,7 @@ class IntIntHashTable implements Map<Int, Int>
 		for (key in keys())
 		{
 			args[0] = key;
-			args[1] = get(key); 
+			args[1] = get(key);
 			b.add(Printf.format("  %- " + i + "d -> %d\n", args));
 		}
 		b.add("]");

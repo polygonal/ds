@@ -72,7 +72,7 @@ class ListSet<T> implements Set<T>
 	
 	public function new(initialCapacity:Null<Int> = 16, ?source:Array<T>)
 	{
-		mInitialCapacity = M.max(1, initialCapacity);	
+		mInitialCapacity = M.max(1, initialCapacity);
 		capacity = mInitialCapacity;
 		mData = NativeArrayTools.init(capacity);
 		if (source != null) for (i in source) set(i);
