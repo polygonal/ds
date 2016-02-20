@@ -24,6 +24,7 @@ import de.polygonal.ds.mem.IntMemory;
 
 import de.polygonal.ds.tools.ArrayTools;
 import de.polygonal.ds.tools.Assert.assert;
+import de.polygonal.ds.tools.GrowthRate;
 import de.polygonal.ds.tools.M;
 
 using de.polygonal.ds.tools.NativeArrayTools;
@@ -52,11 +53,7 @@ class HashSet<T:Hashable> implements Set<T>
 		
 		The capacity never falls below the initial size defined in the constructor.
 	**/
-	public var capacity(get, never):Int;
-	inline function get_capacity():Int
-	{
-		return mH.capacity;
-	}
+	public var capacity(default, null):Int;
 	
 	/**
 		The growth rate of the container.
@@ -118,6 +115,7 @@ class HashSet<T:Hashable> implements Set<T>
 	var mNext:Container<Int>;
 	#end
 	var mFree:Int = 0;
+	var mSize:Int = 0;
 	var mMinCapacity:Int;
 	var mIterator:HashSetIterator<T> = null;
 	
@@ -143,13 +141,14 @@ class HashSet<T:Hashable> implements Set<T>
 	{
 		assert(slotCount > 0);
 		
-		if (capacity == -1) capacity = slotCount;
+		if (initialCapacity == -1)
+			initialCapacity = slotCount;
 		
-		mMinCapacity = capacity;
+		mMinCapacity = capacity = initialCapacity;
 		
 		mH = new IntIntHashTable(slotCount, capacity);
 		mVals = NativeArrayTools.init(capacity);
-		
+		mVals.nullify(capacity);
 		#if alchemy
 		mNext = new IntMemory(capacity, "HashSet.mNext");
 		#else
@@ -262,27 +261,27 @@ class HashSet<T:Hashable> implements Set<T>
 	{
 		assert(x != null);
 		
-		var c = capacity;
-		if (c == size)
-			return setIfFull(x);
-		else
+		if (size == capacity) grow();
+		
+		var i = mFree;
+		if (mH.setIfAbsent(x.key, i))
 		{
-			if (mH.setIfAbsent(x.key, mFree))
-			{
-				mVals.set(mFree, x);
-				mFree = mNext.get(mFree);
-				return true;
-			}
-			else
-				return false;
+			mSize++;
+			mVals.set(i, x);
+			mFree = mNext.get(i);
+			return true;
 		}
+		else
+			return false;
 	}
 	
 	public function pack():HashSet<T>
 	{
-		var c = capacity;
 		mH.pack();
-		if (c == capacity) return this;
+		
+		if (mH.capacity == capacity) return this;
+		
+		capacity = mH.capacity;
 		
 		#if alchemy
 		mNext.resize(capacity);
@@ -295,17 +294,16 @@ class HashSet<T:Hashable> implements Set<T>
 		t.set(capacity - 1, IntIntHashTable.NULL_POINTER);
 		mFree = 0;
 		
-		var next = mNext;
-		var tmpVals = NativeArrayTools.init(capacity);
+		var src = mVals;
+		var dst = NativeArrayTools.init(capacity);
 		for (i in mH)
 		{
-			tmpVals.set(mFree, mVals.get(i));
-			mFree = next.get(mFree);
+			dst.set(mFree, src.get(i));
+			mFree = t.get(mFree);
 		}
 		
-		mVals = tmpVals;
-		for (i in 0...mFree) mH.remap(mVals.get(i).key, i);
-		
+		mVals = dst;
+		for (i in 0...size) mH.remap(mVals.get(i).key, i);
 		return this;
 	}
 	
@@ -318,7 +316,7 @@ class HashSet<T:Hashable> implements Set<T>
 	public var size(get, never):Int;
 	inline function get_size():Int
 	{
-		return mH.size;
+		return mSize;
 	}
 	
 	/**
@@ -371,6 +369,7 @@ class HashSet<T:Hashable> implements Set<T>
 			mVals.set(i, null); //required for iterator
 			mNext.set(i, mFree);
 			mFree = i;
+			mSize--;
 			mH.delete(x.key);
 			return true;
 		}
@@ -386,6 +385,8 @@ class HashSet<T:Hashable> implements Set<T>
 		mH.clear(gc);
 		
 		mVals.nullify(); //required for iterator
+		
+		mSize = 0;
 		
 		var t = mNext;
 		for (i in 0...capacity - 1) t.set(i, i + 1);
@@ -448,59 +449,59 @@ class HashSet<T:Hashable> implements Set<T>
 	**/
 	public function clone(assign:Bool = true, copier:T->T = null):Collection<T>
 	{
-		var c = new HashSet<T>(M.INT16_MIN);
-		c.key = HashKey.next();
-		c.mH = cast mH.clone(false);
+		var c = new HashSet<T>(slotCount, size);
+		c.mH = cast mH.clone();
+		c.mSize = size;
 		
-		var capacity = capacity;
+		var src = mVals;
+		var dst = c.mVals;
 		
 		if (assign)
-		{
-			c.mVals = NativeArrayTools.init(capacity);
-			for (i in 0...capacity) c.mVals.set(i, mVals.get(i));
-		}
+			src.blit(0, dst, 0, size);
 		else
 		{
-			var t = NativeArrayTools.init(capacity), v;
+			var v;
 			if (copier != null)
 			{
-				for (i in 0...capacity)
+				for (i in 0...size)
 				{
-					v = mVals.get(i);
-					if (v != null) t.set(i, copier(v));
+					v = src.get(i);
+					dst.set(i, v != null ? copier(v) : null);
 				}
 			}
 			else
 			{
-				var c:Cloneable<T> = null;
-				for (i in 0...capacity)
+				for (i in 0...size)
 				{
-					v = mVals.get(i);
+					v = src.get(i);
+					
 					if (v != null)
 					{
 						assert(Std.is(v, Cloneable), "element is not of type Cloneable");
 						
-						t.set(i, cast(v, Cloneable<Dynamic>).clone());
+						dst.set(i, cast(v, Cloneable<Dynamic>).clone());
 					}
+					else
+						dst.set(i, null);
 				}
 			}
-			c.mVals = t;
 		}
-		
-		c.mFree = mFree;
-		
 		#if alchemy
-		c.mNext = mNext.clone();
+		var src = mNext;
+		var dst = c.mNext;
+		for (i in 0...size) dst.set(i, src.get(i));
 		#else
-		c.mNext = NativeArrayTools.copy(mNext);
-		//c.mNext = NativeArrayTools.init(mNext.length);
-		//for (i in 0...Std.int(mNext.length)) c.mNext[i] = mNext[i];
+		mNext.blit(0, c.mNext, 0, size);
 		#end
+		c.mFree = mFree;
 		return c;
 	}
 	
-	function grow(oldCapacity:Int)
+	function grow()
 	{
+		var oldCapacity = capacity;
+		capacity = GrowthRate.compute(growthRate, capacity);
+		
 		var t;
 		
 		#if alchemy
@@ -517,22 +518,9 @@ class HashSet<T:Hashable> implements Set<T>
 		mFree = oldCapacity;
 		
 		var t = NativeArrayTools.init(capacity);
+		t.nullify();
 		mVals.blit(0, t, 0, oldCapacity);
 		mVals = t;
-	}
-	
-	function setIfFull(x:T):Bool
-	{
-		var s = size;
-		if (mH.setIfAbsent(x.key, s))
-		{
-			grow(s);
-			mVals.set(mFree, x);
-			mFree = mNext.get(mFree);
-			return true;
-		}
-		else
-			return false;
 	}
 }
 
@@ -565,7 +553,8 @@ class HashSetIterator<T:Hashable> implements de.polygonal.ds.Itr<T>
 		mVals = mObject.mVals;
 		mS = mObject.mH.capacity;
 		mI = 0;
-		while (mI < mS && mVals.get(mI) == null) mI++;
+		var t = mVals;
+		while (mI < mS && t.get(mI) == null) mI++;
 		return this;
 	}
 	
@@ -576,8 +565,9 @@ class HashSetIterator<T:Hashable> implements de.polygonal.ds.Itr<T>
 	
 	public inline function next():T
 	{
-		var v = mVals.get(mI);
-		while (++mI < mS && mVals.get(mI) == null) {}
+		var t = mVals;
+		var v = t.get(mI);
+		while (++mI < mS && t.get(mI) == null) {}
 		return v;
 	}
 	

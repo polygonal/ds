@@ -94,12 +94,86 @@ class TestHashSet extends AbstractTest
 		for (i in 0...8) assertTrue(h.has(values[i]));
 	}
 	
-	function testSize2()
+	function testPack()
 	{
 		var values = new Array<E>();
 		for (i in 0...32) values.push(new E(i));
 		
+		var h = new HashSet<E>(16, 16);
+		for (i in 0...16) h.set(values[i]);
+		for (i in 0...16) assertTrue(h.has(values[i]));
+		assertEquals(16, h.size);
+		assertEquals(16, h.capacity);
+		for (i in 0...12) assertTrue(h.remove(values[i]));
+		h.pack();
+		assertEquals(4, h.size);
+		assertEquals(16, h.capacity);
+		
+		var h = new HashSet<E>(16, 4);
+		for (i in 0...8) h.set(values[i]);
+		for (i in 0...8) assertTrue(h.has(values[i]));
+		assertEquals(8, h.size);
+		assertEquals(8, h.capacity);
+		for (i in 0...6) assertTrue(h.remove(values[i]));
+		
+		h.pack();
+		assertEquals(2, h.size);
+		assertEquals(4, h.capacity);
+		
+		assertTrue(h.has(values[6]));
+		assertTrue(h.has(values[7]));
+		
+		var h = new HashSet<E>(16, 2);
+		for (i in 0...16) h.set(values[i]);
+		
+		for (i in 0...16)
+		{
+			h.remove(values[i]);
+			h.pack();
+			assertEquals(Math.max(2, 16 - (i + 1)), h.capacity);
+			for (j in i + 1...16)
+				assertTrue(h.has(values[j]));
+		}
+	}
+	
+	function testSize1()
+	{
+		var values = new Array<E>();
+		for (i in 0...128) values.push(new E(i));
+		
+		var h = new HashSet<E>(16, 2);
+		h.growthRate = GrowthRate.NORMAL;
+		
+		var t = [for (i in 0...128) i];
+		ArrayTools.shuffle(t);
+		
+		for (i in t) assertTrue(h.set(values[i]));
+		
+		ArrayTools.shuffle(t);
+		for (i in 0...64) assertTrue(h.remove(values[t[i]]));
+		for (i in 64...128) assertTrue(h.has(values[t[i]]));
+		
+		h.pack();
+		
+		for (i in 0...64) t.shift();
+		
+		ArrayTools.shuffle(t);
+		for (i in 0...64) assertTrue(h.has(values[t[i]]));
+		for (i in 0...64) assertTrue(h.remove(values[t[i]]));
+		
+		h.pack();
+		
+		assertEquals(2, h.capacity);
+	}
+	
+	function testSize2()
+	{
+		var values = new Array<E>();
+		for (i in 0...2) values.push(new E(i));
+		
 		var h = new HashSet<E>(4, 2);
+		h.growthRate = GrowthRate.DOUBLE;
+		
 		for (i in 0...3)
 		{
 			h.set(values[0]);
@@ -466,24 +540,9 @@ class TestHashSet extends AbstractTest
 		for (i in 0...8) h.set(values[i]);
 		
 		var c:HashSet<E> = cast h.clone(true);
-		
-		var i = 0;
-		var l = new Dll<E>();
-		for (val in c)
-		{
-			l.append(val);
-			i++;
-		}
-		
-		l.sort(function(a, b) { return a.value - b.value; } );
-		
-		var a:Array<E> = l.toArray();
-		for (i in 0...a.length)
-		{
-			assertEquals(i, a[i].value);
-		}
-		
-		assertEquals(8, i);
+		assertEquals(8, c.size);
+		assertEquals(8, c.capacity);
+		for (i in 0...8) assertTrue(c.has(values[i]));
 	}
 	
 	function testToArray()
