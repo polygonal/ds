@@ -85,8 +85,8 @@ class IntIntHashTable implements Map<Int, Int>
 		
 		+  0: fixed size
 		+ -1: grows at a rate of 1.125x plus a constant.
-		+ -2: grows at a rate of 1.5x (default value).
-		+ -3: grows at a rate of 2.0x.
+		+ -2: grows at a rate of 1.5x.
+		+ -3: grows at a rate of 2.0x (default value).
 		+ >0: grows at a constant rate: capacity += growthRate
 	**/
 	public var growthRate:Int = GrowthRate.DOUBLE;
