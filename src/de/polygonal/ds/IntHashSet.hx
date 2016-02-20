@@ -138,21 +138,15 @@ class IntHashSet implements Set<Int>
 	**/
 	public function new(slotCount:Int, initialCapacity:Int = -1)
 	{
-		if (slotCount == M.INT16_MIN) return;
-		
 		assert(slotCount > 0);
 		assert(M.isPow2(slotCount), "slotCount is not a power of 2");
 		
 		if (initialCapacity == -1)
 			initialCapacity = slotCount;
-		else
-		{
-			assert(initialCapacity >= 2, "minimum capacity is 2");
-			assert(M.isPow2(slotCount), "capacity is not a power of 2");
-		}
 		
-		capacity = initialCapacity;
-		mMinCapacity = capacity;
+		initialCapacity = M.max(2, initialCapacity);
+		mMinCapacity = capacity = initialCapacity;
+		
 		this.slotCount = slotCount;
 		mMask = slotCount - 1;
 		
@@ -793,17 +787,16 @@ class IntHashSet implements Set<Int>
 	**/
 	public function clone(assign:Bool = true, copier:Int->Int = null):Collection<Int>
 	{
-		var c = new IntHashSet(M.INT16_MIN);
-		c.key = HashKey.next();
+		var c = new IntHashSet(slotCount, size);
 		
 		#if alchemy
-		c.mHash = mHash.clone();
-		c.mData = mData.clone();
-		c.mNext = mNext.clone();
+		IntMemory.blit(mHash, 0, c.mHash, 0, slotCount);
+		IntMemory.blit(mData, 0, c.mData, 0, size << 1);
+		IntMemory.blit(mNext, 0, c.mNext, 0, size);
 		#else
-		c.mHash = mHash.copy();
-		c.mData = mData.copy();
-		c.mNext = mNext.copy();
+		mHash.blit(0, c.mHash, 0, slotCount);
+		mData.blit(0, c.mData, 0, size << 1);
+		mNext.blit(0, c.mNext, 0, size);
 		#end
 		
 		c.mMask = mMask;
