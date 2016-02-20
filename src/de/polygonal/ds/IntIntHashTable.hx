@@ -1330,6 +1330,51 @@ class IntIntHashTable implements Map<Int, Int>
 		return this;
 	}
 	
+	#if (!cpp) inline #end //TODO fix inline
+	function hashCode(x:Int):Int
+	{
+		return (x * 73856093) & mMask;
+	}
+	
+	function grow()
+	{
+		var oldCapacity = capacity;
+		capacity = GrowthRate.compute(growthRate, capacity);
+		
+		var t;
+		
+		#if alchemy
+		mNext.resize(capacity);
+		mData.resize(capacity * 3);
+		#else
+		t = NativeArrayTools.init(capacity);
+		NativeArrayTools.blit(mNext, 0, t, 0, oldCapacity);
+		mNext = t;
+		t = NativeArrayTools.init(capacity * 3);
+		NativeArrayTools.blit(mData, 0, t, 0, oldCapacity * 3);
+		mData = t;
+		#end
+		
+		t = mNext;
+		for (i in oldCapacity - 1...capacity - 1) t.set(i, i + 1);
+		t.set(capacity - 1, NULL_POINTER);
+		mFree = oldCapacity;
+		
+		var j = oldCapacity * 3 + 2, t = mData;
+		for (i in 0...capacity - oldCapacity)
+		{
+			#if (flash && alchemy)
+			var o = t.getAddr(j - 1);
+			Memory.setI32(o    , VAL_ABSENT);
+			Memory.setI32(o + 4, NULL_POINTER);
+			#else
+			t.set(j - 1, VAL_ABSENT);
+			t.set(j    , NULL_POINTER);
+			#end
+			j += 3;
+		}
+	}
+	
 	/* INTERFACE Collection */
 	
 	/**
@@ -1536,51 +1581,6 @@ class IntIntHashTable implements Map<Int, Int>
 		c.mNext = NativeArrayTools.copy(mNext);
 		#end
 		return c;
-	}
-	
-	#if (!cpp) inline #end //TODO fix inline
-	function hashCode(x:Int):Int
-	{
-		return (x * 73856093) & mMask;
-	}
-	
-	function grow()
-	{
-		var oldCapacity = capacity;
-		capacity = GrowthRate.compute(growthRate, capacity);
-		
-		var t;
-		
-		#if alchemy
-		mNext.resize(capacity);
-		mData.resize(capacity * 3);
-		#else
-		t = NativeArrayTools.init(capacity);
-		NativeArrayTools.blit(mNext, 0, t, 0, oldCapacity);
-		mNext = t;
-		t = NativeArrayTools.init(capacity * 3);
-		NativeArrayTools.blit(mData, 0, t, 0, oldCapacity * 3);
-		mData = t;
-		#end
-		
-		t = mNext;
-		for (i in oldCapacity - 1...capacity - 1) t.set(i, i + 1);
-		t.set(capacity - 1, NULL_POINTER);
-		mFree = oldCapacity;
-		
-		var j = oldCapacity * 3 + 2, t = mData;
-		for (i in 0...capacity - oldCapacity)
-		{
-			#if (flash && alchemy)
-			var o = t.getAddr(j - 1);
-			Memory.setI32(o    , VAL_ABSENT);
-			Memory.setI32(o + 4, NULL_POINTER);
-			#else
-			t.set(j - 1, VAL_ABSENT);
-			t.set(j    , NULL_POINTER);
-			#end
-			j += 3;
-		}
 	}
 }
 

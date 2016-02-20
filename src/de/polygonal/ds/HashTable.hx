@@ -48,15 +48,6 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	public var key(default, null):Int = HashKey.next();
 	
 	/**
-		If true, reuses the iterator object instead of allocating a new one when calling ``iterator()``.
-		
-		The default is false.
-		
-		<warn>If true, nested iterations are likely to fail as only one iteration is allowed at a time.</warn>
-	**/
-	public var reuseIterator:Bool = false;
-	
-	/**
 		The size of the allocated storage space for the key/value pairs.
 		
 		If more space is required to accomodate new elements, ``capacity`` is doubled every time ``size`` grows beyond capacity, and split in half when ``size`` is a quarter of capacity.
@@ -93,6 +84,34 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		return mH.slotCount;
 	}
 	
+	/**
+		If true, reuses the iterator object instead of allocating a new one when calling ``iterator()``.
+		
+		The default is false.
+		
+		<warn>If true, nested iterations are likely to fail as only one iteration is allowed at a time.</warn>
+	**/
+	public var reuseIterator:Bool = false;
+	
+	/**
+		The growth rate of the container.
+		
+		+  0: fixed size
+		+ -1: grows at a rate of 1.125x plus a constant.
+		+ -2: grows at a rate of 1.5x (default value).
+		+ -3: grows at a rate of 2.0x.
+		+ >0: grows at a constant rate: capacity += growthRate
+	**/
+	public var growthRate(get, set):Int;
+	function get_growthRate():Int
+	{
+		return mH.growthRate;
+	}
+	function set_growthRate(value:Int):Int
+	{
+		return mH.growthRate = value;
+	}
+	
 	var mH:IntIntHashTable;
 	var mKeys:Container<K>;
 	var mVals:Container<T>;
@@ -125,7 +144,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		<li>If the size falls below a quarter of the current `capacity`, the `capacity` is cut in half while the minimum `capacity` can't fall below `capacity`.</li>
 		</ul>
 	**/
-	public function new(slotCount:Int, capacity = -1)
+	public function new(slotCount:Int, initialCapacity:Int = -1)
 	{
 		if (slotCount == M.INT16_MIN) return;
 		assert(slotCount > 0);
@@ -319,6 +338,73 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		return b.toString();
 	}
 	
+	function grow(oldCapacity:Int)
+	{
+		var newSize = oldCapacity << 1;
+		
+		#if alchemy
+		mNext.resize(newSize);
+		#else
+		var t = NativeArrayTools.init(newSize);
+		for (i in 0...oldCapacity) t[i] = mNext[i];
+		mNext = t;
+		#end
+		
+		var t = NativeArrayTools.init(newSize);
+		for (i in 0...oldCapacity) t[i] = mKeys[i];
+		mKeys = t;
+		
+		for (i in oldCapacity - 1...newSize - 1) setNext(i, i + 1);
+		setNext(newSize - 1, IntIntHashTable.NULL_POINTER);
+		mFree = oldCapacity;
+		
+		var t = NativeArrayTools.init(newSize);
+		for (i in 0...oldCapacity) t[i] = mVals[i];
+		mVals = t;
+	}
+	
+	function shrink()
+	{
+		var oldCapacity = capacity << 1;
+		var newSize = capacity;
+		
+		#if alchemy
+		mNext.resize(newSize);
+		#else
+		mNext = NativeArrayTools.init(newSize);
+		#end
+		
+		for (i in 0...newSize - 1) setNext(i, i + 1);
+		setNext(newSize - 1, IntIntHashTable.NULL_POINTER);
+		mFree = 0;
+		
+		var tmpKeys = NativeArrayTools.init(newSize);
+		var tmpVals = NativeArrayTools.init(newSize);
+		
+		for (i in mH)
+		{
+			tmpKeys[mFree] = mKeys[i];
+			tmpVals[mFree] = mVals[i];
+			mFree = getNext(mFree);
+		}
+		
+		mKeys = tmpKeys;
+		mVals = tmpVals;
+		
+		for (i in 0...mFree)
+			mH.remap(_key(mKeys[i]), i);
+	}
+	
+	inline function getNext(i:Int) return mNext.get(i);
+	inline function setNext(i:Int, x:Int) mNext.set(i, x);
+	
+	inline function _key(x:Hashable)
+	{
+		assert(x != null, "key is null");
+		
+		return x.key;
+	}
+	
 	/* INTERFACE Map */
 	
 	/**
@@ -429,8 +515,6 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 				doShrink = true;
 			
 			mH.delete(_key(key));
-			
-			if (doShrink) shrink();
 			return true;
 		}
 	}
@@ -679,73 +763,6 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		//c.mKeys = NativeArrayTools.init(capacity);
 		//for (i in 0...capacity) c.mKeys[i] = mKeys[i];
 		return c;
-	}
-	
-	inline function grow(oldSize:Int)
-	{
-		var newSize = oldSize << 1;
-		
-		#if alchemy
-		mNext.resize(newSize);
-		#else
-		var t = NativeArrayTools.init(newSize);
-		for (i in 0...oldSize) t[i] = mNext[i];
-		mNext = t;
-		#end
-		
-		var t = NativeArrayTools.init(newSize);
-		for (i in 0...oldSize) t[i] = mKeys[i];
-		mKeys = t;
-		
-		for (i in oldSize - 1...newSize - 1) setNext(i, i + 1);
-		setNext(newSize - 1, IntIntHashTable.NULL_POINTER);
-		mFree = oldSize;
-		
-		var t = NativeArrayTools.init(newSize);
-		for (i in 0...oldSize) t[i] = mVals[i];
-		mVals = t;
-	}
-	
-	inline function shrink()
-	{
-		var oldSize = capacity << 1;
-		var newSize = capacity;
-		
-		#if alchemy
-		mNext.resize(newSize);
-		#else
-		mNext = NativeArrayTools.init(newSize);
-		#end
-		
-		for (i in 0...newSize - 1) setNext(i, i + 1);
-		setNext(newSize - 1, IntIntHashTable.NULL_POINTER);
-		mFree = 0;
-		
-		var tmpKeys = NativeArrayTools.init(newSize);
-		var tmpVals = NativeArrayTools.init(newSize);
-		
-		for (i in mH)
-		{
-			tmpKeys[mFree] = mKeys[i];
-			tmpVals[mFree] = mVals[i];
-			mFree = getNext(mFree);
-		}
-		
-		mKeys = tmpKeys;
-		mVals = tmpVals;
-		
-		for (i in 0...mFree)
-			mH.remap(_key(mKeys[i]), i);
-	}
-	
-	inline function getNext(i:Int) return mNext.get(i);
-	inline function setNext(i:Int, x:Int) mNext.set(i, x);
-	
-	inline function _key(x:Hashable)
-	{
-		assert(x != null, "key is null");
-		
-		return x.key;
 	}
 }
 

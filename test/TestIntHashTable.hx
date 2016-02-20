@@ -6,6 +6,7 @@ import de.polygonal.ds.IntHashTable;
 import de.polygonal.ds.ListSet;
 import de.polygonal.ds.Set;
 import de.polygonal.ds.HashableItem;
+import de.polygonal.ds.tools.GrowthRate;
 
 class TestIntHashTable extends AbstractTest
 {
@@ -17,6 +18,46 @@ class TestIntHashTable extends AbstractTest
 		#end
 	}
 	
+	function testPack()
+	{
+		var h = new IntHashTable<Int>(4, 16);
+		h.growthRate = GrowthRate.DOUBLE;
+		
+		assertEquals(16, h.capacity);
+		
+		for (i in 0...32) assertTrue(h.set(i, i));
+		for (i in 0...16) h.remove(i);
+		
+		assertEquals(16, h.size);
+		assertEquals(32, h.capacity);
+		for (i in 16...32) assertTrue(h.has(i));
+		
+		h.pack(); //32->16
+		
+		assertEquals(16, h.size);
+		assertEquals(16, h.capacity);
+		
+		for (i in 16...32) assertTrue(h.has(i));
+		
+		h.free();
+		
+		var h = new IntHashTable<Int>(4, 4);
+		h.growthRate = GrowthRate.NORMAL;
+		
+		for (i in 0...8) h.set(i, i);
+		for (i in 0...8) assertTrue(h.has(i));
+		
+		for (i in 0...6) h.remove(i);
+		assertEquals(2, h.size);
+		assertEquals(11, h.capacity);
+		
+		h.pack();
+		assertEquals(2, h.size);
+		assertEquals(4, h.capacity);
+		assertTrue(h.has(6));
+		assertTrue(h.has(7));
+	}
+	
 	function testGetFront()
 	{
 		var h = new IntHashTable<Null<Int>>(16, 16);
@@ -25,9 +66,8 @@ class TestIntHashTable extends AbstractTest
 			h.set(i, i);
 			assertEquals(i, h.getFront(i));
 		}
-		for (i in 0...4)
-			assertEquals(i, h.getFront(i));
-			
+		
+		for (i in 0...4) assertEquals(i, h.getFront(i));
 		assertEquals(cast null, h.getFront(5));
 	}
 	
@@ -319,6 +359,7 @@ class TestIntHashTable extends AbstractTest
 	function testResizeSmall()
 	{
 		var h = new IntHashTable<Null<Int>>(16, 2);
+		h.growthRate = GrowthRate.DOUBLE;
 		var keys = new Array<Int>();
 		var key = 0;
 		
@@ -359,18 +400,26 @@ class TestIntHashTable extends AbstractTest
 			
 			for (i in 0...12)
 				assertTrue(h.delete(keys.pop()));
-			assertEquals(8, h.capacity);
+			
+			h.pack();
+			
+			assertEquals(4, h.capacity);
 			assertEquals(4, h.size);
+			
 			for (i in keys) assertEquals(i, h.get(i));
 			
 			for (i in 0...2) assertTrue(h.delete(keys.pop()));
 			
-			assertEquals(4, h.capacity);
+			h.pack();
+			
+			assertEquals(2, h.capacity);
 			assertEquals(2, h.size);
 			for (i in keys) assertEquals(i, h.get(i));
 			
 			assertTrue(h.delete(keys.pop()));
 			assertTrue(h.delete(keys.pop()));
+			
+			h.pack();
 			
 			assertEquals(2, h.capacity);
 			assertEquals(0, h.size);
@@ -797,23 +846,6 @@ class TestIntHashTable extends AbstractTest
 		
 		for (i in 0...16)
 			assertEquals(i, h.get(i));
-		
-		//test with purge
-		var h = new IntHashTable<Null<Int>>(8);
-		for (i in 0...16) h.set(i, i);
-		h.clear(true);
-		assertEquals(8, h.capacity);
-		assertEquals(0, h.size);
-		
-		for (i in 0...16) h.set(i, i);
-		assertEquals(16, h.capacity);
-		for (i in 0...16) assertEquals(i, h.get(i));
-		
-		h.clear(true);
-		
-		for (i in 0...16) h.set(i, i);
-		assertEquals(16, h.capacity);
-		for (i in 0...16) assertEquals(i, h.get(i));
 	}
 	
 	function testIterator()

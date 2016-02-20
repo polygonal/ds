@@ -560,6 +560,51 @@ class IntHashSet implements Set<Int>
 		return this;
 	}
 	
+	#if (!cpp) inline #end //TODO fixme
+	function hashCode(x:Int):Int
+	{
+		return (x * 73856093) & mMask;
+	}
+	
+	function grow()
+	{
+		var oldCapacity = capacity;
+		capacity = GrowthRate.compute(growthRate, capacity);
+		
+		var t;
+		
+		#if alchemy
+		mNext.resize(capacity);
+		mData.resize(capacity << 1);
+		#else
+		t = NativeArrayTools.init(capacity);
+		mNext.blit(0, t, 0, oldCapacity);
+		mNext = t;
+		t = NativeArrayTools.init(capacity << 1);
+		mData.blit(0, t, 0, oldCapacity << 1);
+		mData = t;
+		#end
+		
+		t = mNext;
+		for (i in oldCapacity - 1...capacity - 1) t.set(i, i + 1);
+		t.set(capacity - 1, NULL_POINTER);
+		mFree = oldCapacity;
+		
+		var j = oldCapacity << 1, t = mData;
+		for (i in 0...capacity - oldCapacity)
+		{
+			#if (flash && alchemy)
+			var o = t.getAddr(j);
+			Memory.setI32(o    , VAL_ABSENT);
+			Memory.setI32(o + 4, NULL_POINTER);
+			#else
+			t.set(j    , VAL_ABSENT);
+			t.set(j + 1, NULL_POINTER);
+			#end
+			j += 2;
+		}
+	}
+	
 	/* INTERFACE Collection */
 	
 	/**
@@ -805,51 +850,6 @@ class IntHashSet implements Set<Int>
 		c.mFree = mFree;
 		c.mSize = size;
 		return c;
-	}
-	
-	#if (!cpp) inline #end //TODO fixme
-	function hashCode(x:Int):Int
-	{
-		return (x * 73856093) & mMask;
-	}
-	
-	function grow()
-	{
-		var oldCapacity = capacity;
-		capacity = GrowthRate.compute(growthRate, capacity);
-		
-		var t;
-		
-		#if alchemy
-		mNext.resize(capacity);
-		mData.resize(capacity << 1);
-		#else
-		t = NativeArrayTools.init(capacity);
-		mNext.blit(0, t, 0, oldCapacity);
-		mNext = t;
-		t = NativeArrayTools.init(capacity << 1);
-		mData.blit(0, t, 0, oldCapacity << 1);
-		mData = t;
-		#end
-		
-		t = mNext;
-		for (i in oldCapacity - 1...capacity - 1) t.set(i, i + 1);
-		t.set(capacity - 1, NULL_POINTER);
-		mFree = oldCapacity;
-		
-		var j = oldCapacity << 1, t = mData;
-		for (i in 0...capacity - oldCapacity)
-		{
-			#if (flash && alchemy)
-			var o = t.getAddr(j);
-			Memory.setI32(o    , VAL_ABSENT);
-			Memory.setI32(o + 4, NULL_POINTER);
-			#else
-			t.set(j    , VAL_ABSENT);
-			t.set(j + 1, NULL_POINTER);
-			#end
-			j += 2;
-		}
 	}
 }
 

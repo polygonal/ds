@@ -141,8 +141,7 @@ class HashSet<T:Hashable> implements Set<T>
 	{
 		assert(slotCount > 0);
 		
-		if (initialCapacity == -1)
-			initialCapacity = slotCount;
+		if (initialCapacity == -1) initialCapacity = slotCount;
 		initialCapacity = M.max(2, initialCapacity);
 		
 		mMinCapacity = capacity = initialCapacity;
@@ -297,15 +296,43 @@ class HashSet<T:Hashable> implements Set<T>
 		
 		var src = mVals;
 		var dst = NativeArrayTools.init(capacity);
+		var j = mFree;
 		for (i in mH)
 		{
-			dst.set(mFree, src.get(i));
-			mFree = t.get(mFree);
+			dst.set(j, src.get(i));
+			j = t.get(j);
 		}
+		mFree = j;
 		
 		mVals = dst;
-		for (i in 0...size) mH.remap(mVals.get(i).key, i);
+		for (i in 0...size) mH.remap(dst.get(i).key, i);
 		return this;
+	}
+	
+	function grow()
+	{
+		var oldCapacity = capacity;
+		capacity = GrowthRate.compute(growthRate, capacity);
+		
+		var t;
+		
+		#if alchemy
+		mNext.resize(capacity);
+		#else
+		t = NativeArrayTools.init(capacity);
+		mNext.blit(0, t, 0, oldCapacity);
+		mNext = t;
+		#end
+		
+		t = mNext;
+		for (i in oldCapacity - 1...capacity - 1) t.set(i, i + 1);
+		t.set(capacity - 1, IntIntHashTable.NULL_POINTER);
+		mFree = oldCapacity;
+		
+		var t = NativeArrayTools.init(capacity);
+		t.nullify();
+		mVals.blit(0, t, 0, oldCapacity);
+		mVals = t;
 	}
 	
 	/* INTERFACE Collection */
@@ -488,40 +515,12 @@ class HashSet<T:Hashable> implements Set<T>
 			}
 		}
 		#if alchemy
-		var src = mNext;
-		var dst = c.mNext;
-		for (i in 0...size) dst.set(i, src.get(i));
+		IntMemory.blit(mNext, 0, c.mNext, 0, size);
 		#else
 		mNext.blit(0, c.mNext, 0, size);
 		#end
 		c.mFree = mFree;
 		return c;
-	}
-	
-	function grow()
-	{
-		var oldCapacity = capacity;
-		capacity = GrowthRate.compute(growthRate, capacity);
-		
-		var t;
-		
-		#if alchemy
-		mNext.resize(capacity);
-		#else
-		t = NativeArrayTools.init(capacity);
-		mNext.blit(0, t, 0, oldCapacity);
-		mNext = t;
-		#end
-		
-		t = mNext;
-		for (i in oldCapacity - 1...capacity - 1) t.set(i, i + 1);
-		t.set(capacity - 1, IntIntHashTable.NULL_POINTER);
-		mFree = oldCapacity;
-		
-		var t = NativeArrayTools.init(capacity);
-		t.nullify();
-		mVals.blit(0, t, 0, oldCapacity);
-		mVals = t;
 	}
 }
 
