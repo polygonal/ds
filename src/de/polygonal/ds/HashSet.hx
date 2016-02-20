@@ -143,6 +143,7 @@ class HashSet<T:Hashable> implements Set<T>
 		
 		if (initialCapacity == -1)
 			initialCapacity = slotCount;
+		initialCapacity = M.max(2, initialCapacity);
 		
 		mMinCapacity = capacity = initialCapacity;
 		
