@@ -155,10 +155,8 @@ class IntIntHashTable implements Map<Int, Int>
 		<li>If the size falls below a quarter of the current `capacity`, the `capacity` is cut in half while the minimum `capacity` can't fall below `capacity`.</li>
 		</ul>
 	**/
-	public function new(slotCount:Int, initialCapacity = -1)
+	public function new(slotCount:Int, initialCapacity:Int = -1)
 	{
-		if (slotCount == M.INT16_MIN) return;
-		
 		assert(slotCount > 0);
 		assert(M.isPow2(slotCount), "slotCount is not a power of 2");
 		
@@ -177,7 +175,7 @@ class IntIntHashTable implements Map<Int, Int>
 		
 		#if alchemy
 		mHash = new IntMemory(slotCount, "IntIntHashTable.mHash");
-		mHash.fill(EMPTY_SLOT);
+		mHash.setAll(EMPTY_SLOT);
 		mData = new IntMemory(capacity * 3, "IntIntHashTable.mData");
 		mNext = new IntMemory(capacity, "IntIntHashTable.mNext");
 		#else
@@ -1440,7 +1438,7 @@ class IntIntHashTable implements Map<Int, Int>
 	public function clear(gc:Bool = false)
 	{
 		#if alchemy
-		mHash.fill(EMPTY_SLOT);
+		mHash.setAll(EMPTY_SLOT);
 		#else
 		var h = mHash;
 		for (i in 0...slotCount) h.set(i, EMPTY_SLOT);

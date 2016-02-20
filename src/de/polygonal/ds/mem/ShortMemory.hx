@@ -40,7 +40,7 @@ class ShortMemory extends MemoryAccess
 		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
 	#if flash
-	public static function toByteArray(input:ShortMemory, min = -1, max = -1):flash.utils.ByteArray
+	public static function toByteArray(input:ShortMemory, min:Int = -1, max:Int = -1):flash.utils.ByteArray
 	{
 		assert(input != null, "invalid input");
 		
@@ -79,7 +79,7 @@ class ShortMemory extends MemoryAccess
 		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
 	#if flash
-	public static function ofByteArray(input:flash.utils.ByteArray, min = -1, max = -1):ShortMemory
+	public static function ofByteArray(input:flash.utils.ByteArray, min:Int = -1, max:Int = -1):ShortMemory
 	{
 		assert(input != null, "invalid input");
 		
@@ -106,7 +106,7 @@ class ShortMemory extends MemoryAccess
 		@param max index pointing to the last short.
 		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
-	public static function toBytesData(input:ShortMemory, min = -1, max = -1):haxe.io.BytesData
+	public static function toBytesData(input:ShortMemory, min:Int = -1, max:Int = -1):haxe.io.BytesData
 	{
 		assert(input != null, "invalid input");
 		
@@ -130,7 +130,7 @@ class ShortMemory extends MemoryAccess
 		@param min index pointing to the byte storing the last short.
 		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
-	public static function ofBytesData(input:haxe.io.BytesData, min = -1, max = -1):ShortMemory
+	public static function ofBytesData(input:haxe.io.BytesData, min:Int = -1, max:Int = -1):ShortMemory
 	{
 		assert(input != null, "invalid input");
 		
@@ -165,7 +165,7 @@ class ShortMemory extends MemoryAccess
 		@param max index pointing to the last short.
 		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
-	public static function toArray(input:ShortMemory, min = -1, max = -1):Array<Int>
+	public static function toArray(input:ShortMemory, min:Int = -1, max:Int = -1):Array<Int>
 	{
 		assert(input != null, "invalid input");
 		
@@ -199,7 +199,7 @@ class ShortMemory extends MemoryAccess
 		@param max index pointing to the last short.
 		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
-	public static function ofArray(input:Array<Int>, min = -1, max = -1):ShortMemory
+	public static function ofArray(input:Array<Int>, min:Int = -1, max:Int = -1):ShortMemory
 	{
 		assert(input != null, "invalid input");
 		
@@ -262,7 +262,7 @@ class ShortMemory extends MemoryAccess
 		@param max index pointing to the last short.
 		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
-	public static function toUnsignedVector(input:ShortMemory, min = -1, max = -1):Vector<UInt>
+	public static function toUnsignedVector(input:ShortMemory, min:Int = -1, max:Int = -1):Vector<UInt>
 	{
 		assert(input != null, "invalid input");
 		
@@ -298,7 +298,7 @@ class ShortMemory extends MemoryAccess
 		@param max index pointing to the last short.
 		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
-	public static function ofVector(input:Vector<Int>, min = -1, max = -1):ShortMemory
+	public static function ofVector(input:Vector<Int>, min:Int = -1, max:Int = -1):ShortMemory
 	{
 		assert(input != null, "invalid input");
 		
@@ -325,7 +325,7 @@ class ShortMemory extends MemoryAccess
 	/**
 		Creates a byte array capable of storing a total of `size` shorts.
 	**/
-	public function new(size:Int, name = "?")
+	public function new(size:Int, name:String = "?")
 	{
 		super(size << 1, name);
 		this.size = size;

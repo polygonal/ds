@@ -40,7 +40,7 @@ class IntMemory extends MemoryAccess
 		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
 	#if flash
-	public static function toByteArray(input:IntMemory, min = -1, max = -1):flash.utils.ByteArray
+	public static function toByteArray(input:IntMemory, min:Int = -1, max:Int = -1):flash.utils.ByteArray
 	{
 		assert(input != null, "invalid input");
 		
@@ -79,7 +79,7 @@ class IntMemory extends MemoryAccess
 		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
 	#if flash
-	public static function ofByteArray(input:flash.utils.ByteArray, min = -1, max = -1):IntMemory
+	public static function ofByteArray(input:flash.utils.ByteArray, min:Int = -1, max:Int = -1):IntMemory
 	{
 		assert(input != null, "invalid input");
 		
@@ -106,7 +106,7 @@ class IntMemory extends MemoryAccess
 		@param max index pointing to the last integer.
 		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
-	public static function toBytesData(input:IntMemory, min = -1, max = -1):haxe.io.BytesData
+	public static function toBytesData(input:IntMemory, min:Int = -1, max:Int = -1):haxe.io.BytesData
 	{
 		assert(input != null, "invalid input");
 		
@@ -135,7 +135,7 @@ class IntMemory extends MemoryAccess
 		@param min index pointing to the byte storing the last integer.
 		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
-	public static function ofBytesData(input:haxe.io.BytesData, min = -1, max = -1):IntMemory
+	public static function ofBytesData(input:haxe.io.BytesData, min:Int = -1, max:Int = -1):IntMemory
 	{
 		assert(input != null, "invalid input");
 		
@@ -170,7 +170,7 @@ class IntMemory extends MemoryAccess
 		@param max index pointing to the last integer.
 		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
-	public static function toArray(input:IntMemory, min = -1, max = -1):Array<Int>
+	public static function toArray(input:IntMemory, min:Int = -1, max:Int = -1):Array<Int>
 	{
 		assert(input != null, "invalid input");
 		
@@ -204,7 +204,7 @@ class IntMemory extends MemoryAccess
 		@param max index pointing to the last integer.
 		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
-	public static function ofArray(input:Array<Int>, min = -1, max = -1):IntMemory
+	public static function ofArray(input:Array<Int>, min:Int = -1, max:Int = -1):IntMemory
 	{
 		assert(input != null, "invalid input");
 		
@@ -269,7 +269,7 @@ class IntMemory extends MemoryAccess
 		@param max index pointing to the last integer.
 		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
-	public static function toUnsignedVector(input:IntMemory, min = -1, max = -1):Vector<UInt>
+	public static function toUnsignedVector(input:IntMemory, min:Int = -1, max:Int = -1):Vector<UInt>
 	{
 		assert(input != null, "invalid input");
 		
@@ -305,7 +305,7 @@ class IntMemory extends MemoryAccess
 		@param max index pointing to the last integer.
 		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
-	public static function ofVector(input:Vector<Int>, min = -1, max = -1):IntMemory
+	public static function ofVector(input:Vector<Int>, min:Int = -1, max:Int = -1):IntMemory
 	{
 		assert(input != null, "invalid input");
 		
@@ -332,7 +332,7 @@ class IntMemory extends MemoryAccess
 	/**
 		Creates a byte array capable of storing a total of `size` integers.
 	**/
-	public function new(size:Int, name = "?")
+	public function new(size:Int, name:String = "?")
 	{
 		super(size << 2, name);
 		this.size = size;

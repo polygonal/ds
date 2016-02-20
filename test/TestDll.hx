@@ -1,4 +1,5 @@
-﻿import de.polygonal.ds.Collection;
+﻿import de.polygonal.ds.Cloneable;
+import de.polygonal.ds.Collection;
 import de.polygonal.ds.Compare;
 import de.polygonal.ds.Dll;
 import de.polygonal.ds.DllNode;
@@ -635,6 +636,16 @@ class TestDll extends AbstractTest
 		}
 	}
 	
+	function testClone4()
+	{
+		var list = new Dll<E>();
+		for (i in 0...3) list.append(new E(i));
+		
+		var copy:Dll<E> = cast list.clone(false);
+		var j = 0;
+		for (i in copy) assertEquals(j++, i.x);
+	}
+	
 	function testArray()
 	{
 		var list = new Dll<Int>();
@@ -902,11 +913,16 @@ private class EComparable implements de.polygonal.ds.Comparable<EComparable>
 	}
 }
 
-private class E
+private class E implements Cloneable<E>
 {
 	public var x:Int;
 	public function new(x:Int)
 	{
 		this.x = x;
+	}
+	
+	public function clone():E
+	{
+		return new E(x);
 	}
 }

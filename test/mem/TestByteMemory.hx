@@ -152,7 +152,7 @@ class TestByteMemory extends AbstractTest
 		for (i in 1...32 + 1)
 		{
 			var m = new ByteMemory(i);
-			m.fill(123);
+			m.setAll(123);
 			for (j in 0...i) assertEquals(123, m.get(j));
 			m.free();
 		}

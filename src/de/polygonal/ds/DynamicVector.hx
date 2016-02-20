@@ -454,7 +454,7 @@ class DynamicVector<T> implements Collection<T>
 		<assert>`from` out of range</assert>
 		@param from the index to start from. By default, the method starts from the last element in this dense array.
 	**/
-	public function lastIndexOf(x:T, from = -1):Int
+	public function lastIndexOf(x:T, from:Int = -1):Int
 	{
 		if (size == 0) return -1;
 		

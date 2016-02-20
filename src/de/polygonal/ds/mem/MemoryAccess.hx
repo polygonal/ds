@@ -46,7 +46,7 @@ class MemoryAccess implements Hashable
 	
 	var mMemory:Dynamic;
 	
-	function new(bytes:Int, name = "?")
+	function new(bytes:Int, name:String = "?")
 	{
 		assert(bytes > 0);
 		

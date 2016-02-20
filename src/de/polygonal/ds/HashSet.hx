@@ -111,15 +111,12 @@ class HashSet<T:Hashable> implements Set<T>
 	}
 	
 	var mH:IntIntHashTable;
-	
 	var mVals:Container<T>;
-	
 	#if alchemy
 	var mNext:IntMemory;
 	#else
 	var mNext:Container<Int>;
 	#end
-	
 	var mFree:Int = 0;
 	var mMinCapacity:Int;
 	var mIterator:HashSetIterator<T> = null;
@@ -142,9 +139,8 @@ class HashSet<T:Hashable> implements Set<T>
 		<li>If the ``size`` falls below a quarter of the current `capacity`, the `capacity` is cut in half while the minimum `capacity` can't fall below `capacity`.</li>
 		</ul>
 	**/
-	public function new(slotCount:Int, capacity = -1) //TODO rename
+	public function new(slotCount:Int, initialCapacity:Int = -1)
 	{
-		if (slotCount == M.INT16_MIN) return;
 		assert(slotCount > 0);
 		
 		if (capacity == -1) capacity = slotCount;
@@ -173,7 +169,9 @@ class HashSet<T:Hashable> implements Set<T>
 	**/
 	public inline function hasFront(x:T):Bool
 	{
-		return mH.getFront(getKey(x)) != IntIntHashTable.KEY_ABSENT;
+		assert(x != null);
+		
+		return mH.getFront(x.key) != IntIntHashTable.KEY_ABSENT;
 	}
 	
 	/**
@@ -262,12 +260,14 @@ class HashSet<T:Hashable> implements Set<T>
 	**/
 	public inline function set(x:T):Bool
 	{
+		assert(x != null);
+		
 		var c = capacity;
 		if (c == size)
 			return setIfFull(x);
 		else
 		{
-			if (mH.setIfAbsent(getKey(x), mFree))
+			if (mH.setIfAbsent(x.key, mFree))
 			{
 				mVals.set(mFree, x);
 				mFree = mNext.get(mFree);
@@ -304,7 +304,7 @@ class HashSet<T:Hashable> implements Set<T>
 		}
 		
 		mVals = tmpVals;
-		for (i in 0...mFree) mH.remap(getKey(mVals.get(i)), i);
+		for (i in 0...mFree) mH.remap(mVals.get(i).key, i);
 		
 		return this;
 	}
@@ -361,7 +361,9 @@ class HashSet<T:Hashable> implements Set<T>
 	**/
 	public function remove(x:T):Bool
 	{
-		var i = mH.get(getKey(x));
+		assert(x != null);
+		
+		var i = mH.get(x.key);
 		if (i == IntIntHashTable.KEY_ABSENT)
 			return false;
 		else
@@ -369,7 +371,7 @@ class HashSet<T:Hashable> implements Set<T>
 			mVals.set(i, null); //required for iterator
 			mNext.set(i, mFree);
 			mFree = i;
-			mH.delete(getKey(x));
+			mH.delete(x.key);
 			return true;
 		}
 	}
@@ -522,7 +524,7 @@ class HashSet<T:Hashable> implements Set<T>
 	function setIfFull(x:T):Bool
 	{
 		var s = size;
-		if (mH.setIfAbsent(getKey(x), s))
+		if (mH.setIfAbsent(x.key, s))
 		{
 			grow(s);
 			mVals.set(mFree, x);
@@ -531,13 +533,6 @@ class HashSet<T:Hashable> implements Set<T>
 		}
 		else
 			return false;
-	}
-	
-	inline function getKey(x:Hashable)
-	{
-		assert(x != null, "element is null");
-		
-		return x.key;
 	}
 }
 

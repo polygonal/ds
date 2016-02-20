@@ -44,7 +44,7 @@ class TestIntMemory extends AbstractTest
 		for (i in 1...10 + 1)
 		{
 			var m = new IntMemory(i);
-			m.fill(123);
+			m.setAll(123);
 			for (j in 0...i) assertEquals(123, m.get(j));
 			m.free();
 		}

@@ -40,7 +40,7 @@ class DoubleMemory extends MemoryAccess
 		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
 	#if flash
-	public static function toByteArray(input:DoubleMemory, min = -1, max = -1):flash.utils.ByteArray
+	public static function toByteArray(input:DoubleMemory, min:Int = -1, max:Int = -1):flash.utils.ByteArray
 	{
 		assert(input != null, "invalid input");
 		
@@ -79,7 +79,7 @@ class DoubleMemory extends MemoryAccess
 		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
 	#if flash
-	public static function ofByteArray(input:flash.utils.ByteArray, min = -1, max = -1):DoubleMemory
+	public static function ofByteArray(input:flash.utils.ByteArray, min:Int = -1, max:Int = -1):DoubleMemory
 	{
 		assert(input != null, "invalid input");
 		
@@ -105,7 +105,7 @@ class DoubleMemory extends MemoryAccess
 		@param max index pointing to the last double.
 		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
-	public static function toBytesData(input:DoubleMemory, min = -1, max = -1):haxe.io.BytesData
+	public static function toBytesData(input:DoubleMemory, min:Int = -1, max:Int = -1):haxe.io.BytesData
 	{
 		assert(input != null, "invalid input");
 		
@@ -129,7 +129,7 @@ class DoubleMemory extends MemoryAccess
 		@param min index pointing to the byte storing the last float.
 		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
-	public static function ofBytesData(input:haxe.io.BytesData, min = -1, max = -1):DoubleMemory
+	public static function ofBytesData(input:haxe.io.BytesData, min:Int = -1, max:Int = -1):DoubleMemory
 	{
 		assert(input != null, "invalid input");
 		
@@ -164,7 +164,7 @@ class DoubleMemory extends MemoryAccess
 		@param max index pointing to the last double.
 		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
-	public static function toArray(input:DoubleMemory, min = -1, max = -1):Array<Float>
+	public static function toArray(input:DoubleMemory, min:Int = -1, max:Int = -1):Array<Float>
 	{
 		assert(input != null, "invalid input");
 		
@@ -198,7 +198,7 @@ class DoubleMemory extends MemoryAccess
 		@param max index pointing to the last double.
 		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
-	public static function ofArray(input:Array<Float>, min = -1, max = -1):DoubleMemory
+	public static function ofArray(input:Array<Float>, min:Int = -1, max:Int = -1):DoubleMemory
 	{
 		assert(input != null, "invalid input");
 		
@@ -260,7 +260,7 @@ class DoubleMemory extends MemoryAccess
 		@param max index pointing to the last double.
 		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
-	public static function ofVector(input:Vector<Float>, min = -1, max = -1):DoubleMemory
+	public static function ofVector(input:Vector<Float>, min:Int = -1, max:Int = -1):DoubleMemory
 	{
 		assert(input != null, "invalid input");
 		
@@ -287,7 +287,7 @@ class DoubleMemory extends MemoryAccess
 	/**
 		Creates a byte array capable of storing a total of `size` doubles.
 	**/
-	public function new(size:Int, name = "?")
+	public function new(size:Int, name:String = "?")
 	{
 		super(size << 3, name);
 		this.size = size;

@@ -378,7 +378,7 @@ class TestBitMemory extends AbstractTest
 	{
 		var b:BitMemory = new BitMemory(64);
 		for (i in 0...64) b.set(i);
-		b.clrAll();
+		b.setAll(0);
 		
 		for (i in 0...64) assertFalse(b.has(i));
 		for (i in 0...64) b.set(i);
@@ -392,7 +392,7 @@ class TestBitMemory extends AbstractTest
 	function testSetAll()
 	{
 		var b:BitMemory = new BitMemory(64);
-		b.setAll();
+		b.setAll(1);
 		for (i in 0...64) assertTrue(b.has(i));
 		
 		b.free();
@@ -405,7 +405,7 @@ class TestBitMemory extends AbstractTest
 		for (s in 1...40 + 1)
 		{
 			var m = new BitMemory(s);
-			m.fill(1);
+			m.setAll(1);
 			for (i in 0...s) assertEquals(true, m.has(i));
 			
 			#if (flash && alchemy)

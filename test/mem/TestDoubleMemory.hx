@@ -49,7 +49,7 @@ class TestDoubleMemory extends AbstractTest
 	function testFill()
 	{
 		var m = new DoubleMemory(100);
-		m.fill(123.);
+		m.setAll(123.);
 		for (i in 0...100) assertEquals(123., m.get(i));
 	}
 	

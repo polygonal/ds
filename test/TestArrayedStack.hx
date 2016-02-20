@@ -1,4 +1,5 @@
 ﻿import de.polygonal.ds.ArrayedStack;
+import de.polygonal.ds.Cloneable;
 import de.polygonal.ds.ListSet;
 import de.polygonal.ds.Stack;
 
@@ -415,6 +416,16 @@ class TestArrayedStack extends AbstractTest
 		var copy:de.polygonal.ds.ArrayedStack<Int> = cast stack.clone(true);
 		for (i in 0...10) assertEquals(copy.get(i), stack.get(i));
 		assertEquals(10, copy.size);
+		
+		var copy:de.polygonal.ds.ArrayedStack<Int> = cast stack.clone(false, function(x) return x);
+		for (i in 0...10) assertEquals(copy.get(i), stack.get(i));
+		assertEquals(10, copy.size);
+		
+		var stack = new de.polygonal.ds.ArrayedStack<E>(4);
+		for (i in 0...4) stack.push(new E(i));
+		var copy:de.polygonal.ds.ArrayedStack<E> = cast stack.clone(false);
+		for (i in 0...4) assertEquals(i, stack.get(i).x);
+		assertEquals(4, copy.size);
 	}
 	
 	function testCollection()
@@ -432,7 +443,7 @@ class TestArrayedStack extends AbstractTest
 	}
 }
 
-private class E
+private class E implements Cloneable<E>
 {
 	public var x:Int;
 	public function new(x = 0)

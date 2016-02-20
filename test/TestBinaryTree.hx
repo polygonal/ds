@@ -60,6 +60,24 @@ class TestBinaryTree extends AbstractTest
 		
 		assertEquals(2, node.size);
 	}
+	
+	function testClone()
+	{
+		var node = new BinaryTreeNode<String>("root");
+		
+		node.setL("e1");
+		node.setR("e2");
+		node.l.setL("e1");
+		node.l.l.setR("e2");
+		
+		var copy:BinaryTreeNode<String> = cast node.clone(true);
+		
+		assertEquals("e1", copy.l.val);
+		assertEquals("e2", copy.r.val);
+		
+		assertEquals("e1", copy.l.l.val);
+		assertEquals("e2", copy.l.l.r.val);
+	}
 }
 
 private class E

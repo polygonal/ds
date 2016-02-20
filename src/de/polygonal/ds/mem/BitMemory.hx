@@ -68,7 +68,7 @@ class BitMemory extends MemoryAccess
 		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
 	#if flash
-	public static function ofByteArray(input:flash.utils.ByteArray, min = -1, max = -1):BitMemory
+	public static function ofByteArray(input:flash.utils.ByteArray, min:Int = -1, max:Int = -1):BitMemory
 	{
 		assert(input != null, "invalid input");
 		
@@ -133,7 +133,7 @@ class BitMemory extends MemoryAccess
 		If no range is specified, all `input` bytes are copied.
 		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
-	public static function ofBytesData(input:haxe.io.BytesData, min = -1, max = -1):BitMemory
+	public static function ofBytesData(input:haxe.io.BytesData, min:Int = -1, max:Int = -1):BitMemory
 	{
 		assert(input != null, "invalid input");
 		
@@ -215,7 +215,7 @@ class BitMemory extends MemoryAccess
 	/**
 		Creates a bit vector capable of storing a total of `size` bits.
 	**/
-	public function new(size:Int, name = "?")
+	public function new(size:Int, name:String = "?")
 	{
 		super(((size & (32 - 1)) > 0 ? ((size >> 5) + 1) : (size >> 5)) << 2, name);
 		
@@ -357,32 +357,6 @@ class BitMemory extends MemoryAccess
 		flash.Memory.setI32(idx, flash.Memory.getI32(idx) & ~(1 << (i & (32 - 1))));
 		#else
 		mData[idx] = mData[idx] & ~(1 << (i & (32 - 1)));
-		#end
-	}
-	
-	/**
-		Sets all bits to 0.
-		<assert>memory deallocated</assert>
-	**/
-	public inline function clrAll()
-	{
-		#if alchemy
-		for (i in 0...size) flash.Memory.setI32(getAddr(i), 0);
-		#else
-		for (i in 0...size) mData[getAddr(i)] = 0;
-		#end
-	}
-	
-	/**
-		Sets all bits to 1.
-		<assert>memory deallocated</assert>
-	**/
-	public inline function setAll()
-	{
-		#if alchemy
-		for (i in 0...size) flash.Memory.setI32(getAddr(i), -1);
-		#else
-		for (i in 0...size) mData[getAddr(i)] = -1;
 		#end
 	}
 	

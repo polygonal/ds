@@ -136,7 +136,7 @@ class IntHashSet implements Set<Int>
 		<li>If the ``size`` falls below a quarter of the current `capacity`, the `capacity` is cut in half while the minimum `capacity` can't fall below `capacity`.</li>
 		</ul>
 	**/
-	public function new(slotCount:Int, initialCapacity = -1)
+	public function new(slotCount:Int, initialCapacity:Int = -1)
 	{
 		if (slotCount == M.INT16_MIN) return;
 		
@@ -158,7 +158,7 @@ class IntHashSet implements Set<Int>
 		
 		#if alchemy
 		mHash = new IntMemory(slotCount, "IntHashSet.mHash");
-		mHash.fill(EMPTY_SLOT);
+		mHash.setAll(EMPTY_SLOT);
 		mData = new IntMemory(capacity << 1, "IntHashSet.mData");
 		mNext = new IntMemory(capacity, "IntHashSet.mNext");
 		#else
@@ -718,7 +718,7 @@ class IntHashSet implements Set<Int>
 	public function clear(gc:Bool = false)
 	{
 		#if alchemy
-		mHash.fill(EMPTY_SLOT);
+		mHash.setAll(EMPTY_SLOT);
 		#else
 		var h = mHash;
 		for (i in 0...slotCount) h.set(i, EMPTY_SLOT);

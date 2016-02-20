@@ -1,4 +1,5 @@
 ﻿import de.polygonal.ds.ArrayedQueue;
+import de.polygonal.ds.Cloneable;
 import de.polygonal.ds.Container;
 import de.polygonal.ds.ListSet;
 import de.polygonal.ds.Queue;
@@ -517,6 +518,18 @@ class TestArrayedQueue extends AbstractTest
 		var clone:ArrayedQueue<Int> = cast a.clone(true);
 		assertEquals(clone.size, a.size);
 		for (i in 0...10) assertEquals(clone.dequeue(), i);
+		
+		var a:ArrayedQueue<Int> = new ArrayedQueue<Int>(16);
+		for (i in 0...10) a.enqueue(i);
+		var clone:ArrayedQueue<Int> = cast a.clone(false, function(x) return x);
+		assertEquals(clone.size, a.size);
+		for (i in 0...10) assertEquals(clone.dequeue(), i);
+		
+		var a:ArrayedQueue<E> = new ArrayedQueue<E>(16);
+		for (i in 0...10) a.enqueue(new E(i));
+		var clone:ArrayedQueue<E> = cast a.clone(false);
+		assertEquals(clone.size, a.size);
+		for (i in 0...10) assertEquals(clone.dequeue().x, i);
 	}
 	
 	function testCollection()
@@ -526,7 +539,7 @@ class TestArrayedQueue extends AbstractTest
 	}
 }
 
-private class E
+private class E implements Cloneable<E>
 {
 	public var x:Int;
 	public function new(x:Int)

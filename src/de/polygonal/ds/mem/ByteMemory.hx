@@ -38,7 +38,7 @@ class ByteMemory extends MemoryAccess
 		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
 	#if flash
-	public static function toByteArray(input:ByteMemory, min = -1, max = -1):flash.utils.ByteArray
+	public static function toByteArray(input:ByteMemory, min:Int = -1, max:Int = -1):flash.utils.ByteArray
 	{
 		assert(input != null, "invalid input");
 		
@@ -70,7 +70,7 @@ class ByteMemory extends MemoryAccess
 		If no range is specified, all `input` bytes are copied.
 		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
-	public static function ofByteArray(input:flash.utils.ByteArray, min = -1, max = -1):ByteMemory
+	public static function ofByteArray(input:flash.utils.ByteArray, min:Int = -1, max:Int = -1):ByteMemory
 	{
 		assert(input != null, "invalid input");
 		
@@ -94,7 +94,7 @@ class ByteMemory extends MemoryAccess
 		<warn>The bytes are written in little endian format.</warn>
 		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
-	public static function toBytesData(input:ByteMemory, min = -1, max = -1):haxe.io.BytesData
+	public static function toBytesData(input:ByteMemory, min:Int = -1, max:Int = -1):haxe.io.BytesData
 	{
 		assert(input != null, "invalid input");
 		
@@ -115,7 +115,7 @@ class ByteMemory extends MemoryAccess
 		If no range is specified, all `input` bytes are copied.
 		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
-	public static function ofBytesData(input:haxe.io.BytesData, min = -1, max = -1):ByteMemory
+	public static function ofBytesData(input:haxe.io.BytesData, min:Int = -1, max:Int = -1):ByteMemory
 	{
 		assert(input != null, "invalid input");
 		
@@ -137,7 +137,7 @@ class ByteMemory extends MemoryAccess
 		If no range is specified, all `input` bytes are copied.
 		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
-	public static function toArray(input:ByteMemory, min = -1, max = -1):Array<Int>
+	public static function toArray(input:ByteMemory, min:Int = -1, max:Int = -1):Array<Int>
 	{
 		assert(input != null, "invalid input");
 		
@@ -169,7 +169,7 @@ class ByteMemory extends MemoryAccess
 		If no range is specified, all `input` bytes are copied.
 		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
-	public static function ofArray(input:Array<Int>, min = -1, max = -1):ByteMemory
+	public static function ofArray(input:Array<Int>, min:Int = -1, max:Int = -1):ByteMemory
 	{
 		assert(input != null, "invalid input");
 		
@@ -227,7 +227,7 @@ class ByteMemory extends MemoryAccess
 		If no range is specified, all `input` bytes are copied.
 		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
-	public static function ofVector(input:Vector<Int>, min = -1, max = -1):ByteMemory
+	public static function ofVector(input:Vector<Int>, min:Int = -1, max:Int = -1):ByteMemory
 	{
 		assert(input != null, "invalid input");
 		
@@ -260,7 +260,7 @@ class ByteMemory extends MemoryAccess
 	/**
 		Creates a byte array capable of storing a total of `size` bytes.
 	**/
-	public function new(size:Int, name = "?")
+	public function new(size:Int, name:String = "?")
 	{
 		super(this.size = size, name);
 		
