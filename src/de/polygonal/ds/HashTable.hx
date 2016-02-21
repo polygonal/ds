@@ -24,6 +24,7 @@ import de.polygonal.ds.mem.IntMemory;
 
 import de.polygonal.ds.tools.ArrayTools;
 import de.polygonal.ds.tools.Assert.assert;
+import de.polygonal.ds.tools.GrowthRate;
 import de.polygonal.ds.tools.M;
 
 using de.polygonal.ds.tools.NativeArrayTools;
@@ -54,11 +55,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		
 		The capacity never falls below the initial size defined in the constructor.
 	**/
-	public var capacity(get, never):Int;
-	inline function get_capacity():Int
-	{
-		return mH.capacity;
-	}
+	public var capacity(default, null):Int;
 	
 	/**
 		The load factor measure the "denseness" of a hash table and is proportional to the time cost to look up an entry.
@@ -115,7 +112,6 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	var mH:IntIntHashTable;
 	var mKeys:Container<K>;
 	var mVals:Container<T>;
-	
 	#if alchemy
 	var mNext:IntMemory;
 	#else
@@ -123,9 +119,11 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	#end
 	
 	var mFree:Int = 0;
+	var mSize:Int = 0;
 	var mMinCapacity:Int;
 	var mIterator:HashTableValIterator<K, T> = null;
-	var mTmpArr:Array<Int> = [];
+	var mTmpIntBuffer:Array<Int> = [];
+	var mTmpKeyBuffer:Array<K> = [];
 	
 	/**
 		<assert>`slotCount` is not a power of two</assert>
@@ -146,12 +144,12 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	**/
 	public function new(slotCount:Int, initialCapacity:Int = -1)
 	{
-		if (slotCount == M.INT16_MIN) return;
 		assert(slotCount > 0);
 		
-		if (capacity == -1) capacity = slotCount;
+		if (initialCapacity == -1) initialCapacity = slotCount;
+		initialCapacity = M.max(2, initialCapacity);
 		
-		mMinCapacity = capacity;
+		mMinCapacity = capacity = initialCapacity;
 		
 		mH = new IntIntHashTable(slotCount, capacity);
 		mKeys = NativeArrayTools.init(capacity);
@@ -163,8 +161,9 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		mNext = NativeArrayTools.init(capacity);
 		#end
 		
-		for (i in 0...capacity - 1) setNext(i, i + 1);
-		setNext(capacity - 1, IntIntHashTable.NULL_POINTER);
+		var t = mNext;
+		for (i in 0...capacity - 1) t.set(i, i + 1);
+		t.set(capacity - 1, IntIntHashTable.NULL_POINTER);
 	}
 	
 	/**
@@ -185,11 +184,11 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	**/
 	public inline function getFront(key:K):T
 	{
-		var i = mH.getFront(_key(key));
+		var i = mH.getFront(key.key);
 		if (i == IntIntHashTable.KEY_ABSENT)
 			return null;
 		else
-			return mVals[i];
+			return mVals.get(i);
 	}
 	
 	/**
@@ -200,32 +199,21 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	**/
 	public inline function setIfAbsent(key:K, val:T):Bool
 	{
-		if ((size == capacity))
+		assert(key != null);
+		
+		if (size == capacity) grow();
+		
+		var i = mFree;
+		if (mH.setIfAbsent(key.key, i))
 		{
-			if (mH.setIfAbsent(_key(key), size))
-			{
-				grow(capacity >> 1);
-				
-				mVals[mFree] = val;
-				mKeys[mFree] = key;
-				mFree = getNext(mFree);
-				return true;
-			}
-			else
-				return false;
+			mVals.set(i, val);
+			mKeys.set(i, key);
+			mFree = mNext.get(i);
+			mSize++;
+			return true;
 		}
 		else
-		{
-			if (mH.setIfAbsent(_key(key), mFree))
-			{
-				mVals[mFree] = val;
-				mKeys[mFree] = key;
-				mFree = getNext(mFree);
-				return true;
-			}
-			else
-				return false;
-		}
+			return false;
 	}
 	
 	/**
@@ -246,10 +234,12 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	**/
 	public inline function remap(key:K, val:T):Bool
 	{
-		var i = mH.get(_key(key));
+		assert(key != null);
+		
+		var i = mH.get(key.key);
 		if (i != IntIntHashTable.KEY_ABSENT)
 		{
-			mVals[i] = val;
+			mVals.set(i, val);
 			return true;
 		}
 		else
@@ -273,14 +263,44 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		return out;
 	}
 	
-	/**
-		For performance reasons the hash table does nothing to ensure that empty locations contain null;
-		``pack()`` therefore nullifies all obsolete references.
-	**/
 	public function pack()
 	{
-		for (i in 0...capacity)
-			if (mKeys[i] != null) mVals[i] = cast null;
+		mH.pack();
+		
+		if (mH.capacity == capacity) return this;
+		
+		capacity = mH.capacity;
+		
+		#if alchemy
+		mNext.resize(capacity);
+		#else
+		mNext = NativeArrayTools.init(capacity);
+		#end
+		
+		var t = mNext;
+		for (i in 0...capacity - 1) t.set(i, i + 1);
+		t.set(capacity - 1, IntIntHashTable.NULL_POINTER);
+		mFree = 0;
+		
+		var srcKeys = mKeys;
+		var dstKeys = NativeArrayTools.init(capacity);
+		
+		var srcVals = mVals;
+		var dstVals = NativeArrayTools.init(capacity);
+		
+		var j = mFree;
+		for (i in mH)
+		{
+			dstKeys.set(j, srcKeys.get(i));
+			dstVals.set(j, srcVals.get(i));
+			j = mNext.get(j);
+		}
+		mFree = j;
+		
+		mKeys = dstKeys;
+		mVals = dstVals;
+		for (i in 0...size) mH.remap(dstKeys.get(i).key, i);
+		return this;
 	}
 	
 	/**
@@ -338,71 +358,32 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		return b.toString();
 	}
 	
-	function grow(oldCapacity:Int)
+	function grow()
 	{
-		var newSize = oldCapacity << 1;
+		var oldCapacity = capacity;
+		capacity = GrowthRate.compute(growthRate, capacity);
 		
+		var t;
 		#if alchemy
 		mNext.resize(newSize);
 		#else
-		var t = NativeArrayTools.init(newSize);
+		var t = NativeArrayTools.init(capacity);
 		for (i in 0...oldCapacity) t[i] = mNext[i];
 		mNext = t;
 		#end
 		
-		var t = NativeArrayTools.init(newSize);
-		for (i in 0...oldCapacity) t[i] = mKeys[i];
-		mKeys = t;
-		
-		for (i in oldCapacity - 1...newSize - 1) setNext(i, i + 1);
-		setNext(newSize - 1, IntIntHashTable.NULL_POINTER);
+		t = mNext;
+		for (i in oldCapacity - 1...capacity - 1) t.set(i, i + 1);
+		t.set(capacity - 1, IntIntHashTable.NULL_POINTER);
 		mFree = oldCapacity;
 		
-		var t = NativeArrayTools.init(newSize);
-		for (i in 0...oldCapacity) t[i] = mVals[i];
+		var t = NativeArrayTools.init(capacity);
+		mVals.blit(0, t, 0, oldCapacity);
 		mVals = t;
-	}
-	
-	function shrink()
-	{
-		var oldCapacity = capacity << 1;
-		var newSize = capacity;
 		
-		#if alchemy
-		mNext.resize(newSize);
-		#else
-		mNext = NativeArrayTools.init(newSize);
-		#end
-		
-		for (i in 0...newSize - 1) setNext(i, i + 1);
-		setNext(newSize - 1, IntIntHashTable.NULL_POINTER);
-		mFree = 0;
-		
-		var tmpKeys = NativeArrayTools.init(newSize);
-		var tmpVals = NativeArrayTools.init(newSize);
-		
-		for (i in mH)
-		{
-			tmpKeys[mFree] = mKeys[i];
-			tmpVals[mFree] = mVals[i];
-			mFree = getNext(mFree);
-		}
-		
-		mKeys = tmpKeys;
-		mVals = tmpVals;
-		
-		for (i in 0...mFree)
-			mH.remap(_key(mKeys[i]), i);
-	}
-	
-	inline function getNext(i:Int) return mNext.get(i);
-	inline function setNext(i:Int, x:Int) mNext.set(i, x);
-	
-	inline function _key(x:Hashable)
-	{
-		assert(x != null, "key is null");
-		
-		return x.key;
+		var t = NativeArrayTools.init(capacity);
+		mKeys.blit(0, t, 0, oldCapacity);
+		mKeys = t;
 	}
 	
 	/* INTERFACE Map */
@@ -412,19 +393,13 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	**/
 	public function has(val:T):Bool
 	{
-		var exists = false;
+		var k = mKeys, v = mVals;
 		for (i in 0...capacity)
 		{
-			if (mKeys[i] != null)
-			{
-				if (mVals[i] == val)
-				{
-					exists = true;
-					break;
-				}
-			}
+			if (k.get(i) == null) continue;
+			if (v.get(i) == val) return true;
 		}
-		return exists;
+		return false;
 	}
 	
 	/**
@@ -433,7 +408,9 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	**/
 	public inline function hasKey(key:K):Bool
 	{
-		return mH.hasKey(_key(key));
+		assert(key != null);
+		
+		return mH.hasKey(key.key);
 	}
 	
 	/**
@@ -444,11 +421,8 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	{
 		assert(key != null);
 		
-		var i = mH.get(_key(key));
-		if (i == IntIntHashTable.KEY_ABSENT)
-			return null;
-		else
-			return mVals[i];
+		var i = mH.get(key.key);
+		return i == IntIntHashTable.KEY_ABSENT ? null : mVals.get(i);
 	}
 	
 	/**
@@ -457,13 +431,15 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	**/
 	public function getAll(key:K, out:Array<T>):Int
 	{
-		var i = mH.get(_key(key));
+		var i = mH.get(key.key);
 		if (i == IntIntHashTable.KEY_ABSENT)
 			return 0;
 		else
 		{
-			var c = mH.getAll(_key(key), mTmpArr);
-			for (i in 0...c) out[i] = mVals[mTmpArr[i]];
+			var b = mTmpIntBuffer;
+			var c = mH.getAll(key.key, b);
+			var v = mVals;
+			for (i in 0...c) out[i] = v.get(b[i]);
 			return c;
 		}
 	}
@@ -480,14 +456,16 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	**/
 	public inline function set(key:K, val:T):Bool
 	{
-		if (size == capacity)
-			grow(capacity);
+		assert(key != null);
 		
-		var first = mH.set(_key(key), mFree);
-		mVals[mFree] = val;
-		mKeys[mFree] = key;
+		if (size == capacity) grow();
 		
-		mFree = getNext(mFree);
+		var i = mFree;
+		var first = mH.set(key.key, i);
+		mVals.set(i, val);
+		mKeys.set(i, key);
+		mFree = mNext.get(i);
+		mSize++;
 		return first;
 	}
 	
@@ -498,25 +476,16 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		<assert>`key` is null</assert>
 		@return true if `key` is successfully removed.
 	**/
-	public inline function delete(key:K):Bool
+	public function delete(key:K):Bool
 	{
-		var i = mH.get(_key(key));
-		if (i == IntIntHashTable.KEY_ABSENT)
-			return false;
-		else
-		{
-			mKeys[i] = null;
-			setNext(i, mFree);
-			mFree = i;
-			
-			var doShrink = false;
-			
-			if (size - 1 == (capacity >> 2) && capacity > mMinCapacity)
-				doShrink = true;
-			
-			mH.delete(_key(key));
-			return true;
-		}
+		var i = mH.get(key.key);
+		if (i == IntIntHashTable.KEY_ABSENT) return false;
+		mKeys.set(i, null);
+		mNext.set(i, mFree);
+		mFree = i;
+		mH.delete(key.key);
+		mSize--;
+		return true;
 	}
 	
 	/**
@@ -524,12 +493,10 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	**/
 	public function toValSet():Set<T>
 	{
-		var s = new ListSet<T>();
+		var s = new ListSet<T>(), k = mKeys, v = mVals;
 		for (i in 0...capacity)
-		{
-			if (mKeys[i] != null)
-				s.set(mVals[i]);
-		}
+			if (k.get(i) != null)
+				s.set(v.get(i));
 		return s;
 	}
 	
@@ -538,11 +505,11 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	**/
 	public function toKeySet():Set<K>
 	{
-		var s = new ListSet<K>();
+		var s = new ListSet<K>(), t = mKeys, k;
 		for (i in 0...capacity)
 		{
-			if (mKeys[i] != null)
-				s.set(mKeys[i]);
+			k = t.get(i);
+			if (k != null) s.set(k);
 		}
 		return s;
 	}
@@ -567,7 +534,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	public var size(get, never):Int;
 	inline function get_size():Int
 	{
-		return mH.size;
+		return mSize;
 	}
 	
 	/**
@@ -595,7 +562,8 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 			mIterator.free();
 			mIterator = null;
 		}
-		mTmpArr = null;
+		mTmpIntBuffer = null;
+		mTmpKeyBuffer = null;
 	}
 	
 	/**
@@ -613,51 +581,46 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	public function remove(val:T):Bool
 	{
 		var found = false;
-		var t = new Array<K>();
+		var b = mTmpKeyBuffer;
+		var k = mKeys, v = mVals, j;
+		var c = 0;
+		
 		for (i in 0...capacity)
 		{
-			if (mKeys[i] != null)
+			j = k.get(i);
+			if (j == null) continue;
+			if (v.get(i) == val)
 			{
-				if (mVals[i] == val)
-				{
-					t.push(mKeys[i]);
-					found = true;
-				}
+				b[c++] = j;
+				found = true;
 			}
 		}
 		
-		if (found)
+		for (i in 0...c)
 		{
-			for (key in t) delete(key);
-			return true;
+			delete(b[i]);
+			b[i] = null;
 		}
-		else
-			return false;
+		return c > 0;
 	}
 	
 	/**
 		Removes all key/value pairs.
-		@param gc if true, nullifies all keys and values so the garbage collector can reclaim used memory.
+		
+		The `gc` parameter has no effect.
 	**/
 	public function clear(gc:Bool = false)
 	{
 		mH.clear(gc);
-		for (i in 0...capacity) mKeys[i] = null;
 		
-		if (gc)
-		{
-			for (i in 0...capacity)
-			{
-				mVals[i] = cast null;
-				mKeys[i] = null;
-			}
-			
-			while (capacity > mMinCapacity) shrink();
-		}
+		mKeys.assign(null, 0, capacity);
+		mVals.assign(null, 0, capacity);
 		
-		for (i in 0...capacity - 1) setNext(i, i + 1);
-		setNext(capacity - 1, IntIntHashTable.NULL_POINTER);
+		var t = mNext;
+		for (i in 0...capacity - 1) t.set(i, i + 1);
+		t.set(capacity - 1, IntIntHashTable.NULL_POINTER);
 		mFree = 0;
+		mSize = 0;
 	}
 	
 	/**
@@ -686,7 +649,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	**/
 	public inline function isEmpty():Bool
 	{
-		return mH.isEmpty();
+		return mSize == 0;
 	}
 	
 	/**
@@ -713,55 +676,54 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	**/
 	public function clone(assign:Bool = true, copier:T->T = null):Collection<T>
 	{
-		var c = new HashTable<K, T>(M.INT16_MIN);
-		c.key = HashKey.next();
+		var c = new HashTable<K, T>(slotCount, size);
 		c.mH = cast mH.clone();
+		c.mSize = size;
+		c.mFree = mFree;
 		
-		var capacity = capacity;
+		var srcVals = mVals;
+		var dstVals = c.mVals;
+		
+		var srcKeys = mKeys;
+		var dstKeys = c.mKeys;
+		
+		srcKeys.blit(0, dstKeys, 0, size);
 		
 		if (assign)
-		{
-			c.mVals = NativeArrayTools.init(capacity);
-			for (i in 0...capacity) c.mVals[i] = mVals[i];
-		}
+			srcVals.blit(0, dstVals, 0, size);
 		else
 		{
-			var t = NativeArrayTools.init(capacity);
 			if (copier != null)
 			{
-				for (i in 0...capacity)
+				for (i in 0...size)
 				{
-					if (mKeys.get(i) != null)
-						t.set(i, copier(mVals.get(i)));
+					if (srcKeys.get(i) != null)
+						dstVals.set(i, copier(srcVals.get(i)));
+					else
+						dstVals.set(i, null);
 				}
 			}
 			else
 			{
-				for (i in 0...capacity)
+				for (i in 0...size)
 				{
-					if (mKeys.get(i) != null)
+					if (srcKeys.get(i) != null)
 					{
-						assert(Std.is(mVals.get(i), Cloneable), "element is not of type Cloneable");
+						assert(Std.is(srcVals.get(i), Cloneable), "element is not of type Cloneable");
 						
-						t.set(i, cast(mVals.get(i), Cloneable<Dynamic>).clone());
+						dstVals.set(i, cast(srcVals.get(i), Cloneable<Dynamic>).clone());
 					}
+					else
+						dstVals.set(i, null);
 				}
 			}
-			c.mVals = t;
 		}
 		
-		c.mFree = mFree;
-		
 		#if alchemy
-		c.mNext = mNext.clone();
+		IntMemory.blit(mNext, 0, c.mNext, 0, size);
 		#else
-		c.mNext = NativeArrayTools.copy(mNext);
-		//c.mNext = NativeArrayTools.init(mNext.length);
-		//for (i in 0...Std.int(mNext.length)) c.mNext[i] = mNext[i];
+		mNext.blit(0, c.mNext, 0, size);
 		#end
-		c.mKeys = NativeArrayTools.copy(mKeys);
-		//c.mKeys = NativeArrayTools.init(capacity);
-		//for (i in 0...capacity) c.mKeys[i] = mKeys[i];
 		return c;
 	}
 }
