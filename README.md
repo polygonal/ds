@@ -18,16 +18,16 @@ Formerly known as "_AS3 Data Structures For Game Developers (AS3DS)_", the packa
 
 ## Cross-Platform Support
 
-ds currently supports Flash AVM1+2, JavaScript, C++ and Neko
+ds supports the following targets: Flash, JavaScript, C++, Neko, Php, Python
 
 ## Conditional Compilation Flags
 `-D generic`
 
-Enables generic classes (implements `haxe.rtti.Generic`). Optimization for strictly typed runtimes (AVM2), but increases file size.
+Enables generic classes (adds @:generic meta). Extra performance for static typed platforms (currently Flash and C++ only).
 
 `-D alchemy`
 
-Enables fast virtual memory for FP10+ ("alchemy memory"). By default, memory access is replaced with arrays or the flash Vector class.
+Enables fast virtual memory for FP10+ ("alchemy memory"). Extra performance for Flash.
 
 `-D doc`
 
@@ -47,6 +47,8 @@ If you want to test the latest beta build, you should pull the dev branch and ad
 ### 1.5.0 (dev)
 _supports Haxe Compiler 3.2.1_
 
+
+ * modified: arrayed structures now use fast platform specific "native arrays" (vectors) for internal storage
  * added: replaced Da structure with new DynamicVector implementation (growable, vector)
  * modified: renamed swp() -> swap(), cpy() -> copy()
  * modified: Map.clr() renamed to Map.delete() to distinguish from Collection.clear()
@@ -65,7 +67,6 @@ _supports Haxe Compiler 3.2.1_
  * fixed: always increment iterator state inside next()
  * added: initial python support
  * fixed: Graph.remove()
- * modified: use vectors instead of arrays for internal storage
  * modified: require flash10; drop support for fp 9.x
  * added: IntIntHashTable.hasPair() for checking if a {key, value} pair exists
  * added: IntIntHashTable.clrPair() for removing a {key, value} pair
