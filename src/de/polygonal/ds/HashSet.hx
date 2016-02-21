@@ -296,14 +296,17 @@ class HashSet<T:Hashable> implements Set<T>
 		
 		var src = mVals;
 		var dst = NativeArrayTools.init(capacity);
-		var j = mFree;
+		var j = mFree, v;
 		for (i in mH)
 		{
-			dst.set(j, src.get(i));
-			j = t.get(j);
+			v = src.get(i);
+			if (v != null)
+			{
+				dst.set(j, v);
+				j = t.get(j);
+			}
 		}
 		mFree = j;
-		
 		mVals = dst;
 		for (i in 0...size) mH.remap(dst.get(i).key, i);
 		return this;
