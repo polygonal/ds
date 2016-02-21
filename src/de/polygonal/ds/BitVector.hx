@@ -184,15 +184,13 @@ class BitVector implements Hashable
 		assert(min >= 0 && min <= max && max < mBitSize, 'min/max out of range ($min/$max)');
 		
 		var current = min;
-		
-		while ( current < max )
+		while (current < max)
 		{
 			var binIndex = current >> 5;
 			var nextBound = (binIndex + 1) << 5;
 			var mask = -1 << (32 - nextBound + current);
 			mask &= (max < nextBound) ? -1 >>> (nextBound - max) : -1;
-			mData[binIndex] |= mask;
-			
+			mData.set(binIndex, mData.get(binIndex) | mask);
 			current = nextBound;
 		}
 	}
@@ -216,7 +214,7 @@ class BitVector implements Hashable
 	{
 		assert(i >= 0 && i < mArrSize, 'i index out of range ($i)');
 		
-		return mData[i];
+		return mData.get(i);
 	}
 	
 	/**
@@ -277,13 +275,13 @@ class BitVector implements Hashable
 		var out = new flash.utils.ByteArray();
 		if (!bigEndian) out.endian = flash.utils.Endian.LITTLE_ENDIAN;
 		for (i in 0...mArrSize)
-			out.writeInt(mData[i]);
+			out.writeInt(mData.get(i));
 		return out;
 		#else
 		var out = new haxe.io.BytesOutput();
 		out.bigEndian = bigEndian;
 		for (i in 0...mArrSize)
-			out.writeInt32(mData[i]);
+			out.writeInt32(mData.get(i));
 		return out.getBytes().getData();
 		#end
 	}
@@ -320,15 +318,15 @@ class BitVector implements Hashable
 		mArrSize = numIntegers + (numBytes > 0 ? 1 : 0);
 		mBitSize = mArrSize << 5;
 		mData = NativeArrayTools.create(mArrSize);
-		for (i in 0...mArrSize) mData[i] = 0;
+		for (i in 0...mArrSize) mData.set(i, 0);
 		for (i in 0...numIntegers)
 		{
 			#if flash
-			mData[i] = input.readInt();
+			mData.set(i, input.readInt());
 			#elseif cpp
-			mData[i] = (cast input.readInt32()) & 0xFFFFFFFF;
+			mData.set(i, (cast input.readInt32()) & 0xFFFFFFFF);
 			#else
-			mData[i] = cast input.readInt32();
+			mData.set(i, cast input.readInt32());
 			#end
 		}
 		var index:Int = numIntegers << 5;
@@ -374,7 +372,7 @@ class BitVector implements Hashable
 		for (i in 0...mArrSize)
 		{
 			args[0] = i;
-			args[1] = mData[i];
+			args[1] = mData.get(i);
 			b.add(Printf.format("  %4d -> %#.32b\n", args));
 		}
 		b.add("]");

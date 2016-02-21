@@ -368,7 +368,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		mNext.resize(capacity);
 		#else
 		var t = NativeArrayTools.create(capacity);
-		for (i in 0...oldCapacity) t[i] = mNext[i];
+		mNext.blit(0, t, 0, oldCapacity);
 		mNext = t;
 		#end
 		

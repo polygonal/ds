@@ -108,7 +108,7 @@ class ArrayedQueue<T> implements Queue<T>
 		if (source != null)
 		{
 			var d = mData;
-			for (i in 0...mSize) mData[i] = source[i];
+			for (i in 0...mSize) mData.set(i, source[i]);
 		}
 	}
 	

@@ -163,8 +163,7 @@ class IntHashTable<T> implements Map<Int, T>
 		mKeys.setAll(IntIntHashTable.KEY_ABSENT);
 		#else
 		mNext = NativeArrayTools.create(capacity);
-		mKeys = NativeArrayTools.create(capacity);
-		for (i in 0...capacity) mKeys[i] = IntIntHashTable.KEY_ABSENT;
+		mKeys = NativeArrayTools.create(capacity).init(IntIntHashTable.KEY_ABSENT, 0, capacity);
 		#end
 		
 		var t = mNext;
@@ -763,7 +762,7 @@ class IntHashTableIterator<T> implements de.polygonal.ds.Itr<T>
 		#if (flash && alchemy)
 		while (mI < mS && mKeys.get(mI) == IntIntHashTable.KEY_ABSENT) mI++;
 		#else
-		while (mI < mS && mKeys[mI] == IntIntHashTable.KEY_ABSENT) mI++;
+		while (mI < mS && mKeys.get(mI) == IntIntHashTable.KEY_ABSENT) mI++;
 		#end
 		return this;
 	}
@@ -779,8 +778,8 @@ class IntHashTableIterator<T> implements de.polygonal.ds.Itr<T>
 		var v = mVals.get(mI);
 		while (++mI < mS && mKeys.get(mI) == IntIntHashTable.KEY_ABSENT) {}
 		#else
-		var v = mVals[mI];
-		while (++mI < mS && mKeys[mI] == IntIntHashTable.KEY_ABSENT) {}
+		var v = mVals.get(mI);
+		while (++mI < mS && mKeys.get(mI) == IntIntHashTable.KEY_ABSENT) {}
 		#end
 		return v;
 	}
