@@ -100,22 +100,10 @@ class ArrayTools
 		@param k the number of elements to put into `destination`.
 		If omitted `k` is set to `destination`::length;
 	**/
-	public static function fill<T>(destination:Array<T>, x:T, k = -1)
+	public static function init<T>(destination:Array<T>, x:T, k = -1)
 	{
 		if (k == -1) k = destination.length;
 		for (i in 0...k) destination[i] = x;
-	}
-	
-	/**
-		Sets up to `k` elements in `destination` to the object of type `cl`.
-		@param k the number of elements to put into `destination`.
-		If omitted `k` is set to `destination`::length;
-	**/
-	public static function assign<T>(destination:Array<T>, cl:Class<T>, args:Array<Dynamic> = null, k = -1)
-	{
-		if (k == -1) k = destination.length;
-		if (args == null) args = [];
-		for (i in 0...k) destination[i] = Type.createInstance(cl, args);
 	}
 	
 	/**
