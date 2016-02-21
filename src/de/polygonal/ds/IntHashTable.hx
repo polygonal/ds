@@ -472,8 +472,7 @@ class IntHashTable<T> implements Map<Int, T>
 		var srcKeys = mKeys;
 		
 		#if alchemy
-		mKeys.resize(capacity);
-		var dstKeys = mKeys;
+		var dstKeys = new IntMemory(capacity, "IntHashTable.mKeys");
 		#else
 		var dstKeys = NativeArrayTools.init(capacity);
 		#end
@@ -489,6 +488,10 @@ class IntHashTable<T> implements Map<Int, T>
 			j = mNext.get(j);
 		}
 		mFree = j;
+		
+		#if alchemy
+		mKeys.free();
+		#end
 		
 		mKeys = dstKeys;
 		mVals = dstVals;

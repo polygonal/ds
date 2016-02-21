@@ -119,13 +119,11 @@ class TestHashSet extends AbstractTest
 		h.pack();
 		assertEquals(2, h.size);
 		assertEquals(4, h.capacity);
-		
 		assertTrue(h.has(values[6]));
 		assertTrue(h.has(values[7]));
 		
 		var h = new HashSet<E>(16, 2);
 		for (i in 0...16) h.set(values[i]);
-		
 		for (i in 0...16)
 		{
 			h.remove(values[i]);
