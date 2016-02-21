@@ -111,9 +111,7 @@ class IntHashTable<T> implements Map<Int, T>
 	}
 	
 	var mH:IntIntHashTable;
-	
 	var mVals:Container<T>;
-	
 	#if alchemy
 	var mKeys:IntMemory;
 	var mNext:IntMemory;
@@ -124,15 +122,10 @@ class IntHashTable<T> implements Map<Int, T>
 	
 	var mFree:Int = 0;
 	var mSize:Int = 0;
-	
-	var mLastKey:Int = 0;
-	var mLastPos:Int = 0;
-	
 	var mMinCapacity:Int;
 	var mShrinkSize:Int;
 	var mIterator:IntHashTableIterator<T> = null;
-	
-	var mTmpArr:Array<Int> = [];
+	var mTmpKeyBuffer:Array<Int> = [];
 	
 	/**
 		<assert>`slotCount` is not a power of two</assert>
@@ -196,19 +189,11 @@ class IntHashTable<T> implements Map<Int, T>
 	**/
 	public inline function getFront(key:Int):T
 	{
-		if (mLastKey == key)
-			return mVals.get(mLastPos);
+		var i = mH.getFront(key);
+		if (i == IntIntHashTable.KEY_ABSENT)
+			return cast null;
 		else
-		{
-			var i = mH.getFront(key);
-			if (i == IntIntHashTable.KEY_ABSENT)
-				return cast null;
-			else
-			{
-				mLastKey = key;
-				return mVals.get(mLastPos = i);
-			}
-		}
+			return mVals.get(i);
 	}
 	
 	/**
@@ -222,13 +207,13 @@ class IntHashTable<T> implements Map<Int, T>
 		
 		if (size == capacity) grow();
 		
-		var f = mFree;
-		if (mH.setIfAbsent(key, f))
+		var i = mFree;
+		if (mH.setIfAbsent(key, i))
 		{
-			invalidate();
-			mVals.set(f, val);
-			mKeys.set(f, key);
-			mFree = mNext.get(f);
+			mVals.set(i, val);
+			mKeys.set(i, key);
+			mFree = mNext.get(i);
+			mSize++;
 			return true;
 		}
 		else
@@ -381,8 +366,10 @@ class IntHashTable<T> implements Map<Int, T>
 			return 0;
 		else
 		{
-			var c = mH.getAll(key, mTmpArr);
-			for (i in 0...c) out[i] = mVals.get(mTmpArr[i]);
+			var b = mTmpKeyBuffer;
+			var c = mH.getAll(key, b);
+			var v = mVals;
+			for (i in 0...c) out[i] = v.get(b[i]);
 			return c;
 		}
 	}
@@ -403,13 +390,13 @@ class IntHashTable<T> implements Map<Int, T>
 		
 		if (size == capacity) grow();
 		
-		invalidate();
-		var f = mFree;
-		mH.set(key, f);
-		mVals.set(f, val);
-		mKeys.set(f, key);
-		mFree = mNext.get(f);
-		return true;
+		var i = mFree;
+		var first = mH.set(key, i);
+		mVals.set(i, val);
+		mKeys.set(i, key);
+		mFree = mNext.get(i);
+		mSize++;
+		return first;
 	}
 	
 	/**
@@ -422,13 +409,12 @@ class IntHashTable<T> implements Map<Int, T>
 		
 		if (i == IntIntHashTable.KEY_ABSENT) return false;
 		
-		invalidate();
-		
 		mVals.set(i, cast null);
 		mKeys.set(i, IntIntHashTable.KEY_ABSENT);
 		mNext.set(i, mFree);
 		mFree = i;
 		mH.delete(key);
+		mSize--;
 		return true;
 	}
 	
@@ -439,10 +425,8 @@ class IntHashTable<T> implements Map<Int, T>
 	{
 		var s = new ListSet<T>(), k = mKeys, v = mVals;
 		for (i in 0...capacity)
-		{
 			if (k.get(i) != IntIntHashTable.KEY_ABSENT)
 				s.set(v.get(i));
-		}
 		return s;
 	}
 	
@@ -545,8 +529,6 @@ class IntHashTable<T> implements Map<Int, T>
 		mVals = t;
 	}
 	
-	inline function invalidate() mLastKey = IntIntHashTable.KEY_ABSENT;
-	
 	/* INTERFACE Collection */
 	
 	/**
@@ -555,7 +537,7 @@ class IntHashTable<T> implements Map<Int, T>
 	public var size(get, never):Int;
 	inline function get_size():Int
 	{
-		return mH.size;
+		return mSize;
 	}
 	
 	/**
@@ -583,7 +565,7 @@ class IntHashTable<T> implements Map<Int, T>
 			mIterator.free();
 			mIterator = null;
 		}
-		mTmpArr = null;
+		mTmpKeyBuffer = null;
 	}
 	
 	/**
@@ -600,7 +582,7 @@ class IntHashTable<T> implements Map<Int, T>
 	**/
 	public function remove(x:T):Bool
 	{
-		var t = mTmpArr;
+		var b = mTmpKeyBuffer;
 		var c = 0;
 		var k = mKeys, v = mVals, j;
 		for (i in 0...capacity)
@@ -608,9 +590,9 @@ class IntHashTable<T> implements Map<Int, T>
 			j = k.get(i);
 			if (j != IntIntHashTable.KEY_ABSENT)
 				if (v.get(i) == x)
-					t[c++] = j;
+					b[c++] = j;
 		}
-		for (i in 0...c) delete(t[i]);
+		for (i in 0...c) delete(b[i]);
 		return c > 0;
 	}
 	
@@ -629,6 +611,7 @@ class IntHashTable<T> implements Map<Int, T>
 		for (i in 0...capacity - 1) t.set(i, i + 1);
 		t.set(capacity - 1, IntIntHashTable.NULL_POINTER);
 		mFree = 0;
+		mSize = 0;
 	}
 
 	/**
@@ -657,7 +640,7 @@ class IntHashTable<T> implements Map<Int, T>
 	**/
 	public inline function isEmpty():Bool
 	{
-		return mH.isEmpty();
+		return mSize == 0;
 	}
 	
 	/**
@@ -687,6 +670,7 @@ class IntHashTable<T> implements Map<Int, T>
 		var c = new IntHashTable<T>(slotCount, size);
 		c.mH = cast mH.clone(false);
 		c.mSize = size;
+		c.mFree = mFree;
 		
 		var src = mVals;
 		var dst = c.mVals;
@@ -708,8 +692,14 @@ class IntHashTable<T> implements Map<Int, T>
 			else
 			{
 				for (i in 0...size)
+				{
 					if (hasKey(i))
+					{
+						assert(Std.is(src.get(i), Cloneable), "element is not of type Cloneable");
+						
 						dst.set(i, cast(src.get(i), Cloneable<Dynamic>).clone());
+					}
+				}
 			}
 		}
 		
@@ -720,7 +710,6 @@ class IntHashTable<T> implements Map<Int, T>
 		mKeys.blit(0, c.mKeys, 0, size);
 		mNext.blit(0, c.mNext, 0, size);
 		#end
-		c.mFree = mFree;
 		return c;
 	}
 }

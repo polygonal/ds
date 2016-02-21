@@ -1558,28 +1558,23 @@ class IntIntHashTable implements Map<Int, Int>
 	**/
 	public function clone(assign:Bool = true, copier:Int->Int = null):Collection<Int>
 	{
-		var c = Type.createEmptyInstance(IntIntHashTable);
-		c.key = HashKey.next();
-		c.capacity = capacity;
-		c.growthRate = GrowthRate.NORMAL;
-		c.reuseIterator = false;
-		c.slotCount = slotCount;
-		c.mMinCapacity = mMinCapacity;
-		c.mMask = mMask;
-		c.mFree = mFree;
-		c.mSize = size;
-		c.mIterator = null;
-		c.mTmpBuffer = NativeArrayTools.init(16);
+		var c = new IntIntHashTable(slotCount, capacity);
 		
 		#if alchemy
-		c.mHash = mHash.clone();
-		c.mData = mData.clone();
-		c.mNext = mNext.clone();
+		IntMemory.blit(mHash, 0, c.mHash, 0, slotCount);
+		IntMemory.blit(mData, 0, c.mData, 0, capacity * 3);
+		IntMemory.blit(mNext, 0, c.mNext, 0, capacity);
 		#else
-		c.mHash = NativeArrayTools.copy(mHash);
-		c.mData = NativeArrayTools.copy(mData);
-		c.mNext = NativeArrayTools.copy(mNext);
+		mHash.blit(0, c.mHash, 0, slotCount);
+		mData.blit(0, c.mData, 0, capacity * 3);
+		mNext.blit(0, c.mNext, 0, capacity);
 		#end
+		
+		c.mMask = mMask;
+		c.slotCount = slotCount;
+		c.capacity = capacity;
+		c.mFree = mFree;
+		c.mSize = size;
 		return c;
 	}
 }

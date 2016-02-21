@@ -480,6 +480,7 @@ class HashSet<T:Hashable> implements Set<T>
 		var c = new HashSet<T>(slotCount, size);
 		c.mH = cast mH.clone();
 		c.mSize = size;
+		c.mFree = mFree;
 		
 		var src = mVals;
 		var dst = c.mVals;
@@ -519,7 +520,6 @@ class HashSet<T:Hashable> implements Set<T>
 		#else
 		mNext.blit(0, c.mNext, 0, size);
 		#end
-		c.mFree = mFree;
 		return c;
 	}
 }

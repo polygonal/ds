@@ -757,22 +757,19 @@ class TestIntIntHashTable extends AbstractTest
 		for (i in 0...8) h.set(i, i);
 		
 		var c:IntIntHashTable = cast h.clone(true);
-		
-		var i = 0;
-		var l = new Dll<Int>();
+		for (i in 0...8) assertTrue(h.has(i));
+		for (i in 0...8) assertEquals(i, h.get(i));
+		assertEquals(8, c.size);
+		assertEquals(8, c.capacity);
+		assertEquals(8, Lambda.count(c));
+		var keys = [];
 		for (key in c)
 		{
-			l.append(key);
-			i++;
+			keys.push(key);
 		}
-		
-		l.sort(function(a, b) { return a - b; } );
-		
-		var a:Array<Int> = l.toArray();
-		for (i in 0...a.length)
-			assertEquals(i, a[i]);
-		
-		assertEquals(8, i);
+		keys.sort(function(a, b) return a - b);
+		for (i in 0...keys.length)
+			assertEquals(i, keys[i]);
 	}
 	
 	function testToArray()

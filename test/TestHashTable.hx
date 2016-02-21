@@ -3,6 +3,7 @@ import de.polygonal.ds.Container;
 import de.polygonal.ds.HashableItem;
 import de.polygonal.ds.HashTable;
 import de.polygonal.ds.IntIntHashTable;
+import de.polygonal.ds.tools.GrowthRate;
 import de.polygonal.ds.tools.NativeArrayTools;
 
 class TestHashTable extends AbstractTest
@@ -89,12 +90,57 @@ class TestHashTable extends AbstractTest
 		assertEquals(10, h.get(items[0]));
 	}
 	
+	function testPack()
+	{
+		var keys = new Array<E>();
+		for (i in 0...32) keys.push(new E(i));
+		
+		var h = new HashTable<E, Null<Int>>(16, 16);
+		for (i in 0...16) h.set(keys[i], i);
+		for (i in 0...16) assertTrue(h.has(i));
+		
+		assertEquals(16, h.size);
+		assertEquals(16, h.capacity);
+		for (i in 0...12) assertTrue(h.remove(i));
+		h.pack();
+		assertEquals(4, h.size);
+		assertEquals(16, h.capacity);
+		
+		var h = new HashTable<E, Null<Int>>(16, 4);
+		for (i in 0...8) h.set(keys[i], i);
+		for (i in 0...8) assertTrue(h.has(i));
+		assertEquals(8, h.size);
+		assertEquals(8, h.capacity);
+		for (i in 0...6) assertTrue(h.remove(i));
+		
+		h.pack();
+		assertEquals(2, h.size);
+		assertEquals(4, h.capacity);
+		
+		assertTrue(h.has(6));
+		assertTrue(h.has(7));
+		
+		var h = new HashTable<E, Null<Int>>(16, 2);
+		for (i in 0...16) h.set(keys[i], i);
+		for (i in 0...16)
+		{
+			h.remove(i);
+			h.pack();
+			assertEquals(Math.max(2, 16 - (i + 1)), h.capacity);
+			for (j in i + 1...16)
+			{
+				assertTrue(h.hasKey(keys[j]));
+				assertTrue(h.has(j));
+			}
+		}
+	}
+	
 	function testSetFirst()
 	{
 		var items = new Array<E>();
 		for (i in 0...32) items.push(new E(i));
 		
-		var h = new HashTable<E, Null<Int>>(4);
+		var h = new HashTable<E, Null<Int>>(4, 4);
 		for (i in 0...32)
 		{
 			assertTrue(h.setIfAbsent(items[i], i));
@@ -302,6 +348,7 @@ class TestHashTable extends AbstractTest
 	function testResizeSmall()
 	{
 		var h = new HashTable<E, E>(16, 2);
+		h.growthRate = GrowthRate.DOUBLE;
 		
 		var items = new Array<E>();
 		
@@ -357,18 +404,25 @@ class TestHashTable extends AbstractTest
 			
 			for (i in 0...12)
 				assertTrue(h.delete(items.pop()));
-			assertEquals(8, h.capacity);
+			
+			h.pack();
+			
+			assertEquals(4, h.capacity);
 			assertEquals(4, h.size);
 			for (i in items) assertEquals(i, h.get(i));
 			
 			for (i in 0...2) assertTrue(h.delete(items.pop()));
 			
-			assertEquals(4, h.capacity);
+			h.pack();
+			
+			assertEquals(2, h.capacity);
 			assertEquals(2, h.size);
 			for (i in items) assertEquals(i, h.get(i));
 			
 			assertTrue(h.delete(items.pop()));
 			assertTrue(h.delete(items.pop()));
+			
+			h.pack();
 			
 			assertEquals(2, h.capacity);
 			assertEquals(0, h.size);
@@ -611,12 +665,13 @@ class TestHashTable extends AbstractTest
 		var items = new Array<E>();
 		for (i in 0...16) items.push(new E(i));
 		
-		initPrng();
+		var a = [for (j in 0...16) j];
 		for (i in 0...100)
 		{
-			for (i in 0...16) h.setIfAbsent(items[i], i);
-			for (i in 0...16) assertEquals(i, h.get(items[i]));
-			for (i in 0...16) assertTrue(h.delete(items[i]));
+			ArrayTools.shuffle(a);
+			for (i in 0...16) assertTrue(h.setIfAbsent(items[a[i]], a[i]));
+			for (i in 0...16) assertEquals(a[i], h.get(items[a[i]]));
+			for (i in 0...16) assertTrue(h.delete(items[a[i]]));
 		}
 	}
 	
@@ -768,7 +823,7 @@ class TestHashTable extends AbstractTest
 		assertEquals(0, values.length);
 	}
 	
-	function testToKeyArrayOrVector()
+	function testToKeyArray()
 	{
 		var items = new Array<E>();
 		for (i in 0...8) items.push(new E(i));
@@ -831,27 +886,6 @@ class TestHashTable extends AbstractTest
 		
 		for (i in 0...16)
 			assertEquals(i, h.get(items[i]));
-			
-		//test with purge
-		var items = new Array<E>();
-		for (i in 0...16) items.push(new E(i));
-		
-		var h = new HashTable<E, Null<Int>>(8);
-		for (i in 0...16) h.set(items[i], i);
-		h.clear(true);
-		
-		assertEquals(8, h.capacity);
-		assertEquals(0, h.size);
-		
-		for (i in 0...16) h.set(items[i], i);
-		assertEquals(16, h.capacity);
-		for (i in 0...16) assertEquals(i, h.get(items[i]));
-		
-		h.clear(true);
-		
-		for (i in 0...16) h.set(items[i], i);
-		assertEquals(16, h.capacity);
-		for (i in 0...16) assertEquals(i, h.get(items[i]));
 	}
 	
 	function testValIterator()
