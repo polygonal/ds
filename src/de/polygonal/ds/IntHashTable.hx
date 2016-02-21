@@ -608,7 +608,11 @@ class IntHashTable<T> implements Map<Int, T>
 	{
 		mH.clear(gc);
 		
+		#if alchemy
+		mKeys.setAll(IntIntHashTable.KEY_ABSENT);
+		#else
 		mKeys.assign(IntIntHashTable.KEY_ABSENT, 0, capacity);
+		#end
 		
 		var t = mNext;
 		for (i in 0...capacity - 1) t.set(i, i + 1);
