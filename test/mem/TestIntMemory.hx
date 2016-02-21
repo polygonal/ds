@@ -231,6 +231,47 @@ class TestIntMemory extends AbstractTest
 	}
 	#end
 	
+	function testBlit()
+	{
+		var src = new IntMemory(64);
+		for (i in 0...64) src.set(i, i);
+		
+		var dst = new IntMemory(64);
+		IntMemory.blit(src, 0, dst, 0, 64);
+		for (i in 0...64) assertEquals(i, dst.get(i));
+		
+		src.set(10, 100);
+		IntMemory.blit(src, 10, dst, 10, 1);
+		assertEquals(100, dst.get(10));
+		
+		src.set(11, 110);
+		IntMemory.blit(src, 10, dst, 10, 2);
+		assertEquals(100, dst.get(10));
+		assertEquals(110, dst.get(11));
+		
+		src.set(12, 120);
+		IntMemory.blit(src, 10, dst, 10, 3);
+		assertEquals(100, dst.get(10));
+		assertEquals(110, dst.get(11));
+		assertEquals(120, dst.get(12));
+		
+		dst.free();
+		
+		for (i in 0...64) src.set(i, i);
+		IntMemory.blit(src, 0, src, 16, 32);
+		for (i in 16...16 + 32) assertEquals(i - 16, src.get(i));
+		for (i in 0...16) assertEquals(i, src.get(i));
+		for (i in 16+32...64) assertEquals(i, src.get(i));
+		
+		for (i in 0...64) src.set(i, i);
+		IntMemory.blit(src, 32, src, 16, 32);
+		for (i in 16...16 + 32) assertEquals(i + 16, src.get(i));
+		for (i in 0...16) assertEquals(i, src.get(i));
+		for (i in 16+32...64) assertEquals(i, src.get(i));
+		
+		#if alchemy MemoryManager.free(); #end
+	}
+	
 	function fillData(data:IntMemory)
 	{
 		for (i in 0...data.size) data.set(i, i % 10);

@@ -31,6 +31,97 @@ import haxe.ds.Vector;
 **/
 class IntMemory extends MemoryAccess
 {
+	public static function blit(src:IntMemory, srcPos:Int, dst:IntMemory, dstPos:Int, len:Int)
+	{
+		if (len <= 0) return;
+		
+		#if (alchemy && flash)
+		assert(srcPos < src.size, "srcPos out of range");
+		assert(dstPos < dst.size, "dstPos out of range");
+		assert(srcPos + len <= src.size && dstPos + len <= dst.size, "len out of range");
+		
+		var i, j;
+		if (src == dst)
+		{
+			if (srcPos < dstPos)
+			{
+				i = src.getAddr(srcPos + len);
+				j = dst.getAddr(dstPos + len);
+				for (k in 0...len)
+				{
+					i -= 4;
+					j -= 4;
+					flash.Memory.setI32(j, flash.Memory.getI32(i));
+				}
+			}
+			else
+			if (srcPos > dstPos)
+			{
+				i = src.getAddr(srcPos);
+				j = dst.getAddr(dstPos);
+				for (k in 0...len)
+				{
+					flash.Memory.setI32(j, flash.Memory.getI32(i));
+					i += 4;
+					j += 4;
+				}
+			}
+		}
+		else
+		{
+			i = src.getAddr(srcPos);
+			j = dst.getAddr(dstPos);
+			for (k in 0...len >> 1)
+			{
+				flash.Memory.setDouble(j, flash.Memory.getDouble(i));
+				i += 8;
+				j += 8;
+			}
+			if (len & 1 > 0)
+				flash.Memory.setI32(j, flash.Memory.getI32(i));
+		}
+		#else
+		var i, j;
+		if (src == dst)
+		{
+			if (srcPos < dstPos)
+			{
+				i = srcPos + len;
+				j = dstPos + len;
+				for (k in 0...len)
+				{
+					i--;
+					j--;
+					dst.set(j, src.get(i));
+				}
+			}
+			else
+			if (srcPos > dstPos)
+			{
+				i = srcPos;
+				j = dstPos;
+				for (k in 0...len)
+				{
+					dst.set(j, src.get(i));
+					i++;
+					j++;
+				}
+			}
+		}
+		else
+		{
+			i = srcPos;
+			j = dstPos;
+			for (k in 0...len)
+			{
+				dst.set(j, src.get(i));
+				i++;
+				j++;
+			}
+		}
+		#end
+	}
+	
 	/**
 		Converts `input` in the range [`min`, `max`] to a byte array.
 		If no range is specified, all `input` bytes are copied.
