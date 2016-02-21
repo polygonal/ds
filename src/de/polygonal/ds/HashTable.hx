@@ -365,7 +365,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		
 		var t;
 		#if alchemy
-		mNext.resize(newSize);
+		mNext.resize(capacity);
 		#else
 		var t = NativeArrayTools.init(capacity);
 		for (i in 0...oldCapacity) t[i] = mNext[i];
