@@ -156,9 +156,9 @@ class IntHashSet implements Set<Int>
 		mData = new IntMemory(capacity << 1, "IntHashSet.mData");
 		mNext = new IntMemory(capacity, "IntHashSet.mNext");
 		#else
-		mHash = NativeArrayTools.init(slotCount).assign(EMPTY_SLOT);
-		mData = NativeArrayTools.init(capacity << 1);
-		mNext = NativeArrayTools.init(capacity);
+		mHash = NativeArrayTools.create(slotCount).init(EMPTY_SLOT);
+		mData = NativeArrayTools.create(capacity << 1);
+		mNext = NativeArrayTools.create(capacity);
 		#end
 		
 		var j = 1, t = mData;
@@ -531,7 +531,7 @@ class IntHashSet implements Set<Int>
 		mData = dst;
 		mNext.resize(capacity);
 		#else
-		dst = NativeArrayTools.init(capacity << 1);
+		dst = NativeArrayTools.create(capacity << 1);
 		for (i in 0...slotCount)
 		{
 			j = t.get(i);
@@ -550,7 +550,7 @@ class IntHashSet implements Set<Int>
 			}
 		}
 		mData = dst;
-		mNext = NativeArrayTools.init(capacity);
+		mNext = NativeArrayTools.create(capacity);
 		#end
 		
 		var n = mNext;
@@ -577,10 +577,10 @@ class IntHashSet implements Set<Int>
 		mNext.resize(capacity);
 		mData.resize(capacity << 1);
 		#else
-		t = NativeArrayTools.init(capacity);
+		t = NativeArrayTools.create(capacity);
 		mNext.blit(0, t, 0, oldCapacity);
 		mNext = t;
-		t = NativeArrayTools.init(capacity << 1);
+		t = NativeArrayTools.create(capacity << 1);
 		mData.blit(0, t, 0, oldCapacity << 1);
 		mData = t;
 		#end

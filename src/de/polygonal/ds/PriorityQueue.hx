@@ -97,7 +97,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 			capacity = M.max(mSize, capacity);
 		}
 		
-		mData = NativeArrayTools.init(capacity + 1);
+		mData = NativeArrayTools.create(capacity + 1);
 		mData.set(0, cast null); //reserved
 		
 		#if debug
@@ -118,15 +118,17 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	**/
 	public function pack()
 	{
-		/*if (mData.length - 1 == size) return;
-		
-		var t = mData;
-		mData = ArrayTools.alloc(size + 1);
-		
-		mData.set(0, cast null);
-		
-		for (i in 1...size + 1) mData.set(i, t.get(i));
-		for (i in size + 1...t.length) t.set(i, null);*/
+		if (capacity > mInitialCapacity)
+		{
+			capacity = M.max(mInitialCapacity, mSize);
+			resizeContainer(capacity);
+		}
+		else
+		{
+			var d = mData;
+			for (i in mSize...capacity) d.set(i, cast null);
+		}
+		return this;
 	}
 	
 	/**
@@ -282,7 +284,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 		if (isEmpty()) return [];
 		
 		var out = ArrayTools.alloc(size);
-		var t = NativeArrayTools.copy(mData);
+		var t = mData.copy();
 		var k = size;
 		var j = 0, i, c, v, s, u;
 		
@@ -542,7 +544,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	**/
 	public function toArray():Array<T>
 	{
-		return NativeArrayTools.toArray(mData, 1, size);
+		return mData.toArray(1, size);
 	}
 	
 	/**
@@ -755,8 +757,8 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	
 	function resizeContainer(newSize:Int)
 	{
-		var t = NativeArrayTools.init(newSize + 1);
-		NativeArrayTools.blit(mData, 0, t, 0, mSize + 1);
+		var t = NativeArrayTools.create(newSize + 1);
+		mData.blit(0, t, 0, mSize + 1);
 		mData = t;
 	}
 }
@@ -786,8 +788,8 @@ class PriorityQueueIterator<T:(Prioritizable)> implements de.polygonal.ds.Itr<T>
 	{
 		mI = 0;
 		mS = mObject.size;
-		mData = NativeArrayTools.init(mS);
-		NativeArrayTools.blit(mObject.mData, 1, mData, 0, mS);
+		mData = NativeArrayTools.create(mS);
+		mObject.mData.blit(1, mData, 0, mS);
 		return this;
 	}
 	

@@ -1,6 +1,7 @@
 ﻿import de.polygonal.ds.Container;
 import de.polygonal.ds.Heap;
 import de.polygonal.ds.Heapable;
+import de.polygonal.ds.tools.GrowthRate;
 import de.polygonal.ds.tools.NativeArrayTools;
 
 @:access(de.polygonal.ds.Heap)
@@ -23,7 +24,7 @@ class TestHeap extends AbstractTest
 		for (i in 0...4) assertEquals((4 - i) - 1, Std.int(heap.pop().y));
 	}
 	
-	function testGrow()
+	function testGrowPack()
 	{
 		var heap = new Heap<E2>(4);
 		assertEquals(4, heap.capacity);
@@ -32,6 +33,21 @@ class TestHeap extends AbstractTest
 		heap.add(new E2(50));
 		assertTrue(heap.capacity > 4);
 		assertEquals(5, heap.size);
+		
+		var heap = new Heap<E2>(4);
+		heap.growthRate = 10;
+		assertEquals(4, heap.capacity);
+		for (i in 0...20) heap.add(new E2(i));
+		assertEquals(24, heap.capacity);
+		
+		for (i in 0...10) assertEquals(20 - (i + 1), Std.int(heap.pop().y));
+		
+		assertEquals(24, heap.capacity);
+		heap.pack();
+		assertEquals(10, heap.capacity);
+		
+		for (i in 0...10) assertEquals(10 - (i + 1), Std.int(heap.pop().y));
+		assertEquals(0, heap.size);
 	}
 	
 	function testChange()
@@ -215,29 +231,6 @@ class TestHeap extends AbstractTest
 		
 		for (i in 1...8) assertEquals(i - 1, d[i].ID);
 	}
-	
-	/*function _testPack()
-	{
-		var l = new de.polygonal.ds.Heap<E1>();
-		l.add(new E1(0));
-		l.add(new E1(1));
-		l.add(new E1(2));
-		
-		l.clear();
-		
-		var a:Container<E1> = l.mData;
-		
-		assertEquals(null, a[0]);
-		assertEquals(0, a[1].ID);
-		assertEquals(1, a[2].ID);
-		assertEquals(2, a[3].ID);
-		
-		l.pack();
-		
-		var a:Container<E1> = l.mData;
-		assertEquals(1, a.length);
-		assertEquals(null, a[0]);
-	}*/
 	
 	function testFront()
 	{

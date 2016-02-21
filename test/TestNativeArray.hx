@@ -14,14 +14,14 @@ class TestNativeArray extends AbstractTest
 	
 	function testLength()
 	{
-		var v = NativeArrayTools.init(10);
+		var v = NativeArrayTools.create(10);
 		var length = NativeArrayTools.size(v);
 		assertEquals(10, length);
 	}
 	
 	function testBlit()
 	{
-		var v = NativeArrayTools.init(10);
+		var v = NativeArrayTools.create(10);
 		
 		for (i in 0...10) v.set(i, i);
 		NativeArrayTools.blit(v, 0, v, 1, 10 - 1);
@@ -40,7 +40,7 @@ class TestNativeArray extends AbstractTest
 	
 	function testToArray()
 	{
-		var v = NativeArrayTools.init(10);
+		var v = NativeArrayTools.create(10);
 		for (i in 0...10) v.set(i, i);
 		
 		var a = NativeArrayTools.toArray(v, 0, 10);
@@ -61,7 +61,7 @@ class TestNativeArray extends AbstractTest
 	
 	function testBinarySearch()
 	{
-		var v = NativeArrayTools.init(10);
+		var v = NativeArrayTools.create(10);
 		for (i in 0...10) v.set(i, i);
 		
 		var i = v.binarySearchCmp(5, 0, 9, function(a:Int, b:Int) return a - b);
@@ -73,7 +73,7 @@ class TestNativeArray extends AbstractTest
 		var i = v.binarySearchCmp(-20, 0, 9, function(a:Int, b:Int) return a - b);
 		assertEquals(0, ~i);
 		
-		var v:Container<Float> = NativeArrayTools.init(10);
+		var v:Container<Float> = NativeArrayTools.create(10);
 		for (i in 0...10) v.set(i, i + .001);
 		
 		var i = v.binarySearchf(5, 0, 9);
@@ -83,7 +83,7 @@ class TestNativeArray extends AbstractTest
 		var i = v.binarySearchf(-20., 0, 9);
 		assertEquals(0, ~i);
 		
-		var v:Container<Int> = NativeArrayTools.init(10);
+		var v:Container<Int> = NativeArrayTools.create(10);
 		for (i in 0...10) v.set(i, i);
 		var i = v.binarySearchi(5, 0, 9);
 		assertEquals(5, i);
@@ -95,7 +95,7 @@ class TestNativeArray extends AbstractTest
 	
 	function testCopy()
 	{
-		var v = NativeArrayTools.init(10);
+		var v = NativeArrayTools.create(10);
 		for (i in 0...10) v.set(i, i);
 		
 		var c = v.copy();
@@ -106,7 +106,7 @@ class TestNativeArray extends AbstractTest
 	
 	function testZero()
 	{
-		var v = NativeArrayTools.init(10);
+		var v = NativeArrayTools.create(10);
 		for (i in 0...10) v.set(i, 1);
 		
 		v.zero(0, 10);
@@ -116,12 +116,12 @@ class TestNativeArray extends AbstractTest
 	
 	function testNullify()
 	{
-		var v = NativeArrayTools.init(10);
+		var v = NativeArrayTools.create(10);
 		for (i in 0...10) v.set(i, 1);
 		v.nullify();
 		for (i in 0...10) assertEquals(isDynamic() ? null : 0, v.get(i));
 		
-		var v = NativeArrayTools.init(10);
+		var v = NativeArrayTools.create(10);
 		for (i in 0...10) v.set(i, new E());
 		v.nullify();
 		for (i in 0...10) assertEquals(null, v.get(i));

@@ -706,7 +706,7 @@ class TestIntIntHashTable extends AbstractTest
 		}
 	}
 	
-	function _testResize1()
+	function testResize1()
 	{
 		var h = new IntIntHashTable(8);
 		h.growthRate = GrowthRate.DOUBLE;

@@ -133,7 +133,7 @@ class Array2<T> implements Collection<T>
 			mW = width;
 			mH = height;
 			
-			var d = mData = NativeArrayTools.init(size);
+			var d = mData = NativeArrayTools.create(size);
 			for (i in 0...size) d.set(i, source[i]);
 		}
 		else
@@ -141,7 +141,7 @@ class Array2<T> implements Collection<T>
 			assert(width >= 2 && height >= 2, 'invalid size (width:$width, height:$height)');
 			mW = width;
 			mH = height;
-			mData = NativeArrayTools.init(size);
+			mData = NativeArrayTools.create(size);
 		}
 	}
 	
@@ -392,7 +392,7 @@ class Array2<T> implements Collection<T>
 		if (width == mW && height == mH) return;
 		
 		var t = mData;
-		mData = NativeArrayTools.init(width * height);
+		mData = NativeArrayTools.create(width * height);
 		
 		var minX = width < mW ? width : mW;
 		var minY = height < mH ? height : mH;
@@ -514,7 +514,7 @@ class Array2<T> implements Collection<T>
 		assert(input != null, "input is null");
 		assert(input.length >= cols, "insufficient input values");
 		
-		var t = NativeArrayTools.init(mW * (mH + 1));
+		var t = NativeArrayTools.create(mW * (mH + 1));
 		mData.blit(0, t, 0, size);
 		mData = t;
 		var s = size, d = mData;
@@ -531,7 +531,7 @@ class Array2<T> implements Collection<T>
 		assert(input != null, "input is null");
 		assert(input.length >= rows, "insufficient input values");
 		
-		var t = NativeArrayTools.init((mW + 1) * mH);
+		var t = NativeArrayTools.create((mW + 1) * mH);
 		mData.blit(0, t, 0, size);
 		mData = t;
 		var y = size + mH, i = mH - 1, j = mH, x = mW, d = mData;
@@ -558,7 +558,7 @@ class Array2<T> implements Collection<T>
 		assert(input != null, "input is null");
 		assert(input.length >= cols, "insufficient input values");
 		
-		var t = NativeArrayTools.init(mW * (mH + 1));
+		var t = NativeArrayTools.create(mW * (mH + 1));
 		mData.blit(0, t, mW, size);
 		mData = t;
 		mH++;
@@ -575,7 +575,7 @@ class Array2<T> implements Collection<T>
 		assert(input != null, "input is null");
 		assert(input.length >= rows, "insufficient input values");
 		
-		var t = NativeArrayTools.init((mW + 1) * mH);
+		var t = NativeArrayTools.create((mW + 1) * mH);
 		mData.blit(0, t, 0, size);
 		mData = t;
 		var y = size + mH, i = mH - 1, j = mH, x = 0, d = mData;
@@ -692,7 +692,7 @@ class Array2<T> implements Collection<T>
 		}
 		else
 		{
-			var t = NativeArrayTools.init(size);
+			var t = NativeArrayTools.create(size);
 			for (y in 0...mH)
 				for (x in 0...mW)
 					t.set(x * mH + y, get(x, y));
@@ -952,7 +952,7 @@ class Array2<T> implements Collection<T>
 	**/
 	public function toArray():Array<T>
 	{
-		return NativeArrayTools.toArray(mData, 0, size);
+		return mData.toArray(0, size);
 	}
 	
 	/**
@@ -971,7 +971,7 @@ class Array2<T> implements Collection<T>
 		var dst = out.mData;
 		
 		if (assign)
-			NativeArrayTools.blit(src, 0, dst, 0, size);
+			src.blit(0, dst, 0, size);
 		else
 		{
 			if (copier == null)

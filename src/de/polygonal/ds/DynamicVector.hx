@@ -91,13 +91,13 @@ class DynamicVector<T> implements Collection<T>
 		if (source != null && source.length > 0)
 		{
 			mSize = source.length;
-			mData = NativeArrayTools.ofArray(source);
+			mData = source.ofArray();
 			capacity = size;
 		}
 		else
 		{
 			capacity = mInitialCapacity;
-			mData = NativeArrayTools.init(capacity);
+			mData = NativeArrayTools.create(capacity);
 		}
 	}
 	
@@ -162,7 +162,7 @@ class DynamicVector<T> implements Collection<T>
 		if (--mSize == 0) return x;
 		
 		#if (neko || java || cs || cpp)
-		NativeArrayTools.blit(d, 1, d, 0, size);
+		d.blit(1, d, 0, size);
 		#else
 		for (i in 0...size) d.set(i, d.get(i + 1));
 		#end
@@ -185,7 +185,7 @@ class DynamicVector<T> implements Collection<T>
 		if (size == capacity) grow();
 		
 		#if (neko || java || cs || cpp)
-		NativeArrayTools.blit(mData, 0, mData, 1, size);
+		mData.blit(0, mData, 1, size);
 		mData.set(0, x);
 		#else
 		var d = mData;
@@ -282,7 +282,7 @@ class DynamicVector<T> implements Collection<T>
 		#if (neko || java || cs || cpp)
 		var srcPos = i;
 		var dstPos = i + 1;
-		NativeArrayTools.blit(mData, srcPos, mData, dstPos, size - i);
+		mData.blit(srcPos, mData, dstPos, size - i);
 		mData.set(i, x);
 		#else
 		var d = mData;
@@ -305,7 +305,7 @@ class DynamicVector<T> implements Collection<T>
 		var d = mData;
 		var x = d.get(i);
 		#if (neko || java || cs || cpp)
-		NativeArrayTools.blit(d, i + 1, d, i, size - i);
+		d.blit(i + 1, d, i, size - i);
 		--mSize;
 		#else
 		var k = --mSize;
@@ -368,8 +368,8 @@ class DynamicVector<T> implements Collection<T>
 		if (size == 0) return "";
 		
 		#if (flash || cpp)
-		var t = NativeArrayTools.init(size);
-		NativeArrayTools.blit(mData, 0, t, 0, size);
+		var t = NativeArrayTools.create(size);
+		mData.blit(0, t, 0, size);
 		return t.join(sep);
 		#else
 		var k = size;
@@ -401,7 +401,7 @@ class DynamicVector<T> implements Collection<T>
 		
 		if (size == 0) return -1;
 		
-		if (cmp != null) return NativeArrayTools.binarySearchCmp(mData, x, from, size - 1, cmp);
+		if (cmp != null) return mData.binarySearchCmp(x, from, size - 1, cmp);
 		
 		assert(Std.is(x, Comparable), "element is not of type Comparable");
 		
@@ -492,8 +492,8 @@ class DynamicVector<T> implements Collection<T>
 			var sum = size + x.size;
 			var out = new DynamicVector<T>(sum);
 			out.mSize = sum;
-			NativeArrayTools.blit(mData, 0, out.mData, 0, size);
-			NativeArrayTools.blit(x.mData, 0, out.mData, size, x.size);
+			mData.blit(0, out.mData, 0, size);
+			x.mData.blit(0, out.mData, size, x.size);
 			return out;
 		}
 		else
@@ -502,7 +502,7 @@ class DynamicVector<T> implements Collection<T>
 			
 			var sum = size + x.size;
 			reserve(sum);
-			NativeArrayTools.blit(x.mData, 0, mData, size, x.size);
+			x.mData.blit(0, mData, size, x.size);
 			mSize = sum;
 			return this;
 		}
@@ -553,7 +553,7 @@ class DynamicVector<T> implements Collection<T>
 		assert(destination + n <= size);
 		assert(n <= size);
 		
-		NativeArrayTools.blit(mData, source, mData, destination, n);
+		mData.blit(source, mData, destination, n);
 	}
 	
 	/**
@@ -905,8 +905,8 @@ class DynamicVector<T> implements Collection<T>
 	
 	function resizeContainer(newSize:Int)
 	{
-		var t = NativeArrayTools.init(newSize);
-		NativeArrayTools.blit(mData, 0, t, 0, mSize);
+		var t = NativeArrayTools.create(newSize);
+		mData.blit(0, t, 0, mSize);
 		mData = t;
 	}
 	
@@ -969,7 +969,7 @@ class DynamicVector<T> implements Collection<T>
 			{
 				//TODO optimize
 				//#if (neko || java || cs || cpp)
-				//NativeArrayTools.blit(d, i + 1, d, i, s - i);
+				//d.blit(i + 1, d, i, s - i);
 				//s--;
 				//#else
 				s--;
@@ -1032,7 +1032,7 @@ class DynamicVector<T> implements Collection<T>
 	**/
 	public function toArray():Array<T>
 	{
-		return NativeArrayTools.toArray(mData, 0, size);
+		return mData.toArray(0, size);
 	}
 	
 	/**
@@ -1049,7 +1049,7 @@ class DynamicVector<T> implements Collection<T>
 		var src = mData;
 		var dst = out.mData;
 		if (assign)
-			NativeArrayTools.blit(src, 0, dst, 0, size);
+			src.blit(0, dst, 0, size);
 		else
 		if (copier == null)
 		{

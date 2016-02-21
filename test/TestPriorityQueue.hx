@@ -75,26 +75,24 @@ class TestPriorityQueue extends AbstractTest
 		for (i in 1...8) assertEquals(i - 1., d[i].priority);
 	}
 	
-	function _testPack()
+	function testPack()
 	{
-		/*var pq = new de.polygonal.ds.PriorityQueue<E>(false, 3);
-		pq.enqueue(new E(0));
-		pq.enqueue(new E(1));
-		pq.enqueue(new E(2));
-		pq.clear();
+		var pq = new PriorityQueue<E>(4);
+		pq.growthRate = 10;
+		assertEquals(4, pq.capacity);
+		for (i in 0...20) pq.enqueue(new E(i));
+		assertEquals(24, pq.capacity);
 		
-		var a:Container<E> = pq.mData;
-		assertEquals(null, a[0]);
-		assertEquals(2.  , a[1].priority);
-		assertEquals(0.  , a[2].priority);
-		assertEquals(1.  , a[3].priority);
+		for (i in 0...10) assertEquals(20 - (i + 1), Std.int(pq.dequeue().priority));
+		
+		assertEquals(24, pq.capacity);
 		pq.pack();
+		assertEquals(10, pq.capacity);
 		
-		var a:Container<E> = pq.mData;
-		assertEquals(null, a[0]);
-		assertEquals(null, a[1]);
-		assertEquals(null, a[2]);
-		assertEquals(null, a[3]);*/
+		return;
+		
+		for (i in 0...10) assertEquals(10 - (i + 1), Std.int(pq.dequeue().priority));
+		assertEquals(0, pq.size);
 	}
 	
 	function testInverse()

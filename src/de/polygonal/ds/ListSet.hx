@@ -74,7 +74,7 @@ class ListSet<T> implements Set<T>
 	{
 		mInitialCapacity = M.max(1, initialCapacity);
 		capacity = mInitialCapacity;
-		mData = NativeArrayTools.init(capacity);
+		mData = NativeArrayTools.create(capacity);
 		if (source != null) for (i in source) set(i);
 	}
 	
@@ -258,7 +258,7 @@ class ListSet<T> implements Set<T>
 	**/
 	public function toArray():Array<T>
 	{
-		return NativeArrayTools.toArray(mData, 0, size);
+		return mData.toArray(0, size);
 	}
 	
 	/**
@@ -273,7 +273,7 @@ class ListSet<T> implements Set<T>
 		var out = new ListSet<T>();
 		out.capacity = size;
 		out.mSize = size;
-		out.mData = NativeArrayTools.init(size);
+		out.mData = NativeArrayTools.create(size);
 		
 		var src = mData;
 		var dst = out.mData;
@@ -306,8 +306,8 @@ class ListSet<T> implements Set<T>
 	
 	function resizeContainer(newSize:Int)
 	{
-		var t = NativeArrayTools.init(newSize);
-		NativeArrayTools.blit(mData, 0, t, 0, mSize);
+		var t = NativeArrayTools.create(newSize);
+		mData.blit(0, t, 0, mSize);
 		mData = t;
 	}
 }

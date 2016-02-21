@@ -89,7 +89,7 @@ class ArrayedDeque<T> implements Deque<T>
 		mBlockSizeShift = Bits.ntz(blockSize);
 		mPoolCapacity = blockPoolCapacity;
 		mBlocks = new Array();
-		mBlocks[0] = NativeArrayTools.init(blockSize);
+		mBlocks[0] = NativeArrayTools.create(blockSize);
 		mHeadBlock = mBlocks[0];
 		mTailBlock = mHeadBlock;
 		mBlockPool = new Array<Container<T>>();
@@ -657,7 +657,7 @@ class ArrayedDeque<T> implements Deque<T>
 				mBlocks[i] = null;
 			}
 			mBlocks = new Array();
-			mBlocks[0] = NativeArrayTools.init(mBlockSize);
+			mBlocks[0] = NativeArrayTools.create(mBlockSize);
 			mHeadBlock = mBlocks[0];
 			for (i in 0...mBlockPool.length)
 				mBlockPool[i] = null;
@@ -754,7 +754,7 @@ class ArrayedDeque<T> implements Deque<T>
 		
 		var blocks = c.mBlocks = ArrayTools.alloc(mTailBlockIndex + 1);
 		for (i in 0...mTailBlockIndex + 1)
-			blocks[i] = NativeArrayTools.init(mBlockSize);
+			blocks[i] = NativeArrayTools.create(mBlockSize);
 		c.mHeadBlock = blocks[0];
 		c.mTailBlock = blocks[mTailBlockIndex];
 		if (mTailBlockIndex > 0)
@@ -894,7 +894,7 @@ class ArrayedDeque<T> implements Deque<T>
 		if (mPoolSize > 0)
 			return mBlockPool[--mPoolSize];
 		else
-			return NativeArrayTools.init(mBlockSize);
+			return NativeArrayTools.create(mBlockSize);
 	}
 	
 	inline function putBlock(x:Container<T>)

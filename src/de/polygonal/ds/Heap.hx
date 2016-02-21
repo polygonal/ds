@@ -88,7 +88,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 			capacity = M.max(mSize, capacity);
 		}
 		
-		mData = NativeArrayTools.init(capacity + 1);
+		mData = NativeArrayTools.create(capacity + 1);
 		mData.set(0, cast null); //reserved
 		
 		#if debug
@@ -230,7 +230,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 		if (isEmpty()) return [];
 		
 		var out = ArrayTools.alloc(size);
-		var t = NativeArrayTools.copy(mData);
+		var t = mData.copy();
 		var k = size;
 		var j = 0, i, c, v, s, u;
 		while (k > 0)
@@ -308,27 +308,6 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 			var d = mData;
 			for (i in mSize...capacity) d.set(i, cast null);
 		}
-		
-		/*if (mData.length - 1 == size) return;
-		
-		#if debug
-		mMap = new haxe.ds.ObjectMap<T, Bool>();
-		#end
-		
-		var t = mData;
-		mData = NativeArrayTools.init(size + 1);
-		
-		var d = mData;
-		
-		d.set(0, cast null);
-		for (i in 1...size + 1)
-		{
-			d.set(i, t.get(i));
-			
-			#if debug
-			mMap.set(t.get(i), true);
-			#end
-		}*/
 		return this;
 	}
 	
@@ -487,8 +466,8 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	
 	function resizeContainer(newSize:Int)
 	{
-		var t = NativeArrayTools.init(newSize + 1);
-		NativeArrayTools.blit(mData, 0, t, 0, mSize + 1);
+		var t = NativeArrayTools.create(newSize + 1);
+		mData.blit(0, t, 0, mSize + 1);
 		mData = t;
 	}
 	
@@ -615,7 +594,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	**/
 	public function toArray():Array<T>
 	{
-		return NativeArrayTools.toArray(mData, 1, size);
+		return mData.toArray(1, size);
 	}
 	
 	/**
@@ -705,8 +684,8 @@ class HeapIterator<T:(Heapable<T>)> implements de.polygonal.ds.Itr<T>
 	{
 		mS = mObject.size;
 		mI = 0;
-		mData = NativeArrayTools.init(mS);
-		NativeArrayTools.blit(mObject.mData, 1, mData, 0, mS);
+		mData = NativeArrayTools.create(mS);
+		mObject.mData.blit(1, mData, 0, mS);
 		return this;
 	}
 	

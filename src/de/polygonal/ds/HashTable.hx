@@ -152,13 +152,13 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		mMinCapacity = capacity = initialCapacity;
 		
 		mH = new IntIntHashTable(slotCount, capacity);
-		mKeys = NativeArrayTools.init(capacity);
-		mVals = NativeArrayTools.init(capacity);
+		mKeys = NativeArrayTools.create(capacity);
+		mVals = NativeArrayTools.create(capacity);
 		
 		#if alchemy
 		mNext = new IntMemory(capacity, "HashTable.mNext");
 		#else
-		mNext = NativeArrayTools.init(capacity);
+		mNext = NativeArrayTools.create(capacity);
 		#end
 		
 		var t = mNext;
@@ -274,7 +274,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		#if alchemy
 		mNext.resize(capacity);
 		#else
-		mNext = NativeArrayTools.init(capacity);
+		mNext = NativeArrayTools.create(capacity);
 		#end
 		
 		var t = mNext;
@@ -283,10 +283,10 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		mFree = 0;
 		
 		var srcKeys = mKeys;
-		var dstKeys = NativeArrayTools.init(capacity);
+		var dstKeys = NativeArrayTools.create(capacity);
 		
 		var srcVals = mVals;
-		var dstVals = NativeArrayTools.init(capacity);
+		var dstVals = NativeArrayTools.create(capacity);
 		
 		var j = mFree;
 		for (i in mH)
@@ -367,7 +367,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		#if alchemy
 		mNext.resize(capacity);
 		#else
-		var t = NativeArrayTools.init(capacity);
+		var t = NativeArrayTools.create(capacity);
 		for (i in 0...oldCapacity) t[i] = mNext[i];
 		mNext = t;
 		#end
@@ -377,11 +377,11 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		t.set(capacity - 1, IntIntHashTable.NULL_POINTER);
 		mFree = oldCapacity;
 		
-		var t = NativeArrayTools.init(capacity);
+		var t = NativeArrayTools.create(capacity);
 		mVals.blit(0, t, 0, oldCapacity);
 		mVals = t;
 		
-		var t = NativeArrayTools.init(capacity);
+		var t = NativeArrayTools.create(capacity);
 		mKeys.blit(0, t, 0, oldCapacity);
 		mKeys = t;
 	}
@@ -613,8 +613,8 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	{
 		mH.clear(gc);
 		
-		mKeys.assign(null, 0, capacity);
-		mVals.assign(null, 0, capacity);
+		mKeys.init(null, 0, capacity);
+		mVals.init(null, 0, capacity);
 		
 		var t = mNext;
 		for (i in 0...capacity - 1) t.set(i, i + 1);

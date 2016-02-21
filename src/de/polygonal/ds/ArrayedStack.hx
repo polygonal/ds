@@ -94,7 +94,7 @@ class ArrayedStack<T> implements Stack<T>
 			capacity = M.max(mTop, capacity);
 		}
 		
-		mData = NativeArrayTools.init(capacity);
+		mData = NativeArrayTools.create(capacity);
 		
 		if (source != null)
 		{
@@ -148,8 +148,8 @@ class ArrayedStack<T> implements Stack<T>
 	{
 		if (size == x) return this;
 		
-		var t = NativeArrayTools.init(x);
-		NativeArrayTools.blit(mData, 0, t, 0, capacity);
+		var t = NativeArrayTools.create(x);
+		mData.blit(0, t, 0, capacity);
 		mData = t;
 		capacity = x;
 		return this;
@@ -613,8 +613,8 @@ class ArrayedStack<T> implements Stack<T>
 	
 	function resizeContainer(newSize:Int)
 	{
-		var t = NativeArrayTools.init(newSize);
-		NativeArrayTools.blit(mData, 0, t, 0, size);
+		var t = NativeArrayTools.create(newSize);
+		mData.blit(0, t, 0, size);
 		mData = t;
 	}
 }

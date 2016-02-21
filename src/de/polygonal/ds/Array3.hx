@@ -141,7 +141,7 @@ class Array3<T> implements Collection<T>
 		mW = width;
 		mH = height;
 		mD = depth;
-		mData = NativeArrayTools.init(size);
+		mData = NativeArrayTools.create(size);
 		
 		if (source != null)
 		{
@@ -440,7 +440,7 @@ class Array3<T> implements Collection<T>
 		if (width == mW && height == mH && depth == mD) return;
 		
 		var t = mData;
-		mData = NativeArrayTools.init(width * height * depth);
+		mData = NativeArrayTools.create(width * height * depth);
 		
 		var minX = width < mW ? width : mW;
 		var minY = height < mH ? height : mH;
@@ -660,7 +660,7 @@ class Array3<T> implements Collection<T>
 	**/
 	public function toArray():Array<T>
 	{
-		return NativeArrayTools.toArray(mData, 0, size);
+		return mData.toArray(0, size);
 	}
 	
 	/**
@@ -678,7 +678,7 @@ class Array3<T> implements Collection<T>
 		var dst = out.mData;
 		
 		if (assign)
-			NativeArrayTools.blit(src, 0, dst, 0, size);
+			src.blit(0, dst, 0, size);
 		else
 		{
 			if (copier == null)

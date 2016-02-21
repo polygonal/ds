@@ -9,7 +9,7 @@ using cpp.NativeArray;
 
 class NativeArrayTools
 {
-	public static inline function init<T>(len:Int):Container<T>
+	public static inline function create<T>(len:Int):Container<T>
 	{
 		#if flash10
 			#if (generic && !no_inline)
@@ -241,7 +241,7 @@ class NativeArrayTools
 		@param k the number of elements to put into `dst`.
 		If omitted `k` is set to `dst`::length;
 	**/
-	public static function assign<T>(dst:Container<T>, x:T, first:Int = 0, ?k:Null<Int>):Container<T>
+	public static function init<T>(dst:Container<T>, x:T, first:Int = 0, ?k:Null<Int>):Container<T>
 	{
 		if (k == null) k = size(dst);
 		for (i in first...first + k) set(dst, i, x);

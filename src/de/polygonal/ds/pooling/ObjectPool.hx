@@ -198,7 +198,7 @@ class ObjectPool<T> implements Hashable
 		#if alchemy
 		mNext = new de.polygonal.ds.mem.IntMemory(size, "ObjectPool.mNext");
 		#else
-		mNext = NativeArrayTools.init(size);
+		mNext = NativeArrayTools.create(size);
 		#end
 		
 		for (i in 0...size - 1) setNext(i, i + 1);

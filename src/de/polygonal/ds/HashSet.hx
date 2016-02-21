@@ -147,12 +147,12 @@ class HashSet<T:Hashable> implements Set<T>
 		mMinCapacity = capacity = initialCapacity;
 		
 		mH = new IntIntHashTable(slotCount, capacity);
-		mVals = NativeArrayTools.init(capacity);
+		mVals = NativeArrayTools.create(capacity);
 		mVals.nullify(capacity);
 		#if alchemy
 		mNext = new IntMemory(capacity, "HashSet.mNext");
 		#else
-		mNext = NativeArrayTools.init(capacity);
+		mNext = NativeArrayTools.create(capacity);
 		#end
 		
 		var t = mNext;
@@ -286,7 +286,7 @@ class HashSet<T:Hashable> implements Set<T>
 		#if alchemy
 		mNext.resize(capacity);
 		#else
-		mNext = NativeArrayTools.init(capacity);
+		mNext = NativeArrayTools.create(capacity);
 		#end
 		
 		var t = mNext;
@@ -295,7 +295,7 @@ class HashSet<T:Hashable> implements Set<T>
 		mFree = 0;
 		
 		var src = mVals;
-		var dst = NativeArrayTools.init(capacity);
+		var dst = NativeArrayTools.create(capacity);
 		var j = mFree, v;
 		for (i in mH)
 		{
@@ -322,7 +322,7 @@ class HashSet<T:Hashable> implements Set<T>
 		#if alchemy
 		mNext.resize(capacity);
 		#else
-		t = NativeArrayTools.init(capacity);
+		t = NativeArrayTools.create(capacity);
 		mNext.blit(0, t, 0, oldCapacity);
 		mNext = t;
 		#end
@@ -332,7 +332,7 @@ class HashSet<T:Hashable> implements Set<T>
 		t.set(capacity - 1, IntIntHashTable.NULL_POINTER);
 		mFree = oldCapacity;
 		
-		var t = NativeArrayTools.init(capacity);
+		var t = NativeArrayTools.create(capacity);
 		t.nullify();
 		mVals.blit(0, t, 0, oldCapacity);
 		mVals = t;

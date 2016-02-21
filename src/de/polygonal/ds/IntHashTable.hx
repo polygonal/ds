@@ -155,15 +155,15 @@ class IntHashTable<T> implements Map<Int, T>
 		mMinCapacity = capacity = initialCapacity;
 		
 		mH = new IntIntHashTable(slotCount, capacity);
-		mVals = NativeArrayTools.init(capacity);
+		mVals = NativeArrayTools.create(capacity);
 		
 		#if alchemy
 		mNext = new IntMemory(capacity, "IntHashTable.mNext");
 		mKeys = new IntMemory(capacity, "IntHashTable.mKeys");
 		mKeys.setAll(IntIntHashTable.KEY_ABSENT);
 		#else
-		mNext = NativeArrayTools.init(capacity);
-		mKeys = NativeArrayTools.init(capacity);
+		mNext = NativeArrayTools.create(capacity);
+		mKeys = NativeArrayTools.create(capacity);
 		for (i in 0...capacity) mKeys[i] = IntIntHashTable.KEY_ABSENT;
 		#end
 		
@@ -461,7 +461,7 @@ class IntHashTable<T> implements Map<Int, T>
 		#if alchemy
 		mNext.resize(capacity);
 		#else
-		mNext = NativeArrayTools.init(capacity);
+		mNext = NativeArrayTools.create(capacity);
 		#end
 		
 		var t = mNext;
@@ -474,11 +474,11 @@ class IntHashTable<T> implements Map<Int, T>
 		#if alchemy
 		var dstKeys = new IntMemory(capacity, "IntHashTable.mKeys");
 		#else
-		var dstKeys = NativeArrayTools.init(capacity);
+		var dstKeys = NativeArrayTools.create(capacity);
 		#end
 		
 		var srcVals = mVals;
-		var dstVals = NativeArrayTools.init(capacity);
+		var dstVals = NativeArrayTools.create(capacity);
 		
 		var j = mFree;
 		for (i in mH)
@@ -510,10 +510,10 @@ class IntHashTable<T> implements Map<Int, T>
 		mNext.resize(capacity);
 		mKeys.resize(capacity);
 		#else
-		t = NativeArrayTools.init(capacity);
+		t = NativeArrayTools.create(capacity);
 		mNext.blit(0, t, 0, oldCapacity);
 		mNext = t;
-		t = NativeArrayTools.init(capacity);
+		t = NativeArrayTools.create(capacity);
 		mKeys.blit(0, t, 0, oldCapacity);
 		mKeys = t;
 		#end
@@ -527,7 +527,7 @@ class IntHashTable<T> implements Map<Int, T>
 		t.set(capacity - 1, IntIntHashTable.NULL_POINTER);
 		mFree = oldCapacity;
 		
-		var t = NativeArrayTools.init(capacity);
+		var t = NativeArrayTools.create(capacity);
 		mVals.blit(0, t, 0, oldCapacity);
 		mVals = t;
 	}
@@ -611,7 +611,7 @@ class IntHashTable<T> implements Map<Int, T>
 		#if alchemy
 		mKeys.setAll(IntIntHashTable.KEY_ABSENT);
 		#else
-		mKeys.assign(IntIntHashTable.KEY_ABSENT, 0, capacity);
+		mKeys.init(IntIntHashTable.KEY_ABSENT, 0, capacity);
 		#end
 		
 		var t = mNext;

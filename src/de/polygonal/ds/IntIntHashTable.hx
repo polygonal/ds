@@ -179,9 +179,9 @@ class IntIntHashTable implements Map<Int, Int>
 		mData = new IntMemory(capacity * 3, "IntIntHashTable.mData");
 		mNext = new IntMemory(capacity, "IntIntHashTable.mNext");
 		#else
-		mHash = NativeArrayTools.init(slotCount).assign(EMPTY_SLOT);
-		mData = NativeArrayTools.init(capacity * 3);
-		mNext = NativeArrayTools.init(capacity);
+		mHash = NativeArrayTools.create(slotCount).init(EMPTY_SLOT);
+		mData = NativeArrayTools.create(capacity * 3);
+		mNext = NativeArrayTools.create(capacity);
 		#end
 		
 		var j = 2, t = mData;
@@ -196,7 +196,7 @@ class IntIntHashTable implements Map<Int, Int>
 		for (i in 0...capacity - 1) t.set(i, i + 1);
 		t.set(capacity - 1, NULL_POINTER);
 		
-		mTmpBuffer = NativeArrayTools.init(mTmpBufferSize);
+		mTmpBuffer = NativeArrayTools.create(mTmpBufferSize);
 	}
 	
 	/**
@@ -1296,7 +1296,7 @@ class IntIntHashTable implements Map<Int, Int>
 		mData = dst;
 		mNext.resize(capacity);
 		#else
-		dst = NativeArrayTools.init(capacity * 3);
+		dst = NativeArrayTools.create(capacity * 3);
 		for (i in 0...slotCount)
 		{
 			j = t.get(i);
@@ -1320,7 +1320,7 @@ class IntIntHashTable implements Map<Int, Int>
 			}
 		}
 		mData = dst;
-		mNext = NativeArrayTools.init(capacity);
+		mNext = NativeArrayTools.create(capacity);
 		#end
 		
 		var n = mNext;
@@ -1347,11 +1347,11 @@ class IntIntHashTable implements Map<Int, Int>
 		mNext.resize(capacity);
 		mData.resize(capacity * 3);
 		#else
-		t = NativeArrayTools.init(capacity);
-		NativeArrayTools.blit(mNext, 0, t, 0, oldCapacity);
+		t = NativeArrayTools.create(capacity);
+		mNext.blit(0, t, 0, oldCapacity);
 		mNext = t;
-		t = NativeArrayTools.init(capacity * 3);
-		NativeArrayTools.blit(mData, 0, t, 0, oldCapacity * 3);
+		t = NativeArrayTools.create(capacity * 3);
+		mData.blit(0, t, 0, oldCapacity * 3);
 		mData = t;
 		#end
 		
@@ -1442,7 +1442,7 @@ class IntIntHashTable implements Map<Int, Int>
 				{
 					max <<= 1;
 					mTmpBufferSize = max;
-					var t = NativeArrayTools.init(max);
+					var t = NativeArrayTools.create(max);
 					mTmpBuffer.blit(0, t, 0, c);
 					mTmpBuffer = keys = t;
 				}
@@ -1461,7 +1461,7 @@ class IntIntHashTable implements Map<Int, Int>
 				{
 					max <<= 1;
 					mTmpBufferSize = max;
-					var t = NativeArrayTools.init(max);
+					var t = NativeArrayTools.create(max);
 					mTmpBuffer.blit(0, t, 0, c);
 					mTmpBuffer = keys = t;
 				}
