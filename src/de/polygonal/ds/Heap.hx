@@ -374,11 +374,12 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 		var t = sort();
 		b.add("\n[ front\n");
 		var i = 0, args = new Array<Dynamic>();
+		var fmt = '  %${M.numDigits(size)}d: %s\n';
 		for (i in 0...size)
 		{
 			args[0] = i;
 			args[1] = Std.string(t[i]);
-			b.add(Printf.format("  %4d -> %s\n", args));
+			b.add(Printf.format(fmt, args));
 		}
 		b.add("]");
 		return b.toString();

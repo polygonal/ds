@@ -308,13 +308,14 @@ class ArrayedDeque<T> implements Deque<T>
 		b.add("\n[ front\n");
 		var args = new Array<Dynamic>();
 		var i = 0;
+		var fmt = ' %${M.numDigits(size)}d: %s\n';
 		if (mTailBlockIndex == 0)
 		{
 			for (j in mHead + 1...mTail)
 			{
 				args[0] = i++;
 				args[1] = Std.string(mHeadBlock.get(j));
-				b.add(Printf.format("  %4d -> %s\n", args));
+				b.add(Printf.format(fmt, args));
 			}
 		}
 		else
@@ -324,14 +325,14 @@ class ArrayedDeque<T> implements Deque<T>
 			{
 				args[0] = i++;
 				args[1] = Std.string(mHeadBlock.get(j));
-				b.add(Printf.format("  %4d -> %s\n", args));
+				b.add(Printf.format(fmt, args));
 			}
 			
 			for (j in 0...mTail)
 			{
 				args[0] = i++;
 				args[1] = Std.string(mTailBlock.get(j));
-				b.add(Printf.format("  %4d -> %s\n", args));
+				b.add(Printf.format(fmt, args));
 			}
 		}
 		else
@@ -340,7 +341,7 @@ class ArrayedDeque<T> implements Deque<T>
 			{
 				args[0] = i++;
 				args[1] = Std.string(mHeadBlock.get(j));
-				b.add(Printf.format("  %4d -> %s\n", args));
+				b.add(Printf.format(fmt, args));
 			}
 			
 			for (j in 1...mTailBlockIndex)
@@ -350,7 +351,7 @@ class ArrayedDeque<T> implements Deque<T>
 				{
 					args[0] = i++;
 					args[1] = Std.string(block.get(k));
-					b.add(Printf.format("  %4d -> %s\n", args));
+					b.add(Printf.format(fmt, args));
 				}
 			}
 			
@@ -358,7 +359,7 @@ class ArrayedDeque<T> implements Deque<T>
 			{
 				args[0] = i++;
 				args[1] = Std.string(mTailBlock.get(j));
-				b.add(Printf.format("  %4d -> %s\n", args));
+				b.add(Printf.format(fmt, args));
 			}
 		}
 		b.add("]");

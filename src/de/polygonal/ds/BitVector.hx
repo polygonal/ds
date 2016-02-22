@@ -19,6 +19,7 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 package de.polygonal.ds;
 
 import de.polygonal.ds.tools.Assert.assert;
+import de.polygonal.ds.tools.M;
 
 using de.polygonal.ds.tools.NativeArrayTools;
 
@@ -365,15 +366,16 @@ class BitVector implements Hashable
 	public function toString():String
 	{
 		var b = new StringBuf();
-		b.add('{ BitVector set/all: ${ones()}/${capacity} }');
+		b.add('{ BitVector bits: ${capacity} }');
 		if (ones() == 0) return b.toString();
 		b.add("\n[\n");
 		var args = new Array<Dynamic>();
+		var fmt = '  %${M.numDigits(mArrSize)}d: %.32b\n';
 		for (i in 0...mArrSize)
 		{
 			args[0] = i;
 			args[1] = mData.get(i);
-			b.add(Printf.format("  %4d -> %#.32b\n", args));
+			b.add(Printf.format(fmt, args));
 		}
 		b.add("]");
 		return b.toString();

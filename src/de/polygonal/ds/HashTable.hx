@@ -344,15 +344,16 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		if (isEmpty()) return b.toString();
 		b.add("\n[\n");
 		
-		var max = 0;
-		for (key in keys()) max = M.max(max, Std.string(key).length);
+		var l = 0;
+		for (key in keys()) l = M.max(l, Std.string(key).length);
 		
 		var args = new Array<Dynamic>();
+		var fmt = '  %- ${l}s -> %s\n';
 		for (key in keys())
 		{
 			args[0] = key;
 			args[1] = Std.string(get(key));
-			b.add(Printf.format('  %- ${max}s -> %s\n', args));
+			b.add(Printf.format(fmt, args));
 		}
 		b.add("]");
 		return b.toString();

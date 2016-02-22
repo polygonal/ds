@@ -407,17 +407,18 @@ class ArrayedStack<T> implements Stack<T>
 	public function toString():String
 	{
 		var b = new StringBuf();
-		b.add('{ ArrayedStack size: ${size} }');
+		b.add('{ ArrayedStack size/capacity: ${size}/${capacity} }');
 		if (isEmpty()) return b.toString();
 		b.add("\n[ top\n");
 		var i = mTop - 1;
 		var j = mTop - 1;
 		var d = mData, args = new Array<Dynamic>();
+		var fmt = '  %${M.numDigits(size)}d: %s\n';
 		while (i >= 0)
 		{
 			args[0] = j--;
 			args[1] = Std.string(d.get(i--));
-			b.add(Printf.format("  %4d -> %s\n", args));
+			b.add(Printf.format(fmt, args));
 		}
 		b.add("]");
 		return b.toString();

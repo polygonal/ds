@@ -21,6 +21,7 @@ package de.polygonal.ds;
 import de.polygonal.ds.Sll.SllIterator;
 import de.polygonal.ds.tools.ArrayTools;
 import de.polygonal.ds.tools.Assert.assert;
+import de.polygonal.ds.tools.M;
 
 using de.polygonal.ds.tools.NativeArrayTools;
 
@@ -699,12 +700,16 @@ class Sll<T> implements Collection<T>
 		if (isEmpty()) return b.toString();
 		b.add("\n[ head \n");
 		var node = head;
+		var args = new Array<Dynamic>();
+		var fmt = '  %${M.numDigits(size)}d: %s\n';
 		for (i in 0...size)
 		{
-			b.add('  ${Std.string(node.val)}\n');
+			args[0] = i;
+			args[1] = Std.string(node.val);
+			b.add(Printf.format(fmt, args));
 			node = node.next;
 		}
-		b.add("] tail");
+		b.add("]");
 		return b.toString();
 	}
 	

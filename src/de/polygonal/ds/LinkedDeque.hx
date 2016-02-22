@@ -20,6 +20,7 @@ package de.polygonal.ds;
 
 import de.polygonal.ds.tools.ArrayTools;
 import de.polygonal.ds.tools.Assert.assert;
+import de.polygonal.ds.tools.M;
 
 using de.polygonal.ds.tools.NativeArrayTools;
 
@@ -271,11 +272,12 @@ class LinkedDeque<T> implements Deque<T>
 		if (isEmpty()) return b.toString();
 		b.add("\n[ front\n");
 		var node = mHead, i = 0, args = new Array<Dynamic>();
+		var fmt = '  %${M.numDigits(size)}d: %s\n';
 		while (node != null)
 		{
 			args[0] = i++;
 			args[1] = Std.string(node.val);
-			b.add(Printf.format("  %4d -> %s\n", args));
+			b.add(Printf.format(fmt, args));
 			node = node.next;
 		}
 		b.add("]");

@@ -303,11 +303,12 @@ class IntHashTable<T> implements Map<Int, T>
 		}
 		
 		var args = new Array<Dynamic>();
+		var fmt = '  %- ${i}d -> %d\n';
 		for (key in keys())
 		{
 			args[0] = key;
 			args[1] = Std.string(mVals[mH.get(key)]);
-			b.add(Printf.format('  %- ${i}d -> %s\n', args));
+			b.add(Printf.format(fmt, args));
 		}
 		b.add("]");
 		return b.toString();

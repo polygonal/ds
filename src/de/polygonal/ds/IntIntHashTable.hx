@@ -651,7 +651,7 @@ class IntIntHashTable implements Map<Int, Int>
 	public function toString():String
 	{
 		var b = new StringBuf();
-		b.add(Printf.format("[ IntIntHashTable size/capacity: %d/%d, load factor: %.2f }", [size, capacity, loadFactor]));
+		b.add(Printf.format("{ IntIntHashTable size/capacity: %d/%d, load factor: %.2f }", [size, capacity, loadFactor]));
 		if (isEmpty()) return b.toString();
 		b.add("\n[\n");
 		
@@ -664,11 +664,12 @@ class IntIntHashTable implements Map<Int, Int>
 			max = Std.int(max / 10);
 		}
 		var args = new Array<Dynamic>();
+		var fmt = '  %- ${i}d -> %d\n';
 		for (key in keys())
 		{
 			args[0] = key;
 			args[1] = get(key);
-			b.add(Printf.format("  %- " + i + "d -> %d\n", args));
+			b.add(Printf.format(fmt, args));
 		}
 		b.add("]");
 		return b.toString();

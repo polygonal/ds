@@ -1340,10 +1340,20 @@ class TreeNode<T> implements Collection<T>
 	**/
 	public function toString():String
 	{
+		function print(x:TreeNode<T>):String
+		{
+			var s = 'val=$val';
+			var c = x.numChildren();
+			if (c > 0) s += ', #children=$c';
+			s += ', depth=${x.depth()}';
+			return s;
+		}
+		
 		if (children == null)
-			return '{ TreeNode ${print()} }';
+			return '{ TreeNode ${print(this)} }';
 		
 		var b = new StringBuf();
+		b.add("{ TreeNode structure }\n");
 		preorder(function(node:TreeNode<T>, preflight:Bool, userData:Dynamic):Bool
 		{
 			var d = node.depth();
@@ -1354,7 +1364,7 @@ class TreeNode<T> implements Collection<T>
 				else
 					b.add("|    ");
 			}
-			b.add("{ " + node.print() + " }\n");
+			b.add("{ " + print(node) + " }\n");
 			return true;
 		}, null);
 		return b.toString();
@@ -1378,15 +1388,6 @@ class TreeNode<T> implements Collection<T>
 	public function childIterator():Itr<T>
 	{
 		return new ChildTreeIterator<T>(this);
-	}
-	
-	function print():String
-	{
-		var flags = "";
-		if (isRoot())  flags += ", root";
-		if (isLeaf())  flags += ", leaf";
-		if (isChild()) flags += ", child";
-		return 'val: $val, children: ${numChildren()}, depth: ${depth()}$flags';
 	}
 	
 	function preOrderInternal(node:TreeNode<T>, process:TreeNode<T>->Bool->Dynamic->Bool, userData:Dynamic):Bool

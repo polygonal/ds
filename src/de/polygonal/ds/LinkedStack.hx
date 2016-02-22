@@ -20,6 +20,7 @@ package de.polygonal.ds;
 
 import de.polygonal.ds.tools.ArrayTools;
 import de.polygonal.ds.tools.Assert.assert;
+import de.polygonal.ds.tools.M;
 import de.polygonal.ds.tools.NativeArrayTools;
 
 /**
@@ -430,9 +431,13 @@ class LinkedStack<T> implements Stack<T>
 		if (isEmpty()) return b.toString();
 		b.add("\n[ top\n");
 		var node = mHead, i = mTop - 1;
+		var args = new Array<Dynamic>();
+		var fmt = '  %${M.numDigits(size)}d: %s\n';
 		while (i >= 0)
 		{
-			b.add('  $i -> ${Std.string(node.val)}\n');
+			args[0] = i;
+			args[1] = Std.string(node.val);
+			b.add(Printf.format(fmt, args));
 			i--;
 			node = node.next;
 		}

@@ -349,12 +349,13 @@ class ArrayedQueue<T> implements Queue<T>
 		if (isEmpty()) return b.toString();
 		b.add("\n[ front\n");
 		
+		var fmt = '  %${M.numDigits(size)}d: %s\n';
 		var args = new Array<Dynamic>();
 		for (i in 0...size)
 		{
 			args[0] = i;
 			args[1] = Std.string(get(i));
-			b.add(Printf.format("  %4d -> %s\n", args));
+			b.add(Printf.format(fmt, args));
 		}
 		b.add("]");
 		return b.toString();
