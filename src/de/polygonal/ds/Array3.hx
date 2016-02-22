@@ -304,7 +304,7 @@ class Array3<T> implements Collection<T>
 		assert(out != null);
 		
 		var offset = (z * mW * mH) + (y * mW), d = mData;
-		for (x in 0...mW) out.push(d.get(offset + x));
+		for (x in 0...mW) out[x] = d.get(offset + x);
 		return out;
 	}
 	
@@ -337,7 +337,7 @@ class Array3<T> implements Collection<T>
 		assert(out != null);
 		
 		var offset = z * mW * mH, d = mData;
-		for (i in 0...mH) out.push(d.get(offset + (i * mW + x)));
+		for (y in 0...mH) out[y] = d.get(offset + (y * mW + x));
 		return out;
 	}
 
@@ -372,7 +372,7 @@ class Array3<T> implements Collection<T>
 		var offset1 = mW * mH;
 		var offset2 = (y * mW + x);
 		var d = mData;
-		for (z in 0...mD) out.push(d.get(z * offset1 + offset2));
+		for (z in 0...mD) out[z] = d.get(z * offset1 + offset2);
 		return out;
 	}
 	
