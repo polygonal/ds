@@ -166,14 +166,39 @@ class ArrayedQueue<T> implements Queue<T>
 	**/
 	public function pack()
 	{
-		var i = mFront + size, d = mData;
-		for (j in 0...capacity - size)
-			d.set((j + i) % capacity, cast null);
+		if (capacity > mInitialCapacity)
+		{
+			var oldCapacity = capacity;
+			capacity = M.max(size, mInitialCapacity);
+			resizeContainer(oldCapacity, capacity);
+		}
+		else
+		{
+			var i = (mFront + size) % capacity;
+			var d = mData;
+			for (j in 0...capacity - size)
+			{
+				d.set(i, cast null);
+				i = (i + 1) % capacity;
+			}
+		}
+	}
+	
+	/**
+		Preallocates storage for `n` elements.
 		
-		//Nullifies the last dequeued element so it can be garbage collected.
-		//<warn>Use only directly after ``dequeue()``.</warn>
-		//<assert>``dispose()`` wasn't directly called after ``dequeue()``</assert>
-		//mData.set((mFront == 0 ? capacity : mFront) - 1, cast null);
+		May cause a reallocation, but has no effect on the vector size and its elements.
+		Useful before inserting a large number of elements as this reduces the amount of incremental reallocation.
+	**/
+	public function reserve(n:Int):ArrayedQueue<T>
+	{
+		if (n > capacity)
+		{
+			var t = capacity;
+			capacity = n;
+			resizeContainer(t, n);
+		}
+		return this;
 	}
 	
 	/**
@@ -549,9 +574,32 @@ class ArrayedQueue<T> implements Queue<T>
 	function resizeContainer(oldSize:Int, newSize:Int)
 	{
 		var dst = NativeArrayTools.create(newSize);
-		var n = (oldSize - mFront);
-		mData.blit(mFront, dst, 0, n);
-		mData.blit(0, dst, n, size - n);
+		
+		if (oldSize < newSize)
+		{
+			if (mFront + size > oldSize)
+			{
+				var n1 = oldSize - mFront;
+				var n2 = oldSize - n1;
+				mData.blit(mFront, dst, 0, n1);
+				mData.blit(0, dst, n1, n2);
+			}
+			else
+				mData.blit(mFront, dst, 0, size);
+		}
+		else
+		{
+			if (mFront + size > oldSize)
+			{
+				var n1 = oldSize - mFront;
+				var n2 = size - mFront;
+				mData.blit(mFront, dst, 0, n1);
+				mData.blit(0, dst, mFront, n2);
+			}
+			else
+				mData.blit(mFront, dst, 0, size);
+		}
+		
 		mData = dst;
 		mFront = 0;
 	}
