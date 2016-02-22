@@ -124,7 +124,7 @@ class NativeArrayTools
 		#elseif js
 		return x.slice(0, x.length);
 		#else
-		var out = init(x.length);
+		var out = create(x.length);
 		for (i in 0...x.length) set(out, i, x[i]);
 		return out;
 		#end
@@ -205,7 +205,7 @@ class NativeArrayTools
 	{
 		#if (neko || cpp)
 		var len = size(src);
-		var out = init(len);
+		var out = create(len);
 		blit(src, 0, out, 0, len);
 		return out;
 		#elseif flash
@@ -216,7 +216,7 @@ class NativeArrayTools
 		return src.copy();
 		#else
 		var len = size(src);
-		var dst = init(len);
+		var dst = create(len);
 		for (i in 0...len) set(dst, i, get(src, i));
 		return dst;
 		#end
