@@ -84,4 +84,22 @@ class TestListSet extends AbstractTest
 		var c:de.polygonal.ds.Collection<String> = new ListSet<String>();
 		assertEquals(true, true);
 	}
+	
+	function testReserve()
+	{
+		var s = new ListSet<Null<Int>>(2);
+		s.reserve(20);
+		assertEquals(20, s.capacity);
+		for (i in 0...20) s.set(i);
+		for (i in 0...20) assertTrue(s.has(i));
+	}
+	
+	function testPack()
+	{
+		var s = new ListSet<Null<Int>>(2);
+		for (i in 0...16) s.set(i);
+		for (i in 0...8) s.remove(i);
+		s.pack();
+		for (i in 8...16) assertTrue(s.has(i));
+	}
 }

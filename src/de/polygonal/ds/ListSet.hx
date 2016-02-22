@@ -79,6 +79,43 @@ class ListSet<T> implements Set<T>
 	}
 	
 	/**
+		Preallocates storage for `n` elements.
+		
+		May cause a reallocation, but has no effect on the vector size and its elements.
+		Useful before inserting a large number of elements as this reduces the amount of incremental reallocation.
+	**/
+	public function reserve(n:Int):ListSet<T>
+	{
+		if (n > capacity)
+		{
+			capacity = n;
+			resizeContainer(n);
+		}
+		return this;
+	}
+	
+	/**
+		Reduces the capacity of the internal container to the initial capacity.
+		
+		May cause a reallocation, but has no effect on the vector size and its elements.
+		An application can use this operation to free up memory by GC'ing used resources.
+	**/
+	public function pack():ListSet<T>
+	{
+		if (capacity > mInitialCapacity)
+		{
+			capacity = M.max(mInitialCapacity, mSize);
+			resizeContainer(capacity);
+		}
+		else
+		{
+			var d = mData;
+			for (i in mSize...capacity) d.set(i, cast null);
+		}
+		return this;
+	}
+	
+	/**
 		Returns a string representing the current object.
 		
 		Example:
