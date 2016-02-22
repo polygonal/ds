@@ -548,7 +548,36 @@ class Array3<T> implements Collection<T>
 	**/
 	public function toString():String
 	{
-		return '{ Array3 ${cols}x${rows}x${depth} }';
+		var l = 0, out = [];
+		for (y in 0...rows)
+		{
+			for (x in 0...cols)
+			{
+				getPile(x, y, out);
+				l = M.max(l, out.join(",").length);
+			}
+		}
+		
+		var b = new StringBuf();
+		b.add('{ Array3 ${cols}x${rows}x${depth} }');
+		b.add("\n[\n");
+		
+		var row = 0, args = new Array<Dynamic>();
+		var w = M.numDigits(rows);
+		for (y in 0...rows)
+		{
+			args[0] = row++;
+			b.add(Printf.format('  %${w}d: ', args));
+			for (x in 0...cols)
+			{
+				args[0] = getPile(x, y, out).join(",");
+				args[1] = x < cols - 1 ? ", " : "";
+				b.add(Printf.format('%${l}s%s', args));
+			}
+			b.add("\n");
+		}
+		b.add("]");
+		return b.toString();
 	}
 	
 	/* INTERFACE Collection */
