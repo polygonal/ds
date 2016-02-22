@@ -89,4 +89,12 @@ extern class M
 		t |= (t >> 16);
 		return t + 1;
 	}
+	
+	/**
+		Counts the number of digits in `x`, e.g. 1237.34 has 4 digits.
+	**/
+	public static inline function numDigits(x:Float):Int
+	{
+		return Std.int((x == 0) ? 1 : (Math.log(x) / Math.log(10)) + 1);
+	}
 }
