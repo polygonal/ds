@@ -20,6 +20,7 @@ package de.polygonal.ds;
 
 import de.polygonal.ds.Array2.Array2Cell;
 import de.polygonal.ds.tools.Assert.assert;
+import de.polygonal.ds.tools.M;
 
 using de.polygonal.ds.tools.NativeArrayTools;
 
@@ -827,10 +828,11 @@ class Array2<T> implements Collection<T>
 		b.add("\n[\n");
 		
 		var offset, row = 0, args = new Array<Dynamic>();
+		var w = M.numDigits(rows);
 		for (y in 0...rows)
 		{
 			args[0] = row++;
-			b.add(Printf.format("%- 4d: ", args));
+			b.add(Printf.format('  %${w}d: ', args));
 			offset = y * cols;
 			for (x in 0...cols)
 			{
