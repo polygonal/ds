@@ -40,8 +40,15 @@ class NativeArrayTools
 		#end
 	}
 	
-	public static inline function get<T>(x:Container<T>, i:Int):T
+	#if !(assert == "extra")
+	inline
+	#end
+	public static function get<T>(x:Container<T>, i:Int):T
 	{
+		#if (assert == "extra")
+		assert(i >= 0 && i < size(x));
+		#end
+		
 		return
 		#if (cpp && generic)
 		x.unsafeGet(i);
@@ -52,8 +59,15 @@ class NativeArrayTools
 		#end
 	}
 	
-	public static inline function set<T>(x:Container<T>, i:Int, v:T)
+	#if !(assert == "extra")
+	inline
+	#end
+	public static function set<T>(x:Container<T>, i:Int, v:T)
 	{
+		#if (assert == "extra")
+		assert(i >= 0 && i < size(x));
+		#end
+		
 		#if (cpp && generic)
 		x.unsafeSet(i, v);
 		#elseif python
