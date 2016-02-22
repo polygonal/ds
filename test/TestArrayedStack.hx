@@ -200,28 +200,35 @@ class TestArrayedStack extends AbstractTest
 		assertTrue(s.isEmpty());
 	}
 	
-	/*function testReserve()
+	function testReserve()
 	{
-		var stack = new ArrayedStack<Int>(16, 20);
+		var stack = new ArrayedStack<Int>(2);
+		stack.reserve(10);
+		assertEquals(10, stack.capacity);
 		for (i in 0...10) stack.push(i);
-		stack.reserve(20);
-		assertEquals(10, stack.size);
-		for (i in 0...10) assertEquals(9 - i, stack.pop());
-	}*/
+	}
 	
-	function _testPack() //TODO
+	function testPack()
 	{
-		var l = new de.polygonal.ds.ArrayedStack<Int>();
-		l.push(0);
-		l.push(1);
-		l.push(2);
+		var stack = new de.polygonal.ds.ArrayedStack<Int>(4);
+		for (i in 0...4) stack.push(i);
+		stack.pop();
+		stack.pop();
+		stack.pack();
+		assertEquals(1, stack.pop());
+		assertEquals(0, stack.pop());
 		
-		l.clear();
+		var stack = new de.polygonal.ds.ArrayedStack<Int>(4);
+		stack.reserve(10);
+		for (i in 0...4) stack.push(i);
+		stack.pack();
+		for (i in 0...4) assertEquals(4 - (i + 1), stack.pop());
 		
-		//assertEquals(0, l._get(0));
-		//assertEquals(1, l._get(1));
-		//assertEquals(2, l._get(2));
-		//l.shrinkToFit();
+		var stack = new de.polygonal.ds.ArrayedStack<Int>(2);
+		for (i in 0...20) stack.push(i);
+		for (i in 0...10) stack.pop();
+		stack.pack();
+		for (i in 0...10) assertEquals(10 - (i + 1), stack.pop());
 	}
 	
 	function testPeek()
@@ -301,19 +308,6 @@ class TestArrayedStack extends AbstractTest
 		assertEquals(0, stack.size);
 		assertEquals(true, stack.isEmpty());
 	}
-	
-	/*function testDispose()
-	{
-		var stack = getStack();
-		for (i in 0...3) stack.push(i);
-		var x = stack.mData[stack.mTop - 1];
-		assertEquals(2, x);
-		stack.pop();
-		stack.dispose();
-		var x = stack.mData[stack.mTop];
-		//var value = #if (flash) 0 #else null #end;
-		//assertEquals(value, x);
-	}*/
 	
 	function testIterator()
 	{

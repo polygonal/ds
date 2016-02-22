@@ -109,49 +109,31 @@ class ArrayedStack<T> implements Stack<T>
 	**/
 	public function pack()
 	{
-		//if (mData.length == size) return;
-		//
-		//trace('pack()!');
-		//
-		//trace('capacity $mCapacity initialCapacity $mInitialCapacity');
-		//
-		//while (mCapacity >> 1 > mTop)
-		//{
-			//trace('shrink to from $mCapacity to ${mCapacity >> 1}');
-			//mCapacity >>= 1;
-		//}
-		//
-		//trace(mCapacity);
-		
-		//var t = VectorUtil.alloc(mCapacity);
-		//VectorUtil.blit(mData, 0, t, 0, mCapacity);
-		//mData = t;
-		//throw 1;
-		
-			//Nullifies the last popped off element so it can be instantly garbage collected.
-		//<warn>Use only directly after ``pop()``.</warn>
-		//<assert>`pop()` wasn't directly called after ``dequeue()``</assert>
-	/*public inline function dispose()
-	{
-		assert(mTop > 0, "stack is empty");
-		
-		mData.set(mTop, cast null);
-	}*/
+		if (capacity > mInitialCapacity)
+		{
+			capacity = M.max(size, mInitialCapacity);
+			resizeContainer(capacity);
+		}
+		else
+		{
+			var d = mData;
+			for (i in size...capacity) d.set(i, cast null);
+		}
 	}
 	
 	/**
-		Preallocates internal space for storing `x` elements.
+		Preallocates storage for `n` elements.
 		
-		This is useful if the expected size is known in advance.
+		May cause a reallocation, but has no effect on the vector size and its elements.
+		Useful before inserting a large number of elements as this reduces the amount of incremental reallocation.
 	**/
-	public function reserve(x:Int):ArrayedStack<T>
+	public function reserve(n:Int):ArrayedStack<T>
 	{
-		if (size == x) return this;
-		
-		var t = NativeArrayTools.create(x);
-		mData.blit(0, t, 0, capacity);
-		mData = t;
-		capacity = x;
+		if (n > capacity)
+		{
+			capacity = n;
+			resizeContainer(n);
+		}
 		return this;
 	}
 	
