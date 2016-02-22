@@ -31,7 +31,7 @@ class TestObjectPool extends AbstractTest
 			var idset = new ListSet<Int>();
 			var objset = new ListSet<E>();
 			var idrange = new Array<Int>();
-			var r = rand() % 10;
+			var r = Std.int(rand()) % 10;
 			for (j in 0...r) idrange.push(j); shuffle(idrange);
 			
 			var t = new ListSet<Int>();

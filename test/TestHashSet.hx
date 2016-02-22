@@ -115,6 +115,7 @@ class TestHashSet extends AbstractTest
 		assertEquals(8, h.size);
 		assertEquals(8, h.capacity);
 		for (i in 0...6) assertTrue(h.remove(values[i]));
+		assertEquals(2, h.size);
 		
 		h.pack();
 		assertEquals(2, h.size);
