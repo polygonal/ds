@@ -1266,6 +1266,19 @@ class IntIntHashTable implements Map<Int, Int>
 		
 		#if (flash && alchemy)
 		dst = new IntMemory(capacity * 3, "IntIntHashTable.mData");
+		#else
+		dst = NativeArrayTools.create(capacity * 3);
+		#end
+		
+		var j = 2;
+		for (i in 0...capacity)
+		{
+			dst.set(j - 1, VAL_ABSENT);
+			dst.set(j, NULL_POINTER);
+			j += 3;
+		}
+		
+		#if (flash && alchemy)
 		var addr = dst.getAddr(e);
 		for (i in 0...slotCount)
 		{
@@ -1296,7 +1309,6 @@ class IntIntHashTable implements Map<Int, Int>
 		mData = dst;
 		mNext.resize(capacity);
 		#else
-		dst = NativeArrayTools.create(capacity * 3);
 		for (i in 0...slotCount)
 		{
 			j = t.get(i);
