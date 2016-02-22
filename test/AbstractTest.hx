@@ -11,7 +11,7 @@ class AbstractTest extends TestCase
 	
 	function isEven(x:Int):Bool return (x & 1) == 0;
 	
-	function rand():Int return cast (Math.random() * 0x7FFFFFFF);
+	function rand():Int return Std.int(Math.random() * 0x7FFFFFFF);
 	
 	function initPrng(seed:Int = 1) mSeed = seed;
 	
