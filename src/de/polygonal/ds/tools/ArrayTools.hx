@@ -65,7 +65,8 @@ class ArrayTools
 			untyped a.length = x;
 			return a;
 			#elseif cpp
-			return a.setSize(x);
+			a.setSize(x);
+			return a;
 			#else
 			return a.slice(0, x);
 			#end
