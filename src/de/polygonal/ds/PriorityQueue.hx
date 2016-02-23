@@ -73,7 +73,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	**/
 	public var reuseIterator:Bool = false;
 	
-	var mData:Container<T>;
+	var mData:NativeArray<T>;
 	var mInitialCapacity:Int;
 	var mSize:Int = 0;
 	var mInverse:Bool;
@@ -100,7 +100,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 			capacity = M.max(mSize, capacity);
 		}
 		
-		mData = NativeArrayTools.create(capacity + 1);
+		mData = NativeArrayTools.alloc(capacity + 1);
 		mData.set(0, cast null); //reserved
 		
 		#if debug
@@ -761,7 +761,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	
 	function resizeContainer(newSize:Int)
 	{
-		var t = NativeArrayTools.create(newSize + 1);
+		var t = NativeArrayTools.alloc(newSize + 1);
 		mData.blit(0, t, 0, mSize + 1);
 		mData = t;
 	}
@@ -775,7 +775,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 class PriorityQueueIterator<T:(Prioritizable)> implements de.polygonal.ds.Itr<T>
 {
 	var mObject:PriorityQueue<T>;
-	var mData:Container<T>;
+	var mData:NativeArray<T>;
 	var mI:Int;
 	var mS:Int;
 	
@@ -795,7 +795,7 @@ class PriorityQueueIterator<T:(Prioritizable)> implements de.polygonal.ds.Itr<T>
 	{
 		mI = 0;
 		mS = mObject.size;
-		mData = NativeArrayTools.create(mS);
+		mData = NativeArrayTools.alloc(mS);
 		mObject.mData.blit(1, mData, 0, mS);
 		return this;
 	}

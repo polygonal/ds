@@ -75,7 +75,7 @@ class ArrayedQueue<T> implements Queue<T>
 	**/
 	public var reuseIterator:Bool = false;
 	
-	var mData:Container<T>;
+	var mData:NativeArray<T>;
 	var mInitialCapacity:Int;
 	var mSize:Int = 0;
 	var mFront:Int = 0;
@@ -103,7 +103,7 @@ class ArrayedQueue<T> implements Queue<T>
 			capacity = M.max(mSize, capacity);
 		}
 		
-		mData = NativeArrayTools.create(capacity);
+		mData = NativeArrayTools.alloc(capacity);
 		
 		if (source != null)
 		{
@@ -515,7 +515,7 @@ class ArrayedQueue<T> implements Queue<T>
 		if (isEmpty()) return [];
 		
 		#if cpp
-		var out = NativeArrayTools.create(size);
+		var out = NativeArrayTools.alloc(size);
 		var n = M.min(capacity, mFront + size) - mFront;
 		mData.blit(mFront, out, 0, n);
 		if (size - n > 0) mData.blit(0, out, n, size - n);
@@ -574,7 +574,7 @@ class ArrayedQueue<T> implements Queue<T>
 	
 	function resizeContainer(oldSize:Int, newSize:Int)
 	{
-		var dst = NativeArrayTools.create(newSize);
+		var dst = NativeArrayTools.alloc(newSize);
 		
 		if (oldSize < newSize)
 		{
@@ -614,7 +614,7 @@ class ArrayedQueue<T> implements Queue<T>
 class ArrayedQueueIterator<T> implements de.polygonal.ds.Itr<T>
 {
 	var mObject:ArrayedQueue<T>;
-	var mData:Container<T>;
+	var mData:NativeArray<T>;
 	var mFront:Int;
 	var mCapacity:Int;
 	var mSize:Int;

@@ -1,5 +1,5 @@
 ﻿import de.polygonal.ds.tools.ArrayTools;
-import de.polygonal.ds.Container;
+import de.polygonal.ds.NativeArray;
 import de.polygonal.ds.HashableItem;
 import de.polygonal.ds.HashTable;
 import de.polygonal.ds.IntIntHashTable;

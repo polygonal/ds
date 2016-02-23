@@ -3,13 +3,9 @@ package de.polygonal.ds.tools;
 import de.polygonal.ds.tools.ArrayTools;
 import de.polygonal.ds.tools.Assert.assert;
 
-#if cpp
-using cpp.NativeArray;
-#end
-
 class NativeArrayTools
 {
-	public static inline function create<T>(len:Int):Container<T>
+	public static inline function alloc<T>(len:Int):NativeArray<T>
 	{
 		#if flash10
 			#if (generic && !no_inline)
@@ -29,7 +25,7 @@ class NativeArrayTools
 		return new Array<T>();
 		#elseif cpp
 		var a = new Array<T>();
-		a.setSize(len);
+		cpp.NativeArray.setSize(a, len);
 		return a;
 		#elseif python
 		return python.Syntax.pythonCode("[{0}]*{1}", null, len);
@@ -43,7 +39,7 @@ class NativeArrayTools
 	#if !(assert == "extra")
 	inline
 	#end
-	public static function get<T>(x:Container<T>, i:Int):T
+	public static function get<T>(x:NativeArray<T>, i:Int):T
 	{
 		#if (assert == "extra")
 		assert(i >= 0 && i < size(x), 'index $i out of range ${size(x)}');
@@ -51,7 +47,7 @@ class NativeArrayTools
 		
 		return
 		#if (cpp && generic)
-		x.unsafeGet(i);
+		cpp.NativeArray.unsafeGet(x, i);
 		#elseif python
 		python.internal.ArrayImpl.unsafeGet(x, i);
 		#else
@@ -62,14 +58,14 @@ class NativeArrayTools
 	#if !(assert == "extra")
 	inline
 	#end
-	public static function set<T>(x:Container<T>, i:Int, v:T)
+	public static function set<T>(x:NativeArray<T>, i:Int, v:T)
 	{
 		#if (assert == "extra")
 		assert(i >= 0 && i < size(x), 'index $i out of range ${size(x)}');
 		#end
 		
 		#if (cpp && generic)
-		x.unsafeSet(i, v);
+		cpp.NativeArray.unsafeSet(x, i, v);
 		#elseif python
 		python.internal.ArrayImpl.unsafeSet(x, i, v);
 		#else
@@ -77,7 +73,7 @@ class NativeArrayTools
 		#end
 	}
 	
-	public static inline function size<T>(x:Container<T>):Int
+	public static inline function size<T>(x:NativeArray<T>):Int
 	{
 		return
 		#if neko
@@ -95,7 +91,7 @@ class NativeArrayTools
 		#end
 	}
 	
-	public static function toArray<T>(x:Container<T>, first:Int, count:Int):Array<T>
+	public static function toArray<T>(x:NativeArray<T>, first:Int, count:Int):Array<T>
 	{
 		assert(first >= 0 && first < size(x), "first index out of range");
 		assert(count >= 0 && first + count <= size(x), "count out of range");
@@ -119,7 +115,7 @@ class NativeArrayTools
 		return out;
 	}
 	
-	public static inline function ofArray<T>(x:Array<T>):Container<T>
+	public static inline function ofArray<T>(x:Array<T>):NativeArray<T>
 	{
 		#if (python || cs)
 		return cast x.copy();
@@ -138,7 +134,7 @@ class NativeArrayTools
 		#elseif js
 		return x.slice(0, x.length);
 		#else
-		var out = create(x.length);
+		var out = alloc(x.length);
 		for (i in 0...x.length) set(out, i, x[i]);
 		return out;
 		#end
@@ -147,7 +143,7 @@ class NativeArrayTools
 	#if (cs || java || neko || cpp)
 	inline
 	#end
-	public static function blit<T>(src:Container<T>, srcPos:Int, dst:Container<T>, dstPos:Int, len:Int)
+	public static function blit<T>(src:NativeArray<T>, srcPos:Int, dst:NativeArray<T>, dstPos:Int, len:Int)
 	{
 		if (len > 0)
 		{
@@ -162,7 +158,7 @@ class NativeArrayTools
 			#elseif cs
 			cs.system.Array.Copy(cast src, srcPos, cast dst, dstPos, len);
 			#elseif cpp
-			dst.blit(dstPos, src, srcPos, len);
+			cpp.NativeArray.blit(dst, dstPos, src, srcPos, len);
 			#else
 			if (src == dst)
 			{
@@ -215,11 +211,11 @@ class NativeArrayTools
 		}
 	}
 	
-	public static function copy<T>(src:Container<T>):Container<T>
+	public static function copy<T>(src:NativeArray<T>):NativeArray<T>
 	{
 		#if (neko || cpp)
 		var len = size(src);
-		var out = create(len);
+		var out = alloc(len);
 		blit(src, 0, out, 0, len);
 		return out;
 		#elseif flash
@@ -230,7 +226,7 @@ class NativeArrayTools
 		return src.copy();
 		#else
 		var len = size(src);
-		var dst = create(len);
+		var dst = alloc(len);
 		for (i in 0...len) set(dst, i, get(src, i));
 		return dst;
 		#end
@@ -239,7 +235,7 @@ class NativeArrayTools
 	#if flash
 	inline
 	#end
-	public static function zero<T:Float>(dst:Container<T>, first:Int, len:Int):Container<T>
+	public static function zero<T:Float>(dst:NativeArray<T>, first:Int, len:Int):NativeArray<T>
 	{
 		#if cpp
 		untyped dst.zero(first, len);
@@ -255,7 +251,7 @@ class NativeArrayTools
 		@param k the number of elements to put into `dst`.
 		If omitted `k` is set to `dst`::length;
 	**/
-	public static function init<T>(dst:Container<T>, x:T, first:Int = 0, ?k:Null<Int>):Container<T>
+	public static function init<T>(dst:NativeArray<T>, x:T, first:Int = 0, ?k:Null<Int>):NativeArray<T>
 	{
 		if (k == null) k = size(dst);
 		for (i in first...first + k) set(dst, i, x);
@@ -265,7 +261,7 @@ class NativeArrayTools
 	/**
 		Nullifies all elements in `dst`.
 	**/
-	public static function nullify<T>(dst:Container<T>, count:Int = 0)
+	public static function nullify<T>(dst:NativeArray<T>, count:Int = 0)
 	{
 		assert(count <= size(dst), "count out of range");
 		
@@ -285,7 +281,7 @@ class NativeArrayTools
 		@return the index of the element `x` or the bitwise complement (~) of the index where `x` would be inserted (guaranteed to be a negative number).
 		<warn>The insertion point is only valid for `min`=0 and `max`=a.length-1.</warn>
 	**/
-	public static function binarySearchCmp<T>(v:Container<T>, x:T, min:Int, max:Int, cmp:T->T->Int):Int
+	public static function binarySearchCmp<T>(v:NativeArray<T>, x:T, min:Int, max:Int, cmp:T->T->Int):Int
 	{
 		assert(v != null);
 		assert(cmp != null);
@@ -308,7 +304,7 @@ class NativeArrayTools
 			return ~l;
 	}
 	
-	public static function binarySearchf(v:Container<Float>, x:Float, min:Int, max:Int):Int
+	public static function binarySearchf(v:NativeArray<Float>, x:Float, min:Int, max:Int):Int
 	{
 		assert(v != null);
 		assert(min >= 0 && min < size(v));
@@ -330,7 +326,7 @@ class NativeArrayTools
 			return ~l;
 	}
 	
-	public static function binarySearchi(v:Container<Int>, x:Int, min:Int, max:Int):Int
+	public static function binarySearchi(v:NativeArray<Int>, x:Int, min:Int, max:Int):Int
 	{
 		assert(v != null);
 		assert(min >= 0 && min < size(v));

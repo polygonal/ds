@@ -107,9 +107,9 @@ class IntHashSet implements Set<Int>
 	var mData:IntMemory;
 	var mNext:IntMemory;
 	#else
-	var mHash:Container<Int>;
-	var mData:Container<Int>;
-	var mNext:Container<Int>;
+	var mHash:NativeArray<Int>;
+	var mData:NativeArray<Int>;
+	var mNext:NativeArray<Int>;
 	#end
 	
 	var mMask:Int;
@@ -156,9 +156,9 @@ class IntHashSet implements Set<Int>
 		mData = new IntMemory(capacity << 1, "IntHashSet.mData");
 		mNext = new IntMemory(capacity, "IntHashSet.mNext");
 		#else
-		mHash = NativeArrayTools.create(slotCount).init(EMPTY_SLOT);
-		mData = NativeArrayTools.create(capacity << 1);
-		mNext = NativeArrayTools.create(capacity);
+		mHash = NativeArrayTools.alloc(slotCount).init(EMPTY_SLOT);
+		mData = NativeArrayTools.alloc(capacity << 1);
+		mNext = NativeArrayTools.alloc(capacity);
 		#end
 		
 		var j = 1, t = mData;
@@ -531,7 +531,7 @@ class IntHashSet implements Set<Int>
 		mData = dst;
 		mNext.resize(capacity);
 		#else
-		dst = NativeArrayTools.create(capacity << 1);
+		dst = NativeArrayTools.alloc(capacity << 1);
 		for (i in 0...slotCount)
 		{
 			j = t.get(i);
@@ -550,7 +550,7 @@ class IntHashSet implements Set<Int>
 			}
 		}
 		mData = dst;
-		mNext = NativeArrayTools.create(capacity);
+		mNext = NativeArrayTools.alloc(capacity);
 		#end
 		
 		var n = mNext;
@@ -577,10 +577,10 @@ class IntHashSet implements Set<Int>
 		mNext.resize(capacity);
 		mData.resize(capacity << 1);
 		#else
-		t = NativeArrayTools.create(capacity);
+		t = NativeArrayTools.alloc(capacity);
 		mNext.blit(0, t, 0, oldCapacity);
 		mNext = t;
-		t = NativeArrayTools.create(capacity << 1);
+		t = NativeArrayTools.alloc(capacity << 1);
 		mData.blit(0, t, 0, oldCapacity << 1);
 		mData = t;
 		#end
@@ -864,7 +864,7 @@ class IntHashSetIterator implements de.polygonal.ds.Itr<Int>
 	#if alchemy
 	var mData:IntMemory;
 	#else
-	var mData:Container<Int>;
+	var mData:NativeArray<Int>;
 	#end
 	
 	public function new(x:IntHashSet)

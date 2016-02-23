@@ -19,7 +19,7 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 package de.polygonal.ds;
 
 import de.polygonal.ds.tools.Assert.assert;
-import de.polygonal.ds.Container;
+import de.polygonal.ds.NativeArray;
 import de.polygonal.ds.tools.GrowthRate;
 import de.polygonal.ds.tools.M;
 
@@ -69,7 +69,7 @@ class DynamicVector<T> implements Collection<T>
 	**/
 	public var reuseIterator:Bool = false;
 	
-	var mData:Container<T>;
+	var mData:NativeArray<T>;
 	var mInitialCapacity:Int;
 	var mSize:Int = 0;
 	var mIterator:DynamicVectorIterator<T> = null;
@@ -97,7 +97,7 @@ class DynamicVector<T> implements Collection<T>
 		else
 		{
 			capacity = mInitialCapacity;
-			mData = NativeArrayTools.create(capacity);
+			mData = NativeArrayTools.alloc(capacity);
 		}
 	}
 	
@@ -368,7 +368,7 @@ class DynamicVector<T> implements Collection<T>
 		if (size == 0) return "";
 		
 		#if (flash || cpp)
-		var t = NativeArrayTools.create(size);
+		var t = NativeArrayTools.alloc(size);
 		mData.blit(0, t, 0, size);
 		return t.join(sep);
 		#else
@@ -892,7 +892,7 @@ class DynamicVector<T> implements Collection<T>
 		return this;
 	}
 	
-	public inline function getData():Container<T>
+	public inline function getData():NativeArray<T>
 	{
 		return mData;
 	}
@@ -905,7 +905,7 @@ class DynamicVector<T> implements Collection<T>
 	
 	function resizeContainer(newSize:Int)
 	{
-		var t = NativeArrayTools.create(newSize);
+		var t = NativeArrayTools.alloc(newSize);
 		mData.blit(0, t, 0, mSize);
 		mData = t;
 	}
@@ -1077,7 +1077,7 @@ class DynamicVector<T> implements Collection<T>
 class DynamicVectorIterator<T> implements de.polygonal.ds.Itr<T>
 {
 	var mObject:DynamicVector<T>;
-	var mData:Container<T>;
+	var mData:NativeArray<T>;
 	var mI:Int;
 	var mS:Int;
 	

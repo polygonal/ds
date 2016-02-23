@@ -18,13 +18,19 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 */
 package de.polygonal.ds.pooling;
 
+import de.polygonal.ds.NativeArray;
 import de.polygonal.ds.tools.ArrayTools;
 import de.polygonal.ds.tools.Assert.assert;
 import de.polygonal.ds.tools.NativeArrayTools;
 
+using de.polygonal.ds.tools.NativeArrayTools;
+
 /**
 	A fixed sized, arrayed object pool.
 **/
+#if generic
+@:generic
+#end
 class ObjectPool<T> implements Hashable
 {
 	/**
@@ -42,10 +48,10 @@ class ObjectPool<T> implements Hashable
 	#if alchemy
 	var mNext:de.polygonal.ds.mem.IntMemory;
 	#else
-	var mNext:Container<Int>;
+	var mNext:NativeArray<Int>;
 	#end
 	
-	var mPool:Array<T>;
+	var mPool:NativeArray<T>;
 	var mFree:Int;
 	
 	var mLazy:Bool;
@@ -78,7 +84,7 @@ class ObjectPool<T> implements Hashable
 	{
 		if (mPool == null) return;
 		
-		for (i in 0...size) mPool[i] = null;
+		mPool.nullify();
 		mPool = null;
 		
 		#if alchemy
@@ -122,7 +128,7 @@ class ObjectPool<T> implements Hashable
 		var i = mFree;
 		while (i != -1)
 		{
-			i = getNext(i);
+			i = mNext.get(i);
 			c++;
 		}
 		return c;
@@ -141,8 +147,7 @@ class ObjectPool<T> implements Hashable
 		#end
 		
 		var id = mFree;
-		mFree = getNext(id);
-		
+		mFree = mNext.get(id);
 		#if debug
 		mUsage.set(id);
 		#end
@@ -157,13 +162,8 @@ class ObjectPool<T> implements Hashable
 	public inline function get(id:Int):T
 	{
 		assert(mUsage.has(id), 'id $id is not used');
-		
-		if (mLazy)
-		{
-			if (mPool[id] == null)
-				mPool[id] = mLazyConstructor();
-		}
-		return mPool[id];
+		if (mLazy) construct(id);
+		return mPool.get(id);
 	}
 	
 	/**
@@ -179,7 +179,7 @@ class ObjectPool<T> implements Hashable
 		--mCount;
 		#end
 		
-		setNext(id, mFree);
+		mNext.set(id, mFree);
 		mFree = id;
 	}
 	
@@ -198,13 +198,13 @@ class ObjectPool<T> implements Hashable
 		#if alchemy
 		mNext = new de.polygonal.ds.mem.IntMemory(size, "ObjectPool.mNext");
 		#else
-		mNext = NativeArrayTools.create(size);
+		mNext = NativeArrayTools.alloc(size);
 		#end
 		
-		for (i in 0...size - 1) setNext(i, i + 1);
-		setNext(size - 1, -1);
+		for (i in 0...size - 1) mNext.set(i, i + 1);
+		mNext.set(size - 1, -1);
 		mFree = 0;
-		mPool = ArrayTools.alloc(size);
+		mPool = NativeArrayTools.alloc(size);
 		
 		assert(cl != null || fabricate != null || factory != null, "invalid arguments");
 		
@@ -272,21 +272,10 @@ class ObjectPool<T> implements Hashable
 		return b.toString();
 	}
 	
-	inline function getNext(i:Int)
+	function construct(id:Int)
 	{
-		#if alchemy
-		return mNext.get(i);
-		#else
-		return mNext[i];
-		#end
-	}
-	inline function setNext(i:Int, x:Int)
-	{
-		#if alchemy
-		mNext.set(i, x);
-		#else
-		mNext[i] = x;
-		#end
+		if (mPool.get(id) == null)
+			mPool.set(id, mLazyConstructor());
 	}
 }
 
@@ -298,7 +287,7 @@ class ObjectPool<T> implements Hashable
 class ObjectPoolIterator<T> implements de.polygonal.ds.Itr<T>
 {
 	var mObject:ObjectPool<T>;
-	var mData:Array<T>;
+	var mData:NativeArray<T>;
 	var mS:Int;
 	var mI:Int;
 	
@@ -323,7 +312,7 @@ class ObjectPoolIterator<T> implements de.polygonal.ds.Itr<T>
 	
 	public inline function next():T
 	{
-		return mData[mI++];
+		return mData.get(mI++);
 	}
 	
 	public function remove()

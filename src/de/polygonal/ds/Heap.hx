@@ -71,7 +71,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	**/
 	public var reuseIterator:Bool = false;
 	
-	var mData:Container<T>;
+	var mData:NativeArray<T>;
 	var mInitialCapacity:Int;
 	var mSize:Int = 0;
 	var mIterator:HeapIterator<T> = null;
@@ -91,7 +91,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 			capacity = M.max(mSize, capacity);
 		}
 		
-		mData = NativeArrayTools.create(capacity + 1);
+		mData = NativeArrayTools.alloc(capacity + 1);
 		mData.set(0, cast null); //reserved
 		
 		#if debug
@@ -470,7 +470,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	
 	function resizeContainer(newSize:Int)
 	{
-		var t = NativeArrayTools.create(newSize + 1);
+		var t = NativeArrayTools.alloc(newSize + 1);
 		mData.blit(0, t, 0, mSize + 1);
 		mData = t;
 	}
@@ -671,7 +671,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 class HeapIterator<T:(Heapable<T>)> implements de.polygonal.ds.Itr<T>
 {
 	var mObject:Heap<T>;
-	var mData:Container<T>;
+	var mData:NativeArray<T>;
 	var mI:Int;
 	var mS:Int;
 	
@@ -691,7 +691,7 @@ class HeapIterator<T:(Heapable<T>)> implements de.polygonal.ds.Itr<T>
 	{
 		mS = mObject.size;
 		mI = 0;
-		mData = NativeArrayTools.create(mS);
+		mData = NativeArrayTools.alloc(mS);
 		mObject.mData.blit(1, mData, 0, mS);
 		return this;
 	}

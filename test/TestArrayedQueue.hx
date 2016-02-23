@@ -1,6 +1,6 @@
 ﻿import de.polygonal.ds.ArrayedQueue;
 import de.polygonal.ds.Cloneable;
-import de.polygonal.ds.Container;
+import de.polygonal.ds.NativeArray;
 import de.polygonal.ds.ListSet;
 import de.polygonal.ds.Queue;
 

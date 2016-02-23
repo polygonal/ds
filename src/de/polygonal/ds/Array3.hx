@@ -123,7 +123,7 @@ class Array3<T> implements Collection<T>
 	**/
 	public var reuseIterator:Bool = false;
 	
-	var mData:Container<T>;
+	var mData:NativeArray<T>;
 	var mW:Int;
 	var mH:Int;
 	var mD:Int;
@@ -142,7 +142,7 @@ class Array3<T> implements Collection<T>
 		mW = width;
 		mH = height;
 		mD = depth;
-		mData = NativeArrayTools.create(size);
+		mData = NativeArrayTools.alloc(size);
 		
 		if (source != null)
 		{
@@ -441,7 +441,7 @@ class Array3<T> implements Collection<T>
 		if (width == mW && height == mH && depth == mD) return;
 		
 		var t = mData;
-		mData = NativeArrayTools.create(width * height * depth);
+		mData = NativeArrayTools.alloc(width * height * depth);
 		
 		var minX = width < mW ? width : mW;
 		var minY = height < mH ? height : mH;
@@ -493,7 +493,7 @@ class Array3<T> implements Collection<T>
 		
 		Useful for fast iteration or low-level operations.
 	**/
-	public inline function getStorage():Container<T>
+	public inline function getStorage():NativeArray<T>
 	{
 		return mData;
 	}
@@ -738,7 +738,7 @@ class Array3<T> implements Collection<T>
 class Array3Iterator<T> implements de.polygonal.ds.Itr<T>
 {
 	var mObject:Array3<T>;
-	var mData:Container<T>;
+	var mData:NativeArray<T>;
 	var mI:Int;
 	var mS:Int;
 	

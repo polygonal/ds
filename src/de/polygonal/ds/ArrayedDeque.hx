@@ -61,12 +61,12 @@ class ArrayedDeque<T> implements Deque<T>
 	var mPoolSize:Int = 0;
 	var mPoolCapacity:Int;
 	
-	var mBlocks:Array<Container<T>>;
-	var mHeadBlock:Container<T>;
-	var mTailBlock:Container<T>;
-	var mHeadBlockNext:Container<T> = null;
-	var mTailBlockPrev:Container<T> = null;
-	var mBlockPool:Array<Container<T>>;
+	var mBlocks:Array<NativeArray<T>>;
+	var mHeadBlock:NativeArray<T>;
+	var mTailBlock:NativeArray<T>;
+	var mHeadBlockNext:NativeArray<T> = null;
+	var mTailBlockPrev:NativeArray<T> = null;
+	var mBlockPool:Array<NativeArray<T>>;
 	var mIterator:ArrayedDequeIterator<T> = null;
 	
 	/**
@@ -89,10 +89,10 @@ class ArrayedDeque<T> implements Deque<T>
 		mBlockSizeShift = Bits.ntz(blockSize);
 		mPoolCapacity = blockPoolCapacity;
 		mBlocks = new Array();
-		mBlocks[0] = NativeArrayTools.create(blockSize);
+		mBlocks[0] = NativeArrayTools.alloc(blockSize);
 		mHeadBlock = mBlocks[0];
 		mTailBlock = mHeadBlock;
-		mBlockPool = new Array<Container<T>>();
+		mBlockPool = new Array<NativeArray<T>>();
 		
 		if (source != null)
 			for (i in 0...source.length)
@@ -250,7 +250,7 @@ class ArrayedDeque<T> implements Deque<T>
 		for (i in 0...mHead + 1) mHeadBlock.set(i, cast null);
 		for (i in mTail...mBlockSize) mTailBlock.set(i, cast null);
 		mPoolSize = 0;
-		mBlockPool = new Array<Container<T>>();
+		mBlockPool = new Array<NativeArray<T>>();
 	}
 	
 	/**
@@ -658,11 +658,11 @@ class ArrayedDeque<T> implements Deque<T>
 				mBlocks[i] = null;
 			}
 			mBlocks = new Array();
-			mBlocks[0] = NativeArrayTools.create(mBlockSize);
+			mBlocks[0] = NativeArrayTools.alloc(mBlockSize);
 			mHeadBlock = mBlocks[0];
 			for (i in 0...mBlockPool.length)
 				mBlockPool[i] = null;
-			mBlockPool = new Array<Container<T>>();
+			mBlockPool = new Array<NativeArray<T>>();
 			mPoolSize = 0;
 		}
 		
@@ -755,7 +755,7 @@ class ArrayedDeque<T> implements Deque<T>
 		
 		var blocks = c.mBlocks = ArrayTools.alloc(mTailBlockIndex + 1);
 		for (i in 0...mTailBlockIndex + 1)
-			blocks[i] = NativeArrayTools.create(mBlockSize);
+			blocks[i] = NativeArrayTools.alloc(mBlockSize);
 		c.mHeadBlock = blocks[0];
 		c.mTailBlock = blocks[mTailBlockIndex];
 		if (mTailBlockIndex > 0)
@@ -766,7 +766,7 @@ class ArrayedDeque<T> implements Deque<T>
 		
 		if (assign)
 		{
-			inline function copy(src:Container<T>, dst:Container<T>, min:Int, max:Int)
+			inline function copy(src:NativeArray<T>, dst:NativeArray<T>, min:Int, max:Int)
 				src.blit(min, dst, min, max - min);
 			
 			if (mTailBlockIndex == 0)
@@ -788,7 +788,7 @@ class ArrayedDeque<T> implements Deque<T>
 		{
 			if (copier != null)
 			{
-				inline function copy(f:T->T, src:Container<T>, dst:Container<T>, min:Int, max:Int)
+				inline function copy(f:T->T, src:NativeArray<T>, dst:NativeArray<T>, min:Int, max:Int)
 					for (j in min...max) dst.set(j, f(src.get(j)));
 				
 				if (mTailBlockIndex == 0)
@@ -810,7 +810,7 @@ class ArrayedDeque<T> implements Deque<T>
 			{
 				var e:Cloneable<Dynamic>;
 				
-				inline function copy(src:Container<T>, dst:Container<T>, min:Int, max:Int)
+				inline function copy(src:NativeArray<T>, dst:NativeArray<T>, min:Int, max:Int)
 					for (j in min...max)
 					{
 						e = cast(src.get(j), Cloneable<Dynamic>);
@@ -890,15 +890,15 @@ class ArrayedDeque<T> implements Deque<T>
 			mHeadBlockNext = mBlocks[1];
 	}
 	
-	inline function getBlock():Container<T>
+	inline function getBlock():NativeArray<T>
 	{
 		if (mPoolSize > 0)
 			return mBlockPool[--mPoolSize];
 		else
-			return NativeArrayTools.create(mBlockSize);
+			return NativeArrayTools.alloc(mBlockSize);
 	}
 	
-	inline function putBlock(x:Container<T>)
+	inline function putBlock(x:NativeArray<T>)
 	{
 		if (mPoolSize < mPoolCapacity)
 			mBlockPool[mPoolSize++] = x;
@@ -913,8 +913,8 @@ class ArrayedDeque<T> implements Deque<T>
 class ArrayedDequeIterator<T> implements de.polygonal.ds.Itr<T>
 {
 	var mObject:ArrayedDeque<T>;
-	var mBlocks:Array<Container<T>>;
-	var mBlock:Container<T>;
+	var mBlocks:Array<NativeArray<T>>;
+	var mBlock:NativeArray<T>;
 	var mI:Int;
 	var mS:Int;
 	var mB:Int;

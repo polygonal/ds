@@ -18,7 +18,7 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 */
 package de.polygonal.ds;
 
-typedef Container<T> =
+typedef NativeArray<T> =
 #if flash10
 	#if (generic && !no_inline)
 	flash.Vector<T>;

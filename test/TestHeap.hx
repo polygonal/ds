@@ -1,4 +1,4 @@
-﻿import de.polygonal.ds.Container;
+﻿import de.polygonal.ds.NativeArray;
 import de.polygonal.ds.Heap;
 import de.polygonal.ds.Heapable;
 import de.polygonal.ds.tools.GrowthRate;
@@ -192,7 +192,7 @@ class TestHeap extends AbstractTest
 		for (i in 0...4) l.add(new E1(i));
 		assertEquals(4, l.capacity);
 		#if (flash && generic && !no_inline)
-		var d:Container<E1> = flash.Vector.convert(l.mData);
+		var d:NativeArray<E1> = flash.Vector.convert(l.mData);
 		#else
 		var d = l.mData;
 		#end
@@ -206,7 +206,7 @@ class TestHeap extends AbstractTest
 		l.reserve(8);
 		assertEquals(8, l.capacity);
 		#if (flash && generic && !no_inline)
-		var d:Container<E1> = flash.Vector.convert(l.mData);
+		var d:NativeArray<E1> = flash.Vector.convert(l.mData);
 		#else
 		var d = l.mData;
 		#end
@@ -224,7 +224,7 @@ class TestHeap extends AbstractTest
 		for (i in 0...4) l.add(new E1(i + 4));
 		
 		#if (flash && generic && !no_inline)
-		var d:Container<E1> = flash.Vector.convert(l.mData);
+		var d:NativeArray<E1> = flash.Vector.convert(l.mData);
 		#else
 		var d = l.mData;
 		#end

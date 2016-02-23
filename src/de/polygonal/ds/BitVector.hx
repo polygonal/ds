@@ -48,7 +48,7 @@ class BitVector implements Hashable
 		return mBitSize;
 	}
 	
-	var mData:Container<Int>;
+	var mData:NativeArray<Int>;
 	var mArrSize:Int;
 	var mBitSize:Int;
 	
@@ -245,13 +245,13 @@ class BitVector implements Hashable
 		
 		if (mData == null || newArrSize < mArrSize)
 		{
-			mData = NativeArrayTools.create(newArrSize);
+			mData = NativeArrayTools.alloc(newArrSize);
 			mData.zero(0, newArrSize);
 		}
 		else
 		if (newArrSize > mArrSize)
 		{
-			var t = NativeArrayTools.create(newArrSize);
+			var t = NativeArrayTools.alloc(newArrSize);
 			t.zero(0, newArrSize);
 			mData.blit(0, t, 0, mArrSize);
 			mData = t;
@@ -318,7 +318,7 @@ class BitVector implements Hashable
 		var numIntegers = (k - numBytes) >> 2;
 		mArrSize = numIntegers + (numBytes > 0 ? 1 : 0);
 		mBitSize = mArrSize << 5;
-		mData = NativeArrayTools.create(mArrSize);
+		mData = NativeArrayTools.alloc(mArrSize);
 		for (i in 0...mArrSize) mData.set(i, 0);
 		for (i in 0...numIntegers)
 		{

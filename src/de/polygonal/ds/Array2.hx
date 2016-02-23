@@ -110,7 +110,7 @@ class Array2<T> implements Collection<T>
 	**/
 	public var reuseIterator:Bool = false;
 	
-	var mData:Container<T>;
+	var mData:NativeArray<T>;
 	var mW:Int;
 	var mH:Int;
 	var mIterator:Array2Iterator<T> = null;
@@ -134,7 +134,7 @@ class Array2<T> implements Collection<T>
 			mW = width;
 			mH = height;
 			
-			var d = mData = NativeArrayTools.create(size);
+			var d = mData = NativeArrayTools.alloc(size);
 			for (i in 0...size) d.set(i, source[i]);
 		}
 		else
@@ -142,7 +142,7 @@ class Array2<T> implements Collection<T>
 			assert(width >= 2 && height >= 2, 'invalid size (width:$width, height:$height)');
 			mW = width;
 			mH = height;
-			mData = NativeArrayTools.create(size);
+			mData = NativeArrayTools.alloc(size);
 		}
 	}
 	
@@ -393,7 +393,7 @@ class Array2<T> implements Collection<T>
 		if (width == mW && height == mH) return;
 		
 		var t = mData;
-		mData = NativeArrayTools.create(width * height);
+		mData = NativeArrayTools.alloc(width * height);
 		
 		var minX = width < mW ? width : mW;
 		var minY = height < mH ? height : mH;
@@ -515,7 +515,7 @@ class Array2<T> implements Collection<T>
 		assert(input != null, "input is null");
 		assert(input.length >= cols, "insufficient input values");
 		
-		var t = NativeArrayTools.create(mW * (mH + 1));
+		var t = NativeArrayTools.alloc(mW * (mH + 1));
 		mData.blit(0, t, 0, size);
 		mData = t;
 		var s = size, d = mData;
@@ -532,7 +532,7 @@ class Array2<T> implements Collection<T>
 		assert(input != null, "input is null");
 		assert(input.length >= rows, "insufficient input values");
 		
-		var t = NativeArrayTools.create((mW + 1) * mH);
+		var t = NativeArrayTools.alloc((mW + 1) * mH);
 		mData.blit(0, t, 0, size);
 		mData = t;
 		var y = size + mH, i = mH - 1, j = mH, x = mW, d = mData;
@@ -559,7 +559,7 @@ class Array2<T> implements Collection<T>
 		assert(input != null, "input is null");
 		assert(input.length >= cols, "insufficient input values");
 		
-		var t = NativeArrayTools.create(mW * (mH + 1));
+		var t = NativeArrayTools.alloc(mW * (mH + 1));
 		mData.blit(0, t, mW, size);
 		mData = t;
 		mH++;
@@ -576,7 +576,7 @@ class Array2<T> implements Collection<T>
 		assert(input != null, "input is null");
 		assert(input.length >= rows, "insufficient input values");
 		
-		var t = NativeArrayTools.create((mW + 1) * mH);
+		var t = NativeArrayTools.alloc((mW + 1) * mH);
 		mData.blit(0, t, 0, size);
 		mData = t;
 		var y = size + mH, i = mH - 1, j = mH, x = 0, d = mData;
@@ -693,7 +693,7 @@ class Array2<T> implements Collection<T>
 		}
 		else
 		{
-			var t = NativeArrayTools.create(size);
+			var t = NativeArrayTools.alloc(size);
 			for (y in 0...mH)
 				for (x in 0...mW)
 					t.set(x * mH + y, get(x, y));
@@ -709,7 +709,7 @@ class Array2<T> implements Collection<T>
 		
 		Useful for fast iteration or low-level operations.
 	**/
-	public inline function getData():Container<T>
+	public inline function getData():NativeArray<T>
 	{
 		return mData;
 	}
@@ -1003,7 +1003,7 @@ class Array2<T> implements Collection<T>
 class Array2Iterator<T> implements de.polygonal.ds.Itr<T>
 {
 	var mObject:Array2<T>;
-	var mData:Container<T>;
+	var mData:NativeArray<T>;
 	var mI:Int;
 	var mS:Int;
 	

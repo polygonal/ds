@@ -111,13 +111,13 @@ class IntHashTable<T> implements Map<Int, T>
 	}
 	
 	var mH:IntIntHashTable;
-	var mVals:Container<T>;
+	var mVals:NativeArray<T>;
 	#if alchemy
 	var mKeys:IntMemory;
 	var mNext:IntMemory;
 	#else
-	var mNext:Container<Int>;
-	var mKeys:Container<Int>;
+	var mNext:NativeArray<Int>;
+	var mKeys:NativeArray<Int>;
 	#end
 	
 	var mFree:Int = 0;
@@ -155,15 +155,15 @@ class IntHashTable<T> implements Map<Int, T>
 		mMinCapacity = capacity = initialCapacity;
 		
 		mH = new IntIntHashTable(slotCount, capacity);
-		mVals = NativeArrayTools.create(capacity);
+		mVals = NativeArrayTools.alloc(capacity);
 		
 		#if alchemy
 		mNext = new IntMemory(capacity, "IntHashTable.mNext");
 		mKeys = new IntMemory(capacity, "IntHashTable.mKeys");
 		mKeys.setAll(IntIntHashTable.KEY_ABSENT);
 		#else
-		mNext = NativeArrayTools.create(capacity);
-		mKeys = NativeArrayTools.create(capacity).init(IntIntHashTable.KEY_ABSENT, 0, capacity);
+		mNext = NativeArrayTools.alloc(capacity);
+		mKeys = NativeArrayTools.alloc(capacity).init(IntIntHashTable.KEY_ABSENT, 0, capacity);
 		#end
 		
 		var t = mNext;
@@ -461,7 +461,7 @@ class IntHashTable<T> implements Map<Int, T>
 		#if alchemy
 		mNext.resize(capacity);
 		#else
-		mNext = NativeArrayTools.create(capacity);
+		mNext = NativeArrayTools.alloc(capacity);
 		#end
 		
 		var t = mNext;
@@ -474,11 +474,11 @@ class IntHashTable<T> implements Map<Int, T>
 		#if alchemy
 		var dstKeys = new IntMemory(capacity, "IntHashTable.mKeys");
 		#else
-		var dstKeys = NativeArrayTools.create(capacity);
+		var dstKeys = NativeArrayTools.alloc(capacity);
 		#end
 		
 		var srcVals = mVals;
-		var dstVals = NativeArrayTools.create(capacity);
+		var dstVals = NativeArrayTools.alloc(capacity);
 		
 		var j = mFree;
 		for (i in mH)
@@ -510,10 +510,10 @@ class IntHashTable<T> implements Map<Int, T>
 		mNext.resize(capacity);
 		mKeys.resize(capacity);
 		#else
-		t = NativeArrayTools.create(capacity);
+		t = NativeArrayTools.alloc(capacity);
 		mNext.blit(0, t, 0, oldCapacity);
 		mNext = t;
-		t = NativeArrayTools.create(capacity);
+		t = NativeArrayTools.alloc(capacity);
 		mKeys.blit(0, t, 0, oldCapacity);
 		mKeys = t;
 		#end
@@ -527,7 +527,7 @@ class IntHashTable<T> implements Map<Int, T>
 		t.set(capacity - 1, IntIntHashTable.NULL_POINTER);
 		mFree = oldCapacity;
 		
-		var t = NativeArrayTools.create(capacity);
+		var t = NativeArrayTools.alloc(capacity);
 		mVals.blit(0, t, 0, oldCapacity);
 		mVals = t;
 	}
@@ -729,12 +729,12 @@ class IntHashTable<T> implements Map<Int, T>
 class IntHashTableIterator<T> implements de.polygonal.ds.Itr<T>
 {
 	var mObject:IntHashTable<T>;
-	var mVals:Container<T>;
+	var mVals:NativeArray<T>;
 	
 	#if alchemy
 	var mKeys:IntMemory;
 	#else
-	var mKeys:Container<Int>;
+	var mKeys:NativeArray<Int>;
 	#end
 	
 	var mI:Int;

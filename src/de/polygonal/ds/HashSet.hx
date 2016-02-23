@@ -108,11 +108,11 @@ class HashSet<T:Hashable> implements Set<T>
 	}
 	
 	var mH:IntIntHashTable;
-	var mVals:Container<T>;
+	var mVals:NativeArray<T>;
 	#if alchemy
 	var mNext:IntMemory;
 	#else
-	var mNext:Container<Int>;
+	var mNext:NativeArray<Int>;
 	#end
 	var mFree:Int = 0;
 	var mSize:Int = 0;
@@ -147,12 +147,12 @@ class HashSet<T:Hashable> implements Set<T>
 		mMinCapacity = capacity = initialCapacity;
 		
 		mH = new IntIntHashTable(slotCount, capacity);
-		mVals = NativeArrayTools.create(capacity);
+		mVals = NativeArrayTools.alloc(capacity);
 		mVals.nullify(capacity);
 		#if alchemy
 		mNext = new IntMemory(capacity, "HashSet.mNext");
 		#else
-		mNext = NativeArrayTools.create(capacity);
+		mNext = NativeArrayTools.alloc(capacity);
 		#end
 		
 		var t = mNext;
@@ -286,7 +286,7 @@ class HashSet<T:Hashable> implements Set<T>
 		#if alchemy
 		mNext.resize(capacity);
 		#else
-		mNext = NativeArrayTools.create(capacity);
+		mNext = NativeArrayTools.alloc(capacity);
 		#end
 		
 		var t = mNext;
@@ -295,7 +295,7 @@ class HashSet<T:Hashable> implements Set<T>
 		mFree = 0;
 		
 		var src = mVals;
-		var dst = NativeArrayTools.create(capacity);
+		var dst = NativeArrayTools.alloc(capacity);
 		var j = mFree, v;
 		for (i in mH)
 		{
@@ -322,7 +322,7 @@ class HashSet<T:Hashable> implements Set<T>
 		#if alchemy
 		mNext.resize(capacity);
 		#else
-		t = NativeArrayTools.create(capacity);
+		t = NativeArrayTools.alloc(capacity);
 		mNext.blit(0, t, 0, oldCapacity);
 		mNext = t;
 		#end
@@ -332,7 +332,7 @@ class HashSet<T:Hashable> implements Set<T>
 		t.set(capacity - 1, IntIntHashTable.NULL_POINTER);
 		mFree = oldCapacity;
 		
-		var t = NativeArrayTools.create(capacity);
+		var t = NativeArrayTools.alloc(capacity);
 		t.nullify();
 		mVals.blit(0, t, 0, oldCapacity);
 		mVals = t;
@@ -535,7 +535,7 @@ class HashSet<T:Hashable> implements Set<T>
 class HashSetIterator<T:Hashable> implements de.polygonal.ds.Itr<T>
 {
 	var mObject:HashSet<T>;
-	var mVals:Container<T>;
+	var mVals:NativeArray<T>;
 	var mI:Int;
 	var mS:Int;
 	

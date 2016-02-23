@@ -1,4 +1,4 @@
-﻿import de.polygonal.ds.Container;
+﻿import de.polygonal.ds.NativeArray;
 import de.polygonal.ds.PriorityQueue;
 import de.polygonal.ds.tools.NativeArrayTools;
 
@@ -35,7 +35,7 @@ class TestPriorityQueue extends AbstractTest
 		for (i in 0...4) l.enqueue(new E(i));
 		assertEquals(4, l.capacity);
 		#if (flash && generic && !no_inline)
-		var d:Container<E> = flash.Vector.convert(l.mData);
+		var d:NativeArray<E> = flash.Vector.convert(l.mData);
 		#else
 		var d = l.mData;
 		#end
@@ -49,7 +49,7 @@ class TestPriorityQueue extends AbstractTest
 		l.reserve(8);
 		assertEquals(8, l.capacity);
 		#if (flash && generic && !no_inline)
-		var d:Container<E> = flash.Vector.convert(l.mData);
+		var d:NativeArray<E> = flash.Vector.convert(l.mData);
 		#else
 		var d = l.mData;
 		#end
@@ -67,7 +67,7 @@ class TestPriorityQueue extends AbstractTest
 		for (i in 0...4) l.enqueue(new E(i + 4));
 		
 		#if (flash && generic && !no_inline)
-		var d:Container<E> = flash.Vector.convert(l.mData);
+		var d:NativeArray<E> = flash.Vector.convert(l.mData);
 		#else
 		var d = l.mData;
 		#end

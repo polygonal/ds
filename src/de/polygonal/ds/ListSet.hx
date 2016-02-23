@@ -68,7 +68,7 @@ class ListSet<T> implements Set<T>
 	**/
 	public var reuseIterator:Bool = false;
 	
-	var mData:Container<T>;
+	var mData:NativeArray<T>;
 	var mInitialCapacity:Int;
 	var mSize:Int = 0;
 	var mIterator:ListSetIterator<T> = null;
@@ -78,7 +78,7 @@ class ListSet<T> implements Set<T>
 		mInitialCapacity = M.max(1, initialCapacity);
 		capacity = mInitialCapacity;
 		if (source != null) capacity = source.length;
-		mData = NativeArrayTools.create(capacity);
+		mData = NativeArrayTools.alloc(capacity);
 		if (source != null) for (i in source) set(i);
 	}
 	
@@ -202,7 +202,12 @@ class ListSet<T> implements Set<T>
 				{
 					assert(Std.is(val, Cloneable), "element is not of type Cloneable");
 					
+					#if python //TODO fixme
+					var t:Cloneable<Dynamic> = cast val;
+					set(t.clone());
+					#else
 					set(cast(val, Cloneable<Dynamic>).clone());
+					#end
 				}
 			}
 		}
@@ -317,7 +322,7 @@ class ListSet<T> implements Set<T>
 		var out = new ListSet<T>();
 		out.capacity = size;
 		out.mSize = size;
-		out.mData = NativeArrayTools.create(size);
+		out.mData = NativeArrayTools.alloc(size);
 		
 		var src = mData;
 		var dst = out.mData;
@@ -331,7 +336,12 @@ class ListSet<T> implements Set<T>
 			{
 				assert(Std.is(src.get(i), Cloneable), "element is not of type Cloneable");
 				
+				#if python //TODO fixme
+				var t:Cloneable<Dynamic> = cast src.get(i);
+				dst.set(i, t.clone());
+				#else
 				dst.set(i, cast(src.get(i), Cloneable<Dynamic>).clone());
+				#end
 			}
 		}
 		else
@@ -350,7 +360,7 @@ class ListSet<T> implements Set<T>
 	
 	function resizeContainer(newSize:Int)
 	{
-		var t = NativeArrayTools.create(newSize);
+		var t = NativeArrayTools.alloc(newSize);
 		mData.blit(0, t, 0, mSize);
 		mData = t;
 	}
@@ -364,7 +374,7 @@ class ListSet<T> implements Set<T>
 class ListSetIterator<T> implements de.polygonal.ds.Itr<T>
 {
 	var mObject:ListSet<T>;
-	var mData:Container<T>;
+	var mData:NativeArray<T>;
 	var mI:Int;
 	var mS:Int;
 	

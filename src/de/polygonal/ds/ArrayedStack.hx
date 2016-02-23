@@ -73,7 +73,7 @@ class ArrayedStack<T> implements Stack<T>
 	**/
 	public var reuseIterator:Bool = false;
 	
-	var mData:Container<T>;
+	var mData:NativeArray<T>;
 	var mInitialCapacity:Int;
 	var mTop:Int = 0;
 	var mIterator:ArrayedStackIterator<T> = null;
@@ -94,7 +94,7 @@ class ArrayedStack<T> implements Stack<T>
 			capacity = M.max(mTop, capacity);
 		}
 		
-		mData = NativeArrayTools.create(capacity);
+		mData = NativeArrayTools.alloc(capacity);
 		
 		if (source != null)
 		{
@@ -596,7 +596,7 @@ class ArrayedStack<T> implements Stack<T>
 	
 	function resizeContainer(newSize:Int)
 	{
-		var t = NativeArrayTools.create(newSize);
+		var t = NativeArrayTools.alloc(newSize);
 		mData.blit(0, t, 0, size);
 		mData = t;
 	}
@@ -610,7 +610,7 @@ class ArrayedStack<T> implements Stack<T>
 class ArrayedStackIterator<T> implements de.polygonal.ds.Itr<T>
 {
 	var mObject:ArrayedStack<T>;
-	var mData:Container<T>;
+	var mData:NativeArray<T>;
 	var mI:Int;
 	
 	public function new(x:ArrayedStack<T>)
