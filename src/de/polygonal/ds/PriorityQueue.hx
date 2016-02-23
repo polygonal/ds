@@ -31,6 +31,9 @@ using de.polygonal.ds.tools.NativeArrayTools;
 	
 	Adds additional methods for removing and re-prioritizing elements.
 **/
+#if generic
+@:generic
+#end
 @:allow(de.polygonal.ds.Heap)
 class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 {
@@ -764,6 +767,9 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	}
 }
 
+#if generic
+@:generic
+#end
 @:access(de.polygonal.ds.PriorityQueue)
 @:dox(hide)
 class PriorityQueueIterator<T:(Prioritizable)> implements de.polygonal.ds.Itr<T>

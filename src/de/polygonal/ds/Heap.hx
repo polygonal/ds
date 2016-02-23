@@ -30,6 +30,9 @@ using de.polygonal.ds.tools.NativeArrayTools;
 	
 	The implementation is based on an arrayed binary tree.
 **/
+#if generic
+@:generic
+#end
 class Heap<T:(Heapable<T>)> implements Collection<T>
 {
 	/**
@@ -660,6 +663,9 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	}
 }
 
+#if generic
+@:generic
+#end
 @:access(de.polygonal.ds.Heap)
 @:dox(hide)
 class HeapIterator<T:(Heapable<T>)> implements de.polygonal.ds.Itr<T>
