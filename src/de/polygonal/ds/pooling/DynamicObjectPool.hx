@@ -86,6 +86,9 @@ import de.polygonal.ds.tools.M;
 	}
 	</pre>
 **/
+#if (debug && generic)
+@:generic
+#end
 class DynamicObjectPool<T>
 {
 	/**

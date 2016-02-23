@@ -29,7 +29,7 @@ using de.polygonal.ds.tools.NativeArrayTools;
 **/
 #if generic
 @:generic
-#end 
+#end
 class ListSet<T> implements Set<T>
 {
 	/**
