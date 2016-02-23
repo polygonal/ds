@@ -46,7 +46,7 @@ class NativeArrayTools
 	public static function get<T>(x:Container<T>, i:Int):T
 	{
 		#if (assert == "extra")
-		assert(i >= 0 && i < size(x));
+		assert(i >= 0 && i < size(x), 'index $i out of range ${size(x)}');
 		#end
 		
 		return
@@ -65,7 +65,7 @@ class NativeArrayTools
 	public static function set<T>(x:Container<T>, i:Int, v:T)
 	{
 		#if (assert == "extra")
-		assert(i >= 0 && i < size(x));
+		assert(i >= 0 && i < size(x), 'index $i out of range ${size(x)}');
 		#end
 		
 		#if (cpp && generic)
