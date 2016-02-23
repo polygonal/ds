@@ -27,6 +27,9 @@ using de.polygonal.ds.tools.NativeArrayTools;
 /**
 	A simple set using an array
 **/
+#if generic
+@:generic
+#end 
 class ListSet<T> implements Set<T>
 {
 	/**
@@ -74,6 +77,7 @@ class ListSet<T> implements Set<T>
 	{
 		mInitialCapacity = M.max(1, initialCapacity);
 		capacity = mInitialCapacity;
+		if (source != null) capacity = source.length;
 		mData = NativeArrayTools.create(capacity);
 		if (source != null) for (i in source) set(i);
 	}
@@ -163,9 +167,12 @@ class ListSet<T> implements Set<T>
 	{
 		var d = mData;
 		for (i in 0...size) if (d.get(i) == x) return false;
-		
-		if (size == capacity) grow();
-		mData.set(mSize++, x);
+		if (size == capacity)
+		{
+			grow();
+			d = mData;
+		}
+		d.set(mSize++, x);
 		return true;
 	}
 	

@@ -341,7 +341,7 @@ class TestSll extends AbstractTest
 		var list = new Sll<Int>();
 		for (i in 0...10) list.append(i);
 		
-		var s = new ListSet();
+		var s = new ListSet<Int>();
 		list.shuffle(null);
 		var node = list.head;
 		while (node != null)
@@ -357,7 +357,7 @@ class TestSll extends AbstractTest
 		list.close();
 		for (i in 0...10) list.append(i);
 		
-		var s = new ListSet();
+		var s = new ListSet<Int>();
 		list.shuffle(null);
 		var node = list.head;
 		for (i in 0...list.size)
