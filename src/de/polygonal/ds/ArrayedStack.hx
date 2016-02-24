@@ -175,7 +175,7 @@ class ArrayedStack<T> implements Stack<T>
 		Pops the top element of the stack, and pushes it back twice, so that an additional copy of the former top item is now on top, with the original below it.
 		<assert>stack is empty</assert>
 	**/
-	#if (!cpp) inline #end //TODO fixme
+	#if (!cpp) inline #end //TODO inlining gives wrong results in cpp
 	public function dup()
 	{
 		assert(mTop > 0, "stack is empty");
@@ -301,7 +301,7 @@ class ArrayedStack<T> implements Stack<T>
 		<assert>`i`/`j` out of range</assert>
 		<assert>`i` equals `j`</assert>
 	**/
-	#if (!cpp) inline #end //TODO fixme
+	#if (!cpp) inline #end //TODO inlining gives wrong results in cpp
 	public function swap(i:Int, j:Int)
 	{
 		assert(mTop > 0, "stack is empty");
@@ -325,7 +325,7 @@ class ArrayedStack<T> implements Stack<T>
 		<assert>`i`/`j` out of range</assert>
 		<assert>`i` equals `j`</assert>
 	**/
-	#if (!cpp) inline #end //TODO fixme
+	#if (!cpp) inline #end //TODO inlining gives wrong results in cpp
 	public function copy(i:Int, j:Int)
 	{
 		assert(mTop > 0, "stack is empty");

@@ -177,8 +177,6 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 		mMap.remove(x);
 		#end
 		
-		//TODO shrink
-		
 		d.set(1, d.get(size));
 		downheap(1);
 		mSize--;
@@ -546,7 +544,6 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 			upheap(p);
 			mSize--;
 		}
-		//TODO shrink
 		return true;
 	}
 	
