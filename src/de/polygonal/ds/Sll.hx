@@ -34,7 +34,7 @@ using de.polygonal.ds.tools.NativeArrayTools;
 @:generic
 #end
 @:access(de.polygonal.ds.SllNode)
-class Sll<T> implements Collection<T>
+class Sll<T> implements List<T>
 {
 	/**
 		A unique identifier for this object.
@@ -711,6 +711,92 @@ class Sll<T> implements Collection<T>
 		}
 		b.add("]");
 		return b.toString();
+	}
+	
+	/* INTERFACE List */
+	
+	public function add(x:T)
+	{
+		append(x);
+	}
+	
+	public function get(index:Int):T
+	{
+		assert(index >= 0 && index < size, "index out of range");
+		
+		return getNodeAt(index).val;
+	}
+	
+	public function set(index:Int, val:T)
+	{
+		assert(index >= 0 && index < size, "index out of range");
+		
+		getNodeAt(index).val = val;
+	}
+	
+	public function insert(index:Int, val:T)
+	{
+		assert(index >= 0 && index <= size, "index out of range");
+		
+		if (size == 0 || index == size)
+		{
+			append(val);
+			return;
+		}
+		
+		insertBefore(getNodeAt(index), val);
+	}
+	
+	public function indexOf(val:T)
+	{
+		var i = 0;
+		var node = head;
+		while (valid(node))
+		{
+			if (node.val == val) return i;
+			i++;
+			node = node.next;
+		}
+		return -1;
+	}
+	
+	public function removeAt(index:Int):T
+	{
+		var node = getNodeAt(index);
+		node.unlink();
+		return node.val;
+	}
+	
+	public function getRange(fromIndex:Int, toIndex:Int):List<T>
+	{
+		assert(fromIndex >= 0 && fromIndex < size, "fromIndex out of range");
+		#if debug
+		if (toIndex >= 0)
+		{
+			assert(toIndex >= 0 && toIndex < size, "toIndex out of range");
+			assert(fromIndex <= toIndex);
+		}
+		else
+			assert(fromIndex - toIndex <= size, "toIndex out of range");
+		#end
+		
+		var n = toIndex > 0 ? (toIndex - fromIndex) : ((fromIndex - toIndex) - fromIndex);
+		
+		var out = new Sll<T>();
+		if (n == 0) return out;
+		out.mSize = n;
+		
+		var src = getNodeAt(fromIndex), t;
+		out.head = out.tail = out.getNode(src.val);
+		src = src.next;
+		for (i in 0...n - 1)
+		{
+			t = out.getNode(src.val);
+			out.tail = out.tail.next = t;
+			src = src.next;
+		}
+		
+		return out;
 	}
 	
 	/* INTERFACE Collection */
