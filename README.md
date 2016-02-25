@@ -44,7 +44,7 @@ If you want to test the latest beta build, you should pull the dev branch and ad
 
 ## Changelog
 
-### 2.0.0 (beta, dev branch)
+### 2.0.0-beta
 _Requires Haxe >= 3.2.1_
 
  * added: List\<T\> interface (implemented by ArrayList, Sll, Dll)
