@@ -10,5 +10,6 @@ dump/*
 obj/*
 sandbox/*
 tools/*
+!tools/test
 tmp/*
 /todo.txt
