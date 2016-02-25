@@ -49,6 +49,7 @@ class UnitTest extends TestRunner
 		add(new TestArrayedDeque());
 		add(new TestArrayedQueue());
 		add(new TestArrayedStack());
+		add(new TestArrayList());
 		add(new TestArrayTools());
 		add(new TestBinaryTree());
 		add(new TestBits());
@@ -56,7 +57,6 @@ class UnitTest extends TestRunner
 		add(new TestBst());
 		add(new TestDll());
 		add(new TestDllCircular());
-		add(new TestDynamicVector());
 		add(new TestGraph());
 		add(new TestHashSet());
 		add(new TestHashTable());
@@ -76,22 +76,22 @@ class UnitTest extends TestRunner
 		add(new pooling.TestObjectPool());
 		add(new pooling.TestDynamicObjectPool());
 		
+		#if (flash && alchemy)
+		add(new mem.TestMemoryManager());
+		run();
+		this.cases = new List<haxe.unit.TestCase>();
+		de.polygonal.ds.mem.MemoryManager.free();
+		de.polygonal.ds.mem.MemoryManager.RESERVE_BYTES = 1024 * 1024 * 20;
+		de.polygonal.ds.mem.MemoryManager.BLOCK_SIZE_BYTES = 1024 * 512;
+		#end
+		
 		#if flash
-			#if alchemy
-			add(new mem.TestMemoryManager());
-			run();
-			this.cases = new List<haxe.unit.TestCase>();
-			de.polygonal.ds.mem.MemoryManager.free();
-			de.polygonal.ds.mem.MemoryManager.RESERVE_BYTES = 1024 * 1024 * 20;
-			de.polygonal.ds.mem.MemoryManager.BLOCK_SIZE_BYTES = 1024 * 512;
-			#end
-			
-			add(new mem.TestByteMemory());
-			add(new mem.TestBitMemory());
-			add(new mem.TestShortMemory());
-			add(new mem.TestFloatMemory());
-			add(new mem.TestDoubleMemory());
-			add(new mem.TestIntMemory());
+		add(new mem.TestByteMemory());
+		add(new mem.TestBitMemory());
+		add(new mem.TestShortMemory());
+		add(new mem.TestFloatMemory());
+		add(new mem.TestDoubleMemory());
+		add(new mem.TestIntMemory());
 		#end
 		
 		success = success && run();

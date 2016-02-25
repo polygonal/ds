@@ -107,8 +107,107 @@ class TestDll extends AbstractTest
 		assertEquals(list.tail.prev, list.head);
 		assertEquals(list.head.prev, null);
 		assertEquals(list.head.next, list.tail);
+	}
+	
+	function testIndexOf()
+	{
+		var list = new Dll<Int>();
+		assertEquals(-1, list.indexOf(0));
+		for (i in 0...3) list.append(i);
+		assertEquals(0, list.indexOf(0));
+		assertEquals(1, list.indexOf(1));
+		assertEquals(2, list.indexOf(2));
+		assertEquals(-1, list.indexOf(4));
+	}
+	
+	function testRemoveAt()
+	{
+		var list = new Dll<Int>([0, 1, 2]);
+		for (i in 0...3)
+		{
+			assertEquals(i, list.removeAt(0));
+			assertEquals(3 - i - 1, list.size);
+		}
+		assertEquals(0, list.size);
 		
-		list.insertAfter(newNode, 2);
+		for (i in 0...3) list.append(i);
+		
+		var size = 3;
+		while (list.size > 0)
+		{
+			list.removeAt(list.size - 1);
+			size--;
+			assertEquals(size, list.size);
+		}
+		
+		assertEquals(0, list.size);
+	}
+	
+	function testInsert()
+	{
+		var list = new Dll<Int>();
+		list.insert(0, 1);
+		assertEquals(1, list.size);
+		assertEquals(1, list.get(0));
+		
+		var list = new Dll<Int>([0, 1, 2]);
+		assertEquals(3, list.size);
+		list.insert(0, 5);
+		assertEquals(4, list.size);
+		assertEquals(5, list.get(0));
+		assertEquals(0, list.get(1));
+		assertEquals(1, list.get(2));
+		assertEquals(2, list.get(3));
+		
+		var list = new Dll<Int>([0, 1, 2]);
+		assertEquals(3, list.size);
+		
+		list.insert(1, 5);
+		assertEquals(4, list.size);
+		
+		assertEquals(0, list.get(0));
+		assertEquals(5, list.get(1));
+		assertEquals(1, list.get(2));
+		assertEquals(2, list.get(3));
+		
+		var list = new Dll<Int>([0, 1, 2]);
+		assertEquals(3, list.size);
+		
+		list.insert(2, 5);
+		assertEquals(4, list.size);
+		
+		assertEquals(0, list.get(0));
+		assertEquals(1, list.get(1));
+		assertEquals(5, list.get(2));
+		assertEquals(2, list.get(3));
+		
+		var list = new Dll<Int>([0, 1, 2]);
+		assertEquals(3, list.size);
+		list.insert(3, 5);
+		assertEquals(4, list.size);
+		assertEquals(0, list.get(0));
+		assertEquals(1, list.get(1));
+		assertEquals(2, list.get(2));
+		assertEquals(5, list.get(3));
+		
+		var list = new Dll<Int>();
+		list.insert(0, 0);
+		list.insert(1, 1);
+		assertEquals(0, list.get(0));
+		assertEquals(1, list.get(1));
+		
+		var s = 20;
+		for (i in 0...s)
+		{
+			var list = new Dll<Int>(s);
+			for (i in 0...s) list.append(i);
+			
+			list.insert(i, 100);
+			for (j in 0...i) assertEquals(j, list.get(j));
+			assertEquals(100, list.get(i));
+			var v = i;
+			for (j in i + 1...s + 1) assertEquals(v++, list.get(j));
+		}
 	}
 	
 	function testInsertBefore()
@@ -891,6 +990,66 @@ class TestDll extends AbstractTest
 	{
 		var c:de.polygonal.ds.Collection<Int> = cast new Dll<Int>();
 		assertEquals(true, true);
+	}
+	
+	function testRange()
+	{
+		var a = new Dll<Int>([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+		
+		var b = cast a.getRange(0, 5);
+		for (i in 0...5)
+		{
+			assertEquals(i, b.get(i));
+		}
+		
+		var b:Dll<Int> = cast a.getRange(0, 5);
+		
+		var i = 0;
+		var m = b.head;
+		while (m != null)
+		{
+			i++;
+			m = m.next;
+		}
+		
+		assertEquals(5, i);
+		assertEquals(5, b.size);
+		for (i in 0...5) assertEquals(i, b.get(i));
+		
+		var b:Dll<Int> = cast a.getRange(0, -5);
+		var i = 0;
+		var m = b.head;
+		while (m != null)
+		{
+			i++;
+			m = m.next;
+		}
+		assertEquals(5, i);
+		assertEquals(5, b.size);
+		for (i in 0...5) assertEquals(i, b.get(i));
+		
+		var b:Dll<Int> = cast a.getRange(1, 1);
+		var i = 0;
+		var m = b.head;
+		while (m != null)
+		{
+			i++;
+			m = m.next;
+		}
+		assertEquals(0, i);
+		assertEquals(0, b.size);
+		
+		var b:Dll<Int> = cast a.getRange(8, -1);
+		var i = 0;
+		var m = b.head;
+		while (m != null)
+		{
+			i++;
+			m = m.next;
+		}
+		assertEquals(1, i);
+		assertEquals(1, b.size);
+		assertEquals(8, b.get(0));
 	}
 }
 
