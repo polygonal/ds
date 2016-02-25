@@ -44,12 +44,14 @@ If you want to test the latest beta build, you should pull the dev branch and ad
 
 ## Changelog
 
-### 1.5.0 (dev)
+### x.x.0 (beta, dev branch)
 _supports Haxe Compiler 3.2.1_
 
-
+ * added: List<T> interface (implemented by ArrayList, Sll, Dll)
+ * modified: replaced de.polygonal.ds.Vector typedef with NativeArray<T> type.
+ * added: NativeArrayTools: helper class for working with fast platform specific native arrays.
  * modified: arrayed structures now use fast platform specific "native arrays" (vectors) for internal storage
- * added: replaced Da structure with new DynamicVector implementation (growable, vector)
+ * added: replaced Da structure with new ArrayList implementation (resizable native array)
  * modified: renamed swp() -> swap(), cpy() -> copy()
  * modified: Map.clr() renamed to Map.delete() to distinguish from Collection.clear()
  * modified: optimized toString()
@@ -63,9 +65,9 @@ _supports Haxe Compiler 3.2.1_
  * modified: size() is now a property: Collection.size
  * fixed: haxelib package
  * modified: greatly improved performance for static platforms when compiled with -D generic (-swf and -cpp only)
- * modified: cpp target: increase performance by skipping bounds checking when acessing arrays internally
+ * modified: cpp target: increase performance by skipping bounds checking when accessing arrays internally
  * fixed: always increment iterator state inside next()
- * added: initial python support
+ * added: support python and php target
  * fixed: Graph.remove()
  * modified: require flash10; drop support for fp 9.x
  * added: IntIntHashTable.hasPair() for checking if a {key, value} pair exists
@@ -75,7 +77,6 @@ _supports Haxe Compiler 3.2.1_
  * modified: use access control instead of friend sytax with typedef
  * modified: less aggressive inlining
  * modified: use plain array to pass random values to shuffle() instead of Da
- * modified: Array2/3.getArray() renamed to Array2/3.getVector()
  * fixed: several bug fixes for neko/cpp
  * modified: switched to dox for documentation
  * modified: renamed SLL to Sll, DLL to Dll, BST to Bst: match Haxe naming style
