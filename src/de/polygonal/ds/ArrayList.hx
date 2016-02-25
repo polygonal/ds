@@ -31,7 +31,7 @@ using de.polygonal.ds.tools.NativeArrayTools;
 #if generic
 @:generic
 #end
-class DynamicVector<T> implements Collection<T>
+class ArrayList<T> implements List<T>
 {
 	/**
 		A unique identifier for this object.
@@ -72,7 +72,7 @@ class DynamicVector<T> implements Collection<T>
 	var mData:NativeArray<T>;
 	var mInitialCapacity:Int;
 	var mSize:Int = 0;
-	var mIterator:DynamicVectorIterator<T> = null;
+	var mIterator:ArrayListIterator<T> = null;
 	
 	/**
 		<assert>invalid `capacityIncrement`</assert>
@@ -125,6 +125,11 @@ class DynamicVector<T> implements Collection<T>
 		if (i == capacity) grow();
 		if (i >= size) mSize++;
 		mData.set(i, x);
+	}
+	
+	public function add(val:T)
+	{
+		pushBack(val);
 	}
 	
 	/**
@@ -231,7 +236,7 @@ class DynamicVector<T> implements Collection<T>
 		<assert>`i`/`j` out of range or `i` equals `j`</assert>
 	**/
 	#if !cpp inline #end //TODO fixme
-	public function swap(i:Int, j:Int):DynamicVector<T>
+	public function swap(i:Int, j:Int):ArrayList<T>
 	{
 		assert(i != j, 'index i equals index j ($i)');
 		assert(i >= 0 && i <= size, 'index i=$i out of range $size');
@@ -249,7 +254,7 @@ class DynamicVector<T> implements Collection<T>
 		<assert>`i`/`j` out of range or `i` == `j`</assert>
 	**/
 	#if !cpp inline #end //TODO fixme
-	public function copy(src:Int, dst:Int):DynamicVector<T>
+	public function copy(src:Int, dst:Int):ArrayList<T>
 	{
 		assert(src != dst, 'src index equals dst index ($src)');
 		assert(src >= 0 && src <= size, 'index src=$src out of range $size');
@@ -274,7 +279,7 @@ class DynamicVector<T> implements Collection<T>
 		Shifts the element currently at that position (if any) and any subsequent elements to the right (indices + 1).
 		<assert>`i` out of range</assert>
 	**/
-	public function insertAt(i:Int, x:T)
+	public function insert(i:Int, x:T)
 	{
 		assert(i >= 0 && i <= size, 'index $i out of range $size');
 		
@@ -337,7 +342,7 @@ class DynamicVector<T> implements Collection<T>
 		The function signature is: `f(element, index):element`
 		<assert>`f` is null</assert>
 	**/
-	public function forEach(f:T->Int->T):DynamicVector<T>
+	public function forEach(f:T->Int->T):ArrayList<T>
 	{
 		assert(f != null);
 		
@@ -352,7 +357,7 @@ class DynamicVector<T> implements Collection<T>
 		This only modifies the value of `size` and does not perform reallocation.
 		<assert>`n` > `size`</assert>
 	**/
-	public function trim(n:Int):DynamicVector<T>
+	public function trim(n:Int):ArrayList<T>
 	{
 		assert(n <= size, 'new size ($n) > current size ($size)');
 		
@@ -427,16 +432,13 @@ class DynamicVector<T> implements Collection<T>
 	/**
 		Finds the first occurrence of the element `x` (by incrementing indices - from left to right).
 		<assert>`from` out of range</assert>
-		@param from the index to start from. The default value is 0.
 		@return the index storing the element `x` or -1 if `x` was not found.
 	**/
-	@:access(de.polygonal.ds.DynamicVector)
-	public function indexOf(x:T, from:Int = 0):Int
+	@:access(de.polygonal.ds.ArrayList)
+	public function indexOf(x:T):Int
 	{
-		assert(from >= 0 && from <= size, 'from index out of range ($from)');
-		
 		if (size == 0) return -1;
-		var i = from, j = -1, k = size - 1, d = mData;
+		var i = 0, j = -1, k = size - 1, d = mData;
 		do
 		{
 			if (d.get(i) == x)
@@ -483,14 +485,14 @@ class DynamicVector<T> implements Collection<T>
 		<assert>`x` equals this if `copy`=false</assert>
 		@param copy if true, returns a new array instead of modifying this array.
 	**/
-	public function concat(x:DynamicVector<T>, copy:Bool = false):DynamicVector<T>
+	public function concat(x:ArrayList<T>, copy:Bool = false):ArrayList<T>
 	{
 		assert(x != null);
 		
 		if (copy)
 		{
 			var sum = size + x.size;
-			var out = new DynamicVector<T>(sum);
+			var out = new ArrayList<T>(sum);
 			out.mSize = sum;
 			mData.blit(0, out.mData, 0, size);
 			x.mData.blit(0, out.mData, size, x.size);
@@ -623,7 +625,7 @@ class DynamicVector<T> implements Collection<T>
 		
 		Example:
 		<pre class="prettyprint">
-		var dv = new de.polygonal.ds.DynamicVector<Int>();
+		var dv = new de.polygonal.ds.ArrayList<Int>();
 		for (i in 0...3) {
 		    dv.set(i, i);
 		}
@@ -831,7 +833,7 @@ class DynamicVector<T> implements Collection<T>
 		May cause a reallocation, but has no effect on the vector size and its elements.
 		Useful before inserting a large number of elements as this reduces the amount of incremental reallocation.
 	**/
-	public function reserve(n:Int):DynamicVector<T>
+	public function reserve(n:Int):ArrayList<T>
 	{
 		if (n > capacity)
 		{
@@ -847,7 +849,7 @@ class DynamicVector<T> implements Collection<T>
 		Automatically reserves storage for `n` elements so an additional call to `reserve()` is not required.
 		<assert>invalid element count</assert>
 	**/
-	public function alloc(n:Int = 0, x:T):DynamicVector<T>
+	public function alloc(n:Int = 0, x:T):ArrayList<T>
 	{
 		assert(n >= 0, "invalid element count");
 		
@@ -861,7 +863,7 @@ class DynamicVector<T> implements Collection<T>
 	/**
 		Sets `n` existing elements starting at index `first` to the value `x`.
 	**/
-	public function init(first:Int, n:Int, x:T):DynamicVector<T>
+	public function init(first:Int, n:Int, x:T):ArrayList<T>
 	{
 		assert(n <= mSize, "invalid element count");
 		assert(first >= 0 && first <= mSize - n, 'index first $first out of range');
@@ -877,7 +879,7 @@ class DynamicVector<T> implements Collection<T>
 		May cause a reallocation, but has no effect on the vector size and its elements.
 		An application can use this operation to free up memory by GC'ing used resources.
 	**/
-	public function pack():DynamicVector<T>
+	public function pack():ArrayList<T>
 	{
 		if (capacity > mInitialCapacity)
 		{
@@ -892,7 +894,28 @@ class DynamicVector<T> implements Collection<T>
 		return this;
 	}
 	
-	public inline function getData():NativeArray<T>
+	public function getRange(fromIndex:Int, toIndex:Int):List<T>
+	{
+		assert(fromIndex >= 0 && fromIndex < size, "fromIndex out of range");
+		#if debug
+		if (toIndex >= 0)
+		{
+			assert(toIndex >= 0 && toIndex < size, "toIndex out of range");
+			assert(fromIndex <= toIndex);
+		}
+		else
+			assert(fromIndex - toIndex <= size, "toIndex out of range");
+		#end
+		
+		var n = toIndex > 0 ? (toIndex - fromIndex) : ((fromIndex - toIndex) - fromIndex);
+		var out = new ArrayList<T>(n);
+		if (n == 0) return out;
+		out.mSize = n;
+		mData.blit(fromIndex, out.mData, 0, n);
+		return out;
+	}
+	
+	public function getData():NativeArray<T>
 	{
 		return mData;
 	}
@@ -1011,13 +1034,13 @@ class DynamicVector<T> implements Collection<T>
 		if (reuseIterator)
 		{
 			if (mIterator == null)
-				mIterator = new DynamicVectorIterator<T>(this);
+				mIterator = new ArrayListIterator<T>(this);
 			else
 				mIterator.reset();
 			return mIterator;
 		}
 		else
-			return new DynamicVectorIterator<T>(this);
+			return new ArrayListIterator<T>(this);
 	}
 	
 	public function isEmpty():Bool
@@ -1044,7 +1067,7 @@ class DynamicVector<T> implements Collection<T>
 	**/
 	public function clone(assign:Bool = true, copier:T->T = null):Collection<T>
 	{
-		var out = new DynamicVector<T>(capacity);
+		var out = new ArrayList<T>(capacity);
 		out.mSize = size;
 		var src = mData;
 		var dst = out.mData;
@@ -1072,16 +1095,16 @@ class DynamicVector<T> implements Collection<T>
 #if generic
 @:generic
 #end
-@:access(de.polygonal.ds.DynamicVector)
+@:access(de.polygonal.ds.ArrayList)
 @:dox(hide)
-class DynamicVectorIterator<T> implements de.polygonal.ds.Itr<T>
+class ArrayListIterator<T> implements de.polygonal.ds.Itr<T>
 {
-	var mObject:DynamicVector<T>;
+	var mObject:ArrayList<T>;
 	var mData:NativeArray<T>;
 	var mI:Int;
 	var mS:Int;
 	
-	public function new(x:DynamicVector<T>)
+	public function new(x:ArrayList<T>)
 	{
 		mObject = x;
 		reset();
