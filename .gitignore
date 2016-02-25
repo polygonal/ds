@@ -9,6 +9,6 @@ doc/*
 dump/*
 obj/*
 sandbox/*
-scripts/*
+tools/*
 tmp/*
 /todo.txt
