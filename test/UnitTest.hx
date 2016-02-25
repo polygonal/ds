@@ -97,7 +97,7 @@ class UnitTest extends TestRunner
 		success = success && run();
 		
 		#if (flash && !ide)
-		if (success) flash.system.System.exit(0);
+		if (success) flash.system.System.exit(2);
 		#elseif js
 		(untyped process).exit(success ? 0 : 1);
 		#elseif sys
