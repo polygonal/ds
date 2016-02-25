@@ -47,17 +47,17 @@ If you want to test the latest beta build, you should pull the dev branch and ad
 ### 2.0.0 (beta, dev branch)
 _Requires Haxe >= 3.2.1_
 
- * added: List<T> interface (implemented by ArrayList, Sll, Dll)
- * modified: replaced de.polygonal.ds.Vector typedef with NativeArray<T> type.
+ * added: List\<T\> interface (implemented by ArrayList, Sll, Dll)
+ * modified: replaced de.polygonal.ds.Vector typedef with NativeArray\<T\> type.
  * added: NativeArrayTools: helper class for working with fast platform specific native arrays.
  * modified: arrayed structures now use fast platform specific "native arrays" (vectors) for internal storage
  * added: replaced Da structure with new ArrayList implementation (resizable native array)
- * modified: renamed swp() -> swap(), cpy() -> copy()
+ * modified: renamed swp() => swap(), cpy() => copy()
  * modified: Map.clr() renamed to Map.delete() to distinguish from Collection.clear()
  * modified: optimized toString()
  * added: various growth rates for vector-based structures (see GrowthRate)
  * modified: Array2/3: getW(), getH(), getD() is now a property: width, height, depth
- * modified: removed ArrayConvert due to issues with -D generic, instead added ?source:Array<T> to constructor
+ * modified: removed ArrayConvert due to issues with -D generic, instead added ?source:Array\<T\> to constructor
  * modified: removed toVector() method
  * modified: renamed ArrayUtil to ArrayTools: match Haxe naming style
  * modified: iter() renamed to forEach() and implement for all structures
