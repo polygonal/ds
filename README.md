@@ -73,10 +73,10 @@ _supports Haxe Compiler 3.2.1_
  * added: IntIntHashTable.toKeyVector()
  * added: Array.getRect() for extracting a rectangular region
  * modified: use access control instead of friend sytax with typedef
- * modified: less agressive inlining
+ * modified: less aggressive inlining
  * modified: use plain array to pass random values to shuffle() instead of Da
  * modified: Array2/3.getArray() renamed to Array2/3.getVector()
- * fixed: several bugfixes for neko/cpp
+ * fixed: several bug fixes for neko/cpp
  * modified: switched to dox for documentation
  * modified: renamed SLL to Sll, DLL to Dll, BST to Bst: match Haxe naming style
  * modified: removed HashMap class (deprecated, Flash only)
@@ -91,7 +91,7 @@ _supports Haxe Compiler 3.0.0_
  * modified: support Haxe 3 only (Haxe 2.x and Neko 1.x are no longer supported)
  * modified: sacrifice Collection.toDA() for proper @:generic support
  * modified: explicitly allocate elements in ArrayUtil.alloc() when targeting neko
- * fixed: several fixes when compilin with -D generic 
+ * fixed: several fixes when compiling with -D generic 
  * modified: change BitVector to use the haxe.ds.Vector as data
  * modified: ArrayUtil.shrink(): trim when targeting cpp
  * modified: ArrayUtil.alloc(): explicitly allocate elements when targeting cpp
@@ -226,15 +226,15 @@ _supports Haxe 2.10 & Haxe 3.00 r6189_
  * fixed: LinkedStack.clear()
  * fixed: Graph.remove(): update size when removing node
  * added: DA.inRange(): check if given index is valid
- * fixed: DA.sort() using quicksort
+ * fixed: DA.sort() using quick sort
  * modified: GraphNode: added traversal depth and parent pointer
  * modified: Graph: cost is now optional (default is 1.0)
- * modified: changed Graph.addNode() to allow subclassing of GraphNode objects
+ * modified: changed Graph.addNode() to allow sub-classing of GraphNode objects
  * fixed: various fixes for the cpp target
  * added: Graph.autoClearMarks
  * modified: de.polygonal.ds.mem package now works with hxcpp+NME "alchemy" memory
  * added: Graph.DLBFS(): depth-limited breadth-first search
- * fixed: DLL.sort: mergesort produced invalid prev pointers
+ * fixed: DLL.sort: merge sort produced invalid prev pointers
  * modified: optimized TreeNode class
  * modified: added support for circular singly linked lists
  * fixed: Graph.free(): infinite loop lockup
@@ -299,7 +299,7 @@ _supports Haxe 2.10 & Haxe 3.00 r6189_
  * modified: Collection.iterator() changed to Collection.itr() (unify AS3/Haxe)
  * modified: Hashable.getKey() changed to Hashable.key for SWC also (unify AS3/Haxe)
  * modified: removed various C++ workarounds that are no longer needed in Haxe 2.07
- * fixed: incorrent maxSize value in release builds
+ * fixed: incorrect maxSize value in release builds
  * modified: IntHashTable/HashTable/HashSet/HashMap: removed nullValue, use Null\<T\> instead
  * fixed: Bits.ntz() and Bits.setBits() for js target
  * added: SLLNode/DLLNode.isHead(), isTail()
@@ -456,7 +456,7 @@ _supports Haxe 2.10 & Haxe 3.00 r6189_
 
  * all: interfaces can be accessed in swc files
  * all: parameter names are now available in swc files
- * all: switched from flash.Vector to Array for now because a dyamic array (used in swc files) is faster than a dynamic vector and alchemy memory is much faster than typed number vectors.
+ * all: switched from flash.Vector to Array for now because a dynamic array (used in swc files) is faster than a dynamic vector and alchemy memory is much faster than typed number vectors.
  * all: iterators now implement de.polygonal.ds.Itr\<T\> (to distinguish between the built-in Iterator typedef)
  * all: iterators can be reused by calling iterator.reset() when typed to ResettableIterator\<T\> or Itr\<T\>
  * all: enhanced assign(): collection can be filled entirely/partially with elements
