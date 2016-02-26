@@ -489,8 +489,7 @@ class Array2<T> implements Collection<T>
 		<assert>`x0`/`y0` or `x1`/`y1` out of range</assert>
 		<assert>`x0`, `y0` equals `x1`, `y1`</assert>
 	**/
-	#if !cpp inline #end //TODO inlining gives wrong results in cpp
-	public function swap(x0:Int, y0:Int, x1:Int, y1:Int)
+	public inline function swap(x0:Int, y0:Int, x1:Int, y1:Int)
 	{
 		assert(x0 >= 0 && x0 < cols, 'x0 index out of range ($x0)');
 		assert(y0 >= 0 && y0 < rows, 'y0 index out of range ($y0)');

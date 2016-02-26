@@ -1343,7 +1343,6 @@ class IntIntHashTable implements Map<Int, Int>
 		return this;
 	}
 	
-	#if (!cpp) inline #end //TODO fixed in latest hxcpp
 	inline function hashCode(x:Int):Int
 	{
 		return (x * 73856093) & mMask;
