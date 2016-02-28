@@ -3,21 +3,6 @@ import de.polygonal.ds.Cloneable;
 import de.polygonal.ds.Deque;
 import de.polygonal.ds.LinkedDeque;
 
-private class E implements Cloneable<E>
-{
-	public var id:Int;
-	
-	public function new(id:Int)
-	{
-		this.id = id;
-	}
-	
-	public function clone():E
-	{
-		return new E(id);
-	}
-}
-
 @:access(de.polygonal.ds.LinkedDeque)
 class TestLinkedDeque extends AbstractTest
 {
@@ -28,7 +13,7 @@ class TestLinkedDeque extends AbstractTest
 	
 	function createDequeFoo(size = 4)
 	{
-		return new ArrayedDeque<E>(size);
+		return new LinkedDeque<E>(size);
 	}
 	
 	function testSource()
@@ -990,5 +975,20 @@ class TestLinkedDeque extends AbstractTest
 		assertEquals(1, d.size);
 		assertEquals(0, d.popBack());
 		assertEquals(0, d.size);
+	}
+}
+
+private class E implements Cloneable<E>
+{
+	public var id:Int;
+	
+	public function new(id:Int)
+	{
+		this.id = id;
+	}
+	
+	public function clone():E
+	{
+		return new E(id);
 	}
 }
