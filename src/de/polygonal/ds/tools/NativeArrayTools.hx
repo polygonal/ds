@@ -22,7 +22,7 @@ class NativeArrayTools
 		#elseif cs
 		return new cs.NativeArray(len);
 		#elseif java
-		return new Array<T>();
+		return untyped Array.alloc(len);
 		#elseif cpp
 		var a = new Array<T>();
 		cpp.NativeArray.setSize(a, len);
