@@ -1,8 +1,12 @@
 import haxe.ds.StringMap;
 import sys.FileSystem;
+import sys.io.File;
 
 using Sys;
 
+/**
+	@author Michael Baczynski
+**/
 class Main
 {
 	public static function main()
@@ -66,8 +70,7 @@ class Main
 		dstPath = ~/\\/g.replace(dstPath, "/");
 		dstPath = ~/\/$/g.replace(dstPath, "");
 		
-		if (!FileSystem.exists(dstPath))
-			'creating output directory: $dstPath'.println();
+		if (!FileSystem.exists(dstPath)) 'creating output directory: $dstPath'.println();
 		
 		var defines = new StringMap<String>();
 		defines.set("default", "");
@@ -116,7 +119,7 @@ class Main
 				var output = toFileName(directives, target);
 				var args = '-main UnitTest -cp test -cp src -lib polygonal-printf -$target $output ${toArgs(directives)}' + (platformArgs.exists(target) ? (" " + platformArgs.get(target)) : "");
 				'compiling $target: $output ...'.println();
-				if (Sys.command(Sys.getEnv("HAXE"), args.split(" ")) == 1) error();
+				if (Sys.command(Sys.getEnv("HAXEPATH") + "/haxe.exe", args.split(" ")) == 1) error();
 				files.push(output);
 			}
 			return files;
@@ -138,7 +141,7 @@ class Main
 		
 		var cwd = Sys.getCwd();
 		
-		'Using HAXE COMPILER: ${Sys.getEnv("HAXE")}'.println();
+		'Using HAXE COMPILER: ${Sys.getEnv("HAXEPATH")}'.println();
 		
 		for (target in targets)
 		{
@@ -155,7 +158,13 @@ class Main
 				switch (target)
 				{
 					case "swf":
-						run(Sys.getEnv("FLASH_PLAYER"), [file], 2);
+						if (!FileSystem.exists(Sys.getEnv("FLASHPLAYER")))
+						{
+							"flash player not found, please set FLASHPLAYER environment variable".println();
+							error();
+							Sys.exit(1);
+						}
+						run(Sys.getEnv("FLASHPLAYER"), [file], 2);
 					
 					case "js":
 						run("node", [file]);
