@@ -59,6 +59,18 @@ class TestNativeArray extends AbstractTest
 		assertEquals(0, a.length);
 	}
 	
+	function testOfArray()
+	{
+		var a = [1, 2, 3];
+		
+		var v:NativeArray<Int> = NativeArrayTools.ofArray(a);
+		assertEquals(3, NativeArrayTools.size(v));
+		
+		assertEquals(1, NativeArrayTools.get(v, 0));
+		assertEquals(2, NativeArrayTools.get(v, 1));
+		assertEquals(3, NativeArrayTools.get(v, 2));
+	}
+	
 	function testBinarySearch()
 	{
 		var v = NativeArrayTools.alloc(10);
