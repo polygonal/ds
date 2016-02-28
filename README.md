@@ -7,7 +7,7 @@ Formerly known as "_AS3 Data Structures For Game Developers (AS3DS)_", the packa
 ## Documentation
 -    Slides [Introduction to ds - Data Structures For Games](http://lab.polygonal.de/wp-content/assets/120111/introduction_to_ds.pdf)
 -    API [http://www.polygonal.de/dev/ds/doc](http://www.polygonal.de/dev/ds/doc)
--    SWC library v1.39 for ActionScript 3.0 (no longer supported): [http://www.polygonal.de/dev/ds/swc/polygonal-ds-latest.zip](polygonal-ds-latest.zip)
+-    SWC library v1.39 for AS3 (no longer maintained): [polygonal-ds-latest.zip](http://www.polygonal.de/dev/ds/swc/polygonal-ds-latest.zip)
 
 ## Articles
 
@@ -48,6 +48,7 @@ If you want to test the latest beta build, you should pull the dev branch and ad
 ### 2.0.0-beta
 _Requires Haxe >= 3.2.1_
 
+ * modified: remove .swc files - no longer maintained (use tools/swc/run.bat to create swc libs on your own)
  * added: List\<T\> interface (implemented by ArrayList, Sll, Dll)
  * modified: replaced de.polygonal.ds.Vector typedef with NativeArray\<T\> type.
  * added: NativeArrayTools: helper class for working with fast platform specific native arrays.
