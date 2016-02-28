@@ -122,8 +122,6 @@ class ArrayList<T> implements List<T>
 	{
 		assert(i >= 0 && i <= size, 'index $i out of range $size');
 		
-		if (i == capacity) grow();
-		if (i >= size) mSize++;
 		mData.set(i, x);
 	}
 	
