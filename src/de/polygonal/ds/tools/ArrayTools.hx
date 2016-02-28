@@ -44,6 +44,8 @@ class ArrayTools
 		a = new Array<T>();
 		a.setSize(x);
 		return a;
+		#elseif java
+		return untyped Array.alloc(x);
 		#else
 		a = new Array<T>();
 		#if neko
