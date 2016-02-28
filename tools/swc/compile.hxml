@@ -1,0 +1,43 @@
+-cp ../../src
+-swf-version 10
+--macro exclude('Includes')
+--macro addMetadata('@:native("hx.Hash")', 'Hash')
+--macro addMetadata('@:native("hx.List")', 'List')
+--macro addMetadata('@:native("hx.IntHash")', 'IntHash')
+--macro addMetadata('@:native("hx.IntIter")', 'IntIter')
+--macro addMetadata('@:native("hx.Void")', 'Void')
+--macro addMetadata('@:native("hx.Xml")', 'Xml')
+--macro addMetadata('@:native("hx.ValueType")', 'ValueType')
+--macro addMetadata('@:native("hx.StringTools")', 'StringTools')
+--macro addMetadata('@:native("hx.StringBuf")', 'StringBuf')
+--macro addMetadata('@:native("hx.Std")', 'Std')
+--macro addMetadata('@:native("hx.Reflect")', 'Reflect')
+--macro addMetadata('@:native("hx.Lambda")', 'Lambda')
+--macro addMetadata('@:native("hx.EReg")', 'EReg')
+--macro addMetadata('@:native("hx.Dynamic")', 'Dynamic')
+--macro addMetadata('@:native("hx.Type")', 'Type')
+--macro addMetadata('@:native("hx.Int32")', 'haxe.Int32')
+--macro addMetadata('@:native("hx.Int64")', 'haxe.Int64')
+--macro addMetadata('@:native("hx.io.Bytes")', 'haxe.io.Bytes')
+--macro addMetadata('@:native("hx.io.BytesBuffer")', 'haxe.io.BytesBuffer')
+--macro addMetadata('@:native("hx.io.BytesInput")', 'haxe.io.BytesInput')
+--macro addMetadata('@:native("hx.io.BytesOutput")', 'haxe.io.BytesOutput')
+--macro addMetadata('@:native("hx.io.Eof")', 'haxe.io.Eof')
+--macro addMetadata('@:native("hx.io.Error")', 'haxe.io.Error')
+--macro addMetadata('@:native("hx.io.Input")', 'haxe.io.Input')
+--macro addMetadata('@:native("hx.io.Output")', 'haxe.io.Output')
+--no-traces
+-lib polygonal-printf
+Lambda
+
+--each
+
+-swf bin/ds-release.swc
+Includes
+
+--next
+
+-swf bin/ds-debug.swc
+-debug
+--no-inline
+Includes

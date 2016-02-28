@@ -5,8 +5,8 @@ if not exist ..\..\haxelib.json (
 	exit
 )
 
-if exist RunTests.n (
-	del RunTests.n
+if exist Import.n (
+	del Import.n
 )
 
 if exist bin (
