@@ -47,6 +47,7 @@ If you want to test the latest beta build, you should pull the dev branch and ad
 ### 2.0.0-beta
 _Requires Haxe >= 3.2.1_
 
+ * modified: no longer include .swc files (use tools/swc/run.bat to create swc libs)
  * added: List\<T\> interface (implemented by ArrayList, Sll, Dll)
  * modified: replaced de.polygonal.ds.Vector typedef with NativeArray\<T\> type.
  * added: NativeArrayTools: helper class for working with fast platform specific native arrays.
