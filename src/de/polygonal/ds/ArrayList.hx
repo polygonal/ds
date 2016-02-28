@@ -141,6 +141,19 @@ class ArrayList<T> implements List<T>
 	}
 	
 	/**
+		Faster than `pushBack()`, but skips boundary checking.
+		
+		The user is responsible for making sure that there is enough space available (e.g. by calling `reserve()`).
+	**/
+	public inline function unsafePushBack(x:T):Int
+	{
+		assert(mSize < capacity, "out of space");
+		
+		mData.set(mSize++, x);
+		return size;
+	}
+	
+	/**
 		Removes the last element from this vector and returns that element.
 	**/
 	public inline function popBack():T
