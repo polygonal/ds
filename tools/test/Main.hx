@@ -1,6 +1,5 @@
 import haxe.ds.StringMap;
 import sys.FileSystem;
-import sys.io.File;
 
 using Sys;
 

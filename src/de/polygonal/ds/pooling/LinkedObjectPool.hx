@@ -270,6 +270,7 @@ class LinkedObjectPool<T> implements Hashable
 	public function toString():String
 	{
 		#if debug
+		var b = new StringBuf();
 		var s = 'LinkedObjectPool (${getUsageCount()}/${getSize()} objects used)';
 		if (getSize() == 0) return s;
 		b.add("\n[\n");
