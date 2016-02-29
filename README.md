@@ -48,6 +48,7 @@ If you want to test the latest beta build, you should pull the dev branch and ad
 ### 2.0.0-beta
 _Requires Haxe >= 3.2.1_
 
+ * modified: added Set.unset() method
  * modified: remove .swc files - no longer maintained (use tools/swc/run.bat to create swc libs on your own)
  * added: List\<T\> interface (implemented by ArrayList, Sll, Dll)
  * modified: replaced de.polygonal.ds.Vector typedef with NativeArray\<T\> type.
@@ -55,7 +56,7 @@ _Requires Haxe >= 3.2.1_
  * modified: arrayed structures now use fast platform specific "native arrays" (vectors) for internal storage
  * added: replaced Da structure with new ArrayList implementation (resizable native array)
  * modified: renamed swp() => swap(), cpy() => copy()
- * modified: Map.clr() renamed to Map.delete() to distinguish from Collection.clear()
+ * modified: Map.clr() renamed to Map.unset() to distinguish from Collection.clear()
  * modified: optimized toString()
  * added: various growth rates for vector-based structures (see GrowthRate)
  * modified: Array2/3: getW(), getH(), getD() is now a property: width, height, depth

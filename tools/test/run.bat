@@ -9,7 +9,7 @@ haxe compile.hxml
 if not exist flashplayer.txt (
 	echo {absolute_path_to_flash_player_executable} > flashplayer.txt
 	echo please set path to flashplayer.exe in flashplayer.txt
-	echo also add output folder to trusted paths to prevent SecurityError: Error #2017 (Only trusted local files may cause the Flash Player to exit.)
+	echo also add output folder to trusted paths to prevent SecurityError: Error #2017 ^(Only trusted local files may cause the Flash Player to exit.^)
 	pause
 	exit
 )
