@@ -177,6 +177,15 @@ class ListSet<T> implements Set<T>
 	}
 	
 	/**
+		Removes the element `x` from this set if possible.
+		@return true if `x` was removed from this set, false if `x` does not exist.
+	**/
+	public inline function unset(x:T):Bool
+	{
+		return remove(x);
+	}
+	
+	/**
 		Adds all elements of the set `x` to this set.
 		<assert>element is not of type `Cloneable`</assert>
 		@param assign if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.

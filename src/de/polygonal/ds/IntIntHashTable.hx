@@ -1113,7 +1113,7 @@ class IntIntHashTable implements Map<Int, Int>
 		Removes the first occurrence of `key`.
 		@return true if `key` is successfully removed.
 	**/
-	public inline function delete(key:Int):Bool
+	public inline function unset(key:Int):Bool
 	{
 		var b = hashCode(key), h = mHash;
 		var i = h.get(b);
@@ -1483,7 +1483,7 @@ class IntIntHashTable implements Map<Int, Int>
 		}
 		#end
 		
-		for (i in 0...c) delete(keys.get(i));
+		for (i in 0...c) unset(keys.get(i));
 		return c > 0;
 	}
 	

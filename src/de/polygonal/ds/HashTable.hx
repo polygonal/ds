@@ -477,14 +477,14 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		<assert>`key` is null</assert>
 		@return true if `key` is successfully removed.
 	**/
-	public function delete(key:K):Bool
+	public function unset(key:K):Bool
 	{
 		var i = mH.get(key.key);
 		if (i == IntIntHashTable.KEY_ABSENT) return false;
 		mKeys.set(i, null);
 		mNext.set(i, mFree);
 		mFree = i;
-		mH.delete(key.key);
+		mH.unset(key.key);
 		mSize--;
 		return true;
 	}
@@ -599,7 +599,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		
 		for (i in 0...c)
 		{
-			delete(b[i]);
+			unset(b[i]);
 			b[i] = null;
 		}
 		return c > 0;

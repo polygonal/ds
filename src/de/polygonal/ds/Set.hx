@@ -33,4 +33,10 @@ interface Set<T> extends Collection<T>
 		@return false if `x` already exists.
 	**/
 	function set(x:T):Bool;
+	
+	/**
+		Removes the element `x` from the set.
+		@return true if `x` was successfully removed, false if `x` does not exist.
+	**/
+	function unset(x:T):Bool;
 }

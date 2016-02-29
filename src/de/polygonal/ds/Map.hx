@@ -50,10 +50,10 @@ interface Map<K, T> extends Collection<T>
 	function set(key:K, x:T):Bool;
 	
 	/**
-		Removes a `key`/value pair.
+		Removes a {`key`,value} pair.
 		@return true if `key` was successfully removed, false if `key` does not exist.
 	**/
-	function delete(key:K):Bool;
+	function unset(key:K):Bool;
 	
 	/**
 		Remaps the first occurrence of `key` to the element `x`.

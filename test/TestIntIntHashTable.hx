@@ -57,8 +57,8 @@ class TestIntIntHashTable extends AbstractTest
 		h.set(1, 2);
 		h.set(1, 3);
 		
-		assertTrue(h.delete(1));
-		//assertTrue(h.delete(2));
+		assertTrue(h.unset(1));
+		//assertTrue(h.unset(2));
 		assertFalse(h.contains(1));
 		
 		//trace(h.extract(1));
@@ -238,11 +238,11 @@ class TestIntIntHashTable extends AbstractTest
 		assertTrue(h.remap(1, 5));
 		
 		assertEquals(5, h.get(1));
-		h.delete(1);
+		h.unset(1);
 		assertEquals(2, h.get(1));
-		h.delete(1);
+		h.unset(1);
 		assertEquals(3, h.get(1));
-		h.delete(1);
+		h.unset(1);
 		
 		assertTrue(h.isEmpty());
 		
@@ -433,20 +433,20 @@ class TestIntIntHashTable extends AbstractTest
 			h.set(1, 3);
 			
 			assertEquals(1, h.get(0));
-			assertTrue(h.delete(0) );
+			assertTrue(h.unset(0) );
 			assertEquals(2, h.get(0));
-			assertTrue(h.delete(0) );
+			assertTrue(h.unset(0) );
 			assertEquals(3, h.get(0));
-			assertTrue(h.delete(0) );
+			assertTrue(h.unset(0) );
 			assertFalse(h.hasKey(0));
 			assertTrue(h.get(0) == IntIntHashTable.KEY_ABSENT);
 			
 			assertEquals(1, h.get(1));
-			assertTrue(h.delete(1) );
+			assertTrue(h.unset(1) );
 			assertEquals(2, h.get(1));
-			assertTrue(h.delete(1) );
+			assertTrue(h.unset(1) );
 			assertEquals(3, h.get(1));
-			assertTrue(h.delete(1) );
+			assertTrue(h.unset(1) );
 			assertFalse(h.hasKey(1));
 			assertTrue(h.get(1) == IntIntHashTable.KEY_ABSENT);
 		}
@@ -824,7 +824,7 @@ class TestIntIntHashTable extends AbstractTest
 		assertEquals(16, h.capacity);
 		
 		for (i in 0...32) assertTrue(h.set(i, i));
-		for (i in 0...16) assertTrue(h.delete(i));
+		for (i in 0...16) assertTrue(h.unset(i));
 		
 		assertEquals(16, h.size);
 		assertEquals(32, h.capacity);
@@ -847,7 +847,7 @@ class TestIntIntHashTable extends AbstractTest
 		for (i in 0...8) assertTrue(h.hasKey(i));
 		for (i in 0...8) assertTrue(h.has(i));
 		
-		for (i in 0...6) h.delete(i);
+		for (i in 0...6) h.unset(i);
 		assertEquals(2, h.size);
 		assertEquals(11, h.capacity);
 		
@@ -964,9 +964,9 @@ class TestIntIntHashTable extends AbstractTest
 	{
 		var forEach = 0;
 		
-		if (h.delete(key))
+		if (h.unset(key))
 		{
-			while (h.delete(key))
+			while (h.unset(key))
 			{
 				if (forEach++ > 1000) throw 'bail out';
 			}

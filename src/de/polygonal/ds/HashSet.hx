@@ -194,6 +194,69 @@ class HashSet<T:Hashable> implements Set<T>
 		mH.rehash(slotCount);
 	}
 	
+	public function pack():HashSet<T>
+	{
+		mH.pack();
+		
+		if (mH.capacity == capacity) return this;
+		
+		capacity = mH.capacity;
+		
+		#if alchemy
+		mNext.resize(capacity);
+		#else
+		mNext = NativeArrayTools.alloc(capacity);
+		#end
+		
+		var t = mNext;
+		for (i in 0...capacity - 1) t.set(i, i + 1);
+		t.set(capacity - 1, IntIntHashTable.NULL_POINTER);
+		mFree = 0;
+		
+		var src = mVals;
+		var dst = NativeArrayTools.alloc(capacity);
+		var j = mFree, v;
+		for (i in mH)
+		{
+			v = src.get(i);
+			if (v != null)
+			{
+				dst.set(j, v);
+				j = t.get(j);
+			}
+		}
+		mFree = j;
+		mVals = dst;
+		for (i in 0...size) mH.remap(dst.get(i).key, i);
+		return this;
+	}
+	
+	function grow()
+	{
+		var oldCapacity = capacity;
+		capacity = GrowthRate.compute(growthRate, capacity);
+		
+		var t;
+		
+		#if alchemy
+		mNext.resize(capacity);
+		#else
+		t = NativeArrayTools.alloc(capacity);
+		mNext.blit(0, t, 0, oldCapacity);
+		mNext = t;
+		#end
+		
+		t = mNext;
+		for (i in oldCapacity - 1...capacity - 1) t.set(i, i + 1);
+		t.set(capacity - 1, IntIntHashTable.NULL_POINTER);
+		mFree = oldCapacity;
+		
+		var t = NativeArrayTools.alloc(capacity);
+		t.nullify();
+		mVals.blit(0, t, 0, oldCapacity);
+		mVals = t;
+	}
+	
 	/**
 		Returns a string representing the current object.
 		
@@ -275,67 +338,13 @@ class HashSet<T:Hashable> implements Set<T>
 			return false;
 	}
 	
-	public function pack():HashSet<T>
+	/**
+		Removes the element `x` from this set if possible.
+		@return true if `x` was removed from this set, false if `x` does not exist.
+	**/
+	public inline function unset(x:T):Bool
 	{
-		mH.pack();
-		
-		if (mH.capacity == capacity) return this;
-		
-		capacity = mH.capacity;
-		
-		#if alchemy
-		mNext.resize(capacity);
-		#else
-		mNext = NativeArrayTools.alloc(capacity);
-		#end
-		
-		var t = mNext;
-		for (i in 0...capacity - 1) t.set(i, i + 1);
-		t.set(capacity - 1, IntIntHashTable.NULL_POINTER);
-		mFree = 0;
-		
-		var src = mVals;
-		var dst = NativeArrayTools.alloc(capacity);
-		var j = mFree, v;
-		for (i in mH)
-		{
-			v = src.get(i);
-			if (v != null)
-			{
-				dst.set(j, v);
-				j = t.get(j);
-			}
-		}
-		mFree = j;
-		mVals = dst;
-		for (i in 0...size) mH.remap(dst.get(i).key, i);
-		return this;
-	}
-	
-	function grow()
-	{
-		var oldCapacity = capacity;
-		capacity = GrowthRate.compute(growthRate, capacity);
-		
-		var t;
-		
-		#if alchemy
-		mNext.resize(capacity);
-		#else
-		t = NativeArrayTools.alloc(capacity);
-		mNext.blit(0, t, 0, oldCapacity);
-		mNext = t;
-		#end
-		
-		t = mNext;
-		for (i in oldCapacity - 1...capacity - 1) t.set(i, i + 1);
-		t.set(capacity - 1, IntIntHashTable.NULL_POINTER);
-		mFree = oldCapacity;
-		
-		var t = NativeArrayTools.alloc(capacity);
-		t.nullify();
-		mVals.blit(0, t, 0, oldCapacity);
-		mVals = t;
+		return remove(x);
 	}
 	
 	/* INTERFACE Collection */
@@ -401,7 +410,7 @@ class HashSet<T:Hashable> implements Set<T>
 			mNext.set(i, mFree);
 			mFree = i;
 			mSize--;
-			mH.delete(x.key);
+			mH.unset(x.key);
 			return true;
 		}
 	}
