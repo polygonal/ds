@@ -77,6 +77,7 @@ class Main
 		defines.set("noinline", "--no-inline");
 		defines.set("generic", "-D generic");
 		defines.set("alchemy", "-D alchemy");
+		defines.set("analyzer", "-D analyzer");
 		
 		var extLut = new StringMap<String>();
 		extLut.set("swf", "swf");

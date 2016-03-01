@@ -26,11 +26,11 @@ cd ..\..\
 
 neko %CWD%\RunTests.n ^
 -dst %CWD%\bin ^
--swf default,generic,noinline,debug,debug+noinline,debug+generic,debug+generic+noinline,alchemy,alchemy+generic ^
--js default,noinline,debug,debug+noinline ^
--neko default,noinline,debug,debug+noinline ^
--python default,noinline,debug,debug+noinline ^
--cpp default,noinline,debug,generc,noinline+debug,generic+debug,generic+debug+noinline,generic+noinline
+-swf default,generic,noinline,debug,debug+noinline,debug+generic,debug+generic+noinline,alchemy,alchemy+generic,analyzer,alchemy+analyzer,generic+analyzer,alchemy+generic+analyzer ^
+-js default,noinline,debug,debug+noinline,analyzer ^
+-neko default,noinline,debug,debug+noinline,analyzer ^
+-python default,noinline,debug,debug+noinline,analyzer ^
+-cpp default,noinline,debug,generc,noinline+debug,generic+debug,generic+debug+noinline,generic+noinline,analyzer,generic+,analyzer
 
 cd %CWD%
 del RunTests.n
