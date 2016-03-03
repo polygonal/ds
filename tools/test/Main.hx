@@ -141,7 +141,12 @@ class Main
 		
 		var cwd = Sys.getCwd();
 		
-		'Using HAXE COMPILER: ${Sys.getEnv("HAXEPATH")}'.println();
+		var p = new sys.io.Process(Sys.getEnv("HAXEPATH") + "/haxe.exe", []);
+		var s = p.stderr.readAll().toString();
+		p.close();
+		var r = ~/(\d\.\d.\d)/g;
+		r.match(s);
+		'Using HAXE COMPILER: ${Sys.getEnv("HAXEPATH")} (v${r.matched(1)})'.println();
 		
 		for (target in targets)
 		{
