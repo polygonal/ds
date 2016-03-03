@@ -22,6 +22,8 @@ import de.polygonal.ds.tools.ArrayTools;
 import de.polygonal.ds.tools.Assert.assert;
 import de.polygonal.ds.tools.NativeArrayTools;
 
+using de.polygonal.ds.tools.NativeArrayTools;
+
 /**
 	A weighted graph
 	
@@ -79,10 +81,11 @@ class Graph<T> implements Collection<T>
 	
 	var mNodeList:GraphNode<T> = null;
 	var mSize:Int = 0;
-	
-	var mStack:Array<GraphNode<T>> = [];
 	var mQue:Array<GraphNode<T>> = [];
 	var mIterator:GraphIterator<T> = null;
+	
+	var mStack:NativeArray<GraphNode<T>>;
+	var mStackSize:Int = 16;
 	
 	#if debug
 	var mBusy:Bool;
@@ -91,6 +94,8 @@ class Graph<T> implements Collection<T>
 	
 	public function new()
 	{
+		mStack = NativeArrayTools.alloc(mStackSize);
+		
 		#if debug
 		mBusy = false;
 		mNodeSet = new ListSet<GraphNode<T>>();
@@ -355,7 +360,9 @@ class Graph<T> implements Collection<T>
 		var c = 1;
 		
 		if (seed == null) seed = mNodeList;
-		mStack[0] = seed;
+		
+		mStack.set(0, seed);
+		
 		seed.parent = seed;
 		seed.depth = 0;
 		
@@ -372,7 +379,7 @@ class Graph<T> implements Collection<T>
 				else
 				{
 					var v:Dynamic = null;
-					var n = mStack[0];
+					var n = mStack.get(0);
 					v = n.val;
 					if (!v.visit(true, userData))
 					{
@@ -382,9 +389,10 @@ class Graph<T> implements Collection<T>
 						return;
 					}
 					
+					var max = mStackSize;
 					while (c > 0)
 					{
-						var n = mStack[--c];
+						var n = mStack.get(--c);
 						if (n.marked) continue;
 						n.marked = true;
 						
@@ -400,7 +408,10 @@ class Graph<T> implements Collection<T>
 							a.node.depth = n.depth + 1;
 							
 							if (v.visit(true, userData))
-								mStack[c++] = a.node;
+							{
+								if (c == max) resizeStack(max = mStackSize * 2);
+								mStack.set(c++, a.node);
+							}
 							a = a.next;
 						}
 					}
@@ -415,7 +426,7 @@ class Graph<T> implements Collection<T>
 				}
 				else
 				{
-					var n = mStack[0];
+					var n = mStack.get(0);
 					if (!process(n, true, userData))
 					{
 						#if debug
@@ -424,9 +435,10 @@ class Graph<T> implements Collection<T>
 						return;
 					}
 					
+					var max = mStackSize;
 					while (c > 0)
 					{
-						var n = mStack[--c];
+						var n = mStack.get(--c);
 						
 						if (n.marked) continue;
 						n.marked = true;
@@ -440,7 +452,10 @@ class Graph<T> implements Collection<T>
 							a.node.depth = n.depth + 1;
 							
 							if (process(a.node, true, userData))
-								mStack[c++] = a.node;
+							{
+								if (c == max) resizeStack(max = mStackSize * 2);
+								mStack.set(c++, a.node);
+							}
 							a = a.next;
 						}
 					}
@@ -456,9 +471,10 @@ class Graph<T> implements Collection<T>
 				else
 				{
 					var v:Dynamic = null;
+					var max = mStackSize;
 					while (c > 0)
 					{
-						var n = mStack[--c];
+						var n = mStack.get(--c);
 						if (n.marked) continue;
 						n.marked = true;
 						
@@ -468,7 +484,8 @@ class Graph<T> implements Collection<T>
 						var a = n.arcList;
 						while (a != null)
 						{
-							mStack[c++] = a.node;
+							if (c == max) resizeStack(max = mStackSize * 2);
+							mStack.set(c++, a.node);
 							a.node.parent = n;
 							a.node.depth = n.depth + 1;
 							a = a.next;
@@ -482,9 +499,10 @@ class Graph<T> implements Collection<T>
 					dFSRecursiveProcess(seed, process, false, userData);
 				else
 				{
+					var max = mStackSize;
 					while (c > 0)
 					{
-						var n = mStack[--c];
+						var n = mStack.get(--c);
 						if (n.marked) continue;
 						n.marked = true;
 						
@@ -493,7 +511,8 @@ class Graph<T> implements Collection<T>
 						var a = n.arcList;
 						while (a != null)
 						{
-							mStack[c++] = a.node;
+							if (c == max) resizeStack(max = mStackSize * 2);
+							mStack.set(c++, a.node);
 							a.node.parent = n;
 							a.node.depth = n.depth + 1;
 							a = a.next;
@@ -1018,7 +1037,9 @@ class Graph<T> implements Collection<T>
 		
 		mNodeList = null;
 		
-		for (i in 0...mStack.length) mStack[i] = null; mStack = null;
+		mStack.nullify();
+		mStack = null;
+		
 		for (i in 0...mQue.length) mQue[i] = null; mQue = null;
 		
 		if (mIterator != null)
@@ -1103,7 +1124,7 @@ class Graph<T> implements Collection<T>
 				node = hook;
 			}
 			
-			for (i in 0...mStack.length) mStack[i] = null;
+			mStack.nullify();
 			for (i in 0...mQue.length) mQue[i] = null;
 		}
 		
@@ -1319,6 +1340,14 @@ class Graph<T> implements Collection<T>
 			a = a.next;
 		}
 		return true;
+	}
+	
+	function resizeStack(newSize:Int)
+	{
+		var t = NativeArrayTools.alloc(newSize);
+		mStack.blit(0, t, 0, mStackSize);
+		mStack = t;
+		mStackSize = newSize;
 	}
 }
 
