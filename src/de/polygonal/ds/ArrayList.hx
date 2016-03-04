@@ -120,7 +120,7 @@ class ArrayList<T> implements List<T>
 	**/
 	public inline function set(i:Int, x:T)
 	{
-		assert(i >= 0 && i <= size, 'index $i out of range $size');
+		assert(i >= 0 && i < size, 'index $i out of range $size');
 		
 		mData.set(i, x);
 	}
