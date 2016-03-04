@@ -96,7 +96,10 @@ class Main
 		}
 		
 		function toArgs(directives:Array<String>)
-			return Lambda.map(directives, function(e) return defines.get(e)).join(" ");
+		{
+			var s = Lambda.map(directives, function(e) return defines.get(e)).join(" ");
+			return s.length == 1 ? "" : " " + s;
+		}
 		
 		var platformArgs = new StringMap<String>();
 		platformArgs.set("swf", "-swf-version 10 -swf-header 800:600:30:FFFFFF -D swf-script-timeout=60");
