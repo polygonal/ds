@@ -561,8 +561,18 @@ class Graph<T> implements Collection<T>
 		
 		var front = 0;
 		var c = 1;
+		var q = mQue, max = mQueSize;
 		
-		var q = mQue, max = mQueSize, i;
+		inline function getQue(i) return q.get(i);
+		inline function setQue(i, x)
+		{
+			if (i == max)
+			{
+				resizeQue(max = max * 2);
+				q = mQue;
+			}
+			q.set(i, x);
+		}
 		
 		if (seed == null) seed = mNodeList;
 		q.set(0, seed);
@@ -577,7 +587,7 @@ class Graph<T> implements Collection<T>
 			{
 				var v:Dynamic = null;
 				
-				var n = q.get(front);
+				var n = getQue(front);
 				v = n.val;
 				if (!v.visit(true, userData))
 				{
@@ -589,7 +599,7 @@ class Graph<T> implements Collection<T>
 				
 				while (c > 0)
 				{
-					n = q.get(front);
+					n = getQue(front);
 					v = n.val;
 					if (!v.visit(false, userData))
 					{
@@ -610,15 +620,9 @@ class Graph<T> implements Collection<T>
 						m.marked = true;
 						m.parent = n;
 						m.depth = n.depth + 1;
-						
 						v = m.val;
 						if (v.visit(true, userData))
-						{
-							i = c + front;
-							if (i == max) resizeQue(max = mQueSize * 2);
-							q.set(i, m);
-							c++;
-						}
+							setQue(c++ + front, m);
 						a = a.next;
 					}
 					front++;
@@ -627,7 +631,7 @@ class Graph<T> implements Collection<T>
 			}
 			else
 			{
-				var n = q.get(front);
+				var n = getQue(front);
 				if (!process(n, true, userData))
 				{
 					#if debug
@@ -638,7 +642,7 @@ class Graph<T> implements Collection<T>
 				
 				while (c > 0)
 				{
-					n = q.get(front);
+					n = getQue(front);
 					if (!process(n, false, userData))
 					{
 						#if debug
@@ -659,14 +663,8 @@ class Graph<T> implements Collection<T>
 						m.marked = true;
 						m.parent = n;
 						m.depth = n.depth + 1;
-						
 						if (process(m, true, userData))
-						{
-							i = c + front;
-							if (i == max) resizeQue(max = mQueSize * 2);
-							q.set(i, m);
-							c++;
-						}
+							setQue(c++ + front, m);
 						a = a.next;
 					}
 					front++;
@@ -681,7 +679,7 @@ class Graph<T> implements Collection<T>
 				var v:Dynamic = null;
 				while (c > 0)
 				{
-					var n = q.get(front);
+					var n = getQue(front);
 					v = n.val;
 					if (!v.visit(false, userData))
 					{
@@ -702,12 +700,7 @@ class Graph<T> implements Collection<T>
 						m.marked = true;
 						m.parent = n;
 						m.depth = n.depth + 1;
-						
-						i = c + front;
-						if (i == max) resizeQue(max = mQueSize * 2);
-						q.set(i, m);
-						c++;
-						
+						setQue(c++ + front, m);
 						a = a.next;
 					}
 					front++;
@@ -718,7 +711,7 @@ class Graph<T> implements Collection<T>
 			{
 				while (c > 0)
 				{
-					var n = q.get(front);
+					var n = getQue(front);
 					if (!process(n, false, userData))
 					{
 						#if debug
@@ -738,12 +731,7 @@ class Graph<T> implements Collection<T>
 						m.marked = true;
 						m.parent = n;
 						m.depth = n.depth + 1;
-						
-						i = c + front;
-						if (i == max) resizeQue(max = mQueSize * 2);
-						q.set(i, m);
-						c++;
-						
+						setQue(c++ + front, m);
 						a = a.next;
 					}
 					front++;
@@ -791,7 +779,18 @@ class Graph<T> implements Collection<T>
 		var front = 0;
 		var c = 1;
 		
-		var q = mQue, max = mQueSize, i;
+		var q = mQue, max = mQueSize;
+		
+		inline function getQue(i) return q.get(i);
+		inline function setQue(i, x)
+		{
+			if (i == max)
+			{
+				resizeQue(max = max * 2);
+				q = mQue;
+			}
+			q.set(i, x);
+		}
 		
 		var node = mNodeList;
 		while (node != null)
@@ -813,7 +812,7 @@ class Graph<T> implements Collection<T>
 			{
 				var v:Dynamic = null;
 				
-				var n = q.get(front);
+				var n = getQue(front);
 				v = n.val;
 				if (!v.visit(true, userData))
 				{
@@ -825,7 +824,7 @@ class Graph<T> implements Collection<T>
 				
 				while (c > 0)
 				{
-					n = q.get(front);
+					n = getQue(front);
 					v = n.val;
 					if (!v.visit(false, userData))
 					{
@@ -850,12 +849,7 @@ class Graph<T> implements Collection<T>
 						{
 							v = m.val;
 							if (v.visit(true, userData))
-							{
-								i = c + front;
-								if (i == max) resizeQue(max = mQueSize * 2);
-								q.set(i, m);
-								c++;
-							}
+								setQue(c++ + front, m);
 						}
 						a = a.next;
 					}
@@ -865,7 +859,7 @@ class Graph<T> implements Collection<T>
 			}
 			else
 			{
-				var n = q.get(front);
+				var n = getQue(front);
 				if (!process(n, true, userData))
 				{
 					#if debug
@@ -876,7 +870,7 @@ class Graph<T> implements Collection<T>
 				
 				while (c > 0)
 				{
-					n = q.get(front);
+					n = getQue(front);
 					if (!process(n, false, userData))
 					{
 						#if debug
@@ -900,12 +894,7 @@ class Graph<T> implements Collection<T>
 						if (m.depth <= maxDepth)
 						{
 							if (process(m, true, userData))
-							{
-								i = c + front;
-								if (i == max) resizeQue(max = mQueSize * 2);
-								q.set(i, m);
-								c++;
-							}
+								setQue(c++ + front, m);
 						}
 						a = a.next;
 					}
@@ -921,7 +910,7 @@ class Graph<T> implements Collection<T>
 				var v:Dynamic = null;
 				while (c > 0)
 				{
-					var n = q.get(front);
+					var n = getQue(front);
 					
 					v = n.val;
 					if (!v.visit(false, userData))
@@ -944,13 +933,7 @@ class Graph<T> implements Collection<T>
 						m.depth = n.depth + 1;
 						m.parent = n.parent;
 						if (m.depth <= maxDepth)
-						{
-							i = c + front;
-							if (i == max) resizeQue(max = mQueSize * 2);
-							q.set(i, m);
-							c++;
-						}
-						
+							setQue(c++ + front, m);
 						a = a.next;
 					}
 					front++;
@@ -961,7 +944,7 @@ class Graph<T> implements Collection<T>
 			{
 				while (c > 0)
 				{
-					var n = q.get(front);
+					var n = getQue(front);
 					
 					if (n.depth > maxDepth) continue;
 					
@@ -985,13 +968,7 @@ class Graph<T> implements Collection<T>
 						m.depth = n.depth + 1;
 						m.parent = n.parent;
 						if (m.depth <= maxDepth)
-						{
-							i = c + front;
-							if (i == max) resizeQue(max = mQueSize * 2);
-							q.set(i, m);
-							c++;
-						}
-						
+							setQue(c++ + front, m);
 						a = a.next;
 					}
 					front++;
