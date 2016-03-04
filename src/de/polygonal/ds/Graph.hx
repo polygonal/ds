@@ -81,11 +81,12 @@ class Graph<T> implements Collection<T>
 	
 	var mNodeList:GraphNode<T> = null;
 	var mSize:Int = 0;
-	var mQue:Array<GraphNode<T>> = [];
 	var mIterator:GraphIterator<T> = null;
 	
 	var mStack:NativeArray<GraphNode<T>>;
 	var mStackSize:Int = 16;
+	var mQue:NativeArray<GraphNode<T>>;
+	var mQueSize:Int = 16;
 	
 	#if debug
 	var mBusy:Bool;
@@ -95,6 +96,7 @@ class Graph<T> implements Collection<T>
 	public function new()
 	{
 		mStack = NativeArrayTools.alloc(mStackSize);
+		mQue = NativeArrayTools.alloc(mQueSize);
 		
 		#if debug
 		mBusy = false;
@@ -560,8 +562,10 @@ class Graph<T> implements Collection<T>
 		var front = 0;
 		var c = 1;
 		
+		var q = mQue, max = mQueSize, i;
+		
 		if (seed == null) seed = mNodeList;
-		mQue[0] = seed;
+		q.set(0, seed);
 		
 		seed.marked = true;
 		seed.parent = seed;
@@ -573,7 +577,7 @@ class Graph<T> implements Collection<T>
 			{
 				var v:Dynamic = null;
 				
-				var n = mQue[front];
+				var n = q.get(front);
 				v = n.val;
 				if (!v.visit(true, userData))
 				{
@@ -585,7 +589,7 @@ class Graph<T> implements Collection<T>
 				
 				while (c > 0)
 				{
-					n = mQue[front];
+					n = q.get(front);
 					v = n.val;
 					if (!v.visit(false, userData))
 					{
@@ -609,7 +613,12 @@ class Graph<T> implements Collection<T>
 						
 						v = m.val;
 						if (v.visit(true, userData))
-							mQue[c++ + front] = m;
+						{
+							i = c + front;
+							if (i == max) resizeQue(max = mQueSize * 2);
+							q.set(i, m);
+							c++;
+						}
 						a = a.next;
 					}
 					front++;
@@ -618,7 +627,7 @@ class Graph<T> implements Collection<T>
 			}
 			else
 			{
-				var n = mQue[front];
+				var n = q.get(front);
 				if (!process(n, true, userData))
 				{
 					#if debug
@@ -629,7 +638,7 @@ class Graph<T> implements Collection<T>
 				
 				while (c > 0)
 				{
-					n = mQue[front];
+					n = q.get(front);
 					if (!process(n, false, userData))
 					{
 						#if debug
@@ -652,7 +661,12 @@ class Graph<T> implements Collection<T>
 						m.depth = n.depth + 1;
 						
 						if (process(m, true, userData))
-							mQue[c++ + front] = m;
+						{
+							i = c + front;
+							if (i == max) resizeQue(max = mQueSize * 2);
+							q.set(i, m);
+							c++;
+						}
 						a = a.next;
 					}
 					front++;
@@ -667,7 +681,7 @@ class Graph<T> implements Collection<T>
 				var v:Dynamic = null;
 				while (c > 0)
 				{
-					var n = mQue[front];
+					var n = q.get(front);
 					v = n.val;
 					if (!v.visit(false, userData))
 					{
@@ -689,7 +703,11 @@ class Graph<T> implements Collection<T>
 						m.parent = n;
 						m.depth = n.depth + 1;
 						
-						mQue[c++ + front] = m;
+						i = c + front;
+						if (i == max) resizeQue(max = mQueSize * 2);
+						q.set(i, m);
+						c++;
+						
 						a = a.next;
 					}
 					front++;
@@ -700,7 +718,7 @@ class Graph<T> implements Collection<T>
 			{
 				while (c > 0)
 				{
-					var n = mQue[front];
+					var n = q.get(front);
 					if (!process(n, false, userData))
 					{
 						#if debug
@@ -721,7 +739,11 @@ class Graph<T> implements Collection<T>
 						m.parent = n;
 						m.depth = n.depth + 1;
 						
-						mQue[c++ + front] = m;
+						i = c + front;
+						if (i == max) resizeQue(max = mQueSize * 2);
+						q.set(i, m);
+						c++;
+						
 						a = a.next;
 					}
 					front++;
@@ -769,6 +791,8 @@ class Graph<T> implements Collection<T>
 		var front = 0;
 		var c = 1;
 		
+		var q = mQue, max = mQueSize, i;
+		
 		var node = mNodeList;
 		while (node != null)
 		{
@@ -777,10 +801,11 @@ class Graph<T> implements Collection<T>
 		}
 		
 		if (seed == null) seed = mNodeList;
-		mQue[0] = seed;
 		
 		seed.marked = true;
 		seed.parent = seed;
+		
+		q.set(0, seed);
 		
 		if (preflight)
 		{
@@ -788,7 +813,7 @@ class Graph<T> implements Collection<T>
 			{
 				var v:Dynamic = null;
 				
-				var n = mQue[front];
+				var n = q.get(front);
 				v = n.val;
 				if (!v.visit(true, userData))
 				{
@@ -800,7 +825,7 @@ class Graph<T> implements Collection<T>
 				
 				while (c > 0)
 				{
-					n = mQue[front];
+					n = q.get(front);
 					v = n.val;
 					if (!v.visit(false, userData))
 					{
@@ -825,7 +850,12 @@ class Graph<T> implements Collection<T>
 						{
 							v = m.val;
 							if (v.visit(true, userData))
-								mQue[c++ + front] = m;
+							{
+								i = c + front;
+								if (i == max) resizeQue(max = mQueSize * 2);
+								q.set(i, m);
+								c++;
+							}
 						}
 						a = a.next;
 					}
@@ -835,7 +865,7 @@ class Graph<T> implements Collection<T>
 			}
 			else
 			{
-				var n = mQue[front];
+				var n = q.get(front);
 				if (!process(n, true, userData))
 				{
 					#if debug
@@ -846,7 +876,7 @@ class Graph<T> implements Collection<T>
 				
 				while (c > 0)
 				{
-					n = mQue[front];
+					n = q.get(front);
 					if (!process(n, false, userData))
 					{
 						#if debug
@@ -870,7 +900,12 @@ class Graph<T> implements Collection<T>
 						if (m.depth <= maxDepth)
 						{
 							if (process(m, true, userData))
-								mQue[c++ + front] = m;
+							{
+								i = c + front;
+								if (i == max) resizeQue(max = mQueSize * 2);
+								q.set(i, m);
+								c++;
+							}
 						}
 						a = a.next;
 					}
@@ -886,7 +921,7 @@ class Graph<T> implements Collection<T>
 				var v:Dynamic = null;
 				while (c > 0)
 				{
-					var n = mQue[front];
+					var n = q.get(front);
 					
 					v = n.val;
 					if (!v.visit(false, userData))
@@ -909,7 +944,12 @@ class Graph<T> implements Collection<T>
 						m.depth = n.depth + 1;
 						m.parent = n.parent;
 						if (m.depth <= maxDepth)
-							mQue[c++ + front] = m;
+						{
+							i = c + front;
+							if (i == max) resizeQue(max = mQueSize * 2);
+							q.set(i, m);
+							c++;
+						}
 						
 						a = a.next;
 					}
@@ -921,7 +961,7 @@ class Graph<T> implements Collection<T>
 			{
 				while (c > 0)
 				{
-					var n = mQue[front];
+					var n = q.get(front);
 					
 					if (n.depth > maxDepth) continue;
 					
@@ -945,7 +985,12 @@ class Graph<T> implements Collection<T>
 						m.depth = n.depth + 1;
 						m.parent = n.parent;
 						if (m.depth <= maxDepth)
-							mQue[c++ + front] = m;
+						{
+							i = c + front;
+							if (i == max) resizeQue(max = mQueSize * 2);
+							q.set(i, m);
+							c++;
+						}
 						
 						a = a.next;
 					}
@@ -1040,7 +1085,8 @@ class Graph<T> implements Collection<T>
 		mStack.nullify();
 		mStack = null;
 		
-		for (i in 0...mQue.length) mQue[i] = null; mQue = null;
+		mQue.nullify();
+		mQue = null;
 		
 		if (mIterator != null)
 		{
@@ -1125,7 +1171,7 @@ class Graph<T> implements Collection<T>
 			}
 			
 			mStack.nullify();
-			for (i in 0...mQue.length) mQue[i] = null;
+			mQue.nullify();
 		}
 		
 		mNodeList = null;
@@ -1348,6 +1394,14 @@ class Graph<T> implements Collection<T>
 		mStack.blit(0, t, 0, mStackSize);
 		mStack = t;
 		mStackSize = newSize;
+	}
+	
+	function resizeQue(newSize:Int)
+	{
+		var t = NativeArrayTools.alloc(newSize);
+		mQue.blit(0, t, 0, mQueSize);
+		mQue = t;
+		mQueSize = newSize;
 	}
 }
 
