@@ -22,7 +22,7 @@ class NativeArrayTools
 		#elseif cs
 		return new cs.NativeArray(len);
 		#elseif java
-		return untyped Array.alloc(len);
+		return new java.NativeArray(len);
 		#elseif cpp
 		var a = new Array<T>();
 		cpp.NativeArray.setSize(a, len);
@@ -91,6 +91,7 @@ class NativeArrayTools
 		#end
 	}
 	
+	#if java inline #end
 	public static function toArray<T>(x:NativeArray<T>, first:Int, count:Int):Array<T>
 	{
 		assert(first >= 0 && first < size(x), "first index out of range");
@@ -127,7 +128,6 @@ class NativeArrayTools
 			x.copy();
 			#end
 		//#elseif java
-		//#elseif java
 		//return cast (java.Lib.nativeArray(x, false));
 		#elseif cs
 		//return cast (cs.Lib.nativeArray(x, false));
@@ -153,8 +153,8 @@ class NativeArrayTools
 			
 			#if neko
 			untyped __dollar__ablit(dst, dstPos, src, srcPos, len);
-			//#elseif java
-			//TODO java.lang.System.arraycopy(src, srcPos, dst, dstPos, len);
+			#elseif java
+			java.lang.System.arraycopy(src, srcPos, dst, dstPos, len);
 			#elseif cs
 			cs.system.Array.Copy(cast src, srcPos, cast dst, dstPos, len);
 			#elseif cpp
@@ -211,7 +211,8 @@ class NativeArrayTools
 		}
 	}
 	
-	public static function copy<T>(src:NativeArray<T>):NativeArray<T>
+	#if java inline #end
+	inline public static function copy<T>(src:NativeArray<T>):NativeArray<T>
 	{
 		#if (neko || cpp)
 		var len = size(src);
@@ -232,7 +233,7 @@ class NativeArrayTools
 		#end
 	}
 	
-	#if flash
+	#if (flash || java)
 	inline
 	#end
 	public static function zero<T:Float>(dst:NativeArray<T>, first:Int, len:Int):NativeArray<T>
@@ -251,6 +252,7 @@ class NativeArrayTools
 		@param k the number of elements to put into `dst`.
 		If omitted `k` is set to `dst`::length;
 	**/
+	#if java inline #end
 	public static function init<T>(dst:NativeArray<T>, x:T, first:Int = 0, ?k:Null<Int>):NativeArray<T>
 	{
 		if (k == null) k = size(dst);
@@ -261,6 +263,7 @@ class NativeArrayTools
 	/**
 		Nullifies all elements in `dst`.
 	**/
+	#if java inline #end
 	public static function nullify<T>(dst:NativeArray<T>, count:Int = 0)
 	{
 		assert(count <= size(dst), "count out of range");
@@ -281,6 +284,7 @@ class NativeArrayTools
 		@return the index of the element `x` or the bitwise complement (~) of the index where `x` would be inserted (guaranteed to be a negative number).
 		<warn>The insertion point is only valid for `min`=0 and `max`=a.length-1.</warn>
 	**/
+	#if java inline #end
 	public static function binarySearchCmp<T>(v:NativeArray<T>, x:T, min:Int, max:Int, cmp:T->T->Int):Int
 	{
 		assert(v != null);

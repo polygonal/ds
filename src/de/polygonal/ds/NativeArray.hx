@@ -30,7 +30,7 @@ neko.NativeArray<T>;
 #elseif cs
 cs.NativeArray<T>;
 #elseif java
-Array<T>
+java.NativeArray<T>;
 #else
 Array<T>;
 #end
