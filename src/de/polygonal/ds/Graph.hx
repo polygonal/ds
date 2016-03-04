@@ -363,7 +363,17 @@ class Graph<T> implements Collection<T>
 		
 		if (seed == null) seed = mNodeList;
 		
-		mStack.set(0, seed);
+		var max = mStackSize;
+		var s = mStack;
+		
+		s.set(0, seed);
+		
+		inline function popOffStack() return s.get(--c);
+		inline function pushOnStack(x)
+		{
+			if (c == max) resizeStack(max = max * 2);
+			s.set(c++, x);
+		}
 		
 		seed.parent = seed;
 		seed.depth = 0;
@@ -381,7 +391,7 @@ class Graph<T> implements Collection<T>
 				else
 				{
 					var v:Dynamic = null;
-					var n = mStack.get(0);
+					var n = s.get(0);
 					v = n.val;
 					if (!v.visit(true, userData))
 					{
@@ -391,10 +401,10 @@ class Graph<T> implements Collection<T>
 						return;
 					}
 					
-					var max = mStackSize;
 					while (c > 0)
 					{
-						var n = mStack.get(--c);
+						var n = popOffStack();
+						
 						if (n.marked) continue;
 						n.marked = true;
 						
@@ -410,10 +420,7 @@ class Graph<T> implements Collection<T>
 							a.node.depth = n.depth + 1;
 							
 							if (v.visit(true, userData))
-							{
-								if (c == max) resizeStack(max = mStackSize * 2);
-								mStack.set(c++, a.node);
-							}
+								pushOnStack(a.node);
 							a = a.next;
 						}
 					}
@@ -428,7 +435,7 @@ class Graph<T> implements Collection<T>
 				}
 				else
 				{
-					var n = mStack.get(0);
+					var n = s.get(0);
 					if (!process(n, true, userData))
 					{
 						#if debug
@@ -437,10 +444,9 @@ class Graph<T> implements Collection<T>
 						return;
 					}
 					
-					var max = mStackSize;
 					while (c > 0)
 					{
-						var n = mStack.get(--c);
+						var n = popOffStack();
 						
 						if (n.marked) continue;
 						n.marked = true;
@@ -454,10 +460,7 @@ class Graph<T> implements Collection<T>
 							a.node.depth = n.depth + 1;
 							
 							if (process(a.node, true, userData))
-							{
-								if (c == max) resizeStack(max = mStackSize * 2);
-								mStack.set(c++, a.node);
-							}
+								pushOnStack(a.node);
 							a = a.next;
 						}
 					}
@@ -473,10 +476,9 @@ class Graph<T> implements Collection<T>
 				else
 				{
 					var v:Dynamic = null;
-					var max = mStackSize;
 					while (c > 0)
 					{
-						var n = mStack.get(--c);
+						var n = popOffStack();
 						if (n.marked) continue;
 						n.marked = true;
 						
@@ -486,8 +488,7 @@ class Graph<T> implements Collection<T>
 						var a = n.arcList;
 						while (a != null)
 						{
-							if (c == max) resizeStack(max = mStackSize * 2);
-							mStack.set(c++, a.node);
+							pushOnStack(a.node);
 							a.node.parent = n;
 							a.node.depth = n.depth + 1;
 							a = a.next;
@@ -501,10 +502,9 @@ class Graph<T> implements Collection<T>
 					dFSRecursiveProcess(seed, process, false, userData);
 				else
 				{
-					var max = mStackSize;
 					while (c > 0)
 					{
-						var n = mStack.get(--c);
+						var n = popOffStack();
 						if (n.marked) continue;
 						n.marked = true;
 						
@@ -513,8 +513,7 @@ class Graph<T> implements Collection<T>
 						var a = n.arcList;
 						while (a != null)
 						{
-							if (c == max) resizeStack(max = mStackSize * 2);
-							mStack.set(c++, a.node);
+							pushOnStack(a.node);
 							a.node.parent = n;
 							a.node.depth = n.depth + 1;
 							a = a.next;
