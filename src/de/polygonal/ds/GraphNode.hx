@@ -81,6 +81,11 @@ class GraphNode<T> implements Hashable
 	**/
 	public var marked:Bool;
 	
+	/**
+		The total number of outgoing arcs.
+	**/
+	public var numArcs(default, null):Int;
+	
 	var mGraph:Graph<T>;
 	
 	/**
@@ -185,6 +190,8 @@ class GraphNode<T> implements Hashable
 		arc.next = arcList;
 		if (arcList != null) arcList.prev = arc;
 		arcList = arc;
+		
+		numArcs++;
 	}
 	
 	/**
@@ -207,6 +214,7 @@ class GraphNode<T> implements Hashable
 			arc.prev = null;
 			arc.node = null;
 			if (mGraph.returnArc != null) mGraph.returnArc(arc);
+			numArcs--;
 			return true;
 		}
 		return false;
@@ -223,6 +231,7 @@ class GraphNode<T> implements Hashable
 			removeArc(arc.node);
 			arc = arc.next;
 		}
+		numArcs = 0;
 	}
 	
 	/**
@@ -238,21 +247,7 @@ class GraphNode<T> implements Hashable
 			arc = arc.next;
 		}
 		arcList = null;
-	}
-	
-	/**
-		Counts the total number of arcs.
-	**/
-	public function getArcCount():Int
-	{
-		var c = 0;
-		var arc = arcList;
-		while (arc != null)
-		{
-			c++;
-			arc = arc.next;
-		}
-		return c;
+		numArcs = 0;
 	}
 	
 	/**
