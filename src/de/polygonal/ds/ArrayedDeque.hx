@@ -58,15 +58,20 @@ class ArrayedDeque<T> implements Deque<T>
 	var mHead:Int = 0;
 	var mTail:Int = 1;
 	var mTailBlockIndex:Int = 0;
-	var mPoolSize:Int = 0;
-	var mPoolCapacity:Int;
 	
-	var mBlocks:Array<NativeArray<T>>;
+	var mBlocks:NativeArray<NativeArray<T>>;
+	var mNumBlocks:Int = 0;
+	var mMaxBlocks:Int = 16;
+	
 	var mHeadBlock:NativeArray<T>;
 	var mTailBlock:NativeArray<T>;
 	var mHeadBlockNext:NativeArray<T> = null;
 	var mTailBlockPrev:NativeArray<T> = null;
-	var mBlockPool:Array<NativeArray<T>>;
+	
+	var mBlockPool:NativeArray<NativeArray<T>>;
+	var mPoolSize:Int = 0;
+	var mPoolCapacity:Int;
+	
 	var mIterator:ArrayedDequeIterator<T> = null;
 	
 	/**
@@ -88,11 +93,11 @@ class ArrayedDeque<T> implements Deque<T>
 		mBlockSizeMinusOne = blockSize - 1;
 		mBlockSizeShift = Bits.ntz(blockSize);
 		mPoolCapacity = blockPoolCapacity;
-		mBlocks = new Array();
-		mBlocks[0] = NativeArrayTools.alloc(blockSize);
-		mHeadBlock = mBlocks[0];
+		mBlocks = NativeArrayTools.alloc(mMaxBlocks);
+		mBlocks.set(mNumBlocks++, NativeArrayTools.alloc(blockSize));
+		mHeadBlock = mBlocks.get(0);
 		mTailBlock = mHeadBlock;
-		mBlockPool = new Array<NativeArray<T>>();
+		mBlockPool = NativeArrayTools.alloc(mPoolCapacity);
 		
 		if (source != null)
 			for (i in 0...source.length)
@@ -187,7 +192,7 @@ class ArrayedDeque<T> implements Deque<T>
 		
 		var c = (mHead + 1) + i;
 		var b = (c >> mBlockSizeShift);
-		return mBlocks[b].get(c - (b << mBlockSizeShift));
+		return mBlocks.get(b).get(c - (b << mBlockSizeShift));
 	}
 	
 	/**
@@ -202,7 +207,7 @@ class ArrayedDeque<T> implements Deque<T>
 			var c = (mHead + 1) + i;
 			var b = (c >> mBlockSizeShift);
 			
-			if (mBlocks[b].get(c - (b << mBlockSizeShift)) == x)
+			if (mBlocks.get(b).get(c - (b << mBlockSizeShift)) == x)
 				return i;
 		}
 		return -1;
@@ -221,7 +226,7 @@ class ArrayedDeque<T> implements Deque<T>
 		
 		var c = mTail - 1 - i;
 		var b = c >> mBlockSizeShift;
-		return mBlocks[mTailBlockIndex + b].get(M.abs(b << mBlockSizeShift) + c);
+		return mBlocks.get(mTailBlockIndex + b).get(M.abs(b << mBlockSizeShift) + c);
 	}
 	
 	/**
@@ -235,7 +240,7 @@ class ArrayedDeque<T> implements Deque<T>
 		{
 			var c = mTail - 1 - i;
 			var b = c >> mBlockSizeShift;
-			if (mBlocks[mTailBlockIndex + b].get(M.abs(b << mBlockSizeShift) + c) == x)
+			if (mBlocks.get(mTailBlockIndex + b).get(M.abs(b << mBlockSizeShift) + c) == x)
 				return i;
 		}
 		return -1;
@@ -250,7 +255,8 @@ class ArrayedDeque<T> implements Deque<T>
 		for (i in 0...mHead + 1) mHeadBlock.set(i, cast null);
 		for (i in mTail...mBlockSize) mTailBlock.set(i, cast null);
 		mPoolSize = 0;
-		mBlockPool = new Array<NativeArray<T>>();
+		mBlockPool.nullify();
+		mBlockPool = NativeArrayTools.alloc(mPoolCapacity);
 	}
 	
 	/**
@@ -265,7 +271,7 @@ class ArrayedDeque<T> implements Deque<T>
 		var i = mHead + 1;
 		var j = i >> mBlockSizeShift;
 		var k = 0;
-		var b = mBlocks[j], bs = mBlockSize, blocks = mBlocks;
+		var b = mBlocks.get(j), bs = mBlockSize, blocks = mBlocks;
 		i -= j << mBlockSizeShift;
 		while (s > 0)
 		{
@@ -273,7 +279,7 @@ class ArrayedDeque<T> implements Deque<T>
 			if (++i == bs)
 			{
 				i = 0;
-				b = blocks[++j];
+				b = blocks.get(++j);
 			}
 			s--;
 		}
@@ -346,7 +352,7 @@ class ArrayedDeque<T> implements Deque<T>
 			
 			for (j in 1...mTailBlockIndex)
 			{
-				var block = mBlocks[j];
+				var block = mBlocks.get(j);
 				for (k in 0...mBlockSize)
 				{
 					args[0] = i++;
@@ -382,13 +388,12 @@ class ArrayedDeque<T> implements Deque<T>
 		
 		Improves GC efficiency/performance (optional).
 	**/
+	@:access(de.polygonal.ds.BlockList)
 	public function free()
 	{
 		for (i in 0...mTailBlockIndex + 1)
-		{
-			mBlocks[i].nullify();
-			mBlocks[i] = null;
-		}
+			mBlocks.get(i).nullify();
+		mBlocks.nullify();
 		mBlocks = null;
 		mHeadBlock = null;
 		mHeadBlockNext = null;
@@ -427,7 +432,7 @@ class ArrayedDeque<T> implements Deque<T>
 			
 			for (j in 1...mTailBlockIndex)
 			{
-				var block = mBlocks[j];
+				var block = mBlocks.get(j);
 				for (k in 0...mBlockSize)
 					if (block.get(k) == x) return true;
 			}
@@ -501,7 +506,7 @@ class ArrayedDeque<T> implements Deque<T>
 				{
 					for (j in 1...mTailBlockIndex)
 					{
-						var block = mBlocks[j];
+						var block = mBlocks.get(j);
 						for (k in 0...mBlockSize)
 						{
 							if (block.get(k) == x)
@@ -544,7 +549,7 @@ class ArrayedDeque<T> implements Deque<T>
 					mTail--;
 				else
 				{
-					var block = mBlocks[b];
+					var block = mBlocks.get(b);
 					while (i > mHead + 1)
 					{
 						block.set(i, block.get(i - 1));
@@ -567,7 +572,7 @@ class ArrayedDeque<T> implements Deque<T>
 			{
 				if (b <= mTailBlockIndex - b)
 				{
-					var block = mBlocks[b];
+					var block = mBlocks.get(b);
 					while (i > 0)
 					{
 						block.set(i, block.get(i - 1));
@@ -576,7 +581,7 @@ class ArrayedDeque<T> implements Deque<T>
 					
 					while (b > 1)
 					{
-						var prevBlock = mBlocks[b - 1];
+						var prevBlock = mBlocks.get(b - 1);
 						block.set(0, prevBlock.get(mBlockSizeMinusOne));
 						block = prevBlock;
 						
@@ -602,7 +607,7 @@ class ArrayedDeque<T> implements Deque<T>
 				}
 				else
 				{
-					var block = mBlocks[b];
+					var block = mBlocks.get(b);
 					
 					while (i < mBlockSize - 1)
 					{
@@ -613,7 +618,7 @@ class ArrayedDeque<T> implements Deque<T>
 					var j = mTailBlockIndex - 1;
 					while (b < j)
 					{
-						var nextBlock = mBlocks[b + 1];
+						var nextBlock = mBlocks.get(b + 1);
 						block.set(mBlockSizeMinusOne, nextBlock.get(0));
 						block = nextBlock;
 						
@@ -653,16 +658,17 @@ class ArrayedDeque<T> implements Deque<T>
 		{
 			for (i in 0...mTailBlockIndex + 1)
 			{
-				var block = mBlocks[i];
+				var block = mBlocks.get(i);
 				for (j in 0...mBlockSize) block.set(j, cast null);
-				mBlocks[i] = null;
+				mBlocks.set(i, null);
 			}
-			mBlocks = new Array();
-			mBlocks[0] = NativeArrayTools.alloc(mBlockSize);
-			mHeadBlock = mBlocks[0];
-			for (i in 0...mBlockPool.length)
-				mBlockPool[i] = null;
-			mBlockPool = new Array<NativeArray<T>>();
+			
+			mNumBlocks = 0;
+			mBlocks.nullify();
+			mBlocks = NativeArrayTools.alloc(mMaxBlocks);
+			mBlocks.set(mNumBlocks++, NativeArrayTools.alloc(mBlockSize));
+			mHeadBlock = mBlocks.get(0);
+			mBlockPool.nullify();
 			mPoolSize = 0;
 		}
 		
@@ -730,7 +736,7 @@ class ArrayedDeque<T> implements Deque<T>
 			for (j in mHead + 1...mBlockSize) out[i++] = mHeadBlock.get(j);
 			for (j in 1...mTailBlockIndex)
 			{
-				var block = mBlocks[j];
+				var block = mBlocks.get(j);
 				for (k in 0...mBlockSize) out[i++] = block.get(k);
 			}
 			for (j in 0...mTail) out[i++] = mTailBlock.get(j);
@@ -753,15 +759,17 @@ class ArrayedDeque<T> implements Deque<T>
 		c.mTail = mTail;
 		c.mTailBlockIndex = mTailBlockIndex;
 		
-		var blocks = c.mBlocks = ArrayTools.alloc(mTailBlockIndex + 1);
+		c.mNumBlocks = 0;
+		c.mMaxBlocks = mTailBlockIndex + 1;
+		c.mBlocks = NativeArrayTools.alloc(mTailBlockIndex + 1);
 		for (i in 0...mTailBlockIndex + 1)
-			blocks[i] = NativeArrayTools.alloc(mBlockSize);
-		c.mHeadBlock = blocks[0];
-		c.mTailBlock = blocks[mTailBlockIndex];
+			c.mBlocks.set(c.mNumBlocks++, NativeArrayTools.alloc(mBlockSize));
+		c.mHeadBlock = c.mBlocks.get(0);
+		c.mTailBlock = c.mBlocks.get(mTailBlockIndex);
 		if (mTailBlockIndex > 0)
 		{
-			c.mHeadBlockNext = blocks[1];
-			c.mTailBlockPrev = blocks[mTailBlockIndex - 1];
+			c.mHeadBlockNext = c.mBlocks.get(1);
+			c.mTailBlockPrev = c.mBlocks.get(mTailBlockIndex - 1);
 		}
 		
 		if (assign)
@@ -780,7 +788,7 @@ class ArrayedDeque<T> implements Deque<T>
 			else
 			{
 				copy(mHeadBlock, c.mHeadBlock, mHead + 1, mBlockSize);
-				for (j in 1...mTailBlockIndex) copy(mBlocks[j], blocks[j], 0, mBlockSize);
+				for (j in 1...mTailBlockIndex) copy(mBlocks.get(j), c.mBlocks.get(j), 0, mBlockSize);
 				copy(mTailBlock, c.mTailBlock, 0, mTail);
 			}
 		}
@@ -802,7 +810,7 @@ class ArrayedDeque<T> implements Deque<T>
 				else
 				{
 					copy(copier, mHeadBlock, c.mHeadBlock, mHead + 1, mBlockSize);
-					for (j in 1...mTailBlockIndex) copy(copier, mBlocks[j], blocks[j], 0, mBlockSize);
+					for (j in 1...mTailBlockIndex) copy(copier, mBlocks.get(j), c.mBlocks.get(j), 0, mBlockSize);
 					copy(copier, mTailBlock, c.mTailBlock, 0, mTail);
 				}
 			}
@@ -828,7 +836,7 @@ class ArrayedDeque<T> implements Deque<T>
 				else
 				{
 					copy(mHeadBlock, c.mHeadBlock, mHead + 1, mBlockSize);
-					for (j in 1...mTailBlockIndex) copy(mBlocks[j], blocks[j], 0, mBlockSize);
+					for (j in 1...mTailBlockIndex) copy(mBlocks.get(j), c.mBlocks.get(j), 0, mBlockSize);
 					copy(mTailBlock, c.mTailBlock, 0, mTail);
 				}
 			}
@@ -838,15 +846,18 @@ class ArrayedDeque<T> implements Deque<T>
 	
 	function shiftBlock()
 	{
-		putBlock(mBlocks[0]);
-		mBlocks.shift();
+		{
+			putBlock(mBlocks.get(0));
+			mBlocks.blit(1, mBlocks, 0, --mNumBlocks);
+		}
+		
 		mHead = 0;
 		mHeadBlock = mHeadBlockNext;
-		mTailBlock = mBlocks[--mTailBlockIndex];
+		mTailBlock = mBlocks.get(--mTailBlockIndex);
 		if (mTailBlockIndex > 0)
 		{
-			mHeadBlockNext = mBlocks[1];
-			mTailBlockPrev = mBlocks[mTailBlockIndex - 1];
+			mHeadBlockNext = mBlocks.get(1);
+			mTailBlockPrev = mBlocks.get(mTailBlockIndex - 1);
 		}
 		else
 		{
@@ -857,22 +868,37 @@ class ArrayedDeque<T> implements Deque<T>
 	
 	function unshiftBlock()
 	{
-		mBlocks.unshift(getBlock());
+		{
+			if (mNumBlocks == mMaxBlocks)
+			{
+				mMaxBlocks *= 2;
+				var t = NativeArrayTools.alloc(mMaxBlocks);
+				mBlocks.blit(0, t, 1, mNumBlocks++);
+				mBlocks = t;
+			}
+			else
+				mBlocks.blit(0, mBlocks, 1, mNumBlocks++);
+			mBlocks.set(0, getBlock());
+		}
+		
 		mHead = mBlockSizeMinusOne;
-		mHeadBlock = mBlocks[0];
-		mHeadBlockNext = mBlocks[1];
-		mTailBlockPrev = mBlocks[mTailBlockIndex++];
-		mTailBlock = mBlocks[mTailBlockIndex];
+		mHeadBlock = mBlocks.get(0);
+		mHeadBlockNext = mBlocks.get(1);
+		mTailBlockPrev = mBlocks.get(mTailBlockIndex++);
+		mTailBlock = mBlocks.get(mTailBlockIndex);
 	}
 	
 	function popBlock()
 	{
-		putBlock(mBlocks.pop());
+		{
+			putBlock(mBlocks.get(--mNumBlocks));
+		}
+		
 		mTailBlockIndex--;
 		mTailBlock = mTailBlockPrev;
 		mTail = mBlockSizeMinusOne;
 		if (mTailBlockIndex > 0)
-			mTailBlockPrev = mBlocks[mTailBlockIndex - 1];
+			mTailBlockPrev = mBlocks.get(mTailBlockIndex - 1);
 		else
 		{
 			mHeadBlockNext = null;
@@ -882,26 +908,36 @@ class ArrayedDeque<T> implements Deque<T>
 	
 	function pushBlock()
 	{
-		mBlocks.push(getBlock());
+		{
+			if (mNumBlocks == mMaxBlocks)
+			{
+				mMaxBlocks *= 2;
+				var t = NativeArrayTools.alloc(mMaxBlocks);
+				mBlocks.blit(0, t, 0, mNumBlocks);
+				mBlocks = t;
+			}
+			mBlocks.set(mNumBlocks++, getBlock());
+		}
+		
 		mTail = 0;
 		mTailBlockPrev = mTailBlock;
-		mTailBlock = mBlocks[++mTailBlockIndex];
+		mTailBlock = mBlocks.get(++mTailBlockIndex);
 		if (mTailBlockIndex == 1)
-			mHeadBlockNext = mBlocks[1];
+			mHeadBlockNext = mBlocks.get(1);
 	}
 	
-	inline function getBlock():NativeArray<T>
+	function getBlock():NativeArray<T>
 	{
 		if (mPoolSize > 0)
-			return mBlockPool[--mPoolSize];
+			return mBlockPool.get(--mPoolSize);
 		else
 			return NativeArrayTools.alloc(mBlockSize);
 	}
 	
-	inline function putBlock(x:NativeArray<T>)
+	function putBlock(x:NativeArray<T>)
 	{
 		if (mPoolSize < mPoolCapacity)
-			mBlockPool[mPoolSize++] = x;
+			mBlockPool.set(mPoolSize++, x);
 	}
 }
 
@@ -913,7 +949,7 @@ class ArrayedDeque<T> implements Deque<T>
 class ArrayedDequeIterator<T> implements de.polygonal.ds.Itr<T>
 {
 	var mObject:ArrayedDeque<T>;
-	var mBlocks:Array<NativeArray<T>>;
+	var mBlocks:NativeArray<NativeArray<T>>;
 	var mBlock:NativeArray<T>;
 	var mI:Int;
 	var mS:Int;
@@ -940,7 +976,7 @@ class ArrayedDequeIterator<T> implements de.polygonal.ds.Itr<T>
 		mI = mObject.mHead + 1;
 		mB = mI >> mObject.mBlockSizeShift;
 		mS = mObject.size;
-		mBlock = mBlocks[mB];
+		mBlock = mBlocks.get(mB);
 		mI -= mB << mObject.mBlockSizeShift;
 		return this;
 	}
@@ -956,7 +992,7 @@ class ArrayedDequeIterator<T> implements de.polygonal.ds.Itr<T>
 		if (mI == mBlockSize)
 		{
 			mI = 0;
-			mBlock = mBlocks[++mB];
+			mBlock = mBlocks.get(++mB);
 		}
 		mS--;
 		return x;
