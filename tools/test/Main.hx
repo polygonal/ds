@@ -120,9 +120,16 @@ class Main
 				if (directives.length == 0) continue;
 				
 				var output = toFileName(directives, target);
-				var args = '-main UnitTest -cp test -cp src -lib polygonal-printf -$target $output ${toArgs(directives)}' + (platformArgs.exists(target) ? (" " + platformArgs.get(target)) : "");
+				
+				var args = '-main UnitTest -cp test -cp src -lib polygonal-printf -$target $output${toArgs(directives)}' + (platformArgs.exists(target) ? (" " + platformArgs.get(target)) : "");
 				'compiling $target: $output ...'.println();
-				if (Sys.command(Sys.getEnv("HAXEPATH") + "/haxe.exe", args.split(" ")) == 1) error();
+				
+				if (Sys.command(Sys.getEnv("HAXEPATH") + "\\haxe.exe", args.split(" ")) == 1)
+				{
+					error();
+					continue;
+				}
+				
 				files.push(output);
 			}
 			return files;
