@@ -860,27 +860,12 @@ class ArrayList<T> implements List<T>
 		Automatically reserves storage for `n` elements so an additional call to `reserve()` is not required.
 		<assert>invalid element count</assert>
 	**/
-	public function alloc(n:Int = 0, x:T):ArrayList<T>
+	public function init(n:Int, x:T):ArrayList<T>
 	{
-		assert(n >= 0, "invalid element count");
-		
 		reserve(n);
+		mSize = n;
 		var d = mData;
 		for (i in 0...n) d.set(i, x);
-		mSize = n;
-		return this;
-	}
-	
-	/**
-		Sets `n` existing elements starting at index `first` to the value `x`.
-	**/
-	public function init(first:Int, n:Int, x:T):ArrayList<T>
-	{
-		assert(n <= mSize, "invalid element count");
-		assert(first >= 0 && first <= mSize - n, 'index first $first out of range');
-		
-		var d = mData;
-		for (i in first...first + n) d.set(i, x);
 		return this;
 	}
 	
