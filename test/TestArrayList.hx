@@ -41,51 +41,31 @@ class TestArrayList extends AbstractTest
 		for (i in 0...95) assertEquals(i, a.get(5 + i));
 	}
 	
-	function testAlloc()
-	{
-		var a = new ArrayList<Int>();
-		a.alloc(5, 10);
-		assertEquals(5, a.size);
-		for (i in 0...5) assertEquals(10, a.get(i));
-		
-		var a = new ArrayList<Int>();
-		a.alloc(20, 10);
-		assertEquals(20, a.size);
-		for (i in 0...20) assertEquals(10, a.get(i));
-		
-		var a = new ArrayList<Int>();
-		a.alloc(20, 0);
-		a.forEach(function(e, i) return i);
-		for (i in 0...20) assertEquals(i, a.get(i));
-	}
-	
 	function testInit()
 	{
 		var a = new ArrayList<Int>();
-		a.alloc(5, 0);
+		a.init(5, 10);
+		
 		assertEquals(5, a.size);
-		a.init(0, 5, 10);
 		for (i in 0...5) assertEquals(10, a.get(i));
 		
-		var a = new ArrayList<Int>();
-		a.alloc(5, 0);
-		assertEquals(5, a.size);
-		
-		a.init(1, 5 - 1, 10);
-		assertEquals(0, a.get(0));
-		for (i in 1...5) assertEquals(10, a.get(i));
+		var a = new ArrayList<Int>(2);
+		a.init(10, 10);
+		assertEquals(10, a.size);
+		assertEquals(10, a.capacity);
+		for (i in 0...10) assertEquals(10, a.get(i));
 	}
 	
 	function testPack()
 	{
-		var a = new ArrayList<Int>().alloc(20, 0);
+		var a = new ArrayList<Int>().init(20, 0);
 		a.pack();
 		assertEquals(a.size, 20);
 		assertEquals(20, a.capacity);
 		for (i in 0...10) a.pushBack(i);
 		assertEquals(a.size, 30);
 		
-		var a = new ArrayList<Int>().alloc(20, 0);
+		var a = new ArrayList<Int>().init(20, 0);
 		a.clear();
 		a.pack();
 		assertEquals(a.size, 0);
@@ -99,7 +79,7 @@ class TestArrayList extends AbstractTest
 		assertEquals(0, a.size);
 		
 		var a = new ArrayList<Int>();
-		a.alloc(20, 0);
+		a.init(20, 0);
 		a.forEach(function(e, i) return i);
 		assertEquals(20, a.size);
 		for (i in 0...20) assertEquals(i, a.get(i));
@@ -183,7 +163,7 @@ class TestArrayList extends AbstractTest
 	function testPopFront()
 	{
 		var a = new ArrayList<Int>();
-		a.alloc(5, 0);
+		a.init(5, 0);
 		a.forEach(function(e, i) return i);
 		var x = a.popFront();
 		assertEquals(0, x);
@@ -200,7 +180,7 @@ class TestArrayList extends AbstractTest
 	function testPushFront()
 	{
 		var a = new ArrayList<Int>();
-		a.alloc(5, 0);
+		a.init(5, 0);
 		a.forEach(function(e, i) return i);
 		a.pushFront(10);
 		assertEquals(6, a.size);
@@ -253,7 +233,7 @@ class TestArrayList extends AbstractTest
 	function testSwapPop()
 	{
 		var a = new ArrayList<Int>();
-		a.alloc(5, 0);
+		a.init(5, 0);
 		a.forEach(function(e, i) return i);
 		var x = a.swapPop(0);
 		assertEquals(0, x);
@@ -288,7 +268,7 @@ class TestArrayList extends AbstractTest
 	function testTrim()
 	{
 		var a = new ArrayList<Int>();
-		a.alloc(20, 0);
+		a.init(20, 0);
 		a.forEach(function(e, i) return i);
 		a.trim(10);
 		assertEquals(10, a.size);
@@ -760,7 +740,7 @@ class TestArrayList extends AbstractTest
 	function testShuffle()
 	{
 		var q = new ArrayList<Int>();
-		q.alloc(10, 0).forEach(function(e, i) return i);
+		q.init(10, 0).forEach(function(e, i) return i);
 		q.shuffle();
 		assertEquals(10, q.size);
 		var set = new Array<Int>();
