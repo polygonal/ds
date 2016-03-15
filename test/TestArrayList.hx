@@ -64,12 +64,11 @@ class TestArrayList extends AbstractTest
 		assertEquals(20, a.capacity);
 		for (i in 0...10) a.pushBack(i);
 		assertEquals(a.size, 30);
-		
 		var a = new ArrayList<Int>().init(20, 0);
 		a.clear();
 		a.pack();
 		assertEquals(a.size, 0);
-		assertEquals(1, a.capacity);
+		assertEquals(2, a.capacity);
 	}
 	
 	function testIter()
@@ -370,6 +369,11 @@ class TestArrayList extends AbstractTest
 			assertEquals(size, a.size);
 		}
 		
+		assertEquals(0, a.size);
+		
+		var a = new ArrayList<Int>();
+		a.add(1);
+		a.removeAt(0);
 		assertEquals(0, a.size);
 	}
 	
