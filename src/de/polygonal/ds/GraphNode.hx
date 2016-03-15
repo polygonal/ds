@@ -84,7 +84,7 @@ class GraphNode<T> implements Hashable
 	/**
 		The total number of outgoing arcs.
 	**/
-	public var numArcs(default, null):Int;
+	public var numArcs(default, null):Int = 0;
 	
 	var mGraph:Graph<T>;
 	
