@@ -84,9 +84,9 @@ class ArrayList<T> implements List<T>
 		If omitted, the vector uses a growth factor of 1.5 resulting in a mild overallocation.
 		In either case, `capacity` is usually larger than `size` to minimize the amount of incremental reallocation.
 	**/
-	public function new(initalCapacity:Null<Int> = 1, ?source:Array<T>)
+	public function new(initalCapacity:Null<Int> = 2, ?source:Array<T>)
 	{
-		mInitialCapacity = M.max(1, initalCapacity);
+		mInitialCapacity = M.max(2, initalCapacity);
 		
 		if (source != null && source.length > 0)
 		{
