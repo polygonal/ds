@@ -5,6 +5,11 @@ if not exist ..\..\haxelib.json (
 	exit
 )
 haxe compile.hxml
+if errorlevel 1 (
+	echo ERROR
+	pause
+	exit
+)
 
 if not exist flashplayer.txt (
 	echo {absolute_path_to_flash_player_executable} > flashplayer.txt
