@@ -124,7 +124,15 @@ class Main
 				var args = '-main UnitTest -cp test -cp src -lib polygonal-printf -$target $output${toArgs(directives)}' + (platformArgs.exists(target) ? (" " + platformArgs.get(target)) : "");
 				'compiling $target: $output ...'.println();
 				
-				if (Sys.command(Sys.getEnv("HAXEPATH") + "\\haxe.exe", args.split(" ")) == 1)
+				var tmp = [];
+				for (arg in args.split(" "))
+				{
+					if (!~/\S/.match(arg)) continue;
+					tmp.push(arg);
+				}
+				var args = tmp;
+				
+				if (Sys.command(Sys.getEnv("HAXEPATH") + "\\haxe.exe", args) == 1)
 				{
 					error();
 					continue;
