@@ -375,6 +375,17 @@ class TestArrayList extends AbstractTest
 		a.add(1);
 		a.removeAt(0);
 		assertEquals(0, a.size);
+		
+		a.pushBack(1);
+		a.pushBack(2);
+		assertEquals(2, a.removeAt(1));
+		assertEquals(1, a.size);
+		
+		var len = a.capacity;
+		a = new ArrayList<Int>();
+		for (i in 0...len) a.pushBack(i);
+		assertEquals(len - 1, a.removeAt(a.size - 1));
+		assertEquals(len - 1, a.size);
 	}
 	
 	function testJoin()

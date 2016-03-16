@@ -321,8 +321,7 @@ class ArrayList<T> implements List<T>
 		var d = mData;
 		var x = d.get(i);
 		#if (neko || java || cs || cpp)
-		d.blit(i + 1, d, i, size - i);
-		--mSize;
+		d.blit(i + 1, d, i, --mSize - i);
 		#else
 		var k = --mSize;
 		var p = i;
