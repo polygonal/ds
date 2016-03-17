@@ -172,6 +172,8 @@ class Main
 			
 			if (!FileSystem.exists('$dstPath/$target')) FileSystem.createDirectory('$dstPath/$target');
 			
+			Sys.setCwd(cwd);
+			
 			var files = compile(target);
 			
 			for (file in files)
@@ -207,6 +209,8 @@ class Main
 						run(exe, []);
 					
 					case "java":
+						Sys.setCwd(cwd);
+						Sys.setCwd(file);
 						var exe = "UnitTest.jar";
 						if (file.indexOf("debug") > -1) exe = "UnitTest-debug.jar";
 						run("java", ["-jar", '$file/$exe']);
