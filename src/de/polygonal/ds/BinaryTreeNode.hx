@@ -23,6 +23,8 @@ import de.polygonal.ds.tools.Assert.assert;
 import de.polygonal.ds.tools.M;
 import de.polygonal.ds.tools.NativeArrayTools;
 
+using de.polygonal.ds.tools.NativeArrayTools;
+
 /**
 	A binary tree
 	
@@ -63,6 +65,7 @@ class BinaryTreeNode<T> implements Collection<T>
 	public var r:BinaryTreeNode<T>;
 	
 	var mTimestamp:Int = 0;
+	var mStack:NativeArray<BinaryTreeNode<T>> = null;
 	
 	#if debug
 	var mBusy:Bool;
@@ -117,36 +120,49 @@ class BinaryTreeNode<T> implements Collection<T>
 		}
 		else
 		{
-			var stack = new Array<BinaryTreeNode<T>>();
-			
+			var s = getStack();
 			var top = 0;
-			stack[top++] = this;
+			var max = NativeArrayTools.size(s);
+			
+			inline function pop() return s.get(--top);
+			inline function push(x) s.set(top++, x);
+			inline function reserve(n)
+				if (n > max)
+					s = resizeStack(max <<= 1);
+			
+			push(this);
 			
 			if (process == null)
 			{
+				var node, v:Dynamic;
 				while (top != 0)
 				{
-					var node = stack[--top];
-					var v:Dynamic = node.val;
-					if (!v.visit(false, userData))
-						return;
+					node = pop();
+					v = node.val;
+					if (!v.visit(false, userData)) return;
+					
+					reserve(top + 2);
+					
 					if (node.hasR())
-						stack[top++] = node.r;
+						s.set(top++, node.r);
 					if (node.hasL())
-						stack[top++] = node.l;
+						s.set(top++, node.l);
 				}
 			}
 			else
 			{
+				var node;
 				while (top != 0)
 				{
-					var node = stack[--top];
-					if (!process(node, userData))
-						return;
+					node = pop();
+					if (!process(node, userData)) return;
+					
+					reserve(top + 2);
+					
 					if (node.hasR())
-						stack[top++] = node.r;
+						push(node.r);
 					if (node.hasL())
-						stack[top++] = node.l;
+						push(node.l);
 				}
 			}
 		}
@@ -195,9 +211,18 @@ class BinaryTreeNode<T> implements Collection<T>
 		}
 		else
 		{
-			var stack = new Array<BinaryTreeNode<T>>();
-			
+			var s = getStack();
 			var top = 0;
+			var max = NativeArrayTools.size(s);
+			
+			inline function pop() return s.get(--top);
+			inline function push(x) s.set(top++, x);
+			inline function reserve(n)
+				if (n > max)
+					s = resizeStack(max <<= 1);
+			
+			push(this);
+			
 			var node = this;
 			
 			if (process == null)
@@ -206,25 +231,25 @@ class BinaryTreeNode<T> implements Collection<T>
 				{
 					while (node != null)
 					{
+						reserve(top + 2);
 						if (node.r != null)
-							stack[top++] = node.r;
-						stack[top++] = node;
+							push(node.r);
+						push(node);
 						node = node.l;
 					}
 					
-					node = stack[--top];
+					var v:Dynamic;
+					node = pop();
 					while (top != 0 && node.r == null)
 					{
-						var v:Dynamic = node.val;
-						if (!v.visit(false, userData))
-							return;
-						node = stack[--top];
+						v = node.val;
+						if (!v.visit(false, userData)) return;
+						node = pop();
 					}
 					
-					var v:Dynamic = node.val;
-					if (!v.visit(false, userData))
-						return;
-					node = (top != 0) ? stack[--top] : null;
+					v = node.val;
+					if (!v.visit(false, userData)) return;
+					node = (top != 0) ? pop() : null;
 				}
 			}
 			else
@@ -233,23 +258,22 @@ class BinaryTreeNode<T> implements Collection<T>
 				{
 					while (node != null)
 					{
+						reserve(top + 2);
 						if (node.r != null)
-							stack[top++] = node.r;
-						stack[top++] = node;
+							push(node.r);
+						push(node);
 						node = node.l;
 					}
 					
-					node = stack[--top];
+					node = pop();
 					while (top != 0 && node.r == null)
 					{
-						if (!process(node, userData))
-							return;
-						node = stack[--top];
+						if (!process(node, userData)) return;
+						node = pop();
 					}
 					
-					if (!process(node, userData))
-						return;
-					node = (top != 0) ? stack[--top] : null;
+					if (!process(node, userData)) return;
+					node = (top != 0) ? pop() : null;
 				}
 			}
 		}
@@ -305,24 +329,33 @@ class BinaryTreeNode<T> implements Collection<T>
 			mBusy = true;
 			#end
 			
-			var time = mTimestamp + 1;
-			var stack = new Array<BinaryTreeNode<T>>();
-			
+			var s = getStack();
 			var top = 0;
-			stack[top++] = this;
+			var max = NativeArrayTools.size(s);
+			
+			inline function push(x) s.set(top++, x);
+			inline function reserve(n)
+				if (n > max)
+					s = resizeStack(max <<= 1);
+			
+			var time = mTimestamp + 1;
+			
+			push(this);
 			
 			if (process == null)
 			{
-				var v:Dynamic = null;
+				var node, v:Dynamic;
 				while (top != 0)
 				{
-					var node = stack[top - 1];
+					reserve(top + 1);
+					
+					node = s.get(top - 1);
 					if ((node.l != null) && (node.l.mTimestamp < time))
-						stack[top++] = node.l;
+						push(node.l);
 					else
 					{
 						if ((node.r != null) && (node.r.mTimestamp < time))
-							stack[top++] = node.r;
+							push(node.r);
 						else
 						{
 							v = node.val;
@@ -341,15 +374,18 @@ class BinaryTreeNode<T> implements Collection<T>
 			}
 			else
 			{
+				var node;
 				while (top != 0)
 				{
-					var node = stack[top - 1];
+					reserve(top + 1);
+					
+					node = s.get(top - 1);
 					if ((node.l != null) && (node.l.mTimestamp < time))
-						stack[top++] = node.l;
+						push(node.l);
 					else
 					{
 						if ((node.r != null) && (node.r.mTimestamp < time))
-							stack[top++] = node.r;
+							push(node.r);
 						else
 						{
 							if (!process(node, userData))
@@ -647,6 +683,7 @@ class BinaryTreeNode<T> implements Collection<T>
 		
 		val = cast null;
 		r = l = p = null;
+		mStack = null;
 	}
 	
 	/**
@@ -826,6 +863,33 @@ class BinaryTreeNode<T> implements Collection<T>
 			}
 		}
 		return copy;
+	}
+	
+	function getStack():NativeArray<BinaryTreeNode<T>>
+	{
+		if (mStack == null)
+		{
+			var n = p;
+			while (n != null)
+			{
+				if (n.mStack != null)
+				{
+					mStack = n.mStack;
+					break;
+				}
+				n = n.p;
+			}
+			if (mStack == null)
+				mStack = NativeArrayTools.alloc(2);
+		}
+		return mStack;
+	}
+	
+	function resizeStack(newSize:Int):NativeArray<BinaryTreeNode<T>>
+	{
+		var t = NativeArrayTools.alloc(newSize);
+		mStack.blit(0, t, 0, mStack.size());
+		return mStack = t;
 	}
 }
 
