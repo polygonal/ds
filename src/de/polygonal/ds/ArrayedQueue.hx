@@ -480,11 +480,7 @@ class ArrayedQueue<T> implements Queue<T>
 	**/
 	public function clear(gc:Bool = false)
 	{
-		if (gc)
-		{
-			var i = mFront, d = mData;
-			for (j in 0...size) d.set(i++ % capacity, cast null);
-		}
+		if (gc) mData.nullify();
 		mFront = mSize = 0;
 	}
 	
