@@ -910,7 +910,7 @@ class ArrayList<T> implements List<T>
 		return out;
 	}
 	
-	public function getData():NativeArray<T>
+	public inline function getData():NativeArray<T>
 	{
 		return mData;
 	}

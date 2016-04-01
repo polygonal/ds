@@ -160,6 +160,18 @@ class ArrayedStack<T> implements Stack<T>
 	}
 	
 	/**
+		Faster than `push()`, but skips boundary checking.
+		
+		The user is responsible for making sure that there is enough space available (e.g. by calling `reserve()`).
+	**/
+	public inline function unsafePush(x:T)
+	{
+		assert(size < capacity, "out of space");
+		
+		mData.set(mTop++, x);
+	}
+	
+	/**
 		Pops data off the stack.
 		<assert>stack is empty</assert>
 		@return the top element.
@@ -383,6 +395,11 @@ class ArrayedStack<T> implements Stack<T>
 				d.set(i, t);
 			}
 		}
+	}
+	
+	public inline function getData():NativeArray<T>
+	{
+		return mData;
 	}
 	
 	/**
