@@ -187,8 +187,7 @@ class ArrayedStack<T> implements Stack<T>
 		Pops the top element of the stack, and pushes it back twice, so that an additional copy of the former top item is now on top, with the original below it.
 		<assert>stack is empty</assert>
 	**/
-	#if (!cpp) inline #end //TODO inlining gives wrong results in cpp
-	public function dup()
+	public inline function dup()
 	{
 		assert(mTop > 0, "stack is empty");
 		
@@ -202,8 +201,7 @@ class ArrayedStack<T> implements Stack<T>
 		Swaps the two topmost items on the stack.
 		<assert>``size`` < 2</assert>
 	**/
-	#if (!cpp) inline #end //TODO fixme
-	public function exchange()
+	public inline function exchange()
 	{
 		assert(mTop > 1, "size < 2");
 		
@@ -313,8 +311,7 @@ class ArrayedStack<T> implements Stack<T>
 		<assert>`i`/`j` out of range</assert>
 		<assert>`i` equals `j`</assert>
 	**/
-	#if (!cpp) inline #end //TODO inlining gives wrong results in cpp
-	public function swap(i:Int, j:Int)
+	public inline function swap(i:Int, j:Int)
 	{
 		assert(mTop > 0, "stack is empty");
 		assert(i >= 0 && i < mTop, 'i index out of range ($i)');
@@ -337,8 +334,7 @@ class ArrayedStack<T> implements Stack<T>
 		<assert>`i`/`j` out of range</assert>
 		<assert>`i` equals `j`</assert>
 	**/
-	#if (!cpp) inline #end //TODO inlining gives wrong results in cpp
-	public function copy(i:Int, j:Int)
+	public inline function copy(i:Int, j:Int)
 	{
 		assert(mTop > 0, "stack is empty");
 		assert(i >= 0 && i < mTop, 'i index out of range ($i)');
