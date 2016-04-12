@@ -57,6 +57,7 @@ class TestBinaryTree extends AbstractTest
 		
 		assertFalse(node.hasL());
 		assertTrue(node.hasR());
+		assertFalse(node.isLeaf());
 		
 		assertEquals(2, node.size);
 	}
