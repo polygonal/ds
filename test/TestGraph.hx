@@ -559,6 +559,52 @@ class TestGraph extends AbstractTest
 		assertEquals(0, graph.size);
     }
 	
+	function testUnlink()
+	{
+		var graph = new Graph<E>();
+		var nodes = new Array<GraphNode<E>>();
+		for (i in 0...3)
+		{
+			var node = graph.addNode(graph.createNode(new E(this, i)));
+			nodes[i] = node;
+		}
+		
+		//0 <-> 1
+		//1 <-> 2
+		//2 <-> 0
+		graph.addMutualArc(nodes[0], nodes[1]);
+		graph.addMutualArc(nodes[1], nodes[2]);
+		graph.addMutualArc(nodes[2], nodes[0]);
+		
+		assertEquals(2, nodes[0].numArcs);
+		assertEquals(2, nodes[1].numArcs);
+		assertEquals(2, nodes[2].numArcs);
+		
+		graph.unlink(nodes[0]);
+		
+		assertEquals(0, nodes[0].numArcs);
+		assertEquals(1, nodes[1].numArcs);
+		assertEquals(1, nodes[2].numArcs);
+		
+		graph.unlink(nodes[1]);
+		
+		assertEquals(0, nodes[1].numArcs);
+		assertEquals(0, nodes[2].numArcs);
+		
+		//0 <-> 1
+		//0 <-> 2
+		graph.addMutualArc(nodes[0], nodes[1]);
+		graph.addMutualArc(nodes[0], nodes[2]);
+		assertEquals(2, nodes[0].numArcs);
+		assertEquals(1, nodes[1].numArcs);
+		assertEquals(1, nodes[2].numArcs);
+		
+		graph.unlink(nodes[0]);
+		assertEquals(0, nodes[0].numArcs);
+		assertEquals(0, nodes[1].numArcs);
+		assertEquals(0, nodes[2].numArcs);
+	}
+	
 	function testCustomGraph()
 	{
 		var f = function(node:GraphNode<String>, preflight:Bool, userData:Dynamic):Bool return true;

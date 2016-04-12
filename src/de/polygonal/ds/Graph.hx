@@ -256,6 +256,7 @@ class Graph<T> implements Collection<T>
 		<assert>`node` does not belong to this graph</assert>
 		@return the disconnected graph node.
 	**/
+	@:access(de.polygonal.ds.GraphNode)
 	public function unlink(node:GraphNode<T>):GraphNode<T>
 	{
 		assert(mNodeList != null, "graph is empty");
@@ -277,6 +278,7 @@ class Graph<T> implements Collection<T>
 					if (hook != null) hook.prev = arc1.prev;
 					if (node1.arcList == arc1) node1.arcList = hook;
 					arc1.free();
+					node1.numArcs--;
 					if (returnArc != null)
 						returnArc(arc1);
 				}
@@ -290,6 +292,7 @@ class Graph<T> implements Collection<T>
 			if (hook != null) hook.prev = arc0.prev;
 			if (node.arcList == arc0) node.arcList = hook;
 			arc0.free();
+			node.numArcs--;
 			if (returnArc != null)
 				returnArc(arc0);
 			
