@@ -140,9 +140,21 @@ class ArrayedQueue<T> implements Queue<T>
 		Enqueues the element `x`.
 		<assert>out of space - queue is full but not resizable</assert>
 	**/
-	public function enqueue(x:T)
+	public inline function enqueue(x:T)
 	{
 		if (capacity == size) grow();
+		mData.set((mSize++ + mFront) % capacity, x);
+	}
+	
+	/**
+		Faster than `enqueue()`, but skips boundary checking.
+		
+		The user is responsible for making sure that there is enough space available (e.g. by calling `reserve()`).
+	**/
+	public inline function unsafeEnqueue(x:T)
+	{
+		assert(mSize < capacity, "out of space");
+		
 		mData.set((mSize++ + mFront) % capacity, x);
 	}
 	
@@ -150,7 +162,7 @@ class ArrayedQueue<T> implements Queue<T>
 		Dequeues and returns the front element.
 		<assert>queue is empty</assert>
 	**/
-	public function dequeue():T
+	public inline function dequeue():T
 	{
 		assert(size > 0, "queue is empty");
 		
@@ -468,11 +480,7 @@ class ArrayedQueue<T> implements Queue<T>
 	**/
 	public function clear(gc:Bool = false)
 	{
-		if (gc)
-		{
-			var i = mFront, d = mData;
-			for (j in 0...size) d.set(i++ % capacity, cast null);
-		}
+		if (gc) mData.nullify();
 		mFront = mSize = 0;
 	}
 	

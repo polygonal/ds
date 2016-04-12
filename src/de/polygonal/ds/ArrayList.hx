@@ -246,8 +246,7 @@ class ArrayList<T> implements List<T>
 		Swaps the element stored at index `i` with the element stored at index `j`.
 		<assert>`i`/`j` out of range or `i` equals `j`</assert>
 	**/
-	#if !cpp inline #end //TODO fixme
-	public function swap(i:Int, j:Int):ArrayList<T>
+	public inline function swap(i:Int, j:Int):ArrayList<T>
 	{
 		assert(i != j, 'index i equals index j ($i)');
 		assert(i >= 0 && i <= size, 'index i=$i out of range $size');
@@ -264,8 +263,7 @@ class ArrayList<T> implements List<T>
 		Replaces the element at index `dst` with the element stored at index `src`.
 		<assert>`i`/`j` out of range or `i` == `j`</assert>
 	**/
-	#if !cpp inline #end //TODO fixme
-	public function copy(src:Int, dst:Int):ArrayList<T>
+	public inline function copy(src:Int, dst:Int):ArrayList<T>
 	{
 		assert(src != dst, 'src index equals dst index ($src)');
 		assert(src >= 0 && src <= size, 'index src=$src out of range $size');
@@ -335,8 +333,7 @@ class ArrayList<T> implements List<T>
 		@return the element at index `i` prior removal.
 		<assert>`i` out of range</assert>
 	**/
-	#if !cpp inline #end //TODO fixme
-	public function swapPop(i:Int):T
+	public inline function swapPop(i:Int):T
 	{
 		assert(i >= 0 && i < size, 'index $i out of range ${size}');
 		
@@ -910,7 +907,7 @@ class ArrayList<T> implements List<T>
 		return out;
 	}
 	
-	public function getData():NativeArray<T>
+	public inline function getData():NativeArray<T>
 	{
 		return mData;
 	}

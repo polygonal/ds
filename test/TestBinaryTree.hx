@@ -79,6 +79,60 @@ class TestBinaryTree extends AbstractTest
 		assertEquals("e1", copy.l.l.val);
 		assertEquals("e2", copy.l.l.r.val);
 	}
+	
+	function testStackResize()
+	{
+		var c = 0;
+		
+		function add(parent:BinaryTreeNode<String>)
+		{
+			parent.setL('l_$c');
+			parent.setR('r_$c');
+			c++;
+		}
+		
+		var root = new BinaryTreeNode<String>("root");
+		
+		var l = root;
+		var r = root;
+		for (i in 0...10)
+		{
+			add(l); l = l.l;
+			add(r); r = r.r;
+		}
+		
+		var n = root.size;
+		
+		c = 0;
+		root.preorder(
+			function(_, _)
+			{
+				c++;
+				return true;
+			}, true);
+		
+		assertEquals(n, c);
+		
+		c = 0;
+		root.postorder(
+			function(_, _)
+			{
+				c++;
+				return true;
+			}, true);
+		
+		assertEquals(n, c);
+		
+		c = 0;
+		root.inorder(
+			function(node, u)
+			{
+				c++;
+				return true;
+			}, true);
+		
+		assertEquals(n + 1, c);
+	}
 }
 
 private class E
