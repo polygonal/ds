@@ -479,7 +479,7 @@ class BinaryTreeNode<T> implements Collection<T>
 	}
 	
 	/**
-		Returns true if this node is a root node (``p`` is null).
+		Returns true if this node is a leaf node (``l`` and ``r`` are null).
 	**/
 	public inline function isLeaf():Bool
 	{
