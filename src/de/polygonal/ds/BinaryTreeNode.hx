@@ -221,8 +221,6 @@ class BinaryTreeNode<T> implements Collection<T>
 				if (n > max)
 					s = resizeStack(max <<= 1);
 			
-			push(this);
-			
 			var node = this;
 			
 			if (process == null)

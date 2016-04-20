@@ -131,7 +131,7 @@ class TestBinaryTree extends AbstractTest
 				return true;
 			}, true);
 		
-		assertEquals(n + 1, c);
+		assertEquals(n, c);
 	}
 }
 
