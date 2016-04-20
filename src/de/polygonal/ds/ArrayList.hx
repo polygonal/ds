@@ -911,6 +911,15 @@ class ArrayList<T> implements List<T>
 		return out;
 	}
 	
+	public function of(other:ArrayList<T>):ArrayList<T>
+	{
+		clear();
+		reserve(other.size);
+		other.getData().blit(0, getData(), 0, other.size);
+		mSize = other.size;
+		return this;
+	}
+	
 	public inline function getData():NativeArray<T>
 	{
 		return mData;
