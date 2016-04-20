@@ -695,6 +695,9 @@ class Sll<T> implements List<T>
 	**/
 	public function toString():String
 	{
+		#if no_tostring
+		return Std.string(this);
+		#else
 		var b = new StringBuf();
 		b.add('{ Sll size: ${size}, circular: ${isCircular()} }');
 		if (isEmpty()) return b.toString();
@@ -711,6 +714,7 @@ class Sll<T> implements List<T>
 		}
 		b.add("]");
 		return b.toString();
+		#end
 	}
 	
 	/* INTERFACE List */

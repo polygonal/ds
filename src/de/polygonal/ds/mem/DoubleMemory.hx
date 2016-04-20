@@ -451,6 +451,9 @@ class DoubleMemory extends MemoryAccess
 	**/
 	public function toString():String
 	{
+		#if no_tostring
+		return Std.string(this);
+		#else
 		#if debug
 		if (mMemory == null) return "{ DoubleMemory (unassigned) }";
 		var b = new StringBuf();
@@ -467,6 +470,7 @@ class DoubleMemory extends MemoryAccess
 		return b.toString();
 		#else
 		return '{ DoubleMemory size: $size, name: $name }';
+		#end
 		#end
 	}
 }

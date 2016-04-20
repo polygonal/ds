@@ -1007,6 +1007,9 @@ class Graph<T> implements Collection<T>
 	**/
 	public function toString():String
 	{
+		#if no_tostring
+		return Std.string(this);
+		#else
 		var b = new StringBuf();
 		b.add('{ Graph size: ${size} }');
 		if (isEmpty()) return b.toString();
@@ -1019,6 +1022,7 @@ class Graph<T> implements Collection<T>
 		}
 		b.add("]");
 		return b.toString();
+		#end
 	}
 	
 	/* INTERFACE Collection */
@@ -1077,6 +1081,9 @@ class Graph<T> implements Collection<T>
 		mNodeSet.free();
 		mNodeSet = null;
 		#end
+		
+		borrowArc = null;
+		returnArc = null;
 	}
 	
 	/**

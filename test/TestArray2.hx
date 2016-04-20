@@ -81,10 +81,14 @@ class TestArray2 extends AbstractTest
 	
 	function testToString()
 	{
+		#if no_tostring
+		assertTrue(true);
+		#else
 		var array2 = new de.polygonal.ds.Array2<String>(4, 4);
 		array2.forEach(function(val:String, x:Int, y:Int):String { return Std.string(x) + "." + Std.string(y); });
 		array2.toString();
 		assertTrue(true);
+		#end
 	}
 	
 	function testReadWrite()

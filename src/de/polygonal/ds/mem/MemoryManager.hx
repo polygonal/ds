@@ -174,8 +174,11 @@ class MemoryManager
 	inline function get_bytes():flash.utils.ByteArray return mBytes;
 	#end
 	
-	public function dump():String
+	public function toString():String
 	{
+		#if no_tostring
+		return Std.string(this);
+		#else
 		#if (flash && alchemy)
 		var b = new StringBuf();
 		b.add('{ MemoryManager, ${bytesTotal} bytes total, ${bytesFree} bytes free (${mBytes.length - mBlockSizeBytes}) }');
@@ -195,6 +198,7 @@ class MemoryManager
 		return b.toString();
 		#else
 		return "{ MemoryManager }";
+		#end
 		#end
 	}
 	
@@ -987,10 +991,14 @@ private class MemorySegment
 	
 	public function toString():String
 	{
+		#if no_tostring
+		return Std.string(this);
+		#else
 		#if debug
 		return '{ MemorySegment range: $b...$e, bytes: $size, isEmpty: $isEmpty }';
 		#else
 		return '{ MemorySegment bytes: $size }';
+		#end
 		#end
 	}
 	

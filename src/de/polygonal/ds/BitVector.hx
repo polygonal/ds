@@ -365,6 +365,9 @@ class BitVector implements Hashable
 	**/
 	public function toString():String
 	{
+		#if no_tostring
+		return Std.string(this);
+		#else
 		var b = new StringBuf();
 		b.add('{ BitVector bits: ${capacity} }');
 		if (ones() == 0) return b.toString();
@@ -379,6 +382,7 @@ class BitVector implements Hashable
 		}
 		b.add("]");
 		return b.toString();
+		#end
 	}
 	
 	/**

@@ -252,6 +252,9 @@ class ObjectPool<T> implements Hashable
 	**/
 	public function toString():String
 	{
+		#if no_tostring
+		return Std.string(this);
+		#else
 		var b = new StringBuf();
 		
 		#if debug
@@ -270,6 +273,7 @@ class ObjectPool<T> implements Hashable
 		}
 		b.add("]");
 		return b.toString();
+		#end
 	}
 	
 	function construct(id:Int)

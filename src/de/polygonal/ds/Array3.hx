@@ -549,6 +549,9 @@ class Array3<T> implements Collection<T>
 	**/
 	public function toString():String
 	{
+		#if no_tostring
+		return Std.string(this);
+		#else
 		var l = 0, out = [];
 		for (y in 0...rows)
 		{
@@ -579,6 +582,7 @@ class Array3<T> implements Collection<T>
 		}
 		b.add("]");
 		return b.toString();
+		#end
 	}
 	
 	/* INTERFACE Collection */

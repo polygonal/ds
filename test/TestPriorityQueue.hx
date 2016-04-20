@@ -245,6 +245,9 @@ class TestPriorityQueue extends AbstractTest
 	
 	function testToString()
 	{
+		#if no_tostring
+		assertTrue(true);
+		#else
 		var pq = new PriorityQueue<E>(3, false);
 		pq.enqueue(new E(1));
 		pq.enqueue(new E(2));
@@ -263,6 +266,7 @@ class TestPriorityQueue extends AbstractTest
 		assertEquals(3., pq.dequeue().priority);
 		assertEquals(2., pq.dequeue().priority);
 		assertEquals(1., pq.dequeue().priority);
+		#end
 	}
 	
 	function testIterator()

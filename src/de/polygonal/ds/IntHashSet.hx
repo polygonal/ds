@@ -399,6 +399,9 @@ class IntHashSet implements Set<Int>
 	**/
 	public function toString():String
 	{
+		#if no_tostring
+		return Std.string(this);
+		#else
 		var b = new StringBuf();
 		b.add(Printf.format("{ IntHashSet size/capacity: %d/%d, load factor: %.2f }", [size, capacity, loadFactor]));
 		if (isEmpty()) return b.toString();
@@ -406,6 +409,7 @@ class IntHashSet implements Set<Int>
 		for (x in this) b.add('  $x\n');
 		b.add("]");
 		return b.toString();
+		#end
 	}
 	
 	inline function hashCode(x:Int):Int

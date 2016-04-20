@@ -470,6 +470,9 @@ class ByteMemory extends MemoryAccess
 	**/
 	public function toString():String
 	{
+		#if no_tostring
+		return Std.string(this);
+		#else
 		#if debug
 		if (mMemory == null) return "{ ByteMemory (unassigned) }";
 		var b = new StringBuf();
@@ -486,6 +489,7 @@ class ByteMemory extends MemoryAccess
 		return b.toString();
 		#else
 		return '{ ByteMemory size: $size, name: $name }';
+		#end
 		#end
 	}
 }

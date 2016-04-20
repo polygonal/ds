@@ -130,7 +130,11 @@ class SllNode<T>
 	**/
 	public function toString():String
 	{
+		#if no_tostring
+		return Std.string(this);
+		#else
 		return '{ SllNode ${Std.string(val)} }';
+		#end
 	}
 	
 	inline function insertAfter(node:SllNode<T>)

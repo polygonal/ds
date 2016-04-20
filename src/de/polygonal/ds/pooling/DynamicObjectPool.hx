@@ -273,7 +273,11 @@ class DynamicObjectPool<T>
 	**/
 	public function toString():String
 	{
+		#if no_tostring
+		return Std.string(this);
+		#else
 		return '{ DynamicObjectPool, size/capacity: $size/${capacity()} }';
+		#end
 	}
 	
 	inline function alloc()

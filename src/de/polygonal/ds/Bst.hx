@@ -244,6 +244,9 @@ class Bst<T:Comparable<T>> implements Collection<T>
 	**/
 	public function toString():String
 	{
+		#if no_tostring
+		return Std.string(this);
+		#else
 		var b = new StringBuf();
 		b.add('{ Bst size: ${size} }');
 		if (isEmpty()) return b.toString();
@@ -256,6 +259,7 @@ class Bst<T:Comparable<T>> implements Collection<T>
 		mRoot.inorder(dumpNode);
 		b.add("]");
 		return b.toString();
+		#end
 	}
 	
 	/* INTERFACE Collection */

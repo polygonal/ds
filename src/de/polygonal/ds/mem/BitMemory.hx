@@ -416,6 +416,9 @@ class BitMemory extends MemoryAccess
 	**/
 	public function toString():String
 	{
+		#if no_tostring
+		return Std.string(this);
+		#else
 		#if debug
 		if (mMemory == null) return "{ BitMemory (unassigned) }";
 		var b = new StringBuf();
@@ -442,6 +445,7 @@ class BitMemory extends MemoryAccess
 		return b.toString();
 		#else
 		return '{ BitMemory size: $size, name: $name }';
+		#end
 		#end
 	}
 }

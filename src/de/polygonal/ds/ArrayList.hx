@@ -647,6 +647,9 @@ class ArrayList<T> implements List<T>
 	**/
 	public function toString():String
 	{
+		#if no_tostring
+		return Std.string(this);
+		#else
 		var b = new StringBuf();
 		b.add('{ Dv size/capacity: $size/$capacity} }');
 		if (isEmpty()) return b.toString();
@@ -660,6 +663,7 @@ class ArrayList<T> implements List<T>
 		}
 		b.add("]");
 		return b.toString();
+		#end
 	}
 	
 	function quickSort(first:Int, k:Int, cmp:T->T->Int)

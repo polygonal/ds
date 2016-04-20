@@ -502,6 +502,9 @@ class ShortMemory extends MemoryAccess
 	**/
 	public function toString():String
 	{
+		#if no_tostring
+		return Std.string(this);
+		#else
 		#if debug
 		if (mMemory == null) return "{ShortMemory (unassigned) }";
 		var s = '{ ShortMemory size: $size, name: $name }';
@@ -518,6 +521,7 @@ class ShortMemory extends MemoryAccess
 		return b.toString();
 		#else
 		return '{ ShortMemory size: $size, name: $name }';
+		#end
 		#end
 	}
 }

@@ -339,6 +339,9 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	**/
 	public function toString():String
 	{
+		#if no_tostring
+		return Std.string(this);
+		#else
 		var b = new StringBuf();
 		b.add(Printf.format("{ HashTable size/capacity: %d/%d, load factor: %.2f }", [size, capacity, loadFactor]));
 		if (isEmpty()) return b.toString();
@@ -357,6 +360,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		}
 		b.add("]");
 		return b.toString();
+		#end
 	}
 	
 	function grow()

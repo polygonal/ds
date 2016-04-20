@@ -137,6 +137,9 @@ class ListSet<T> implements Set<T>
 	**/
 	public function toString():String
 	{
+		#if no_tostring
+		return Std.string(this);
+		#else
 		var b = new StringBuf();
 		b.add('{ ListSet size: ${size} }');
 		if (isEmpty()) return b.toString();
@@ -144,6 +147,7 @@ class ListSet<T> implements Set<T>
 		for (i in 0...size) b.add('  ${Std.string(mData[i])}\n');
 		b.add("]");
 		return b.toString();
+		#end
 	}
 	
 	/* INTERFACE Set */

@@ -1340,6 +1340,9 @@ class TreeNode<T> implements Collection<T>
 	**/
 	public function toString():String
 	{
+		#if no_tostring
+		return Std.string(this);
+		#else
 		function print(x:TreeNode<T>):String
 		{
 			var s = 'val=$val';
@@ -1368,6 +1371,7 @@ class TreeNode<T> implements Collection<T>
 			return true;
 		}, null);
 		return b.toString();
+		#end
 	}
 	
 	/**

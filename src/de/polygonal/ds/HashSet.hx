@@ -294,6 +294,9 @@ class HashSet<T:Hashable> implements Set<T>
 	**/
 	public function toString():String
 	{
+		#if no_tostring
+		return Std.string(this);
+		#else
 		var b = new StringBuf();
 		b.add(Printf.format("{ HashSet size/capacity: %d/%d, load factor: %.2f }", [size, capacity, loadFactor]));
 		if (isEmpty()) return b.toString();
@@ -301,6 +304,7 @@ class HashSet<T:Hashable> implements Set<T>
 		for (x in this) b.add('  ${Std.string(x)}\n');
 		b.add("]");
 		return b.toString();
+		#end
 	}
 	
 	/* INTERFACE Set */

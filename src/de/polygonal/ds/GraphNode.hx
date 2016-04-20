@@ -255,6 +255,9 @@ class GraphNode<T> implements Hashable
 	**/
 	public function toString():String
 	{
+		#if no_tostring
+		return Std.string(this);
+		#else
 		var t = [], arc;
 		if (arcList != null)
 		{
@@ -270,6 +273,7 @@ class GraphNode<T> implements Hashable
 			'{ GraphNode val: $val, connected to: ${t.join(",")} }';
 		else
 			'{ GraphNode val: $val }';
+		#end
 	}
 }
 

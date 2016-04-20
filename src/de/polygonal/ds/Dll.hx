@@ -855,6 +855,9 @@ class Dll<T> implements List<T>
 	**/
 	public function toString():String
 	{
+		#if no_tostring
+		return Std.string(this);
+		#else
 		var b = new StringBuf();
 		b.add('{ Dll size: ${size}, circular: ${isCircular()} }');
 		if (isEmpty()) return b.toString();
@@ -871,6 +874,7 @@ class Dll<T> implements List<T>
 		}
 		b.add("]");
 		return b.toString();
+		#end
 	}
 	
 	/* INTERFACE List */

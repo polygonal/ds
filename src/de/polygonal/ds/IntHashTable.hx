@@ -289,6 +289,9 @@ class IntHashTable<T> implements Map<Int, T>
 	**/
 	public function toString():String
 	{
+		#if no_tostring
+		return Std.string(this);
+		#else
 		var b = new StringBuf();
 		b.add(Printf.format("{ IntHashTable size/capacity: %d/%d, load factor: %.2f }", [size, capacity, loadFactor]));
 		if (isEmpty()) return b.toString();
@@ -312,6 +315,7 @@ class IntHashTable<T> implements Map<Int, T>
 		}
 		b.add("]");
 		return b.toString();
+		#end
 	}
 	
 	/* INTERFACE Map */

@@ -563,6 +563,9 @@ class BinaryTreeNode<T> implements Collection<T>
 	**/
 	public function toString():String
 	{
+		#if no_tostring
+		return Std.string(this);
+		#else
 		var b = new StringBuf();
 		b.add('{ BinaryTreeNode val: ${Std.string(val)}, size: ${size}, node depth: ${depth()}, tree height: ${height()} }');
 		if (size == 1) return b.toString();
@@ -586,6 +589,7 @@ class BinaryTreeNode<T> implements Collection<T>
 		preorder(f);
 		b.add("]\n");
 		return b.toString();
+		#end
 	}
 	
 	function preorderRecursive(node:BinaryTreeNode<T>, process:BinaryTreeNode<T>->Dynamic->Bool, userData:Dynamic):Bool

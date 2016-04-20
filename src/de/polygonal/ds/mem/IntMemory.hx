@@ -593,6 +593,9 @@ class IntMemory extends MemoryAccess
 	**/
 	public function toString():String
 	{
+		#if no_tostring
+		return Std.string(this);
+		#else
 		#if debug
 		if (mMemory == null) return "{ IntMemory (unassigned) }";
 		var b = new StringBuf();
@@ -609,6 +612,7 @@ class IntMemory extends MemoryAccess
 		return b.toString();
 		#else
 		return '{ IntMemory size: $size, name: $name }';
+		#end
 		#end
 	}
 }

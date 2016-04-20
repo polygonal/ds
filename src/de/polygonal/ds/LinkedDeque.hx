@@ -267,6 +267,9 @@ class LinkedDeque<T> implements Deque<T>
 	**/
 	public function toString():String
 	{
+		#if no_tostring
+		return Std.string(this);
+		#else
 		var b = new StringBuf();
 		b.add('{ LinkedDeque size: ${size} }');
 		if (isEmpty()) return b.toString();
@@ -282,6 +285,7 @@ class LinkedDeque<T> implements Deque<T>
 		}
 		b.add("]");
 		return b.toString();
+		#end
 	}
 	
 	/* INTERFACE Collection */

@@ -456,6 +456,9 @@ class FloatMemory extends MemoryAccess
 	**/
 	public function toString():String
 	{
+		#if no_tostring
+		return Std.string(this);
+		#else
 		#if debug
 		if (mMemory == null) return "{ FloatMemory (unassigned) }";
 		var b = new StringBuf();
@@ -472,6 +475,7 @@ class FloatMemory extends MemoryAccess
 		return b.toString();
 		#else
 		return '{ FloatMemory, size: $size, name: $name }';
+		#end
 		#end
 	}
 }
