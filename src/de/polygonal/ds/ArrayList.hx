@@ -855,7 +855,7 @@ class ArrayList<T> implements List<T>
 	}
 	
 	/**
-		Sets `n` elements starting at index `first` to the value `x`.
+		Sets `n` elements to the value `x`.
 		
 		Automatically reserves storage for `n` elements so an additional call to `reserve()` is not required.
 		<assert>invalid element count</assert>
