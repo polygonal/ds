@@ -943,7 +943,7 @@ class TestIntIntHashTable extends AbstractTest
 		assertEquals(0, h.get(0));
 	}
 	
-	function testClrPair()
+	function testunsetPair()
 	{
 		var values = [20, 30, 40];
 		
@@ -954,7 +954,7 @@ class TestIntIntHashTable extends AbstractTest
 			var size = 3;
 			for (i in order)
 			{
-				assertEquals(true, h.clrPair(10, values[i - 1]));
+				assertEquals(true, h.unsetPair(10, values[i - 1]));
 				assertEquals(--size, h.size);
 			}
 		}

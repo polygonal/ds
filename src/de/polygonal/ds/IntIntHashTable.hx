@@ -928,7 +928,7 @@ class IntIntHashTable implements Map<Int, Int>
 		Removes the first mapping from `key` to `val`.
 		@return true if `key` is successfully removed.
 	**/
-	public function clrPair(key:Int, val:Int):Bool
+	public function unsetPair(key:Int, val:Int):Bool
 	{
 		assert(val != KEY_ABSENT, "val 0x80000000 is reserved");
 		
