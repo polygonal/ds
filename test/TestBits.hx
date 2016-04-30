@@ -31,7 +31,7 @@ class TestBits extends AbstractTest
 			x |= 1 << i;
 			assertEquals(1 << i, x.msb());
 		}
-		
+		x = -1;
 		for (i in 0...k-1)
 		{
 			x = x.clrBits(1 << i);
