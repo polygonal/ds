@@ -164,6 +164,7 @@ class Graph<T> implements Collection<T>
 	public function removeNode(x:GraphNode<T>)
 	{
 		assert(size > 0, "graph is empty");
+		assert(mNodeSet.has(x), "unknown node");
 		
 		unlink(x);
 		
@@ -1023,6 +1024,11 @@ class Graph<T> implements Collection<T>
 		b.add("]");
 		return b.toString();
 		#end
+	}
+	
+	public function serialize()
+	{
+		
 	}
 	
 	/* INTERFACE Collection */
