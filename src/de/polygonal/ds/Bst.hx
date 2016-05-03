@@ -42,7 +42,7 @@ class Bst<T:Comparable<T>> implements Collection<T>
 	public var key(default, null):Int = HashKey.next();
 	
 	/**
-		If true, reuses the iterator object instead of allocating a new one when calling ``iterator()``.
+		If true, reuses the iterator object instead of allocating a new one when calling `iterator()`.
 		
 		The default is false.
 		
@@ -68,7 +68,6 @@ class Bst<T:Comparable<T>> implements Collection<T>
 	
 	/**
 		Inserts the element `x` into the binary search tree.
-		<assert>`x` is null</assert>
 		@return the inserted node storing the element `x`.
 	**/
 	public function insert(x:T):BinaryTreeNode<T>
@@ -116,8 +115,6 @@ class Bst<T:Comparable<T>> implements Collection<T>
 	
 	/**
 		Finds the node that stores the element `x`.
-		<assert>tree is empty</assert>
-		<assert>`x` is null</assert>
 		@return the node storing `x` or null if `x` does not exist.
 	**/
 	public function find(x:T):BinaryTreeNode<T>
@@ -137,7 +134,6 @@ class Bst<T:Comparable<T>> implements Collection<T>
 	
 	/**
 		Removes the node storing the element `x`.
-		<assert>`x` is invalid</assert>
 		@return true if `x` was successfully removed.
 	**/
 	public function removeNode(x:BinaryTreeNode<T>):Bool
@@ -205,42 +201,7 @@ class Bst<T:Comparable<T>> implements Collection<T>
 	}
 	
 	/**
-		Returns a string representing the current object.
-		
-		Example:
-		<pre class="prettyprint">
-		class Foo implements de.polygonal.ds.Comparable<Foo>;
-		{
-		    var i:Int;
-		    public function new(i:Int) {
-		        this.i = i;
-		    }
-		    public function compare(other:Foo):Int {
-		        return other.i - i;
-		    }
-		    public function toString():String {
-		        return "{Foo " + i + "}";
-		    }
-		}
-		class Main
-		{
-		    static function main() {
-		        var bst = new de.polygonal.ds.Bst<Foo>();
-		        bst.insert(new Foo(1));
-		        bst.insert(new Foo(0));
-		        bst.insert(new Foo(2));
-		        bst.insert(new Foo(7));
-		        trace(bst);
-		    }
-		}</pre>
-		<pre class="console">
-		{ Bst size: 4 }
-		[
-		  {Foo 7}
-		  {Foo 2}
-		  {Foo 1}
-		  {Foo 0}
-		]</pre>
+		Prints out all elements.
 	**/
 	public function toString():String
 	{
@@ -299,7 +260,6 @@ class Bst<T:Comparable<T>> implements Collection<T>
 	
 	/**
 		Removes all nodes containing the element `x`.
-		<assert>`x` is invalid</assert>
 		@return true if at least one occurrence of `x` is nullified.
 	**/
 	public function remove(x:T):Bool
@@ -343,7 +303,7 @@ class Bst<T:Comparable<T>> implements Collection<T>
 		
 		The elements are visited by using a preorder traversal.
 		
-		See <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
+		@see http://haxe.org/ref/iterators
 	**/
 	public function iterator():Itr<T>
 	{
@@ -384,10 +344,9 @@ class Bst<T:Comparable<T>> implements Collection<T>
 	
 	/**
 		Duplicates this subtree. Supports shallow (structure only) and deep copies (structure & elements).
-		<assert>element is not of type `Cloneable`</assert>
 		@param assign if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
-		If false, the ``clone()`` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
-		@param copier a custom function for copying elements. Replaces ``element::clone()`` if `assign` is false.
+		If false, the `clone()` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
+		@param copier a custom function for copying elements. Replaces `element->clone()` if `assign` is false.
 	**/
 	public function clone(assign:Bool = true, copier:T->T = null):Collection<T>
 	{

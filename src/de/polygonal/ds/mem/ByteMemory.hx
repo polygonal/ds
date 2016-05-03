@@ -35,7 +35,6 @@ class ByteMemory extends MemoryAccess
 		Converts `input` in the range [`min`, `max`] to a byte array.
 		If no range is specified, all `input` bytes are copied.</i>
 		<warn>The bytes are written in little endian format.</warn>
-		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
 	#if flash
 	public static function toByteArray(input:ByteMemory, min:Int = -1, max:Int = -1):flash.utils.ByteArray
@@ -68,7 +67,6 @@ class ByteMemory extends MemoryAccess
 	/**
 		Converts `input` in the range [`min`, `max`] to a `ByteMemory` object.
 		If no range is specified, all `input` bytes are copied.
-		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
 	public static function ofByteArray(input:flash.utils.ByteArray, min:Int = -1, max:Int = -1):ByteMemory
 	{
@@ -92,7 +90,6 @@ class ByteMemory extends MemoryAccess
 		Converts `input` in the range [`min`, `max`] to a `BytesData` object.
 		If no range is specified, all `input` bytes are copied.</i>
 		<warn>The bytes are written in little endian format.</warn>
-		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
 	public static function toBytesData(input:ByteMemory, min:Int = -1, max:Int = -1):haxe.io.BytesData
 	{
@@ -113,7 +110,6 @@ class ByteMemory extends MemoryAccess
 	/**
 		Converts `input` in the range [`min`, `max`] to a `ByteMemory` object.
 		If no range is specified, all `input` bytes are copied.
-		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
 	public static function ofBytesData(input:haxe.io.BytesData, min:Int = -1, max:Int = -1):ByteMemory
 	{
@@ -135,7 +131,6 @@ class ByteMemory extends MemoryAccess
 	/**
 		Converts `input` in the range [`min`, `max`] to an array.
 		If no range is specified, all `input` bytes are copied.
-		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
 	public static function toArray(input:ByteMemory, min:Int = -1, max:Int = -1):Array<Int>
 	{
@@ -167,7 +162,6 @@ class ByteMemory extends MemoryAccess
 	/**
 		Converts `input` in the range [`min`, `max`] to a `ByteMemory` object.
 		If no range is specified, all `input` bytes are copied.
-		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
 	public static function ofArray(input:Array<Int>, min:Int = -1, max:Int = -1):ByteMemory
 	{
@@ -188,7 +182,6 @@ class ByteMemory extends MemoryAccess
 		Converts `input` in the range [`min`, `max`] to a Vector object.
 		If no range is specified, all `input` bytes are copied.
 		@param out the `Vector` object to write into. If null, a new Vector object is created on-the-fly.
-		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
 	public static function toVector(input:ByteMemory, min:Int = -1, max:Int = -1, out:Vector<Int> = null):Vector<Int>
 	{
@@ -225,7 +218,6 @@ class ByteMemory extends MemoryAccess
 	/**
 		Converts `input` in the range [`min`, `max`] to a `ByteMemory` object.
 		If no range is specified, all `input` bytes are copied.
-		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
 	public static function ofVector(input:Vector<Int>, min:Int = -1, max:Int = -1):ByteMemory
 	{
@@ -343,8 +335,6 @@ class ByteMemory extends MemoryAccess
 	
 	/**
 		Adjusts the size of this object so it's capable of storing `newSize` bytes.
-		<assert>invalid size</assert>
-		<assert>memory was already deallocated</assert>
 	**/
 	override public function resize(newSize:Int)
 	{
@@ -369,8 +359,6 @@ class ByteMemory extends MemoryAccess
 	
 	/**
 		Returns the byte at index `i`.
-		<assert>segmentation Fault</assert>
-		<assert>memory deallocated</assert>
 	**/
 	public inline function get(i:Int):Int
 	{
@@ -387,8 +375,6 @@ class ByteMemory extends MemoryAccess
 	
 	/**
 		Replaces the byte at the index `i` with the byte `x`.
-		<assert>segmentation Fault</assert>
-		<assert>memory deallocated</assert>
 	**/
 	public inline function set(i:Int, x:Int)
 	{
@@ -405,9 +391,6 @@ class ByteMemory extends MemoryAccess
 	
 	/**
 		Swaps the byte at the index `i` with the byte at the index `j`.
-		<assert>`i` equals `j`</assert>
-		<assert>segmentation Fault</assert>
-		<assert>memory deallocated</assert>
 	**/
 	public inline function swap(i:Int, j:Int)
 	{
@@ -426,8 +409,6 @@ class ByteMemory extends MemoryAccess
 	
 	/**
 		Returns the memory byte offset for the byte at index `i`.
-		<assert>segmentation fault</assert>
-		<assert>memory deallocated</assert>
 	**/
 	public inline function getAddr(i:Int):Int
 	{
@@ -449,24 +430,7 @@ class ByteMemory extends MemoryAccess
 	#end
 	
 	/**
-		Returns a string representing the current object.
-		Prints out all elements if compiled with the `-debug` directive.
-		
-		Example:
-		<pre class="prettyprint">
-		var mem = new new de.polygonal.ds.mem.ByteMemory(4);
-		for (i in 0...4) {
-		    mem.set(i, i);
-		}
-		trace(mem);</pre>
-		<pre class="console">
-		{ ByteMemory size: 4 }
-		[
-		  0 -> 0
-		  1 -> 1
-		  2 -> 2
-		  3 -> 3
-		]</pre>
+		Prints out all elements.
 	**/
 	public function toString():String
 	{

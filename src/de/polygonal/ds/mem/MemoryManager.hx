@@ -28,8 +28,8 @@ import de.polygonal.ds.tools.M;
 /**
 	Manages fast "alchemy memory"
 	
-	See <a href="http://lab.polygonal.de/2009/03/14/a-little-alchemy-in-hx3ds/" target="_blank">http://lab.polygonal.de/2009/03/14/a-little-alchemy-in-hx3ds/</a>.
-	See <a href="http://lab.polygonal.de/2010/03/15/memorymanager-revisited/" target="_blank">http://lab.polygonal.de/2010/03/15/memorymanager-revisited/</a>
+	@see http://lab.polygonal.de/2009/03/14/a-little-alchemy-in-hx3ds/
+	@see http://lab.polygonal.de/2010/03/15/memorymanager-revisited/
 **/
 @:access(de.polygonal.ds.mem.MemorySegment)
 @:access(de.polygonal.ds.mem.MemoryAccess)
@@ -213,8 +213,7 @@ class MemoryManager
 		
 		Copying takes place as if an intermediate buffer was used, allowing the destination and source to overlap.
 		
-		See <a href="http://www.cplusplus.com/reference/clibrary/cstring/memmove/" target="_blank">http://www.cplusplus.com/reference/clibrary/cstring/memmove/</a>
-		<assert>invalid `destination`, `source` or `n` value</assert>
+		@see http://www.cplusplus.com/reference/clibrary/cstring/memmove/
 	**/
 	#if (flash && alchemy)
 	public function memmove(destination:Int, source:Int, n:Int)

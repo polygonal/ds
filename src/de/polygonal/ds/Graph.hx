@@ -29,7 +29,7 @@ using de.polygonal.ds.tools.NativeArrayTools;
 	
 	A graph is composed of `GraphNode` and `GraphArc` objects.
 	
-	See <a href="http://lab.polygonal.de/?p=185" target="mBlank">http://lab.polygonal.de/?p=185/</a>
+	@see http://lab.polygonal.de/?p=185/
 **/
 #if generic
 @:generic
@@ -53,7 +53,7 @@ class Graph<T> implements Collection<T>
 	public var autoClearMarks:Bool = false;
 	
 	/**
-		If true, reuses the iterator object instead of allocating a new one when calling ``iterator()``.
+		If true, reuses the iterator object instead of allocating a new one when calling `iterator()`.
 		
 		The default is false.
 		
@@ -62,7 +62,7 @@ class Graph<T> implements Collection<T>
 	public var reuseIterator:Bool = false;
 	
 	/**
-		If specified, ``borrowArc()`` is called in order to create `GraphArc` objects.
+		If specified, `borrowArc()` is called in order to create `GraphArc` objects.
 		
 		Useful for pooling `GraphArc` objects.
 		
@@ -73,7 +73,7 @@ class Graph<T> implements Collection<T>
 	/**
 		A function pointer responsible for returning `GraphArc` objects.
 		
-		Required if ``borrowArc`` is specified.
+		Required if `borrowArc` is specified.
 		
 		Default is null.
 	**/
@@ -159,7 +159,6 @@ class Graph<T> implements Collection<T>
 		Removes the node `x` from this graph.
 		
 		This clears all outgoing and incoming arcs and removes `x` from the node list.
-		<assert>graph is empty</assert>
 	**/
 	public function removeNode(x:GraphNode<T>)
 	{
@@ -178,8 +177,6 @@ class Graph<T> implements Collection<T>
 		Creates an uni-directional link between two nodes with a weight of `cost` (default is 1.0).
 		
 		This creates an arc pointing from the `source` node to the `target` node.
-		<assert>`source` or `target` is null</assert>
-		<assert>`source` equals `target`</assert>
 	**/
 	public function addSingleArc(source:GraphNode<T>, target:GraphNode<T>, cost:Float = 1.)
 	{
@@ -213,8 +210,6 @@ class Graph<T> implements Collection<T>
 		Creates a bi-directional link between two nodes with a weight of `cost` (default is 1.0).
 		
 		This creates two arcs - an arc that points from the `source` node to the `target` node and vice versa.
-		<assert>`source` or `target` is null</assert>
-		<assert>`source` equals `target`</assert>
 	**/
 	public function addMutualArc(source:GraphNode<T>, target:GraphNode<T>, cost:Float = 1.)
 	{
@@ -252,9 +247,6 @@ class Graph<T> implements Collection<T>
 		Isolates `node` from this graph by unlinking it from all outgoing and incoming arcs.
 		
 		The size remains unchanged as the node is not removed from the graph.
-		<assert>`node` is null</assert>
-		<assert>graph is empty</assert>
-		<assert>`node` does not belong to this graph</assert>
 		@return the disconnected graph node.
 	**/
 	@:access(de.polygonal.ds.GraphNode)
@@ -335,7 +327,7 @@ class Graph<T> implements Collection<T>
 	/**
 		Performs an iterative depth-first search (DFS).
 		@param preflight if true, an extra traversal is performed before the actual traversal runs.
-		The first pass visits all elements and calls ``element::visit()`` with the `preflight` parameter set to true.
+		The first pass visits all elements and calls `element->visit()` with the `preflight` parameter set to true.
 		In this pass the return value determines whether the element will be processed (true) or
 		excluded (false) from the final traversal, which is the second pass (`preflight` parameter set to false).
 		The same applies when using a `process` function.
@@ -347,9 +339,9 @@ class Graph<T> implements Collection<T>
 		<li>custom data specified by the `userData` parameter (default is null).</li>
 		</ul>
 		Once `process` returns false, the traversal stops immediately and no further nodes are examined (termination condition).
-		If omitted, ``element::visit()`` is used.
+		If omitted, `element->visit()` is used.
 		<warn>In this case the elements of all nodes have to implement `Visitable`.</warn>
-		@param userData custom data that is passed to every visited node via `process` or ``element::visit()``. If omitted, null is used.
+		@param userData custom data that is passed to every visited node via `process` or `element->visit()`. If omitted, null is used.
 		@param recursive if true, performs a recursive traversal (default traversal style is iterative).
 	**/
 	public function DFS(preflight:Bool = false, seed:GraphNode<T> = null, process:GraphNode<T>->Bool->Dynamic->Bool = null, userData:Dynamic = null, recursive:Bool = false)
@@ -535,7 +527,7 @@ class Graph<T> implements Collection<T>
 	/**
 		Performs an iterative breadth-first search (BFS).
 		@param preflight if true, an extra traversal is performed before the actual traversal runs.
-		The first pass visits all elements and calls ``element::visit()`` with the `preflight` parameter set to true.
+		The first pass visits all elements and calls `element->visit()` with the `preflight` parameter set to true.
 		In this pass the return value determines whether the element will be processed (true) or
 		excluded (false) from the final traversal, which is the second pass (`preflight` parameter set to false).
 		The same applies when using a `process` function.
@@ -547,9 +539,9 @@ class Graph<T> implements Collection<T>
 		<li>custom data specified by the `userData` parameter (default is null).</li>
 		</ul>
 		Once `process` returns false, the traversal stops immediately and no further nodes are examined (termination condition).
-		If omitted, ``element::visit()`` is used.
+		If omitted, `element->visit()` is used.
 		<warn>In this case the elements of all nodes have to implement `Visitable`.</warn>
-		@param userData custom data that is passed to every visited node via `process` or ``element::visit()``. If omitted, null is used.
+		@param userData custom data that is passed to every visited node via `process` or `element->visit()`. If omitted, null is used.
 	**/
 	public function BFS(preflight:Bool = false, seed:GraphNode<T> = null, process:GraphNode<T>->Bool->Dynamic->Bool = null, userData:Dynamic = null)
 	{
@@ -752,7 +744,7 @@ class Graph<T> implements Collection<T>
 		Performs an iterative depth-limited breadth-first search (DLBFS).
 		@param maxDepth A `maxDepth` value of 1 means that only all direct neighbors of `seed` are visited.
 		@param preflight if true, an extra traversal is performed before the actual traversal runs.
-		The first pass visits all elements and calls ``element::visit()`` with the `preflight` parameter set to true.
+		The first pass visits all elements and calls `element->visit()` with the `preflight` parameter set to true.
 		In this pass the return value determines whether the element will be processed (true) or
 		excluded (false) from the final traversal, which is the second pass (`preflight` parameter set to false).
 		The same applies when using a `process` function.
@@ -764,9 +756,9 @@ class Graph<T> implements Collection<T>
 		<li>custom data specified by the `userData` parameter (default is null).</li>
 		</ul>
 		Once `process` returns false, the traversal stops immediately and no further nodes are examined (termination condition).
-		If omitted, ``element::visit()`` is used.
+		If omitted, `element->visit()` is used.
 		<warn>In this case the elements of all nodes have to implement `Visitable`.</warn>
-		@param userData custom data that is passed to every visited node via `process` or ``element::visit()``. If omitted, null is used.
+		@param userData custom data that is passed to every visited node via `process` or `element->visit()`. If omitted, null is used.
 	**/
 	public function DLBFS(maxDepth:Int, preflight:Bool = false, seed:GraphNode<T> = null, process:GraphNode<T>->Bool->Dynamic->Bool = null, userData:Dynamic = null)
 	{
@@ -986,25 +978,7 @@ class Graph<T> implements Collection<T>
 	}
 	
 	/**
-		Returns a string representing the current object.
-		
-		Example:
-		<pre class="prettyprint">
-		var graph = new de.polygonal.ds.Graph<String>();
-		var a = graph.addNode("a");
-		var b = graph.addNode("b");
-		var c = graph.addNode("c");
-		graph.addSingleArc(a, b, 1.0);
-		graph.addSingleArc(b, a, 1.0);
-		graph.addMutualArc(a, c, 1.0);
-		trace(graph);</pre>
-		<pre class="console">
-		{ Graph size: 3 }
-		[
-		  {GraphNode, val: c, connected to: a}
-		  {GraphNode, val: b, connected to: a}
-		  {GraphNode, val: a, connected to: c,b}
-		]</pre>
+		Prints out all elements.
 	**/
 	public function toString():String
 	{
@@ -1175,7 +1149,7 @@ class Graph<T> implements Collection<T>
 		
 		The nodes are visited in a random order.
 		
-		See <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
+		@see http://haxe.org/ref/iterators
 	**/
 	public function iterator():Itr<T>
 	{
@@ -1196,7 +1170,7 @@ class Graph<T> implements Collection<T>
 		
 		The nodes are visited in a random order.
 		
-		See <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
+		@see http://haxe.org/ref/iterators
 	**/
 	public function nodeIterator():Itr<GraphNode<T>>
 	{
@@ -1208,7 +1182,7 @@ class Graph<T> implements Collection<T>
 		
 		The arcs are visited in a random order.
 		
-		See <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
+		@see http://haxe.org/ref/iterators
 	**/
 	public function arcIterator():Itr<GraphArc<T>>
 	{
@@ -1243,10 +1217,9 @@ class Graph<T> implements Collection<T>
 	
 	/**
 		Duplicates this graph. Supports shallow (structure only) and deep copies (structure & elements).
-		<assert>element is not of type `Cloneable`</assert>
 		@param assign if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
-		If false, the ``clone()`` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
-		@param copier a custom function for copying elements. Replaces ``element::clone()`` if `assign` is false.
+		If false, the `clone()` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
+		@param copier a custom function for copying elements. Replaces `element->clone()` if `assign` is false.
 	**/
 	public function clone(assign:Bool = true, copier:T->T = null):Collection<T>
 	{

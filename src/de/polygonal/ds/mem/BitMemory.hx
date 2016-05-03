@@ -34,7 +34,6 @@ class BitMemory extends MemoryAccess
 	/**
 		Converts `input` to a `ByteArray` object.
 		<warn>The bytes are written in little endian format.</warn>
-		<assert>memory deallocated</assert>
 	**/
 	#if flash
 	public static function toByteArray(input:BitMemory):flash.utils.ByteArray
@@ -65,7 +64,6 @@ class BitMemory extends MemoryAccess
 	/**
 		Converts `input` in the range [`min`, `max`] to a `ByteMemory` object.
 		If no range is specified, all `input` bytes are copied.
-		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
 	#if flash
 	public static function ofByteArray(input:flash.utils.ByteArray, min:Int = -1, max:Int = -1):BitMemory
@@ -103,7 +101,6 @@ class BitMemory extends MemoryAccess
 	/**
 		Converts `input` to a `BytesData` object.
 		<warn>The bytes are written in little endian format.</warn>
-		<assert>memory deallocated</assert>
 	**/
 	public static function toBytesData(input:BitMemory):haxe.io.BytesData
 	{
@@ -131,7 +128,6 @@ class BitMemory extends MemoryAccess
 	/**
 		Converts `input` in the range [`min`, `max`] to a `ByteMemory` object.
 		If no range is specified, all `input` bytes are copied.
-		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
 	public static function ofBytesData(input:haxe.io.BytesData, min:Int = -1, max:Int = -1):BitMemory
 	{
@@ -193,7 +189,6 @@ class BitMemory extends MemoryAccess
 	
 	/**
 		Converts `input` to a `BitVector` object.
-		<assert>memory deallocated</assert>
 	**/
 	public static function toBitVector(input:BitMemory):BitVector
 	{
@@ -254,7 +249,6 @@ class BitMemory extends MemoryAccess
 	
 	/**
 		Sets all bits to the value `x`.
-		<assert>`x` is not 0 or 1</assert>
 	**/
 	public function setAll(x:Int):BitMemory
 	{
@@ -282,8 +276,6 @@ class BitMemory extends MemoryAccess
 	
 	/**
 		Adjusts the size of this object so it's capable of storing `newSize` bits.
-		<assert>invalid size</assert>
-		<assert>memory was already deallocated</assert>
 	**/
 	override public function resize(newSize:Int)
 	{
@@ -304,8 +296,6 @@ class BitMemory extends MemoryAccess
 	
 	/**
 		Returns true if the bit at index `i` is 1.
-		<assert>index out of range</assert>
-		<assert>memory deallocated</assert>
 	**/
 	public inline function has(i:Int):Bool
 	{
@@ -318,8 +308,6 @@ class BitMemory extends MemoryAccess
 	
 	/**
 		Returns 1 if the bit at index `i` is set, otherwise zero.
-		<assert>index out of range</assert>
-		<assert>memory deallocated</assert>
 	**/
 	public inline function get(i:Int):Int
 	{
@@ -332,8 +320,6 @@ class BitMemory extends MemoryAccess
 	
 	/**
 		Sets the bit at index `i` to 1.
-		<assert>index out of range</assert>
-		<assert>memory deallocated</assert>
 	**/
 	public inline function set(i:Int)
 	{
@@ -347,8 +333,6 @@ class BitMemory extends MemoryAccess
 	
 	/**
 		Sets the bit at index `i` to 0.
-		<assert>index out of range</assert>
-		<assert>memory deallocated</assert>
 	**/
 	public inline function clr(i:Int)
 	{
@@ -362,8 +346,6 @@ class BitMemory extends MemoryAccess
 	
 	/**
 		Sets the bit at index `i` to 1 if `cond` is true or clears the bit at index `i` if `cond` is false.
-		<assert>index out of range</assert>
-		<assert>memory deallocated</assert>
 	**/
 	public inline function ofBool(i:Int, cond:Bool)
 	{
@@ -372,8 +354,6 @@ class BitMemory extends MemoryAccess
 	
 	/**
 		Returns the memory byte offset for the byte storing the bit at index `i`.
-		<assert>segmentation fault</assert>
-		<assert>memory deallocated</assert>
 	**/
 	public inline function getAddr(i:Int):Int
 	{
@@ -395,24 +375,7 @@ class BitMemory extends MemoryAccess
 	#end
 	
 	/**
-		Returns a string representing the current object.
-		Prints out all elements if compiled with the `-debug` directive.
-		
-		Example:
-		<pre class="prettyprint">
-		var mem = new de.polygonal.ds.mem.BitMemory(32);
-		for (i in 0...16) {
-		    mem.set(i);
-		}
-		for (i in 16...32) {
-		    mem.clr(i);
-		}
-		trace(mem);</pre>
-		<pre class="console">
-		{ BitMemory size: 32 }
-		[
-		  0 -> 11111111111111110000000000000000
-		]</pre>
+		Prints out all elements.
 	**/
 	public function toString():String
 	{

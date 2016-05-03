@@ -36,15 +36,15 @@ interface Collection<T> extends Hashable
 	function free():Void;
 	
 	/**
-		Returns true if this collection contains the element `x`.
+		Returns true if this collection contains the element `val`.
 	**/
-	function contains(x:T):Bool;
+	function contains(val:T):Bool;
 	
 	/**
-		Removes all occurrences of the element `x`.
-		@return true if at least one occurrence of `x` was removed.
+		Removes all occurrences of the element `val`.
+		@return true if at least one occurrence of `val` was removed.
 	**/
-	function remove(x:T):Bool;
+	function remove(val:T):Bool;
 	
 	/**
 		Removes all elements from this collection.
@@ -60,20 +60,19 @@ interface Collection<T> extends Hashable
 		Iterates over all elements in this collection.
 		
 		Example:
-		<pre class="prettyprint">
-		var c:Collection<String> = new Array2<String>(...);
-		for (element in c) {
-		    trace(element);
-		}
-		//or
-		var c:Collection = new Array2<String>(...);
-		var itr:Itr = c.iterator();
-		while (itr.hasNext()) {
-		    var element:String = itr.next();
-		    trace(element);
-		}</pre>
+			var c:Collection<String> = new Array2<String>(...);
+			for (element in c) {
+			    trace(element);
+			}
+			//or
+			var c:Collection = new Array2<String>(...);
+			var itr:Itr = c.iterator();
+			while (itr.hasNext()) {
+			    var element:String = itr.next();
+			    trace(element);
+			}
 		
-		See <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
+		@see http://haxe.org/ref/iterators
 	**/
 	function iterator():Itr<T>;
 	
@@ -91,30 +90,29 @@ interface Collection<T> extends Hashable
 		Duplicates this collection. Supports shallow (structure only) and deep copies (structure & elements).
 		
 		Example:
-		<pre class="prettyprint">
-		class Foo implements de.polygonal.ds.Cloneable<Foo>
-		{
-		    public var val:Int;
-		    public function new(val:Int) {
-		        this.val = val;
-		    }
-		    public function clone():Foo {
-		        return new Foo(val);
-		    }
-		}
-		class Main
-		{
-		    var c:Collection<Foo> = new Array2<Foo>(...);
-		    //shallow copy
-		    var clone = c.clone(true);
-		    //deep copy
-		    var clone = c.clone(false);
-		    //deep copy using a custom function to do the actual work
-		    var clone = c.clone(false, function(existingValue:Foo) { return new Foo(existingValue.val); })
-		}</pre>
+			class Foo implements de.polygonal.ds.Cloneable<Foo>
+			{
+			    public var val:Int;
+			    public function new(val:Int) {
+			        this.val = val;
+			    }
+			    public function clone():Foo {
+			        return new Foo(val);
+			    }
+			}
+			class Main
+			{
+			    var c:Collection<Foo> = new Array2<Foo>(...);
+			    //shallow copy
+			    var clone = c.clone(true);
+			    //deep copy
+			    var clone = c.clone(false);
+			    //deep copy using a custom function to do the actual work
+			    var clone = c.clone(false, function(existingValue:Foo) { return new Foo(existingValue.val); })
+			}
 		@param assign if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
-		If false, the ``clone()`` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
-		@param copier a custom function for copying elements. Replaces ``element::clone()`` if `assign` is false.
+		If false, the `clone()` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
+		@param copier a custom function for copying elements. Replaces `element->clone()` if `assign` is false.
 	**/
 	function clone(assign:Bool = true, copier:T->T = null):Collection<T>;
 }

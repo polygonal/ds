@@ -75,7 +75,6 @@ class ArrayList<T> implements List<T>
 	var mIterator:ArrayListIterator<T> = null;
 	
 	/**
-		<assert>invalid `capacityIncrement`</assert>
 		
 		@param allowShrink if true, the internal container gets halved when `size` falls below ¼ of the current `capacity`.
 		Default is false.
@@ -103,8 +102,6 @@ class ArrayList<T> implements List<T>
 	
 	/**
 		Returns the element stored at index `i`.
-		
-		<assert>`i` out of range</assert>
 	**/
 	public inline function get(i:Int):T
 	{
@@ -115,8 +112,6 @@ class ArrayList<T> implements List<T>
 	
 	/**
 		Replaces the element at index `i` with the element `x`.
-		
-		<assert>`i` out of range</assert>
 	**/
 	public inline function set(i:Int, x:T)
 	{
@@ -167,7 +162,6 @@ class ArrayList<T> implements List<T>
 		Removes and returns the first element.
 		
 		To fill the gap, any subsequent elements are shifted to the left (indices - 1).
-		<assert>vector is empty</assert>
 	**/
 	public function popFront():T
 	{
@@ -220,7 +214,6 @@ class ArrayList<T> implements List<T>
 		Returns the first element.
 		
 		This is the element at index 0.
-		<assert>vector is empty</assert>
 	**/
 	public inline function front():T
 	{
@@ -233,7 +226,6 @@ class ArrayList<T> implements List<T>
 		Returns the last element.
 		
 		This is the element at index `size` - 1.
-		<assert>vector is empty</assert>
 	**/
 	public inline function back():T
 	{
@@ -244,7 +236,6 @@ class ArrayList<T> implements List<T>
 	
 	/**
 		Swaps the element stored at index `i` with the element stored at index `j`.
-		<assert>`i`/`j` out of range or `i` equals `j`</assert>
 	**/
 	public inline function swap(i:Int, j:Int):ArrayList<T>
 	{
@@ -261,7 +252,6 @@ class ArrayList<T> implements List<T>
 	
 	/**
 		Replaces the element at index `dst` with the element stored at index `src`.
-		<assert>`i`/`j` out of range or `i` == `j`</assert>
 	**/
 	public inline function copy(src:Int, dst:Int):ArrayList<T>
 	{
@@ -286,7 +276,6 @@ class ArrayList<T> implements List<T>
 		Inserts `x` at the specified index `i`.
 		
 		Shifts the element currently at that position (if any) and any subsequent elements to the right (indices + 1).
-		<assert>`i` out of range</assert>
 	**/
 	public function insert(i:Int, x:T)
 	{
@@ -310,7 +299,6 @@ class ArrayList<T> implements List<T>
 	/**
 		Removes the element at the specified index `i`.
 		Shifts any subsequent elements to the left (indices - 1).
-		<assert>`i` out of range</assert>
 	**/
 	public function removeAt(i:Int):T
 	{
@@ -331,7 +319,6 @@ class ArrayList<T> implements List<T>
 	/**
 		Fast removal of the element at index `i` if the order of the elements doesn't matter.
 		@return the element at index `i` prior removal.
-		<assert>`i` out of range</assert>
 	**/
 	public inline function swapPop(i:Int):T
 	{
@@ -347,7 +334,6 @@ class ArrayList<T> implements List<T>
 		Calls the `f` function on all elements.
 		
 		The function signature is: `f(element, index):element`
-		<assert>`f` is null</assert>
 	**/
 	public function forEach(f:T->Int->T):ArrayList<T>
 	{
@@ -362,7 +348,6 @@ class ArrayList<T> implements List<T>
 		Cuts of `size` - `n` elements.
 		
 		This only modifies the value of `size` and does not perform reallocation.
-		<assert>`n` > `size`</assert>
 	**/
 	public function trim(n:Int):ArrayList<T>
 	{
@@ -401,7 +386,6 @@ class ArrayList<T> implements List<T>
 	
 	/**
 		Finds the first occurrence of the element `x` by using the binary search algorithm assuming elements are sorted.
-		<assert>`from` out of range</assert>
 		@param from the index to start from. The default value is 0.
 		@param cmp a comparison function for the binary search. If omitted, the method assumes that all elements implement `Comparable`.
 		@return the index storing the element `x` or the bitwise complement (~) of the index where the `x` would be inserted (guaranteed to be a negative number).
@@ -438,7 +422,6 @@ class ArrayList<T> implements List<T>
 	
 	/**
 		Finds the first occurrence of the element `x` (by incrementing indices - from left to right).
-		<assert>`from` out of range</assert>
 		@return the index storing the element `x` or -1 if `x` was not found.
 	**/
 	@:access(de.polygonal.ds.ArrayList)
@@ -460,7 +443,6 @@ class ArrayList<T> implements List<T>
 	
 	/**
 		Finds the first occurrence of `x` (by decrementing indices - from right to left) and returns the index storing the element `x` or -1 if `x` was not found.
-		<assert>`from` out of range</assert>
 		@param from the index to start from. By default, the method starts from the last element in this dense array.
 	**/
 	public function lastIndexOf(x:T, from:Int = -1):Int
@@ -488,8 +470,6 @@ class ArrayList<T> implements List<T>
 	
 	/**
 		Concatenates this array with `x` by appending all elements of `x` to this array.
-		<assert>`x` is null</assert>
-		<assert>`x` equals this if `copy`=false</assert>
 		@param copy if true, returns a new array instead of modifying this array.
 	**/
 	public function concat(x:ArrayList<T>, copy:Bool = false):ArrayList<T>
@@ -519,9 +499,6 @@ class ArrayList<T> implements List<T>
 	
 	/**
 		Reverses this vector in place in the range [`first, `last`] (the first element becomes the last and the last becomes the first).
-		
-		<assert>`first` >= `last`</assert>
-		<assert>`first`/`last` out of range</assert>
 	**/
 	public function reverse(first:Int = -1, last:Int = -1)
 	{
@@ -552,8 +529,7 @@ class ArrayList<T> implements List<T>
 		
 		Copying takes place as if an intermediate buffer was used, allowing the destination and source to overlap.
 		
-		See <a href="http://www.cplusplus.com/reference/clibrary/cstring/memmove/" target="mBlank">http://www.cplusplus.com/reference/clibrary/cstring/memmove/</a>
-		<assert>invalid `destination`, `source` or `n` value</assert>
+		@see http://www.cplusplus.com/reference/clibrary/cstring/memmove/"
 	**/
 	public function memmove(destination:Int, source:Int, n:Int)
 	{
@@ -567,9 +543,7 @@ class ArrayList<T> implements List<T>
 	
 	/**
 		Sorts the elements of this dense array using the quick sort algorithm.
-		<assert>element does not implement `Comparable`</assert>
-		<assert>`first` or `count` out of range</assert>
-		@param cmp a comparison function.If null, the elements are compared using `element::compare()`.
+		@param cmp a comparison function.If null, the elements are compared using `element->compare()`.
 		<warn>In this case all elements have to implement `Comparable`.</warn>
 		@param useInsertionSort if true, the dense array is sorted using the insertion sort algorithm. This is faster for nearly sorted lists.
 		@param first sort start index. The default value is 0.
@@ -631,19 +605,17 @@ class ArrayList<T> implements List<T>
 		Returns a string representing the current object.
 		
 		Example:
-		<pre class="prettyprint">
-		var dv = new de.polygonal.ds.ArrayList<Int>();
-		for (i in 0...3) {
-		    dv.set(i, i);
-		}
-		trace(dv);</pre>
-		<pre class="console">
-		{ Dv size/capacity: 3/16 }
-		[
-		  0 -> 0
-		  1 -> 1
-		  2 -> 2
-		]</pre>
+			var dv = new de.polygonal.ds.ArrayList<Int>();
+			for (i in 0...3) {
+			    dv.set(i, i);
+			}
+			trace(dv);
+			{ Dv size/capacity: 3/16 }
+			[
+			  0 -> 0
+			  1 -> 1
+			  2 -> 2
+			]
 	**/
 	public function toString():String
 	{
@@ -858,7 +830,6 @@ class ArrayList<T> implements List<T>
 		Sets `n` elements to the value `x`.
 		
 		Automatically reserves storage for `n` elements so an additional call to `reserve()` is not required.
-		<assert>invalid element count</assert>
 	**/
 	public function init(n:Int, x:T):ArrayList<T>
 	{
@@ -1032,7 +1003,7 @@ class ArrayList<T> implements List<T>
 		
 		Order: Row-major order (row-by-row).
 		
-		See <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
+		@see http://haxe.org/ref/iterators
 	**/
 	public function iterator():Itr<T>
 	{
@@ -1065,10 +1036,9 @@ class ArrayList<T> implements List<T>
 	
 	/**
 		Duplicates this dense array. Supports shallow (structure only) and deep copies (structure & elements).
-		<assert>element is not of type `Cloneable`</assert>
 		@param assign if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
 		If false, the `clone()` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
-		@param copier a custom function for copying elements. Replaces `element::clone()` if `assign` is false.
+		@param copier a custom function for copying elements. Replaces `element->clone()` if `assign` is false.
 	**/
 	public function clone(assign:Bool = true, copier:T->T = null):Collection<T>
 	{

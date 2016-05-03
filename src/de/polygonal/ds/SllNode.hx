@@ -25,7 +25,7 @@ import de.polygonal.ds.tools.Assert.assert;
 	
 	Each node wraps an element and stores a reference to the next list node.
 	
-	``SllNode`` objects are created and managed by the ``Sll`` class.
+	`SllNode` objects are created and managed by the `Sll` class.
 **/
 #if generic
 @:generic
@@ -67,7 +67,6 @@ class SllNode<T>
 	
 	/**
 		Returns true if this node is the head of a list.
-		<assert>node is not managed by a list</assert>
 	**/
 	public inline function isHead():Bool
 	{
@@ -78,7 +77,6 @@ class SllNode<T>
 	
 	/**
 		Returns true if this node is the tail of a list.
-		<assert>node is not managed by a list</assert>
 	**/
 	public inline function isTail():Bool
 	{
@@ -97,7 +95,6 @@ class SllNode<T>
 	
 	/**
 		Returns the element of the next node.
-		<assert>next node is null</assert>
 	**/
 	public inline function nextVal():T
 	{
@@ -116,7 +113,6 @@ class SllNode<T>
 	
 	/**
 		Unlinks this node from its list and returns node.`next`.
-		<assert>list is null</assert>
 	**/
 	public inline function unlink():SllNode<T>
 	{
@@ -126,7 +122,7 @@ class SllNode<T>
 	}
 	
 	/**
-		Returns a string representing the current object.
+		Prints out all elements.
 	**/
 	public function toString():String
 	{

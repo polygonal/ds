@@ -21,21 +21,21 @@ package de.polygonal.ds;
 /**
 	An iterator over a collection
 	
-	Same as typedef Iterator<T> but augmented with a ``reset()`` method.
+	Same as typedef Iterator<T> but augmented with a `reset()` method.
 **/
 interface Itr<T>
 {
 	/**
 		Returns true if this iteration has more elements.
 		
-		See <a href="http://haxe.org/api/iterator" target="mBlank">http://haxe.org/api/iterator</a>
+		@see http://haxe.org/api/iterator
 	**/
 	function hasNext():Bool;
 	
 	/**
 		Returns the next element in this iteration.
 		
-		See <a href="http://haxe.org/api/iterator" target="mBlank">http://haxe.org/api/iterator</a>
+		@see http://haxe.org/api/iterator
 	**/
 	function next():T;
 	
@@ -43,15 +43,13 @@ interface Itr<T>
 		Removes the last element returned by the iterator from the collection.
 		
 		Example:
-		<pre class="prettyprint">
-		var c:Collection<String> = new Array2<String>(...);
-		var itr = c.iterator();
-		while (itr.hasNext()) {
-		    var val = itr.next();
-		    itr.remove(); //removes val
-		}
-		trace(c.isEmpty()); //true
-		</pre>
+			var c:Collection<String> = new Array2<String>(...);
+			var itr = c.iterator();
+			while (itr.hasNext()) {
+			    var val = itr.next();
+			    itr.remove(); //removes val
+			}
+			trace(c.isEmpty()); //true
 	**/
 	function remove():Void;
 	
@@ -61,16 +59,14 @@ interface Itr<T>
 		Improves performance if an iterator is frequently used.
 		
 		Example:
-		<pre class="prettyprint">
-		var c:Collection<String> = new Array2<String>(...);
-		var itr = c.iterator();
-		for (i in 0...100) {
-		    itr.reset();
-		    for (element in itr) {
-		        trace(element);
-		    }
-		}
-		</pre>
+			var c:Collection<String> = new Array2<String>(...);
+			var itr = c.iterator();
+			for (i in 0...100) {
+			    itr.reset();
+			    for (element in itr) {
+			        trace(element);
+			    }
+			}
 	**/
 	function reset():Itr<T>;
 }

@@ -56,7 +56,7 @@ class IntHashSet implements Set<Int>
 	/**
 		The size of the allocated storage space for the elements.
 		
-		If more space is required to accomodate new elements, ``getCapacity()`` is doubled every time ``size`` grows beyond capacity and split in half when ``size`` is a quarter of capacity.
+		If more space is required to accomodate new elements, `getCapacity()` is doubled every time `size` grows beyond capacity and split in half when `size` is a quarter of capacity.
 		
 		The capacity never falls below the initial size defined in the constructor.
 	**/
@@ -74,7 +74,7 @@ class IntHashSet implements Set<Int>
 	public var growthRate:Int = GrowthRate.DOUBLE;
 	
 	/**
-		If true, reuses the iterator object instead of allocating a new one when calling ``iterator()``.
+		If true, reuses the iterator object instead of allocating a new one when calling `iterator()`.
 		
 		The default is false.
 		
@@ -89,7 +89,7 @@ class IntHashSet implements Set<Int>
 		
 		A high load factor thus indicates poor performance.
 		
-		If the load factor gets too high, additional slots can be allocated by calling ``rehash()``.
+		If the load factor gets too high, additional slots can be allocated by calling `rehash()`.
 	**/
 	public var loadFactor(get, never):Float;
 	function get_loadFactor():Float
@@ -119,13 +119,10 @@ class IntHashSet implements Set<Int>
 	var mIterator:IntHashSetIterator;
 	
 	/**
-		<assert>`slotCount` is not a power of two</assert>
-		<assert>`capacity` is not a power of two</assert>
-		<assert>`capacity` is < 2</assert>
 		@param slotCount the total number of slots into which the hashed elements are distributed.
 		This defines the space-time trade off of the set.
 		Increasing the `slotCount` reduces the computation time (read/write/access) of the set at the cost of increased memory use.
-		This value is fixed and can only be changed by calling ``rehash()``, which rebuilds the set (expensive).
+		This value is fixed and can only be changed by calling `rehash()`, which rebuilds the set (expensive).
 		
 		@param initialCapacity the initial physical space for storing the elements at the time the set is created.
 		This is also the minimum allowed size of the set and cannot be changed in the future.
@@ -133,7 +130,7 @@ class IntHashSet implements Set<Int>
 		The `initialCapacity` is automatically adjusted according to the storage requirements based on two rules:
 		<ul>
 		<li>If the set runs out of space, the `capacity` is doubled.</li>
-		<li>If the ``size`` falls below a quarter of the current `capacity`, the `capacity` is cut in half while the minimum `capacity` can't fall below `capacity`.</li>
+		<li>If the `size` falls below a quarter of the current `capacity`, the `capacity` is cut in half while the minimum `capacity` can't fall below `capacity`.</li>
 		</ul>
 	**/
 	public function new(slotCount:Int, initialCapacity:Int = -1)
@@ -200,7 +197,6 @@ class IntHashSet implements Set<Int>
 		Returns true if this set contains the element `x`.
 		
 		Uses move-to-front-on-access which reduces access time when similar elements are frequently queried.
-		<assert>value 0x80000000 is reserved</assert>
 	**/
 	public inline function hasFront(x:Int):Bool
 	{
@@ -268,7 +264,6 @@ class IntHashSet implements Set<Int>
 		Redistributes all elements over `slotCount`.
 		
 		This is an expensive operations as the set is rebuild from scratch.
-		<assert>`slotCount` is not a power of two</assert>
 	**/
 	public function rehash(slotCount:Int)
 	{
@@ -379,23 +374,7 @@ class IntHashSet implements Set<Int>
 	}
 	
 	/**
-		Returns a string representing the current object.
-		
-		Example:
-		<pre class="prettyprint">
-		var set = new de.polygonal.ds.IntHashSet(16);
-		for (i in 0...4) {
-		    set.set(i);
-		}
-		trace(set);</pre>
-		<pre class="console">
-		{ IntHashSet size/capacity: 4/16, load factor: 0.25 }
-		[
-		  0
-		  1
-		  2
-		  3
-		]</pre>
+		Prints out all elements.
 	**/
 	public function toString():String
 	{
@@ -460,7 +439,6 @@ class IntHashSet implements Set<Int>
 	
 	/**
 		Returns true if this set contains the element `x`.
-		<assert>value 0x80000000 is reserved</assert>
 	**/
 	public inline function has(x:Int):Bool
 	{
@@ -514,8 +492,6 @@ class IntHashSet implements Set<Int>
 	
 	/**
 		Adds the element `x` to this set if possible.
-		<assert>value 0x80000000 is reserved</assert>
-		<assert>hash set is full (if not resizable)</assert>
 		@return true if `x` was added to this set, false if `x` already exists.
 	**/
 	public inline function set(x:Int):Bool
@@ -652,7 +628,7 @@ class IntHashSet implements Set<Int>
 	}
 	
 	/**
-		Same as ``has()``.
+		Same as `has()`.
 	**/
 	public inline function contains(x:Int):Bool
 	{
@@ -796,7 +772,7 @@ class IntHashSet implements Set<Int>
 		
 		The elements are visited in a random order.
 		
-		See <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
+		@see http://haxe.org/ref/iterators
 	**/
 	public function iterator():Itr<Int>
 	{

@@ -26,65 +26,63 @@ import de.polygonal.ds.tools.M;
 	Use this pool if the number of objects is not known in advance.
 	
 	Example:
-	<pre class="prettyprint">
-	class Main
-	{
-	    static function main() {
-	        new Main();
-	    }
-	    var mPool:de.polygonal.ds.pooling.DynamicObjectPool<Point>;
-	    public function new() {
-	        //setup the pool
-	        mPool = new de.polygonal.ds.pooling.DynamicObjectPool(Point);
-	
-	        //setup an algorithm that runs every 100ms
-	        var timer = new haxe.Timer(100);
-	        timer.run = algorithm;
-	    }
-	
-	    function algorithm() {
-	        //add two points together and store the result in c
-	        var a = getPoint(10, 10);
-	        var b = getPoint(20, 20);
-	        var c = addition(a, b);
-	
-	        //at this point the pool has allocated three point objects;
-	        //we could call mPool.get() to create a new point, but instead we reuse the points we already have
-	        mPool.put(a);
-	        mPool.put(b);
-	        mPool.put(c);
-	
-	        //now the same calculation doesn't allocate any objects
-	        var a = getPoint(10, 10);
-	        var b = getPoint(20, 20);
-	        var c = addition(a, b);
-	
-	        //after we are done, call reclaim() to mark all objects as available for reuse in the next iteration
-	        mPool.reclaim();
-	    }
-	
-	    inline function getPoint(x:Float, y:Float):Point {
-	        var p = mPool.get();
-	        p.x = x;
-	        p.y = y;
-	        return p;
-	    }
-	
-	    inline function addition(a:Point, b:Point):Point {
-	        var sum = mPool.get();
-	        sum.x = a.x + b.x;
-	        sum.y = a.y + b.y;
-	        return sum;
-	    }
-	}
-	
-	class Point
-	{
-	    public var x:Float;
-	    public var y:Float;
-	    public function new() {}
-	}
-	</pre>
+		class Main
+		{
+		    static function main() {
+		        new Main();
+		    }
+		    var mPool:de.polygonal.ds.pooling.DynamicObjectPool<Point>;
+		    public function new() {
+		        //setup the pool
+		        mPool = new de.polygonal.ds.pooling.DynamicObjectPool(Point);
+		
+		        //setup an algorithm that runs every 100ms
+		        var timer = new haxe.Timer(100);
+		        timer.run = algorithm;
+		    }
+		
+		    function algorithm() {
+		        //add two points together and store the result in c
+		        var a = getPoint(10, 10);
+		        var b = getPoint(20, 20);
+		        var c = addition(a, b);
+		
+		        //at this point the pool has allocated three point objects;
+		        //we could call mPool.get() to create a new point, but instead we reuse the points we already have
+		        mPool.put(a);
+		        mPool.put(b);
+		        mPool.put(c);
+		
+		        //now the same calculation doesn't allocate any objects
+		        var a = getPoint(10, 10);
+		        var b = getPoint(20, 20);
+		        var c = addition(a, b);
+		
+		        //after we are done, call reclaim() to mark all objects as available for reuse in the next iteration
+		        mPool.reclaim();
+		    }
+		
+		    inline function getPoint(x:Float, y:Float):Point {
+		        var p = mPool.get();
+		        p.x = x;
+		        p.y = y;
+		        return p;
+		    }
+		
+		    inline function addition(a:Point, b:Point):Point {
+		        var sum = mPool.get();
+		        sum.x = a.x + b.x;
+		        sum.y = a.y + b.y;
+		        return sum;
+		    }
+		}
+		
+		class Point
+		{
+		    public var x:Float;
+		    public var y:Float;
+		    public function new() {}
+		}
 **/
 #if (debug && generic)
 @:generic
@@ -124,10 +122,9 @@ class DynamicObjectPool<T>
 		Creates an empty pool.
 		@param cl allocates objects by instantiating the class `cl`.
 		@param fabricate allocates objects by calling `fabricate()`.
-		@param factory allocates objects by using a `Factory` object (calling `factory`::create()).
+		@param factory allocates objects by using a `Factory` object (calling `factory`->create()).
 		@param capacity the maximum number of objects that are stored in this pool.
 		The default value of 0x7FFFFFFF indicates that the size is unbound.
-		<assert>invalid arguments</assert>
 	**/
 	public function new(cl:Class<T> = null, fabricate:Void->T = null, factory:Factory<T> = null, capacity = M.INT32_MAX)
 	{
@@ -196,7 +193,7 @@ class DynamicObjectPool<T>
 	/**
 		Acquires the next object from this pool or creates a new object if all objects are in use.
 		To minimize object creation, return objects back to the pool as soon as their life cycle ends by calling `put()`.
-		<warn>If ``size`` equals `capacity()`, `get()` still allocates a new object but does not pool it. This effectively disables pooling.</warn>
+		<warn>If `size` equals `capacity()`, `get()` still allocates a new object but does not pool it. This effectively disables pooling.</warn>
 	**/
 	public inline function get():T
 	{
@@ -224,7 +221,6 @@ class DynamicObjectPool<T>
 	/**
 		Returns the object `x` to the pool.
 		Objects are pushed onto a stack, so `get()` returns `x` if called immediately after `put()`.
-		<assert>`x` was returned twice to the pool</assert>
 	**/
 	public inline function put(x:T)
 	{
@@ -261,7 +257,7 @@ class DynamicObjectPool<T>
 	/**
 		Returns a new `DynamicObjectPoolIterator` object to iterate over all pooled objects.
 		
-		See <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
+		@see http://haxe.org/ref/iterators
 	**/
 	public function iterator():Itr<T>
 	{

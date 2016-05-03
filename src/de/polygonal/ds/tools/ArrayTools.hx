@@ -31,7 +31,6 @@ class ArrayTools
 {
 	/**
 		Allocates an array with a length of `x`.
-		<assert>`x` < 0</assert>
 	**/
 	public static function alloc<T>(x:Int):Array<T>
 	{
@@ -79,9 +78,6 @@ class ArrayTools
 	
 	/**
 		Copies elements in the range [`min`, `max`] from `source` to `destination`.
-		<assert>`source` is null</assert>
-		<assert>`destination` is null</assert>
-		<assert>`min`/`max` out of range</assert>
 	**/
 	public static function copy<T>(source:Array<T>, destination:Array<T>, min = 0, max = -1):Array<T>
 	{
@@ -101,7 +97,7 @@ class ArrayTools
 	/**
 		Sets up to `k` elements in `destination` to the instance `x`.
 		@param k the number of elements to put into `destination`.
-		If omitted `k` is set to `destination`::length;
+		If omitted `k` is set to `destination`->length;
 	**/
 	public static function init<T>(destination:Array<T>, x:T, k = -1)
 	{
@@ -114,8 +110,7 @@ class ArrayTools
 		
 		Copying takes place as if an intermediate buffer is used, allowing the destination and source to overlap.
 		
-		See <a href="ttp://www.cplusplus.com/reference/clibrary/cstring/memmove/" target="mBlank">ttp://www.cplusplus.com/reference/clibrary/cstring/memmove/</a>
-		<assert>invalid `destination`, `source` or `n` value</assert>
+		@see http://www.cplusplus.com/reference/clibrary/cstring/memmove/
 	**/
 	public static function memmove<T>(a:Array<T>, destination:Int, source:Int, n:Int)
 	{
@@ -155,8 +150,6 @@ class ArrayTools
 		Searches the sorted array `a` for the element `x` in the range (`min`, `max`] using the binary search algorithm.
 		
 		<warn>The insertion point is only valid for `min`=0 and `max`=a.length-1.</warn>
-		<assert>`a`/`comparator` is null</assert>
-		<assert>invalid `min`/`max` search boundaries</assert>
 		@return the index of the element `x` or the bitwise complement (~) of the index where `x` would be inserted (guaranteed to be a negative number).
 	**/
 	public static function bsearchComparator<T>(a:Array<T>, x:T, min:Int, max:Int, comparator:T->T->Int):Int
@@ -185,9 +178,7 @@ class ArrayTools
 	/**
 		Searches the sorted array `a` for the element `x` in the range [`min`, `max`) using the binary search algorithm.
 		
-		<warn>The insertion point is only valid for `min`=0 and `max`=`a`::length-1.</warn>
-		<assert>`a` is null</assert>
-		<assert>invalid `min`/`max` search boundaries</assert>
+		<warn>The insertion point is only valid for `min`=0 and `max`=`a`->length-1.</warn>
 		@return the index of the element `x` or the bitwise complement (~) of the index where `x` would be inserted (guaranteed to be a negative number).
 	**/
 	public static function bsearchInt(a:Array<Int>, x:Int, min:Int, max:Int):Int
@@ -215,9 +206,7 @@ class ArrayTools
 	/**
 		Searches the sorted array `a` for the element `x` in the range [`min`, `max`) using the binary search algorithm.
 		
-		<warn>The insertion point is only valid for `min`=0 and `max`=`a`::length-1.</warn>
-		<assert>`a` is null</assert>
-		<assert>invalid `min`/`max` search boundaries</assert>
+		<warn>The insertion point is only valid for `min`=0 and `max`=`a`->length-1.</warn>
 		@return the index of the element `x` or the bitwise complement (~) of the index where `x` would be inserted (guaranteed to be a negative number).
 	**/
 	public static function bsearchFloat(a:Array<Float>, x:Float, min:Int, max:Int):Int
@@ -244,9 +233,8 @@ class ArrayTools
 	
 	/**
 		Shuffles the elements of the array `a` by using the Fisher-Yates algorithm.
-		<assert>insufficient random values</assert>
 		@param rvals a list of random double values in the range between [0, 1) defining the new positions of the elements.
-		If omitted, random values are generated on-the-fly by calling `Math::random()`.
+		If omitted, random values are generated on-the-fly by calling `Math->random()`.
 	**/
 	public static function shuffle<T>(a:Array<T>, rvals:Array<Float> = null)
 	{
@@ -281,12 +269,11 @@ class ArrayTools
 	
 	/**
 		Sorts the elements of the array `a` by using the quick sort algorithm.
-		<assert>`first` or `count` out of range</assert>
 		@param compare a comparison function.
 		@param useInsertionSort if true, the array is sorted using the insertion sort algorithm. This is faster for nearly sorted lists.
 		@param first sort start index. The default value is 0.
 		@param count the number of elements to sort (range: [`first`, `first` + `count`]).
-		If omitted, `count` is set to ``size``.
+		If omitted, `count` is set to `size`.
 	**/
 	public static function sortRange(a:Array<Float>, compare:Float->Float->Int, useInsertionSort:Bool, first:Int, count:Int)
 	{
@@ -306,7 +293,7 @@ class ArrayTools
 	/**
 		A quick counting permutation algorithm.
 		
-		See <a href="http://www.freewebs.com/permute/quickperm.html" target="mBlank">http://www.freewebs.com/permute/quickperm.html</a>
+		@see http://www.freewebs.com/permute/quickperm.html
 		@param n number of elements to permute.
 	**/
 	public static function quickPerm(n:Int):Array<Array<Int>>
@@ -362,7 +349,6 @@ class ArrayTools
 	
 	/**
 		Splits the input array `a` storing `n` elements into smaller chunks, each containing k elements.
-		<assert>`n` is not a multiple of `k`</assert>
 	**/
 	public static function split<T>(a:Array<T>, n:Int, k:Int):Array<Array<T>>
 	{

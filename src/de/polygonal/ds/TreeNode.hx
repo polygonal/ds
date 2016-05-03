@@ -27,7 +27,7 @@ using de.polygonal.ds.tools.NativeArrayTools;
 /**
 	A tree structure
 	
-	See <a href="http://lab.polygonal.de/?p=184" target="mBlank">http://lab.polygonal.de/?p=184</a>
+	@see http://lab.polygonal.de/?p=184
 **/
 #if generic
 @:generic
@@ -56,7 +56,7 @@ class TreeNode<T> implements Collection<T>
 	/**
 		The node's children or null if this node has no children.
 		
-		This is a doubly linked list of ``TreeNode`` objects and ``children`` points to the first child.
+		This is a doubly linked list of `TreeNode` objects and `children` points to the first child.
 	**/
 	public var children:TreeNode<T>;
 	
@@ -80,7 +80,7 @@ class TreeNode<T> implements Collection<T>
 	#end
 	
 	/**
-		Creates a ``TreeNode`` object storing the element `x`.
+		Creates a `TreeNode` object storing the element `x`.
 		@param parent if specified, this node is appended to the children of `parent`.
 	**/
 	public function new(x:T, parent:TreeNode<T> = null)
@@ -201,7 +201,7 @@ class TreeNode<T> implements Collection<T>
 	}
 	
 	/**
-		Returns true if this node has a sibling to its right (``next`` != null).
+		Returns true if this node has a sibling to its right (`next` != null).
 	**/
 	public inline function hasNextSibling():Bool
 	{
@@ -209,7 +209,7 @@ class TreeNode<T> implements Collection<T>
 	}
 	
 	/**
-		Returns true if this node has a sibling to its left (``prev`` != null).
+		Returns true if this node has a sibling to its left (`prev` != null).
 	**/
 	public inline function hasPrevSibling():Bool
 	{
@@ -235,7 +235,7 @@ class TreeNode<T> implements Collection<T>
 	/**
 		Returns the sibling index of this node.
 		
-		The first sibling equals index 0, the last sibling equals index ``numChildren()`` - 1.
+		The first sibling equals index 0, the last sibling equals index `numChildren()` - 1.
 	**/
 	public inline function getSiblingIndex():Int
 	{
@@ -251,8 +251,6 @@ class TreeNode<T> implements Collection<T>
 	
 	/**
 		Swaps the child `a` with child `b` by swapping their values.
-		<assert>`a` and `b` are not siblings</assert>
-		<assert>`a` equals `b`</assert>
 		@return this node.
 	**/
 	public function swapChildren(a:TreeNode<T>, b:TreeNode<T>):TreeNode<T>
@@ -266,9 +264,6 @@ class TreeNode<T> implements Collection<T>
 	
 	/**
 		Swaps the child at index `i` with the child at index `j` by swapping their values.
-		<assert>index `i` out of range</assert>
-		<assert>index `j` out of range</assert>
-		<assert>`i` equals `j`</assert>
 		@return this node.
 	**/
 	public function swapChildrenAt(i:Int, j:Int):TreeNode<T>
@@ -309,7 +304,6 @@ class TreeNode<T> implements Collection<T>
 	
 	/**
 		Removes the child at index `i` and returns the child.
-		<assert>index `i` is out of range</assert>
 		@return this node.
 	**/
 	public function removeChildAt(i:Int):TreeNode<T>
@@ -330,8 +324,7 @@ class TreeNode<T> implements Collection<T>
 	/**
 		Removes `n` children starting at the specified index `i` in the range [`i`, `i` + `n`].
 		
-		If `n` is -1, `n` is set to ``numChildren()`` - `i`.
-		<assert>`i` or `n` out of range</assert>
+		If `n` is -1, `n` is set to `numChildren()` - `i`.
 		@return this node.
 	**/
 	public function removeChildren(i:Int = 0, n:Int = -1):TreeNode<T>
@@ -363,7 +356,6 @@ class TreeNode<T> implements Collection<T>
 	
 	/**
 		Changes the index of the child `x` to `i`.
-		<assert>index `i` is out of range</assert>
 		@return this node.
 	**/
 	public function setChildIndex(x:TreeNode<T>, i:Int):TreeNode<T>
@@ -528,7 +520,6 @@ class TreeNode<T> implements Collection<T>
 	
 	/**
 		Returns the child at index `i` or null if the node has no children.
-		<assert>`i` out of range</assert>
 	**/
 	public inline function getChildAt(i:Int):TreeNode<T>
 	{
@@ -585,7 +576,6 @@ class TreeNode<T> implements Collection<T>
 	
 	/**
 		Unlinks `x` and appends `x` as a child to this node.
-		<assert>`x` is null</assert>
 		@return this node.
 	**/
 	public function appendNode(x:TreeNode<T>):TreeNode<T>
@@ -637,7 +627,6 @@ class TreeNode<T> implements Collection<T>
 	
 	/**
 		Unlinks `x` and appends `x` to the specified `child` node.
-		<assert>`child` node is not a child of this node</assert>
 		@return this node.
 	**/
 	public function insertAfterChild(child:TreeNode<T>, x:TreeNode<T>):TreeNode<T>
@@ -668,7 +657,6 @@ class TreeNode<T> implements Collection<T>
 	
 	/**
 		Unlinks `x` and prepends `x` to the specified child `node`.
-		<assert>`child` node is not a child of this node</assert>
 		@return this node.
 	**/
 	public function insertBeforeChild(child:TreeNode<T>, x:TreeNode<T>):TreeNode<T>
@@ -699,7 +687,6 @@ class TreeNode<T> implements Collection<T>
 	
 	/**
 		Unlinks `x` and inserts `x` at the index position `i`.
-		<assert>index `i` out of range</assert>
 		@return this node.
 	**/
 	public function insertChildAt(x:TreeNode<T>, i:Int):TreeNode<T>
@@ -785,10 +772,10 @@ class TreeNode<T> implements Collection<T>
 		@param process a function that is invoked on every traversed node.
 		The first argument holds a reference to the current node, the second arguments stores the preflight flag and the third argument stores custom data specified by the `userData` parameter (default is null).
 		Once `process` returns false, the traversal stops immediately and no further nodes are examined.
-		If omitted, ``element::visit()`` is used instead.
-		@param userData custom data that is passed to every visited node via `process` or ``element::visit()``.
+		If omitted, `element->visit()` is used instead.
+		@param userData custom data that is passed to every visited node via `process` or `element->visit()`.
 		@param preflight if true, an extra traversal is performed before the actual traversal runs.
-		The first pass visits all elements and calls ``element::visit()`` with the `preflight` parameter set to true.
+		The first pass visits all elements and calls `element->visit()` with the `preflight` parameter set to true.
 		In this pass the return value determines whether the element (and all its children) will be processed (true) or
 		excluded (false) from the final traversal, which is the second pass (`preflight` parameter set to false).
 		The same applies when using a `process` function.
@@ -1054,9 +1041,9 @@ class TreeNode<T> implements Collection<T>
 		@param process a function that is invoked on every traversed node.
 		The first argument holds a reference to the current node, while the second argument stores custom data specified by the `userData` parameter (default is null).
 		Once `process` returns false, the traversal stops immediately and no further nodes are examined.
-		If omitted, ``element::visit()`` is used instead.
+		If omitted, `element->visit()` is used instead.
 		<warn>In this case all elements have to implement `Visitable`.</warn>
-		@param userData custom data that is passed to every visited node via `process` or ``element::visit()``.
+		@param userData custom data that is passed to every visited node via `process` or `element->visit()`.
 		@param iterative if true, an iterative traversal is used (default traversal style is recursive).
 		@return this node.
 	**/
@@ -1227,9 +1214,9 @@ class TreeNode<T> implements Collection<T>
 		@param process a function that is invoked on every traversed node.
 		The first argument holds a reference to the current node, while the second argument stores custom data specified by the `userData` parameter (default is null).
 		Once `process` returns false, the traversal stops immediately and no further nodes are examined.
-		If omitted, ``element::visit()`` is used instead.
+		If omitted, `element->visit()` is used instead.
 		<warn>In this case all elements have to implement `Visitable`.</warn>
-		@param userData custom data that is passed to every visited node via `process` or ``element::visit()``.
+		@param userData custom data that is passed to every visited node via `process` or `element->visit()`.
 		@return this node.
 	**/
 	public function levelorder(process:TreeNode<T>->Dynamic->Bool, userData:Dynamic):TreeNode<T>
@@ -1299,7 +1286,6 @@ class TreeNode<T> implements Collection<T>
 	
 	/**
 		Sorts the children of this node using the merge sort algorithm.
-		<assert>element does not implement `Comparable`</assert>
 		@param cmp a comparison function.
 		If null, the elements are compared using element.`compare()`.
 		<warn>In this case all elements have to implement `Comparable`.</warn>
@@ -1320,23 +1306,7 @@ class TreeNode<T> implements Collection<T>
 	}
 	
 	/**
-		Returns a string representing the current object.
-		
-		Example:
-		<pre class="prettyprint">
-		var root = new de.polygonal.ds.TreeNode<Int>(0); //create the root of the tree
-		var builder = new de.polygonal.ds.TreeBuilder<Int>(root);
-		builder.appendChild(1);
-		builder.down();
-		builder.appendChild(2);
-		builder.up();
-		builder.appendChild(3);
-		trace(root);</pre>
-		<pre class="console">
-		{TreeNode (root), children: 2, depth:0, value: 0}
-		+---{TreeNode (child), children: 1, depth:1, value: 1}
-		|   +---{TreeNode (leaf+child), depth:2, value: 2}
-		+---{TreeNode (leaf+child), depth:1, value: 3}</pre>
+		Prints out all elements.
 	**/
 	public function toString():String
 	{
@@ -1375,7 +1345,7 @@ class TreeNode<T> implements Collection<T>
 	}
 	
 	/**
-		Creates and returns a ``TreeBuilder`` object pointing to this node.
+		Creates and returns a `TreeBuilder` object pointing to this node.
 	**/
 	public function getBuilder():TreeBuilder<T>
 	{
@@ -1383,11 +1353,11 @@ class TreeNode<T> implements Collection<T>
 	}
 	
 	/**
-		Returns a new ``ChildTreeIterator`` object to iterate over all direct children (excluding this node).
+		Returns a new `ChildTreeIterator` object to iterate over all direct children (excluding this node).
 		
-		<warn>In contrast to ``iterator()``, this method is not recursive.</warn>
+		<warn>In contrast to `iterator()`, this method is not recursive.</warn>
 		
-		See <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
+		@see http://haxe.org/ref/iterators
 	**/
 	public function childIterator():Itr<T>
 	{
@@ -1829,9 +1799,9 @@ class TreeNode<T> implements Collection<T>
 	/**
 		Serializes this tree.
 		
-		The tree can be rebuild by calling ``unserialize()``.
+		The tree can be rebuild by calling `unserialize()`.
 		
-		See <a href="http://eli.thegreenplace.net/2011/09/29/an-interesting-tree-serialization-algorithm-from-dwarf/" target="mBlank">An interesting tree serialization algorithm from DWARF</a>
+		@see http://eli.thegreenplace.net/2011/09/29/an-interesting-tree-serialization-algorithm-from-dwarf/"
 		@param node the root of the tree.
 		@return a flattened tree.
 	**/
@@ -1859,13 +1829,11 @@ class TreeNode<T> implements Collection<T>
 	/**
 		Unserializes a given `list` into a TreeNode structure.
 		
-		First create a dummy node which will be the root of the unserialized tree, then call ``unserialize()``.
+		First create a dummy node which will be the root of the unserialized tree, then call `unserialize()`.
 		
 		Example:
-		<pre class="prettyprint">
 		var root = new de.polygonal.ds.TreeNode<String>(null);
 		root.unserialize(mySerializedTree);
-		</pre>
 		@param list the flattened tree
 		@return the root of the tree.
 	**/
@@ -2016,11 +1984,11 @@ class TreeNode<T> implements Collection<T>
 	}
 	
 	/**
-		Returns a new ``TreeIterator`` object to iterate over all elements contained in the nodes of this subtree (including this node).
+		Returns a new `TreeIterator` object to iterate over all elements contained in the nodes of this subtree (including this node).
 		
 		The elements are visited by using a preorder traversal.
 		
-		See <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
+		@see http://haxe.org/ref/iterators
 	**/
 	public function iterator():Itr<T>
 	{
@@ -2052,10 +2020,9 @@ class TreeNode<T> implements Collection<T>
 	
 	/**
 		Duplicates this subtree. Supports shallow (structure only) and deep copies (structure & elements).
-		<assert>element is not of type `Cloneable`</assert>
 		@param assign if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
-		If false, the ``clone()`` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
-		@param copier a custom function for copying elements. Replaces ``element::clone()`` if `assign` is false.
+		If false, the `clone()` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
+		@param copier a custom function for copying elements. Replaces `element->clone()` if `assign` is false.
 	**/
 	public function clone(assign:Bool = true, copier:T->T = null):Collection<T>
 	{

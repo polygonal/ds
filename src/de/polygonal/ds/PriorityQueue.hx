@@ -65,7 +65,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	public var growthRate:Int = GrowthRate.NORMAL;
 	
 	/**
-		If true, reuses the iterator object instead of allocating a new one when calling ``iterator()``.
+		If true, reuses the iterator object instead of allocating a new one when calling `iterator()`.
 		
 		The default is false.
 		
@@ -154,7 +154,6 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 		Returns the front element.
 		
 		This is the element with the highest priority.
-		<assert>priority queue is empty</assert>
 	**/
 	public inline function peek():T
 	{
@@ -167,7 +166,6 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 		Returns the rear element.
 		
 		This is the element with the lowest priority.
-		<assert>priority queue is empty</assert>
 	**/
 	public function back():T
 	{
@@ -198,7 +196,6 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	
 	/**
 		Enqueues the element `x`.
-		<assert>`x` is null or `x` already exists</assert>
 	**/
 	public function enqueue(x:T)
 	{
@@ -216,7 +213,6 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	
 	/**
 		Dequeues the front element.
-		<assert>priority queue is empty</assert>
 	**/
 	public function dequeue():T
 	{
@@ -238,7 +234,6 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	
 	/**
 		Reprioritizes the element `x`.
-		<assert>priority queue is empty or `x` does not exist</assert>
 		@param x the element to re-prioritize.
 		@param priority the new priority.
 	**/
@@ -353,40 +348,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	}
 	
 	/**
-		Returns a string representing the current object.
-		
-		Example:
-		<pre class="prettyprint">
-		class Foo implements de.polygonal.ds.Prioritizable
-		{
-		    public var priority:Int;
-		    public var position:Int;
-		    public function new(priority:Int) {
-		      this.priority = priority;
-		    }
-		    public function toString():String {
-		      return Std.string(priority);
-		    }
-		}
-		
-		class Main
-		{
-		    static function main() {
-		        var pq = new de.polygonal.ds.PriorityQueue<Foo>(4);
-		        pq.enqueue(new Foo(5));
-		        pq.enqueue(new Foo(3));
-		        pq.enqueue(new Foo(0));
-		        trace(pq);
-		    }
-		}</pre>
-		<pre class="console">
-		{ PriorityQueue size: 3 }
-		[ front
-		   0 -> 5
-		   1 -> 3
-		   2 -> 0
-		]
-		</pre>
+		Prints out all elements.
 	**/
 	public function toString():String
 	{
@@ -461,7 +423,6 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	
 	/**
 		Returns true if this priority queue contains the element `x`.
-		<assert>`x` is invalid</assert>
 	**/
 	public inline function contains(x:T):Bool
 	{
@@ -473,7 +434,6 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	
 	/**
 		Removes the element `x`.
-		<assert>`x` is invalid or does not exist</assert>
 		@return true if `x` was removed.
 	**/
 	public function remove(x:T):Bool
@@ -523,7 +483,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 		
 		The values are visited in an unsorted order.
 		
-		See <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
+		@see http://haxe.org/ref/iterators
 	**/
 	public function iterator():Itr<T>
 	{
@@ -557,10 +517,9 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	
 	/**
 		Duplicates this priority queue. Supports shallow (structure only) and deep copies (structure & elements).
-		<assert>element is not of type `Cloneable`</assert>
 		@param assign if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
-		If false, the ``clone()`` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
-		@param copier a custom function for copying elements. Replaces ``element::clone()`` if `assign` is false.
+		If false, the `clone()` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
+		@param copier a custom function for copying elements. Replaces `element->clone()` if `assign` is false.
 		<warn>If `assign` is true, only the copied version should be used from now on.</warn>
 	**/
 	public function clone(assign:Bool = true, copier:T->T = null):Collection<T>

@@ -137,7 +137,6 @@ class ObjectPool<T> implements Hashable
 	/**
 		Returns the id to the next free object.
 		After an id has been obtained, the corresponding object can be retrieved using `get(id)`.
-		<assert>pool exhausted</assert>
 	**/
 	public inline function next():Int
 	{
@@ -157,7 +156,6 @@ class ObjectPool<T> implements Hashable
 	/**
 		Returns the object that is mapped to `id`.
 		Call `next()` to request an `id` first.
-		<assert>invalid `id` or object linked to `id` is not used</assert>
 	**/
 	public inline function get(id:Int):T
 	{
@@ -168,7 +166,6 @@ class ObjectPool<T> implements Hashable
 	
 	/**
 		Puts the object mapped to `id` back into the pool.
-		<assert>pool is full or object linked to `id` is not used</assert>
 	**/
 	public inline function put(id:Int)
 	{
@@ -188,8 +185,7 @@ class ObjectPool<T> implements Hashable
 		@param lazy if true, objects are allocated on-the-fly until the pool is full.
 		@param cl allocates objects by instantiating the class `cl`.
 		@param fabricate allocates objects by calling `fabricate()`.
-		@param factory allocates objects by using a `Factory` object (calling `factory`::create()).
-		<assert>invalid arguments</assert>
+		@param factory allocates objects by using a `Factory` object (calling `factory`->create()).
 	**/
 	public function allocate(lazy:Bool, cl:Class<T> = null, fabricate:Void->T = null, factory:Factory<T> = null)
 	{
@@ -239,7 +235,7 @@ class ObjectPool<T> implements Hashable
 	/**
 		Returns a new `ObjectPoolIterator` object to iterate over all pooled objects, regardless if an object is used or not.
 		
-		See <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
+		@see http://haxe.org/ref/iterators
 	**/
 	public function iterator():Itr<T>
 	{
@@ -247,8 +243,7 @@ class ObjectPool<T> implements Hashable
 	}
 	
 	/**
-		Returns a string representing the current object.
-		Prints out all object if compiled with the `-debug` directive.
+		Returns the string form of the value that this object represents.
 	**/
 	public function toString():String
 	{

@@ -44,7 +44,7 @@ class LinkedDeque<T> implements Deque<T>
 	public var key(default, null):Int = HashKey.next();
 	
 	/**
-		If true, reuses the iterator object instead of allocating a new one when calling ``iterator()``.
+		If true, reuses the iterator object instead of allocating a new one when calling `iterator()`.
 		
 		The default is false.
 		
@@ -64,7 +64,6 @@ class LinkedDeque<T> implements Deque<T>
 	var mIterator:LinkedDequeIterator<T> = null;
 	
 	/**
-		<assert>reserved size is greater than allowed size</assert>
 		@param reservedSize if > 0, this queue maintains an object pool of node objects.
 		Prevents frequent node allocation and thus increases performance at the cost of using more memory.
 	**/
@@ -93,7 +92,6 @@ class LinkedDeque<T> implements Deque<T>
 	
 	/**
 		Returns the first element of this deque.
-		<assert>deque is empty</assert>
 	**/
 	public inline function front():T
 	{
@@ -117,7 +115,6 @@ class LinkedDeque<T> implements Deque<T>
 	
 	/**
 		Removes and returns the element at the beginning of this deque.
-		<assert>deque is empty</assert>
 	**/
 	public inline function popFront():T
 	{
@@ -133,7 +130,6 @@ class LinkedDeque<T> implements Deque<T>
 	
 	/**
 		Returns the last element of the deque.
-		<assert>deque is empty</assert>
 	**/
 	public inline function back():T
 	{
@@ -157,7 +153,6 @@ class LinkedDeque<T> implements Deque<T>
 	
 	/**
 		Deletes the element at the end of the deque.
-		<assert>deque is empty</assert>
 	**/
 	public inline function popBack():T
 	{
@@ -174,9 +169,7 @@ class LinkedDeque<T> implements Deque<T>
 	/**
 		Returns the element at index `i` relative to the front of this deque.
 		
-		The front element is at index [0], the back element is at index [``size`` - 1].
-		<assert>deque is empty</assert>
-		<assert>`i` out of range</assert>
+		The front element is at index [0], the back element is at index [`size` - 1].
 	**/
 	public function getFront(i:Int):T
 	{
@@ -190,7 +183,7 @@ class LinkedDeque<T> implements Deque<T>
 	/**
 		Returns the index of the first occurence of the element `x` or -1 if `x` does not exist.
 		
-		The front element is at index [0], the back element is at index [``size`` - 1].
+		The front element is at index [0], the back element is at index [`size` - 1].
 	**/
 	public function indexOfFront(x:T):Int
 	{
@@ -206,9 +199,7 @@ class LinkedDeque<T> implements Deque<T>
 	/**
 		Returns the element at index `i` relative to the back of this deque.
 		
-		The back element is at index [0], the front element is at index [``size`` - 1].
-		<assert>deque is empty</assert>
-		<assert>`i` out of range</assert>
+		The back element is at index [0], the front element is at index [`size` - 1].
 	**/
 	public function getBack(i:Int):T
 	{
@@ -220,9 +211,9 @@ class LinkedDeque<T> implements Deque<T>
 	}
 	
 	/**
-		Returns the index of the first occurence of the element `x` or -1 if `x` does not exist.
+		Returns the index of the first occurrence of the element `x` or -1 if `x` does not exist.
 		
-		The back element is at index [0], the front element is at index [``size`` - 1].
+		The back element is at index [0], the front element is at index [`size` - 1].
 	**/
 	public function indexOfBack(x:T):Int
 	{
@@ -247,23 +238,7 @@ class LinkedDeque<T> implements Deque<T>
 	}
 	
 	/**
-		Returns a string representing the current object.
-		
-		Example:
-		<pre class="prettyprint">
-		var deque = new de.polygonal.ds.LinkedDeque<Int>();
-		for (i in 0...4) {
-		    deque.pushFront(i);
-		}
-		trace(deque);</pre>
-		<pre class="console">
-		{ LinkedDeque, size: 4 }
-		[ front
-		  0 -> 3
-		  1 -> 2
-		  2 -> 1
-		  3 -> 0
-		]</pre>
+		Prints out all elements.
 	**/
 	public function toString():String
 	{
@@ -421,7 +396,7 @@ class LinkedDeque<T> implements Deque<T>
 		
 		Preserves the natural order of a deque.
 		
-		See <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
+		@see http://haxe.org/ref/iterators
 	**/
 	public function iterator():Itr<T>
 	{
@@ -465,10 +440,9 @@ class LinkedDeque<T> implements Deque<T>
 	
 	/**
 		Duplicates this deque. Supports shallow (structure only) and deep copies (structure & elements).
-		<assert>element is not of type `Cloneable`</assert>
 		@param assign if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
-		If false, the ``clone()`` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
-		@param copier a custom function for copying elements. Replaces ``element::clone()`` if `assign` is false.
+		If false, the `clone()` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
+		@param copier a custom function for copying elements. Replaces `element->clone()` if `assign` is false.
 	**/
 	public function clone(assign:Bool = true, copier:T->T = null):Collection<T>
 	{

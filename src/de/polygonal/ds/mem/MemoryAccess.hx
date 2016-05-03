@@ -68,7 +68,6 @@ class MemoryAccess implements Hashable
 		Destroys this object by explicitly nullifying all pointers and instantly releases any memory that was allocated by this accessor.
 		<warn>Invoke this method when the life cycle of this object ends to prevent a memory leak.</warn>
 		This is not optional if `MemoryManager.AUTO_RECLAIM_MEMORY` is true.
-		<assert>memory was already deallocated</assert>
 	**/
 	public function free()
 	{
@@ -83,7 +82,6 @@ class MemoryAccess implements Hashable
 	
 	/**
 		Sets all bytes to 0.
-		<assert>memory was already deallocated</assert>
 	**/
 	public function clear()
 	{
@@ -95,8 +93,6 @@ class MemoryAccess implements Hashable
 	
 	/**
 		Resizes the memory to `byteSize` bytes.
-		<assert>bytes <= 0</assert>
-		<assert>memory was already deallocated</assert>
 	**/
 	public function resize(byteSize:Int)
 	{

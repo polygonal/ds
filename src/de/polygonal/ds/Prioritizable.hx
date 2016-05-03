@@ -29,7 +29,7 @@ interface Prioritizable
 		
 		By default, a higher number equals a higher priority.
 		
-		<warn>This value should never be changed by the user after being added to a priority queue - use ``PriorityQueue::reprioritize()`` instead.</warn>
+		<warn>This value should never be changed by the user after being added to a priority queue - use `PriorityQueue->reprioritize()` instead.</warn>
 	**/
 	var priority(default, null):Float;
 	

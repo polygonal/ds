@@ -37,7 +37,6 @@ class DoubleMemory extends MemoryAccess
 		<warn>The bytes are written in little endian format.</warn>
 		@param min index pointing to the first double.
 		@param max index pointing to the last double.
-		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
 	#if flash
 	public static function toByteArray(input:DoubleMemory, min:Int = -1, max:Int = -1):flash.utils.ByteArray
@@ -76,7 +75,6 @@ class DoubleMemory extends MemoryAccess
 		If no range is specified, all `input` bytes are copied.
 		@param min index pointing to the byte storing the first double.
 		@param min index pointing to the byte storing the last double.
-		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
 	#if flash
 	public static function ofByteArray(input:flash.utils.ByteArray, min:Int = -1, max:Int = -1):DoubleMemory
@@ -103,7 +101,6 @@ class DoubleMemory extends MemoryAccess
 		If no range is specified, all `input` bytes are copied.
 		@param min index pointing to the first double.
 		@param max index pointing to the last double.
-		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
 	public static function toBytesData(input:DoubleMemory, min:Int = -1, max:Int = -1):haxe.io.BytesData
 	{
@@ -127,7 +124,6 @@ class DoubleMemory extends MemoryAccess
 		If no range is specified, all `input` bytes are copied.
 		@param min index pointing to the byte storing the first float.
 		@param min index pointing to the byte storing the last float.
-		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
 	public static function ofBytesData(input:haxe.io.BytesData, min:Int = -1, max:Int = -1):DoubleMemory
 	{
@@ -162,7 +158,6 @@ class DoubleMemory extends MemoryAccess
 		If no range is specified, all `input` bytes are copied.
 		@param min index pointing to the first double.
 		@param max index pointing to the last double.
-		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
 	public static function toArray(input:DoubleMemory, min:Int = -1, max:Int = -1):Array<Float>
 	{
@@ -196,7 +191,6 @@ class DoubleMemory extends MemoryAccess
 		If no range is specified, all `input` values are copied.
 		@param min index pointing to the first double.
 		@param max index pointing to the last double.
-		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
 	public static function ofArray(input:Array<Float>, min:Int = -1, max:Int = -1):DoubleMemory
 	{
@@ -219,7 +213,6 @@ class DoubleMemory extends MemoryAccess
 		@param min index pointing to the first double.
 		@param max index pointing to the last double.
 		@param out the `Vector` object to write into. If null, a new Vector object is created on-the-fly.
-		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
 	public static function toVector(input:DoubleMemory, min:Int = -1, max:Int = -1, out:Vector<Float> = null):Vector<Float>
 	{
@@ -258,7 +251,6 @@ class DoubleMemory extends MemoryAccess
 		If no range is specified, all `input` values are copied.
 		@param min index pointing to the first double.
 		@param max index pointing to the last double.
-		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
 	public static function ofVector(input:Vector<Float>, min:Int = -1, max:Int = -1):DoubleMemory
 	{
@@ -339,8 +331,6 @@ class DoubleMemory extends MemoryAccess
 	
 	/**
 		Adjusts the size of this object so it's capable of storing `newSize` doubles.
-		<assert>invalid size</assert>
-		<assert>memory was already deallocated</assert>
 	**/
 	override public function resize(newSize:Int)
 	{
@@ -359,8 +349,6 @@ class DoubleMemory extends MemoryAccess
 	
 	/**
 		Returns the double at index `i`.
-		<assert>index out of range</assert>
-		<assert>memory deallocated</assert>
 	**/
 	public inline function get(i:Int):Float
 	{
@@ -373,8 +361,6 @@ class DoubleMemory extends MemoryAccess
 	
 	/**
 		Replaces the double at the index `i` with the double `x`.
-		<assert>index out of range</assert>
-		<assert>memory deallocated</assert>
 	**/
 	public inline function set(i:Int, x:Float)
 	{
@@ -387,8 +373,6 @@ class DoubleMemory extends MemoryAccess
 	
 	/**
 		Swaps the double at index `i` with the double at index `j`.
-		<assert>index out of range</assert>
-		<assert>`i` equals `j`</assert>
 	**/
 	public inline function swap(i:Int, j:Int)
 	{
@@ -407,8 +391,6 @@ class DoubleMemory extends MemoryAccess
 	
 	/**
 		Returns the memory byte offset of the first byte storing the double at index `i`.
-		<assert>index out of range</assert>
-		<assert>memory deallocated</assert>
 	**/
 	public inline function getAddr(i:Int):Int
 	{
@@ -430,24 +412,7 @@ class DoubleMemory extends MemoryAccess
 	#end
 	
 	/**
-		Returns a string representing the current object.
-		Prints out all elements if compiled with the `-debug` directive.
-		
-		Example:
-		<pre class="prettyprint">
-		var mem = new new de.polygonal.ds.mem.DoubleMemory(4);
-		for (i in 0...4) {
-		    mem.set(i, i);
-		}
-		trace(mem);</pre>
-		<pre class="console">
-		{ DoubleMemory size: 4 }
-		[
-		  0 -> 0.000
-		  1 -> 1.000
-		  2 -> 2.000
-		  3 -> 3.000
-		]</pre>
+		Prints out all elements.
 	**/
 	public function toString():String
 	{

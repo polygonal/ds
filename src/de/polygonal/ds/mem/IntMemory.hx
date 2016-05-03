@@ -128,7 +128,6 @@ class IntMemory extends MemoryAccess
 		<warn>The bytes are written in little endian format.</warn>
 			@param min index pointing to the first integer.
 		@param max index pointing to the last integer.
-		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
 	#if flash
 	public static function toByteArray(input:IntMemory, min:Int = -1, max:Int = -1):flash.utils.ByteArray
@@ -167,7 +166,6 @@ class IntMemory extends MemoryAccess
 		If no range is specified, all `input` bytes are copied.
 		@param min index pointing to the byte storing the first integer.
 		@param min index pointing to the byte storing the last integer.
-		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
 	#if flash
 	public static function ofByteArray(input:flash.utils.ByteArray, min:Int = -1, max:Int = -1):IntMemory
@@ -195,7 +193,6 @@ class IntMemory extends MemoryAccess
 		<warn>The bytes are written in little endian format.</warn>
 			@param min index pointing to the first integer.
 		@param max index pointing to the last integer.
-		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
 	public static function toBytesData(input:IntMemory, min:Int = -1, max:Int = -1):haxe.io.BytesData
 	{
@@ -224,7 +221,6 @@ class IntMemory extends MemoryAccess
 		If no range is specified, all `input` bytes are copied.
 		@param min index pointing to the byte storing the first integer.
 		@param min index pointing to the byte storing the last integer.
-		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
 	public static function ofBytesData(input:haxe.io.BytesData, min:Int = -1, max:Int = -1):IntMemory
 	{
@@ -259,7 +255,6 @@ class IntMemory extends MemoryAccess
 		If no range is specified, all `input` bytes are copied.
 			@param min index pointing to the first integer.
 		@param max index pointing to the last integer.
-		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
 	public static function toArray(input:IntMemory, min:Int = -1, max:Int = -1):Array<Int>
 	{
@@ -293,7 +288,6 @@ class IntMemory extends MemoryAccess
 		If no range is specified, all `input` values are copied.
 			@param min index pointing to the first integer.
 		@param max index pointing to the last integer.
-		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
 	public static function ofArray(input:Array<Int>, min:Int = -1, max:Int = -1):IntMemory
 	{
@@ -316,7 +310,6 @@ class IntMemory extends MemoryAccess
 			@param min index pointing to the first integer.
 		@param max index pointing to the last integer.
 		@param out the `Vector` object to write into. If null, a new Vector object is created on-the-fly.
-		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
 	public static function toVector(input:IntMemory, min:Int = -1, max:Int = -1, out:Vector<Int> = null):Vector<Int>
 	{
@@ -358,7 +351,6 @@ class IntMemory extends MemoryAccess
 		If no range is specified, all `input` bytes are copied.
 			@param min index pointing to the first integer.
 		@param max index pointing to the last integer.
-		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
 	public static function toUnsignedVector(input:IntMemory, min:Int = -1, max:Int = -1):Vector<UInt>
 	{
@@ -394,7 +386,6 @@ class IntMemory extends MemoryAccess
 		If no range is specified, all `input` values are copied.
 			@param min index pointing to the first integer.
 		@param max index pointing to the last integer.
-		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
 	public static function ofVector(input:Vector<Int>, min:Int = -1, max:Int = -1):IntMemory
 	{
@@ -481,8 +472,6 @@ class IntMemory extends MemoryAccess
 	
 	/**
 		Adjusts the size of this object so it's capable of storing `newSize` integers.
-		<assert>invalid size</assert>
-		<assert>memory was already deallocated</assert>
 	**/
 	override public function resize(newSize:Int)
 	{
@@ -501,8 +490,6 @@ class IntMemory extends MemoryAccess
 	
 	/**
 		Returns the integer at index `i`.
-		<assert>index out of range</assert>
-		<assert>memory deallocated</assert>
 	**/
 	public inline function get(i:Int):Int
 	{
@@ -515,8 +502,6 @@ class IntMemory extends MemoryAccess
 	
 	/**
 		Replaces the integer at the index `i` with the integer `x`.
-		<assert>index out of range</assert>
-		<assert>memory deallocated</assert>
 	**/
 	public inline function set(i:Int, x:Int)
 	{
@@ -529,8 +514,6 @@ class IntMemory extends MemoryAccess
 	
 	/**
 		Swaps the integer at index `i` with the integer at index `j`.
-		<assert>index out of range</assert>
-		<assert>`i` equals `j`</assert>
 	**/
 	public inline function swap(i:Int, j:Int)
 	{
@@ -549,8 +532,6 @@ class IntMemory extends MemoryAccess
 	
 	/**
 		Returns the memory byte offset of the first byte storing the integer at index `i`.
-		<assert>index out of range</assert>
-		<assert>memory deallocated</assert>
 	**/
 	public inline function getAddr(i:Int):Int
 	{
@@ -572,24 +553,7 @@ class IntMemory extends MemoryAccess
 	#end
 	
 	/**
-		Returns a string representing the current object.
-		Prints out all elements if compiled with the `-debug` directive.
-		
-		Example:
-		<pre class="prettyprint">
-		var mem = new new de.polygonal.ds.mem.IntMemory(4);
-		for (i in 0...4) {
-		    mem.set(i, i);
-		}
-		trace(mem);</pre>
-		<pre class="console">
-		{ IntMemory size: 4 }
-		[
-		  0 -> 0
-		  1 -> 1
-		  2 -> 2
-		  3 -> 3
-		]</pre>
+		Prints out all elements.
 	**/
 	public function toString():String
 	{

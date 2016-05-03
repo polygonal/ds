@@ -65,7 +65,7 @@ class ArrayedStack<T> implements Stack<T>
 	public var growthRate:Int = GrowthRate.NORMAL;
 	
 	/**
-		If true, reuses the iterator object instead of allocating a new one when calling ``iterator()``.
+		If true, reuses the iterator object instead of allocating a new one when calling `iterator()`.
 		
 		The default is false.
 		
@@ -79,9 +79,7 @@ class ArrayedStack<T> implements Stack<T>
 	var mIterator:ArrayedStackIterator<T> = null;
 	
 	/**
-		<assert>`initialCapacity` is greater than allowed size</assert>
-		<assert>`initialCapacity` is below minimum capacity of 16</assert>
-		@param initialCapacity the initial capacity of the internal container. This is also the minimum internal stack size. See ``reserve()``.
+		@param initialCapacity the initial capacity of the internal container. This is also the minimum internal stack size. See `reserve()`.
 	**/
 	public function new(initialCapacity:Null<Int> = 16, ?source:Array<T>)
 	{
@@ -105,7 +103,7 @@ class ArrayedStack<T> implements Stack<T>
 	
 	/**
 		For performance reasons the stack does nothing to ensure that empty locations contain null;
-		``pack()`` therefore nullifies all obsolete references and shrinks the array to the actual size allowing the garbage collector to reclaim used memory.
+		`pack()` therefore nullifies all obsolete references and shrinks the array to the actual size allowing the garbage collector to reclaim used memory.
 	**/
 	public function pack()
 	{
@@ -141,7 +139,6 @@ class ArrayedStack<T> implements Stack<T>
 		Returns the top element of this stack.
 		
 		This is the "newest" element.
-		<assert>stack is empty</assert>
 	**/
 	public inline function top():T
 	{
@@ -173,7 +170,6 @@ class ArrayedStack<T> implements Stack<T>
 	
 	/**
 		Pops data off the stack.
-		<assert>stack is empty</assert>
 		@return the top element.
 	**/
 	public inline function pop():T
@@ -185,7 +181,6 @@ class ArrayedStack<T> implements Stack<T>
 	
 	/**
 		Pops the top element of the stack, and pushes it back twice, so that an additional copy of the former top item is now on top, with the original below it.
-		<assert>stack is empty</assert>
 	**/
 	public inline function dup()
 	{
@@ -199,7 +194,6 @@ class ArrayedStack<T> implements Stack<T>
 	
 	/**
 		Swaps the two topmost items on the stack.
-		<assert>``size`` < 2</assert>
 	**/
 	public inline function exchange()
 	{
@@ -217,13 +211,11 @@ class ArrayedStack<T> implements Stack<T>
 		Moves the `n` topmost elements on the stack in a rotating fashion.
 		
 		Example:
-		<pre>
-		top
-		|3|               |0|
-		|2|  rotate right |3|
-		|1|      -->      |2|
-		|0|               |1|</pre>
-		<assert>``size`` >= `n`</assert>
+			top
+			|3|               |0|
+			|2|  rotate right |3|
+			|1|      -->      |2|
+			|0|               |1|
 	**/
 	public function rotRight(n:Int)
 	{
@@ -245,13 +237,11 @@ class ArrayedStack<T> implements Stack<T>
 		Moves the `n` topmost elements on the stack in a rotating fashion.
 		
 		Example:
-		<pre>
-		top
-		|3|              |2|
-		|2|  rotate left |1|
-		|1|      -->     |0|
-		|0|              |3|</pre>
-		<assert>``size`` >= `n`</assert>
+			top
+			|3|              |2|
+			|2|  rotate left |1|
+			|1|      -->     |0|
+			|0|              |3|
 	**/
 	public function rotLeft(n:Int)
 	{
@@ -274,8 +264,7 @@ class ArrayedStack<T> implements Stack<T>
 		
 		An index of 0 indicates the bottommost element.
 		
-		An index of ``size`` - 1 indicates the topmost element.
-		<assert>stack is empty or `i` out of range</assert>
+		An index of `size` - 1 indicates the topmost element.
 	**/
 	public inline function get(i:Int):T
 	{
@@ -290,8 +279,7 @@ class ArrayedStack<T> implements Stack<T>
 		
 		An index of 0 indicates the bottommost element.
 		
-		An index of ``size`` - 1 indicates the topmost element.
-		<assert>stack is empty or `i` out of range</assert>
+		An index of `size` - 1 indicates the topmost element.
 	**/
 	public inline function set(i:Int, x:T)
 	{
@@ -306,10 +294,7 @@ class ArrayedStack<T> implements Stack<T>
 		
 		An index of 0 indicates the bottommost element.
 		
-		An index of ``size`` - 1 indicates the topmost element.
-		<assert>stack is empty</assert>
-		<assert>`i`/`j` out of range</assert>
-		<assert>`i` equals `j`</assert>
+		An index of `size` - 1 indicates the topmost element.
 	**/
 	public inline function swap(i:Int, j:Int)
 	{
@@ -329,10 +314,7 @@ class ArrayedStack<T> implements Stack<T>
 		
 		An index of 0 indicates the bottommost element.
 		
-		An index of ``size`` - 1 indicates the topmost element.
-		<assert>stack is empty</assert>
-		<assert>`i`/`j` out of range</assert>
-		<assert>`i` equals `j`</assert>
+		An index of `size` - 1 indicates the topmost element.
 	**/
 	public inline function copy(i:Int, j:Int)
 	{
@@ -349,7 +331,6 @@ class ArrayedStack<T> implements Stack<T>
 		Calls the `f` function on all elements.
 		
 		The function signature is: `f(element, index):element`
-		<assert>`f` is null</assert>
 	**/
 	public function forEach(f:T->Int->T):ArrayedStack<T>
 	{
@@ -360,9 +341,8 @@ class ArrayedStack<T> implements Stack<T>
 	
 	/**
 		Shuffles the elements of this collection by using the Fisher-Yates algorithm.
-		<assert>insufficient random values</assert>
 		@param rvals a list of random double values in the range between 0 (inclusive) to 1 (exclusive) defining the new positions of the elements.
-		If omitted, random values are generated on-the-fly by calling `Math::random()`.
+		If omitted, random values are generated on-the-fly by calling `Math->random()`.
 	**/
 	public function shuffle(rvals:Array<Float> = null)
 	{
@@ -399,23 +379,7 @@ class ArrayedStack<T> implements Stack<T>
 	}
 	
 	/**
-		Returns a string representing the current object.
-		
-		Example:
-		<pre class="prettyprint">
-		var stack = new de.polygonal.ds.ArrayedStack<Int>(4);
-		for (i in 0...4) {
-		    stack.push(i);
-		}
-		trace(stack);</pre>
-		<pre class="console">
-		{ ArrayedStack size/max: 4/4 }
-		[ top
-		  3 -> 3
-		  2 -> 2
-		  1 -> 1
-		  0 -> 0
-		]</pre>
+		Prints out all elements.
 	**/
 	public function toString():String
 	{
@@ -529,7 +493,7 @@ class ArrayedStack<T> implements Stack<T>
 		
 		Preserves the natural order of a stack (First-In-Last-Out).
 		
-		See <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
+		@see http://haxe.org/ref/iterators
 	**/
 	public function iterator():Itr<T>
 	{
@@ -570,10 +534,9 @@ class ArrayedStack<T> implements Stack<T>
 
 	/**
 		Duplicates this stack. Supports shallow (structure only) and deep copies (structure & elements).
-		<assert>element is not of type `Cloneable`</assert>
 		@param assign if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
-		If false, the ``clone()`` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
-		@param copier a custom function for copying elements. Replaces ``element::clone()`` if `assign` is false.
+		If false, the `clone()` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
+		@param copier a custom function for copying elements. Replaces `element->clone()` if `assign` is false.
 	**/
 	public function clone(assign:Bool = true, copier:T->T = null):Collection<T>
 	{

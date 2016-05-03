@@ -26,7 +26,7 @@ import de.polygonal.ds.tools.NativeArrayTools;
 /**
 	A doubly linked list
 	
-	See <a href="http://lab.polygonal.de/?p=206" target="mBlank">http://lab.polygonal.de/?p=206</a>
+	@see http://lab.polygonal.de/?p=206
 **/
 #if generic
 @:generic
@@ -54,7 +54,7 @@ class Dll<T> implements List<T>
 	public var tail(default, null):DllNode<T>;
 	
 	/**
-		If true, reuses the iterator object instead of allocating a new one when calling ``iterator()``.
+		If true, reuses the iterator object instead of allocating a new one when calling `iterator()`.
 		
 		The default is false.
 		
@@ -143,7 +143,7 @@ class Dll<T> implements List<T>
 	}
 	
 	/**
-		Creates and returns a new ``DllNode`` object storing the value `x` and pointing to this list.
+		Creates and returns a new `DllNode` object storing the value `x` and pointing to this list.
 	**/
 	public function createNode(x:T):DllNode<T>
 	{
@@ -151,7 +151,7 @@ class Dll<T> implements List<T>
 	}
 	
 	/**
-		Appends the element `x` to the tail of this list by creating a ``DllNode`` object storing `x`.
+		Appends the element `x` to the tail of this list by creating a `DllNode` object storing `x`.
 		@return the appended node storing `x`.
 	**/
 	public function append(x:T):DllNode<T>
@@ -202,7 +202,7 @@ class Dll<T> implements List<T>
 	}
 	
 	/**
-		Prepends the element `x` to the head of this list by creating a ``DllNode`` object storing `x`.
+		Prepends the element `x` to the head of this list by creating a `DllNode` object storing `x`.
 		@return the prepended node storing `x`.
 	**/
 	public function prepend(x:T):DllNode<T>
@@ -249,8 +249,7 @@ class Dll<T> implements List<T>
 	}
 	
 	/**
-		Inserts the element `x` after `node` by creating a ``DllNode`` object storing `x`.
-		<assert>`node` is null or not managed by this list</assert>
+		Inserts the element `x` after `node` by creating a `DllNode` object storing `x`.
 		@return the inserted node storing `x`.
 	**/
 	public function insertAfter(node:DllNode<T>, x:T):DllNode<T>
@@ -272,8 +271,7 @@ class Dll<T> implements List<T>
 	}
 	
 	/**
-		Inserts the element `x` before `node` by creating a ``DllNode`` object storing `x`.
-		<assert>`node` is null or not managed by this list</assert>
+		Inserts the element `x` before `node` by creating a `DllNode` object storing `x`.
 		@return the inserted node storing `x`.
 	**/
 	public function insertBefore(node:DllNode<T>, x:T):DllNode<T>
@@ -295,9 +293,7 @@ class Dll<T> implements List<T>
 	}
 	
 	/**
-		Unlinks `node` from this list and returns `node`::next.
-		<assert>list is empty</assert>
-		<assert>`node` is null or not managed by this list</assert>
+		Unlinks `node` from this list and returns `node->next`.
 	**/
 	public function unlink(node:DllNode<T>):DllNode<T>
 	{
@@ -339,8 +335,6 @@ class Dll<T> implements List<T>
 		Returns the node at "index" `i`.
 		
 		The index is measured relative to the head node (= index 0).
-		<assert>list is empty</assert>
-		<assert>index out of range</assert>
 	**/
 	public function getNodeAt(i:Int):DllNode<T>
 	{
@@ -354,7 +348,6 @@ class Dll<T> implements List<T>
 	
 	/**
 		Removes the head node and returns the element stored in this node.
-		<assert>list is empty</assert>
 	**/
 	public function removeHead():T
 	{
@@ -382,7 +375,6 @@ class Dll<T> implements List<T>
 	
 	/**
 		Removes the tail node and returns the element stored in this node.
-		<assert>list is empty</assert>
 	**/
 	public function removeTail():T
 	{
@@ -411,7 +403,6 @@ class Dll<T> implements List<T>
 	
 	/**
 		Unlinks the head node and appends it to the tail.
-		<assert>list is empty</assert>
 	**/
 	public function shiftUp()
 	{
@@ -454,7 +445,6 @@ class Dll<T> implements List<T>
 	
 	/**
 		Unlinks the tail node and prepends it to the head.
-		<assert>list is empty</assert>
 	**/
 	public function popDown()
 	{
@@ -499,7 +489,6 @@ class Dll<T> implements List<T>
 		Searches for the element `x` in this list from head to tail starting at node `from`.
 		
 		If `from` is null, the search starts at the head of this list.
-		<assert>`from` is not managed by this list</assert>
 		@return the node containing `x` or null if such a node does not exist.
 	**/
 	public function nodeOf(x:T, from:DllNode<T> = null):DllNode<T>
@@ -534,7 +523,6 @@ class Dll<T> implements List<T>
 		Searches for the element `x` in this list from tail to head starting at node `from`.
 		
 		If `from` is null, the search starts at the tail of this list.
-		<assert>`from` is not managed by this list</assert>
 		@return the node containing `x` or null if such a node does not exist.
 	**/
 	public function lastNodeOf(x:T, from:DllNode<T> = null):DllNode<T>
@@ -567,9 +555,8 @@ class Dll<T> implements List<T>
 	
 	/**
 		Sorts the elements of this list using the merge sort algorithm.
-		<assert>element does not implement `Comparable`</assert>
 		@param cmp a comparison function.
-		If null, the elements are compared using ``element::compare()``.
+		If null, the elements are compared using `element->compare()`.
 		<warn>In this case all elements have to implement `Comparable`.</warn>
 		@param useInsertionSort if true, the linked list is sorted using the insertion sort algorithm.
 		This is faster for nearly sorted lists.
@@ -605,7 +592,6 @@ class Dll<T> implements List<T>
 		Merges this list with the list `x` by linking both lists together.
 		
 		<warn>The merge operation destroys x so it should be discarded.</warn>
-		<assert>`x` is null or this list equals `x`</assert>
 	**/
 	public function merge(x:Dll<T>)
 	{
@@ -647,7 +633,6 @@ class Dll<T> implements List<T>
 		Concatenates this list with the list `x` by appending all elements of `x` to this list.
 		
 		This list and `x` are untouched.
-		<assert>`x` is null or this equals `x`</assert>
 		@return a new list containing the elements of both lists.
 	**/
 	public function concat(x:Dll<T>):Dll<T>
@@ -765,7 +750,6 @@ class Dll<T> implements List<T>
 		Calls the `f` function on all elements.
 		
 		The function signature is: `f(element, index):element`
-		<assert>`f` is null</assert>
 	**/
 	public function forEach(f:T->Int->T)
 	{
@@ -779,9 +763,8 @@ class Dll<T> implements List<T>
 	
 	/**
 		Shuffles the elements of this collection by using the Fisher-Yates algorithm.
-		<assert>insufficient random values</assert>
 		@param rvals a list of random double values in the range between 0 (inclusive) to 1 (exclusive) defining the new positions of the elements.
-		If omitted, random values are generated on-the-fly by calling `Math::random()`.
+		If omitted, random values are generated on-the-fly by calling `Math->random()`.
 	**/
 	public function shuffle(rvals:Array<Float> = null)
 	{
@@ -835,23 +818,7 @@ class Dll<T> implements List<T>
 	}
 	
 	/**
-		Returns a string representing the current object.
-		
-		Example:
-		<pre class="prettyprint">
-		var dll = new de.polygonal.ds.Dll<Int>();
-		for (i in 0...4) {
-		    dll.append(i);
-		}
-		trace(dll);</pre>
-		<pre class="console">
-		{ Dll size: 4, circular: false }
-		[ head
-		  0
-		  1
-		  2
-		  3
-		] tail</pre>
+		Prints out all elements.
 	**/
 	public function toString():String
 	{
@@ -1070,30 +1037,26 @@ class Dll<T> implements List<T>
 	/**
 		Returns a new `DllIterator` object to iterate over all elements contained in this doubly linked list.
 		
-		Uses a `CircularDllIterator` iterator object if ``circular`` is true.
+		Uses a `CircularDllIterator` iterator object if `circular` is true.
 		
 		The elements are visited from head to tail.
 		
 		If performance is crucial, use the following loop instead:
-		<pre class="prettyprint">
-		//open list:
-		var node = myDll.head;
-		while (node != null)
-		{
-		    var element = node.val;
-		    node = node.next;
-		}
-		
-		//circular list:
-		var node = myDll.head;
-		for (i in 0...list.size)
-		{
-		    var element = node.val;
-		    node = node.next;
-		}
-		</pre>
-		See <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
-		
+			//open list:
+			var node = myDll.head;
+			while (node != null)
+			{
+			    var element = node.val;
+			    node = node.next;
+			}
+			//circular list:
+			var node = myDll.head;
+			for (i in 0...list.size)
+			{
+			    var element = node.val;
+			    node = node.next;
+			}
+		@see http://haxe.org/ref/iterators
 	**/
 	public function iterator():Itr<T>
 	{
@@ -1148,10 +1111,9 @@ class Dll<T> implements List<T>
 	
 	/**
 		Duplicates this linked list. Supports shallow (structure only) and deep copies (structure & elements).
-		<assert>element is not of type `Cloneable`</assert>
 		@param assign if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
-		If false, the ``clone()`` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
-		@param copier a custom function for copying elements. Replaces ``element::clone()`` if `assign` is false.
+		If false, the `clone()` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
+		@param copier a custom function for copying elements. Replaces `element->clone()` if `assign` is false.
 	**/
 	public function clone(assign:Bool = true, copier:T->T = null):Collection<T>
 	{

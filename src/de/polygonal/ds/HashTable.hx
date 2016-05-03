@@ -51,7 +51,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	/**
 		The size of the allocated storage space for the key/value pairs.
 		
-		If more space is required to accomodate new elements, ``capacity`` is doubled every time ``size`` grows beyond capacity, and split in half when ``size`` is a quarter of capacity.
+		If more space is required to accomodate new elements, `capacity` is doubled every time `size` grows beyond capacity, and split in half when `size` is a quarter of capacity.
 		
 		The capacity never falls below the initial size defined in the constructor.
 	**/
@@ -64,7 +64,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		
 		A high load factor thus indicates poor performance.
 		
-		If the load factor gets too high, additional slots can be allocated by calling ``rehash()``.
+		If the load factor gets too high, additional slots can be allocated by calling `rehash()`.
 	**/
 	public var loadFactor(get, never):Float;
 	function get_loadFactor():Float
@@ -82,7 +82,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	}
 	
 	/**
-		If true, reuses the iterator object instead of allocating a new one when calling ``iterator()``.
+		If true, reuses the iterator object instead of allocating a new one when calling `iterator()`.
 		
 		The default is false.
 		
@@ -126,13 +126,10 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	var mTmpKeyBuffer:Array<K> = [];
 	
 	/**
-		<assert>`slotCount` is not a power of two</assert>
-		<assert>`capacity` is not a power of two</assert>
-		<assert>`capacity` is < 2</assert>
 		@param slotCount the total number of slots into which the hashed keys are distributed.
 		This defines the space-time trade off of the hash table.
 		Increasing the `slotCount` reduces the computation time (read/write/access) of the hash table at the cost of increased memory use.
-		This value is fixed and can only be changed by calling ``rehash()``, which rebuilds the hash table (expensive).
+		This value is fixed and can only be changed by calling `rehash()`, which rebuilds the hash table (expensive).
 		
 		@param capacity the initial physical space for storing the key/value pairs at the time the hash table is created.
 		This is also the minimum allowed size of the hash table and cannot be changed in the future. If omitted, the initial `capacity` equals `slotCount`.
@@ -180,7 +177,6 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		Returns the value that is mapped to `key` or null if `key` does not exist.
 		
 		Uses move-to-front-on-access which reduces access time when similar keys are frequently queried.
-		<assert>`key` is null</assert>
 	**/
 	public inline function getFront(key:K):T
 	{
@@ -193,8 +189,6 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	
 	/**
 		Maps `val` to `key` in this map, but only if `key` does not exist yet.
-		<assert>out of space - hash table is full but not resizable</assert>
-		<assert>`key` is null</assert>
 		@return true if `key` was mapped to `val` for the first time.
 	**/
 	public inline function setIfAbsent(key:K, val:T):Bool
@@ -220,7 +214,6 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		Redistributes all keys over `slotCount`.
 		
 		This is an expensive operations as the hash table is rebuild from scratch.
-		<assert>`slotCount` is not a power of two</assert>
 	**/
 	public function rehash(slotCount:Int)
 	{
@@ -229,7 +222,6 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	
 	/**
 		Remaps the first occurrence of `key` to a new value `val`.
-		<assert>`key` is null</assert>
 		@return true if `val` was successfully remapped to `key`.
 	**/
 	public inline function remap(key:K, val:T):Bool
@@ -304,38 +296,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	}
 	
 	/**
-		Returns a string representing the current object.
-		
-		Example:
-		<pre class="prettyprint">
-		class Foo extends de.polygonal.ds.HashableItem
-		{
-		    var val:Int;
-		    public function new(val:Int) {
-		        super();
-		        this.val = val;
-		    }
-		    public function toString():String {
-		        return "{ Foo val: " + val + " }";
-		    }
-		}
-		
-		class Main
-		{
-		    static function main() {
-		        var hash = new de.polygonal.ds.HashTable<Foo, String>(16);
-		        for (i in 0...4) hash.set(new Foo(i), "foo"  + i);
-		        trace(hash);
-		    }
-		}</pre>
-		<pre class="console">
-		{ HashTable size/capacity: 4/16, load factor: 0.25 }
-		[
-		  {Foo val: 0} -> foo0
-		  {Foo val: 1} -> foo1
-		  {Foo val: 2} -> foo2
-		  {Foo val: 3} -> foo3
-		]</pre>
+		Prints out all elements.
 	**/
 	public function toString():String
 	{
@@ -409,7 +370,6 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	
 	/**
 		Returns true if this map contains `key`.
-		<assert>`key` is null</assert>
 	**/
 	public inline function hasKey(key:K):Bool
 	{
@@ -420,7 +380,6 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	
 	/**
 		Returns the value that is mapped to `key` or null if `key` does not exist.
-		<assert>`key` is null</assert>
 	**/
 	public inline function get(key:K):T
 	{
@@ -454,9 +413,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		
 		The method allows duplicate keys.
 		
-		<warn>To ensure unique keys either use ``hasKey()`` before ``set()`` or ``setIfAbsent()``</warn>
-		<assert> out of space - hash table is full but not resizable</assert>
-		<assert>`key` is null</assert>
+		<warn>To ensure unique keys either use `hasKey()` before `set()` or `setIfAbsent()`</warn>
 		@return true if `key` was added for the first time, false if another instance of `key` was inserted.
 	**/
 	public inline function set(key:K, val:T):Bool
@@ -477,8 +434,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	/**
 		Removes and nullifies the first occurrence of `key`.
 		
-		Only the key is nullified, to nullifiy the value call ``pack()``.
-		<assert>`key` is null</assert>
+		Only the key is nullified, to nullifiy the value call `pack()`.
 		@return true if `key` is successfully removed.
 	**/
 	public function unset(key:K):Bool
@@ -524,7 +480,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		
 		The keys are visited in a random order.
 		
-		See <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
+		@see http://haxe.org/ref/iterators
 	**/
 	public function keys():Itr<K>
 	{
@@ -572,7 +528,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	}
 	
 	/**
-		Same as ``has()``.
+		Same as `has()`.
 	**/
 	public function contains(val:T):Bool
 	{
@@ -633,7 +589,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		
 		The values are visited in a random order.
 		
-		See <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
+		@see http://haxe.org/ref/iterators
 	**/
 	public function iterator():Itr<T>
 	{
@@ -674,10 +630,9 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	
 	/**
 		Duplicates this hash table. Supports shallow (structure only) and deep copies (structure & elements).
-		<assert>element is not of type `Cloneable`</assert>
 		@param assign if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
-		If false, the ``clone()`` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
-		@param copier a custom function for copying elements. Replaces ``element::clone()`` if `assign` is false.
+		If false, the `clone()` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
+		@param copier a custom function for copying elements. Replaces `element->clone()` if `assign` is false.
 	**/
 	public function clone(assign:Bool = true, copier:T->T = null):Collection<T>
 	{

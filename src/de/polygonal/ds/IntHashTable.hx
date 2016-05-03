@@ -52,7 +52,7 @@ class IntHashTable<T> implements Map<Int, T>
 	/**
 		The size of the allocated storage space for the key/value pairs.
 		
-		If more space is required to accomodate new elements,``getCapacity()`` is doubled every time ``size`` grows beyond capacity, and split in half when ``size`` is a quarter of capacity.
+		If more space is required to accomodate new elements,`getCapacity()` is doubled every time `size` grows beyond capacity, and split in half when `size` is a quarter of capacity.
 		
 		The capacity never falls below the initial size defined in the constructor.
 	**/
@@ -78,7 +78,7 @@ class IntHashTable<T> implements Map<Int, T>
 	}
 	
 	/**
-		If true, reuses the iterator object instead of allocating a new one when calling ``iterator()``.
+		If true, reuses the iterator object instead of allocating a new one when calling `iterator()`.
 		
 		The default is false.
 		
@@ -93,7 +93,7 @@ class IntHashTable<T> implements Map<Int, T>
 		
 		A high load factor thus indicates poor performance.
 		
-		If the load factor gets too high, additional slots can be allocated by calling ``rehash()``.
+		If the load factor gets too high, additional slots can be allocated by calling `rehash()`.
 	**/
 	public var loadFactor(get, never):Float;
 	function get_loadFactor():Float
@@ -128,14 +128,11 @@ class IntHashTable<T> implements Map<Int, T>
 	var mTmpKeyBuffer:Array<Int> = [];
 	
 	/**
-		<assert>`slotCount` is not a power of two</assert>
-		<assert>`capacity` is not a power of two</assert>
-		<assert>`capacity` is < 2</assert>
 		
 		@param slotCount the total number of slots into which the hashed keys are distributed.
 		This defines the space-time trade off of the hash table.
 		Increasing the `slotCount` reduces the computation time (read/write/access) of the hash table at the cost of increased memory use.
-		This value is fixed and can only be changed by calling ``rehash()``, which rebuilds the hash table (expensive).
+		This value is fixed and can only be changed by calling `rehash()`, which rebuilds the hash table (expensive).
 		
 		@param capacity the initial physical space for storing the key/value pairs at the time the hash table is created.
 		This is also the minimum allowed size of the hash table and cannot be changed in the future. If omitted, the initial `capacity` equals `slotCount`.
@@ -197,7 +194,6 @@ class IntHashTable<T> implements Map<Int, T>
 	
 	/**
 		Maps `val` to `key` in this map, but only if `key` does not exist yet.
-		<assert>out of space - hash table is full but not resizable</assert>
 		@return true if `key` was mapped to `val` for the first time.
 	**/
 	public inline function setIfAbsent(key:Int, val:T):Bool
@@ -223,7 +219,6 @@ class IntHashTable<T> implements Map<Int, T>
 		Redistributes all keys over `slotCount`.
 		
 		This is an expensive operations as the hash table is rebuild from scratch.
-		<assert>`slotCount` is not a power of two</assert>
 	**/
 	public function rehash(slotCount:Int)
 	{
@@ -255,37 +250,7 @@ class IntHashTable<T> implements Map<Int, T>
 	}
 	
 	/**
-		Returns a string representing the current object.
-		
-		Example:
-		<pre class="prettyprint">
-		class Foo extends de.polygonal.ds.HashableItem {
-		    var val:Int;
-		    public function new(val:Int) {
-		        super();
-		        this.val = val;
-		    }
-		    public function toString():String {
-		        return "{ Foo " + val + " }";
-		    }
-		}
-		
-		class Main
-		{
-		    static function main() {
-		        var hash = new de.polygonal.ds.IntHashTable<Foo>(16);
-		        for (i in 0...4) hash.set(i, new Foo(i));
-		        trace(hash);
-		    }
-		}</pre>
-		<pre class="console">
-		{ IntHashTable size/capacity: 4/16, load factor: 0.25 }
-		[
-		   0 -> { Foo 0 }
-		   1 -> { Foo 1 }
-		   2 -> { Foo 2 }
-		   3 -> { Foo 3 }
-		]</pre>
+		Prints out all elements.
 	**/
 	public function toString():String
 	{
@@ -383,9 +348,7 @@ class IntHashTable<T> implements Map<Int, T>
 		
 		The method allows duplicate keys.
 		
-		<warn>To ensure unique keys either use ``hasKey()`` before ``set()`` or ``setIfAbsent()``</warn>
-		<assert>out of space - hash table is full but not resizable</assert>
-		<assert>key 0x80000000 is reserved</assert>
+		<warn>To ensure unique keys either use `hasKey()` before `set()` or `setIfAbsent()`</warn>
 		@return true if `key` was added for the first time, false if another instance of `key` was inserted.
 	**/
 	public function set(key:Int, val:T):Bool
@@ -447,7 +410,7 @@ class IntHashTable<T> implements Map<Int, T>
 		
 		The keys are visited in a random order.
 		
-		See <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
+		@see http://haxe.org/ref/iterators
 	**/
 	public function keys():Itr<Int>
 	{
@@ -576,7 +539,7 @@ class IntHashTable<T> implements Map<Int, T>
 	}
 	
 	/**
-		Same as ``has()``.
+		Same as `has()`.
 	**/
 	public function contains(val:T):Bool
 	{
@@ -630,7 +593,7 @@ class IntHashTable<T> implements Map<Int, T>
 		
 		The values are visited in a random order.
 		
-		See <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
+		@see http://haxe.org/ref/iterators
 	**/
 	public function iterator():Itr<T>
 	{
@@ -671,10 +634,9 @@ class IntHashTable<T> implements Map<Int, T>
 	
 	/**
 		Duplicates this hash table. Supports shallow (structure only) and deep copies (structure & elements).
-		<assert>element is not of type `Cloneable`</assert>
 		@param assign if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
-		If false, the ``clone()`` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
-		@param copier a custom function for copying elements. Replaces ``element::clone()`` if `assign` is false.
+		If false, the `clone()` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
+		@param copier a custom function for copying elements. Replaces `element->clone()` if `assign` is false.
 	**/
 	public function clone(assign:Bool = true, copier:T->T = null):Collection<T>
 	{

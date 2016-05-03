@@ -58,7 +58,7 @@ interface Map<K, T> extends Collection<T>
 	/**
 		Remaps the first occurrence of `key` to the element `x`.
 		
-		This is faster than ``clr(key)`` followed by ``set(key, x)``.
+		This is faster than `clr(key)` followed by `set(key, x)`.
 		@return true if the remapping was successful, false if `key` does not exist.
 	**/
 	function remap(key:K, x:T):Bool;
@@ -76,7 +76,7 @@ interface Map<K, T> extends Collection<T>
 	/**
 		Creates and returns an iterator over all keys in this map.
 		
-		See <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
+		@see http://haxe.org/ref/iterators
 	**/
 	function keys():Itr<K>;
 }

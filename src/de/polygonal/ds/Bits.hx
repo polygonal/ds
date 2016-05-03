@@ -210,7 +210,6 @@ class Bits
 	
 	/**
 		Returns true if the bit in `x` at index `i` is one.
-		<assert>`i` out of range</assert>
 	**/
 	public static inline function hasBitAt(x:Int, i:Int):Bool
 	{
@@ -221,7 +220,6 @@ class Bits
 	
 	/**
 		Sets the bit in `x` at index `i` to one.
-		<assert>`i` out of range</assert>
 	**/
 	public static inline function setBitAt(x:Int, i:Int):Int
 	{
@@ -232,7 +230,6 @@ class Bits
 	
 	/**
 		Sets the bit in `x` at index `i` to zero.
-		<assert>`i` out of range</assert>
 	**/
 	public static inline function clrBitAt(x:Int, i:Int):Int
 	{
@@ -243,7 +240,6 @@ class Bits
 	
 	/**
 		Flips the bit in `x` at index `i`.
-		<assert>`i` out of range</assert>
 	**/
 	public static inline function invBitAt(x:Int, i:Int):Int
 	{
@@ -254,7 +250,6 @@ class Bits
 	
 	/**
 		Sets all bits in `x` in the range [0, 31].
-		<assert>invalid `min`/`max`</assert>
 	**/
 	public static inline function setBitsRange(x:Int, min:Int, max:Int):Int
 	{

@@ -34,7 +34,6 @@ class Array3<T> implements Collection<T>
 	/**
 		The width (#columns).
 		The minimum value is 2.
-		<assert>invalid width</assert>
 	**/
 	public var width(get, set):Int;
 	inline function get_width():Int
@@ -50,7 +49,6 @@ class Array3<T> implements Collection<T>
 	/**
 		The height (#rows).
 		The minimum value is 2.
-		<assert>invalid width</assert>
 	**/
 	public var height(get, set):Int;
 	inline function get_height():Int
@@ -66,7 +64,6 @@ class Array3<T> implements Collection<T>
 	/**
 		The depth (#layers).
 		The minimum value is 2.
-		<assert>invalid depth</assert>
 	**/
 	public var depth(get, set):Int;
 	inline function get_depth():Int
@@ -115,7 +112,7 @@ class Array3<T> implements Collection<T>
 	public var key(default, null):Int = HashKey.next();
 	
 	/**
-		If true, reuses the iterator object instead of allocating a new one when calling ``iterator()``.
+		If true, reuses the iterator object instead of allocating a new one when calling `iterator()`.
 		
 		The default is false.
 		
@@ -133,7 +130,6 @@ class Array3<T> implements Collection<T>
 		Creates a three-dimensional array with dimensions `width`, `height` and `depth`.
 		
 		The minimum size is 2x2x2.
-		<assert>invalid `width`, `height` or `depth`</assert>
 	**/
 	public function new(width:Int, height:Int, depth:Int, ?source:Array<T>)
 	{
@@ -155,7 +151,6 @@ class Array3<T> implements Collection<T>
 	
 	/**
 		Returns the element that is stored in column `x`, row `y` and layer `z`.
-		<assert>`x`/`y`/`z` out of range</assert>
 	**/
 	public inline function get(x:Int, y:Int, z:Int):T
 	{
@@ -168,7 +163,6 @@ class Array3<T> implements Collection<T>
 	
 	/**
 		Returns the element that is stored in column cell.`x`, row cell.`y` and layer cell.`z`.
-		<assert>`x`/`y`/`z` out of range</assert>
 	**/
 	public inline function getAtCell(cell:Array3Cell):T
 	{
@@ -182,7 +176,6 @@ class Array3<T> implements Collection<T>
 	
 	/**
 		Replaces the element at column `x`, row `y` and layer `z` with `val`.
-		<assert>`x`/`y`/`z` out of range</assert>
 	**/
 	public inline function set(x:Int, y:Int, z:Int, val:T)
 	{
@@ -204,7 +197,7 @@ class Array3<T> implements Collection<T>
 	/**
 		Returns the index of the first occurrence of the element `x` or returns -1 if element `x` does not exist.
 		
-		The index is in the range [0, ``size`` - 1].
+		The index is in the range [0, `size` - 1].
 	**/
 	public function indexOf(x:T):Int
 	{
@@ -227,7 +220,6 @@ class Array3<T> implements Collection<T>
 	
 	/**
 		Returns the cell coordinates of the first occurrence of the element `x` or null if element `x` does not exist.
-		<assert>`out` is null</assert>
 		@param out stores the result.
 		@return a reference to `out`.
 	**/
@@ -241,8 +233,6 @@ class Array3<T> implements Collection<T>
 	
 	/**
 		Transforms the index `i` into `out` coordinates.
-		<assert>`i` out of range</assert>
-		<assert>`out` is null</assert>
 		@param out stores the result.
 		@return a reference to `out`.
 	**/
@@ -261,7 +251,6 @@ class Array3<T> implements Collection<T>
 	
 	/**
 		Computes an array index into the linear array from the `cell` coordinates.
-		<assert>`cell` index out of range or `cell` is null</assert>
 	**/
 	public inline function cellToIndex(cell:Array3Cell):Int
 	{
@@ -275,8 +264,6 @@ class Array3<T> implements Collection<T>
 	
 	/**
 		Copies all elements stored in layer `z` by reference into a two-dimensional array.
-		<assert>`z` out of range</assert>
-		<assert>invalid layer or `out` is null or `out` too small</assert>
 		@param out stores the "slice" of this three-dimensional array.
 		@return a reference to `out`.
 	**/
@@ -295,7 +282,6 @@ class Array3<T> implements Collection<T>
 	
 	/**
 		Copies all elements stored in row `y` and layer `z` by reference to the `out` array.
-		<assert>`x`/`y` out of range or `out` is null</assert>
 		@return a reference to the `out` array.
 	**/
 	public function getRow(z:Int, y:Int, out:Array<T>):Array<T>
@@ -311,8 +297,6 @@ class Array3<T> implements Collection<T>
 	
 	/**
 		Overwrites all elements in row `y` and layer `z` with the elements stored in the `input` array.
-		<assert>`z`/`y` out of range</assert>
-		<assert>`input` is null or insufficient input values</assert>
 	**/
 	public function setRow(z:Int, y:Int, input:Array<T>)
 	{
@@ -327,8 +311,6 @@ class Array3<T> implements Collection<T>
 	
 	/**
 		Copies all elements stored in column `x` and layer `z` by reference to the `out` array.
-		<assert>`z`/`x` out of range</assert>
-		<assert>`out` is null</assert>
 		@return a reference to the `out` array.
 	**/
 	public function getCol(z:Int, x:Int, out:Array<T>):Array<T>
@@ -344,8 +326,6 @@ class Array3<T> implements Collection<T>
 
 	/**
 		Overwrites all elements in column `x` and layer `z` with the elements stored in the `input` array.
-		<assert>`z`/`x` out of range</assert>
-		<assert>`input` is null or insufficient input values</assert>
 	**/
 	public function setCol(z:Int, x:Int, input:Array<T>)
 	{
@@ -360,8 +340,6 @@ class Array3<T> implements Collection<T>
 	
 	/**
 		Copies all elements stored in the pile at column `x` and row `y` by reference to the `out` array.
-		<assert>`x`/`y` out of range</assert>
-		<assert>`out` is null</assert>
 		@return a reference to the `out` array.
 	**/
 	public function getPile(x:Int, y:Int, out:Array<T>):Array<T>
@@ -379,8 +357,6 @@ class Array3<T> implements Collection<T>
 	
 	/**
 		Overwrites all elements in column `x` and row `y` with the elements stored in the `input` array.
-		<assert>`x`/`y` out of range</assert>
-		<assert>`input` is null or insufficient input values</assert>
 	**/
 	public function setPile(x:Int, y:Int, input:Array<T>)
 	{
@@ -400,7 +376,6 @@ class Array3<T> implements Collection<T>
 		Calls the `f` function on all elements.
 		
 		The function signature is: `f(element, xIndex, yIndex, zIndex):element`
-		<assert>`f` is null</assert>
 	**/
 	public function forEach(f:T->Int->Int->Int->T, z:Int = -1):Array3<T>
 	{
@@ -429,7 +404,6 @@ class Array3<T> implements Collection<T>
 	
 	/**
 		Resizes this three-dimensional array.
-		<assert>invalid dimensions</assert>
 		@param width the new width (minimum is 2).
 		@param height the new height (minimum is 2).
 		@param depth the new depth (minimum is 2).
@@ -467,8 +441,6 @@ class Array3<T> implements Collection<T>
 	
 	/**
 		Swaps the element at column/row/layer `x0`, `y0`, `z0` with the element at column/row/layer `x1`, `y1`, `z1`.
-		<assert>`x0`/`y0`/`z0` or `x1`/`y1`/`z1` out of range</assert>
-		<assert>`x0`, `y0`, `z0` equals `x1`, `y1`, `z1`</assert>
 	**/
 	public inline function swap(x0:Int, y0:Int, z0:Int, x1:Int, y1:Int, z1:Int)
 	{
@@ -500,9 +472,8 @@ class Array3<T> implements Collection<T>
 	
 	/**
 		Shuffles the elements of this collection by using the Fisher-Yates algorithm.
-		<assert>insufficient random values</assert>
 		@param rvals a list of random double values in the range between 0 (inclusive) to 1 (exclusive) defining the new positions of the elements.
-		If omitted, random values are generated on-the-fly by calling `Math::random()`.
+		If omitted, random values are generated on-the-fly by calling `Math->random()`.
 	**/
 	public function shuffle(rvals:Array<Float> = null)
 	{
@@ -535,17 +506,9 @@ class Array3<T> implements Collection<T>
 	}
 	
 	/**
-		Returns a string representing the current object.
+		Prints out all elements.
 		
-		Use ``getLayer()`` to print the elements of a specific layer.
-		
-		Example:
-		<pre class="prettyprint">
-		var array3 = new de.polygonal.ds.Array3<String>(4, 4, 3);
-		trace(array3);</pre>
-		<pre class="console">
-		{ Array3 4x4x3 }
-		</pre>
+		Use `getLayer()->toString()` to print the elements of a specific layer only.
 	**/
 	public function toString():String
 	{
@@ -590,7 +553,7 @@ class Array3<T> implements Collection<T>
 	/**
 		The number of elements in this three-dimensional array.
 		
-		Always equals ``width`` * ``height`` * ``depth``.
+		Always equals `width` * `height` * `depth`.
 	**/
 	public var size(get, never):Int;
 	inline function get_size():Int
@@ -663,7 +626,7 @@ class Array3<T> implements Collection<T>
 		
 		Order: Row-major order (layer-by-layer, row-by-row).
 		
-		See <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
+		@see http://haxe.org/ref/iterators
 	**/
 	public function iterator():Itr<T>
 	{
@@ -699,11 +662,10 @@ class Array3<T> implements Collection<T>
 	
 	/**
 		Duplicates this three-dimensional array. Supports shallow (structure only) and deep copies (structure & elements).
-		<assert>element is not of type `Cloneable`</assert>
 		@param assign if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
-		If false, the ``clone()`` method is called on each element.
+		If false, the `clone()` method is called on each element.
 		<warn>In this case all elements have to implement `Cloneable`.</warn>
-		@param copier a custom function for copying elements. Replaces ``element::clone()`` if `assign` is false.
+		@param copier a custom function for copying elements. Replaces `element->clone()` if `assign` is false.
 	**/
 	public function clone(assign:Bool = true, copier:T->T = null):Collection<T>
 	{

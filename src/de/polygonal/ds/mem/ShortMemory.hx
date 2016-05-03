@@ -37,7 +37,6 @@ class ShortMemory extends MemoryAccess
 		<warn>The bytes are written in little endian format.</warn>
 		@param min index pointing to the first short.
 		@param max index pointing to the last short.
-		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
 	#if flash
 	public static function toByteArray(input:ShortMemory, min:Int = -1, max:Int = -1):flash.utils.ByteArray
@@ -76,7 +75,6 @@ class ShortMemory extends MemoryAccess
 		If no range is specified, all `input` bytes are copied.
 		@param min index pointing to the byte storing the first short.
 		@param min index pointing to the byte storing the last short.
-		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
 	#if flash
 	public static function ofByteArray(input:flash.utils.ByteArray, min:Int = -1, max:Int = -1):ShortMemory
@@ -104,7 +102,6 @@ class ShortMemory extends MemoryAccess
 		<warn>The bytes are written in little endian format.</warn>
 		@param min index pointing to the first short.
 		@param max index pointing to the last short.
-		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
 	public static function toBytesData(input:ShortMemory, min:Int = -1, max:Int = -1):haxe.io.BytesData
 	{
@@ -128,7 +125,6 @@ class ShortMemory extends MemoryAccess
 		If no range is specified, all `input` bytes are copied.
 		@param min index pointing to the byte storing the first short.
 		@param min index pointing to the byte storing the last short.
-		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
 	public static function ofBytesData(input:haxe.io.BytesData, min:Int = -1, max:Int = -1):ShortMemory
 	{
@@ -163,7 +159,6 @@ class ShortMemory extends MemoryAccess
 		If no range is specified, all `input` bytes are copied.
 		@param min index pointing to the first short.
 		@param max index pointing to the last short.
-		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
 	public static function toArray(input:ShortMemory, min:Int = -1, max:Int = -1):Array<Int>
 	{
@@ -197,7 +192,6 @@ class ShortMemory extends MemoryAccess
 		If no range is specified, all `input` values are copied.
 		@param min index pointing to the first short.
 		@param max index pointing to the last short.
-		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
 	public static function ofArray(input:Array<Int>, min:Int = -1, max:Int = -1):ShortMemory
 	{
@@ -220,7 +214,6 @@ class ShortMemory extends MemoryAccess
 		@param min index pointing to the first short.
 		@param max index pointing to the last short.
 		@param out the `Vector` object to write into. If null, a new Vector object is created on-the-fly.
-		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
 	public static function toVector(input:ShortMemory, min:Int = -1, max:Int = -1, out:Vector<Int> = null):Vector<Int>
 	{
@@ -260,7 +253,6 @@ class ShortMemory extends MemoryAccess
 		If no range is specified, all `input` bytes are copied.
 		@param min index pointing to the first short.
 		@param max index pointing to the last short.
-		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
 	public static function toUnsignedVector(input:ShortMemory, min:Int = -1, max:Int = -1):Vector<UInt>
 	{
@@ -296,7 +288,6 @@ class ShortMemory extends MemoryAccess
 		If no range is specified, all `input` values are copied.
 		@param min index pointing to the first short.
 		@param max index pointing to the last short.
-		<assert>invalid range, invalid `input` or memory deallocated</assert>
 	**/
 	public static function ofVector(input:Vector<Int>, min:Int = -1, max:Int = -1):ShortMemory
 	{
@@ -390,8 +381,6 @@ class ShortMemory extends MemoryAccess
 	
 	/**
 		Adjusts the size of this object so it's capable of storing `newSize` shorts.
-		<assert>invalid size</assert>
-		<assert>memory was already deallocated</assert>
 	**/
 	override public function resize(newSize:Int)
 	{
@@ -410,8 +399,6 @@ class ShortMemory extends MemoryAccess
 	
 	/**
 		Returns the short at index `i`.
-		<assert>index out of range</assert>
-		<assert>memory deallocated</assert>
 	**/
 	public inline function get(i:Int):Int
 	{
@@ -424,8 +411,6 @@ class ShortMemory extends MemoryAccess
 	
 	/**
 		Replaces the short at the index `i` with the short `x`.
-		<assert>index out of range</assert>
-		<assert>memory deallocated</assert>
 	**/
 	public inline function set(i:Int, x:Int)
 	{
@@ -438,8 +423,6 @@ class ShortMemory extends MemoryAccess
 	
 	/**
 		Swaps the short at index `i` with the short at index `j`.
-		<assert>index out of range</assert>
-		<assert>`i` equals `j`</assert>
 	**/
 	public inline function swap(i:Int, j:Int)
 	{
@@ -458,8 +441,6 @@ class ShortMemory extends MemoryAccess
 	
 	/**
 		Returns the memory byte offset of the first byte storing the short at index `i`.
-		<assert>index out of range</assert>
-		<assert>memory deallocated</assert>
 	**/
 	public inline function getAddr(i:Int):Int
 	{
@@ -481,24 +462,7 @@ class ShortMemory extends MemoryAccess
 	#end
 	
 	/**
-		Returns a string representing the current object.
-		Prints out all elements if compiled with the `-debug` directive.
-		
-		Example:
-		<pre class="prettyprint">
-		var mem = new new de.polygonal.ds.mem.ShortMemory(4);
-		for (i in 0...4) {
-		    mem.set(i, i);
-		}
-		trace(mem);</pre>
-		<pre class="console">
-		{ ShortMemory size: 4 }
-		[
-		  0 -> 0
-		  1 -> 1
-		  2 -> 2
-		  3 -> 3
-		]</pre>
+		Prints out all elements.
 	**/
 	public function toString():String
 	{

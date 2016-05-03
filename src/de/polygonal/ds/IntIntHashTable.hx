@@ -74,7 +74,7 @@ class IntIntHashTable implements Map<Int, Int>
 	/**
 		The size of the allocated storage space for the key/value pairs.
 		
-		If more space is required to accomodate new elements, ``getCapacity()`` is doubled every time ``size`` grows beyond capacity, and split in half when ``size`` is a quarter of capacity.
+		If more space is required to accomodate new elements, `getCapacity()` is doubled every time `size` grows beyond capacity, and split in half when `size` is a quarter of capacity.
 		
 		The capacity never falls below the initial size defined in the constructor.
 	**/
@@ -83,16 +83,16 @@ class IntIntHashTable implements Map<Int, Int>
 	/**
 		The growth rate of the container.
 		
-		+  0: fixed size
-		+ -1: grows at a rate of 1.125x plus a constant.
-		+ -2: grows at a rate of 1.5x.
-		+ -3: grows at a rate of 2.0x (default value).
-		+ >0: grows at a constant rate: capacity += growthRate
+		-  `0` : fixed size
+		- `-1` : grows at a rate of 1.125x plus a constant.
+		- `-2` : grows at a rate of 1.5x.
+		- `-3` : grows at a rate of 2.0x (default value).
+		- `>0` : grows at a constant rate: capacity += growthRate
 	**/
 	public var growthRate:Int = GrowthRate.DOUBLE;
 	
 	/**
-		If true, reuses the iterator object instead of allocating a new one when calling ``iterator()``.
+		If true, reuses the iterator object instead of allocating a new one when calling `iterator()`.
 		
 		The default is false.
 		
@@ -107,7 +107,7 @@ class IntIntHashTable implements Map<Int, Int>
 		
 		A high load factor thus indicates poor performance.
 		
-		If the load factor gets too high, additional slots can be allocated by calling ``rehash()``.
+		If the load factor gets too high, additional slots can be allocated by calling `rehash()`.
 	**/
 	public var loadFactor(get, never):Float;
 	function get_loadFactor():Float
@@ -139,13 +139,10 @@ class IntIntHashTable implements Map<Int, Int>
 	var mTmpBufferSize:Int = 16;
 	
 	/**
-		<assert>`slotCount` is not a power of two</assert>
-		<assert>`capacity` is not a power of two</assert>
-		<assert>`capacity` is < 2</assert>
 		@param slotCount the total number of slots into which the hashed keys are distributed.
 		This defines the space-time trade off of the hash table.
 		Increasing the `slotCount` reduces the computation time (read/write/access) of the hash table at the cost of increased memory use.
-		This value is fixed and can only be changed by calling ``rehash()``, which rebuilds the hash table (expensive).
+		This value is fixed and can only be changed by calling `rehash()`, which rebuilds the hash table (expensive).
 		
 		@param initialCapacity the initial physical space for storing the key/value pairs at the time the hash table is created.
 		This is also the minimum allowed size of the hash table and cannot be changed in the future. If omitted, the initial `capacity` equals `slotCount`.
@@ -222,7 +219,7 @@ class IntIntHashTable implements Map<Int, Int>
 	}
 	
 	/**
-		Returns the value that is mapped to `key` or ``IntIntHashTable.KEY_ABSENT`` if `key` does not exist.
+		Returns the value that is mapped to `key` or `IntIntHashTable.KEY_ABSENT` if `key` does not exist.
 		
 		Uses move-to-front-on-access which reduces access time when similar keys are frequently queried.
 	**/
@@ -288,7 +285,6 @@ class IntIntHashTable implements Map<Int, Int>
 	
 	/**
 		Maps `val` to `key` in this map, but only if `key` does not exist yet.
-		<assert>out of space - hash table is full but not resizable</assert>
 		@return true if `key` was mapped to `val` for the first time.
 	**/
 	public inline function setIfAbsent(key:Int, val:Int):Bool
@@ -402,7 +398,6 @@ class IntIntHashTable implements Map<Int, Int>
 		Redistributes all keys over `slotCount`.
 		
 		This is an expensive operations as the hash table is rebuild from scratch.
-		<assert>`slotCount` is not a power of two</assert>
 	**/
 	public function rehash(slotCount:Int)
 	{
@@ -503,7 +498,7 @@ class IntIntHashTable implements Map<Int, Int>
 	
 	/**
 		Removes the first occurrence of `key` and returns the value mapped to it.
-		@return the value mapped to key or ``IntIntHashTable.KEY_ABSENT`` if `key` does not exist.
+		@return the value mapped to key or `IntIntHashTable.KEY_ABSENT` if `key` does not exist.
 	**/
 	public inline function extract(key:Int):Int
 	{
@@ -630,23 +625,7 @@ class IntIntHashTable implements Map<Int, Int>
 	}
 	
 	/**
-		Returns a string representing the current object.
-		
-		Example:
-		<pre class="prettyprint">
-		var hash = new de.polygonal.ds.IntIntHashTable(16);
-		for (i in 0...4) {
-		    hash.set(i, i);
-		}
-		trace(hash);</pre>
-		<pre class="console">
-		{ IntIntHashTable size: 4, load factor: 0.25 }
-		[
-		  0 -> 0
-		  1 -> 1
-		  2 -> 2
-		  3 -> 3
-		]</pre>
+		Prints out all elements.
 	**/
 	public function toString():String
 	{
@@ -683,7 +662,6 @@ class IntIntHashTable implements Map<Int, Int>
 	
 	/**
 		Returns true if this map contains a mapping for the value `val`.
-		<assert>value 0x80000000 is reserved</assert>
 	**/
 	public function has(val:Int):Bool
 	{
@@ -878,7 +856,6 @@ class IntIntHashTable implements Map<Int, Int>
 	
 	/**
 		Returns true if this map contains a mapping from `key` to `val`.
-		<assert>value 0x80000000 is reserved</assert>
 	**/
 	public function hasPair(key:Int, val:Int):Bool
 	{
@@ -1033,9 +1010,7 @@ class IntIntHashTable implements Map<Int, Int>
 		
 		The method allows duplicate keys.
 		
-		<warn>To ensure unique keys either use ``hasKey()`` before ``set()`` or ``setIfAbsent()``</warn>
-		<assert>out of space - hash table is full but not resizable</assert>
-		<assert>key/value 0x80000000 is reserved</assert>
+		<warn>To ensure unique keys either use `hasKey()` before `set()` or `setIfAbsent()`</warn>
 		@return true if `key` was added for the first time, false if another instance of `key` was inserted.
 	**/
 	public inline function set(key:Int, val:Int):Bool
@@ -1252,7 +1227,7 @@ class IntIntHashTable implements Map<Int, Int>
 		
 		The keys are visited in a random order.
 		
-		See <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
+		@see http://haxe.org/ref/iterators
 	**/
 	public function keys():Itr<Int>
 	{
@@ -1427,7 +1402,7 @@ class IntIntHashTable implements Map<Int, Int>
 	}
 	
 	/**
-		Same as ``has()``.
+		Same as `has()`.
 	**/
 	public inline function contains(val:Int):Bool
 	{
@@ -1436,7 +1411,6 @@ class IntIntHashTable implements Map<Int, Int>
 	
 	/**
 		Removes all occurrences of the value `val`.
-		<assert>value 0x80000000 is reserved</assert>
 		@return true if `val` was removed, false if `val` does not exist.
 	**/
 	public function remove(val:Int):Bool
@@ -1526,7 +1500,7 @@ class IntIntHashTable implements Map<Int, Int>
 		
 		The values are visited in a random order.
 		
-		See <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
+		@see http://haxe.org/ref/iterators
 	**/
 	public function iterator():Itr<Int>
 	{

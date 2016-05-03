@@ -36,7 +36,6 @@ class Array2<T> implements Collection<T>
 		The width (#columns).
 		
 		The minimum value is 2.
-		<assert>invalid width</assert>
 	**/
 	public var width(get, set):Int;
 	inline function get_width():Int
@@ -53,7 +52,6 @@ class Array2<T> implements Collection<T>
 		The height (#rows).
 		
 		The minimum value is 2.
-		<assert>invalid height</assert>
 	**/
 	public var height(get, set):Int;
 	inline function get_height():Int
@@ -102,7 +100,7 @@ class Array2<T> implements Collection<T>
 	public var key(default, null):Int = HashKey.next();
 	
 	/**
-		If true, reuses the iterator object instead of allocating a new one when calling ``iterator()``.
+		If true, reuses the iterator object instead of allocating a new one when calling `iterator()`.
 		
 		The default is false.
 		
@@ -119,7 +117,6 @@ class Array2<T> implements Collection<T>
 		Creates a two-dimensional array with dimensions `width` and `height`.
 		
 		The minimum size is 2x2.
-		<assert>invalid `width` or `height`</assert>
 	**/
 	public function new(width:Int, ?height:Null<Int>, ?source:Array<T>)
 	{
@@ -148,7 +145,6 @@ class Array2<T> implements Collection<T>
 	
 	/**
 		Returns the element that is stored in column `x` and row `y`.
-		<assert>`x`/`y` out of range</assert>
 	**/
 	public inline function get(x:Int, y:Int):T
 	{
@@ -159,9 +155,7 @@ class Array2<T> implements Collection<T>
 	}
 	
 	/**
-		Returns the element that is stored in column ``cell::x`` and row ``cell::y``.
-		<assert>`cell` is null</assert>
-		<assert>`x`/`y` out of range</assert>
+		Returns the element that is stored in column `cell->x` and row `cell->y`.
 	**/
 	public inline function getAtCell(cell:Array2Cell):T
 	{
@@ -174,7 +168,6 @@ class Array2<T> implements Collection<T>
 	
 	/**
 		Replaces the element at column `x` and row `y` with `val`.
-		<assert>`x`/`y` out of range</assert>
 	**/
 	public inline function set(x:Int, y:Int, val:T)
 	{
@@ -186,7 +179,6 @@ class Array2<T> implements Collection<T>
 	
 	/**
 		Returns the element at index `i`.
-		<assert>`i` out of range</assert>
 	**/
 	public inline function getAtIndex(i:Int):T
 	{
@@ -196,9 +188,7 @@ class Array2<T> implements Collection<T>
 	}
 	
 	/**
-		Replaces the element that is stored in column ``cell::x`` and row ``cell::y`` with `val`.
-		<assert>`cell` is null</assert>
-		<assert>`x`/`y` out of range</assert>
+		Replaces the element that is stored in column `cell->x` and row `cell->y` with `val`.
 	**/
 	public inline function setAtCell(cell:Array2Cell, val:T)
 	{
@@ -211,7 +201,6 @@ class Array2<T> implements Collection<T>
 	
 	/**
 		Replaces the element at index `i` with `val`.
-		<assert>`i` out of range</assert>
 	**/
 	public inline function setAtIndex(i:Int, val:T)
 	{
@@ -240,7 +229,7 @@ class Array2<T> implements Collection<T>
 	/**
 		Returns the index of the first occurrence of the element `x` or returns -1 if element `x` does not exist.
 		
-		The index is in the range [0, ``size`` - 1].
+		The index is in the range [0, `size` - 1].
 	**/
 	public function indexOf(x:T):Int
 	{
@@ -262,23 +251,20 @@ class Array2<T> implements Collection<T>
 	}
 	
 	/**
-		Returns the cell coordinates of the first occurrence of the element `x` or null if element `x` does not exist.
-		<assert>`out` is null</assert>
+		Returns the cell coordinates of the first occurrence of the element `val` or null if element `val` does not exist.
 		@param out stores the result.
 		@return a reference to `out`.
 	**/
-	public inline function cellOf(x:T, out:Array2Cell):Array2Cell
+	public inline function cellOf(val:T, out:Array2Cell):Array2Cell
 	{
 		assert(out != null);
 		
-		var i = indexOf(x);
+		var i = indexOf(val);
 		return i == -1 ? null : indexToCell(i, out);
 	}
 	
 	/**
-		Transforms the index `i` into `out` coordinates.
-		<assert>`i` out of range</assert>
-		<assert>`out` is null</assert>
+		Transforms the index `i` into cell coordinates.
 		@param out stores the result.
 		@return a reference to `out`.
 	**/
@@ -293,9 +279,7 @@ class Array2<T> implements Collection<T>
 	}
 	
 	/**
-		Computes an array index into the linear array from the `cell` coordinates.
-		<assert>`cell` index out of range</assert>
-		<assert>`cell` is null</assert>
+		Computes an array index into the linear array from the given `cell` coordinates.
 	**/
 	public inline function cellToIndex(cell:Array2Cell):Int
 	{
@@ -308,8 +292,6 @@ class Array2<T> implements Collection<T>
 	
 	/**
 		Copies all elements stored in row `y` by reference to the `out` array.
-		<assert>`y` out of range</assert>
-		<assert>`out` is null</assert>
 		@return a reference to the `out` array.
 	**/
 	public function getRow(y:Int, out:Array<T>):Array<T>
@@ -323,8 +305,7 @@ class Array2<T> implements Collection<T>
 	}
 	
 	/**
-		Overwrites all elements in row `y` with the elements stored in the `input` array.
-		<assert>`y` out of range or `input` is null or insufficient input values</assert>
+		Overwrites all elements in row `y` with elements from `input`.
 	**/
 	public function setRow(y:Int, input:Array<T>)
 	{
@@ -338,8 +319,6 @@ class Array2<T> implements Collection<T>
 	
 	/**
 		Copies all elements stored in column `x` by reference to the `out` array.
-		<assert>`x` out of range</assert>
-		<assert>`out` is null</assert>
 		@return a reference to the `out` array.
 	**/
 	public function getCol(x:Int, out:Array<T>):Array<T>
@@ -353,9 +332,7 @@ class Array2<T> implements Collection<T>
 	}
 	
 	/**
-		Overwrites all elements in column `x` with the elements stored in the `input` array.
-		<assert>`x` out of range</assert>
-		<assert>`input` is null or insufficient input values</assert>
+		Overwrites all elements in column `x` with elements from `input`.
 	**/
 	public function setCol(x:Int, input:Array<T>)
 	{
@@ -370,8 +347,12 @@ class Array2<T> implements Collection<T>
 	/**
 		Calls the `f` function on all elements.
 		
-		The function signature is: `f(element, xIndex, yIndex):element`
-		<assert>`f` is null</assert>
+		The function signature is: `f(input, x, y):output`
+		
+		- input: element at (x,y)
+		- x: current x index
+		- y: current y index
+		- output: element to be stored at (x,y)
 	**/
 	public function forEach(f:T->Int->Int->T):Array2<T>
 	{
@@ -382,7 +363,6 @@ class Array2<T> implements Collection<T>
 	
 	/**
 		Resizes this two-dimensional array.
-		<assert>invalid dimensions</assert>
 		@param width the new width (minimum is 2).
 		@param height the new height (minimum is 2).
 	**/
@@ -433,7 +413,7 @@ class Array2<T> implements Collection<T>
 	/**
 		Shifts all columns to the east by one position.
 		
-		Columns are wrapped, so the column at index [``cols`` - 1] is not lost but prepended to the leftmost column.
+		Columns are wrapped, so the column at index [`cols` - 1] is not lost but prepended to the leftmost column.
 	**/
 	public function shiftE()
 	{
@@ -469,7 +449,7 @@ class Array2<T> implements Collection<T>
 	/**
 		Shifts all rows to the south by one position.
 		
-		Rows are wrapped, so row at index [``rows`` - 1] is not lost but prepended to the topmost row.
+		Rows are wrapped, so row at index [`rows` - 1] is not lost but prepended to the topmost row.
 	**/
 	public function shiftS()
 	{
@@ -486,8 +466,6 @@ class Array2<T> implements Collection<T>
 	
 	/**
 		Swaps the element at column/row `x0`, `y0` with the element at column/row `x1`, `y1`.
-		<assert>`x0`/`y0` or `x1`/`y1` out of range</assert>
-		<assert>`x0`, `y0` equals `x1`, `y1`</assert>
 	**/
 	public inline function swap(x0:Int, y0:Int, x1:Int, y1:Int)
 	{
@@ -506,8 +484,7 @@ class Array2<T> implements Collection<T>
 	}
 	
 	/**
-		Appends the elements of the `input` array in the range [0, ``cols``] by adding a new row.
-		<assert>`input` is null or too short</assert>
+		Appends the elements of the `input` array in the range [0, `cols`] by adding a new row.
 	**/
 	public function appendRow(input:Array<T>)
 	{
@@ -523,8 +500,7 @@ class Array2<T> implements Collection<T>
 	}
 	
 	/**
-		Appends the elements of the `input` array in the range [0, ``rows``] by adding a new column.
-		<assert>`input` is null or too short</assert>
+		Appends the elements of the `input` array in the range [0, `rows`] by adding a new column.
 	**/
 	public function appendCol(input:Array<T>)
 	{
@@ -550,8 +526,7 @@ class Array2<T> implements Collection<T>
 	}
 	
 	/**
-		Prepends the elements of the `input` array in the range [0, ``cols``] by adding a new row.
-		<assert>`input` is null or too short</assert>
+		Prepends the elements of the `input` array in the range [0, `cols`] by adding a new row.
 	**/
 	public function prependRow(input:Array<T>)
 	{
@@ -567,8 +542,7 @@ class Array2<T> implements Collection<T>
 	}
 	
 	/**
-		Prepends the elements of the `input` array in the range [0, ``rows``] by adding a new column.
-		<assert>`input` is null or too short</assert>
+		Prepends the elements of the `input` array in the range [0, `rows`] by adding a new column.
 	**/
 	public function prependCol(input:Array<T>)
 	{
@@ -595,7 +569,6 @@ class Array2<T> implements Collection<T>
 	
 	/**
 		Copies row elements from row `i` to row `j`.
-		<assert>`i`/`j` out of range</assert>
 	**/
 	public function copyRow(i:Int, j:Int)
 	{
@@ -613,7 +586,6 @@ class Array2<T> implements Collection<T>
 	
 	/**
 		Swaps row elements at row `i` with row elements at row `j`.
-		<assert>`i`/`j` out of range</assert>
 	**/
 	public function swapRow(i:Int, j:Int)
 	{
@@ -637,7 +609,6 @@ class Array2<T> implements Collection<T>
 	
 	/**
 		Copies column elements from column `i` to column `j`.
-		<assert>`i`/`j` out of range</assert>
 	**/
 	public function copyCol(i:Int, j:Int)
 	{
@@ -657,7 +628,6 @@ class Array2<T> implements Collection<T>
 	
 	/**
 		Swaps column elements at column `i` with column elements at row `j`.
-		<assert>`i`/`j` out of range</assert>
 	**/
 	public function swapCol(i:Int, j:Int)
 	{
@@ -715,7 +685,6 @@ class Array2<T> implements Collection<T>
 	
 	/**
 		Copies all elements from the nested two-dimensional array `a` into this two-dimensional array.
-		<assert>invalid dimensions of `a`</assert>
 	**/
 	public function ofNestedArray(input:Array<Array<T>>)
 	{
@@ -732,9 +701,8 @@ class Array2<T> implements Collection<T>
 	
 	/**
 		Shuffles the elements of this collection by using the Fisher-Yates algorithm.
-		<assert>insufficient random values</assert>
 		@param rvals a list of random double values in the range between 0 (inclusive) to 1 (exclusive) defining the new positions of the elements.
-		If omitted, random values are generated on-the-fly by calling `Math::random()`.
+		If omitted, random values are generated on-the-fly by calling `Math->random()`.
 	**/
 	public function shuffle(rvals:Array<Float> = null)
 	{
@@ -768,7 +736,6 @@ class Array2<T> implements Collection<T>
 	
 	/**
 		Copies all elements inside the rectangular region bounded by [`minX`, `minY`] and [`maxX`, `maxY`] by reference to the `out` array.
-		<assert>`minX` or `minY` out of range</assert>
 		@return a reference to the `out` array.
 	**/
 	public function getRect(minX:Int, minY:Int, maxX:Int, maxY:Int, out:Array<T>):Array<T>
@@ -797,21 +764,7 @@ class Array2<T> implements Collection<T>
 	}
 	
 	/**
-		Returns a string representing the current object.
-		
-		Example:
-		<pre class="prettyprint">
-		var array2 = new de.polygonal.ds.Array2<String>(4, 4);
-		array2.walk(function(val:String, x:Int, y:Int):String { return Std.string(x) + "." + Std.string(y); });
-		trace(array2);</pre>
-		<pre class="console">
-		{ Array2 4x4 }
-		[
-		  [0.0][1.0][2.0][3.0]
-		  [0.1][1.1][2.1][3.1]
-		  [0.2][1.2][2.2][3.2]
-		  [0.3][1.3][2.3][3.3]
-		]</pre>
+		Prints out all elements.
 	**/
 	public function toString():String
 	{
@@ -854,7 +807,7 @@ class Array2<T> implements Collection<T>
 	/**
 		The number of elements in this two-dimensional array.
 		
-		Always equals ``cols`` * ``rows``.
+		Always equals `cols` * `rows`.
 	**/
 	public var size(get, never):Int;
 	inline function get_size():Int
@@ -879,30 +832,30 @@ class Array2<T> implements Collection<T>
 	}
 	
 	/**
-		Returns true if this two-dimensional array contains the element `x`.
+		Returns true if this two-dimensional array contains the element `val`.
 	**/
-	public function contains(x:T):Bool
+	public function contains(val:T):Bool
 	{
 		var d = mData;
 		for (i in 0...size)
 		{
-			if (d.get(i) == x)
+			if (d.get(i) == val)
 				return true;
 		}
 		return false;
 	}
 	
 	/**
-		Nullifies all occurrences of `x`.
+		Nullifies all occurrences of `val`.
 		The size is not altered.
-		@return true if at least one occurrence of `x` was nullified.
+		@return true if at least one occurrence of `val` was nullified.
 	**/
-	public function remove(x:T):Bool
+	public function remove(val:T):Bool
 	{
 		var found = false, d = mData;
 		for (i in 0...size)
 		{
-			if (d.get(i) == x)
+			if (d.get(i) == val)
 			{
 				d.set(i, cast null);
 				found = true;
@@ -926,7 +879,7 @@ class Array2<T> implements Collection<T>
 		
 		Order: Row-major order (row-by-row).
 		
-		See <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
+		@see http://haxe.org/ref/iterators
 	**/
 	public function iterator():Itr<T>
 	{
@@ -962,20 +915,16 @@ class Array2<T> implements Collection<T>
 	
 	/**
 		Duplicates this two-dimensional array. Supports shallow (structure only) and deep copies (structure & elements).
-		<assert>element is not of type `Cloneable`</assert>
-		@param assign if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
-		If false, the ``clone()`` method is called on each element.
-		
-		<warn>In this case all elements have to implement `Cloneable`.</warn>
-		@param copier a custom function for copying elements. Replaces ``element::clone()`` if `assign` is false.
+		@param byRef if true, primitive elements are copied by value whereas objects are copied by reference.
+		@param copier a custom function for copying elements (if `byRef` is false). Otherwise elements have to implement `Cloneable`.
 	**/
-	public function clone(assign:Bool = true, copier:T->T = null):Collection<T>
+	public function clone(byRef:Bool = true, copier:T->T = null):Collection<T>
 	{
 		var out = new Array2<T>(mW, mH);
 		var src = mData;
 		var dst = out.mData;
 		
-		if (assign)
+		if (byRef)
 			src.blit(0, dst, 0, size);
 		else
 		{

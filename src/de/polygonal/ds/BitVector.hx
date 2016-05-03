@@ -54,8 +54,6 @@ class BitVector implements Hashable
 	
 	/**
 		Creates a bit-vector capable of storing a total of `numBits` bits.
-		
-		<assert>invalid `numBits` value</assert>
 	**/
 	public function new(numBits:Int)
 	{
@@ -95,7 +93,6 @@ class BitVector implements Hashable
 	
 	/**
 		Returns true if the bit at index `i` is 1.
-		<assert>`i` out of range</assert>
 	**/
 	public inline function has(i:Int):Bool
 	{
@@ -106,7 +103,6 @@ class BitVector implements Hashable
 	
 	/**
 		Sets the bit at index `i` to one.
-		<assert>`i` out of range</assert>
 	**/
 	public inline function set(i:Int)
 	{
@@ -118,7 +114,6 @@ class BitVector implements Hashable
 	
 	/**
 		Sets the bit at index `i` to zero.
-		<assert>`i` out of range</assert>
 	**/
 	public inline function clr(i:Int)
 	{
@@ -153,9 +148,7 @@ class BitVector implements Hashable
 	/**
 		Clears all bits in the range [`min`, `max`).
 		
-		This is faster than clearing individual bits by using ``clr()``.
-		<assert>`min` out of range</assert>
-		<assert>`max` out of range</assert>
+		This is faster than clearing individual bits by using `clr()`.
 	**/
 	public function clrRange(min:Int, max:Int)
 	{
@@ -176,9 +169,7 @@ class BitVector implements Hashable
 	/**
 		Sets all bits in the range [`min`, `max`).
 		
-		This is faster than setting individual bits by using ``set()``.
-		<assert>`min` out of range</assert>
-		<assert>`max` out of range</assert>
+		This is faster than setting individual bits by using `set()`.
 	**/
 	public function setRange(min:Int, max:Int)
 	{
@@ -198,7 +189,6 @@ class BitVector implements Hashable
 	
 	/**
 		Sets the bit at index `i` to one if `cond` is true or clears the bit at index `i` if `cond` is false.
-		<assert>`i` out of range</assert>
 	**/
 	public inline function ofBool(i:Int, cond:Bool)
 	{
@@ -209,7 +199,6 @@ class BitVector implements Hashable
 		Returns the bucket at index `i`.
 		
 		A bucket is a 32-bit integer for storing the bit flags.
-		<assert>`i` out of range</assert>
 	**/
 	public inline function getBucketAt(i:Int):Int
 	{
@@ -267,7 +256,7 @@ class BitVector implements Hashable
 	/**
 		Writes the data in this bit-vector to a byte array.
 		
-		The number of bytes equals ``bucketSize()`` * 4 and the number of bits equals ``capacity``.
+		The number of bytes equals `bucketSize()` * 4 and the number of bits equals `capacity`.
 		@param bigEndian the byte order (default is little endian)
 	**/
 	public function toBytes(bigEndian:Bool = false):haxe.io.BytesData
@@ -291,7 +280,6 @@ class BitVector implements Hashable
 		Copies the bits from `bytes` into this bit vector.
 		
 		The bit-vector is resized to the size of `bytes`.
-		<assert>`input` is null</assert>
 		@param bigEndian the input byte order (default is little endian)
 	**/
 	public function ofBytes(bytes:haxe.io.BytesData, bigEndian:Bool = false)
@@ -345,23 +333,7 @@ class BitVector implements Hashable
 	}
 	
 	/**
-		Returns a string representing the current object.
-		
-		Example:
-		<pre class="prettyprint">
-		var bv = new de.polygonal.ds.BitVector(40);
-		for (i in 0...bv.capacity) {
-		    if (i & 1 == 0) {
-		        bv.set(i);
-		    }
-		}
-		trace(bv);</pre>
-		<pre class="console">
-		{ BitVector set/all: 20/40 }
-		[
-		  0 -> b01010101010101010101010101010101
-		  1 -> b00000000000000000000000001010101
-		]</pre>
+		Prints out all elements.
 	**/
 	public function toString():String
 	{

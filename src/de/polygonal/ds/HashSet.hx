@@ -49,7 +49,7 @@ class HashSet<T:Hashable> implements Set<T>
 	/**
 		The size of the allocated storage space for the elements.
 		
-		If more space is required to accomodate new elements, ``capacity`` is doubled every time ``size`` grows beyond capacity, and split in half when ``size`` is a quarter of capacity.
+		If more space is required to accomodate new elements, `capacity` is doubled every time `size` grows beyond capacity, and split in half when `size` is a quarter of capacity.
 		
 		The capacity never falls below the initial size defined in the constructor.
 	**/
@@ -75,7 +75,7 @@ class HashSet<T:Hashable> implements Set<T>
 	}
 	
 	/**
-		If true, reuses the iterator object instead of allocating a new one when calling ``iterator()``.
+		If true, reuses the iterator object instead of allocating a new one when calling `iterator()`.
 		
 		The default is false.
 		
@@ -90,7 +90,7 @@ class HashSet<T:Hashable> implements Set<T>
 		
 		A high load factor thus indicates poor performance.
 		
-		If the load factor gets too high, additional slots can be allocated by calling ``rehash()``.
+		If the load factor gets too high, additional slots can be allocated by calling `rehash()`.
 	**/
 	public var loadFactor(get, never):Float;
 	function get_loadFactor():Float
@@ -120,13 +120,10 @@ class HashSet<T:Hashable> implements Set<T>
 	var mIterator:HashSetIterator<T> = null;
 	
 	/**
-		<assert>`slotCount` is not a power of two</assert>
-		<assert>`capacity` is not a power of two</assert>
-		<assert>`capacity` is < 2</assert>
 		@param slotCount the total number of slots into which the hashed values are distributed.
 		This defines the space-time trade off of the set.
 		Increasing the `slotCount` reduces the computation time (read/write/access) of the set at the cost of increased memory use.
-		This value is fixed and can only be changed by calling ``rehash()``, which rebuilds the set (expensive).
+		This value is fixed and can only be changed by calling `rehash()`, which rebuilds the set (expensive).
 		
 		@param capacity the initial physical space for storing the elements at the time the set is created.
 		This is also the minimum allowed size of the set and cannot be changed in the future.
@@ -134,7 +131,7 @@ class HashSet<T:Hashable> implements Set<T>
 		The `capacity` is automatically adjusted according to the storage requirements based on two rules:
 		<ul>
 		<li>If the set runs out of space, the `capacity` is doubled.</li>
-		<li>If the ``size`` falls below a quarter of the current `capacity`, the `capacity` is cut in half while the minimum `capacity` can't fall below `capacity`.</li>
+		<li>If the `size` falls below a quarter of the current `capacity`, the `capacity` is cut in half while the minimum `capacity` can't fall below `capacity`.</li>
 		</ul>
 	**/
 	public function new(slotCount:Int, initialCapacity:Int = -1)
@@ -164,7 +161,6 @@ class HashSet<T:Hashable> implements Set<T>
 		Returns true if this set contains the element `x`.
 		
 		Uses move-to-front-on-access which reduces access time when similar elements are frequently queried.
-		<assert>`x` is null</assert>
 	**/
 	public inline function hasFront(x:T):Bool
 	{
@@ -187,7 +183,6 @@ class HashSet<T:Hashable> implements Set<T>
 		Redistributes all elements over `slotCount`.
 		
 		This is an expensive operations as the set is rebuild from scratch.
-		<assert>`slotCount` is not a power of two</assert>
 	**/
 	public function rehash(slotCount:Int)
 	{
@@ -258,39 +253,7 @@ class HashSet<T:Hashable> implements Set<T>
 	}
 	
 	/**
-		Returns a string representing the current object.
-		
-		Example:
-		<pre class="prettyprint">
-		class Foo extends de.polygonal.ds.HashableItem
-		{
-		    var val:Int;
-		    public function new(val:Int) {
-		        super();
-		        this.val = val;
-		    }
-		    public function toString():String {
-		        return "{ Foo val: " + val + " }";
-		    }
-		}
-		
-		class Main
-		{
-		    static function main()
-		    {
-		        var set = new de.polygonal.ds.HashSet<Foo>(16);
-		        for (i in 0...4) set.set(new Foo(i));
-		        trace(set);
-		    }
-		}</pre>
-		<pre class="console">
-		{ HashSet size/capacity: 4/16, load factor: 0.25 }
-		[
-		  { Foo val: 0 }
-		  { Foo val: 1 }
-		  { Foo val: 2 }
-		  { Foo val: 3 }
-		]</pre>
+		Prints out all elements.
 	**/
 	public function toString():String
 	{
@@ -311,7 +274,6 @@ class HashSet<T:Hashable> implements Set<T>
 	
 	/**
 		Returns true if this set contains the element `x` or null if `x` does not exist.
-		<assert>`x` is null</assert>
 	**/
 	public inline function has(x:T):Bool
 	{
@@ -320,8 +282,6 @@ class HashSet<T:Hashable> implements Set<T>
 	
 	/**
 		Adds the element `x` to this set if possible.
-		<assert>`x` is null</assert>
-		<assert>hash set is full (if not resizable)</assert>
 		@return true if `x` was added to this set, false if `x` already exists.
 	**/
 	public inline function set(x:T):Bool
@@ -388,8 +348,7 @@ class HashSet<T:Hashable> implements Set<T>
 	}
 	
 	/**
-		Same as ``has()``.
-		<assert>`x` is null</assert>
+		Same as `has()`.
 	**/
 	public function contains(x:T):Bool
 	{
@@ -398,7 +357,6 @@ class HashSet<T:Hashable> implements Set<T>
 	
 	/**
 		Removes the element `x`.
-		<assert>`x` is null</assert>
 		@return true if `x` was successfully removed, false if `x` does not exist.
 	**/
 	public function remove(x:T):Bool
@@ -443,7 +401,7 @@ class HashSet<T:Hashable> implements Set<T>
 		
 		The elements are visited in a random order.
 		
-		See <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
+		@see http://haxe.org/ref/iterators
 	**/
 	public function iterator():Itr<T>
 	{
@@ -487,9 +445,8 @@ class HashSet<T:Hashable> implements Set<T>
 	/**
 		Duplicates this hash set. Supports shallow (structure only) and deep copies (structure & elements).
 		@param assign if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
-		If false, the ``clone()`` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
-		@param copier a custom function for copying elements. Replaces ``element::clone()`` if `assign` is false.
-		<assert>element is not of type `Cloneable`</assert>
+		If false, the `clone()` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
+		@param copier a custom function for copying elements. Replaces `element->clone()` if `assign` is false.
 	**/
 	public function clone(assign:Bool = true, copier:T->T = null):Collection<T>
 	{

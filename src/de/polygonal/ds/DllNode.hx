@@ -25,7 +25,7 @@ import de.polygonal.ds.tools.Assert.assert;
 	
 	Each node wraps an element and stores a reference to the next and previous list node.
 	
-	``DllNode`` objects are created and managed by the ``Dll`` class.
+	`DllNode` objects are created and managed by the `Dll` class.
 **/
 #if generic
 @:generic
@@ -73,7 +73,6 @@ class DllNode<T>
 	
 	/**
 		Returns true if this node is the head of a list.
-		<assert>node is not managed by a list</assert>
 	**/
 	public inline function isHead():Bool
 	{
@@ -84,7 +83,6 @@ class DllNode<T>
 	
 	/**
 		Returns true if this node is the tail of a list.
-		<assert>node is not managed by a list</assert>
 	**/
 	public inline function isTail():Bool
 	{
@@ -111,7 +109,6 @@ class DllNode<T>
 	
 	/**
 		Returns the element of the next node.
-		<assert>next node is null</assert>
 	**/
 	public inline function nextVal():T
 	{
@@ -122,7 +119,6 @@ class DllNode<T>
 	
 	/**
 		Returns the element of the previous node.
-		<assert>previous node is null</assert>
 	**/
 	public inline function prevVal():T
 	{
@@ -141,7 +137,6 @@ class DllNode<T>
 	
 	/**
 		Unlinks this node from its list and returns `next`.
-		<assert>list is null</assert>
 	**/
 	public inline function unlink():DllNode<T>
 	{
@@ -153,17 +148,14 @@ class DllNode<T>
 	/**
 		Prepends `node` to this node assuming this is the ***head*** node of a list.
 		
-		Useful for updating a list which is not managed by a ``Dll`` object.
+		Useful for updating a list which is not managed by a `Dll` object.
 		
 		Example:
-		<pre class="prettyprint">
-		var a = new DllNode<Int>(0, null);
-		var b = new DllNode<Int>(1, null);
-		var head = b.prepend(a);
-		trace(head.val); //0
-		trace(head.nextVal()); //1</pre>
-		<assert>`node` is null or managed by a list</assert>
-		<assert>`node`::prev exists</assert>
+			var a = new DllNode<Int>(0, null);
+			var b = new DllNode<Int>(1, null);
+			var head = b.prepend(a);
+			trace(head.val); //0
+			trace(head.nextVal()); //1
 		@return the list's new head node.
 	**/
 	public inline function prepend(node:DllNode<T>):DllNode<T>
@@ -180,17 +172,14 @@ class DllNode<T>
 	/**
 		Appends `node` to this node assuming this is the **tail** node of a list.
 		
-		Useful for updating a list which is not managed by a ``Dll`` object.
+		Useful for updating a list which is not managed by a `Dll` object.
 		
 		Example:
-		<pre class="prettyprint">
-		var a = new DllNode<Int>(0, null);
-		var b = new DllNode<Int>(1, null);
-		var tail = a.append(b);
-		trace(tail.val); //1
-		trace(tail.prevVal()); //0</pre>
-		<assert>`node` is null or managed by a list</assert>
-		<assert>`node`::next exists</assert>
+			var a = new DllNode<Int>(0, null);
+			var b = new DllNode<Int>(1, null);
+			var tail = a.append(b);
+			trace(tail.val); //1
+			trace(tail.prevVal()); //0
 		@return the list's new tail node.
 	**/
 	public inline function append(node:DllNode<T>):DllNode<T>
@@ -207,17 +196,15 @@ class DllNode<T>
 	/**
 		Prepends this node to `node` assuming `node` is the **head** node of a list.
 		
-		Useful for updating a list which is not managed by a ``Dll`` object.
+		Useful for updating a list which is not managed by a `Dll` object.
 		
 		Example:
-		<pre class="prettyprint">
-		var a = new DllNode<Int>(0, null);
-		var b = new DllNode<Int>(1, null);
-		var head = a.prependTo(b);
-		trace(head.val); //0
-		trace(head.nextVal()); //1</pre>
-		<assert>`node` is null or managed by a list</assert>
-		<assert>`node`::prev exists</assert>
+			var a = new DllNode<Int>(0, null);
+			var b = new DllNode<Int>(1, null);
+			var head = a.prependTo(b);
+			trace(head.val); //0
+			trace(head.nextVal()); //1
+
 		@return the list's new head node.
 	**/
 	public inline function prependTo(node:DllNode<T>):DllNode<T>
@@ -234,17 +221,15 @@ class DllNode<T>
 	/**
 		Appends this node to `node` assuming `node` is the **tail** node of a list.
 		
-		Useful for updating a list which is not managed by a ``Dll`` object.
+		Useful for updating a list which is not managed by a `Dll` object.
 		
 		Example:
-		<pre class="prettyprint">
-		var a = new DllNode<Int>(0, null);
-		var b = new DllNode<Int>(1, null);
-		var tail = b.appendTo(a);
-		trace(tail.val); //1
-		trace(tail.prevVal()); //0</pre>
-		<assert>`node` is null or managed by a list</assert>
-		<assert>`node`::next exists</assert>
+			var a = new DllNode<Int>(0, null);
+			var b = new DllNode<Int>(1, null);
+			var tail = b.appendTo(a);
+			trace(tail.val); //1
+			trace(tail.prevVal()); //0
+		
 		@return the list's new tail node.
 	**/
 	public inline function appendTo(node:DllNode<T>):DllNode<T>
@@ -259,7 +244,7 @@ class DllNode<T>
 	}
 	
 	/**
-		Returns a string representing the current object.
+		Prints out all elements.
 	**/
 	public function toString():String
 	{

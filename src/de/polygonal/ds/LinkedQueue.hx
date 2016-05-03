@@ -30,7 +30,7 @@ import de.polygonal.ds.tools.NativeArrayTools;
 	
 	This is called a FIFO structure (First In, First Out).
 	
-	See <a href="http://lab.polygonal.de/2007/05/23/data-structures-example-the-queue-class/" target="mBlank">http://lab.polygonal.de/2007/05/23/data-structures-example-the-queue-class/</a>
+	@see http://lab.polygonal.de/2007/05/23/data-structures-example-the-queue-class/
 **/
 #if generic
 @:generic
@@ -47,7 +47,7 @@ class LinkedQueue<T> implements Queue<T>
 	public var key(default, null):Int = HashKey.next();
 	
 	/**
-		If true, reuses the iterator object instead of allocating a new one when calling ``iterator()``.
+		If true, reuses the iterator object instead of allocating a new one when calling `iterator()`.
 		
 		The default is false.
 		
@@ -68,7 +68,6 @@ class LinkedQueue<T> implements Queue<T>
 	var mIterator:LinkedQueueIterator<T> = null;
 	
 	/**
-		<assert>reserved size is greater than allowed size</assert>
 		@param reservedSize if > 0, this queue maintains an object pool of node objects.
 		Prevents frequent node allocation and thus increases performance at the cost of using more memory.
 	**/
@@ -100,7 +99,6 @@ class LinkedQueue<T> implements Queue<T>
 		Returns the front element.
 		
 		This is the "oldest" element.
-		<assert>queue is empty</assert>
 	**/
 	public inline function peek():T
 	{
@@ -113,7 +111,6 @@ class LinkedQueue<T> implements Queue<T>
 		Returns the rear element.
 		
 		This is the "newest" element.
-		<assert>queue is empty</assert>
 	**/
 	public inline function back():T
 	{
@@ -144,7 +141,6 @@ class LinkedQueue<T> implements Queue<T>
 	
 	/**
 		Dequeues and returns the front element.
-		<assert>queue is empty</assert>
 	**/
 	public inline function dequeue():T
 	{
@@ -175,9 +171,8 @@ class LinkedQueue<T> implements Queue<T>
 	
 	/**
 		Shuffles the elements of this collection by using the Fisher-Yates algorithm.
-		<assert>insufficient random values</assert>
 		@param rvals a list of random double values in the range between 0 (inclusive) to 1 (exclusive) defining the new positions of the elements.
-		If omitted, random values are generated on-the-fly by calling `Math::random()`.
+		If omitted, random values are generated on-the-fly by calling `Math->random()`.
 	**/
 	public function shuffle(rvals:Array<Float> = null)
 	{
@@ -225,22 +220,7 @@ class LinkedQueue<T> implements Queue<T>
 	}
 	
 	/**
-		Returns a string representing the current object.
-		
-		Example:
-		<pre class="prettyprint">
-		var lq = new de.polygonal.ds.LinkedQueue<Int>();
-		lq.enqueue(0);
-		lq.enqueue(1);
-		lq.enqueue(2);
-		trace(lq);</pre>
-		<pre class="console">
-		{ LinkedQueue size: 3 }
-		[
-		  0 -> 0
-		  1 -> 1
-		  2 -> 2
-		]</pre>
+		Prints out all elements.
 	**/
 	public function toString():String
 	{
@@ -407,7 +387,7 @@ class LinkedQueue<T> implements Queue<T>
 		
 		Preserves the natural order of a queue (First-In-First-Out).
 		
-		See <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
+		@see http://haxe.org/ref/iterators
 	**/
 	public function iterator():Itr<T>
 	{
@@ -453,10 +433,9 @@ class LinkedQueue<T> implements Queue<T>
 	
 	/**
 		Duplicates this queue. Supports shallow (structure only) and deep copies (structure & elements).
-		<assert>element is not of type `Cloneable`</assert>
 		@param assign if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
-		If false, the ``clone()`` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
-		@param copier a custom function for copying elements. Replaces ``element::clone()`` if `assign` is false.
+		If false, the `clone()` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
+		@param copier a custom function for copying elements. Replaces `element->clone()` if `assign` is false.
 	**/
 	public function clone(assign:Bool = true, copier:T->T = null):Collection<T>
 	{

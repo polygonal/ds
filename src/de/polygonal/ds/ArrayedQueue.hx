@@ -32,7 +32,7 @@ using de.polygonal.ds.tools.NativeArrayTools;
 	
 	This is called a FIFO structure (First In, First Out).
 	
-	See <a href="http://lab.polygonal.de/?p=189" target="mBlank">http://lab.polygonal.de/?p=189</a>
+	@see http://lab.polygonal.de/?p=189
 **/
 #if generic
 @:generic
@@ -67,7 +67,7 @@ class ArrayedQueue<T> implements Queue<T>
 	public var growthRate:Int = GrowthRate.NORMAL;
 	
 	/**
-		If true, reuses the iterator object instead of allocating a new one when calling ``iterator()``.
+		If true, reuses the iterator object instead of allocating a new one when calling `iterator()`.
 		
 		The default is false.
 		
@@ -82,13 +82,12 @@ class ArrayedQueue<T> implements Queue<T>
 	var mIterator:ArrayedQueueIterator<T> = null;
 	
 	/**
-		<assert>reserved size is greater than allowed size</assert>
 		@param initialCapacity the initial physical space for storing the elements at the time the queue is created.
 		This is also the minimum size of this queue.
 		The `capacity` is automatically adjusted according to the storage requirements based on three rules:
 		<ul>
 		<li>If this queue runs out of space, `capacity` is doubled.</li>
-		<li>If the ``size`` falls below a quarter of the current `capacity`, the `capacity` is cut in half</li>
+		<li>If the `size` falls below a quarter of the current `capacity`, the `capacity` is cut in half</li>
 		<li>The minimum `capacity` equals `capacity`</li>
 		</ul>
 	**/
@@ -114,7 +113,6 @@ class ArrayedQueue<T> implements Queue<T>
 	
 	/**
 		Returns the front element. This is the "oldest" element.
-		<assert>queue is empty</assert>
 	**/
 	public inline function peek():T
 	{
@@ -127,7 +125,6 @@ class ArrayedQueue<T> implements Queue<T>
 		Returns the rear element.
 		
 		This is the "newest" element.
-		<assert>queue is empty</assert>
 	**/
 	public inline function back():T
 	{
@@ -138,7 +135,6 @@ class ArrayedQueue<T> implements Queue<T>
 	
 	/**
 		Enqueues the element `x`.
-		<assert>out of space - queue is full but not resizable</assert>
 	**/
 	public inline function enqueue(x:T)
 	{
@@ -160,7 +156,6 @@ class ArrayedQueue<T> implements Queue<T>
 	
 	/**
 		Dequeues and returns the front element.
-		<assert>queue is empty</assert>
 	**/
 	public inline function dequeue():T
 	{
@@ -174,7 +169,7 @@ class ArrayedQueue<T> implements Queue<T>
 	
 	/**
 		For performance reasons the queue does nothing to ensure that empty locations contain null;
-		``pack()`` therefore nullifies all obsolete references.
+		`pack()` therefore nullifies all obsolete references.
 	**/
 	public function pack()
 	{
@@ -217,8 +212,6 @@ class ArrayedQueue<T> implements Queue<T>
 		Returns the element at index `i`.
 		
 		The index is measured relative to the index of the front element (= 0).
-		<assert>queue is empty</assert>
-		<assert>`i` out of range</assert>
 	**/
 	public inline function get(i:Int):T
 	{
@@ -232,8 +225,6 @@ class ArrayedQueue<T> implements Queue<T>
 		Replaces the element at index `i` with the element `x`.
 		
 		The index is measured relative to the index of the front element (= 0).
-		<assert>queue is empty</assert>
-		<assert>`i` out of range</assert>
 	**/
 	public inline function set(i:Int, x:T)
 	{
@@ -247,9 +238,6 @@ class ArrayedQueue<T> implements Queue<T>
 		Swaps the element at index `i` with the element at index `j`.
 		
 		The index is measured relative to the index of the front element (= 0).
-		<assert>queue is empty</assert>
-		<assert>`i`/`j` out of range</assert>
-		<assert>`i` equals `j`</assert>
 	**/
 	public inline function swap(i:Int, j:Int)
 	{
@@ -267,9 +255,6 @@ class ArrayedQueue<T> implements Queue<T>
 		Replaces the element at index `i` with the element from index `j`.
 		
 		The index is measured relative to the index of the front element (= 0).
-		<assert>queue is empty</assert>
-		<assert>`i`/`j` out of range</assert>
-		<assert>`i` equals `j`</assert>
 	**/
 	public inline function copy(i:Int, j:Int)
 	{
@@ -285,7 +270,6 @@ class ArrayedQueue<T> implements Queue<T>
 		Calls the `f` function on all elements.
 		
 		The function signature is: `f(element, index):element`
-		<assert>`f` is null</assert>
 	**/
 	public function forEach(f:T->Int->T):ArrayedQueue<T>
 	{
@@ -300,9 +284,8 @@ class ArrayedQueue<T> implements Queue<T>
 	
 	/**
 		Shuffles the elements of this collection by using the Fisher-Yates algorithm.
-		<assert>insufficient random values</assert>
 		@param rvals a list of random double values in the range between 0 (inclusive) to 1 (exclusive) defining the new positions of the elements.
-		If omitted, random values are generated on-the-fly by calling `Math::random()`.
+		If omitted, random values are generated on-the-fly by calling `Math->random()`.
 	**/
 	public function shuffle(rvals:Array<Float> = null)
 	{
@@ -336,23 +319,7 @@ class ArrayedQueue<T> implements Queue<T>
 	}
 	
 	/**
-		Returns a string representing the current object.
-		
-		Example:
-		<pre class="prettyprint">
-		var queue = new de.polygonal.ds.ArrayedQueue<Int>(4);
-		for (i in 0...queue.capacity) {
-		    queue.enqueue(i);
-		}
-		trace(queue);</pre>
-		<pre class="console">
-		{ ArrayedQueue size/capacity: 4/4 }
-		[ front
-		  0 -> 0
-		  1 -> 1
-		  2 -> 2
-		  3 -> 3
-		]</pre>
+		Prints out all elements.
 	**/
 	public function toString():String
 	{
@@ -380,7 +347,7 @@ class ArrayedQueue<T> implements Queue<T>
 	/**
 		The size of the allocated storage space for the elements.
 		
-		If more space is required to accomodate new elements, the capacity is doubled every time ``size`` grows beyond capacity, and split in half when ``size`` is a quarter of capacity.
+		If more space is required to accomodate new elements, the capacity is doubled every time `size` grows beyond capacity, and split in half when `size` is a quarter of capacity.
 		The capacity never falls below the initial size defined in the constructor.
 	**/
 	public inline function getCapacity():Int
@@ -493,7 +460,7 @@ class ArrayedQueue<T> implements Queue<T>
 		
 		Preserves the natural order of a queue (First-In-First-Out).
 		
-		See <a href="http://haxe.org/ref/iterators" target="mBlank">http://haxe.org/ref/iterators</a>
+		@see http://haxe.org/ref/iterators
 	**/
 	public function iterator():Itr<T>
 	{
@@ -542,10 +509,9 @@ class ArrayedQueue<T> implements Queue<T>
 	
 	/**
 		Duplicates this queue. Supports shallow (structure only) and deep copies (structure & elements).
-		<assert>element is not of type `Cloneable`</assert>
 		@param assign if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
-		If false, the ``clone()`` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
-		@param copier a custom function for copying elements. Replaces ``element::clone()`` if `assign` is false.
+		If false, the `clone()` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
+		@param copier a custom function for copying elements. Replaces `element->clone()` if `assign` is false.
 	**/
 	public function clone(assign:Bool = true, copier:T->T = null):Collection<T>
 	{
