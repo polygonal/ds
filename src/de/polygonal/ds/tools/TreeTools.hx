@@ -18,8 +18,6 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 */
 package de.polygonal.ds.tools;
 
-import haxe.ds.StringMap;
-
 /**
 	A helper class for working with trees.
 **/
