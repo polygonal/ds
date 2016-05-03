@@ -68,7 +68,7 @@ class TestIntHashTable extends AbstractTest
 		}
 		
 		for (i in 0...4) assertEquals(i, h.getFront(i));
-		assertEquals(cast null, h.getFront(5));
+		assertEquals(#if (cpp && generic) 0 #else cast null #end, h.getFront(5));
 	}
 	
 	function testRehash()
@@ -307,14 +307,14 @@ class TestIntHashTable extends AbstractTest
 			
 			assertTrue(h.unset(0));
 			
-			assertEquals(cast null, h.get(0));
+			assertEquals(#if (cpp && generic) 0 #else cast null #end, h.get(0));
 			assertEquals(1, h.get(1));
 			assertEquals(1, h.size);
 			
 			assertTrue(h.unset(1));
 			
-			assertEquals(cast null, h.get(0));
-			assertEquals(cast null, h.get(1));
+			assertEquals(#if (cpp && generic) 0 #else cast null #end, h.get(0));
+			assertEquals(#if (cpp && generic) 0 #else cast null #end, h.get(1));
 			assertEquals(0, h.size);
 		}
 	}
@@ -335,23 +335,23 @@ class TestIntHashTable extends AbstractTest
 			
 			assertTrue(h.unset(0));
 			
-			assertEquals(cast null, h.get(0));
+			assertEquals(#if (cpp && generic) 0 #else cast null #end, h.get(0));
 			assertEquals(1, h.get(1));
 			assertEquals(2, h.get(2));
 			assertEquals(2, h.size);
 			
 			assertTrue(h.unset(1));
 			
-			assertEquals(cast null, h.get(0));
-			assertEquals(cast null, h.get(1));
+			assertEquals(#if (cpp && generic) 0 #else cast null #end, h.get(0));
+			assertEquals(#if (cpp && generic) 0 #else cast null #end, h.get(1));
 			assertEquals(2, h.get(2));
 			assertEquals(1, h.size);
 			
 			assertTrue(h.unset(2));
 			
-			assertEquals(cast null, h.get(0));
-			assertEquals(cast null, h.get(1));
-			assertEquals(cast null, h.get(2));
+			assertEquals(#if (cpp && generic) 0 #else cast null #end, h.get(0));
+			assertEquals(#if (cpp && generic) 0 #else cast null #end, h.get(1));
+			assertEquals(#if (cpp && generic) 0 #else cast null #end, h.get(2));
 			assertEquals(0, h.size);
 		}
 	}
@@ -447,7 +447,7 @@ class TestIntHashTable extends AbstractTest
 			assertEquals(3, h.get(0));
 			assertTrue(h.unset(0));
 			assertFalse(h.hasKey(0));
-			assertEquals(cast null, h.get(0));
+			assertEquals(#if (cpp && generic) 0 #else cast null #end, h.get(0));
 			
 			assertEquals(1, h.get(1));
 			assertTrue(h.unset(1));
@@ -456,7 +456,7 @@ class TestIntHashTable extends AbstractTest
 			assertEquals(3, h.get(1));
 			assertTrue(h.unset(1));
 			assertFalse(h.hasKey(1));
-			assertEquals(cast null, h.get(1));
+			assertEquals(#if (cpp && generic) 0 #else cast null #end, h.get(1));
 		}
 	}
 	
