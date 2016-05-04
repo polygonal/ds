@@ -131,8 +131,8 @@ class Main
 					tmp.push(arg);
 				}
 				var args = tmp;
-				
-				if (Sys.command(Sys.getEnv("HAXEPATH") + "\\haxe.exe", args) == 1)
+				var out = Sys.command(Sys.getEnv("HAXEPATH") + "\\haxe.exe", args);
+				if (out == 1)
 				{
 					error();
 					continue;
