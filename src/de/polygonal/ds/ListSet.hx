@@ -201,12 +201,7 @@ class ListSet<T> implements Set<T>
 				{
 					assert(Std.is(val, Cloneable), "element is not of type Cloneable");
 					
-					#if python //TODO only required for haxe 3.2.x
-					var t:Cloneable<Dynamic> = cast val;
-					set(t.clone());
-					#else
 					set(cast(val, Cloneable<Dynamic>).clone());
-					#end
 				}
 			}
 		}
