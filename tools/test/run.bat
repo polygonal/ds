@@ -35,7 +35,7 @@ neko %CWD%\RunTests.n ^
 -js default,noinline,debug,debug+noinline ^
 -neko default,noinline,debug,debug+noinline ^
 -python default,noinline,debug,debug+noinline ^
--cpp default,noinline,debug,generc,noinline+debug,generic+debug,generic+debug+noinline,generic+noinline
+-cpp default,noinline,debug,generic,noinline+debug,generic+debug,generic+debug+noinline,generic+noinline
 
 cd %CWD%
 del RunTests.n
