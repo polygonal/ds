@@ -742,14 +742,7 @@ class ArrayList<T> implements List<T>
 					hi--;
 				}
 			}
-			
-			#if cpp
-			var t:Dynamic = cast pivot; //TODO fixme
-			d.set(lo, t);
-			#else
 			d.set(lo, cast pivot);
-			#end
-			
 			quickSortComparable(first, lo - first);
 			quickSortComparable(lo + 1, last - lo);
 		}
