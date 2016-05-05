@@ -85,12 +85,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	
 	/**
 		The growth rate of the container.
-		
-		+  0: fixed size
-		+ -1: grows at a rate of 1.125x plus a constant.
-		+ -2: grows at a rate of 1.5x (default value).
-		+ -3: grows at a rate of 2.0x.
-		+ >0: grows at a constant rate: capacity += growthRate
+		@see `GrowthRate`
 	**/
 	public var growthRate:Int = GrowthRate.NORMAL;
 	
@@ -576,7 +571,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	}
 	
 	/**
-		Returns true if this heap is empty.
+		Returns true only if `size` is 0.
 	**/
 	public inline function isEmpty():Bool
 	{
@@ -593,19 +588,19 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	
 	/**
 		Duplicates this heap. Supports shallow (structure only) and deep copies (structure & elements).
-		@param assign if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
+		@param byRef if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
 		If false, the `clone()` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
-		@param copier a custom function for copying elements. Replaces `element->clone()` if `assign` is false.
-		<warn>If `assign` is true, only the copied version should be used from now on.</warn>
+		@param copier a custom function for copying elements. Replaces `element->clone()` if `byRef` is false.
+		<warn>If `byRef` is true, only the copied version should be used from now on.</warn>
 	**/
-	public function clone(assign:Bool = true, copier:T->T = null):Collection<T>
+	public function clone(byRef:Bool = true, copier:T->T = null):Collection<T>
 	{
 		var copy = new Heap<T>(size);
 		if (size == 0) return copy;
 		
 		var src = mData;
 		var dst = copy.mData;
-		if (assign)
+		if (byRef)
 		{
 			src.blit(1, dst, 1, size + 1);
 			

@@ -191,7 +191,7 @@ class LinkedQueue<T> implements Queue<T>
 	
 	/**
 		Shuffles the elements of this collection by using the Fisher-Yates algorithm.
-		@param rvals a list of random double values in the range between 0 (inclusive) to 1 (exclusive) defining the new positions of the elements.
+		@param rvals a list of random double values in the interval [0, 1) defining the new positions of the elements.
 		If omitted, random values are generated on-the-fly by calling `Math->random()`.
 	**/
 	public function shuffle(rvals:Array<Float> = null)
@@ -428,7 +428,7 @@ class LinkedQueue<T> implements Queue<T>
 	}
 	
 	/**
-		Returns true if this queue is empty.
+		Returns true only if `size` is 0.
 	**/
 	public inline function isEmpty():Bool
 	{
@@ -457,16 +457,16 @@ class LinkedQueue<T> implements Queue<T>
 	
 	/**
 		Duplicates this queue. Supports shallow (structure only) and deep copies (structure & elements).
-		@param assign if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
+		@param byRef if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
 		If false, the `clone()` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
-		@param copier a custom function for copying elements. Replaces `element->clone()` if `assign` is false.
+		@param copier a custom function for copying elements. Replaces `element->clone()` if `byRef` is false.
 	**/
-	public function clone(assign:Bool = true, copier:T->T = null):Collection<T>
+	public function clone(byRef:Bool = true, copier:T->T = null):Collection<T>
 	{
 		var copy = new LinkedQueue<T>(mReservedSize);
 		if (size == 0) return copy;
 		
-		if (assign)
+		if (byRef)
 		{
 			var node = mHead;
 			if (node != null)

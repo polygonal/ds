@@ -60,18 +60,18 @@ interface Collection<T> extends Hashable
 		Iterates over all elements in this collection.
 		
 		Example:
-			var c:Collection<String> = new Array2<String>(...);
-			for (element in c) {
-				trace(element);
-			}
+			var c = new ArrayList<String>();
+			for (element in c) trace(element);
 			
 			//or
-			var c:Collection = new Array2<String>(...);
-			var itr:Itr = c.iterator();
-			while (itr.hasNext()) {
-				var element:String = itr.next();
-				trace(element);
-			}
+			var c = new ArrayList<String>();
+			var itr = c.iterator();
+			while (itr.hasNext()) trace(itr.next());
+			
+			//inline hasNext() and next()
+			var c = new ArrayList<String>();
+			var itr:ArrayListIterator<String> = cast c.iterator();
+			while (itr.hasNext()) trace(itr.next());
 		
 		@see http://haxe.org/ref/iterators
 	**/
@@ -88,33 +88,37 @@ interface Collection<T> extends Hashable
 	function toArray():Array<T>;
 	
 	/**
-		Duplicates this collection. Supports shallow (structure only) and deep copies (structure & elements).
+		Duplicates this collection.
+		
+		Supports shallow (structure only) and deep copies (structure & elements).
 		
 		Example:
-			class Foo implements de.polygonal.ds.Cloneable<Foo> {
-				public var val:Int;
-				public function new(val:Int) {
-					this.val = val;
-				}
-				public function clone():Foo {
-					return new Foo(val);
-				}
+			class Element implements de.polygonal.ds.Cloneable<Element> {
+			    public var val:Int;
+			    public function new(val:Int) {
+			        this.val = val;
+			    }
+			    public function clone():Element {
+			        return new Element(val);
+			    }
 			}
-			class Main {
-				var c:Collection<Foo> = new Array2<Foo>(...);
-				
-				//shallow copy
-				var clone = c.clone(true);
-				
-				//deep copy
-				var clone = c.clone(false);
-				
-				//deep copy using a custom function to do the actual work
-				var clone = c.clone(false, function(x) return new Foo(x.val));
-			}
-		@param assign if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
+			
+			...
+			
+			var c:Collection<Element> = new Array2<Element>(...);
+			
+			//shallow copy
+			var o = c.clone(true);
+			
+			//deep copy
+			var o = c.clone(false);
+			
+			//deep copy using a custom function
+			var o = c.clone(false, function(x) return new Element(x.val));
+		
+		@param byRef if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
 		If false, the `clone()` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
-		@param copier a custom function for copying elements. Replaces `element->clone()` if `assign` is false.
+		@param copier a custom function for copying elements. Replaces `element->clone()` if `byRef` is false.
 	**/
-	function clone(assign:Bool = true, copier:T->T = null):Collection<T>;
+	function clone(byRef:Bool = true, copier:T->T = null):Collection<T>;
 }

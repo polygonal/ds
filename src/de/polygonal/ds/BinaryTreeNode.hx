@@ -722,22 +722,22 @@ class BinaryTreeNode<T> implements Collection<T>
 	}
 	
 	/**
-		Runs a recursive preorder traversal that removes all occurrences of `x`.
+		Runs a recursive preorder traversal that removes all occurrences of `val`.
 		
-		Tree nodes are not rearranged, so if a node storing `x` is removed, the subtree rooted at that node is unlinked and lost.
-		@return true if at least one occurrence of `x` was removed.
+		Tree nodes are not rearranged, so if a node storing `val` is removed, the subtree rooted at that node is unlinked and lost.
+		@return true if at least one occurrence of `val` was removed.
 	**/
-	public function remove(x:T):Bool
+	public function remove(val:T):Bool
 	{
 		var found = false;
-		if (val == x)
+		if (this.val == val)
 		{
 			unlink();
 			found = true;
 		}
 		
-		if (hasL()) found = found || l.remove(x);
-		if (hasR()) found = found || r.remove(x);
+		if (hasL()) found = found || l.remove(val);
+		if (hasR()) found = found || r.remove(val);
 		return found;
 	}
 	
@@ -796,11 +796,11 @@ class BinaryTreeNode<T> implements Collection<T>
 	
 	/**
 		Duplicates this subtree. Supports shallow (structure only) and deep copies (structure & elements).
-		@param assign if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
+		@param byRef if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
 		If false, the `clone()` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
-		@param copier a custom function for copying elements. Replaces `element->clone()` if `assign` is false.
+		@param copier a custom function for copying elements. Replaces `element->clone()` if `byRef` is false.
 	**/
-	public function clone(assign:Bool = true, copier:T->T = null):Collection<T>
+	public function clone(byRef:Bool = true, copier:T->T = null):Collection<T>
 	{
 		var stack = new Array<BinaryTreeNode<T>>();
 		var copy = new BinaryTreeNode<T>(copier != null ? copier(val) : val);
@@ -808,7 +808,7 @@ class BinaryTreeNode<T> implements Collection<T>
 		stack[1] = copy;
 		var top = 2;
 		
-		if (assign)
+		if (byRef)
 		{
 			while (top > 0)
 			{

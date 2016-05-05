@@ -238,16 +238,16 @@ class Array2<T> implements Collection<T>
 	}
 	
 	/**
-		Returns the index of the first occurrence of the element `x` or returns -1 if element `x` does not exist.
+		Returns the index of the first occurrence of the element `val` or returns -1 if element `val` does not exist.
 		
 		The index is in the range [0, `size` - 1].
 	**/
-	public function indexOf(x:T):Int
+	public function indexOf(val:T):Int
 	{
 		var i = 0, j = size, d = mData;
 		while (i < j)
 		{
-			if (d.get(i) == x) break;
+			if (d.get(i) == val) break;
 			i++;
 		}
 		return (i == j) ? -1 : i;
@@ -695,7 +695,7 @@ class Array2<T> implements Collection<T>
 	}
 	
 	/**
-		Copies all elements from the nested two-dimensional array `a` into this two-dimensional array.
+		Copies all elements from the nested two-dimensional array `input` into this two-dimensional array by reference.
 	**/
 	public function ofNestedArray(input:Array<Array<T>>)
 	{
@@ -712,7 +712,7 @@ class Array2<T> implements Collection<T>
 	
 	/**
 		Shuffles the elements of this collection by using the Fisher-Yates algorithm.
-		@param rvals a list of random double values in the range between 0 (inclusive) to 1 (exclusive) defining the new positions of the elements.
+		@param rvals a list of random double values in the interval [0, 1) defining the new positions of the elements.
 		If omitted, random values are generated on-the-fly by calling `Math->random()`.
 	**/
 	public function shuffle(rvals:Array<Float> = null)
@@ -923,11 +923,6 @@ class Array2<T> implements Collection<T>
 		return mData.toArray(0, size);
 	}
 	
-	/**
-		Duplicates this two-dimensional array. Supports shallow (structure only) and deep copies (structure & elements).
-		@param byRef if true, primitive elements are copied by value whereas objects are copied by reference.
-		@param copier a custom function for copying elements (if `byRef` is false). Otherwise elements have to implement `Cloneable`.
-	**/
 	public function clone(byRef:Bool = true, copier:T->T = null):Collection<T>
 	{
 		var out = new Array2<T>(mW, mH);

@@ -68,12 +68,7 @@ class ArrayedStack<T> implements Stack<T>
 	
 	/**
 		The growth rate of the container.
-		
-		+  0: fixed size
-		+ -1: grows at a rate of 1.125x plus a constant.
-		+ -2: grows at a rate of 1.5x (default value).
-		+ -3: grows at a rate of 2.0x.
-		+ >0: grows at a constant rate: capacity += growthRate
+		@see `GrowthRate`
 	**/
 	public var growthRate:Int = GrowthRate.NORMAL;
 	
@@ -358,7 +353,7 @@ class ArrayedStack<T> implements Stack<T>
 	
 	/**
 		Shuffles the elements of this collection by using the Fisher-Yates algorithm.
-		@param rvals a list of random double values in the range between 0 (inclusive) to 1 (exclusive) defining the new positions of the elements.
+		@param rvals a list of random double values in the interval [0, 1) defining the new positions of the elements.
 		If omitted, random values are generated on-the-fly by calling `Math->random()`.
 	**/
 	public function shuffle(rvals:Array<Float> = null)
@@ -555,11 +550,11 @@ class ArrayedStack<T> implements Stack<T>
 
 	/**
 		Duplicates this stack. Supports shallow (structure only) and deep copies (structure & elements).
-		@param assign if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
+		@param byRef if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
 		If false, the `clone()` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
-		@param copier a custom function for copying elements. Replaces `element->clone()` if `assign` is false.
+		@param copier a custom function for copying elements. Replaces `element->clone()` if `byRef` is false.
 	**/
-	public function clone(assign:Bool = true, copier:T->T = null):Collection<T>
+	public function clone(byRef:Bool = true, copier:T->T = null):Collection<T>
 	{
 		var c = new ArrayedStack<T>(capacity);
 		
@@ -568,7 +563,7 @@ class ArrayedStack<T> implements Stack<T>
 		c.mTop = mTop;
 		var src = mData;
 		var dst = c.mData;
-		if (assign)
+		if (byRef)
 			src.blit(0, dst, 0, size);
 		else
 		{

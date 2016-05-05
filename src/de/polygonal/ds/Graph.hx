@@ -1231,7 +1231,7 @@ class Graph<T> implements Collection<T>
 	}
 	
 	/**
-		Returns true if this graph is empty.
+		Returns true only if `size` is 0.
 	**/
 	public inline function isEmpty():Bool
 	{
@@ -1258,11 +1258,11 @@ class Graph<T> implements Collection<T>
 	
 	/**
 		Duplicates this graph. Supports shallow (structure only) and deep copies (structure & elements).
-		@param assign if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
+		@param byRef if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
 		If false, the `clone()` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
-		@param copier a custom function for copying elements. Replaces `element->clone()` if `assign` is false.
+		@param copier a custom function for copying elements. Replaces `element->clone()` if `byRef` is false.
 	**/
-	public function clone(assign:Bool = true, copier:T->T = null):Collection<T>
+	public function clone(byRef:Bool = true, copier:T->T = null):Collection<T>
 	{
 		var copy = new Graph<T>();
 		if (mNodeList == null) return copy;
@@ -1271,7 +1271,7 @@ class Graph<T> implements Collection<T>
 		var i = 0;
 		var n = mNodeList, m;
 		
-		if (assign)
+		if (byRef)
 		{
 			while (n != null)
 			{

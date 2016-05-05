@@ -63,12 +63,7 @@ class ArrayList<T> implements List<T>
 	
 	/**
 		The growth rate of the container.
-		
-		+  0: fixed size
-		+ -1: grows at a rate of 1.125x plus a constant.
-		+ -2: grows at a rate of 1.5x (default value).
-		+ -3: grows at a rate of 2.0x.
-		+ >0: grows at a constant rate: capacity += growthRate
+		@see `GrowthRate`
 	**/
 	public var growthRate:Int = GrowthRate.NORMAL;
 	
@@ -87,10 +82,6 @@ class ArrayList<T> implements List<T>
 	var mIterator:ArrayListIterator<T> = null;
 	
 	/**
-		
-		@param allowShrink if true, the internal container gets halved when `size` falls below ¼ of the current `capacity`.
-		Default is false.
-		
 		@param capacityIncrement if defined, the vector's storage increases in chunks the size of `capacityIncrement`.
 		If omitted, the vector uses a growth factor of 1.5 resulting in a mild overallocation.
 		In either case, `capacity` is usually larger than `size` to minimize the amount of incremental reallocation.
@@ -123,40 +114,43 @@ class ArrayList<T> implements List<T>
 	}
 	
 	/**
-		Replaces the element at index `i` with the element `x`.
+		Replaces the element at index `i` with the element `val`.
 	**/
-	public inline function set(i:Int, x:T)
+	public inline function set(i:Int, val:T)
 	{
 		assert(i >= 0 && i < size, 'index $i out of range $size');
 		
-		mData.set(i, x);
+		mData.set(i, val);
 	}
 	
+	/**
+		Appends the element `val`.
+	**/
 	public function add(val:T)
 	{
 		pushBack(val);
 	}
 	
 	/**
-		Adds `x` to the end of this vector and returns the new size.
+		Adds `val` to the end of this vector and returns the new size.
 	**/
-	public inline function pushBack(x:T):Int
+	public inline function pushBack(val:T):Int
 	{
 		if (size == capacity) grow();
-		mData.set(mSize++, x);
+		mData.set(mSize++, val);
 		return size;
 	}
 	
 	/**
-		Faster than `pushBack()`, but skips boundary checking.
+		Faster than `pushBack()` by skipping boundary checking.
 		
 		The user is responsible for making sure that there is enough space available (e.g. by calling `reserve()`).
 	**/
-	public inline function unsafePushBack(x:T):Int
+	public inline function unsafePushBack(val:T):Int
 	{
 		assert(mSize < capacity, "out of space");
 		
-		mData.set(mSize++, x);
+		mData.set(mSize++, val);
 		return size;
 	}
 	
@@ -192,15 +186,15 @@ class ArrayList<T> implements List<T>
 	}
 	
 	/**
-		Prepends the element `x` to the first element und returns the new size
+		Prepends the element `val` to the first element and returns the new size.
 		
 		Shifts the first element (if any) and any subsequent elements to the right (indices + 1).
 	**/
-	public function pushFront(x:T):Int
+	public function pushFront(val:T):Int
 	{
 		if (size == 0)
 		{
-			mData.set(0, x);
+			mData.set(0, val);
 			return ++mSize;
 		}
 		
@@ -208,7 +202,7 @@ class ArrayList<T> implements List<T>
 		
 		#if (neko || java || cs || cpp)
 		mData.blit(0, mData, 1, size);
-		mData.set(0, x);
+		mData.set(0, val);
 		#else
 		var d = mData;
 		var i = size;
@@ -217,7 +211,7 @@ class ArrayList<T> implements List<T>
 			d.set(i, d.get(i - 1));
 			i--;
 		}
-		d.set(0, x);
+		d.set(0, val);
 		#end
 		return ++mSize;
 	}
@@ -285,11 +279,11 @@ class ArrayList<T> implements List<T>
 	}
 	
 	/**
-		Inserts `x` at the specified index `i`.
+		Inserts `val` at the specified index `i`.
 		
 		Shifts the element currently at that position (if any) and any subsequent elements to the right (indices + 1).
 	**/
-	public function insert(i:Int, x:T)
+	public function insert(i:Int, val:T)
 	{
 		assert(i >= 0 && i <= size, 'index $i out of range $size');
 		
@@ -298,18 +292,19 @@ class ArrayList<T> implements List<T>
 		var srcPos = i;
 		var dstPos = i + 1;
 		mData.blit(srcPos, mData, dstPos, size - i);
-		mData.set(i, x);
+		mData.set(i, val);
 		#else
 		var d = mData;
 		var p = size;
 		while (p > i) d.set(p--, d.get(p));
-		d.set(i, x);
+		d.set(i, val);
 		#end
 		mSize++;
 	}
 	
 	/**
 		Removes the element at the specified index `i`.
+		
 		Shifts any subsequent elements to the left (indices - 1).
 	**/
 	public function removeAt(i:Int):T
@@ -330,6 +325,7 @@ class ArrayList<T> implements List<T>
 	
 	/**
 		Fast removal of the element at index `i` if the order of the elements doesn't matter.
+		
 		@return the element at index `i` prior removal.
 	**/
 	public inline function swapPop(i:Int):T
@@ -401,21 +397,21 @@ class ArrayList<T> implements List<T>
 	}
 	
 	/**
-		Finds the first occurrence of the element `x` by using the binary search algorithm assuming elements are sorted.
+		Finds the first occurrence of the element `val` by using the binary search algorithm assuming elements are sorted.
 		@param from the index to start from. The default value is 0.
 		@param cmp a comparison function for the binary search. If omitted, the method assumes that all elements implement `Comparable`.
-		@return the index storing the element `x` or the bitwise complement (~) of the index where the `x` would be inserted (guaranteed to be a negative number).
-		<warn>The insertion point is only valid if `from`=0.</warn>
+		@return the index storing the element `val` or the bitwise complement (~) of the index where the `val` would be inserted (guaranteed to be a negative number).
+		<warn>The insertion point is only valid if `from` is 0.</warn>
 	**/
-	public function binarySearch(x:T, from:Int, ?cmp:T->T->Int):Int
+	public function binarySearch(val:T, from:Int, ?cmp:T->T->Int):Int
 	{
 		assert(from >= 0 && from <= size, 'from index out of range ($from)');
 		
 		if (size == 0) return -1;
 		
-		if (cmp != null) return mData.binarySearchCmp(x, from, size - 1, cmp);
+		if (cmp != null) return mData.binarySearchCmp(val, from, size - 1, cmp);
 		
-		assert(Std.is(x, Comparable), "element is not of type Comparable");
+		assert(Std.is(val, Comparable), "element is not of type Comparable");
 		
 		var k = size;
 		var l = from, m, h = k, d = mData;
@@ -425,7 +421,7 @@ class ArrayList<T> implements List<T>
 			
 			assert(Std.is(d.get(m), Comparable), "element is not of type Comparable");
 			
-			if (cast(d.get(m), Comparable<Dynamic>).compare(x) < 0)
+			if (cast(d.get(m), Comparable<Dynamic>).compare(val) < 0)
 				l = m + 1;
 			else
 				h = m;
@@ -433,21 +429,21 @@ class ArrayList<T> implements List<T>
 		
 		assert(Std.is(d.get(l), Comparable), "element is not of type Comparable");
 		
-		return ((l <= k) && (cast(d.get(l), Comparable<Dynamic>).compare(x)) == 0) ? l : -l;
+		return ((l <= k) && (cast(d.get(l), Comparable<Dynamic>).compare(val)) == 0) ? l : -l;
 	}
 	
 	/**
-		Finds the first occurrence of the element `x` (by incrementing indices - from left to right).
-		@return the index storing the element `x` or -1 if `x` was not found.
+		Finds the first occurrence of the element `val` (by incrementing indices - from left to right).
+		@return the index storing the element `val` or -1 if `val` was not found.
 	**/
 	@:access(de.polygonal.ds.ArrayList)
-	public function indexOf(x:T):Int
+	public function indexOf(val:T):Int
 	{
 		if (size == 0) return -1;
 		var i = 0, j = -1, k = size - 1, d = mData;
 		do
 		{
-			if (d.get(i) == x)
+			if (d.get(i) == val)
 			{
 				j = i;
 				break;
@@ -458,10 +454,10 @@ class ArrayList<T> implements List<T>
 	}
 	
 	/**
-		Finds the first occurrence of `x` (by decrementing indices - from right to left) and returns the index storing the element `x` or -1 if `x` was not found.
+		Finds the first occurrence of `val` (by decrementing indices - from right to left) and returns the index storing the element `x` or -1 if `x` was not found.
 		@param from the index to start from. By default, the method starts from the last element in this dense array.
 	**/
-	public function lastIndexOf(x:T, from:Int = -1):Int
+	public function lastIndexOf(val:T, from:Int = -1):Int
 	{
 		if (size == 0) return -1;
 		
@@ -474,7 +470,7 @@ class ArrayList<T> implements List<T>
 		var d = mData;
 		do
 		{
-			if (d.get(i) == x)
+			if (d.get(i) == val)
 			{
 				j = i;
 				break;
@@ -485,29 +481,29 @@ class ArrayList<T> implements List<T>
 	}
 	
 	/**
-		Concatenates this array with `x` by appending all elements of `x` to this array.
+		Concatenates this array with `val` by appending all elements of `val` to this array.
 		@param copy if true, returns a new array instead of modifying this array.
 	**/
-	public function concat(x:ArrayList<T>, copy:Bool = false):ArrayList<T>
+	public function concat(val:ArrayList<T>, copy:Bool = false):ArrayList<T>
 	{
-		assert(x != null);
+		assert(val != null);
 		
 		if (copy)
 		{
-			var sum = size + x.size;
+			var sum = size + val.size;
 			var out = new ArrayList<T>(sum);
 			out.mSize = sum;
 			mData.blit(0, out.mData, 0, size);
-			x.mData.blit(0, out.mData, size, x.size);
+			val.mData.blit(0, out.mData, size, val.size);
 			return out;
 		}
 		else
 		{
-			assert(x != this, "x equals this");
+			assert(val != this, "val equals this");
 			
-			var sum = size + x.size;
+			var sum = size + val.size;
 			reserve(sum);
-			x.mData.blit(0, mData, size, x.size);
+			val.mData.blit(0, mData, size, val.size);
 			mSize = sum;
 			return this;
 		}
@@ -545,7 +541,7 @@ class ArrayList<T> implements List<T>
 		
 		Copying takes place as if an intermediate buffer was used, allowing the destination and source to overlap.
 		
-		@see http://www.cplusplus.com/reference/clibrary/cstring/memmove/"
+		@see http://www.cplusplus.com/reference/clibrary/cstring/memmove/
 	**/
 	public function memmove(destination:Int, source:Int, n:Int)
 	{
@@ -814,7 +810,7 @@ class ArrayList<T> implements List<T>
 	/**
 		Preallocates storage for `n` elements.
 		
-		May cause a reallocation, but has no effect on the vector size and its elements.
+		May cause a reallocation, but has no effect on the vector `size` and its elements.
 		Useful before inserting a large number of elements as this reduces the amount of incremental reallocation.
 	**/
 	public function reserve(n:Int):ArrayList<T>
@@ -828,23 +824,23 @@ class ArrayList<T> implements List<T>
 	}
 	
 	/**
-		Sets `n` elements to the value `x`.
+		Sets `n` elements to `val` (by reference).
 		
 		Automatically reserves storage for `n` elements so an additional call to `reserve()` is not required.
 	**/
-	public function init(n:Int, x:T):ArrayList<T>
+	public function init(n:Int, val:T):ArrayList<T>
 	{
 		reserve(n);
 		mSize = n;
 		var d = mData;
-		for (i in 0...n) d.set(i, x);
+		for (i in 0...n) d.set(i, val);
 		return this;
 	}
 	
 	/**
 		Reduces the capacity of the internal container to the initial capacity.
 		
-		May cause a reallocation, but has no effect on the vector size and its elements.
+		May cause a reallocation, but has no effect on the vector `size` and its elements.
 		An application can use this operation to free up memory by GC'ing used resources.
 	**/
 	public function pack():ArrayList<T>
@@ -938,25 +934,26 @@ class ArrayList<T> implements List<T>
 	}
 	
 	/**
-		Returns true if this vector contains the element `x`.
+		Returns true if this vector contains the element `val`.
 	**/
-	public function contains(x:T):Bool
+	public function contains(val:T):Bool
 	{
 		var d = mData;
 		for (i in 0...size)
 		{
-			if (d.get(i) == x)
+			if (d.get(i) == val)
 				return true;
 		}
 		return false;
 	}
 	
 	/**
-		Removes all occurrences of `x`.
+		Removes all occurrences of `val`.
+		
 		Shifts any subsequent elements to the left (indices - 1).
-		@return true if at least one occurrence of `x` was removed.
+		@return true if at least one occurrence of `val` was removed.
 	**/
-	public function remove(x:T):Bool
+	public function remove(val:T):Bool
 	{
 		if (isEmpty()) return false;
 		
@@ -965,7 +962,7 @@ class ArrayList<T> implements List<T>
 		var d = mData;
 		while (i < s)
 		{
-			if (d.get(i) == x)
+			if (d.get(i) == val)
 			{
 				//TODO optimize
 				//#if (neko || java || cs || cpp)
@@ -984,7 +981,6 @@ class ArrayList<T> implements List<T>
 			}
 			i++;
 		}
-		
 		var found = (size - s) != 0;
 		mSize = s;
 		return found;
@@ -1020,6 +1016,9 @@ class ArrayList<T> implements List<T>
 			return new ArrayListIterator<T>(this);
 	}
 	
+	/**
+		Returns true only if `size` is 0.
+	**/
 	public function isEmpty():Bool
 	{
 		return size == 0;
@@ -1037,17 +1036,17 @@ class ArrayList<T> implements List<T>
 	
 	/**
 		Duplicates this dense array. Supports shallow (structure only) and deep copies (structure & elements).
-		@param assign if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
+		@param byRef if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
 		If false, the `clone()` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
-		@param copier a custom function for copying elements. Replaces `element->clone()` if `assign` is false.
+		@param copier a custom function for copying elements. Replaces `element->clone()` if `byRef` is false.
 	**/
-	public function clone(assign:Bool = true, copier:T->T = null):Collection<T>
+	public function clone(byRef:Bool = true, copier:T->T = null):Collection<T>
 	{
 		var out = new ArrayList<T>(capacity);
 		out.mSize = size;
 		var src = mData;
 		var dst = out.mData;
-		if (assign)
+		if (byRef)
 			src.blit(0, dst, 0, size);
 		else
 		if (copier == null)

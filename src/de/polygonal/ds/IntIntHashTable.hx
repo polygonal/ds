@@ -94,12 +94,7 @@ class IntIntHashTable implements Map<Int, Int>
 	
 	/**
 		The growth rate of the container.
-		
-		-  `0` : fixed size
-		- `-1` : grows at a rate of 1.125x plus a constant.
-		- `-2` : grows at a rate of 1.5x.
-		- `-3` : grows at a rate of 2.0x (default value).
-		- `>0` : grows at a constant rate: capacity += growthRate
+		@see `GrowthRate`
 	**/
 	public var growthRate:Int = GrowthRate.DOUBLE;
 	
@@ -1532,7 +1527,7 @@ class IntIntHashTable implements Map<Int, Int>
 	}
 	
 	/**
-		Returns true if this hash table is empty.
+		Returns true only if `size` is 0.
 	**/
 	public inline function isEmpty():Bool
 	{
@@ -1559,9 +1554,9 @@ class IntIntHashTable implements Map<Int, Int>
 	/**
 		Duplicates this hash table by creating a deep copy.
 		
-		The `assign` and `copier` parameters are ignored.
+		The `byRef` and `copier` parameters are ignored.
 	**/
-	public function clone(assign:Bool = true, copier:Int->Int = null):Collection<Int>
+	public function clone(byRef:Bool = true, copier:Int->Int = null):Collection<Int>
 	{
 		var c = new IntIntHashTable(slotCount, capacity);
 		

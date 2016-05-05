@@ -2008,7 +2008,7 @@ class TreeNode<T> implements Collection<T>
 	}
 	
 	/**
-		Returns true if this tree is empty.
+		Returns true only if `size` is 0.
 	**/
 	public function isEmpty():Bool
 	{
@@ -2032,11 +2032,11 @@ class TreeNode<T> implements Collection<T>
 	
 	/**
 		Duplicates this subtree. Supports shallow (structure only) and deep copies (structure & elements).
-		@param assign if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
+		@param byRef if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
 		If false, the `clone()` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
-		@param copier a custom function for copying elements. Replaces `element->clone()` if `assign` is false.
+		@param copier a custom function for copying elements. Replaces `element->clone()` if `byRef` is false.
 	**/
-	public function clone(assign:Bool = true, copier:T->T = null):Collection<T>
+	public function clone(byRef:Bool = true, copier:T->T = null):Collection<T>
 	{
 		var stack = new Array<TreeNode<T>>();
 		var copy = new TreeNode<T>(copier != null ? copier(val) : val);
@@ -2044,7 +2044,7 @@ class TreeNode<T> implements Collection<T>
 		inline function f(x:T)
 		{
 			return
-			if (assign)
+			if (byRef)
 				x;
 			else
 			if (copier == null)

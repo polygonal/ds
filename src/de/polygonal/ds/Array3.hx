@@ -182,7 +182,7 @@ class Array3<T> implements Collection<T>
 	}
 	
 	/**
-		Returns the element that is stored in column cell.`x`, row cell.`y` and layer cell.`z`.
+		Returns the element that is stored in column `cell->x`, row `cell->y` and layer `cell->z`.
 	**/
 	public inline function getAtCell(cell:Array3Cell):T
 	{
@@ -215,16 +215,16 @@ class Array3<T> implements Collection<T>
 	}
 	
 	/**
-		Returns the index of the first occurrence of the element `x` or returns -1 if element `x` does not exist.
+		Returns the index of the first occurrence of the element `val` or returns -1 if element `val` does not exist.
 		
 		The index is in the range [0, `size` - 1].
 	**/
-	public function indexOf(x:T):Int
+	public function indexOf(val:T):Int
 	{
 		var i = 0, j = size, d = mData;
 		while (i < j)
 		{
-			if (d.get(i) == x) break;
+			if (d.get(i) == val) break;
 			i++;
 		}
 		return (i == j) ? -1 : i;
@@ -239,15 +239,15 @@ class Array3<T> implements Collection<T>
 	}
 	
 	/**
-		Returns the cell coordinates of the first occurrence of the element `x` or null if element `x` does not exist.
+		Returns the cell coordinates of the first occurrence of the element `val` or null if element `val` does not exist.
 		@param out stores the result.
 		@return a reference to `out`.
 	**/
-	public inline function cellOf(x:T, out:Array3Cell):Array3Cell
+	public inline function cellOf(val:T, out:Array3Cell):Array3Cell
 	{
 		assert(out != null);
 		
-		var i = indexOf(x);
+		var i = indexOf(val);
 		return i == -1 ? null : indexToCell(i, out);
 	}
 	
@@ -498,7 +498,7 @@ class Array3<T> implements Collection<T>
 	
 	/**
 		Shuffles the elements of this collection by using the Fisher-Yates algorithm.
-		@param rvals a list of random double values in the range between 0 (inclusive) to 1 (exclusive) defining the new positions of the elements.
+		@param rvals a list of random double values in the interval [0, 1) defining the new positions of the elements.
 		If omitted, random values are generated on-the-fly by calling `Math->random()`.
 	**/
 	public function shuffle(rvals:Array<Float> = null)
@@ -598,31 +598,31 @@ class Array3<T> implements Collection<T>
 	}
 	
 	/**
-		Returns true if this three-dimensional array contains the element `x`.
+		Returns true if this three-dimensional array contains the element `val`.
 	**/
-	public function contains(x:T):Bool
+	public function contains(val:T):Bool
 	{
 		var d = mData;
 		for (i in 0...size)
 		{
-			if (d.get(i) == x)
+			if (d.get(i) == val)
 				return true;
 		}
 		return false;
 	}
 	
 	/**
-		Nullifies all occurrences of `x`.
+		Nullifies all occurrences of `val`.
 		
 		The size is not altered.
-		@return true if at least one occurrence of `x` is nullified.
+		@return true if at least one occurrence of `val` is nullified.
 	**/
-	public function remove(x:T):Bool
+	public function remove(val:T):Bool
 	{
 		var found = false, d = mData;
 		for (i in 0...size)
 		{
-			if (d.get(i) == x)
+			if (d.get(i) == val)
 			{
 				d.set(i, cast null);
 				found = true;
@@ -680,20 +680,13 @@ class Array3<T> implements Collection<T>
 		return mData.toArray(0, size);
 	}
 	
-	/**
-		Duplicates this three-dimensional array. Supports shallow (structure only) and deep copies (structure & elements).
-		@param assign if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
-		If false, the `clone()` method is called on each element.
-		<warn>In this case all elements have to implement `Cloneable`.</warn>
-		@param copier a custom function for copying elements. Replaces `element->clone()` if `assign` is false.
-	**/
-	public function clone(assign:Bool = true, copier:T->T = null):Collection<T>
+	public function clone(byRef:Bool = true, copier:T->T = null):Collection<T>
 	{
 		var out = new Array3<T>(mW, mH, mD);
 		var src = mData;
 		var dst = out.mData;
 		
-		if (assign)
+		if (byRef)
 			src.blit(0, dst, 0, size);
 		else
 		{

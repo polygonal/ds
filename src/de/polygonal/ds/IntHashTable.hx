@@ -638,7 +638,7 @@ class IntHashTable<T> implements Map<Int, T>
 	}
 	
 	/**
-		Returns true if this hash table is empty.
+		Returns true only if `size` is 0.
 	**/
 	public inline function isEmpty():Bool
 	{
@@ -662,11 +662,11 @@ class IntHashTable<T> implements Map<Int, T>
 	
 	/**
 		Duplicates this hash table. Supports shallow (structure only) and deep copies (structure & elements).
-		@param assign if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
+		@param byRef if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
 		If false, the `clone()` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
-		@param copier a custom function for copying elements. Replaces `element->clone()` if `assign` is false.
+		@param copier a custom function for copying elements. Replaces `element->clone()` if `byRef` is false.
 	**/
-	public function clone(assign:Bool = true, copier:T->T = null):Collection<T>
+	public function clone(byRef:Bool = true, copier:T->T = null):Collection<T>
 	{
 		var c = new IntHashTable<T>(slotCount, size);
 		c.mH = cast mH.clone(false);
@@ -676,7 +676,7 @@ class IntHashTable<T> implements Map<Int, T>
 		var src = mVals;
 		var dst = c.mVals;
 		
-		if (assign)
+		if (byRef)
 			src.blit(0, dst, 0, size);
 		else
 		{
