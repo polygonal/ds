@@ -278,9 +278,13 @@ class ArrayedQueue<T> implements Queue<T>
 	}
 	
 	/**
-		Calls the `f` function on all elements.
+		Calls `f` on all elements.
 		
-		The function signature is: `f(element, index):element`
+		The function signature is: `f(input, index):output`
+		
+		- input: current element
+		- index: position relative to the front(=0) of the queue
+		- output: element to be stored at given index
 	**/
 	public function forEach(f:T->Int->T):ArrayedQueue<T>
 	{

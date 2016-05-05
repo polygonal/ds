@@ -343,9 +343,13 @@ class ArrayList<T> implements List<T>
 	}
 	
 	/**
-		Calls the `f` function on all elements.
+		Calls `f` on all elements.
 		
-		The function signature is: `f(element, index):element`
+		The function signature is: `f(input, index):output`
+		
+		- input: current element
+		- index: the index number of the given element
+		- output: element to be stored at given index
 	**/
 	public function forEach(f:T->Int->T):ArrayList<T>
 	{

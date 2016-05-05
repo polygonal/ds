@@ -170,6 +170,15 @@ class LinkedQueue<T> implements Queue<T>
 		return putNode(node);
 	}
 	
+	/**
+		Calls `f` on all elements.
+		
+		The function signature is: `f(input, index):output`
+		
+		- input: current element
+		- index: position relative to the front(=0) of the queue
+		- output: element to be stored at given index
+	**/
 	public function forEach(f:T->Int->T)
 	{
 		var node = mHead;

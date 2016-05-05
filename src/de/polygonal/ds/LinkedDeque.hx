@@ -239,6 +239,15 @@ class LinkedDeque<T> implements Deque<T>
 		return -1;
 	}
 	
+	/**
+		Calls `f` on all elements.
+		
+		The function signature is: `f(input, index):output`
+		
+		- input: current element
+		- index: position relative to the front(=0)
+		- output: element to be stored at given index
+	**/
 	public function forEach(f:T->Int->T):LinkedDeque<T>
 	{
 		var node = mHead;

@@ -356,7 +356,7 @@ class Array2<T> implements Collection<T>
 	}
 	
 	/**
-		Calls the `f` function on all elements.
+		Calls `f` on all elements.
 		
 		The function signature is: `f(input, x, y):output`
 		

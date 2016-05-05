@@ -393,9 +393,15 @@ class Array3<T> implements Collection<T>
 	}
 	
 	/**
-		Calls the `f` function on all elements.
+		Calls `f` on all elements.
 		
-		The function signature is: `f(element, xIndex, yIndex, zIndex):element`
+		The function signature is: `f(input, x, y, z):output`
+		
+		- input: element at (x,y,z)
+		- x: current x index
+		- y: current y index
+		- z: current z index
+		- output: element to be stored at (x,y,z)
 	**/
 	public function forEach(f:T->Int->Int->Int->T, z:Int = -1):Array3<T>
 	{
