@@ -28,6 +28,19 @@ using de.polygonal.ds.tools.NativeArrayTools;
 	A deque is a "double-ended queue"
 	
 	This is a linear list for which all insertions and deletions (and usually all accesses) are made at ends of the list.
+	
+	Example:
+		var o = new de.polygonal.ds.LinkedDeque<Int>();
+		for (i in 0...4) o.pushFront(i);
+		trace(o); //outputs:
+		
+		[ LinkedDeque size=4
+		  front
+		  0 -> 3
+		  1 -> 2
+		  2 -> 1
+		  3 -> 0
+		]
 **/
 #if generic
 @:generic
@@ -246,11 +259,15 @@ class LinkedDeque<T> implements Deque<T>
 		return Std.string(this);
 		#else
 		var b = new StringBuf();
-		b.add('{ LinkedDeque size: ${size} }');
-		if (isEmpty()) return b.toString();
-		b.add("\n[ front\n");
+		b.add('[ LinkedDeque size=$size');
+		if (isEmpty())
+		{
+			b.add(" ]");
+			return b.toString();
+		}
+		b.add("\n  front\n");
 		var node = mHead, i = 0, args = new Array<Dynamic>();
-		var fmt = '  %${M.numDigits(size)}d: %s\n';
+		var fmt = '  %${M.numDigits(size)}d -> %s\n';
 		while (node != null)
 		{
 			args[0] = i++;

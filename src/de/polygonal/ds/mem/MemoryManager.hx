@@ -27,9 +27,6 @@ import de.polygonal.ds.tools.M;
 
 /**
 	Manages fast "alchemy memory"
-	
-	@see http://lab.polygonal.de/2009/03/14/a-little-alchemy-in-hx3ds/
-	@see http://lab.polygonal.de/2010/03/15/memorymanager-revisited/
 **/
 @:access(de.polygonal.ds.mem.MemorySegment)
 @:access(de.polygonal.ds.mem.MemoryAccess)

@@ -22,13 +22,12 @@ package de.polygonal.ds;
 	An object that can be cloned by calling object->clone()
 	
 	Example:
-		class Foo implements de.polygonal.ds.Cloneable<Foo>
-		{
-		    public function new() {}
-		    public function clone():Foo {
-		        return new Foo();
-		    }
-	}
+		class Foo implements de.polygonal.ds.Cloneable<Foo> {
+			public function new() {}
+			public function clone():Foo {
+				return new Foo();
+			}
+		}
 **/
 interface Cloneable<T>
 {

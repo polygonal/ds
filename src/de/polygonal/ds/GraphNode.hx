@@ -244,9 +244,6 @@ class GraphNode<T> implements Hashable
 		numArcs = 0;
 	}
 	
-	/**
-		Prints out all elements.
-	**/
 	public function toString():String
 	{
 		#if no_tostring
@@ -264,9 +261,9 @@ class GraphNode<T> implements Hashable
 		}
 		return
 		if (t.length > 0)
-			'{ GraphNode val: $val, connected to: ${t.join(",")} }';
+			'{ GraphNode val=$val, arcs=${t.join(",")} }';
 		else
-			'{ GraphNode val: $val }';
+			'{ GraphNode val=$val }';
 		#end
 	}
 }

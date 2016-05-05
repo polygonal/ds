@@ -30,6 +30,33 @@ using de.polygonal.ds.tools.NativeArrayTools;
 	A priority queue is heap but with a simplified API for managing prioritized data
 	
 	Adds additional methods for removing and re-prioritizing elements.
+	
+	Example:
+		class Element implements de.polygonal.ds.Prioritizable {
+		    public var priority:Int;
+		    public var position:Int;
+		    public function new(priority:Int) {
+		        this.priority = priority;
+		    }
+		    public function toString():String {
+		        return "Element" + priority;
+		    }
+		}
+		
+		...
+		
+		var o = new de.polygonal.ds.PriorityQueue<Element>(4);
+		o.enqueue(new Element(3));
+		o.enqueue(new Element(0));
+		o.enqueue(new Element(5));
+		trace(o); //outputs:
+		
+		[ PriorityQueue size=3
+		  front
+		  0 -> Element5
+		  1 -> Element3
+		  2 -> Element0
+		]
 **/
 #if generic
 @:generic
@@ -356,12 +383,16 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 		return Std.string(this);
 		#else
 		var b = new StringBuf();
-		b.add('{ PriorityQueue size: ${size} }');
-		if (isEmpty()) return b.toString();
+		b.add('[ PriorityQueue size=$size');
+		if (isEmpty())
+		{
+			b.add(" ]");
+			return b.toString();
+		}
 		var t = sort();
-		b.add("\n[ front\n");
+		b.add("\n  front\n");
 		var i = 0, args = new Array<Dynamic>();
-		var fmt = '  %${M.numDigits(size)}d: %s\n';
+		var fmt = '  %${M.numDigits(size)}d -> %s\n';
 		for (i in 0...size)
 		{
 			args[0] = i;

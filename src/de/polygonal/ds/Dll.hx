@@ -26,7 +26,18 @@ import de.polygonal.ds.tools.NativeArrayTools;
 /**
 	A doubly linked list
 	
-	@see http://lab.polygonal.de/?p=206
+	Example:
+		var o = new de.polygonal.ds.Dll<Int>();
+		for (i in 0...4) o.append(i);
+		trace(o); //outputs:
+		
+		[ Dll size=4
+		  head
+		  0 -> 0
+		  1 -> 1
+		  2 -> 2
+		  3 -> 3
+		]
 **/
 #if generic
 @:generic
@@ -826,12 +837,16 @@ class Dll<T> implements List<T>
 		return Std.string(this);
 		#else
 		var b = new StringBuf();
-		b.add('{ Dll size: ${size}, circular: ${isCircular()} }');
-		if (isEmpty()) return b.toString();
-		b.add("\n[ head \n");
+		b.add('[ Dll size=$size' + (isCircular() ? " circular" : ""));
+		if (isEmpty())
+		{
+			b.add(" ]");
+			return b.toString();
+		}
+		b.add("\n  head\n");
 		var node = head;
 		var args = new Array<Dynamic>();
-		var fmt = '  %${M.numDigits(size)}d: %s\n';
+		var fmt = '  %${M.numDigits(size)}d -> %s\n';
 		for (i in 0...size)
 		{
 			args[0] = i;

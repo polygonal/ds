@@ -26,6 +26,17 @@ using de.polygonal.ds.tools.NativeArrayTools;
 
 /**
 	A two-dimensional array based on a rectangular sequential array
+	
+	Example:
+		var o = new de.polygonal.ds.Array2<String>(3, 3);
+		o.forEach(function(_, x, y) return '$x,$y');
+		trace(o); //outputs:
+		
+		[ Array2 cols=3 rows=3
+		  0 -> 0,0 | 1,0 | 2,0
+		  1 -> 0,1 | 1,1 | 2,1
+		  2 -> 0,2 | 1,2 | 2,2
+		]
 **/
 #if generic
 @:generic
@@ -779,20 +790,19 @@ class Array2<T> implements Collection<T>
 		}
 		
 		var b = new StringBuf();
-		b.add('{ Array2 ${cols}x${rows} }');
-		b.add("\n[\n");
+		b.add('[ Array2 cols=$cols rows=$rows\n');
 		
 		var offset, row = 0, args = new Array<Dynamic>();
 		var w = M.numDigits(rows);
 		for (y in 0...rows)
 		{
 			args[0] = row++;
-			b.add(Printf.format('  %${w}d: ', args));
+			b.add(Printf.format('  %${w}d -> ', args));
 			offset = y * cols;
 			for (x in 0...cols)
 			{
 				args[0] = Std.string(d.get(offset + x));
-				args[1] = x < cols - 1 ? ", " : "";
+				args[1] = x < cols - 1 ? " | " : "";
 				b.add(Printf.format('%${l}s%s', args));
 			}
 			b.add("\n");

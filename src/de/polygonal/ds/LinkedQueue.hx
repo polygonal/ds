@@ -30,7 +30,18 @@ import de.polygonal.ds.tools.NativeArrayTools;
 	
 	This is called a FIFO structure (First In, First Out).
 	
-	@see http://lab.polygonal.de/2007/05/23/data-structures-example-the-queue-class/
+	Example:
+		var o = new de.polygonal.ds.LinkedQueue<Int>();
+		for (i in 0...4) o.enqueue(i);
+		trace(o); //outputs:
+		
+		[ LinkedQueue size=4
+		  front
+		  0 -> 0
+		  1 -> 1
+		  2 -> 2
+		  3 -> 3
+		]
 **/
 #if generic
 @:generic
@@ -228,11 +239,15 @@ class LinkedQueue<T> implements Queue<T>
 		return Std.string(this);
 		#else
 		var b = new StringBuf();
-		b.add('{ LinkedQueue size: ${size} }');
-		if (isEmpty()) return b.toString();
-		b.add("\n[ front\n");
+		b.add('[ LinkedQueue size=$size');
+		if (isEmpty())
+		{
+			b.add(" ]");
+			return b.toString();
+		}
+		b.add("\n  front\n");
 		var node = mHead, i = 0, args = new Array<Dynamic>();
-		var fmt = '  %${M.numDigits(size)}d: %s\n';
+		var fmt = '  %${M.numDigits(size)}d -> %s\n';
 		while (node != null)
 		{
 			args[0] = i++;

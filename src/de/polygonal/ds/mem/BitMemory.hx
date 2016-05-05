@@ -210,7 +210,7 @@ class BitMemory extends MemoryAccess
 	/**
 		Creates a bit vector capable of storing a total of `size` bits.
 	**/
-	public function new(size:Int, name:String = "?")
+	public function new(size:Int, name:String = null)
 	{
 		super(((size & (32 - 1)) > 0 ? ((size >> 5) + 1) : (size >> 5)) << 2, name);
 		
@@ -382,12 +382,11 @@ class BitMemory extends MemoryAccess
 		#if no_tostring
 		return Std.string(this);
 		#else
-		#if debug
-		if (mMemory == null) return "{ BitMemory (unassigned) }";
+		if (mMemory == null) return "[ BitMemory (unassigned) ]";
 		var b = new StringBuf();
-		b.add('{ BitMemory size: $size, name: $name }');
-		b.add("\n[\n");
-		
+		b.add('[ BitMemory size=$size');
+		if (name != null) b.add(' name=$name');
+		b.add("\n");
 		var args = new Array<Dynamic>();
 		for (i in 0...bytes >> 2)
 		{
@@ -404,11 +403,8 @@ class BitMemory extends MemoryAccess
 			args[1] = t;
 			b.add(Printf.format("  %4d -> %s\n", args));
 		}
-		b.add("\n]");
+		b.add("]");
 		return b.toString();
-		#else
-		return '{ BitMemory size: $size, name: $name }';
-		#end
 		#end
 	}
 }

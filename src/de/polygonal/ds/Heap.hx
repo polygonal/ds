@@ -29,6 +29,38 @@ using de.polygonal.ds.tools.NativeArrayTools;
 	A heap is a special kind of binary tree in which every node is greater than all of its children
 	
 	The implementation is based on an arrayed binary tree.
+	
+	Example:
+		class Element implements de.polygonal.ds.Heapable<Element> {
+		    public var id:Int;
+		    public var position:Int;
+		    public function new(id:Int) {
+		        this.id = id;
+		    }
+		    public function compare(other:Element):Int {
+		        return other.id - id;
+		    }
+		    public function toString():String {
+		        return Std.string(id);
+		    }
+		}
+		
+		...
+		
+		var o = new de.polygonal.ds.Heap<Element>();
+		o.add(new Element(64));
+		o.add(new Element(13));
+		o.add(new Element(1));
+		o.add(new Element(37));
+		trace(o); //outputs:
+		
+		[ Heap size=4
+		  front
+		  0 -> 1
+		  1 -> 13
+		  2 -> 37
+		  3 -> 64
+		]
 **/
 #if generic
 @:generic
@@ -328,12 +360,16 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 		return Std.string(this);
 		#else
 		var b = new StringBuf();
-		b.add('{ Heap size: ${size} }');
-		if (isEmpty()) return b.toString();
+		b.add('[ Heap size=$size');
+		if (isEmpty())
+		{
+			b.add(" ]");
+			return b.toString();
+		}
 		var t = sort();
-		b.add("\n[ front\n");
+		b.add("\n  front\n");
 		var i = 0, args = new Array<Dynamic>();
-		var fmt = '  %${M.numDigits(size)}d: %s\n';
+		var fmt = '  %${M.numDigits(size)}d -> %s\n';
 		for (i in 0...size)
 		{
 			args[0] = i;

@@ -33,6 +33,17 @@ using de.polygonal.ds.tools.NativeArrayTools;
 /**
 	An array hash set for storing integers
 	
+	Example:
+		var o = new de.polygonal.ds.IntHashSet(16);
+		for (i in 0...4) o.set(i);
+		trace(o); //outputs:
+		
+		[ IntHashSet size=4 capacity=16 load=0.25
+		  0
+		  1
+		  2
+		  3
+		]
 **/
 class IntHashSet implements Set<Int>
 {
@@ -382,9 +393,13 @@ class IntHashSet implements Set<Int>
 		return Std.string(this);
 		#else
 		var b = new StringBuf();
-		b.add(Printf.format("{ IntHashSet size/capacity: %d/%d, load factor: %.2f }", [size, capacity, loadFactor]));
-		if (isEmpty()) return b.toString();
-		b.add("\n[\n");
+		b.add(Printf.format('[ IntHashSet size=$size capacity=$capacity load=%.2f', [loadFactor]));
+		if (isEmpty())
+		{
+			b.add(" ]");
+			return b.toString();
+		}
+		b.add("\n");
 		for (x in this) b.add('  $x\n');
 		b.add("]");
 		return b.toString();

@@ -25,6 +25,26 @@ using de.polygonal.ds.tools.NativeArrayTools;
 
 /**
 	A three-dimensional array based on a rectangular sequential array
+	
+	Example:
+		var o = new de.polygonal.ds.Array3<String>(3, 3, 3);
+		o.forEach(function(_, x, y, z) return '$x,$y,$z');
+		trace(o); //outputs:
+		
+		[ Array3 cols=3 rows=3 depth=3
+		  layer=0
+			0 -> 0,0,0 | 1,0,0 | 2,0,0
+			1 -> 0,1,0 | 1,1,0 | 2,1,0
+			2 -> 0,2,0 | 1,2,0 | 2,2,0
+		  layer=1
+			0 -> 0,0,1 | 1,0,1 | 2,0,1
+			1 -> 0,1,1 | 1,1,1 | 2,1,1
+			2 -> 0,2,1 | 1,2,1 | 2,2,1
+		  layer=2
+			0 -> 0,0,2 | 1,0,2 | 2,0,2
+			1 -> 0,1,2 | 1,1,2 | 2,1,2
+			2 -> 0,2,2 | 1,2,2 | 2,2,2
+		]
 **/
 #if generic
 @:generic
@@ -515,33 +535,27 @@ class Array3<T> implements Collection<T>
 		#if no_tostring
 		return Std.string(this);
 		#else
-		var l = 0, out = [];
-		for (y in 0...rows)
-		{
-			for (x in 0...cols)
-			{
-				getPile(x, y, out);
-				l = M.max(l, out.join(",").length);
-			}
-		}
-		
+		var l = 0;
+		for (i in 0...size) l = M.max(l, Std.string(mData.get(i)).length);
 		var b = new StringBuf();
-		b.add('{ Array3 ${cols}x${rows}x${depth} }');
-		b.add("\n[\n");
-		
-		var row = 0, args = new Array<Dynamic>();
+		b.add('[ Array3 cols=$cols rows=$rows depth=$depth\n');
+		var args = new Array<Dynamic>();
 		var w = M.numDigits(rows);
-		for (y in 0...rows)
+		for (z in 0...depth)
 		{
-			args[0] = row++;
-			b.add(Printf.format('  %${w}d: ', args));
-			for (x in 0...cols)
+			b.add('  layer=$z\n');
+			for (y in 0...rows)
 			{
-				args[0] = getPile(x, y, out).join(",");
-				args[1] = x < cols - 1 ? ", " : "";
-				b.add(Printf.format('%${l}s%s', args));
+				args[0] = y;
+				b.add(Printf.format('    %${w}d -> ', args));
+				for (x in 0...cols)
+				{
+					args[0] = get(x, y, z);
+					args[1] = x < cols - 1 ? " | " : "";
+					b.add(Printf.format('%${l}s%s', args));
+				}
+				b.add("\n");
 			}
-			b.add("\n");
 		}
 		b.add("]");
 		return b.toString();

@@ -31,6 +31,19 @@ using de.polygonal.ds.tools.NativeArrayTools;
 	A stack is a linear list for which all insertions and deletions (and usually all accesses) are made at one end of the list.
 	
 	This is called a LIFO structure (Last In, First Out).
+	
+	Example:
+		var stack = new de.polygonal.ds.ArrayedStack<Int>(4);
+		for (i in 0...4) stack.push(i);
+		trace(stack); //outputs:
+		
+		[ ArrayedStack size=4 capacity=4
+		  top
+		  3 -> 3
+		  2 -> 2
+		  1 -> 1
+		  0 -> 0
+		]
 **/
 #if generic
 @:generic
@@ -387,13 +400,17 @@ class ArrayedStack<T> implements Stack<T>
 		return Std.string(this);
 		#else
 		var b = new StringBuf();
-		b.add('{ ArrayedStack size/capacity: ${size}/${capacity} }');
-		if (isEmpty()) return b.toString();
-		b.add("\n[ top\n");
+		b.add('[ ArrayedStack size=$size capacity=$capacity');
+		if (isEmpty())
+		{
+			b.add(" ]");
+			return b.toString();
+		}
+		b.add("\n  top\n");
 		var i = mTop - 1;
 		var j = mTop - 1;
 		var d = mData, args = new Array<Dynamic>();
-		var fmt = '  %${M.numDigits(size)}d: %s\n';
+		var fmt = '  %${M.numDigits(size)}d -> %s\n';
 		while (i >= 0)
 		{
 			args[0] = j--;

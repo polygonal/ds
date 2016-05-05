@@ -29,6 +29,22 @@ using de.polygonal.ds.tools.NativeArrayTools;
 	A binary tree
 	
 	A tree data structure in which each node has at most two child nodes.
+	
+	Example:
+		var o = new de.polygonal.ds.BinaryTreeNode<Int>(0);
+		o.setL(1);
+		o.setR(2);
+		o.l.setL(3);
+		o.l.l.setR(4);
+		trace(o); //outputs:
+		
+		[ BinaryTree val=0 size=5 depth=0 height=4
+		  0
+		  L---1
+		  |   L---3
+		  |   |   R---4
+		  R---2
+		]
 **/
 #if generic
 @:generic
@@ -547,13 +563,17 @@ class BinaryTreeNode<T> implements Collection<T>
 		return Std.string(this);
 		#else
 		var b = new StringBuf();
-		b.add('{ BinaryTreeNode val: ${Std.string(val)}, size: ${size}, node depth: ${depth()}, tree height: ${height()} }');
-		if (size == 1) return b.toString();
-		b.add("\n\n[\n");
+		b.add('[ BinaryTree val=${Std.string(val)} size=$size depth=${depth()} height=${height()}');
+		if (size == 1)
+		{
+			b.add(" ]");
+			return b.toString();
+		}
+		b.add("\n");
 		var f = function(node:BinaryTreeNode<T>, userData:Dynamic):Bool
 		{
 			var d = node.depth();
-			var t = '';
+			var t = "";
 			for (i in 0...d)
 			{
 				if (i == d - 1)
@@ -567,7 +587,7 @@ class BinaryTreeNode<T> implements Collection<T>
 			return true;
 		}
 		preorder(f);
-		b.add("]\n");
+		b.add("]");
 		return b.toString();
 		#end
 	}

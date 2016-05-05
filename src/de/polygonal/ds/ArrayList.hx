@@ -26,7 +26,19 @@ import de.polygonal.ds.tools.M;
 using de.polygonal.ds.tools.NativeArrayTools;
 
 /**
-	A growable, dense vector whose length can change over time.
+	A growable, dense array.
+	
+	Example:
+		var o = new de.polygonal.ds.ArrayList<Int>();
+		for (i in 0...4) o.pushBack(i);
+		trace(o); //outputs:
+		
+		[ ArrayList size=4 capacity=4
+		  0 -> 0
+		  1 -> 1
+		  2 -> 2
+		  3 -> 3
+		]
 **/
 #if generic
 @:generic
@@ -602,20 +614,7 @@ class ArrayList<T> implements List<T>
 	}
 	
 	/**
-		Returns a string representing the current object.
-		
-		Example:
-			var dv = new de.polygonal.ds.ArrayList<Int>();
-			for (i in 0...3) {
-			    dv.set(i, i);
-			}
-			trace(dv);
-			{ Dv size/capacity: 3/16 }
-			[
-			  0 -> 0
-			  1 -> 1
-			  2 -> 2
-			]
+		Prints out all elements.
 	**/
 	public function toString():String
 	{
@@ -623,10 +622,15 @@ class ArrayList<T> implements List<T>
 		return Std.string(this);
 		#else
 		var b = new StringBuf();
-		b.add('{ Dv size/capacity: $size/$capacity} }');
-		if (isEmpty()) return b.toString();
-		b.add("\n[\n");
-		var d = mData, fmt = "  %4d -> %s\n", args = new Array<Dynamic>();
+		b.add('[ ArrayList size=$size capacity=$capacity');
+		if (isEmpty())
+		{
+			b.add(" ]");
+			return b.toString();
+		}
+		b.add("\n");
+		var d = mData, args = new Array<Dynamic>();
+		var fmt = '  %${M.numDigits(size)}d -> %s\n';
 		for (i in 0...size)
 		{
 			args[0] = i;

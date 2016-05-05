@@ -277,7 +277,7 @@ class FloatMemory extends MemoryAccess
 	/**
 		Creates a byte array capable of storing a total of `size` floats.
 	**/
-	public function new(size:Int, name:String = "?")
+	public function new(size:Int, name:String = null)
 	{
 		super(size << 2, name);
 		this.size = size;
@@ -423,11 +423,11 @@ class FloatMemory extends MemoryAccess
 		#if no_tostring
 		return Std.string(this);
 		#else
-		#if debug
-		if (mMemory == null) return "{ FloatMemory (unassigned) }";
+		if (mMemory == null) return "[ FloatMemory (unassigned) ]";
 		var b = new StringBuf();
-		b.add('{ FloatMemory, size: $size, name: $name }');
-		b.add("\n[\n");
+		b.add('[ FloatMemory, size=$size');
+		if (name != null) b.add(' name=$name');
+		b.add("\n");
 		var args = new Array<Dynamic>();
 		for (i in 0...size)
 		{
@@ -435,11 +435,8 @@ class FloatMemory extends MemoryAccess
 			args[1] = get(i);
 			b.add(Printf.format("  %3d -> %#.3f\n", args));
 		}
-		b.add("\n]");
+		b.add("]");
 		return b.toString();
-		#else
-		return '{ FloatMemory, size: $size, name: $name }';
-		#end
 		#end
 	}
 }

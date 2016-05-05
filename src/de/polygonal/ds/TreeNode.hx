@@ -27,7 +27,22 @@ using de.polygonal.ds.tools.NativeArrayTools;
 /**
 	A tree structure
 	
-	@see http://lab.polygonal.de/?p=184
+	Example:
+		var root = new de.polygonal.ds.TreeNode<Int>(0); //create the root of the tree
+		var builder = new de.polygonal.ds.TreeBuilder<Int>(root);
+		builder.appendChild(1);
+		builder.down();
+		builder.appendChild(2);
+		builder.up();
+		builder.appendChild(3);
+		trace(root); //outputs:
+		
+		[ Tree size=4 depth=0 height=3
+		  0
+		  +--- 1
+		  |      +--- 2
+		  +--- 3
+		]
 **/
 #if generic
 @:generic
@@ -1313,33 +1328,30 @@ class TreeNode<T> implements Collection<T>
 		#if no_tostring
 		return Std.string(this);
 		#else
-		function print(x:TreeNode<T>):String
-		{
-			var s = 'val=$val';
-			var c = x.numChildren();
-			if (c > 0) s += ', #children=$c';
-			s += ', depth=${x.depth()}';
-			return s;
-		}
-		
-		if (children == null)
-			return '{ TreeNode ${print(this)} }';
-		
 		var b = new StringBuf();
-		b.add("{ TreeNode structure }\n");
+		b.add('[ Tree size=$size depth=${depth()} height=${height()}');
+		if (children == null)
+		{
+			b.add(" ]");
+			return b.toString();
+		}
+		b.add("\n");
 		preorder(function(node:TreeNode<T>, preflight:Bool, userData:Dynamic):Bool
 		{
 			var d = node.depth();
 			for (i in 0...d)
 			{
 				if (i == d - 1)
-					b.add("+--- ");
+					b.add("  +--- ");
 				else
-					b.add("|    ");
+					b.add("  |    ");
 			}
-			b.add("{ " + print(node) + " }\n");
+			
+			if (node == this) b.add("  ");
+			b.add(node.val + "\n");
 			return true;
 		}, null);
+		b.add("]");
 		return b.toString();
 		#end
 	}

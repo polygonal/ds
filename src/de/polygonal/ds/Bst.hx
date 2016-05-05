@@ -26,6 +26,36 @@ import de.polygonal.ds.tools.NativeArrayTools;
 	A binary search tree (BST)
 	
 	A BST automatically arranges `BinaryTreeNode` objects so the resulting tree is a valid BST.
+	
+	Example:
+		class Element implements de.polygonal.ds.Comparable<Element> {
+		    var i:Int;
+		    public function new(i:Int) {
+		        this.i = i;
+		    }
+		    public function compare(other:Element):Int {
+		        return other.i - i;
+		    }
+		    public function toString():String {
+		        return Std.string(i);
+		    }
+		}
+		
+		...
+		
+		var o = new de.polygonal.ds.Bst<Element>();
+		o.insert(new Element(1));
+		o.insert(new Element(0));
+		o.insert(new Element(2));
+		o.insert(new Element(7));
+		trace(o); //outputs:
+		
+		[ Bst size=4
+		  7
+		  2
+		  1
+		  0
+		]
 **/
 #if generic
 @:generic
@@ -209,15 +239,20 @@ class Bst<T:Comparable<T>> implements Collection<T>
 		return Std.string(this);
 		#else
 		var b = new StringBuf();
-		b.add('{ Bst size: ${size} }');
-		if (isEmpty()) return b.toString();
-		b.add("\n[\n");
-		var dumpNode = function(node:BinaryTreeNode<T>, userData:Dynamic):Bool
+		b.add('[ Bst size=$size');
+		if (isEmpty())
 		{
-			b.add('  ${Std.string(node.val)}\n');
+			b.add(" ]");
+			return b.toString();
+		}
+		b.add("\n");
+		mRoot.inorder(function(node:BinaryTreeNode<T>, _):Bool
+		{
+			b.add("  ");
+			b.add(Std.string(node.val));
+			b.add("\n");
 			return true;
-		};
-		mRoot.inorder(dumpNode);
+		});
 		b.add("]");
 		return b.toString();
 		#end

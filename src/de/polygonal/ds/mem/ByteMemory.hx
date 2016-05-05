@@ -252,7 +252,7 @@ class ByteMemory extends MemoryAccess
 	/**
 		Creates a byte array capable of storing a total of `size` bytes.
 	**/
-	public function new(size:Int, name:String = "?")
+	public function new(size:Int, name:String = null)
 	{
 		super(this.size = size, name);
 		
@@ -437,11 +437,11 @@ class ByteMemory extends MemoryAccess
 		#if no_tostring
 		return Std.string(this);
 		#else
-		#if debug
-		if (mMemory == null) return "{ ByteMemory (unassigned) }";
+		if (mMemory == null) return "[ ByteMemory (unassigned) ]";
 		var b = new StringBuf();
-		b.add('{ ByteMemory size: $size, name: $name }');
-		b.add("\n[\n");
+		b.add('[ ByteMemory size=$size');
+		if (name != null) b.add(' name=$name');
+		b.add("\n");
 		var args = new Array<Dynamic>();
 		for (i in 0...size)
 		{
@@ -449,11 +449,8 @@ class ByteMemory extends MemoryAccess
 			args[1] = get(i);
 			b.add(Printf.format("  %3d -> %d\n", args));
 		}
-		b.add("\n]");
+		b.add("]");
 		return b.toString();
-		#else
-		return '{ ByteMemory size: $size, name: $name }';
-		#end
 		#end
 	}
 }

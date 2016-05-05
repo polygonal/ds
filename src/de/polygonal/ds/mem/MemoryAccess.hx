@@ -46,7 +46,7 @@ class MemoryAccess implements Hashable
 	
 	var mMemory:Dynamic;
 	
-	function new(bytes:Int, name:String = "?")
+	function new(bytes:Int, name:String = null)
 	{
 		assert(bytes > 0);
 		
@@ -60,7 +60,10 @@ class MemoryAccess implements Hashable
 		#end
 		
 		#if verbose
-		trace('allocated $bytes bytes for $name');
+		if (name != null)
+			trace('allocated $bytes bytes for $name');
+		else
+			trace('allocated $bytes bytes');
 		#end
 	}
 	

@@ -32,7 +32,18 @@ using de.polygonal.ds.tools.NativeArrayTools;
 	
 	This is called a FIFO structure (First In, First Out).
 	
-	@see http://lab.polygonal.de/?p=189
+	Example:
+		var o = new de.polygonal.ds.ArrayedQueue<Int>(4);
+		for (i in 0...o.capacity) o.enqueue(i);
+		trace(o); //outputs:
+		
+		[ ArrayedQueue size=4 capacity=4
+		  front
+		  0 -> 0
+		  1 -> 1
+		  2 -> 2
+		  3 -> 3
+		]
 **/
 #if generic
 @:generic
@@ -327,11 +338,14 @@ class ArrayedQueue<T> implements Queue<T>
 		return Std.string(this);
 		#else
 		var b = new StringBuf();
-		b.add('{ ArrayedQueue size/capacity: $size/$capacity }');
-		if (isEmpty()) return b.toString();
-		b.add("\n[ front\n");
-		
-		var fmt = '  %${M.numDigits(size)}d: %s\n';
+		b.add('[ ArrayedQueue size=$size capacity=$capacity');
+		if (isEmpty())
+		{
+			b.add(" ]");
+			return b.toString();
+		}
+		b.add("\n  front\n");
+		var fmt = '  %${M.numDigits(size)}d -> %s\n';
 		var args = new Array<Dynamic>();
 		for (i in 0...size)
 		{

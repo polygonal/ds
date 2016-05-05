@@ -34,6 +34,30 @@ using de.polygonal.ds.tools.NativeArrayTools;
 	
 	The implementation is based `IntIntHashTable`.
 	
+	Example:
+		class Element extends de.polygonal.ds.HashableItem {
+		    var val:Int;
+		    public function new(val:Int) {
+		        super();
+		        this.val = val;
+		    }
+		    public function toString():String {
+		        return "Element" + val;
+		    }
+		}
+		
+		...
+		
+		var o = new de.polygonal.ds.IntHashTable<Element>(16);
+		for (i in 0...4) o.set(i, new Element(i));
+		trace(o); //outputs:
+		
+		[ IntHashTable size=4 capacity=16 load=0.25
+		   0 -> Element0
+		   1 -> Element1
+		   2 -> Element2
+		   3 -> Element3
+		]
 **/
 #if generic
 @:generic
@@ -258,9 +282,13 @@ class IntHashTable<T> implements Map<Int, T>
 		return Std.string(this);
 		#else
 		var b = new StringBuf();
-		b.add(Printf.format("{ IntHashTable size/capacity: %d/%d, load factor: %.2f }", [size, capacity, loadFactor]));
-		if (isEmpty()) return b.toString();
-		b.add("\n[\n");
+		b.add(Printf.format('[ IntHashTable size=$size capacity=$capacity load=%.2f', [loadFactor]));
+		if (isEmpty())
+		{
+			b.add(" ]");
+			return b.toString();
+		}
+		b.add("\n");
 		var max = 0.;
 		for (key in keys()) max = Math.max(max, key);
 		var i = 1;
@@ -271,7 +299,7 @@ class IntHashTable<T> implements Map<Int, T>
 		}
 		
 		var args = new Array<Dynamic>();
-		var fmt = '  %- ${i}d -> %d\n';
+		var fmt = '  %- ${i}d -> %s\n';
 		for (key in keys())
 		{
 			args[0] = key;

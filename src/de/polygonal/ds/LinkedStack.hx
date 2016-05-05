@@ -29,6 +29,19 @@ import de.polygonal.ds.tools.NativeArrayTools;
 	A stack is a linear list for which all insertions and deletions (and usually all accesses) are made at one end of the list.
 	
 	This is called a FIFO structure (First In, First Out).
+	
+	Example:
+		var o = new de.polygonal.ds.LinkedStack<Int>();
+		for (i in 0...4) o.push(i);
+		trace(o); //outputs:
+		
+		[ LinkedStack size=4
+		  top
+		  3 -> 3
+		  2 -> 2
+		  1 -> 1
+		  0 -> 0
+		]
 **/
 #if generic
 @:generic
@@ -396,12 +409,16 @@ class LinkedStack<T> implements Stack<T>
 		return Std.string(this);
 		#else
 		var b = new StringBuf();
-		b.add('{ LinkedStack size: ${size} }');
-		if (isEmpty()) return b.toString();
-		b.add("\n[ top\n");
+		b.add('[ LinkedStack size=$size');
+		if (isEmpty())
+		{
+			b.add(" ]");
+			return b.toString();
+		}
+		b.add("\n  top\n");
 		var node = mHead, i = mTop - 1;
 		var args = new Array<Dynamic>();
-		var fmt = '  %${M.numDigits(size)}d: %s\n';
+		var fmt = '  %${M.numDigits(size)}d -> %s\n';
 		while (i >= 0)
 		{
 			args[0] = i;

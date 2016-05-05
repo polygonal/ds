@@ -33,6 +33,32 @@ using de.polygonal.ds.tools.NativeArrayTools;
 	An array hash table for mapping Hashable keys to generic elements
 	
 	The implementation is based on `IntIntHashTable`.
+	
+	Example:
+		class Element extends de.polygonal.ds.HashableItem {
+		    var i:Int;
+		    public function new(i:Int) {
+		        super();
+		        this.i = i;
+		    }
+		    public function toString():String {
+		        return "Element" + i;
+		    }
+		}
+		
+		...
+		
+		var o = new de.polygonal.ds.HashTable<Element, String>(16);
+		o.set(new Element(1), "a");
+		o.set(new Element(2), "b");
+		o.set(new Element(3), "c");
+		trace(o); //outputs:
+		
+		[ HashTable size=4 capacity=16 load=0.25
+		  Element1 -> a
+		  Element2 -> b
+		  Element3 -> c
+		]
 **/
 #if generic
 @:generic
@@ -304,13 +330,15 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		return Std.string(this);
 		#else
 		var b = new StringBuf();
-		b.add(Printf.format("{ HashTable size/capacity: %d/%d, load factor: %.2f }", [size, capacity, loadFactor]));
-		if (isEmpty()) return b.toString();
-		b.add("\n[\n");
-		
+		b.add(Printf.format('[ HashTable size=$size capacity=$capacity load=%.2f', [loadFactor]));
+		if (isEmpty())
+		{
+			b.add(" ]");
+			return b.toString();
+		}
+		b.add("\n");
 		var l = 0;
 		for (key in keys()) l = M.max(l, Std.string(key).length);
-		
 		var args = new Array<Dynamic>();
 		var fmt = '  %- ${l}s -> %s\n';
 		for (key in keys())

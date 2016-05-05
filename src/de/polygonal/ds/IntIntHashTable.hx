@@ -39,6 +39,18 @@ import flash.Memory;
 	- The hash table is dynamic: the capacity is automatically increased and decreased.
 	- The hash table is never rehashed automatically, because this operation is time-consuming. Instead the user can decide if rehashing is necessary by checking the load factor.
 	- The value 0x80000000 is reserved and cannot be associated with a key.
+	
+	Example:
+		var o = new de.polygonal.ds.IntIntHashTable(16);
+		for (i in 0...4) o.set(i, i);
+		trace(o); //outputs:
+		
+		[ IntIntHashTable size=4 capacity=16 load=0.25
+		   0 -> 0
+		   1 -> 1
+		   2 -> 2
+		   3 -> 3
+		]
 **/
 class IntIntHashTable implements Map<Int, Int>
 {
@@ -633,10 +645,13 @@ class IntIntHashTable implements Map<Int, Int>
 		return Std.string(this);
 		#else
 		var b = new StringBuf();
-		b.add(Printf.format("{ IntIntHashTable size/capacity: %d/%d, load factor: %.2f }", [size, capacity, loadFactor]));
-		if (isEmpty()) return b.toString();
-		b.add("\n[\n");
-		
+		b.add(Printf.format('[ IntIntHashTable size=$size capacity=$capacity load=%.2f', [loadFactor]));
+		if (isEmpty())
+		{
+			b.add(" ]");
+			return b.toString();
+		}
+		b.add("\n");
 		var max = 0.;
 		for (key in keys()) max = Math.max(max, key);
 		var i = 1;

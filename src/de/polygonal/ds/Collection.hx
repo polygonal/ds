@@ -62,14 +62,15 @@ interface Collection<T> extends Hashable
 		Example:
 			var c:Collection<String> = new Array2<String>(...);
 			for (element in c) {
-			    trace(element);
+				trace(element);
 			}
+			
 			//or
 			var c:Collection = new Array2<String>(...);
 			var itr:Itr = c.iterator();
 			while (itr.hasNext()) {
-			    var element:String = itr.next();
-			    trace(element);
+				var element:String = itr.next();
+				trace(element);
 			}
 		
 		@see http://haxe.org/ref/iterators
@@ -90,25 +91,26 @@ interface Collection<T> extends Hashable
 		Duplicates this collection. Supports shallow (structure only) and deep copies (structure & elements).
 		
 		Example:
-			class Foo implements de.polygonal.ds.Cloneable<Foo>
-			{
-			    public var val:Int;
-			    public function new(val:Int) {
-			        this.val = val;
-			    }
-			    public function clone():Foo {
-			        return new Foo(val);
-			    }
+			class Foo implements de.polygonal.ds.Cloneable<Foo> {
+				public var val:Int;
+				public function new(val:Int) {
+					this.val = val;
+				}
+				public function clone():Foo {
+					return new Foo(val);
+				}
 			}
-			class Main
-			{
-			    var c:Collection<Foo> = new Array2<Foo>(...);
-			    //shallow copy
-			    var clone = c.clone(true);
-			    //deep copy
-			    var clone = c.clone(false);
-			    //deep copy using a custom function to do the actual work
-			    var clone = c.clone(false, function(existingValue:Foo) { return new Foo(existingValue.val); })
+			class Main {
+				var c:Collection<Foo> = new Array2<Foo>(...);
+				
+				//shallow copy
+				var clone = c.clone(true);
+				
+				//deep copy
+				var clone = c.clone(false);
+				
+				//deep copy using a custom function to do the actual work
+				var clone = c.clone(false, function(x) return new Foo(x.val));
 			}
 		@param assign if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
 		If false, the `clone()` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>

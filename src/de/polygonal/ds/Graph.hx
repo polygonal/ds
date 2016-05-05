@@ -29,7 +29,21 @@ using de.polygonal.ds.tools.NativeArrayTools;
 	
 	A graph is composed of `GraphNode` and `GraphArc` objects.
 	
-	@see http://lab.polygonal.de/?p=185/
+	Example:
+		var o = new de.polygonal.ds.Graph<String>();
+		var a = o.addNode(o.createNode("a"));
+		var b = o.addNode(o.createNode("b"));
+		var c = o.addNode(o.createNode("c"));
+		o.addSingleArc(a, b);
+		o.addSingleArc(b, a);
+		o.addMutualArc(a, c);
+		trace(o); //outputs:
+		
+		[ Graph size=3
+		  c -> a
+		  b -> a
+		  a -> c,b
+		]
 **/
 #if generic
 @:generic
@@ -985,14 +999,41 @@ class Graph<T> implements Collection<T>
 		#if no_tostring
 		return Std.string(this);
 		#else
+		var tmp = [];
+		function printNode(n:GraphNode<T>)
+		{
+			var arc, i = 0;
+			if (n.arcList != null)
+			{
+				arc = n.arcList;
+				while (arc != null)
+				{
+					tmp[i++] = Std.string(arc.val);
+					arc = arc.next;
+				}
+			}
+			while (tmp.length > i) tmp.pop();
+			return
+			if (i > 0)
+				n.val + " -> " + tmp.join(",");
+			else
+				n.val + "";
+		}
+		
 		var b = new StringBuf();
-		b.add('{ Graph size: ${size} }');
-		if (isEmpty()) return b.toString();
-		b.add("\n[\n");
+		b.add('[ Graph size=$size');
+		if (isEmpty())
+		{
+			b.add(" ]");
+			return b.toString();
+		}
+		b.add("\n");
 		var node = mNodeList;
 		while (node != null)
 		{
-			b.add('  ${node.toString()}\n');
+			b.add("  ");
+			b.add(printNode(node));
+			b.add("\n");
 			node = node.next;
 		}
 		b.add("]");

@@ -414,7 +414,7 @@ class IntMemory extends MemoryAccess
 	/**
 		Creates a byte array capable of storing a total of `size` integers.
 	**/
-	public function new(size:Int, name:String = "?")
+	public function new(size:Int, name:String = null)
 	{
 		super(size << 2, name);
 		this.size = size;
@@ -560,11 +560,11 @@ class IntMemory extends MemoryAccess
 		#if no_tostring
 		return Std.string(this);
 		#else
-		#if debug
-		if (mMemory == null) return "{ IntMemory (unassigned) }";
+		if (mMemory == null) return "[ IntMemory (unassigned) ]";
 		var b = new StringBuf();
-		b.add('{ IntMemory size: $size, name: $name }');
-		b.add("\n[\n");
+		b.add('[ IntMemory size=$size');
+		if (name != null) b.add(' name=$name');
+		b.add("\n");
 		var args = new Array<Dynamic>();
 		for (i in 0...size)
 		{
@@ -572,11 +572,8 @@ class IntMemory extends MemoryAccess
 			args[1] = get(i);
 			b.add(Printf.format("  %3d -> %#d\n", args));
 		}
-		b.add("\n]");
+		b.add("]");
 		return b.toString();
-		#else
-		return '{ IntMemory size: $size, name: $name }';
-		#end
 		#end
 	}
 }

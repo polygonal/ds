@@ -27,6 +27,20 @@ using de.polygonal.ds.Bits;
 
 /**
 	An array data structure that compactly stores individual bits (boolean values)
+	
+	Example:
+		var o = new de.polygonal.ds.BitVector(40);
+		for (i in 0...40) {
+		    if (i & 1 == 0) {
+		        o.set(i);
+		    }
+		}
+		trace(o); //outputs:
+		
+		[ BitVector capacity=40
+		  0 -> 01010101010101010101010101010101
+		  1 -> 00000000000000000000000001010101
+		]
 **/
 class BitVector implements Hashable
 {
@@ -341,11 +355,15 @@ class BitVector implements Hashable
 		return Std.string(this);
 		#else
 		var b = new StringBuf();
-		b.add('{ BitVector bits: ${capacity} }');
-		if (ones() == 0) return b.toString();
-		b.add("\n[\n");
+		b.add('[ BitVector capacity=$capacity');
+		if (ones() == 0)
+		{
+			b.add(" ]");
+			return b.toString();
+		}
+		b.add("\n");
 		var args = new Array<Dynamic>();
-		var fmt = '  %${M.numDigits(mArrSize)}d: %.32b\n';
+		var fmt = '  %${M.numDigits(mArrSize)}d -> %.32b\n';
 		for (i in 0...mArrSize)
 		{
 			args[0] = i;

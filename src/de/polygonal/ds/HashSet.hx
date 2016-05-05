@@ -31,6 +31,37 @@ using de.polygonal.ds.tools.NativeArrayTools;
 
 /**
 	An array hash set for storing Hashable objects
+	
+	Example:
+		class Element extends de.polygonal.ds.HashableItem {
+		    var val:String;
+		    public function new(val:String) {
+		        super();
+		        this.val = val;
+		    }
+		    public function toString():String {
+		        return val;
+		    }
+		}
+		
+		...
+		
+		var o = new de.polygonal.ds.HashSet<Element>(16);
+		var a = new Element("a");
+		var b = new Element("b");
+		var c = new Element("c");
+		o.set(a);
+		o.set(a);
+		o.set(b);
+		o.set(c);
+		o.set(c);
+		trace(o); //outputs:
+		
+		[ HashSet size=3 capacity=16 load=0.19
+		  a
+		  b
+		  c
+		]
 **/
 #if generic
 @:generic
@@ -261,10 +292,19 @@ class HashSet<T:Hashable> implements Set<T>
 		return Std.string(this);
 		#else
 		var b = new StringBuf();
-		b.add(Printf.format("{ HashSet size/capacity: %d/%d, load factor: %.2f }", [size, capacity, loadFactor]));
-		if (isEmpty()) return b.toString();
-		b.add("\n[\n");
-		for (x in this) b.add('  ${Std.string(x)}\n');
+		b.add(Printf.format('[ HashSet size=$size capacity=$capacity load=%.2f', [loadFactor]));
+		if (isEmpty())
+		{
+			b.add(" ]");
+			return b.toString();
+		}
+		b.add("\n");
+		for (x in this)
+		{
+			b.add("  ");
+			b.add(Std.string(x));
+			b.add("\n");
+		}
 		b.add("]");
 		return b.toString();
 		#end

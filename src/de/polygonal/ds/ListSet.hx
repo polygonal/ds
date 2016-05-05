@@ -26,6 +26,22 @@ using de.polygonal.ds.tools.NativeArrayTools;
 
 /**
 	A simple set using an array
+	
+	Example:
+		var o = new de.polygonal.ds.ListSet<String>();
+		o.set("a");
+		o.set("b");
+		o.set("b");
+		o.set("c");
+		o.set("c");
+		o.set("c");
+		trace(o); //outputs:
+		
+		[ ListSet size=3
+		  a
+		  b
+		  c
+		]
 **/
 #if generic
 @:generic
@@ -128,10 +144,19 @@ class ListSet<T> implements Set<T>
 		return Std.string(this);
 		#else
 		var b = new StringBuf();
-		b.add('{ ListSet size: ${size} }');
-		if (isEmpty()) return b.toString();
-		b.add("\n[\n");
-		for (i in 0...size) b.add('  ${Std.string(mData[i])}\n');
+		b.add('[ ListSet size=$size');
+		if (isEmpty())
+		{
+			b.add(" ]");
+			return b.toString();
+		}
+		b.add("\n");
+		for (i in 0...size)
+		{
+			b.add("  ");
+			b.add(Std.string(mData[i]));
+			b.add("\n");
+		}
 		b.add("]");
 		return b.toString();
 		#end

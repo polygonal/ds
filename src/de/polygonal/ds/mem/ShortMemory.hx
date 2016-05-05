@@ -316,7 +316,7 @@ class ShortMemory extends MemoryAccess
 	/**
 		Creates a byte array capable of storing a total of `size` shorts.
 	**/
-	public function new(size:Int, name:String = "?")
+	public function new(size:Int, name:String = null)
 	{
 		super(size << 1, name);
 		this.size = size;
@@ -469,11 +469,11 @@ class ShortMemory extends MemoryAccess
 		#if no_tostring
 		return Std.string(this);
 		#else
-		#if debug
-		if (mMemory == null) return "{ShortMemory (unassigned) }";
-		var s = '{ ShortMemory size: $size, name: $name }';
+		if (mMemory == null) return "[ ShortMemory (unassigned) ]";
 		var b = new StringBuf();
-		b.add("\n[\n");
+		b.add('[ ShortMemory size=$size');
+		if (name != null) b.add(' name=$name');
+		b.add("\n");
 		var args = new Array<Dynamic>();
 		for (i in 0...size)
 		{
@@ -481,11 +481,8 @@ class ShortMemory extends MemoryAccess
 			args[1] = get(i);
 			b.add(Printf.format("  %3d -> %#.3f\n", args));
 		}
-		b.add("\n]");
+		b.add("]");
 		return b.toString();
-		#else
-		return '{ ShortMemory size: $size, name: $name }';
-		#end
 		#end
 	}
 }

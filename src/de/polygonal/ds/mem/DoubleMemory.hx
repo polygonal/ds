@@ -279,7 +279,7 @@ class DoubleMemory extends MemoryAccess
 	/**
 		Creates a byte array capable of storing a total of `size` doubles.
 	**/
-	public function new(size:Int, name:String = "?")
+	public function new(size:Int, name:String = null)
 	{
 		super(size << 3, name);
 		this.size = size;
@@ -419,11 +419,11 @@ class DoubleMemory extends MemoryAccess
 		#if no_tostring
 		return Std.string(this);
 		#else
-		#if debug
-		if (mMemory == null) return "{ DoubleMemory (unassigned) }";
+		if (mMemory == null) return "[ DoubleMemory (unassigned) ]";
 		var b = new StringBuf();
-		b.add('{ DoubleMemory size: $size, name: $name }');
-		b.add("\n[\n");
+		b.add('[ DoubleMemory size=$size');
+		if (name != null) b.add(' name=$name');
+		b.add("\n");
 		var args = new Array<Dynamic>();
 		for (i in 0...size)
 		{
@@ -431,11 +431,8 @@ class DoubleMemory extends MemoryAccess
 			args[1] = get(i);
 			b.add(Printf.format("  %3d -> %#.3f\n", args));
 		}
-		b.add("\n]");
+		b.add("]");
 		return b.toString();
-		#else
-		return '{ DoubleMemory size: $size, name: $name }';
-		#end
 		#end
 	}
 }
