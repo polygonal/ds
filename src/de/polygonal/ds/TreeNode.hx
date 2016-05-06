@@ -776,7 +776,7 @@ class TreeNode<T> implements Collection<T>
 	}
 	
 	/**
-		Performs a recursive preorder traversal.
+		Performs a recursive _preorder_ traversal.
 		
 		A preorder traversal performs the following steps:
 		
@@ -1046,7 +1046,7 @@ class TreeNode<T> implements Collection<T>
 	}
 	
 	/**
-		Performs a recursive postorder traversal.
+		Performs a recursive _postorder_ traversal.
 		A postorder traversal performs the following steps:
 		
 		1. Traverse the left subtree of the node
@@ -1224,7 +1224,7 @@ class TreeNode<T> implements Collection<T>
 	}
 	
 	/**
-		Performs a queue-based, iterative level-order traversal.
+		Performs a queue-based, iterative _level-order_ traversal.
 		In a level-order traversal all nodes of a tree are processed by depth: first the root, then the children of the root, etc.
 		@param process a function that is invoked on every traversed node.
 		The first argument holds a reference to the current node, while the second argument stores custom data specified by the `userData` parameter (default is null).

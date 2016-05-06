@@ -158,7 +158,7 @@ class TreeBuilder<T>
 	}
 	
 	/**
-		Returns true if the horizonal pointer has a next child.
+		Returns true if the horizontal pointer has a next child.
 	**/
 	public inline function hasNextChild():Bool
 	{
@@ -166,7 +166,7 @@ class TreeBuilder<T>
 	}
 	
 	/**
-		Returns true if the horizonal pointer has a previous child.
+		Returns true if the horizontal pointer has a previous child.
 	**/
 	public inline function hasPrevChild():Bool
 	{

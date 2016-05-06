@@ -149,7 +149,7 @@ class ArrayTools
 	/**
 		Searches the sorted array `a` for the element `x` in the range (`min`, `max`] using the binary search algorithm.
 		
-		<warn>The insertion point is only valid for `min`=0 and `max`=a.length-1.</warn>
+		<warn>The insertion point is only valid for `min=0` and `max = a.length-1`.</warn>
 		@return the index of the element `x` or the bitwise complement (~) of the index where `x` would be inserted (guaranteed to be a negative number).
 	**/
 	public static function bsearchComparator<T>(a:Array<T>, x:T, min:Int, max:Int, comparator:T->T->Int):Int
@@ -178,7 +178,7 @@ class ArrayTools
 	/**
 		Searches the sorted array `a` for the element `x` in the range [`min`, `max`) using the binary search algorithm.
 		
-		<warn>The insertion point is only valid for `min`=0 and `max`=`a`->length-1.</warn>
+		<warn>The insertion point is only valid for `min=0` and `max=a->length-1`.</warn>
 		@return the index of the element `x` or the bitwise complement (~) of the index where `x` would be inserted (guaranteed to be a negative number).
 	**/
 	public static function bsearchInt(a:Array<Int>, x:Int, min:Int, max:Int):Int
@@ -206,7 +206,7 @@ class ArrayTools
 	/**
 		Searches the sorted array `a` for the element `x` in the range [`min`, `max`) using the binary search algorithm.
 		
-		<warn>The insertion point is only valid for `min`=0 and `max`=`a`->length-1.</warn>
+		<warn>The insertion point is only valid for `min=0` and `max=a->length-1`.</warn>
 		@return the index of the element `x` or the bitwise complement (~) of the index where `x` would be inserted (guaranteed to be a negative number).
 	**/
 	public static function bsearchFloat(a:Array<Float>, x:Float, min:Int, max:Int):Int

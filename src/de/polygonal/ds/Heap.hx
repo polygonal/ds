@@ -223,7 +223,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	/**
 		Rebuilds the heap in case an existing element was modified.
 		
-		This is faster than removing and readding an element.
+		This is faster than removing and re-adding an element.
 		@param hint a value >= 0 indicates that `x` is now smaller (ascending order) or bigger (descending order) and should be moved towards the root of the tree to rebuild the heap property.
 		Likewise, a value < 0 indicates that `x` is now bigger (ascending order) or smaller (descending order) and should be moved towards the leaf nodes of the tree.
 	**/

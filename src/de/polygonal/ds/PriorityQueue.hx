@@ -255,7 +255,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	}
 	
 	/**
-		Reprioritizes the element `x`.
+		Re-prioritizes the element `x`.
 		@param x the element to re-prioritize.
 		@param priority the new priority.
 	**/

@@ -29,7 +29,7 @@ interface Collection<T> extends Hashable
 	var size(get, never):Int;
 	
 	/**
-		Deconstructs this collection by explicitly nullifying all internal references for GC'ing used resources.
+		Disposes this collection by explicitly nullifying all internal references for GC'ing used resources.
 		
 		Improves GC efficiency/performance (optional).
 	**/

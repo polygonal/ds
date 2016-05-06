@@ -77,7 +77,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	/**
 		The size of the allocated storage space for the key/value pairs.
 		
-		If more space is required to accomodate new elements, `capacity` is doubled every time `size` grows beyond capacity, and split in half when `size` is a quarter of capacity.
+		If more space is required to accommodate new elements, `capacity` is doubled every time `size` grows beyond capacity, and split in half when `size` is a quarter of capacity.
 		
 		The capacity never falls below the initial size defined in the constructor.
 	**/
@@ -118,12 +118,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	
 	/**
 		The growth rate of the container.
-		
-		+  0: fixed size
-		+ -1: grows at a rate of 1.125x plus a constant.
-		+ -2: grows at a rate of 1.5x.
-		+ -3: grows at a rate of 2.0x (default value).
-		+ >0: grows at a constant rate: capacity += growthRate
+		@see `GrowthRate`
 	**/
 	public var growthRate(get, set):Int;
 	function get_growthRate():Int
@@ -462,7 +457,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	/**
 		Removes and nullifies the first occurrence of `key`.
 		
-		Only the key is nullified, to nullifiy the value call `pack()`.
+		Only the key is nullified, to nullify the value call `pack()`.
 		@return true if `key` is successfully removed.
 	**/
 	public function unset(key:K):Bool

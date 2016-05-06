@@ -67,7 +67,7 @@ class IntHashSet implements Set<Int>
 	/**
 		The size of the allocated storage space for the elements.
 		
-		If more space is required to accomodate new elements, `getCapacity()` is doubled every time `size` grows beyond capacity and split in half when `size` is a quarter of capacity.
+		If more space is required to accommodate new elements, `getCapacity()` is doubled every time `size` grows beyond capacity and split in half when `size` is a quarter of capacity.
 		
 		The capacity never falls below the initial size defined in the constructor.
 	**/

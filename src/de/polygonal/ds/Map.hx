@@ -44,7 +44,7 @@ interface Map<K, T> extends Collection<T>
 		Maps the element `x` to `key`.
 		
 		Multiple keys are stored in a First-In-First-Out (FIFO) order - there is no way to access keys which were added after the first `key`,
-		other than removing the first `key` which unveals the second `key`.
+		other than removing the first `key` which unveils the second `key`.
 		@return true if `key` was added for the first time, false if this `key` is not unique.
 	**/
 	function set(key:K, x:T):Bool;
@@ -58,7 +58,7 @@ interface Map<K, T> extends Collection<T>
 	/**
 		Remaps the first occurrence of `key` to the element `x`.
 		
-		This is faster than `clr(key)` followed by `set(key, x)`.
+		This is faster than `unset(key)` followed by `set(key, x)`.
 		@return true if the remapping was successful, false if `key` does not exist.
 	**/
 	function remap(key:K, x:T):Bool;

@@ -76,7 +76,7 @@ class IntHashTable<T> implements Map<Int, T>
 	/**
 		The size of the allocated storage space for the key/value pairs.
 		
-		If more space is required to accomodate new elements,`getCapacity()` is doubled every time `size` grows beyond capacity, and split in half when `size` is a quarter of capacity.
+		If more space is required to accommodate new elements,`getCapacity()` is doubled every time `size` grows beyond capacity, and split in half when `size` is a quarter of capacity.
 		
 		The capacity never falls below the initial size defined in the constructor.
 	**/
@@ -84,12 +84,7 @@ class IntHashTable<T> implements Map<Int, T>
 	
 	/**
 		The growth rate of the container.
-		
-		+  0: fixed size
-		+ -1: grows at a rate of 1.125x plus a constant.
-		+ -2: grows at a rate of 1.5x.
-		+ -3: grows at a rate of 2.0x (default value).
-		+ >0: grows at a constant rate: capacity += growthRate
+		@see `GrowthRate`
 	**/
 	public var growthRate(get, set):Int;
 	function get_growthRate():Int

@@ -280,7 +280,7 @@ class NativeArrayTools
 	/**
 		Searches the sorted vector `v` for the element `x` in the range (`min`, `max`] using the binary search algorithm.
 		@return the index of the element `x` or the bitwise complement (~) of the index where `x` would be inserted (guaranteed to be a negative number).
-		<warn>The insertion point is only valid for `min`=0 and `max`=a.length-1.</warn>
+		<warn>The insertion point is only valid for `min=0` and `max=a.length-1`.</warn>
 	**/
 	#if java inline #end
 	public static function binarySearchCmp<T>(v:NativeArray<T>, x:T, min:Int, max:Int, cmp:T->T->Int):Int

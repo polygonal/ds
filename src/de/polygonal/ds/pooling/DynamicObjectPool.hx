@@ -183,7 +183,7 @@ class DynamicObjectPool<T>
 	}
 	
 	/**
-		The maximum number of objects in use between calls to code>reclaim()`.
+		The maximum number of objects in use between calls to `reclaim()`.
 	**/
 	public inline function maxUsageCount():Int
 	{
@@ -234,7 +234,7 @@ class DynamicObjectPool<T>
 	}
 	
 	/**
-		Marks all pooled resources as avaiable for use by `get()`.
+		Marks all pooled resources as available for use by `get()`.
 		<warn>The user is responsible for re-initializing an object.</warn>
 		<warn>Don't call this method while objects are still in use or `get()` will return a used object.</warn>
 		@return The total number of allocated objects since the last call to `reclaim()`.

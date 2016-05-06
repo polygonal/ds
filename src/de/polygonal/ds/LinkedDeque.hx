@@ -194,7 +194,7 @@ class LinkedDeque<T> implements Deque<T>
 	}
 	
 	/**
-		Returns the index of the first occurence of the element `x` or -1 if `x` does not exist.
+		Returns the index of the first occurrence of the element `x` or -1 if `x` does not exist.
 		
 		The front element is at index [0], the back element is at index [`size` - 1].
 	**/

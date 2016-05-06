@@ -88,11 +88,11 @@ class BinaryTreeNode<T> implements Collection<T>
 	#end
 	
 	/**
-		Creates a new `BinaryTreeNode` object storing the element `x`.
+		Creates a new `BinaryTreeNode` object storing the element `val`.
 	**/
-	public function new(x:T)
+	public function new(val:T)
 	{
-		this.val = x;
+		this.val = val;
 		p = l = r = null;
 		
 		#if debug
@@ -101,7 +101,7 @@ class BinaryTreeNode<T> implements Collection<T>
 	}
 	
 	/**
-		Performs a recursive preorder traversal.
+		Performs a recursive _preorder_ traversal.
 		
 		A preorder traversal performs the following steps:
 		
@@ -185,7 +185,7 @@ class BinaryTreeNode<T> implements Collection<T>
 	}
 	
 	/**
-		Performs a recursive inorder traversal.
+		Performs a recursive _inorder_ traversal.
 		
 		An inorder traversal performs the following steps:
 		
@@ -194,11 +194,11 @@ class BinaryTreeNode<T> implements Collection<T>
 		3. Traverse the right subtree of the node
 		
 		@param process a function that is invoked on every traversed node.
-		If omitted, element:`visit()` is used instead. <warn>In this case all elements have to implement `Visitable`.</warn>
+		If omitted, `element->visit()` is used instead. <warn>In this case all elements have to implement `Visitable`.</warn>
 		The first argument holds a reference to the current node, while the second argument stores custom data specified by the userData parameter (default is null).
 		Once `process` returns false, the traversal stops immediately and no further nodes are examined.
 		@param iterative if true, an iterative traversal is used (default traversal style is recursive).
-		@param userData custom data that is passed to every visited node via `process` or element:`visit()`. If omitted, null is used.
+		@param userData custom data that is passed to every visited node via `process` or `element->visit()`. If omitted, null is used.
 	**/
 	public function inorder(process:BinaryTreeNode<T>->Dynamic->Bool = null, iterative:Bool = false, userData:Dynamic = null)
 	{
@@ -294,7 +294,7 @@ class BinaryTreeNode<T> implements Collection<T>
 	}
 	
 	/**
-		Performs a recursive postorder traversal.
+		Performs a recursive _postorder_ traversal.
 		
 		A postorder traversal performs the following steps:
 		
@@ -431,19 +431,19 @@ class BinaryTreeNode<T> implements Collection<T>
 	}
 	
 	/**
-		Adds a left child node storing the element `x`.
+		Adds a left child node storing the element `val`.
 		
-		If a left child exists, only the element is updated to `x`.
+		If a left child exists, only the element is updated to `val`.
 	**/
-	public inline function setL(x:T)
+	public inline function setL(val:T)
 	{
 		if (l == null)
 		{
-			l = new BinaryTreeNode<T>(x);
+			l = new BinaryTreeNode<T>(val);
 			l.p = this;
 		}
 		else
-			l.val = x;
+			l.val = val;
 	}
 	
 	/**
@@ -455,19 +455,19 @@ class BinaryTreeNode<T> implements Collection<T>
 	}
 	
 	/**
-		Adds a right child node storing the element `x`.
+		Adds a right child node storing the element `val`.
 		
-		If a right child exists, only the element is updated to `x`.
+		If a right child exists, only the element is updated to `val`.
 	**/
-	public inline function setR(x:T)
+	public inline function setR(val:T)
 	{
 		if (r == null)
 		{
-			r = new BinaryTreeNode<T>(x);
+			r = new BinaryTreeNode<T>(val);
 			r.p = this;
 		}
 		else
-			r.val = x;
+			r.val = val;
 	}
 	
 	/**
@@ -701,7 +701,7 @@ class BinaryTreeNode<T> implements Collection<T>
 	/**
 		Returns true if the subtree rooted at this node contains the element `x`.
 	**/
-	public function contains(x:T):Bool
+	public function contains(val:T):Bool
 	{
 		var stack = new Array<BinaryTreeNode<T>>();
 		stack[0] = this;
@@ -710,7 +710,7 @@ class BinaryTreeNode<T> implements Collection<T>
 		while (c > 0)
 		{
 			var node = stack[--c];
-			if (node.val == x)
+			if (node.val == val)
 			{
 				found = true;
 				break;
