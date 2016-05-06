@@ -710,7 +710,7 @@ class BinaryTreeNode<T> implements Collection<T>
 		while (c > 0)
 		{
 			var node = stack[--c];
-			if (node.val == val)
+			if (node.val == x)
 			{
 				found = true;
 				break;
