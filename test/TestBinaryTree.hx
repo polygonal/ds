@@ -80,6 +80,16 @@ class TestBinaryTree extends AbstractTest
 		assertEquals("e2", copy.l.l.r.val);
 	}
 	
+	function testContains()
+	{
+		var node = new BinaryTreeNode<String>("root");
+		node.setL("e1");
+		node.setR("e2");
+		assertFalse(node.contains("e3"));
+		assertTrue(node.contains("e1"));
+		assertTrue(node.contains("e2"));
+	}
+	
 	function testStackResize()
 	{
 		var c = 0;
