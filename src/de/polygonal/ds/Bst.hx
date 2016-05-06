@@ -82,7 +82,7 @@ class Bst<T:Comparable<T>> implements Collection<T>
 	
 	var mSize:Int = 0;
 	var mRoot:BinaryTreeNode<T> = null;
-	var mIterator:BSTIterator<T> = null;
+	var mIterator:BstIterator<T> = null;
 	
 	public function new()
 	{
@@ -334,7 +334,7 @@ class Bst<T:Comparable<T>> implements Collection<T>
 	}
 	
 	/**
-		Returns a new `BSTIterator` object to iterate over all elements contained in this BST.
+		Returns a new `BstIterator` object to iterate over all elements contained in this BST.
 		
 		The elements are visited by using a preorder traversal.
 		
@@ -345,13 +345,13 @@ class Bst<T:Comparable<T>> implements Collection<T>
 		if (reuseIterator)
 		{
 			if (mIterator == null)
-				mIterator = new BSTIterator<T>(mRoot);
+				mIterator = new BstIterator<T>(mRoot);
 			else
 				mIterator.reset();
 			return mIterator;
 		}
 		else
-			return new BSTIterator<T>(mRoot);
+			return new BstIterator<T>(mRoot);
 	}
 	
 	/**
@@ -396,7 +396,7 @@ class Bst<T:Comparable<T>> implements Collection<T>
 @:generic
 #end
 @:dox(hide)
-class BSTIterator<T> implements de.polygonal.ds.Itr<T>
+class BstIterator<T> implements de.polygonal.ds.Itr<T>
 {
 	var mObject:BinaryTreeNode<T>;
 	var mStack:Array<BinaryTreeNode<T>>;
