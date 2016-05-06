@@ -101,9 +101,9 @@ class Compare
 	}
 	
 	/**
-		Comparison function for sorting strings in lexiographic order.
+		Comparison function for sorting strings in lexicographic order.
 	**/
-	public static function lexiographic(a:String, b:String):Int
+	public static function lexicographic(a:String, b:String):Int
 	{
 		var ak = a.length;
 		var bk = b.length;
