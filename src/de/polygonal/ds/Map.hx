@@ -26,9 +26,9 @@ package de.polygonal.ds;
 interface Map<K, T> extends Collection<T>
 {
 	/**
-		Returns true if this map contains a mapping for the element `x`.
+		Returns true if this map contains a mapping for `val`.
 	**/
-	function has(x:T):Bool;
+	function has(val:T):Bool;
 	
 	/**
 		Returns true if this map contains `key`.
@@ -41,13 +41,13 @@ interface Map<K, T> extends Collection<T>
 	function get(key:K):T;
 	
 	/**
-		Maps the element `x` to `key`.
+		Maps `val` to `key`.
 		
 		Multiple keys are stored in a First-In-First-Out (FIFO) order - there is no way to access keys which were added after the first `key`,
 		other than removing the first `key` which unveils the second `key`.
 		@return true if `key` was added for the first time, false if this `key` is not unique.
 	**/
-	function set(key:K, x:T):Bool;
+	function set(key:K, val:T):Bool;
 	
 	/**
 		Removes a {`key`,value} pair.
@@ -56,12 +56,12 @@ interface Map<K, T> extends Collection<T>
 	function unset(key:K):Bool;
 	
 	/**
-		Remaps the first occurrence of `key` to the element `x`.
+		Remaps the first occurrence of `key` to `val`.
 		
-		This is faster than `unset(key)` followed by `set(key, x)`.
+		This is faster than `this.unset(key)` followed by `this.set(key, val)`.
 		@return true if the remapping was successful, false if `key` does not exist.
 	**/
-	function remap(key:K, x:T):Bool;
+	function remap(key:K, val:T):Bool;
 	
 	/**
 		Returns a set view of the elements contained in this map.

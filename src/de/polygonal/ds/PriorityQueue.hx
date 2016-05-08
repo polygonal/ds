@@ -75,8 +75,8 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	
 	/**
 		The size of the allocated storage space for the elements.
-		If more space is required to accommodate new elements, `capacity` grows according `GrowthRate`.
-		The capacity never falls below the initial size defined in the constructor and is usually a bit larger than `size` (_mild overallocation_).
+		If more space is required to accommodate new elements, `capacity` grows according to `this.growthRate`.
+		The capacity never falls below the initial size defined in the constructor and is usually a bit larger than `this.size` (_mild overallocation_).
 	**/
 	public var capacity(default, null):Int;
 	
@@ -87,7 +87,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	public var growthRate:Int = GrowthRate.NORMAL;
 	
 	/**
-		If true, reuses the iterator object instead of allocating a new one when calling `iterator()`.
+		If true, reuses the iterator object instead of allocating a new one when calling `this.iterator()`.
 		
 		The default is false.
 		
@@ -110,7 +110,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 		Useful before inserting a large number of elements as this reduces the amount of incremental reallocation.
 		@param inverse if true, the lower the number, the higher the priority.
 		By default a higher number means a higher priority.
-		@param source Copies all values from `source` in the range [0, `source->length` - 1] to this collection.
+		@param source Copies all values from `source` in the range [0, `source.length` - 1] to this collection.
 	**/
 	public function new(initalCapacity:Null<Int> = 1, ?inverse:Null<Bool> = false, ?source:Array<T>)
 	{
@@ -140,8 +140,10 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	}
 	
 	/**
-		For performance reasons the priority queue does nothing to ensure that empty locations contain null;
-		`pack()` therefore nullifies all obsolete references and shrinks the container to the actual size allowing the garbage collector to reclaim used memory.
+		Reduces the capacity of the internal container to the initial capacity.
+		
+		May cause a reallocation, but has no effect on `this.size` and its elements.
+		An application can use this operation to free up memory by unlocking resources for the garbage collector.
 	**/
 	public function pack()
 	{
@@ -157,22 +159,6 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 		}
 		return this;
 	}
-	
-	/**
-		Preallocates storage for `n` elements.
-		
-		Useful before inserting a large number of elements as this reduces the amount of incremental reallocation.
-	**/
-	/*public function reserve(n:Int):PriorityQueue<T>
-	{
-		if (n <= capacity) return this;
-		
-		capacity = n;
-		mShrinkSize = n >> 2;
-		grow(n);
-		
-		return this;
-	}*/
 	
 	/**
 		Returns the front element.
@@ -219,19 +205,19 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	}
 	
 	/**
-		Enqueues the element `x`.
+		Enqueues `val`.
 	**/
-	public function enqueue(x:T)
+	public function enqueue(val:T)
 	{
 		#if debug
-		assert(x != null, "element is null");
-		assert(!mMap.exists(x), "element already exists");
-		mMap.set(x, true);
+		assert(val != null, "element is null");
+		assert(!mMap.exists(val), "element already exists");
+		mMap.set(val, true);
 		#end
 		
 		if (size == capacity) grow();
-		mData.set(++mSize, x);
-		x.position = size;
+		mData.set(++mSize, val);
+		val.position = size;
 		upheap(size);
 	}
 	
@@ -257,24 +243,23 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	}
 	
 	/**
-		Re-prioritizes the element `x`.
-		@param x the element to re-prioritize.
+		Re-prioritizes `val`.
 		@param priority the new priority.
 	**/
-	public function reprioritize(x:T, priority:Float)
+	public function reprioritize(val:T, priority:Float)
 	{
 		assert(size > 0, "priority queue is empty");
 		
 		#if debug
-		var exists = mMap.exists(x);
+		var exists = mMap.exists(val);
 		assert(exists, "unknown element");
 		#end
 		
-		var oldPriority = x.priority;
+		var oldPriority = val.priority;
 		if (oldPriority == priority) return;
 		
-		x.priority = priority;
-		var pos = x.position;
+		val.priority = priority;
+		var pos = val.position;
 		
 		if (mInverse)
 		{
@@ -404,7 +389,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	/**
 		Preallocates storage for `n` elements.
 		
-		May cause a reallocation, but has no effect on the vector size and its elements.
+		May cause a reallocation, but has no effect `size` and its elements.
 		Useful before inserting a large number of elements as this reduces the amount of incremental reallocation.
 	**/
 	public function reserve(n:Int):PriorityQueue<T>
@@ -450,39 +435,39 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	}
 	
 	/**
-		Returns true if this priority queue contains the element `x`.
+		Returns true if this priority queue contains `val`.
 	**/
-	public inline function contains(x:T):Bool
+	public inline function contains(val:T):Bool
 	{
-		assert(x != null, "x is null");
+		assert(val != null, "val is null");
 		
-		var position = x.position;
-		return (position > 0 && position <= size) && (mData.get(position) == x);
+		var position = val.position;
+		return (position > 0 && position <= size) && (mData.get(position) == val);
 	}
 	
 	/**
-		Removes the element `x`.
-		@return true if `x` was removed.
+		Removes `val`.
+		@return true if `val` was removed.
 	**/
-	public function remove(x:T):Bool
+	public function remove(val:T):Bool
 	{
 		if (isEmpty())
 			return false;
 		else
 		{
-			assert(x != null, "x is null");
+			assert(val != null, "val is null");
 			
 			#if debug
-			var exists = mMap.exists(x);
-			assert(exists, "x does not exist");
-			mMap.remove(x);
+			var exists = mMap.exists(val);
+			assert(exists, "val does not exist");
+			mMap.remove(val);
 			#end
 			
-			if (x.position == 1)
+			if (val.position == 1)
 				dequeue();
 			else
 			{
-				var p = x.position, d = mData;
+				var p = val.position, d = mData;
 				d.set(p, d.get(size));
 				downheap(p);
 				upheap(p);
@@ -507,7 +492,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	}
 	
 	/**
-		Returns a new `PriorityQueueIterator` object to iterate over all elements contained in this priority queue.
+		Returns a new *PriorityQueueIterator* object to iterate over all elements contained in this priority queue.
 		
 		The values are visited in an unsorted order.
 		
@@ -528,7 +513,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	}
 	
 	/**
-		Returns true only if `size` is 0.
+		Returns true only if `this.size` is 0.
 	**/
 	public inline function isEmpty():Bool
 	{
@@ -544,11 +529,11 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	}
 	
 	/**
-		Duplicates this priority queue. Supports shallow (structure only) and deep copies (structure & elements).
-		@param byRef if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
-		If false, the `clone()` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
-		@param copier a custom function for copying elements. Replaces `element->clone()` if `byRef` is false.
-		<warn>If `byRef` is true, only the copied version should be used from now on.</warn>
+		Creates and returns a shallow copy (structure only - default) or deep copy (structure & elements) of this priority queue.
+		
+		If `byRef` is true, primitive elements are copied by value whereas objects are copied by reference.
+		
+		If `byRef` is false, the `copier` function is used for copying elements. If omitted, `clone()` is called on each element assuming all elements implement `Cloneable`.
 	**/
 	public function clone(byRef:Bool = true, copier:T->T = null):Collection<T>
 	{

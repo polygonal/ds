@@ -29,9 +29,9 @@ interface Deque<T> extends Collection<T>
 	function front():T;
 	
 	/**
-		Inserts the element `x` at the front of the deque.
+		Inserts `val` at the front of the deque.
 	**/
-	function pushFront(x:T):Void;
+	function pushFront(val:T):Void;
 	
 	/**
 		Removes and returns the element at the beginning of the deque.
@@ -44,9 +44,9 @@ interface Deque<T> extends Collection<T>
 	function back():T;
 	
 	/**
-		Inserts the element `x` at the back of the deque.
+		Inserts `val` at the back of the deque.
 	**/
-	function pushBack(x:T):Void;
+	function pushBack(val:T):Void;
 	
 	/**
 		Deletes the element at the end of the deque.

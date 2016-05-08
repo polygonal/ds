@@ -75,8 +75,8 @@ class IntHashTable<T> implements Map<Int, T>
 	
 	/**
 		The size of the allocated storage space for the elements.
-		If more space is required to accommodate new elements, `capacity` grows according `GrowthRate`.
-		The capacity never falls below the initial size defined in the constructor and is usually a bit larger than `size` (_mild overallocation_).
+		If more space is required to accommodate new elements, `capacity` grows according to `this.growthRate`.
+		The capacity never falls below the initial size defined in the constructor and is usually a bit larger than `this.size` (_mild overallocation_).
 	**/
 	public var capacity(default, null):Int;
 	
@@ -95,7 +95,7 @@ class IntHashTable<T> implements Map<Int, T>
 	}
 	
 	/**
-		If true, reuses the iterator object instead of allocating a new one when calling `iterator()`.
+		If true, reuses the iterator object instead of allocating a new one when calling `this.iterator()`.
 		
 		The default is false.
 		
@@ -110,7 +110,7 @@ class IntHashTable<T> implements Map<Int, T>
 		
 		A high load factor thus indicates poor performance.
 		
-		If the load factor gets too high, additional slots can be allocated by calling `rehash()`.
+		If the load factor gets too high, additional slots can be allocated by calling `this.rehash()`.
 	**/
 	public var loadFactor(get, never):Float;
 	function get_loadFactor():Float
@@ -149,7 +149,7 @@ class IntHashTable<T> implements Map<Int, T>
 		@param slotCount the total number of slots into which the hashed keys are distributed.
 		This defines the space-time trade off of the hash table.
 		Increasing the `slotCount` reduces the computation time (read/write/access) of the hash table at the cost of increased memory use.
-		This value is fixed and can only be changed by calling `rehash()`, which rebuilds the hash table (expensive).
+		This value is fixed and can only be changed by calling `this.rehash()`, which rebuilds the hash table (expensive).
 		
 		@param capacity the initial physical space for storing the key/value pairs at the time the hash table is created.
 		This is also the minimum allowed size of the hash table and cannot be changed in the future. If omitted, the initial `capacity` equals `slotCount`.
@@ -369,7 +369,7 @@ class IntHashTable<T> implements Map<Int, T>
 		
 		The method allows duplicate keys.
 		
-		<warn>To ensure unique keys either use `hasKey()` before `set()` or `setIfAbsent()`</warn>
+		<warn>To ensure unique keys either use `this.hasKey()` before `this.set()` or `this.setIfAbsent()`</warn>
 		@return true if `key` was added for the first time, false if another instance of `key` was inserted.
 	**/
 	public function set(key:Int, val:T):Bool
@@ -427,7 +427,7 @@ class IntHashTable<T> implements Map<Int, T>
 	}
 	
 	/**
-		Returns a new `IntIntHashTableKeyIterator` object to iterate over all keys stored in this map.
+		Returns a new *IntIntHashTableKeyIterator* object to iterate over all keys stored in this map.
 		
 		The keys are visited in a random order.
 		
@@ -438,6 +438,9 @@ class IntHashTable<T> implements Map<Int, T>
 		return mH.keys();
 	}
 	
+	/**
+		Free up resources by reducing the capacity of the internal container to the initial capacity.
+	**/
 	public function pack():IntHashTable<T>
 	{
 		mH.pack();
@@ -560,7 +563,7 @@ class IntHashTable<T> implements Map<Int, T>
 	}
 	
 	/**
-		Same as `has()`.
+		Same as `this.has()`.
 	**/
 	public function contains(val:T):Bool
 	{
@@ -571,7 +574,7 @@ class IntHashTable<T> implements Map<Int, T>
 		Removes all occurrences of the value `val`.
 		@return true if `val` was removed, false if `val` does not exist.
 	**/
-	public function remove(x:T):Bool
+	public function remove(val:T):Bool
 	{
 		var b = mTmpKeyBuffer;
 		var c = 0;
@@ -580,7 +583,7 @@ class IntHashTable<T> implements Map<Int, T>
 		{
 			j = k.get(i);
 			if (j != IntIntHashTable.KEY_ABSENT)
-				if (v.get(i) == x)
+				if (v.get(i) == val)
 					b[c++] = j;
 		}
 		for (i in 0...c) unset(b[i]);
@@ -610,7 +613,7 @@ class IntHashTable<T> implements Map<Int, T>
 	}
 
 	/**
-		Returns a new `IntHashTableIterator` object to iterate over all values contained in this hash table.
+		Returns a new *IntHashTableIterator* object to iterate over all values contained in this hash table.
 		
 		The values are visited in a random order.
 		
@@ -631,7 +634,7 @@ class IntHashTable<T> implements Map<Int, T>
 	}
 	
 	/**
-		Returns true only if `size` is 0.
+		Returns true only if `this.size` is 0.
 	**/
 	public inline function isEmpty():Bool
 	{
@@ -654,10 +657,11 @@ class IntHashTable<T> implements Map<Int, T>
 	}
 	
 	/**
-		Duplicates this hash table. Supports shallow (structure only) and deep copies (structure & elements).
-		@param byRef if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
-		If false, the `clone()` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
-		@param copier a custom function for copying elements. Replaces `element->clone()` if `byRef` is false.
+		Creates and returns a shallow copy (structure only - default) or deep copy (structure & elements) of this hash table.
+		
+		If `byRef` is true, primitive elements are copied by value whereas objects are copied by reference.
+		
+		If `byRef` is false, the `copier` function is used for copying elements. If omitted, `clone()` is called on each element assuming all elements implement `Cloneable`.
 	**/
 	public function clone(byRef:Bool = true, copier:T->T = null):Collection<T>
 	{

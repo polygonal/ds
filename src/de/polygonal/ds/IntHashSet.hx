@@ -66,8 +66,8 @@ class IntHashSet implements Set<Int>
 	
 	/**
 		The size of the allocated storage space for the elements.
-		If more space is required to accommodate new elements, `capacity` grows according `GrowthRate`.
-		The capacity never falls below the initial size defined in the constructor and is usually a bit larger than `size` (_mild overallocation_).
+		If more space is required to accommodate new elements, `capacity` grows according to `this.growthRate`.
+		The capacity never falls below the initial size defined in the constructor and is usually a bit larger than `this.size` (_mild overallocation_).
 	**/
 	public var capacity(default, null):Int;
 	
@@ -78,7 +78,7 @@ class IntHashSet implements Set<Int>
 	public var growthRate:Int = GrowthRate.DOUBLE;
 	
 	/**
-		If true, reuses the iterator object instead of allocating a new one when calling `iterator()`.
+		If true, reuses the iterator object instead of allocating a new one when calling `this.iterator()`.
 		
 		The default is false.
 		
@@ -93,7 +93,7 @@ class IntHashSet implements Set<Int>
 		
 		A high load factor thus indicates poor performance.
 		
-		If the load factor gets too high, additional slots can be allocated by calling `rehash()`.
+		If the load factor gets too high, additional slots can be allocated by calling `this.rehash()`.
 	**/
 	public var loadFactor(get, never):Float;
 	function get_loadFactor():Float
@@ -126,7 +126,7 @@ class IntHashSet implements Set<Int>
 		@param slotCount the total number of slots into which the hashed elements are distributed.
 		This defines the space-time trade off of the set.
 		Increasing the `slotCount` reduces the computation time (read/write/access) of the set at the cost of increased memory use.
-		This value is fixed and can only be changed by calling `rehash()`, which rebuilds the set (expensive).
+		This value is fixed and can only be changed by calling `this.rehash()`, which rebuilds the set (expensive).
 		
 		@param initialCapacity the initial physical space for storing the elements at the time the set is created.
 		This is also the minimum allowed size of the set and cannot be changed in the future.
@@ -198,16 +198,16 @@ class IntHashSet implements Set<Int>
 	}
 	
 	/**
-		Returns true if this set contains the element `x`.
+		Returns true if this set contains `val`.
 		
 		Uses move-to-front-on-access which reduces access time when similar elements are frequently queried.
 	**/
-	public inline function hasFront(x:Int):Bool
+	public inline function hasFront(val:Int):Bool
 	{
-		assert(x != VAL_ABSENT, "value 0x80000000 is reserved");
+		assert(val != VAL_ABSENT, "value 0x80000000 is reserved");
 		
 		var h = mHash;
-		var b = hashCode(x);
+		var b = hashCode(val);
 		var i = h.get(b);
 		if (i == EMPTY_SLOT)
 			return false;
@@ -216,10 +216,10 @@ class IntHashSet implements Set<Int>
 			var d = mData;
 			#if (flash && alchemy)
 			var o = d.getAddr(i);
-			if (Memory.getI32(o) == x)
+			if (Memory.getI32(o) == val)
 				return true;
 			#else
-			if (d.get(i) == x)
+			if (d.get(i) == val)
 				return true;
 			#end
 			else
@@ -238,9 +238,9 @@ class IntHashSet implements Set<Int>
 				{
 					#if (flash && alchemy)
 					o = d.getAddr(i);
-					if (Memory.getI32(o) == x)
+					if (Memory.getI32(o) == val)
 					#else
-					if (d.get(i) == x)
+					if (d.get(i) == val)
 					#end
 					{
 						#if (flash && alchemy)
@@ -308,6 +308,9 @@ class IntHashSet implements Set<Int>
 		mFree = t.mFree;
 	}
 	
+	/**
+		Free up resources by reducing the capacity of the internal container to the initial capacity.
+	**/
 	public function pack():IntHashSet
 	{
 		if (capacity == mMinCapacity) return this;
@@ -446,13 +449,13 @@ class IntHashSet implements Set<Int>
 	/* INTERFACE Set */
 	
 	/**
-		Returns true if this set contains the element `x`.
+		Returns true if this set contains `val`.
 	**/
-	public inline function has(x:Int):Bool
+	public inline function has(val:Int):Bool
 	{
-		assert(x != VAL_ABSENT, "value 0x80000000 is reserved");
+		assert(val != VAL_ABSENT, "value 0x80000000 is reserved");
 		
-		var i = mHash.get(hashCode(x));
+		var i = mHash.get(hashCode(val));
 		if (i == EMPTY_SLOT)
 			return false;
 		else
@@ -460,10 +463,10 @@ class IntHashSet implements Set<Int>
 			var d = mData;
 			#if (flash && alchemy)
 			var o = d.getAddr(i);
-			if (Memory.getI32(o) == x)
+			if (Memory.getI32(o) == val)
 				return true;
 			#else
-			if (d.get(i) == x)
+			if (d.get(i) == val)
 				return true;
 			#end
 			else
@@ -474,7 +477,7 @@ class IntHashSet implements Set<Int>
 				while (i != NULL_POINTER)
 				{
 					o = d.getAddr(i);
-					if (Memory.getI32(o) == x)
+					if (Memory.getI32(o) == val)
 					{
 						exists = true;
 						break;
@@ -485,7 +488,7 @@ class IntHashSet implements Set<Int>
 				i = d.get(i + 1);
 				while (i != NULL_POINTER)
 				{
-					if (d.get(i) == x)
+					if (d.get(i) == val)
 					{
 						exists = true;
 						break;
@@ -499,14 +502,14 @@ class IntHashSet implements Set<Int>
 	}
 	
 	/**
-		Adds the element `x` to this set if possible.
-		@return true if `x` was added to this set, false if `x` already exists.
+		Adds `val` to this set if possible.
+		@return true if `val` was added to this set, false if `val` already exists.
 	**/
-	public inline function set(x:Int):Bool
+	public inline function set(val:Int):Bool
 	{
-		assert(x != VAL_ABSENT, "value 0x80000000 is reserved");
+		assert(val != VAL_ABSENT, "value 0x80000000 is reserved");
 		
-		var b = hashCode(x), d = mData;
+		var b = hashCode(val), d = mData;
 		
 		#if (flash && alchemy)
 		var o = mHash.getAddr(b);
@@ -531,7 +534,7 @@ class IntHashSet implements Set<Int>
 			mHash.set(b, j);
 			#end
 			
-			d.set(j, x);
+			d.set(j, val);
 			mSize++;
 			return true;
 		}
@@ -539,9 +542,9 @@ class IntHashSet implements Set<Int>
 		{
 			#if (flash && alchemy)
 			o = d.getAddr(j);
-			if (Memory.getI32(o) == x) return false;
+			if (Memory.getI32(o) == val) return false;
 			#else
-			if (d.get(j) == x) return false;
+			if (d.get(j) == val) return false;
 			#end
 			else
 			{
@@ -550,7 +553,7 @@ class IntHashSet implements Set<Int>
 				while (p != NULL_POINTER)
 				{
 					o = d.getAddr(p);
-					if (Memory.getI32(o) == x)
+					if (Memory.getI32(o) == val)
 					{
 						j = -1;
 						break;
@@ -562,7 +565,7 @@ class IntHashSet implements Set<Int>
 				var p = d.get(j + 1);
 				while (p != NULL_POINTER)
 				{
-					if (d.get(p) == x)
+					if (d.get(p) == val)
 					{
 						j = -1;
 						break;
@@ -583,7 +586,7 @@ class IntHashSet implements Set<Int>
 					}
 					p = mFree << 1;
 					mFree = mNext.get(mFree);
-					d.set(p, x);
+					d.set(p, val);
 					d.set(j + 1, p);
 					mSize++;
 					return true;
@@ -593,12 +596,12 @@ class IntHashSet implements Set<Int>
 	}
 	
 	/**
-		Removes the element `x` from this set if possible.
-		@return true if `x` was removed from this set, false if `x` does not exist.
+		Removes `val` from this set if possible.
+		@return true if `val` was removed from this set, false if `val` does not exist.
 	**/
-	public inline function unset(x:Int):Bool
+	public inline function unset(val:Int):Bool
 	{
-		return remove(x);
+		return remove(val);
 	}
 	
 	/* INTERFACE Collection */
@@ -636,20 +639,20 @@ class IntHashSet implements Set<Int>
 	}
 	
 	/**
-		Same as `has()`.
+		Same as `this.has()`.
 	**/
-	public inline function contains(x:Int):Bool
+	public inline function contains(val:Int):Bool
 	{
-		return has(x);
+		return has(val);
 	}
 	
 	/**
-		Removes the element `x`.
-		@return true if `x` was successfully removed, false if `x` does not exist.
+		Removes `val`.
+		@return true if `val` was successfully removed, false if `val` does not exist.
 	**/
-	public inline function remove(x:Int):Bool
+	public inline function remove(val:Int):Bool
 	{
-		var b = hashCode(x);
+		var b = hashCode(val);
 		var i = mHash.get(b);
 		if (i == EMPTY_SLOT)
 			return false;
@@ -658,9 +661,9 @@ class IntHashSet implements Set<Int>
 			var d = mData;
 			#if (flash && alchemy)
 			var o = d.getAddr(i);
-			if (x == Memory.getI32(o))
+			if (val == Memory.getI32(o))
 			#else
-			if (x == d.get(i))
+			if (val == d.get(i))
 			#end
 			{
 				#if (flash && alchemy)
@@ -702,7 +705,7 @@ class IntHashSet implements Set<Int>
 				{
 					#if (flash && alchemy)
 					o = d.getAddr(i);
-					if (Memory.getI32(o) == x)
+					if (Memory.getI32(o) == val)
 					{
 						exists = true;
 						break;
@@ -710,7 +713,7 @@ class IntHashSet implements Set<Int>
 					i0 = i;
 					i = Memory.getI32(o + 4);
 					#else
-					if (d.get(i) == x)
+					if (d.get(i) == val)
 					{
 						exists = true;
 						break;
@@ -776,7 +779,7 @@ class IntHashSet implements Set<Int>
 	}
 	
 	/**
-		Returns a new `IntHashSetIterator` object to iterate over all elements contained in this hash set.
+		Returns a new *IntHashSetIterator* object to iterate over all elements contained in this hash set.
 		
 		The elements are visited in a random order.
 		
@@ -797,7 +800,7 @@ class IntHashSet implements Set<Int>
 	}
 	
 	/**
-		Returns true only if `size` is 0.
+		Returns true only if `this.size` is 0.
 	**/
 	public inline function isEmpty():Bool
 	{
@@ -822,9 +825,7 @@ class IntHashSet implements Set<Int>
 	}
 	
 	/**
-		Duplicates this hash set by creating a deep copy.
-		
-		The `byRef` and `copier` parameters are ignored.
+		Duplicates this hash set by creating a deep copy (`byRef` and `copier` are ignored).
 	**/
 	public function clone(byRef:Bool = true, copier:Int->Int = null):Collection<Int>
 	{

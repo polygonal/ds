@@ -59,8 +59,8 @@ class ListSet<T> implements Set<T>
 	
 	/**
 		The size of the allocated storage space for the elements.
-		If more space is required to accommodate new elements, `capacity` grows according `GrowthRate`.
-		The capacity never falls below the initial size defined in the constructor and is usually a bit larger than `size` (_mild overallocation_).
+		If more space is required to accommodate new elements, `capacity` grows according to `this.growthRate`.
+		The capacity never falls below the initial size defined in the constructor and is usually a bit larger than `this.size` (_mild overallocation_).
 	**/
 	public var capacity(default, null):Int;
 	
@@ -71,7 +71,7 @@ class ListSet<T> implements Set<T>
 	public var growthRate:Int = GrowthRate.NORMAL;
 	
 	/**
-		If true, reuses the iterator object instead of allocating a new one when calling `iterator()`.
+		If true, reuses the iterator object instead of allocating a new one when calling `this.iterator()`.
 		
 		The default is false.
 		
@@ -96,7 +96,7 @@ class ListSet<T> implements Set<T>
 	/**
 		Preallocates storage for `n` elements.
 		
-		May cause a reallocation, but has no effect on the vector size and its elements.
+		May cause a reallocation, but has no effect `size` and its elements.
 		Useful before inserting a large number of elements as this reduces the amount of incremental reallocation.
 	**/
 	public function reserve(n:Int):ListSet<T>
@@ -112,8 +112,8 @@ class ListSet<T> implements Set<T>
 	/**
 		Reduces the capacity of the internal container to the initial capacity.
 		
-		May cause a reallocation, but has no effect on the vector size and its elements.
-		An application can use this operation to free up memory by GC'ing used resources.
+		May cause a reallocation, but has no effect on `this.size` and its elements.
+		An application can use this operation to free up memory by unlocking resources for the garbage collector.
 	**/
 	public function pack():ListSet<T>
 	{
@@ -160,68 +160,68 @@ class ListSet<T> implements Set<T>
 	/* INTERFACE Set */
 	
 	/**
-		Returns true if this set contains the element `x`.
+		Returns true if this set contains `val`.
 	**/
-	public function has(x:T):Bool
+	public function has(val:T):Bool
 	{
 		if (isEmpty()) return false;
 		var d = mData;
-		for (i in 0...size) if (d.get(i) == x) return true;
+		for (i in 0...size) if (d.get(i) == val) return true;
 		return false;
 	}
 	
 	/**
-		Adds the element `x` to this set if possible.
-		@return true if `x` was added to this set, false if `x` already exists.
+		Adds `val` to this set if possible.
+		@return true if `val` was added to this set, false if `val` already exists.
 	**/
-	public function set(x:T):Bool
+	public function set(val:T):Bool
 	{
 		var d = mData;
-		for (i in 0...size) if (d.get(i) == x) return false;
+		for (i in 0...size) if (d.get(i) == val) return false;
 		if (size == capacity)
 		{
 			grow();
 			d = mData;
 		}
-		d.set(mSize++, x);
+		d.set(mSize++, val);
 		return true;
 	}
 	
 	/**
-		Removes the element `x` from this set if possible.
-		@return true if `x` was removed from this set, false if `x` does not exist.
+		Removes `val` from this set if possible.
+		@return true if `val` was removed from this set, false if `val` does not exist.
 	**/
-	public inline function unset(x:T):Bool
+	public inline function unset(val:T):Bool
 	{
-		return remove(x);
+		return remove(val);
 	}
 	
 	/**
-		Adds all elements of the set `x` to this set.
+		Adds all elements of the set `other` to this set.
 		@param assign if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
-		If false, the `clone()` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
-		@param copier a custom function for copying elements. Replaces `element->clone()` if `assign` is false.
+		If false, the `this.clone()` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
+		@param copier a custom function for copying elements. Replaces `element.clone()` if `assign` is false.
 	**/
-	public function merge(x:Set<T>, ?assign:Bool, copier:T->T = null)
+	public function merge(set:Set<T>, ?assign:Bool, copier:T->T = null)
 	{
 		if (assign)
 		{
-			for (val in x) set(val);
+			for (val in set) this.set(val);
 		}
 		else
 		{
 			if (copier != null)
 			{
-				for (val in x)
-					set(copier(val));
+				for (val in set)
+					this.set(copier(val));
 			}
 			else
 			{
-				for (val in x)
+				for (val in set)
 				{
 					assert(Std.is(val, Cloneable), "element is not of type Cloneable");
 					
-					set(cast(val, Cloneable<Dynamic>).clone());
+					this.set(cast(val, Cloneable<Dynamic>).clone());
 				}
 			}
 		}
@@ -254,22 +254,22 @@ class ListSet<T> implements Set<T>
 	}
 	
 	/**
-		Same as `has()`.
+		Same as `this.has()`.
 	**/
-	public function contains(x:T):Bool
+	public function contains(val:T):Bool
 	{
-		return has(x);
+		return has(val);
 	}
 	
 	/**
-		Removes the element `x`.
-		@return true if `x` was successfully removed.
+		Removes `val`.
+		@return true if `val` was successfully removed.
 	**/
-	public function remove(x:T):Bool
+	public function remove(val:T):Bool
 	{
 		var d = mData;
 		for (i in 0...size)
-			if (d.get(i) == x)
+			if (d.get(i) == val)
 			{
 				d.set(i, mData.get(--mSize));
 				return true;
@@ -309,7 +309,7 @@ class ListSet<T> implements Set<T>
 	}
 	
 	/**
-		Returns true only if `size` is 0.
+		Returns true only if `this.size` is 0.
 	**/
 	public function isEmpty():Bool
 	{
@@ -325,10 +325,11 @@ class ListSet<T> implements Set<T>
 	}
 	
 	/**
-		Duplicates this set. Supports shallow (structure only) and deep copies (structure & elements).
-		@param byRef if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
-		If false, the `clone()` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
-		@param copier a custom function for copying elements. Replaces `element->clone()` if `byRef` is false.
+		Creates and returns a shallow copy (structure only - default) or deep copy (structure & elements) of this set.
+		
+		If `byRef` is true, primitive elements are copied by value whereas objects are copied by reference.
+		
+		If `byRef` is false, the `copier` function is used for copying elements. If omitted, `clone()` is called on each element assuming all elements implement `Cloneable`.
 	**/
 	public function clone(byRef:Bool = true, copier:T->T = null):Collection<T>
 	{

@@ -65,7 +65,7 @@ class Dll<T> implements List<T>
 	public var tail(default, null):DllNode<T>;
 	
 	/**
-		If true, reuses the iterator object instead of allocating a new one when calling `iterator()`.
+		If true, reuses the iterator object instead of allocating a new one when calling `this.iterator()`.
 		
 		The default is false.
 		
@@ -154,20 +154,20 @@ class Dll<T> implements List<T>
 	}
 	
 	/**
-		Creates and returns a new `DllNode` object storing the value `x` and pointing to this list.
+		Creates and returns a new `DllNode` object storing the value `val` and pointing to this list.
 	**/
-	public function createNode(x:T):DllNode<T>
+	public function createNode(val:T):DllNode<T>
 	{
-		return new DllNode<T>(x, this);
+		return new DllNode<T>(val, this);
 	}
 	
 	/**
-		Appends the element `x` to the tail of this list by creating a `DllNode` object storing `x`.
-		@return the appended node storing `x`.
+		Appends `val` to the tail of this list by creating a `DllNode` object storing `val`.
+		@return the appended node storing `val`.
 	**/
-	public function append(x:T):DllNode<T>
+	public function append(val:T):DllNode<T>
 	{
-		var node = getNode(x);
+		var node = getNode(val);
 		if (valid(tail))
 		{
 			tail.next = node;
@@ -188,20 +188,20 @@ class Dll<T> implements List<T>
 	}
 	
 	/**
-		Appends the node `x` to this list.
+		Appends `node` to this list.
 	**/
-	public function appendNode(x:DllNode<T>)
+	public function appendNode(node:DllNode<T>)
 	{
-		assert(x.getList() == this, "node is not managed by this list");
+		assert(node.getList() == this, "node is not managed by this list");
 		
 		if (valid(tail))
 		{
-			tail.next = x;
-			x.prev = tail;
+			tail.next = node;
+			node.prev = tail;
 		}
 		else
-			head = x;
-		tail = x;
+			head = node;
+		tail = node;
 		
 		if (mCircular)
 		{
@@ -213,12 +213,12 @@ class Dll<T> implements List<T>
 	}
 	
 	/**
-		Prepends the element `x` to the head of this list by creating a `DllNode` object storing `x`.
-		@return the prepended node storing `x`.
+		Prepends `val` to the head of this list by creating a `DllNode` object storing `val`.
+		@return the prepended node storing `val`.
 	**/
-	public function prepend(x:T):DllNode<T>
+	public function prepend(val:T):DllNode<T>
 	{
-		var node = getNode(x);
+		var node = getNode(val);
 		node.next = head;
 		if (valid(head))
 			head.prev = node;
@@ -237,18 +237,18 @@ class Dll<T> implements List<T>
 	}
 	
 	/**
-		Prepends the node `x` to this list.
+		Prepends `node` to this list.
 	**/
-	public function prependNode(x:DllNode<T>)
+	public function prependNode(node:DllNode<T>)
 	{
-		assert(x.getList() == this, "node is not managed by this list");
+		assert(node.getList() == this, "node is not managed by this list");
 		
-		x.next = head;
+		node.next = head;
 		if (valid(head))
-			head.prev = x;
+			head.prev = node;
 		else
-			tail = x;
-		head = x;
+			tail = node;
+		head = node;
 		
 		if (mCircular)
 		{
@@ -260,15 +260,15 @@ class Dll<T> implements List<T>
 	}
 	
 	/**
-		Inserts the element `x` after `node` by creating a `DllNode` object storing `x`.
-		@return the inserted node storing `x`.
+		Inserts `val` after `node` by creating a `DllNode` object storing `val`.
+		@return the inserted node storing `val`.
 	**/
-	public function insertAfter(node:DllNode<T>, x:T):DllNode<T>
+	public function insertAfter(node:DllNode<T>, val:T):DllNode<T>
 	{
 		assert(valid(node), "node is null");
 		assert(node.getList() == this, "node is not managed by this list");
 		
-		var t = getNode(x);
+		var t = getNode(val);
 		node.insertAfter(t);
 		if (node == tail)
 		{
@@ -282,15 +282,15 @@ class Dll<T> implements List<T>
 	}
 	
 	/**
-		Inserts the element `x` before `node` by creating a `DllNode` object storing `x`.
-		@return the inserted node storing `x`.
+		Inserts `val` before `node` by creating a `DllNode` object storing `val`.
+		@return the inserted node storing `val`.
 	**/
-	public function insertBefore(node:DllNode<T>, x:T):DllNode<T>
+	public function insertBefore(node:DllNode<T>, val:T):DllNode<T>
 	{
 		assert(valid(node), "node is null");
 		assert(node.getList() == this, "node is not managed by this list");
 		
-		var t = getNode(x);
+		var t = getNode(val);
 		node.insertBefore(t);
 		if (node == head)
 		{
@@ -304,7 +304,7 @@ class Dll<T> implements List<T>
 	}
 	
 	/**
-		Unlinks `node` from this list and returns `node->next`.
+		Unlinks `node` from this list and returns `node.next`.
 	**/
 	public function unlink(node:DllNode<T>):DllNode<T>
 	{
@@ -497,12 +497,12 @@ class Dll<T> implements List<T>
 	}
 	
 	/**
-		Searches for the element `x` in this list from head to tail starting at node `from`.
+		Searches for `val` in this list from head to tail starting at node `from`.
 		
 		If `from` is null, the search starts at the head of this list.
-		@return the node containing `x` or null if such a node does not exist.
+		@return the node containing `val` or null if such a node does not exist.
 	**/
-	public function nodeOf(x:T, from:DllNode<T> = null):DllNode<T>
+	public function nodeOf(val:T, from:DllNode<T> = null):DllNode<T>
 	{
 		#if debug
 		if (valid(from))
@@ -514,16 +514,16 @@ class Dll<T> implements List<T>
 		{
 			while (node != tail)
 			{
-				if (node.val == x) return node;
+				if (node.val == val) return node;
 				node = node.next;
 			}
-			if (node.val == x) return node;
+			if (node.val == val) return node;
 		}
 		else
 		{
 			while (valid(node))
 			{
-				if (node.val == x) return node;
+				if (node.val == val) return node;
 				node = node.next;
 			}
 		}
@@ -531,12 +531,12 @@ class Dll<T> implements List<T>
 	}
 	
 	/**
-		Searches for the element `x` in this list from tail to head starting at node `from`.
+		Searches for `val` in this list from tail to head starting at node `from`.
 		
 		If `from` is null, the search starts at the tail of this list.
-		@return the node containing `x` or null if such a node does not exist.
+		@return the node containing `val` or null if such a node does not exist.
 	**/
-	public function lastNodeOf(x:T, from:DllNode<T> = null):DllNode<T>
+	public function lastNodeOf(val:T, from:DllNode<T> = null):DllNode<T>
 	{
 		#if debug
 		if (valid(from))
@@ -548,16 +548,16 @@ class Dll<T> implements List<T>
 		{
 			while (node != head)
 			{
-				if (node.val == x) return node;
+				if (node.val == val) return node;
 				node = node.prev;
 			}
-			if (node.val == x) return node;
+			if (node.val == val) return node;
 		}
 		else
 		{
 			while (valid(node))
 			{
-				if (node.val == x) return node;
+				if (node.val == val) return node;
 				node = node.prev;
 			}
 		}
@@ -567,7 +567,7 @@ class Dll<T> implements List<T>
 	/**
 		Sorts the elements of this list using the merge sort algorithm.
 		@param cmp a comparison function.
-		If null, the elements are compared using `element->compare()`.
+		If null, the elements are compared using `element.compare()`.
 		<warn>In this case all elements have to implement `Comparable`.</warn>
 		@param useInsertionSort if true, the linked list is sorted using the insertion sort algorithm.
 		This is faster for nearly sorted lists.
@@ -600,19 +600,19 @@ class Dll<T> implements List<T>
 	}
 	
 	/**
-		Merges this list with the list `x` by linking both lists together.
+		Merges this list with `list` by linking both lists together.
 		
-		<warn>The merge operation destroys x so it should be discarded.</warn>
+		<warn>The merge operation destroys `list` so it should be discarded.</warn>
 	**/
-	public function merge(x:Dll<T>)
+	public function merge(list:Dll<T>)
 	{
-		assert(x != this, "x equals this list");
-		assert(x != null, "x is null");
+		assert(list != this, "list equals this list");
+		assert(list != null, "list is null");
 		
-		if (valid(x.head))
+		if (valid(list.head))
 		{
-			var node = x.head;
-			for (i in 0...x.size)
+			var node = list.head;
+			for (i in 0...list.size)
 			{
 				node.mList = this;
 				node = node.next;
@@ -620,17 +620,17 @@ class Dll<T> implements List<T>
 				
 			if (valid(head))
 			{
-				tail.next = x.head;
-				x.head.prev = tail;
-				tail = x.tail;
+				tail.next = list.head;
+				list.head.prev = tail;
+				tail = list.tail;
 			}
 			else
 			{
-				head = x.head;
-				tail = x.tail;
+				head = list.head;
+				tail = list.tail;
 			}
 			
-			mSize += x.size;
+			mSize += list.size;
 			
 			if (mCircular)
 			{
@@ -641,21 +641,21 @@ class Dll<T> implements List<T>
 	}
 	
 	/**
-		Concatenates this list with the list `x` by appending all elements of `x` to this list.
+		Concatenates this list with `list` by appending all elements of `list` to this list.
 		
-		This list and `x` are untouched.
+		This list and `list` are left untouched.
 		@return a new list containing the elements of both lists.
 	**/
-	public function concat(x:Dll<T>):Dll<T>
+	public function concat(list:Dll<T>):Dll<T>
 	{
-		assert(x != null, "x is null");
-		assert(x != this, "x equals this list");
+		assert(list != null, "list is null");
+		assert(list != this, "list equals this list");
 		
 		var c = new Dll<T>();
-		var k = x.size;
+		var k = list.size;
 		if (k > 0)
 		{
-			var node = x.tail;
+			var node = list.tail;
 			var t = c.tail = new DllNode<T>(node.val, c);
 			node = node.prev;
 			var i = k - 1;
@@ -740,9 +740,9 @@ class Dll<T> implements List<T>
 	}
 	
 	/**
-		Converts the data in the linked list to strings, inserts `x` between the elements, concatenates them, and returns the resulting string.
+		Converts the data in the linked list to strings, inserts `sep` between the elements, concatenates them, and returns the resulting string.
 	**/
-	public function join(x:String):String
+	public function join(sep:String):String
 	{
 		if (isEmpty()) return "";
 		
@@ -750,7 +750,7 @@ class Dll<T> implements List<T>
 		var node = head;
 		for (i in 0...size - 1)
 		{
-			b.add(Std.string(node.val) + x);
+			b.add(Std.string(node.val) + sep);
 			node = node.next;
 		}
 		b.add(Std.string(node.val));
@@ -779,7 +779,7 @@ class Dll<T> implements List<T>
 	/**
 		Shuffles the elements of this collection by using the Fisher-Yates algorithm.
 		@param rvals a list of random double values in the interval [0, 1) defining the new positions of the elements.
-		If omitted, random values are generated on-the-fly by calling `Math->random()`.
+		If omitted, random values are generated on-the-fly by calling `Math.random()`.
 	**/
 	public function shuffle(rvals:Array<Float> = null)
 	{
@@ -866,11 +866,11 @@ class Dll<T> implements List<T>
 	/* INTERFACE List */
 	
 	/**
-		Same as `append()`.
+		Same as `this.append()`.
 	**/
-	public function add(x:T)
+	public function add(val:T)
 	{
-		append(x);
+		append(val);
 	}
 	
 	/**
@@ -1017,14 +1017,14 @@ class Dll<T> implements List<T>
 	}
 	
 	/**
-		Returns true if this list contains a node storing the element `x`.
+		Returns true if this list contains a node storing `val`.
 	**/
-	public function contains(x:T):Bool
+	public function contains(val:T):Bool
 	{
 		var node = head;
 		for (i in 0...size)
 		{
-			if (node.val == x)
+			if (node.val == val)
 				return true;
 			node = node.next;
 		}
@@ -1032,10 +1032,10 @@ class Dll<T> implements List<T>
 	}
 	
 	/**
-		Removes all nodes storing the element `x`.
-		@return true if at least one occurrence of `x` was removed.
+		Removes all nodes storing `val`.
+		@return true if at least one occurrence of `val` was removed.
 	**/
-	public function remove(x:T):Bool
+	public function remove(val:T):Bool
 	{
 		var s = size;
 		if (s == 0) return false;
@@ -1043,7 +1043,7 @@ class Dll<T> implements List<T>
 		var node = head;
 		while (valid(node))
 		{
-			if (node.val == x)
+			if (node.val == val)
 				node = unlink(node);
 			else
 				node = node.next;
@@ -1076,9 +1076,9 @@ class Dll<T> implements List<T>
 	}
 	
 	/**
-		Returns a new `DllIterator` object to iterate over all elements contained in this doubly linked list.
+		Returns a new *DllIterator* object to iterate over all elements contained in this doubly linked list.
 		
-		Uses a `CircularDllIterator` iterator object if `circular` is true.
+		Uses a *CircularDllIterator* iterator object if `circular` is true.
 		
 		The elements are visited from head to tail.
 		
@@ -1124,7 +1124,7 @@ class Dll<T> implements List<T>
 	}
 	
 	/**
-		Returns true only if `size` is 0.
+		Returns true only if `this.size` is 0.
 	**/
 	public inline function isEmpty():Bool
 	{
@@ -1151,10 +1151,11 @@ class Dll<T> implements List<T>
 	}
 	
 	/**
-		Duplicates this linked list. Supports shallow (structure only) and deep copies (structure & elements).
-		@param byRef if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
-		If false, the `clone()` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
-		@param copier a custom function for copying elements. Replaces `element->clone()` if `byRef` is false.
+		Creates and returns a shallow copy (structure only - default) or deep copy (structure & elements) of this list.
+		
+		If `byRef` is true, primitive elements are copied by value whereas objects are copied by reference.
+		
+		If `byRef` is false, the `copier` function is used for copying elements. If omitted, `clone()` is called on each element assuming all elements implement `Cloneable`.
 	**/
 	public function clone(byRef:Bool = true, copier:T->T = null):Collection<T>
 	{

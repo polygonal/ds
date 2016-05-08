@@ -72,7 +72,7 @@ class Bst<T:Comparable<T>> implements Collection<T>
 	public var key(default, null):Int = HashKey.next();
 	
 	/**
-		If true, reuses the iterator object instead of allocating a new one when calling `iterator()`.
+		If true, reuses the iterator object instead of allocating a new one when calling `this.iterator()`.
 		
 		The default is false.
 		
@@ -97,17 +97,17 @@ class Bst<T:Comparable<T>> implements Collection<T>
 	}
 	
 	/**
-		Inserts the element `x` into the binary search tree.
-		@return the inserted node storing the element `x`.
+		Inserts `val` into the binary search tree.
+		@return the inserted node storing `val`.
 	**/
-	public function insert(x:T):BinaryTreeNode<T>
+	public function insert(val:T):BinaryTreeNode<T>
 	{
-		assert(x != null, "element is null");
+		assert(val != null, "element is null");
 		
 		mSize++;
 		if (mRoot == null)
 		{
-			mRoot = new BinaryTreeNode<T>(x);
+			mRoot = new BinaryTreeNode<T>(val);
 			return mRoot;
 		}
 		else
@@ -116,25 +116,25 @@ class Bst<T:Comparable<T>> implements Collection<T>
 			var node = mRoot;
 			while (node != null)
 			{
-				if (x.compare(node.val) < 0)
+				if (val.compare(node.val) < 0)
 				{
-					if (node.l != null)
-						node = node.l;
+					if (node.left != null)
+						node = node.left;
 					else
 					{
-						node.setL(x);
-						t = node.l;
+						node.setLeft(val);
+						t = node.left;
 						break;
 					}
 				}
 				else
 				{
-					if (node.r != null)
-						node = node.r;
+					if (node.right != null)
+						node = node.right;
 					else
 					{
-						node.setR(x);
-						t = node.r;
+						node.setRight(val);
+						t = node.right;
 						break;
 					}
 				}
@@ -144,86 +144,86 @@ class Bst<T:Comparable<T>> implements Collection<T>
 	}
 	
 	/**
-		Finds the node that stores the element `x`.
-		@return the node storing `x` or null if `x` does not exist.
+		Finds the node that stores `val`.
+		@return the node storing `val` or null if `val` does not exist.
 	**/
-	public function find(x:T):BinaryTreeNode<T>
+	public function find(val:T):BinaryTreeNode<T>
 	{
 		assert(mRoot != null, "tree is empty");
-		assert(x != null, "element is null");
+		assert(val != null, "element is null");
 		
 		var node = mRoot;
 		while (node != null)
 		{
-			var i = x.compare(node.val);
+			var i = val.compare(node.val);
 			if (i == 0) break;
-			node = i < 0 ? node.l : node.r;
+			node = i < 0 ? node.left : node.right;
 		}
 		return node;
 	}
 	
 	/**
-		Removes the node storing the element `x`.
-		@return true if `x` was successfully removed.
+		Removes `node`.
+		@return true if `node` was successfully removed.
 	**/
-	public function removeNode(x:BinaryTreeNode<T>):Bool
+	public function removeNode(node:BinaryTreeNode<T>):Bool
 	{
-		assert(x != null, "element is null");
+		assert(node != null, "element is null");
 		
-		if (x.l == null || x.r == null)
+		if (node.left == null || node.right == null)
 		{
 			var child:BinaryTreeNode<T> = null;
-			if (x.l != null) child = x.l;
-			if (x.r != null) child = x.r;
-			if (x.p == null)
+			if (node.left != null) child = node.left;
+			if (node.right != null) child = node.right;
+			if (node.parent == null)
 				mRoot = child;
 			else
 			{
-				if (x == x.p.l)
-					x.p.l = child;
+				if (node == node.parent.left)
+					node.parent.left = child;
 				else
-					x.p.r = child;
+					node.parent.right = child;
 			}
 			
-			if (child != null) child.p = x.p;
-			x.l = null;
-			x.r = null;
-			x = null;
+			if (child != null) child.parent = node.parent;
+			node.left = null;
+			node.right = null;
+			node = null;
 		}
 		else
 		{
-			var l = x.l;
-			while (l.r != null) l = l.r;
+			var l = node.left;
+			while (l.right != null) l = l.right;
 			
-			if (x.l == l)
+			if (node.left == l)
 			{
-				l.r = x.r;
-				l.r.p = l;
+				l.right = node.right;
+				l.right.parent = l;
 			}
 			else
 			{
-				l.p.r = l.l;
-				if (l.l != null) l.l.p = l.p;
-				l.l = x.l;
-				l.l.p = l;
-				l.r = x.r;
-				l.r.p = l;
+				l.parent.right = l.left;
+				if (l.left != null) l.left.parent = l.parent;
+				l.left = node.left;
+				l.left.parent = l;
+				l.right = node.right;
+				l.right.parent = l;
 			}
 			
-			if (x.p == null)
+			if (node.parent == null)
 				mRoot = l;
 			else
 			{
-				if (x == x.p.l)
-					x.p.l = l;
+				if (node == node.parent.left)
+					node.parent.left = l;
 				else
-					x.p.r = l;
+					node.parent.right = l;
 			}
 			
-			l.p = x.p;
-			x.l = null;
-			x.r = null;
-			x = null;
+			l.parent = node.parent;
+			node.left = null;
+			node.right = null;
+			node = null;
 		}
 		
 		if (--mSize == 0) mRoot = null;
@@ -286,20 +286,20 @@ class Bst<T:Comparable<T>> implements Collection<T>
 	}
 	
 	/**
-		Returns true if this BST contains the element `x`.
+		Returns true if this BST contains `val`.
 	**/
-	public inline function contains(x:T):Bool
+	public inline function contains(val:T):Bool
 	{
-		return size > 0 && (find(x) != null);
+		return size > 0 && (find(val) != null);
 	}
 	
 	/**
-		Removes all nodes containing the element `x`.
-		@return true if at least one occurrence of `x` is nullified.
+		Removes all nodes containing `val`.
+		@return true if at least one occurrence of `val` is nullified.
 	**/
-	public function remove(x:T):Bool
+	public function remove(val:T):Bool
 	{
-		assert(x != null, "element is null");
+		assert(val != null, "element is null");
 		
 		if (size == 0) return false;
 		
@@ -307,7 +307,7 @@ class Bst<T:Comparable<T>> implements Collection<T>
 		var found = false;
 		while (s > 0)
 		{
-			var node = find(x);
+			var node = find(val);
 			if (node == null) break;
 			if (!removeNode(node)) break;
 			found = true;
@@ -334,7 +334,7 @@ class Bst<T:Comparable<T>> implements Collection<T>
 	}
 	
 	/**
-		Returns a new `BstIterator` object to iterate over all elements contained in this BST.
+		Returns a new *BstIterator* object to iterate over all elements contained in this BST.
 		
 		The elements are visited by using a preorder traversal.
 		
@@ -355,7 +355,7 @@ class Bst<T:Comparable<T>> implements Collection<T>
 	}
 	
 	/**
-		Returns true only if `size` is 0.
+		Returns true only if `this.size` is 0.
 	**/
 	public function isEmpty():Bool
 	{
@@ -378,10 +378,11 @@ class Bst<T:Comparable<T>> implements Collection<T>
 	}
 	
 	/**
-		Duplicates this subtree. Supports shallow (structure only) and deep copies (structure & elements).
-		@param byRef if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
-		If false, the `clone()` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
-		@param copier a custom function for copying elements. Replaces `element->clone()` if `byRef` is false.
+		Creates and returns a shallow copy (structure only - default) or deep copy (structure & elements) of this binary search tree.
+		
+		If `byRef` is true, primitive elements are copied by value whereas objects are copied by reference.
+		
+		If `byRef` is false, the `copier` function is used for copying elements. If omitted, `clone()` is called on each element assuming all elements implement `Cloneable`.
 	**/
 	public function clone(byRef:Bool = true, copier:T->T = null):Collection<T>
 	{
@@ -432,15 +433,15 @@ class BstIterator<T> implements de.polygonal.ds.Itr<T>
 	public inline function next():T
 	{
 		var node = mStack[--mTop];
-		if (node.hasL())
+		if (node.hasLeft())
 		{
 			mC++;
-			mStack[mTop++] = node.l;
+			mStack[mTop++] = node.left;
 		}
-		if (node.hasR())
+		if (node.hasRight())
 		{
 			mC++;
-			mStack[mTop++] = node.r;
+			mStack[mTop++] = node.right;
 		}
 		return node.val;
 	}

@@ -89,11 +89,11 @@ class GraphNode<T> implements Hashable
 	var mGraph:Graph<T>;
 	
 	/**
-		Creates a graph node storing the element `x`.
+		Creates a graph node storing `val`.
 	**/
-	public function new(graph:Graph<T>, x:T)
+	public function new(graph:Graph<T>, val:T)
 	{
-		val = x;
+		this.val = val;
 		arcList = null;
 		marked = false;
 		mGraph = graph;
@@ -113,7 +113,7 @@ class GraphNode<T> implements Hashable
 	}
 	
 	/**
-		Returns a new `NodeValIterator` object to iterate over the elements stored in all nodes that are connected to this node by an outgoing arc.
+		Returns a new *NodeValIterator* object to iterate over the elements stored in all nodes that are connected to this node by an outgoing arc.
 		
 		@see http://haxe.org/ref/iterators
 	**/

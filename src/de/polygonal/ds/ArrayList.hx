@@ -56,8 +56,8 @@ class ArrayList<T> implements List<T>
 	
 	/**
 		The size of the allocated storage space for the elements.
-		If more space is required to accommodate new elements, `capacity` grows according `GrowthRate`.
-		The capacity never falls below the initial size defined in the constructor and is usually a bit larger than `size` (_mild overallocation_).
+		If more space is required to accommodate new elements, `capacity` grows according to `this.growthRate`.
+		The capacity never falls below the initial size defined in the constructor and is usually a bit larger than `this.size` (_mild overallocation_).
 	**/
 	public var capacity(default, null):Int;
 	
@@ -68,7 +68,7 @@ class ArrayList<T> implements List<T>
 	public var growthRate:Int = GrowthRate.NORMAL;
 	
 	/**
-		If true, reuses the iterator object instead of allocating a new one when calling `iterator()`.
+		If true, reuses the iterator object instead of allocating a new one when calling `this.iterator()`.
 		
 		The default is false.
 		
@@ -84,7 +84,7 @@ class ArrayList<T> implements List<T>
 	/**
 		@param initialCapacity the initial physical space for storing values.
 		Useful before inserting a large number of elements as this reduces the amount of incremental reallocation.
-		@param source Copies all values from `source` in the range [0, `source->length` - 1] to this collection.
+		@param source Copies all values from `source` in the range [0, `source.length` - 1] to this collection.
 	**/
 	public function new(initalCapacity:Null<Int> = 2, ?source:Array<T>)
 	{
@@ -114,7 +114,7 @@ class ArrayList<T> implements List<T>
 	}
 	
 	/**
-		Replaces the element at index `i` with the element `val`.
+		Replaces the element at index `i` with `val`.
 	**/
 	public inline function set(i:Int, val:T)
 	{
@@ -124,7 +124,7 @@ class ArrayList<T> implements List<T>
 	}
 	
 	/**
-		Appends the element `val`, same as `pushBack()`.
+		Appends `val`, same as `this.pushBack()`.
 	**/
 	public inline function add(val:T)
 	{
@@ -132,7 +132,7 @@ class ArrayList<T> implements List<T>
 	}
 	
 	/**
-		Adds `val` to the end of this vector and returns the new size.
+		Adds `val` to the end of this list and returns the new size.
 	**/
 	public inline function pushBack(val:T):Int
 	{
@@ -142,9 +142,9 @@ class ArrayList<T> implements List<T>
 	}
 	
 	/**
-		Faster than `pushBack()` by skipping boundary checking.
+		Faster than `this.pushBack()` by skipping boundary checking.
 		
-		The user is responsible for making sure that there is enough space available (e.g. by calling `reserve()`).
+		The user is responsible for making sure that there is enough space available (e.g. by calling `this.reserve()`).
 	**/
 	public inline function unsafePushBack(val:T):Int
 	{
@@ -155,7 +155,7 @@ class ArrayList<T> implements List<T>
 	}
 	
 	/**
-		Removes the last element from this vector and returns that element.
+		Removes the last element from this list and returns that element.
 	**/
 	public inline function popBack():T
 	{
@@ -171,7 +171,7 @@ class ArrayList<T> implements List<T>
 	**/
 	public function popFront():T
 	{
-		assert(size > 0, 'vector is empty');
+		assert(size > 0, "list is empty");
 		
 		var d = mData;
 		var x = d.get(0);
@@ -186,7 +186,7 @@ class ArrayList<T> implements List<T>
 	}
 	
 	/**
-		Prepends the element `val` to the first element and returns the new size.
+		Prepends `val` to the first element and returns the new size.
 		
 		Shifts the first element (if any) and any subsequent elements to the right (indices + 1).
 	**/
@@ -223,7 +223,7 @@ class ArrayList<T> implements List<T>
 	**/
 	public inline function front():T
 	{
-		assert(size > 0, "vector is empty");
+		assert(size > 0, "list is empty");
 		
 		return mData.get(0);
 	}
@@ -231,11 +231,11 @@ class ArrayList<T> implements List<T>
 	/**
 		Returns the last element.
 		
-		This is the element at index `size` - 1.
+		This is the element at index `this.size` - 1.
 	**/
 	public inline function back():T
 	{
-		assert(size > 0, "vector is empty");
+		assert(size > 0, "list is empty");
 		
 		return mData.get(size - 1);
 	}
@@ -357,9 +357,9 @@ class ArrayList<T> implements List<T>
 	}
 	
 	/**
-		Cuts of `size` - `n` elements.
+		Cuts of `this.size` - `n` elements.
 		
-		This only modifies the value of `size` and does not perform reallocation.
+		This only modifies the value of `this.size` and does not perform reallocation.
 	**/
 	public function trim(n:Int):ArrayList<T>
 	{
@@ -397,10 +397,10 @@ class ArrayList<T> implements List<T>
 	}
 	
 	/**
-		Finds the first occurrence of the element `val` by using the binary search algorithm assuming elements are sorted.
+		Finds the first occurrence of `val` by using the binary search algorithm assuming elements are sorted.
 		@param from the index to start from. The default value is 0.
 		@param cmp a comparison function for the binary search. If omitted, the method assumes that all elements implement `Comparable`.
-		@return the index storing the element `val` or the bitwise complement (~) of the index where the `val` would be inserted (guaranteed to be a negative number).
+		@return the index storing `val` or the bitwise complement (~) of the index where the `val` would be inserted (guaranteed to be a negative number).
 		<warn>The insertion point is only valid if `from` is 0.</warn>
 	**/
 	public function binarySearch(val:T, from:Int, ?cmp:T->T->Int):Int
@@ -433,8 +433,8 @@ class ArrayList<T> implements List<T>
 	}
 	
 	/**
-		Finds the first occurrence of the element `val` (by incrementing indices - from left to right).
-		@return the index storing the element `val` or -1 if `val` was not found.
+		Finds the first occurrence of `val` (by incrementing indices - from left to right).
+		@return the index storing `val` or -1 if `val` was not found.
 	**/
 	@:access(de.polygonal.ds.ArrayList)
 	public function indexOf(val:T):Int
@@ -454,7 +454,7 @@ class ArrayList<T> implements List<T>
 	}
 	
 	/**
-		Finds the first occurrence of `val` (by decrementing indices - from right to left) and returns the index storing the element `x` or -1 if `x` was not found.
+		Finds the first occurrence of `val` (by decrementing indices - from right to left) and returns the index storing `val` or -1 if `val` was not found.
 		@param from the index to start from. By default, the method starts from the last element in this dense array.
 	**/
 	public function lastIndexOf(val:T, from:Int = -1):Int
@@ -510,7 +510,7 @@ class ArrayList<T> implements List<T>
 	}
 	
 	/**
-		Reverses this vector in place in the range [`first`, `last`] (the first element becomes the last and the last becomes the first).
+		Reverses this list in place in the range [`first`, `last`] (the first element becomes the last and the last becomes the first).
 	**/
 	public function reverse(first:Int = -1, last:Int = -1)
 	{
@@ -555,12 +555,12 @@ class ArrayList<T> implements List<T>
 	
 	/**
 		Sorts the elements of this dense array using the quick sort algorithm.
-		@param cmp a comparison function.If null, the elements are compared using `element->compare()`.
+		@param cmp a comparison function.If null, the elements are compared using `element.compare()`.
 		<warn>In this case all elements have to implement `Comparable`.</warn>
 		@param useInsertionSort if true, the dense array is sorted using the insertion sort algorithm. This is faster for nearly sorted lists.
 		@param first sort start index. The default value is 0.
 		@param count the number of elements to sort (range: [`first`, `first` + `count`]).
-		If omitted, `count` is set to the remaining elements (`size` - `first`).
+		If omitted, `count` is set to the remaining elements (`this.size` - `first`).
 	**/
 	public function sort(?cmp:T->T->Int, useInsertionSort:Bool = false, first:Int = 0, count:Int = -1)
 	{
@@ -586,7 +586,7 @@ class ArrayList<T> implements List<T>
 	/**
 		Shuffles the elements of this collection by using the Fisher-Yates algorithm.
 		@param rvals a list of random double values in the interval [0, 1) defining the new positions of the elements.
-		If omitted, random values are generated on-the-fly by calling `Math->random()`.
+		If omitted, random values are generated on-the-fly by calling `Math.random()`.
 	**/
 	public function shuffle(?rvals:Array<Float>)
 	{
@@ -815,7 +815,7 @@ class ArrayList<T> implements List<T>
 	/**
 		Preallocates storage for `n` elements.
 		
-		May cause a reallocation, but has no effect on the vector `size` and its elements.
+		May cause a reallocation, but has no effect `size` and its elements.
 		Useful before inserting a large number of elements as this reduces the amount of incremental reallocation.
 	**/
 	public function reserve(n:Int):ArrayList<T>
@@ -831,7 +831,7 @@ class ArrayList<T> implements List<T>
 	/**
 		Sets `n` elements to `val` (by reference).
 		
-		Automatically reserves storage for `n` elements so an additional call to `reserve()` is not required.
+		Automatically reserves storage for `n` elements so an additional call to `this.reserve()` is not required.
 	**/
 	public function init(n:Int, val:T):ArrayList<T>
 	{
@@ -845,8 +845,8 @@ class ArrayList<T> implements List<T>
 	/**
 		Reduces the capacity of the internal container to the initial capacity.
 		
-		May cause a reallocation, but has no effect on the vector `size` and its elements.
-		An application can use this operation to free up memory by GC'ing used resources.
+		May cause a reallocation, but has no effect on `this.size` and its elements.
+		An application can use this operation to free up memory by unlocking resources for the garbage collector.
 	**/
 	public function pack():ArrayList<T>
 	{
@@ -887,6 +887,7 @@ class ArrayList<T> implements List<T>
 		mData.blit(fromIndex, out.mData, 0, n);
 		return out;
 	}
+	
 	/**
 		Make this an exact copy of `other`.
 	**/
@@ -925,7 +926,7 @@ class ArrayList<T> implements List<T>
 	/* INTERFACE Collection */
 	
 	/**
-		The total number of elements stored in this vector.
+		The total number of elements stored in this list.
 	**/
 	public var size(get, never):Int;
 	inline function get_size():Int
@@ -950,7 +951,7 @@ class ArrayList<T> implements List<T>
 	}
 	
 	/**
-		Returns true if this vector contains the element `val`.
+		Returns true if this list contains `val`.
 	**/
 	public function contains(val:T):Bool
 	{
@@ -1003,7 +1004,7 @@ class ArrayList<T> implements List<T>
 	}
 	
 	/**
-		Clears this vector by nullifying all elements so the garbage collector can reclaim used memory.
+		Clears this list by nullifying all elements so the garbage collector can reclaim used memory.
 	**/
 	public function clear(gc:Bool = false)
 	{
@@ -1012,7 +1013,7 @@ class ArrayList<T> implements List<T>
 	}
 	
 	/**
-		Returns a new `Array2Iterator` object to iterate over all elements contained in this vector.
+		Returns a new *ArrayListIterator* object to iterate over all elements contained in this list.
 		
 		Order: Row-major order (row-by-row).
 		
@@ -1033,7 +1034,7 @@ class ArrayList<T> implements List<T>
 	}
 	
 	/**
-		Returns true only if `size` is 0.
+		Returns true only if `this.size` is 0.
 	**/
 	public function isEmpty():Bool
 	{
@@ -1041,7 +1042,7 @@ class ArrayList<T> implements List<T>
 	}
 	
 	/**
-		Returns an array containing all elements in this vector.
+		Returns an array containing all elements in this list.
 		
 		Preserves the natural order of this array.
 	**/
@@ -1051,10 +1052,11 @@ class ArrayList<T> implements List<T>
 	}
 	
 	/**
-		Duplicates this dense array. Supports shallow (structure only) and deep copies (structure & elements).
-		@param byRef if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
-		If false, the `clone()` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
-		@param copier a custom function for copying elements. Replaces `element->clone()` if `byRef` is false.
+		Creates and returns a shallow copy (structure only - default) or deep copy (structure & elements) of this list.
+		
+		If `byRef` is true, primitive elements are copied by value whereas objects are copied by reference.
+		
+		If `byRef` is false, the `copier` function is used for copying elements. If omitted, `clone()` is called on each element assuming all elements implement `Cloneable`.
 	**/
 	public function clone(byRef:Bool = true, copier:T->T = null):Collection<T>
 	{

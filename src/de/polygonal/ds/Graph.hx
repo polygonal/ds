@@ -67,7 +67,7 @@ class Graph<T> implements Collection<T>
 	public var autoClearMarks:Bool = false;
 	
 	/**
-		If true, reuses the iterator object instead of allocating a new one when calling `iterator()`.
+		If true, reuses the iterator object instead of allocating a new one when calling `this.iterator()`.
 		
 		The default is false.
 		
@@ -76,7 +76,7 @@ class Graph<T> implements Collection<T>
 	public var reuseIterator:Bool = false;
 	
 	/**
-		If specified, `borrowArc()` is called in order to create `GraphArc` objects.
+		If specified, `this.borrowArc()` is called in order to create `GraphArc` objects.
 		
 		Useful for pooling `GraphArc` objects.
 		
@@ -87,7 +87,7 @@ class Graph<T> implements Collection<T>
 	/**
 		A function pointer responsible for returning `GraphArc` objects.
 		
-		Required if `borrowArc` is specified.
+		Required if `this.borrowArc` is specified.
 		
 		Default is null.
 	**/
@@ -128,15 +128,15 @@ class Graph<T> implements Collection<T>
 	}
 	
 	/**
-		Finds and returns the node storing the element `x` or null if such a node does not exist.
+		Finds and returns the node storing `val` or null if such a node does not exist.
 	**/
-	public function findNode(x:T):GraphNode<T>
+	public function findNode(val:T):GraphNode<T>
 	{
 		var found = false;
 		var n = mNodeList;
 		while (n != null)
 		{
-			if (n.val == x)
+			if (n.val == val)
 			{
 				found = true;
 				break;
@@ -147,43 +147,43 @@ class Graph<T> implements Collection<T>
 	}
 	
 	/**
-		Creates and returns a node object storing the element `x`.
+		Creates and returns a node object storing `val`.
 	**/
-	public function createNode(x:T):GraphNode<T>
+	public function createNode(val:T):GraphNode<T>
 	{
-		return new GraphNode<T>(this, x);
+		return new GraphNode<T>(this, val);
 	}
 	
 	/**
-		Adds the node `x` to this graph.
+		Adds the node `node` to this graph and returns `node`.
 	**/
-	public function addNode(x:GraphNode<T>):GraphNode<T>
+	public function addNode(node:GraphNode<T>):GraphNode<T>
 	{
-		assert(mNodeSet.set(x), "node exists");
+		assert(mNodeSet.set(node), "node exists");
 		
 		mSize++;
 		
-		x.next = mNodeList;
-		if (x.next != null) x.next.prev = x;
-		mNodeList = x;
-		return x;
+		node.next = mNodeList;
+		if (node.next != null) node.next.prev = node;
+		mNodeList = node;
+		return node;
 	}
 	
 	/**
-		Removes the node `x` from this graph.
+		Removes `node` from this graph.
 		
-		This clears all outgoing and incoming arcs and removes `x` from the node list.
+		This clears all outgoing and incoming arcs and removes `node` from the node list.
 	**/
-	public function removeNode(x:GraphNode<T>)
+	public function removeNode(node:GraphNode<T>)
 	{
 		assert(size > 0, "graph is empty");
-		assert(mNodeSet.has(x), "unknown node");
+		assert(mNodeSet.has(node), "unknown node");
 		
-		unlink(x);
+		unlink(node);
 		
-		if (x.prev != null) x.prev.next = x.next;
-		if (x.next != null) x.next.prev = x.prev;
-		if (mNodeList == x) mNodeList = x.next;
+		if (node.prev != null) node.prev.next = node.next;
+		if (node.next != null) node.next.prev = node.prev;
+		if (mNodeList == node) mNodeList = node.next;
 		mSize--;
 	}
 	
@@ -341,7 +341,7 @@ class Graph<T> implements Collection<T>
 	/**
 		Performs an iterative depth-first search (DFS).
 		@param preflight if true, an extra traversal is performed before the actual traversal runs.
-		The first pass visits all elements and calls `element->visit()` with the `preflight` parameter set to true.
+		The first pass visits all elements and calls `element.visit()` with the `preflight` parameter set to true.
 		In this pass the return value determines whether the element will be processed (true) or
 		excluded (false) from the final traversal, which is the second pass (`preflight` parameter set to false).
 		The same applies when using a `process` function.
@@ -353,9 +353,9 @@ class Graph<T> implements Collection<T>
 		<li>custom data specified by the `userData` parameter (default is null).</li>
 		</ul>
 		Once `process` returns false, the traversal stops immediately and no further nodes are examined (termination condition).
-		If omitted, `element->visit()` is used.
+		If omitted, `element.visit()` is used.
 		<warn>In this case the elements of all nodes have to implement `Visitable`.</warn>
-		@param userData custom data that is passed to every visited node via `process` or `element->visit()`. If omitted, null is used.
+		@param userData custom data that is passed to every visited node via `process` or `element.visit()`. If omitted, null is used.
 		@param recursive if true, performs a recursive traversal (default traversal style is iterative).
 	**/
 	public function DFS(preflight:Bool = false, seed:GraphNode<T> = null, process:GraphNode<T>->Bool->Dynamic->Bool = null, userData:Dynamic = null, recursive:Bool = false)
@@ -541,7 +541,7 @@ class Graph<T> implements Collection<T>
 	/**
 		Performs an iterative breadth-first search (BFS).
 		@param preflight if true, an extra traversal is performed before the actual traversal runs.
-		The first pass visits all elements and calls `element->visit()` with the `preflight` parameter set to true.
+		The first pass visits all elements and calls `element.visit()` with the `preflight` parameter set to true.
 		In this pass the return value determines whether the element will be processed (true) or
 		excluded (false) from the final traversal, which is the second pass (`preflight` parameter set to false).
 		The same applies when using a `process` function.
@@ -553,9 +553,9 @@ class Graph<T> implements Collection<T>
 		<li>custom data specified by the `userData` parameter (default is null).</li>
 		</ul>
 		Once `process` returns false, the traversal stops immediately and no further nodes are examined (termination condition).
-		If omitted, `element->visit()` is used.
+		If omitted, `element.visit()` is used.
 		<warn>In this case the elements of all nodes have to implement `Visitable`.</warn>
-		@param userData custom data that is passed to every visited node via `process` or `element->visit()`. If omitted, null is used.
+		@param userData custom data that is passed to every visited node via `process` or `element.visit()`. If omitted, null is used.
 	**/
 	public function BFS(preflight:Bool = false, seed:GraphNode<T> = null, process:GraphNode<T>->Bool->Dynamic->Bool = null, userData:Dynamic = null)
 	{
@@ -758,7 +758,7 @@ class Graph<T> implements Collection<T>
 		Performs an iterative depth-limited breadth-first search (DLBFS).
 		@param maxDepth A `maxDepth` value of 1 means that only all direct neighbors of `seed` are visited.
 		@param preflight if true, an extra traversal is performed before the actual traversal runs.
-		The first pass visits all elements and calls `element->visit()` with the `preflight` parameter set to true.
+		The first pass visits all elements and calls `element.visit()` with the `preflight` parameter set to true.
 		In this pass the return value determines whether the element will be processed (true) or
 		excluded (false) from the final traversal, which is the second pass (`preflight` parameter set to false).
 		The same applies when using a `process` function.
@@ -770,9 +770,9 @@ class Graph<T> implements Collection<T>
 		<li>custom data specified by the `userData` parameter (default is null).</li>
 		</ul>
 		Once `process` returns false, the traversal stops immediately and no further nodes are examined (termination condition).
-		If omitted, `element->visit()` is used.
+		If omitted, `element.visit()` is used.
 		<warn>In this case the elements of all nodes have to implement `Visitable`.</warn>
-		@param userData custom data that is passed to every visited node via `process` or `element->visit()`. If omitted, null is used.
+		@param userData custom data that is passed to every visited node via `process` or `element.visit()`. If omitted, null is used.
 	**/
 	public function DLBFS(maxDepth:Int, preflight:Bool = false, seed:GraphNode<T> = null, process:GraphNode<T>->Bool->Dynamic->Bool = null, userData:Dynamic = null)
 	{
@@ -1108,15 +1108,15 @@ class Graph<T> implements Collection<T>
 	}
 	
 	/**
-		Returns true if this graph contains a node storing the element `x`.
+		Returns true if this graph contains a node storing `val`.
 	**/
-	public function contains(x:T):Bool
+	public function contains(val:T):Bool
 	{
 		var found = false;
 		var node = mNodeList;
 		while (node != null)
 		{
-			if (node.val == x)
+			if (node.val == val)
 				return true;
 			node = node.next;
 		}
@@ -1124,12 +1124,12 @@ class Graph<T> implements Collection<T>
 	}
 	
 	/**
-		Removes all nodes storing the element `x`.
+		Removes all nodes storing `val`.
 		
 		Nodes and elements are nullified.
-		@return true if at least one node storing `x` was removed.
+		@return true if at least one node storing `val` was removed.
 	**/
-	public function remove(x:T):Bool
+	public function remove(val:T):Bool
 	{
 		var found = false;
 		var node = mNodeList;
@@ -1137,7 +1137,7 @@ class Graph<T> implements Collection<T>
 		{
 			var nextNode = node.next;
 			
-			if (node.val == x)
+			if (node.val == val)
 			{
 				unlink(node);
 				if (node == mNodeList) mNodeList = nextNode;
@@ -1186,7 +1186,7 @@ class Graph<T> implements Collection<T>
 	}
 	
 	/**
-		Returns a new `GraphIterator` object to iterate over all elements stored in the graph nodes of this graph.
+		Returns a new *GraphIterator* object to iterate over all elements stored in the graph nodes of this graph.
 		
 		The nodes are visited in a random order.
 		
@@ -1207,7 +1207,7 @@ class Graph<T> implements Collection<T>
 	}
 	
 	/**
-		Returns a new `GraphNodeIterator` object to iterate over all `GraphNode` objects in this graph.
+		Returns a new *GraphNodeIterator* object to iterate over all `GraphNode` objects in this graph.
 		
 		The nodes are visited in a random order.
 		
@@ -1219,7 +1219,7 @@ class Graph<T> implements Collection<T>
 	}
 	
 	/**
-		Returns a new `GraphArcIterator` object to iterate over all `GraphArc` objects in this graph.
+		Returns a new *GraphArcIterator* object to iterate over all `GraphArc` objects in this graph.
 		
 		The arcs are visited in a random order.
 		
@@ -1231,7 +1231,7 @@ class Graph<T> implements Collection<T>
 	}
 	
 	/**
-		Returns true only if `size` is 0.
+		Returns true only if `this.size` is 0.
 	**/
 	public inline function isEmpty():Bool
 	{
@@ -1257,10 +1257,11 @@ class Graph<T> implements Collection<T>
 	}
 	
 	/**
-		Duplicates this graph. Supports shallow (structure only) and deep copies (structure & elements).
-		@param byRef if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
-		If false, the `clone()` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
-		@param copier a custom function for copying elements. Replaces `element->clone()` if `byRef` is false.
+		Creates and returns a shallow copy (structure only - default) or deep copy (structure & elements) of this graph.
+		
+		If `byRef` is true, primitive elements are copied by value whereas objects are copied by reference.
+		
+		If `byRef` is false, the `copier` function is used for copying elements. If omitted, `clone()` is called on each element assuming all elements implement `Cloneable`.
 	**/
 	public function clone(byRef:Bool = true, copier:T->T = null):Collection<T>
 	{

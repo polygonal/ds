@@ -76,7 +76,7 @@ class Array2<T> implements Collection<T>
 	}
 	
 	/**
-		Equals `width`.
+		Equals `this.width`.
 	**/
 	public var cols(get, set):Int;
 	inline function get_cols():Int
@@ -89,7 +89,7 @@ class Array2<T> implements Collection<T>
 	}
 	
 	/**
-		Equals `height`.
+		Equals `this.height`.
 	**/
 	public var rows(get, set):Int;
 	inline function get_rows():Int
@@ -111,7 +111,7 @@ class Array2<T> implements Collection<T>
 	public var key(default, null):Int = HashKey.next();
 	
 	/**
-		If true, reuses the iterator object instead of allocating a new one when calling `iterator()`.
+		If true, reuses the iterator object instead of allocating a new one when calling `this.iterator()`.
 		
 		The default is false.
 		
@@ -128,8 +128,10 @@ class Array2<T> implements Collection<T>
 		Creates a two-dimensional array with dimensions `width` and `height`.
 		
 		The minimum size is 2x2.
+		
+		@param source initial values for populating this two-dimensional array (`source.length` should match `width` * `height`).
 	**/
-	public function new(width:Int, ?height:Null<Int>, ?source:Array<T>)
+	public function new(width:Int, height:Int, ?source:Array<T>)
 	{
 		assert(width >= 2 && height >= 2, 'invalid size (width:$width, height:$height)');
 		
@@ -137,11 +139,8 @@ class Array2<T> implements Collection<T>
 		{
 			assert(source.length >= 4, "invalid source");
 			
-			if (height == null) height = Std.int(source.length / width);
-			
 			mW = width;
 			mH = height;
-			
 			var d = mData = NativeArrayTools.alloc(size);
 			for (i in 0...size) d.set(i, source[i]);
 		}
@@ -166,7 +165,7 @@ class Array2<T> implements Collection<T>
 	}
 	
 	/**
-		Returns the element that is stored in column `cell->x` and row `cell->y`.
+		Returns the element that is stored in column `cell.x` and row `cell.y`.
 	**/
 	public inline function getAtCell(cell:Array2Cell):T
 	{
@@ -199,7 +198,7 @@ class Array2<T> implements Collection<T>
 	}
 	
 	/**
-		Replaces the element that is stored in column `cell->x` and row `cell->y` with `val`.
+		Replaces the element that is stored in column `cell.x` and row `cell.y` with `val`.
 	**/
 	public inline function setAtCell(cell:Array2Cell, val:T)
 	{
@@ -238,9 +237,9 @@ class Array2<T> implements Collection<T>
 	}
 	
 	/**
-		Returns the index of the first occurrence of the element `val` or returns -1 if element `val` does not exist.
+		Returns the index of the first occurrence of `val` or returns -1 if element `val` does not exist.
 		
-		The index is in the range [0, `size` - 1].
+		The index is in the range [0, `this.size` - 1].
 	**/
 	public function indexOf(val:T):Int
 	{
@@ -262,7 +261,7 @@ class Array2<T> implements Collection<T>
 	}
 	
 	/**
-		Returns the cell coordinates of the first occurrence of the element `val` or null if element `val` does not exist.
+		Returns the cell coordinates of the first occurrence of `val` or null if element `val` does not exist.
 		@param out stores the result.
 		@return a reference to `out`.
 	**/
@@ -424,7 +423,7 @@ class Array2<T> implements Collection<T>
 	/**
 		Shifts all columns to the east by one position.
 		
-		Columns are wrapped, so the column at index [`cols` - 1] is not lost but prepended to the leftmost column.
+		Columns are wrapped, so the column at index [`this.cols` - 1] is not lost but prepended to the leftmost column.
 	**/
 	public function shiftE()
 	{
@@ -460,7 +459,7 @@ class Array2<T> implements Collection<T>
 	/**
 		Shifts all rows to the south by one position.
 		
-		Rows are wrapped, so row at index [`rows` - 1] is not lost but prepended to the topmost row.
+		Rows are wrapped, so row at index [`this.rows` - 1] is not lost but prepended to the topmost row.
 	**/
 	public function shiftS()
 	{
@@ -495,7 +494,7 @@ class Array2<T> implements Collection<T>
 	}
 	
 	/**
-		Appends the elements of the `input` array in the range [0, `cols`] by adding a new row.
+		Appends the elements of the `input` array in the range [0, `this.cols`] by adding a new row.
 	**/
 	public function appendRow(input:Array<T>)
 	{
@@ -511,7 +510,7 @@ class Array2<T> implements Collection<T>
 	}
 	
 	/**
-		Appends the elements of the `input` array in the range [0, `rows`] by adding a new column.
+		Appends the elements of the `input` array in the range [0, `this.rows`] by adding a new column.
 	**/
 	public function appendCol(input:Array<T>)
 	{
@@ -537,7 +536,7 @@ class Array2<T> implements Collection<T>
 	}
 	
 	/**
-		Prepends the elements of the `input` array in the range [0, `cols`] by adding a new row.
+		Prepends the elements of the `input` array in the range [0, `this.cols`] by adding a new row.
 	**/
 	public function prependRow(input:Array<T>)
 	{
@@ -553,7 +552,7 @@ class Array2<T> implements Collection<T>
 	}
 	
 	/**
-		Prepends the elements of the `input` array in the range [0, `rows`] by adding a new column.
+		Prepends the elements of the `input` array in the range [0, `this.rows`] by adding a new column.
 	**/
 	public function prependCol(input:Array<T>)
 	{
@@ -713,7 +712,7 @@ class Array2<T> implements Collection<T>
 	/**
 		Shuffles the elements of this collection by using the Fisher-Yates algorithm.
 		@param rvals a list of random double values in the interval [0, 1) defining the new positions of the elements.
-		If omitted, random values are generated on-the-fly by calling `Math->random()`.
+		If omitted, random values are generated on-the-fly by calling `Math.random()`.
 	**/
 	public function shuffle(rvals:Array<Float> = null)
 	{
@@ -817,7 +816,7 @@ class Array2<T> implements Collection<T>
 	/**
 		The number of elements in this two-dimensional array.
 		
-		Always equals `cols` * `rows`.
+		Always equals `this.cols` * `this.rows`.
 	**/
 	public var size(get, never):Int;
 	inline function get_size():Int
@@ -842,7 +841,7 @@ class Array2<T> implements Collection<T>
 	}
 	
 	/**
-		Returns true if this two-dimensional array contains the element `val`.
+		Returns true if this two-dimensional array contains `val`.
 	**/
 	public function contains(val:T):Bool
 	{
@@ -885,7 +884,7 @@ class Array2<T> implements Collection<T>
 	}
 	
 	/**
-		Returns a new `Array2Iterator` object to iterate over all elements contained in this two-dimensional array.
+		Returns a new *Array2Iterator* object to iterate over all elements contained in this two-dimensional array.
 		
 		Order: Row-major order (row-by-row).
 		
@@ -923,6 +922,13 @@ class Array2<T> implements Collection<T>
 		return mData.toArray(0, size);
 	}
 	
+	/**
+		Creates and returns a shallow copy (structure only - default) or deep copy (structure & elements) of this two-dimensional array.
+		
+		If `byRef` is true, primitive elements are copied by value whereas objects are copied by reference.
+		
+		If `byRef` is false, the `copier` function is used for copying elements. If omitted, `clone()` is called on each element assuming all elements implement `Cloneable`.
+	**/
 	public function clone(byRef:Bool = true, copier:T->T = null):Collection<T>
 	{
 		var out = new Array2<T>(mW, mH);

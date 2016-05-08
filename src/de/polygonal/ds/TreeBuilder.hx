@@ -67,13 +67,13 @@ class TreeBuilder<T>
 	}
 	
 	/**
-		Stores the element `x` in the node that the tree builder is currently pointing at.
+		Stores `val` in the node that the tree builder is currently pointing at.
 	**/
-	public inline function setVal(x:T)
+	public inline function setVal(val:T)
 	{
 		assert(valid(), "vertical pointer is null");
 		
-		mNode.val = x;
+		mNode.val = val;
 	}
 	
 	/**
@@ -242,24 +242,24 @@ class TreeBuilder<T>
 	}
 	
 	/**
-		Appends a child node storing `x` to the children of the vertical pointer.
+		Appends a child node storing `val` to the children of the vertical pointer.
 	**/
-	public function appendChild(x:T):TreeNode<T>
+	public function appendChild(val:T):TreeNode<T>
 	{
 		assert(valid(), "invalid vertical pointer");
 		
-		mChild = createChildNode(x, true);
+		mChild = createChildNode(val, true);
 		return mChild;
 	}
 	
 	/**
-		Prepends a child node storing `x` to the children of the vertical pointer.
+		Prepends a child node storing `val` to the children of the vertical pointer.
 	**/
-	public function prependChild(x:T):TreeNode<T>
+	public function prependChild(val:T):TreeNode<T>
 	{
 		assert(valid(), "invalid vertical pointer");
 		
-		var childNode = createChildNode(x, false);
+		var childNode = createChildNode(val, false);
 		if (childValid())
 		{
 			childNode.next = mNode.children;
@@ -273,15 +273,15 @@ class TreeBuilder<T>
 	}
 	
 	/**
-		Prepends a child node storing `x` to the child node referenced by the horizontal pointer.
+		Prepends a child node storing `val` to the child node referenced by the horizontal pointer.
 	**/
-	public function insertBeforeChild(x:T):TreeNode<T>
+	public function insertBeforeChild(val:T):TreeNode<T>
 	{
 		assert(valid(), "invalid vertical pointer");
 		
 		if (childValid())
 		{
-			var childNode = createChildNode(x, false);
+			var childNode = createChildNode(val, false);
 			
 			childNode.next = mChild;
 			childNode.prev = mChild.prev;
@@ -294,19 +294,19 @@ class TreeBuilder<T>
 			return childNode;
 		}
 		else
-			return appendChild(x);
+			return appendChild(val);
 	}
 	
 	/**
-		Appends a child node storing `x` to the node referenced by the vertical pointer.
+		Appends a child node storing `val` to the node referenced by the vertical pointer.
 	**/
-	public function insertAfterChild(x:T):TreeNode<T>
+	public function insertAfterChild(val:T):TreeNode<T>
 	{
 		assert(valid(), "invalid vertical pointer");
 		
 		if (childValid())
 		{
-			var childNode = createChildNode(x, false);
+			var childNode = createChildNode(val, false);
 			
 			childNode.prev = mChild;
 			childNode.next = mChild.next;
@@ -319,7 +319,7 @@ class TreeBuilder<T>
 			return childNode;
 		}
 		else
-			return appendChild(x);
+			return appendChild(val);
 	}
 	
 	/**

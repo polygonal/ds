@@ -97,7 +97,7 @@ class Array3<T> implements Collection<T>
 	}
 	
 	/**
-		Equals `width`.
+		Equals `this.width`.
 	**/
 	public var cols(get, set):Int;
 	inline function get_cols():Int
@@ -110,7 +110,7 @@ class Array3<T> implements Collection<T>
 	}
 	
 	/**
-		Equals `height`.
+		Equals `this.height`.
 	**/
 	public var rows(get, set):Int;
 	inline function get_rows():Int
@@ -132,7 +132,7 @@ class Array3<T> implements Collection<T>
 	public var key(default, null):Int = HashKey.next();
 	
 	/**
-		If true, reuses the iterator object instead of allocating a new one when calling `iterator()`.
+		If true, reuses the iterator object instead of allocating a new one when calling `this.iterator()`.
 		
 		The default is false.
 		
@@ -150,6 +150,8 @@ class Array3<T> implements Collection<T>
 		Creates a three-dimensional array with dimensions `width`, `height` and `depth`.
 		
 		The minimum size is 2x2x2.
+		
+		@param source initial values for populating this three-dimensional array (`source.length` should match `width` * `height` * `depth`).
 	**/
 	public function new(width:Int, height:Int, depth:Int, ?source:Array<T>)
 	{
@@ -182,7 +184,7 @@ class Array3<T> implements Collection<T>
 	}
 	
 	/**
-		Returns the element that is stored in column `cell->x`, row `cell->y` and layer `cell->z`.
+		Returns the element that is stored in column `cell.x`, row `cell.y` and layer `cell.z`.
 	**/
 	public inline function getAtCell(cell:Array3Cell):T
 	{
@@ -215,9 +217,9 @@ class Array3<T> implements Collection<T>
 	}
 	
 	/**
-		Returns the index of the first occurrence of the element `val` or returns -1 if element `val` does not exist.
+		Returns the index of the first occurrence of `val` or returns -1 if element `val` does not exist.
 		
-		The index is in the range [0, `size` - 1].
+		The index is in the range [0, `this.size` - 1].
 	**/
 	public function indexOf(val:T):Int
 	{
@@ -239,7 +241,7 @@ class Array3<T> implements Collection<T>
 	}
 	
 	/**
-		Returns the cell coordinates of the first occurrence of the element `val` or null if element `val` does not exist.
+		Returns the cell coordinates of the first occurrence of `val` or null if element `val` does not exist.
 		@param out stores the result.
 		@return a reference to `out`.
 	**/
@@ -499,7 +501,7 @@ class Array3<T> implements Collection<T>
 	/**
 		Shuffles the elements of this collection by using the Fisher-Yates algorithm.
 		@param rvals a list of random double values in the interval [0, 1) defining the new positions of the elements.
-		If omitted, random values are generated on-the-fly by calling `Math->random()`.
+		If omitted, random values are generated on-the-fly by calling `Math.random()`.
 	**/
 	public function shuffle(rvals:Array<Float> = null)
 	{
@@ -534,7 +536,7 @@ class Array3<T> implements Collection<T>
 	/**
 		Prints out all elements.
 		
-		Use `getLayer()->toString()` to print the elements of a specific layer only.
+		Use `this.getLayer().toString()` to print the elements of a specific layer only.
 	**/
 	public function toString():String
 	{
@@ -573,7 +575,7 @@ class Array3<T> implements Collection<T>
 	/**
 		The number of elements in this three-dimensional array.
 		
-		Always equals `width` * `height` * `depth`.
+		Always equals `this.width` * `this.height` * `this.depth`.
 	**/
 	public var size(get, never):Int;
 	inline function get_size():Int
@@ -598,7 +600,7 @@ class Array3<T> implements Collection<T>
 	}
 	
 	/**
-		Returns true if this three-dimensional array contains the element `val`.
+		Returns true if this three-dimensional array contains `val`.
 	**/
 	public function contains(val:T):Bool
 	{
@@ -642,7 +644,7 @@ class Array3<T> implements Collection<T>
 	}
 	
 	/**
-		Returns a new `Array3Iterator` object to iterate over all elements contained in this three-dimensional array.
+		Returns a new *Array3Iterator* object to iterate over all elements contained in this three-dimensional array.
 		
 		Order: Row-major order (layer-by-layer, row-by-row).
 		
@@ -680,6 +682,13 @@ class Array3<T> implements Collection<T>
 		return mData.toArray(0, size);
 	}
 	
+	/**
+		Creates and returns a shallow copy (structure only - default) or deep copy (structure & elements) of this three-dimensional array.
+		
+		If `byRef` is true, primitive elements are copied by value whereas objects are copied by reference.
+		
+		If `byRef` is false, the `copier` function is used for copying elements. If omitted, `clone()` is called on each element assuming all elements implement `Cloneable`.
+	**/
 	public function clone(byRef:Bool = true, copier:T->T = null):Collection<T>
 	{
 		var out = new Array3<T>(mW, mH, mD);

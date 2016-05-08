@@ -58,7 +58,7 @@ class LinkedQueue<T> implements Queue<T>
 	public var key(default, null):Int = HashKey.next();
 	
 	/**
-		If true, reuses the iterator object instead of allocating a new one when calling `iterator()`.
+		If true, reuses the iterator object instead of allocating a new one when calling `this.iterator()`.
 		
 		The default is false.
 		
@@ -131,13 +131,13 @@ class LinkedQueue<T> implements Queue<T>
 	}
 	
 	/**
-		Enqueues the element `x`.
-		**/
-	public inline function enqueue(x:T)
+		Enqueues `val`.
+	**/
+	public inline function enqueue(val:T)
 	{
 		mSize++;
 		
-		var node = getNode(x);
+		var node = getNode(val);
 		if (mHead == null)
 		{
 			mHead = mTail = node;
@@ -192,7 +192,7 @@ class LinkedQueue<T> implements Queue<T>
 	/**
 		Shuffles the elements of this collection by using the Fisher-Yates algorithm.
 		@param rvals a list of random double values in the interval [0, 1) defining the new positions of the elements.
-		If omitted, random values are generated on-the-fly by calling `Math->random()`.
+		If omitted, random values are generated on-the-fly by calling `Math.random()`.
 	**/
 	public function shuffle(rvals:Array<Float> = null)
 	{
@@ -316,14 +316,14 @@ class LinkedQueue<T> implements Queue<T>
 	}
 	
 	/**
-		Returns true if this queue contains the element `x`.
+		Returns true if this queue contains `val`.
 	**/
-	public function contains(x:T):Bool
+	public function contains(val:T):Bool
 	{
 		var node = mHead;
 		while (node != null)
 		{
-			if (node.val == x)
+			if (node.val == val)
 				return true;
 			node = node.next;
 		}
@@ -331,10 +331,10 @@ class LinkedQueue<T> implements Queue<T>
 	}
 	
 	/**
-		Removes and nullifies all occurrences of the element `x`.
-		@return true if at least one occurrence of `x` was removed.
+		Removes and nullifies all occurrences of `val`.
+		@return true if at least one occurrence of `val` was removed.
 	**/
-	public function remove(x:T):Bool
+	public function remove(val:T):Bool
 	{
 		if (isEmpty()) return false;
 		
@@ -344,7 +344,7 @@ class LinkedQueue<T> implements Queue<T>
 		
 		if (mHead == mTail)
 		{
-			if (mHead.val == x)
+			if (mHead.val == val)
 			{
 				mSize = 0;
 				putNode(mHead);
@@ -357,7 +357,7 @@ class LinkedQueue<T> implements Queue<T>
 		
 		while (node1 != null)
 		{
-			if (node1.val == x)
+			if (node1.val == val)
 			{
 				found = true;
 				if (node1 == mTail) mTail = node0;
@@ -374,7 +374,7 @@ class LinkedQueue<T> implements Queue<T>
 			}
 		}
 		
-		if (mHead.val == x)
+		if (mHead.val == val)
 		{
 			found = true;
 			var head1 = mHead.next;
@@ -428,7 +428,7 @@ class LinkedQueue<T> implements Queue<T>
 	}
 	
 	/**
-		Returns true only if `size` is 0.
+		Returns true only if `this.size` is 0.
 	**/
 	public inline function isEmpty():Bool
 	{
@@ -456,10 +456,11 @@ class LinkedQueue<T> implements Queue<T>
 	}
 	
 	/**
-		Duplicates this queue. Supports shallow (structure only) and deep copies (structure & elements).
-		@param byRef if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
-		If false, the `clone()` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
-		@param copier a custom function for copying elements. Replaces `element->clone()` if `byRef` is false.
+		Creates and returns a shallow copy (structure only - default) or deep copy (structure & elements) of this queue.
+		
+		If `byRef` is true, primitive elements are copied by value whereas objects are copied by reference.
+		
+		If `byRef` is false, the `copier` function is used for copying elements. If omitted, `clone()` is called on each element assuming all elements implement `Cloneable`.
 	**/
 	public function clone(byRef:Bool = true, copier:T->T = null):Collection<T>
 	{

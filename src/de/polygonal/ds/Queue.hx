@@ -28,9 +28,9 @@ package de.polygonal.ds;
 interface Queue<T> extends Collection<T>
 {
 	/**
-		Inserts the element `x` at the back of the queue.
+		Inserts `val` at the back of the queue.
 	**/
-	function enqueue(x:T):Void;
+	function enqueue(val:T):Void;
 	
 	/**
 		Removes and returns the element at the front of the queue.

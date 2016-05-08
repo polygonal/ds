@@ -136,7 +136,7 @@ class DllNode<T>
 	}
 	
 	/**
-		Unlinks this node from its list and returns `next`.
+		Unlinks this node from its list and returns `this.next`.
 	**/
 	public inline function unlink():DllNode<T>
 	{

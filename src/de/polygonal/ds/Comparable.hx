@@ -19,7 +19,7 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 package de.polygonal.ds;
 
 /**
-	Specifies that the order of an element in a collection can be determined by calling `object->compare(otherObject)`
+	Specifies that the order of an element in a collection can be determined by calling `object.compare(otherObject)`
 	
 	Example:
 		class Element implements de.polygonal.ds.Comparable<Element> {

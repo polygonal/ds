@@ -57,7 +57,7 @@ class LinkedDeque<T> implements Deque<T>
 	public var key(default, null):Int = HashKey.next();
 	
 	/**
-		If true, reuses the iterator object instead of allocating a new one when calling `iterator()`.
+		If true, reuses the iterator object instead of allocating a new one when calling `this.iterator()`.
 		
 		The default is false.
 		
@@ -114,11 +114,11 @@ class LinkedDeque<T> implements Deque<T>
 	}
 	
 	/**
-		Inserts the element `x` at the front of this deque.
+		Inserts `val` at the front of this deque.
 	**/
-	public inline function pushFront(x:T)
+	public inline function pushFront(val:T)
 	{
-		var node = getNode(x);
+		var node = getNode(val);
 		node.next = mHead;
 		if (mHead != null) mHead.prev = node;
 		mHead = node;
@@ -152,11 +152,11 @@ class LinkedDeque<T> implements Deque<T>
 	}
 	
 	/**
-		Inserts the element `x` at the back of the deque.
+		Inserts `val` at the back of the deque.
 	**/
-	public inline function pushBack(x:T)
+	public inline function pushBack(val:T)
 	{
-		var node = getNode(x);
+		var node = getNode(val);
 		node.prev = mTail;
 		if (mTail != null) mTail.next = node;
 		mTail = node;
@@ -182,7 +182,7 @@ class LinkedDeque<T> implements Deque<T>
 	/**
 		Returns the element at index `i` relative to the front of this deque.
 		
-		The front element is at index [0], the back element is at index [`size` - 1].
+		The front element is at index [0], the back element is at index [`this.size` - 1].
 	**/
 	public function getFront(i:Int):T
 	{
@@ -194,16 +194,16 @@ class LinkedDeque<T> implements Deque<T>
 	}
 	
 	/**
-		Returns the index of the first occurrence of the element `x` or -1 if `x` does not exist.
+		Returns the index of the first occurrence of `val` or -1 if `val` does not exist.
 		
-		The front element is at index [0], the back element is at index [`size` - 1].
+		The front element is at index [0], the back element is at index [`this.size` - 1].
 	**/
-	public function indexOfFront(x:T):Int
+	public function indexOfFront(val:T):Int
 	{
 		var node = mHead;
 		for (i in 0...size)
 		{
-			if (node.val == x) return i;
+			if (node.val == val) return i;
 			node = node.next;
 		}
 		return -1;
@@ -212,7 +212,7 @@ class LinkedDeque<T> implements Deque<T>
 	/**
 		Returns the element at index `i` relative to the back of this deque.
 		
-		The back element is at index [0], the front element is at index [`size` - 1].
+		The back element is at index [0], the front element is at index [`this.size` - 1].
 	**/
 	public function getBack(i:Int):T
 	{
@@ -224,16 +224,16 @@ class LinkedDeque<T> implements Deque<T>
 	}
 	
 	/**
-		Returns the index of the first occurrence of the element `x` or -1 if `x` does not exist.
+		Returns the index of the first occurrence of `val` or -1 if `val` does not exist.
 		
-		The back element is at index [0], the front element is at index [`size` - 1].
+		The back element is at index [0], the front element is at index [`this.size` - 1].
 	**/
-	public function indexOfBack(x:T):Int
+	public function indexOfBack(val:T):Int
 	{
 		var node = mTail;
 		for (i in 0...size)
 		{
-			if (node.val == x) return i;
+			if (node.val == val) return i;
 			node = node.prev;
 		}
 		return -1;
@@ -336,15 +336,15 @@ class LinkedDeque<T> implements Deque<T>
 	}
 	
 	/**
-		Returns true if this deque contains the element `x`.
+		Returns true if this deque contains `val`.
 	**/
-	public function contains(x:T):Bool
+	public function contains(val:T):Bool
 	{
 		var found = false;
 		var node = mHead;
 		while (node != null)
 		{
-			if (node.val == x)
+			if (node.val == val)
 			{
 				found = true;
 				break;
@@ -355,16 +355,16 @@ class LinkedDeque<T> implements Deque<T>
 	}
 	
 	/**
-		Removes and nullifies all occurrences of the element `x`.
-		@return true if at least one occurrence of `x` was removed.
+		Removes and nullifies all occurrences of `val`.
+		@return true if at least one occurrence of `val` was removed.
 	**/
-	public function remove(x:T):Bool
+	public function remove(val:T):Bool
 	{
 		var found = false;
 		var node = mHead;
 		while (node != null)
 		{
-			if (node.val == x)
+			if (node.val == val)
 			{
 				found = true;
 				
@@ -418,7 +418,7 @@ class LinkedDeque<T> implements Deque<T>
 	}
 	
 	/**
-		Returns a new `LinkedDequeIterator` object to iterate over all elements contained in this deque.
+		Returns a new *LinkedDequeIterator* object to iterate over all elements contained in this deque.
 		
 		Preserves the natural order of a deque.
 		
@@ -439,7 +439,7 @@ class LinkedDeque<T> implements Deque<T>
 	}
 	
 	/**
-		Returns true only if `size` is 0.
+		Returns true only if `this.size` is 0.
 	**/
 	public inline function isEmpty():Bool
 	{
@@ -465,10 +465,11 @@ class LinkedDeque<T> implements Deque<T>
 	}
 	
 	/**
-		Duplicates this deque. Supports shallow (structure only) and deep copies (structure & elements).
-		@param byRef if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
-		If false, the `clone()` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
-		@param copier a custom function for copying elements. Replaces `element->clone()` if `byRef` is false.
+		Creates and returns a shallow copy (structure only - default) or deep copy (structure & elements) of this deque.
+		
+		If `byRef` is true, primitive elements are copied by value whereas objects are copied by reference.
+		
+		If `byRef` is false, the `copier` function is used for copying elements. If omitted, `clone()` is called on each element assuming all elements implement `Cloneable`.
 	**/
 	public function clone(byRef:Bool = true, copier:T->T = null):Collection<T>
 	{

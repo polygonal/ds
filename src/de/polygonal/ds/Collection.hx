@@ -36,12 +36,12 @@ interface Collection<T> extends Hashable
 	function free():Void;
 	
 	/**
-		Returns true if this collection contains the element `val`.
+		Returns true if this collection contains `val`.
 	**/
 	function contains(val:T):Bool;
 	
 	/**
-		Removes all occurrences of the element `val`.
+		Removes all occurrences of `val`.
 		@return true if at least one occurrence of `val` was removed.
 	**/
 	function remove(val:T):Bool;
@@ -116,9 +116,9 @@ interface Collection<T> extends Hashable
 			//deep copy using a custom function
 			var o = c.clone(false, function(x) return new Element(x.val));
 		
-		@param byRef if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
-		If false, the `clone()` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
-		@param copier a custom function for copying elements. Replaces `element->clone()` if `byRef` is false.
+		If `byRef` is true, primitive elements are copied by value whereas objects are copied by reference.
+		
+		If `byRef` is false, the `copier` function is used for copying elements. If omitted, `clone()` is called on each element assuming all elements implement `Cloneable`.
 	**/
 	function clone(byRef:Bool = true, copier:T->T = null):Collection<T>;
 }

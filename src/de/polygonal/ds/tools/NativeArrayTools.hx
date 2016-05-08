@@ -39,103 +39,103 @@ class NativeArrayTools
 	#if !(assert == "extra")
 	inline
 	#end
-	public static function get<T>(x:NativeArray<T>, i:Int):T
+	public static function get<T>(src:NativeArray<T>, i:Int):T
 	{
 		#if (assert == "extra")
-		assert(i >= 0 && i < size(x), 'index $i out of range ${size(x)}');
+		assert(i >= 0 && i < size(src), 'index $i out of range ${size(src)}');
 		#end
 		
 		return
 		#if (cpp && generic)
-		cpp.NativeArray.unsafeGet(x, i);
+		cpp.NativeArray.unsafeGet(src, i);
 		#elseif python
-		python.internal.ArrayImpl.unsafeGet(x, i);
+		python.internal.ArrayImpl.unsafeGet(src, i);
 		#else
-		x[i];
+		src[i];
 		#end
 	}
 	
 	#if !(assert == "extra")
 	inline
 	#end
-	public static function set<T>(x:NativeArray<T>, i:Int, v:T)
+	public static function set<T>(dst:NativeArray<T>, i:Int, val:T)
 	{
 		#if (assert == "extra")
-		assert(i >= 0 && i < size(x), 'index $i out of range ${size(x)}');
+		assert(i >= 0 && i < size(dst), 'index $i out of range ${size(dst)}');
 		#end
 		
 		#if (cpp && generic)
-		cpp.NativeArray.unsafeSet(x, i, v);
+		cpp.NativeArray.unsafeSet(dst, i, val);
 		#elseif python
-		python.internal.ArrayImpl.unsafeSet(x, i, v);
+		python.internal.ArrayImpl.unsafeSet(dst, i, val);
 		#else
-		x[i] = v;
+		dst[i] = val;
 		#end
 	}
 	
-	public static inline function size<T>(x:NativeArray<T>):Int
+	public static inline function size<T>(src:NativeArray<T>):Int
 	{
 		return
 		#if neko
-		untyped __dollar__asize(x);
+		untyped __dollar__asize(src);
 		#elseif cs
-		x.Length;
+		src.Length;
 		#elseif java
-		x.length;
+		src.length;
 		#elseif python
-		x.length;
+		src.length;
 		#elseif cpp
-		x.length;
+		src.length;
 		#else
-		x.length;
+		src.length;
 		#end
 	}
 	
 	#if java inline #end
-	public static function toArray<T>(x:NativeArray<T>, first:Int, count:Int):Array<T>
+	public static function toArray<T>(src:NativeArray<T>, first:Int, count:Int):Array<T>
 	{
-		assert(first >= 0 && first < size(x), "first index out of range");
-		assert(count >= 0 && first + count <= size(x), "count out of range");
+		assert(first >= 0 && first < size(src), "first index out of range");
+		assert(count >= 0 && first + count <= size(src), "count out of range");
 		
 		#if (cpp || python)
-		if (first == 0 && count == size(x)) return x.copy();
+		if (first == 0 && count == size(src)) return src.copy();
 		#end
 		
 		if (count == 0) return [];
 		var out = ArrayTools.alloc(count);
 		if (first == 0)
 		{
-			for (i in 0...count) out[i] = get(x, i);
+			for (i in 0...count) out[i] = get(src, i);
 		}
 		else
 		{
 			var j;
-			for (i in first...first + count) out[i - first] = get(x, i);
+			for (i in first...first + count) out[i - first] = get(src, i);
 		}
 		
 		return out;
 	}
 	
-	public static inline function ofArray<T>(x:Array<T>):NativeArray<T>
+	public static inline function ofArray<T>(src:Array<T>):NativeArray<T>
 	{
 		#if (python || cs)
-		return cast x.copy();
+		return cast src.copy();
 		#elseif flash10
 			return
 			#if (generic && !no_inline)
-			flash.Vector.ofArray(x);
+			flash.Vector.ofArray(src);
 			#else
-			x.copy();
+			src.copy();
 			#end
 		//#elseif java
-		//return cast (java.Lib.nativeArray(x, false));
+		//return cast (java.Lib.nativeArray(src, false));
 		#elseif cs
-		//return cast (cs.Lib.nativeArray(x, false));
+		//return cast (cs.Lib.nativeArray(src, false));
 		#elseif js
-		return x.slice(0, x.length);
+		return src.slice(0, src.length);
 		#else
-		var out = alloc(x.length);
-		for (i in 0...x.length) set(out, i, x[i]);
+		var out = alloc(src.length);
+		for (i in 0...src.length) set(out, i, src[i]);
 		return out;
 		#end
 	}
@@ -248,15 +248,15 @@ class NativeArrayTools
 	};
 	
 	/**
-		Sets up to `k` elements in `dst` to `x`.
+		Sets up to `k` elements in `dst` to `val`.
 		@param k the number of elements to put into `dst`.
-		If omitted `k` is set to `dst->length`;
+		If omitted `k` is set to `dst.length`;
 	**/
 	#if java inline #end
-	public static function init<T>(dst:NativeArray<T>, x:T, first:Int = 0, ?k:Null<Int>):NativeArray<T>
+	public static function init<T>(dst:NativeArray<T>, val:T, first:Int = 0, ?k:Null<Int>):NativeArray<T>
 	{
 		if (k == null) k = size(dst);
-		for (i in first...first + k) set(dst, i, x);
+		for (i in first...first + k) set(dst, i, val);
 		return dst;
 	}
 	
@@ -278,73 +278,73 @@ class NativeArrayTools
 	}
 	
 	/**
-		Searches the sorted vector `v` for the element `x` in the range (`min`, `max`] using the binary search algorithm.
-		@return the index of the element `x` or the bitwise complement (~) of the index where `x` would be inserted (guaranteed to be a negative number).
+		Searches the sorted array `src` for `val` in the range (`min`, `max`] using the binary search algorithm.
+		@return the index of `val` or the bitwise complement (~) of the index where `val` would be inserted (guaranteed to be a negative number).
 		<warn>The insertion point is only valid for `min=0` and `max=a.length-1`.</warn>
 	**/
 	#if java inline #end
-	public static function binarySearchCmp<T>(v:NativeArray<T>, x:T, min:Int, max:Int, cmp:T->T->Int):Int
+	public static function binarySearchCmp<T>(src:NativeArray<T>, val:T, min:Int, max:Int, cmp:T->T->Int):Int
 	{
-		assert(v != null);
+		assert(src != null);
 		assert(cmp != null);
-		assert(min >= 0 && min < size(v));
-		assert(max < size(v));
+		assert(min >= 0 && min < size(src));
+		assert(max < size(src));
 		
 		var l = min, m, h = max + 1;
 		while (l < h)
 		{
 			m = l + ((h - l) >> 1);
-			if (cmp(get(v, m), x) < 0)
+			if (cmp(get(src, m), val) < 0)
 				l = m + 1;
 			else
 				h = m;
 		}
 		
-		if ((l <= max) && cmp(get(v, l), x) == 0)
+		if ((l <= max) && cmp(get(src, l), val) == 0)
 			return l;
 		else
 			return ~l;
 	}
 	
-	public static function binarySearchf(v:NativeArray<Float>, x:Float, min:Int, max:Int):Int
+	public static function binarySearchf(src:NativeArray<Float>, val:Float, min:Int, max:Int):Int
 	{
-		assert(v != null);
-		assert(min >= 0 && min < size(v));
-		assert(max < size(v));
+		assert(src != null);
+		assert(min >= 0 && min < size(src));
+		assert(max < size(src));
 		
 		var l = min, m, h = max + 1;
 		while (l < h)
 		{
 			m = l + ((h - l) >> 1);
-			if (get(v, m) < x)
+			if (get(src, m) < val)
 				l = m + 1;
 			else
 				h = m;
 		}
 		
-		if ((l <= max) && (get(v, l) == x))
+		if ((l <= max) && (get(src, l) == val))
 			return l;
 		else
 			return ~l;
 	}
 	
-	public static function binarySearchi(v:NativeArray<Int>, x:Int, min:Int, max:Int):Int
+	public static function binarySearchi(src:NativeArray<Int>, val:Int, min:Int, max:Int):Int
 	{
-		assert(v != null);
-		assert(min >= 0 && min < size(v));
-		assert(max < size(v));
+		assert(src != null);
+		assert(min >= 0 && min < size(src));
+		assert(max < size(src));
 		
 		var l = min, m, h = max + 1;
 		while (l < h)
 		{
 			m = l + ((h - l) >> 1);
-			if (get(v, m) < x)
+			if (get(src, m) < val)
 				l = m + 1;
 			else
 				h = m;
 		}
 		
-		if ((l <= max) && (get(v, l) == x))
+		if ((l <= max) && (get(src, l) == val))
 			return l;
 		else
 			return ~l;

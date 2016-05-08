@@ -233,7 +233,7 @@ class ObjectPool<T> implements Hashable
 	}
 	
 	/**
-		Returns a new `ObjectPoolIterator` object to iterate over all pooled objects, regardless if an object is used or not.
+		Returns a new *ObjectPoolIterator* object to iterate over all pooled objects, regardless if an object is used or not.
 		
 		@see http://haxe.org/ref/iterators
 	**/

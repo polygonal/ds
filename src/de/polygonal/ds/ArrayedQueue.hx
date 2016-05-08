@@ -61,8 +61,8 @@ class ArrayedQueue<T> implements Queue<T>
 	
 	/**
 		The size of the allocated storage space for the elements.
-		If more space is required to accommodate new elements, `capacity` grows according `GrowthRate`.
-		The capacity never falls below the initial size defined in the constructor and is usually a bit larger than `size` (_mild overallocation_).
+		If more space is required to accommodate new elements, `capacity` grows according to `this.growthRate`.
+		The capacity never falls below the initial size defined in the constructor and is usually a bit larger than `this.size` (_mild overallocation_).
 	**/
 	public var capacity(default, null):Int;
 	
@@ -73,7 +73,7 @@ class ArrayedQueue<T> implements Queue<T>
 	public var growthRate:Int = GrowthRate.NORMAL;
 	
 	/**
-		If true, reuses the iterator object instead of allocating a new one when calling `iterator()`.
+		If true, reuses the iterator object instead of allocating a new one when calling `this.iterator()`.
 		
 		The default is false.
 		
@@ -90,7 +90,7 @@ class ArrayedQueue<T> implements Queue<T>
 	/**
 		@param initialCapacity the initial physical space for storing values.
 		Useful before inserting a large number of elements as this reduces the amount of incremental reallocation.
-		@param source Copies all values from `source` in the range [0, `source->length` - 1] to this collection.
+		@param source Copies all values from `source` in the range [0, `source.length` - 1] to this collection.
 	**/
 	public function new(initialCapacity:Null<Int> = 16, ?source:Array<T>)
 	{
@@ -135,24 +135,24 @@ class ArrayedQueue<T> implements Queue<T>
 	}
 	
 	/**
-		Enqueues the element `x`.
+		Enqueues `val`.
 	**/
-	public inline function enqueue(x:T)
+	public inline function enqueue(val:T)
 	{
 		if (capacity == size) grow();
-		mData.set((mSize++ + mFront) % capacity, x);
+		mData.set((mSize++ + mFront) % capacity, val);
 	}
 	
 	/**
-		Faster than `enqueue()` by skipping boundary checking.
+		Faster than `this.enqueue()` by skipping boundary checking.
 		
-		The user is responsible for making sure that there is enough space available (e.g. by calling `reserve()`).
+		The user is responsible for making sure that there is enough space available (e.g. by calling `this.reserve()`).
 	**/
-	public inline function unsafeEnqueue(x:T)
+	public inline function unsafeEnqueue(val:T)
 	{
 		assert(mSize < capacity, "out of space");
 		
-		mData.set((mSize++ + mFront) % capacity, x);
+		mData.set((mSize++ + mFront) % capacity, val);
 	}
 	
 	/**
@@ -169,8 +169,10 @@ class ArrayedQueue<T> implements Queue<T>
 	}
 	
 	/**
-		For performance reasons the queue does nothing to ensure that empty locations contain null;
-		`pack()` therefore nullifies all obsolete references.
+		Reduces the capacity of the internal container to the initial capacity.
+		
+		May cause a reallocation, but has no effect on `this.size` and its elements.
+		An application can use this operation to free up memory by unlocking resources for the garbage collector.
 	**/
 	public function pack()
 	{
@@ -195,7 +197,7 @@ class ArrayedQueue<T> implements Queue<T>
 	/**
 		Preallocates storage for `n` elements.
 		
-		May cause a reallocation, but has no effect on the vector size and its elements.
+		May cause a reallocation, but has no effect `size` and its elements.
 		Useful before inserting a large number of elements as this reduces the amount of incremental reallocation.
 	**/
 	public function reserve(n:Int):ArrayedQueue<T>
@@ -223,16 +225,16 @@ class ArrayedQueue<T> implements Queue<T>
 	}
 	
 	/**
-		Replaces the element at index `i` with the element `x`.
+		Replaces the element at index `i` with `val`.
 		
 		The index is measured relative to the index of the front element (= 0).
 	**/
-	public inline function set(i:Int, x:T)
+	public inline function set(i:Int, val:T)
 	{
 		assert(size > 0, "queue is empty");
 		assert(i < size, 'i index out of range ($i)');
 		
-		mData.set((i + mFront) % capacity, x);
+		mData.set((i + mFront) % capacity, val);
 	}
 	
 	/**
@@ -290,7 +292,7 @@ class ArrayedQueue<T> implements Queue<T>
 	/**
 		Shuffles the elements of this collection by using the Fisher-Yates algorithm.
 		@param rvals a list of random double values in the interval [0, 1) defining the new positions of the elements.
-		If omitted, random values are generated on-the-fly by calling `Math->random()`.
+		If omitted, random values are generated on-the-fly by calling `Math.random()`.
 	**/
 	public function shuffle(rvals:Array<Float> = null)
 	{
@@ -388,24 +390,24 @@ class ArrayedQueue<T> implements Queue<T>
 	}
 	
 	/**
-		Returns true if this queue contains the element `x`.
+		Returns true if this queue contains `val`.
 	**/
-	public function contains(x:T):Bool
+	public function contains(val:T):Bool
 	{
 		var d = mData;
 		for (i in 0...size)
 		{
-			if (d.get((i + mFront) % capacity) == x)
+			if (d.get((i + mFront) % capacity) == val)
 				return true;
 		}
 		return false;
 	}
 	
 	/**
-		Removes and nullifies all occurrences of the element `x`.
-		@return true if at least one occurrence of `x` was removed.
+		Removes and nullifies all occurrences of `val`.
+		@return true if at least one occurrence of `val` was removed.
 	**/
-	public function remove(x:T):Bool
+	public function remove(val:T):Bool
 	{
 		if (isEmpty()) return false;
 		
@@ -415,7 +417,7 @@ class ArrayedQueue<T> implements Queue<T>
 			success = false;
 			for (i in 0...s)
 			{
-				if (d.get((i + mFront) % capacity) == x)
+				if (d.get((i + mFront) % capacity) == val)
 				{
 					success = true;
 					if (i == 0)
@@ -453,7 +455,7 @@ class ArrayedQueue<T> implements Queue<T>
 	}
 	
 	/**
-		Returns a new `ArrayedQueueIterator` object to iterate over all elements contained in this queue.
+		Returns a new *ArrayedQueueIterator* object to iterate over all elements contained in this queue.
 		
 		Preserves the natural order of a queue (First-In-First-Out).
 		
@@ -505,10 +507,11 @@ class ArrayedQueue<T> implements Queue<T>
 	}
 	
 	/**
-		Duplicates this queue. Supports shallow (structure only) and deep copies (structure & elements).
-		@param byRef if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
-		If false, the `clone()` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
-		@param copier a custom function for copying elements. Replaces `element->clone()` if `byRef` is false.
+		Creates and returns a shallow copy (structure only - default) or deep copy (structure & elements) of this queue.
+		
+		If `byRef` is true, primitive elements are copied by value whereas objects are copied by reference.
+		
+		If `byRef` is false, the `copier` function is used for copying elements. If omitted, `clone()` is called on each element assuming all elements implement `Cloneable`.
 	**/
 	public function clone(byRef:Bool = true, copier:T->T = null):Collection<T>
 	{

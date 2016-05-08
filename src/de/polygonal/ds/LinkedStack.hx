@@ -58,7 +58,7 @@ class LinkedStack<T> implements Stack<T>
 	public var key(default, null):Int = HashKey.next();
 	
 	/**
-		If true, reuses the iterator object instead of allocating a new one when calling `iterator()`.
+		If true, reuses the iterator object instead of allocating a new one when calling `this.iterator()`.
 		
 		The default is false.
 		
@@ -121,11 +121,11 @@ class LinkedStack<T> implements Stack<T>
 	}
 	
 	/**
-		Pushes the element `x` onto the stack.
+		Pushes `val` onto the stack.
 	**/
-	public inline function push(x:T)
+	public inline function push(val:T)
 	{
-		var node = getNode(x);
+		var node = getNode(val);
 		node.next = mHead;
 		mHead = node;
 		mTop++;
@@ -225,7 +225,7 @@ class LinkedStack<T> implements Stack<T>
 		
 		An index of 0 indicates the bottommost element.
 		
-		An index of `size` - 1 indicates the topmost element.
+		An index of `this.size` - 1 indicates the topmost element.
 	**/
 	public inline function get(i:Int):T
 	{
@@ -239,13 +239,13 @@ class LinkedStack<T> implements Stack<T>
 	}
 	
 	/**
-		Replaces the element at index `i` with the element `x`.
+		Replaces the element at index `i` with `val`.
 		
 		An index of 0 indicates the bottommost element.
 		
-		An index of `size` - 1 indicates the topmost element.
+		An index of `this.size` - 1 indicates the topmost element.
 	**/
-	public inline function set(i:Int, x:T)
+	public inline function set(i:Int, val:T)
 	{
 		assert(mTop > 0, "stack is empty");
 		assert(i >= 0 && i < mTop, 'i index out of range ($i)');
@@ -253,7 +253,7 @@ class LinkedStack<T> implements Stack<T>
 		var node = mHead;
 		i = size - i;
 		while (--i > 0) node = node.next;
-		node.val = x;
+		node.val = val;
 	}
 	
 	/**
@@ -261,7 +261,7 @@ class LinkedStack<T> implements Stack<T>
 		
 		An index of 0 indicates the bottommost element.
 		
-		An index of `size` - 1 indicates the topmost element.
+		An index of `this.size` - 1 indicates the topmost element.
 	**/
 	public inline function swap(i:Int, j:Int)
 	{
@@ -301,7 +301,7 @@ class LinkedStack<T> implements Stack<T>
 		
 		An index of 0 indicates the bottommost element.
 		
-		An index of `size` - 1 indicates the topmost element.
+		An index of `this.size` - 1 indicates the topmost element.
 	**/
 	public inline function copy(i:Int, j:Int)
 	{
@@ -357,7 +357,7 @@ class LinkedStack<T> implements Stack<T>
 	/**
 		Shuffles the elements of this collection by using the Fisher-Yates algorithm.
 		@param rvals a list of random double values in the interval [0, 1) defining the new positions of the elements.
-		If omitted, random values are generated on-the-fly by calling `Math->random()`.
+		If omitted, random values are generated on-the-fly by calling `Math.random()`.
 	**/
 	public function shuffle(rvals:Array<Float> = null)
 	{
@@ -483,14 +483,14 @@ class LinkedStack<T> implements Stack<T>
 	}
 	
 	/**
-		Returns true if this stack contains the element `x`.
+		Returns true if this stack contains `val`.
 	**/
-	public function contains(x:T):Bool
+	public function contains(val:T):Bool
 	{
 		var node = mHead;
 		while (node != null)
 		{
-			if (node.val == x)
+			if (node.val == val)
 				return true;
 			node = node.next;
 		}
@@ -498,10 +498,10 @@ class LinkedStack<T> implements Stack<T>
 	}
 	
 	/**
-		Removes and nullifies all occurrences of the element `x`.
-		@return true if at least one occurrence of `x` was removed.
+		Removes and nullifies all occurrences of `val`.
+		@return true if at least one occurrence of `val` was removed.
 	**/
-	public function remove(x:T):Bool
+	public function remove(val:T):Bool
 	{
 		if (isEmpty()) return false;
 		
@@ -511,7 +511,7 @@ class LinkedStack<T> implements Stack<T>
 		
 		while (node1 != null)
 		{
-			if (node1.val == x)
+			if (node1.val == val)
 			{
 				found = true;
 				var node2 = node1.next;
@@ -527,7 +527,7 @@ class LinkedStack<T> implements Stack<T>
 			}
 		}
 		
-		if (mHead.val == x)
+		if (mHead.val == val)
 		{
 			found = true;
 			var head1 = mHead.next;
@@ -562,7 +562,7 @@ class LinkedStack<T> implements Stack<T>
 	}
 	
 	/**
-		Returns a new `LinkedStackIterator` object to iterate over all elements contained in this stack.
+		Returns a new *LinkedStackIterator* object to iterate over all elements contained in this stack.
 		
 		Preserves the natural order of the stack (First-In-Last-Out).
 		
@@ -583,7 +583,7 @@ class LinkedStack<T> implements Stack<T>
 	}
 	
 	/**
-		Returns true only if `size` is 0.
+		Returns true only if `this.size` is 0.
 	**/
 	public inline function isEmpty():Bool
 	{
@@ -610,10 +610,11 @@ class LinkedStack<T> implements Stack<T>
 	}
 	
 	/**
-		Duplicates this stack. Supports shallow (structure only) and deep copies (structure & elements).
-		@param byRef if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
-		If false, the `clone()` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
-		@param copier a custom function for copying elements. Replaces `element->clone()` if `byRef` is false.
+		Creates and returns a shallow copy (structure only - default) or deep copy (structure & elements) of this stack.
+		
+		If `byRef` is true, primitive elements are copied by value whereas objects are copied by reference.
+		
+		If `byRef` is false, the `copier` function is used for copying elements. If omitted, `clone()` is called on each element assuming all elements implement `Cloneable`.
 	**/
 	public function clone(byRef:Bool = true, copier:T->T = null):Collection<T>
 	{

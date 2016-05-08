@@ -24,19 +24,19 @@ package de.polygonal.ds;
 interface Set<T> extends Collection<T>
 {
 	/**
-		Returns true if this set contains the element `x`.
+		Returns true if this set contains the element `val`.
 	**/
-	function has(x:T):Bool;
+	function has(val:T):Bool;
 	
 	/**
-		Adds the element `x` to this set if possible.
-		@return false if `x` already exists.
+		Adds `val` to this set if possible.
+		@return false if `val` already exists.
 	**/
-	function set(x:T):Bool;
+	function set(val:T):Bool;
 	
 	/**
-		Removes the element `x` from the set.
-		@return true if `x` was successfully removed, false if `x` does not exist.
+		Removes `val` from the set.
+		@return true if `val` was successfully removed, false if `val` does not exist.
 	**/
-	function unset(x:T):Bool;
+	function unset(val:T):Bool;
 }

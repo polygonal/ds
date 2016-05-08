@@ -28,9 +28,9 @@ package de.polygonal.ds;
 interface Stack<T> extends Collection<T>
 {
 	/**
-		Adds the element `x` to the top of the stack.
+		Adds `val` to the top of the stack.
 	**/
-	function push(x:T):Void;
+	function push(val:T):Void;
 	
 	/**
 		Removes and returns an element from the top of the stack.

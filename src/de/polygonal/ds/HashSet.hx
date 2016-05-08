@@ -79,8 +79,8 @@ class HashSet<T:Hashable> implements Set<T>
 	
 	/**
 		The size of the allocated storage space for the elements.
-		If more space is required to accommodate new elements, `capacity` grows according `GrowthRate`.
-		The capacity never falls below the initial size defined in the constructor and is usually a bit larger than `size` (_mild overallocation_).
+		If more space is required to accommodate new elements, `capacity` grows according to `this.growthRate`.
+		The capacity never falls below the initial size defined in the constructor and is usually a bit larger than `this.size` (_mild overallocation_).
 	**/
 	public var capacity(default, null):Int;
 	
@@ -99,7 +99,7 @@ class HashSet<T:Hashable> implements Set<T>
 	}
 	
 	/**
-		If true, reuses the iterator object instead of allocating a new one when calling `iterator()`.
+		If true, reuses the iterator object instead of allocating a new one when calling `this.iterator()`.
 		
 		The default is false.
 		
@@ -114,7 +114,7 @@ class HashSet<T:Hashable> implements Set<T>
 		
 		A high load factor thus indicates poor performance.
 		
-		If the load factor gets too high, additional slots can be allocated by calling `rehash()`.
+		If the load factor gets too high, additional slots can be allocated by calling `this.rehash()`.
 	**/
 	public var loadFactor(get, never):Float;
 	function get_loadFactor():Float
@@ -147,7 +147,7 @@ class HashSet<T:Hashable> implements Set<T>
 		@param slotCount the total number of slots into which the hashed values are distributed.
 		This defines the space-time trade off of the set.
 		Increasing the `slotCount` reduces the computation time (read/write/access) of the set at the cost of increased memory use.
-		This value is fixed and can only be changed by calling `rehash()`, which rebuilds the set (expensive).
+		This value is fixed and can only be changed by calling `this.rehash()`, which rebuilds the set (expensive).
 		
 		@param capacity the initial physical space for storing the elements at the time the set is created.
 		This is also the minimum allowed size of the set and cannot be changed in the future.
@@ -182,15 +182,15 @@ class HashSet<T:Hashable> implements Set<T>
 	}
 	
 	/**
-		Returns true if this set contains the element `x`.
+		Returns true if this set contains `val`.
 		
 		Uses move-to-front-on-access which reduces access time when similar elements are frequently queried.
 	**/
-	public inline function hasFront(x:T):Bool
+	public inline function hasFront(val:T):Bool
 	{
-		assert(x != null);
+		assert(val != null);
 		
-		return mH.getFront(x.key) != IntIntHashTable.KEY_ABSENT;
+		return mH.getFront(val.key) != IntIntHashTable.KEY_ABSENT;
 	}
 	
 	/**
@@ -213,6 +213,9 @@ class HashSet<T:Hashable> implements Set<T>
 		mH.rehash(slotCount);
 	}
 	
+	/**
+		Free up resources by reducing the capacity of the internal container to the initial capacity.
+	**/
 	public function pack():HashSet<T>
 	{
 		mH.pack();
@@ -306,28 +309,28 @@ class HashSet<T:Hashable> implements Set<T>
 	/* INTERFACE Set */
 	
 	/**
-		Returns true if this set contains the element `x` or null if `x` does not exist.
+		Returns true if this set contains `val` or null if `val` does not exist.
 	**/
-	public inline function has(x:T):Bool
+	public inline function has(val:T):Bool
 	{
-		return mH.get(x.key) != IntIntHashTable.KEY_ABSENT;
+		return mH.get(val.key) != IntIntHashTable.KEY_ABSENT;
 	}
 	
 	/**
-		Adds the element `x` to this set if possible.
-		@return true if `x` was added to this set, false if `x` already exists.
+		Adds `val` to this set if possible.
+		@return true if `val` was added to this set, false if `val` already exists.
 	**/
-	public inline function set(x:T):Bool
+	public inline function set(val:T):Bool
 	{
-		assert(x != null);
+		assert(val != null);
 		
 		if (size == capacity) grow();
 		
 		var i = mFree;
-		if (mH.setIfAbsent(x.key, i))
+		if (mH.setIfAbsent(val.key, i))
 		{
 			mSize++;
-			mVals.set(i, x);
+			mVals.set(i, val);
 			mFree = mNext.get(i);
 			return true;
 		}
@@ -336,12 +339,12 @@ class HashSet<T:Hashable> implements Set<T>
 	}
 	
 	/**
-		Removes the element `x` from this set if possible.
-		@return true if `x` was removed from this set, false if `x` does not exist.
+		Removes `val` from this set if possible.
+		@return true if `val` was removed from this set, false if `val` does not exist.
 	**/
-	public inline function unset(x:T):Bool
+	public inline function unset(val:T):Bool
 	{
-		return remove(x);
+		return remove(val);
 	}
 	
 	/* INTERFACE Collection */
@@ -381,22 +384,22 @@ class HashSet<T:Hashable> implements Set<T>
 	}
 	
 	/**
-		Same as `has()`.
+		Same as `this.has()`.
 	**/
-	public function contains(x:T):Bool
+	public function contains(val:T):Bool
 	{
-		return has(x);
+		return has(val);
 	}
 	
 	/**
-		Removes the element `x`.
-		@return true if `x` was successfully removed, false if `x` does not exist.
+		Removes `val`.
+		@return true if `val` was successfully removed, false if `val` does not exist.
 	**/
-	public function remove(x:T):Bool
+	public function remove(val:T):Bool
 	{
-		assert(x != null);
+		assert(val != null);
 		
-		var i = mH.get(x.key);
+		var i = mH.get(val.key);
 		if (i == IntIntHashTable.KEY_ABSENT)
 			return false;
 		else
@@ -405,7 +408,7 @@ class HashSet<T:Hashable> implements Set<T>
 			mNext.set(i, mFree);
 			mFree = i;
 			mSize--;
-			mH.unset(x.key);
+			mH.unset(val.key);
 			return true;
 		}
 	}
@@ -430,7 +433,7 @@ class HashSet<T:Hashable> implements Set<T>
 	}
 	
 	/**
-		Returns a new `HashSetIterator` object to iterate over all elements contained in this hash set.
+		Returns a new *HashSetIterator* object to iterate over all elements contained in this hash set.
 		
 		The elements are visited in a random order.
 		
@@ -451,7 +454,7 @@ class HashSet<T:Hashable> implements Set<T>
 	}
 	
 	/**
-		Returns true only if `size` is 0.
+		Returns true only if `this.size` is 0.
 	**/
 	public inline function isEmpty():Bool
 	{
@@ -476,10 +479,11 @@ class HashSet<T:Hashable> implements Set<T>
 	}
 	
 	/**
-		Duplicates this hash set. Supports shallow (structure only) and deep copies (structure & elements).
-		@param byRef if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
-		If false, the `clone()` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
-		@param copier a custom function for copying elements. Replaces `element->clone()` if `byRef` is false.
+		Creates and returns a shallow copy (structure only - default) or deep copy (structure & elements) of this set.
+		
+		If `byRef` is true, primitive elements are copied by value whereas objects are copied by reference.
+		
+		If `byRef` is false, the `copier` function is used for copying elements. If omitted, `clone()` is called on each element assuming all elements implement `Cloneable`.
 	**/
 	public function clone(byRef:Bool = true, copier:T->T = null):Collection<T>
 	{

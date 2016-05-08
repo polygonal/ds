@@ -95,12 +95,12 @@ class TreeNode<T> implements Collection<T>
 	#end
 	
 	/**
-		Creates a `TreeNode` object storing the element `x`.
+		Creates a `TreeNode` object storing `val`.
 		@param parent if specified, this node is appended to the children of `parent`.
 	**/
-	public function new(x:T, parent:TreeNode<T> = null)
+	public function new(val:T, parent:TreeNode<T> = null)
 	{
-		this.val = x;
+		this.val = val;
 		this.parent = parent;
 		
 		children = null;
@@ -161,11 +161,11 @@ class TreeNode<T> implements Collection<T>
 	}
 	
 	/**
-		Returns true if this node is an ancestor of `x`.
+		Returns true if this node is an ancestor of `node`.
 	**/
-	public function isAncestor(x:TreeNode<T>):Bool
+	public function isAncestor(node:TreeNode<T>):Bool
 	{
-		var n = x.parent;
+		var n = node.parent;
 		while (n != null)
 		{
 			if (this == n) return true;
@@ -175,14 +175,14 @@ class TreeNode<T> implements Collection<T>
 	}
 	
 	/**
-		Returns true if this node is an descendant of `x`.
+		Returns true if this node is an descendant of `node`.
 	**/
-	public function isDescendant(x:TreeNode<T>):Bool
+	public function isDescendant(node:TreeNode<T>):Bool
 	{
 		var n = parent;
 		while (n != null)
 		{
-			if (n == x) return true;
+			if (n == node) return true;
 			n = n.parent;
 		}
 		return false;
@@ -216,7 +216,7 @@ class TreeNode<T> implements Collection<T>
 	}
 	
 	/**
-		Returns true if this node has a sibling to its right (`next` != null).
+		Returns true if this node has a sibling to its right (`this.next` != null).
 	**/
 	public inline function hasNextSibling():Bool
 	{
@@ -224,7 +224,7 @@ class TreeNode<T> implements Collection<T>
 	}
 	
 	/**
-		Returns true if this node has a sibling to its left (`prev` != null).
+		Returns true if this node has a sibling to its left (`this.prev` != null).
 	**/
 	public inline function hasPrevSibling():Bool
 	{
@@ -250,7 +250,7 @@ class TreeNode<T> implements Collection<T>
 	/**
 		Returns the sibling index of this node.
 		
-		The first sibling equals index 0, the last sibling equals index `numChildren()` - 1.
+		The first sibling equals index 0, the last sibling equals index `this.numChildren()` - 1.
 	**/
 	public inline function getSiblingIndex():Int
 	{
@@ -339,7 +339,7 @@ class TreeNode<T> implements Collection<T>
 	/**
 		Removes `n` children starting at the specified index `i` in the range [`i`, `i` + `n`].
 		
-		If `n` is -1, `n` is set to `numChildren()` - `i`.
+		If `n` is -1, `n` is set to `this.numChildren()` - `i`.
 		@return this node.
 	**/
 	public function removeChildren(i:Int = 0, n:Int = -1):TreeNode<T>
@@ -370,10 +370,10 @@ class TreeNode<T> implements Collection<T>
 	}
 	
 	/**
-		Changes the index of the child `x` to `i`.
+		Changes the index of the child `node` to `i`.
 		@return this node.
 	**/
-	public function setChildIndex(x:TreeNode<T>, i:Int):TreeNode<T>
+	public function setChildIndex(node:TreeNode<T>, i:Int):TreeNode<T>
 	{
 		assert(i >= 0 && i < numChildren(), 'index $i out of range ${numChildren()}');
 		
@@ -389,23 +389,23 @@ class TreeNode<T> implements Collection<T>
 				if (k != -1)
 				{
 					if (k < i)
-						insertAfterChild(n, x);
+						insertAfterChild(n, node);
 					else
 					if (k > i)
-						insertBeforeChild(n, x);
+						insertBeforeChild(n, node);
 					return this;
 				}
 			}
-			if (x == c)
+			if (node == c)
 			{
 				k = j;
 				if (n != null)
 				{
 					if (k < i)
-						insertAfterChild(n, x);
+						insertAfterChild(n, node);
 					else
 					if (k > i)
-						insertBeforeChild(n, x);
+						insertBeforeChild(n, node);
 					return this;
 				}
 			}
@@ -590,131 +590,131 @@ class TreeNode<T> implements Collection<T>
 	}
 	
 	/**
-		Unlinks `x` and appends `x` as a child to this node.
+		Unlinks `node` and appends `node` as a child to this node.
 		@return this node.
 	**/
-	public function appendNode(x:TreeNode<T>):TreeNode<T>
+	public function appendNode(node:TreeNode<T>):TreeNode<T>
 	{
-		assert(x != null, "x is null");
+		assert(node != null, "node is null");
 		
-		x.unlink();
-		x.parent = this;
+		node.unlink();
+		node.parent = this;
 		incChildCount();
 		
 		if (hasChildren())
 		{
-			mTail.next = x;
-			x.prev = mTail;
-			x.next = null;
-			mTail = x;
+			mTail.next = node;
+			node.prev = mTail;
+			node.next = null;
+			mTail = node;
 		}
 		else
 		{
-			mTail = x;
-			children = x;
+			mTail = node;
+			children = node;
 		}
 		return this;
 	}
 	
 	/**
-		Unlinks `x` and prepends `x` as a child of this node.
+		Unlinks `node` and prepends `node` as a child of this node.
 		@return this node.
 	**/
-	public function prependNode(x:TreeNode<T>):TreeNode<T>
+	public function prependNode(node:TreeNode<T>):TreeNode<T>
 	{
-		x.unlink();
-		x.parent = this;
+		node.unlink();
+		node.parent = this;
 		incChildCount();
 		
 		if (hasChildren())
 		{
 			var head = children;
-			x.next = head;
-			head.prev = x;
-			x.prev = null;
+			node.next = head;
+			head.prev = node;
+			node.prev = null;
 		}
 		else
-			mTail = x;
+			mTail = node;
 		
-		children = x;
+		children = node;
 		return this;
 	}
 	
 	/**
-		Unlinks `x` and appends `x` to the specified `child` node.
+		Unlinks `node` and appends `node` to the specified `child` node.
 		@return this node.
 	**/
-	public function insertAfterChild(child:TreeNode<T>, x:TreeNode<T>):TreeNode<T>
+	public function insertAfterChild(child:TreeNode<T>, node:TreeNode<T>):TreeNode<T>
 	{
 		assert(child.parent == this, "given child node is not a child of this node");
 		
-		x.unlink();
-		x.parent = this;
+		node.unlink();
+		node.parent = this;
 		incChildCount();
 		
 		if (children == null)
 		{
-			children = x;
+			children = node;
 			return this;
 		}
 		
 		if (child.hasNextSibling())
 		{
-			child.next.prev = x;
-			x.next = child.next;
+			child.next.prev = node;
+			node.next = child.next;
 		}
-		child.next = x;
-		x.prev = child;
+		child.next = node;
+		node.prev = child;
 		
-		if (child == mTail) mTail = x;
+		if (child == mTail) mTail = node;
 		return this;
 	}
 	
 	/**
-		Unlinks `x` and prepends `x` to the specified child `node`.
+		Unlinks `node` and prepends `node` to the specified child `node`.
 		@return this node.
 	**/
-	public function insertBeforeChild(child:TreeNode<T>, x:TreeNode<T>):TreeNode<T>
+	public function insertBeforeChild(child:TreeNode<T>, node:TreeNode<T>):TreeNode<T>
 	{
 		assert(child.parent == this, "given child node is not a child of this node");
 		
-		x.unlink();
-		x.parent = this;
+		node.unlink();
+		node.parent = this;
 		incChildCount();
 		
 		if (children == null)
 		{
-			children = x;
+			children = node;
 			return this;
 		}
 		
-		if (child == children) children = x;
+		if (child == children) children = node;
 		if (child.hasPrevSibling())
 		{
-			child.prev.next = x;
-			x.prev = child.prev;
+			child.prev.next = node;
+			node.prev = child.prev;
 		}
 		
-		x.next = child;
-		child.prev = x;
+		node.next = child;
+		child.prev = node;
 		return this;
 	}
 	
 	/**
-		Unlinks `x` and inserts `x` at the index position `i`.
+		Unlinks `node` and inserts `node` at the index position `i`.
 		@return this node.
 	**/
-	public function insertChildAt(x:TreeNode<T>, i:Int):TreeNode<T>
+	public function insertChildAt(node:TreeNode<T>, i:Int):TreeNode<T>
 	{
 		assert(i >= 0 && i <= numChildren(), 'index $i out of range');
 		
 		if (i == 0)
-			prependNode(x);
+			prependNode(node);
 		else
 		if (i == numChildren())
-			appendNode(x);
+			appendNode(node);
 		else
-			insertBeforeChild(getChildAt(i), x);
+			insertBeforeChild(getChildAt(i), node);
 		return this;
 	}
 	
@@ -749,17 +749,17 @@ class TreeNode<T> implements Collection<T>
 	}
 	
 	/**
-		Recursively finds the first occurrence of the node storing the element `x` in this tree.
-		@return the node storing the element `x` or null if such a node does not exist.
+		Recursively finds the first occurrence of the node storing `val` in this tree.
+		@return the node storing `val` or null if such a node does not exist.
 	**/
-	public function find(x:T):TreeNode<T>
+	public function find(val:T):TreeNode<T>
 	{
 		var top = this;
 		while (top != null)
 		{
 			var node = top;
 			top = popOffStack(top);
-			if (node.val == x)
+			if (node.val == val)
 				return node;
 			var n = node.children;
 			if (n != null)
@@ -787,10 +787,10 @@ class TreeNode<T> implements Collection<T>
 		@param process a function that is invoked on every traversed node.
 		The first argument holds a reference to the current node, the second arguments stores the preflight flag and the third argument stores custom data specified by the `userData` parameter (default is null).
 		Once `process` returns false, the traversal stops immediately and no further nodes are examined.
-		If omitted, `element->visit()` is used instead.
-		@param userData custom data that is passed to every visited node via `process` or `element->visit()`.
+		If omitted, `element.visit()` is used instead.
+		@param userData custom data that is passed to every visited node via `process` or `element.visit()`.
 		@param preflight if true, an extra traversal is performed before the actual traversal runs.
-		The first pass visits all elements and calls `element->visit()` with the `preflight` parameter set to true.
+		The first pass visits all elements and calls `element.visit()` with the `preflight` parameter set to true.
 		In this pass the return value determines whether the element (and all its children) will be processed (true) or
 		excluded (false) from the final traversal, which is the second pass (`preflight` parameter set to false).
 		The same applies when using a `process` function.
@@ -1056,9 +1056,9 @@ class TreeNode<T> implements Collection<T>
 		@param process a function that is invoked on every traversed node.
 		The first argument holds a reference to the current node, while the second argument stores custom data specified by the `userData` parameter (default is null).
 		Once `process` returns false, the traversal stops immediately and no further nodes are examined.
-		If omitted, `element->visit()` is used instead.
+		If omitted, `element.visit()` is used instead.
 		<warn>In this case all elements have to implement `Visitable`.</warn>
-		@param userData custom data that is passed to every visited node via `process` or `element->visit()`.
+		@param userData custom data that is passed to every visited node via `process` or `element.visit()`.
 		@param iterative if true, an iterative traversal is used (default traversal style is recursive).
 		@return this node.
 	**/
@@ -1229,9 +1229,9 @@ class TreeNode<T> implements Collection<T>
 		@param process a function that is invoked on every traversed node.
 		The first argument holds a reference to the current node, while the second argument stores custom data specified by the `userData` parameter (default is null).
 		Once `process` returns false, the traversal stops immediately and no further nodes are examined.
-		If omitted, `element->visit()` is used instead.
+		If omitted, `element.visit()` is used instead.
 		<warn>In this case all elements have to implement `Visitable`.</warn>
-		@param userData custom data that is passed to every visited node via `process` or `element->visit()`.
+		@param userData custom data that is passed to every visited node via `process` or `element.visit()`.
 		@return this node.
 	**/
 	public function levelorder(process:TreeNode<T>->Dynamic->Bool, userData:Dynamic):TreeNode<T>
@@ -1302,7 +1302,7 @@ class TreeNode<T> implements Collection<T>
 	/**
 		Sorts the children of this node using the merge sort algorithm.
 		@param cmp a comparison function.
-		If null, the elements are compared using element.`compare()`.
+		If null, the elements are compared using `element.compare()`.
 		<warn>In this case all elements have to implement `Comparable`.</warn>
 		@param useInsertionSort if true, the dense array is sorted using the insertion sort algorithm.
 		This is faster for nearly sorted lists.
@@ -1365,9 +1365,9 @@ class TreeNode<T> implements Collection<T>
 	}
 	
 	/**
-		Returns a new `ChildTreeIterator` object to iterate over all direct children (excluding this node).
+		Returns a new *ChildTreeIterator* object to iterate over all direct children (excluding this node).
 		
-		<warn>In contrast to `iterator()`, this method is not recursive.</warn>
+		<warn>In contrast to `this.iterator()`, this method is not recursive.</warn>
 		
 		@see http://haxe.org/ref/iterators
 	**/
@@ -1811,7 +1811,7 @@ class TreeNode<T> implements Collection<T>
 	/**
 		Serializes this tree.
 		
-		The tree can be rebuild by calling `unserialize()`.
+		The tree can be rebuild by calling `this.unserialize()`.
 		
 		@see http://eli.thegreenplace.net/2011/09/29/an-interesting-tree-serialization-algorithm-from-dwarf/"
 		@param node the root of the tree.
@@ -1841,7 +1841,7 @@ class TreeNode<T> implements Collection<T>
 	/**
 		Unserializes a given `list` into a TreeNode structure.
 		
-		First create a dummy node which will be the root of the unserialized tree, then call `unserialize()`.
+		First create a dummy node which will be the root of the unserialized tree, then call `this.unserialize()`.
 		
 		Example:
 		var root = new de.polygonal.ds.TreeNode<String>(null);
@@ -1918,16 +1918,16 @@ class TreeNode<T> implements Collection<T>
 	}
 	
 	/**
-		Returns true if this tree contains the element `x`.
+		Returns true if this tree contains `val`.
 	**/
-	public function contains(x:T):Bool
+	public function contains(val:T):Bool
 	{
 		var top = this;
 		while (top != null)
 		{
 			var node = top;
 			top = popOffStack(top);
-			if (node.val == x) return true;
+			if (node.val == val) return true;
 			var n = node.children;
 			if (n != null)
 			{
@@ -1943,15 +1943,15 @@ class TreeNode<T> implements Collection<T>
 	}
 	
 	/**
-		Runs a recursive preorder traversal that removes all nodes storing the element `x`.
+		Runs a recursive preorder traversal that removes all nodes storing `val`.
 		
-		Tree nodes are not rearranged, so if a node stores `x`, the complete subtree rooted at that node is unlinked.
-		@return true if at least one occurrence of `x` was removed.
+		Tree nodes are not rearranged, so if a node stores `val`, the complete subtree rooted at that node is unlinked.
+		@return true if at least one occurrence of `val` was removed.
 	**/
-	public function remove(x:T):Bool
+	public function remove(val:T):Bool
 	{
 		var found = false;
-		if (val == x)
+		if (this.val == val)
 		{
 			unlink();
 			found = true;
@@ -1961,7 +1961,7 @@ class TreeNode<T> implements Collection<T>
 		while (child != null)
 		{
 			var next = child.next;
-			found = found || child.remove(x);
+			found = found || child.remove(val);
 			child = next;
 		}
 		return found;
@@ -1996,7 +1996,7 @@ class TreeNode<T> implements Collection<T>
 	}
 	
 	/**
-		Returns a new `TreeIterator` object to iterate over all elements contained in the nodes of this subtree (including this node).
+		Returns a new *TreeIterator* object to iterate over all elements contained in the nodes of this subtree (including this node).
 		
 		The elements are visited by using a preorder traversal.
 		
@@ -2008,7 +2008,7 @@ class TreeNode<T> implements Collection<T>
 	}
 	
 	/**
-		Returns true only if `size` is 0.
+		Returns true only if `this.size` is 0.
 	**/
 	public function isEmpty():Bool
 	{
@@ -2031,10 +2031,11 @@ class TreeNode<T> implements Collection<T>
 	}
 	
 	/**
-		Duplicates this subtree. Supports shallow (structure only) and deep copies (structure & elements).
-		@param byRef if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
-		If false, the `clone()` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
-		@param copier a custom function for copying elements. Replaces `element->clone()` if `byRef` is false.
+		Creates and returns a shallow copy (structure only - default) or deep copy (structure & elements) of this node and its subtree.
+		
+		If `byRef` is true, primitive elements are copied by value whereas objects are copied by reference.
+		
+		If `byRef` is false, the `copier` function is used for copying elements. If omitted, `clone()` is called on each element assuming all elements implement `Cloneable`.
 	**/
 	public function clone(byRef:Bool = true, copier:T->T = null):Collection<T>
 	{

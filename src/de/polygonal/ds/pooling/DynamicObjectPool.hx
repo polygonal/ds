@@ -183,7 +183,7 @@ class DynamicObjectPool<T>
 	}
 	
 	/**
-		The maximum number of objects in use between calls to `reclaim()`.
+		The maximum number of objects in use between calls to `this.reclaim()`.
 	**/
 	public inline function maxUsageCount():Int
 	{
@@ -192,8 +192,8 @@ class DynamicObjectPool<T>
 	
 	/**
 		Acquires the next object from this pool or creates a new object if all objects are in use.
-		To minimize object creation, return objects back to the pool as soon as their life cycle ends by calling `put()`.
-		<warn>If `size` equals `capacity()`, `get()` still allocates a new object but does not pool it. This effectively disables pooling.</warn>
+		To minimize object creation, return objects back to the pool as soon as their life cycle ends by calling `this.put()`.
+		<warn>If `this.size` equals `this.capacity()`, `this.get()` still allocates a new object but does not pool it. This effectively disables pooling.</warn>
 	**/
 	public inline function get():T
 	{
@@ -220,7 +220,7 @@ class DynamicObjectPool<T>
 	
 	/**
 		Returns the object `x` to the pool.
-		Objects are pushed onto a stack, so `get()` returns `x` if called immediately after `put()`.
+		Objects are pushed onto a stack, so `this.get()` returns `x` if called immediately after `this.put()`.
 	**/
 	public inline function put(x:T)
 	{
@@ -234,10 +234,10 @@ class DynamicObjectPool<T>
 	}
 	
 	/**
-		Marks all pooled resources as available for use by `get()`.
+		Marks all pooled resources as available for use by `this.get()`.
 		<warn>The user is responsible for re-initializing an object.</warn>
-		<warn>Don't call this method while objects are still in use or `get()` will return a used object.</warn>
-		@return The total number of allocated objects since the last call to `reclaim()`.
+		<warn>Don't call this method while objects are still in use or `this.get()` will return a used object.</warn>
+		@return The total number of allocated objects since the last call to `this.reclaim()`.
 	**/
 	public inline function reclaim():Int
 	{
@@ -255,7 +255,7 @@ class DynamicObjectPool<T>
 	}
 	
 	/**
-		Returns a new `DynamicObjectPoolIterator` object to iterate over all pooled objects.
+		Returns a new *DynamicObjectPoolIterator* object to iterate over all pooled objects.
 		
 		@see http://haxe.org/ref/iterators
 	**/

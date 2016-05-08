@@ -112,7 +112,7 @@ class SllNode<T>
 	}
 	
 	/**
-		Unlinks this node from its list and returns `node->next`.
+		Unlinks this node from its list and returns `node.next`.
 	**/
 	public inline function unlink():SllNode<T>
 	{

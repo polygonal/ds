@@ -30,27 +30,27 @@ using cpp.NativeArray;
 class ArrayTools
 {
 	/**
-		Allocates an array with a length of `x`.
+		Allocates an array with a length of `len`.
 	**/
-	public static function alloc<T>(x:Int):Array<T>
+	public static function alloc<T>(len:Int):Array<T>
 	{
-		assert(x >= 0);
+		assert(len >= 0);
 		
 		var a:Array<T>;
 		#if (flash || js)
-		a = untyped __new__(Array, x);
+		a = untyped __new__(Array, len);
 		#elseif cpp
 		a = new Array<T>();
-		a.setSize(x);
+		a.setSize(len);
 		return a;
 		#elseif java
-		return untyped Array.alloc(x);
+		return untyped Array.alloc(len);
 		#else
 		a = new Array<T>();
 		#if neko
-		a[x - 1] = cast null;
+		a[len - 1] = cast null;
 		#end
-		for (i in 0...x) a[i] = cast null;
+		for (i in 0...len) a[i] = cast null;
 		#end
 		return a;
 	}
@@ -178,7 +178,7 @@ class ArrayTools
 	/**
 		Searches the sorted array `a` for the element `x` in the range [`min`, `max`) using the binary search algorithm.
 		
-		<warn>The insertion point is only valid for `min=0` and `max=a->length-1`.</warn>
+		<warn>The insertion point is only valid for `min=0` and `max=a.length-1`.</warn>
 		@return the index of the element `x` or the bitwise complement (~) of the index where `x` would be inserted (guaranteed to be a negative number).
 	**/
 	public static function bsearchInt(a:Array<Int>, x:Int, min:Int, max:Int):Int
@@ -206,7 +206,7 @@ class ArrayTools
 	/**
 		Searches the sorted array `a` for the element `x` in the range [`min`, `max`) using the binary search algorithm.
 		
-		<warn>The insertion point is only valid for `min=0` and `max=a->length-1`.</warn>
+		<warn>The insertion point is only valid for `min=0` and `max=a.length-1`.</warn>
 		@return the index of the element `x` or the bitwise complement (~) of the index where `x` would be inserted (guaranteed to be a negative number).
 	**/
 	public static function bsearchFloat(a:Array<Float>, x:Float, min:Int, max:Int):Int
@@ -234,7 +234,7 @@ class ArrayTools
 	/**
 		Shuffles the elements of the array `a` by using the Fisher-Yates algorithm.
 		@param rvals a list of random double values in the range between [0, 1) defining the new positions of the elements.
-		If omitted, random values are generated on-the-fly by calling `Math->random()`.
+		If omitted, random values are generated on-the-fly by calling `Math.random()`.
 	**/
 	public static function shuffle<T>(a:Array<T>, rvals:Array<Float> = null)
 	{
@@ -273,7 +273,7 @@ class ArrayTools
 		@param useInsertionSort if true, the array is sorted using the insertion sort algorithm. This is faster for nearly sorted lists.
 		@param first sort start index. The default value is 0.
 		@param count the number of elements to sort (range: [`first`, `first` + `count`]).
-		If omitted, `count` is set to `size`.
+		If omitted, `count` is set to `this.size`.
 	**/
 	public static function sortRange(a:Array<Float>, compare:Float->Float->Int, useInsertionSort:Bool, first:Int, count:Int)
 	{
