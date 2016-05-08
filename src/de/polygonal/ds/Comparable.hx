@@ -19,13 +19,13 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 package de.polygonal.ds;
 
 /**
-	Specifies that the order of an element in a collection can be determined by calling object->compare(otherObject)
+	Specifies that the order of an element in a collection can be determined by calling `object->compare(otherObject)`
 	
 	Example:
-		class Foo implements de.polygonal.ds.Comparable<Foo> {
+		class Element implements de.polygonal.ds.Comparable<Element> {
 		    public var val:Int;
 		    public function new() {}
-		    public function compare(other:Foo):Int {
+		    public function compare(other:Element):Int {
 		        return val - other.val;
 		    }
 		}
@@ -35,7 +35,7 @@ interface Comparable<T>
 	/**
 		Compares this object to `other`.
 		
-		The return value should be 1 if this object is "bigger" than `other`, -1 if this object is "smaller" than `other` and 0 if both are "equal".
+		The return value should be **>0** if this object is "bigger" than `other`, **<0** if this object is "smaller" than `other` and **0** if both are "equal".
 	**/
 	function compare(other:T):Int;
 }

@@ -77,9 +77,9 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	public var key(default, null):Int = HashKey.next();
 	
 	/**
-		The capacity of the internal container.
-		
-		The capacity is usually a bit larger than `size` (_mild overallocation_).
+		The size of the allocated storage space for the elements.
+		If more space is required to accommodate new elements, `capacity` grows according `GrowthRate`.
+		The capacity never falls below the initial size defined in the constructor and is usually a bit larger than `size` (_mild overallocation_).
 	**/
 	public var capacity(default, null):Int;
 	
@@ -107,6 +107,11 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	var mMap:haxe.ds.ObjectMap<T, Bool>;
 	#end
 	
+	/**
+		@param initialCapacity the initial physical space for storing values.
+		Useful before inserting a large number of elements as this reduces the amount of incremental reallocation.
+		@param source Copies all values from `source` in the range [0, `source->length` - 1] to this collection.
+	**/
 	public function new(initalCapacity:Null<Int> = 1, ?source:Array<T>)
 	{
 		mInitialCapacity = M.max(1, initalCapacity);

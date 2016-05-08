@@ -685,7 +685,7 @@ class Array2<T> implements Collection<T>
 	}
 	
 	/**
-		Grants access to the rectangular sequential array storing the elements of this two-dimensional array.
+		Returns a reference to the internal container storing the elements of this collection.
 		
 		Useful for fast iteration or low-level operations.
 	**/

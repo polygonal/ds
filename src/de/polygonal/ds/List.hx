@@ -20,6 +20,9 @@ package de.polygonal.ds;
 
 import de.polygonal.ds.Collection;
 
+/**
+	An ordered list of elements
+**/
 interface List<T> extends Collection<T>
 {
 	/**
@@ -38,12 +41,12 @@ interface List<T> extends Collection<T>
 	function add(val:T):Void;
 	
 	/**
-		Inserts an element at the specified index. hint shift, if index == size??
+		Inserts an element at the specified index.
 	**/
 	function insert(index:Int, val:T):Void;
 	
 	/**
-		Removes the value at the given `index`. hint shift
+		Removes the value at the given `index`.
 	**/
 	function removeAt(index:Int):T;
 	

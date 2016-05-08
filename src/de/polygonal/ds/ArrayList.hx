@@ -55,9 +55,9 @@ class ArrayList<T> implements List<T>
 	public var key(default, null):Int = HashKey.next();
 	
 	/**
-		The capacity of the internal container.
-		
-		The capacity is usually a bit larger than `size` (_mild overallocation_).
+		The size of the allocated storage space for the elements.
+		If more space is required to accommodate new elements, `capacity` grows according `GrowthRate`.
+		The capacity never falls below the initial size defined in the constructor and is usually a bit larger than `size` (_mild overallocation_).
 	**/
 	public var capacity(default, null):Int;
 	
@@ -82,9 +82,9 @@ class ArrayList<T> implements List<T>
 	var mIterator:ArrayListIterator<T> = null;
 	
 	/**
-		@param capacityIncrement if defined, the vector's storage increases in chunks the size of `capacityIncrement`.
-		If omitted, the vector uses a growth factor of 1.5 resulting in a mild overallocation.
-		In either case, `capacity` is usually larger than `size` to minimize the amount of incremental reallocation.
+		@param initialCapacity the initial physical space for storing values.
+		Useful before inserting a large number of elements as this reduces the amount of incremental reallocation.
+		@param source Copies all values from `source` in the range [0, `source->length` - 1] to this collection.
 	**/
 	public function new(initalCapacity:Null<Int> = 2, ?source:Array<T>)
 	{
@@ -124,9 +124,9 @@ class ArrayList<T> implements List<T>
 	}
 	
 	/**
-		Appends the element `val`.
+		Appends the element `val`, same as `pushBack()`.
 	**/
-	public function add(val:T)
+	public inline function add(val:T)
 	{
 		pushBack(val);
 	}
@@ -510,7 +510,7 @@ class ArrayList<T> implements List<T>
 	}
 	
 	/**
-		Reverses this vector in place in the range [`first, `last`] (the first element becomes the last and the last becomes the first).
+		Reverses this vector in place in the range [`first`, `last`] (the first element becomes the last and the last becomes the first).
 	**/
 	public function reverse(first:Int = -1, last:Int = -1)
 	{
@@ -583,6 +583,11 @@ class ArrayList<T> implements List<T>
 		}
 	}
 	
+	/**
+		Shuffles the elements of this collection by using the Fisher-Yates algorithm.
+		@param rvals a list of random double values in the interval [0, 1) defining the new positions of the elements.
+		If omitted, random values are generated on-the-fly by calling `Math->random()`.
+	**/
 	public function shuffle(?rvals:Array<Float>)
 	{
 		var s = size, d = mData;
@@ -858,6 +863,10 @@ class ArrayList<T> implements List<T>
 		return this;
 	}
 	
+	/**
+		Returns an `ArrayList` object storing elements in the range [`fromIndex`, `toIndex`).
+		If `toIndex` is negative, the value represents the number of elements.
+	**/
 	public function getRange(fromIndex:Int, toIndex:Int):List<T>
 	{
 		assert(fromIndex >= 0 && fromIndex < size, "fromIndex out of range");
@@ -878,7 +887,9 @@ class ArrayList<T> implements List<T>
 		mData.blit(fromIndex, out.mData, 0, n);
 		return out;
 	}
-	
+	/**
+		Make this an exact copy of `other`.
+	**/
 	public function of(other:ArrayList<T>):ArrayList<T>
 	{
 		clear();
@@ -888,6 +899,11 @@ class ArrayList<T> implements List<T>
 		return this;
 	}
 	
+	/**
+		Returns a reference to the internal container storing the elements of this collection.
+		
+		Useful for fast iteration or low-level operations.
+	**/
 	public inline function getData():NativeArray<T>
 	{
 		return mData;

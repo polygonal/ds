@@ -45,12 +45,12 @@ class SllNode<T>
 	var mList:Sll<T>;
 	
 	/**
-		@param x the element to store in this node.
+		@param val the element to store in this node.
 		@param list the list storing this node.
 	**/
-	public function new(x:T, list:Sll<T>)
+	public function new(val:T, list:Sll<T>)
 	{
-		val = x;
+		this.val = val;
 		mList = list;
 	}
 	

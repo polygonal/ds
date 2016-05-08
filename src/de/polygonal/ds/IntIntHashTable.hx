@@ -84,11 +84,9 @@ class IntIntHashTable implements Map<Int, Int>
 	public var key(default, null):Int = HashKey.next();
 	
 	/**
-		The size of the allocated storage space for the key/value pairs.
-		
-		If more space is required to accommodate new elements, `getCapacity()` is doubled every time `size` grows beyond capacity, and split in half when `size` is a quarter of capacity.
-		
-		The capacity never falls below the initial size defined in the constructor.
+		The size of the allocated storage space for the elements.
+		If more space is required to accommodate new elements, `capacity` grows according `GrowthRate`.
+		The capacity never falls below the initial size defined in the constructor and is usually a bit larger than `size` (_mild overallocation_).
 	**/
 	public var capacity(default, null):Int;
 	

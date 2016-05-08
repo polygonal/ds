@@ -32,7 +32,7 @@ class TestBitVector extends AbstractTest
 			if (i & 1 == 0)
 				bv.set(i);
 			else
-				bv.clr(i);
+				bv.clear(i);
 		}
 		
 		var ba = bv.toBytes();
@@ -115,7 +115,7 @@ class TestBitVector extends AbstractTest
 		for (i in 0...32)
 		{
 			if ((i & 1) == 0)
-				b.clr(i);
+				b.clear(i);
 		}
 		
 		for (i in 0...32)
@@ -132,7 +132,7 @@ class TestBitVector extends AbstractTest
 		for (i in 0...32)
 		{
 			if ((i & 1) == 1)
-				b.clr(i);
+				b.clear(i);
 		}
 		for (i in 0...32)
 		{
@@ -164,7 +164,7 @@ class TestBitVector extends AbstractTest
 		for (i in 0...100)
 		{
 			b.set(i);
-			b.clr(i);
+			b.clear(i);
 		}
 		for (i in 0...100)
 			assertFalse(b.has(i));
@@ -191,7 +191,7 @@ class TestBitVector extends AbstractTest
 		for (i in 0...64)
 			b.set(i);
 		
-		b.clrAll();
+		b.clearAll();
 		
 		for (i in 0...64)
 			assertFalse(b.has(i));
@@ -202,31 +202,31 @@ class TestBitVector extends AbstractTest
 		// base case clear nothing
 		var b = new BitVector(2);
 		for (i in 0...2) b.set(i);
-		b.clrRange(0, 0);
+		b.clearRange(0, 0);
 		for (i in 0...2) assertTrue(b.has(i));
 		
 		var b = new BitVector(32);
 		for (i in 0...32) b.set(i);
-		b.clrRange(0, 16);
+		b.clearRange(0, 16);
 		for (i in 0...16) assertFalse(b.has(i));
 		for (i in 16...32) assertTrue(b.has(i));
 		
 		var b = new BitVector(64);
 		for (i in 0...64) b.set(i);
-		b.clrRange(0, 25);
+		b.clearRange(0, 25);
 		for (i in 0...25) assertFalse(b.has(i));
 		for (i in 25...64) assertTrue(b.has(i));
 		
 		var b = new BitVector(64);
 		for (i in 0...64) b.set(i);
-		b.clrRange(0, 35);
+		b.clearRange(0, 35);
 		for (i in 0...35) assertFalse(b.has(i));
 		for (i in 35...64) assertTrue(b.has(i));
 		
 		//min > 0
 		var b = new BitVector(32);
 		for (i in 0...32) b.set(i);
-		b.clrRange(5, 16);
+		b.clearRange(5, 16);
 		
 		for (i in 0...5) assertTrue(b.has(i));
 		for (i in 5...16) assertFalse(b.has(i));
@@ -234,14 +234,14 @@ class TestBitVector extends AbstractTest
 		
 		var b = new BitVector(64);
 		for (i in 0...64) b.set(i);
-		b.clrRange(5, 25);
+		b.clearRange(5, 25);
 		for (i in 0...5) assertTrue(b.has(i));
 		for (i in 5...25) assertFalse(b.has(i));
 		for (i in 25...64) assertTrue(b.has(i));
 		
 		var b = new BitVector(64);
 		for (i in 0...64) b.set(i);
-		b.clrRange(5, 35);
+		b.clearRange(5, 35);
 		for (i in 0...5) assertTrue(b.has(i));
 		for (i in 5...35) assertFalse(b.has(i));
 		for (i in 35...64) assertTrue(b.has(i));

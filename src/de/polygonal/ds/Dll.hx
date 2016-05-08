@@ -865,11 +865,17 @@ class Dll<T> implements List<T>
 	
 	/* INTERFACE List */
 	
+	/**
+		Same as `append()`.
+	**/
 	public function add(x:T)
 	{
 		append(x);
 	}
 	
+	/**
+		Returns the value at the given `index` (0=head).
+	**/
 	public function get(index:Int):T
 	{
 		assert(index >= 0 && index < size, "index out of range");
@@ -877,6 +883,9 @@ class Dll<T> implements List<T>
 		return getNodeAt(index).val;
 	}
 	
+	/**
+		Overwrites the value at the given `index` with `val` (0=head).
+	**/
 	public function set(index:Int, val:T)
 	{
 		assert(index >= 0 && index < size, "index out of range");
@@ -884,6 +893,9 @@ class Dll<T> implements List<T>
 		getNodeAt(index).val = val;
 	}
 	
+	/**
+		Inserts `val` before the element at `index` (0=head).
+	**/
 	public function insert(index:Int, val:T)
 	{
 		assert(index >= 0 && index <= size, "index out of range");
@@ -897,6 +909,9 @@ class Dll<T> implements List<T>
 		insertBefore(getNodeAt(index), val);
 	}
 	
+	/**
+		Returns the index of `val` (0=head).
+	**/
 	public function indexOf(val:T)
 	{
 		var i = 0;
@@ -910,6 +925,9 @@ class Dll<T> implements List<T>
 		return -1;
 	}
 	
+	/**
+		Removes and returns the element at `index` (0=head).
+	**/
 	public function removeAt(index:Int):T
 	{
 		var node = getNodeAt(index);
@@ -917,6 +935,10 @@ class Dll<T> implements List<T>
 		return node.val;
 	}
 	
+	/**
+		Returns a `Dll` object storing elements in the range [`fromIndex`, `toIndex`).
+		If `toIndex` is negative, the value represents the number of elements.
+	**/
 	public function getRange(fromIndex:Int, toIndex:Int):List<T>
 	{
 		assert(fromIndex >= 0 && fromIndex < size, "fromIndex out of range");

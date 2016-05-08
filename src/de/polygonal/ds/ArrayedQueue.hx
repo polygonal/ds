@@ -60,9 +60,9 @@ class ArrayedQueue<T> implements Queue<T>
 	public var key(default, null):Int = HashKey.next();
 	
 	/**
-		The capacity of the internal container.
-		
-		The capacity is usually a bit larger than `size` (_mild overallocation_).
+		The size of the allocated storage space for the elements.
+		If more space is required to accommodate new elements, `capacity` grows according `GrowthRate`.
+		The capacity never falls below the initial size defined in the constructor and is usually a bit larger than `size` (_mild overallocation_).
 	**/
 	public var capacity(default, null):Int;
 	
@@ -88,14 +88,9 @@ class ArrayedQueue<T> implements Queue<T>
 	var mIterator:ArrayedQueueIterator<T> = null;
 	
 	/**
-		@param initialCapacity the initial physical space for storing the elements at the time the queue is created.
-		This is also the minimum size of this queue.
-		The `capacity` is automatically adjusted according to the storage requirements based on three rules:
-		<ul>
-		<li>If this queue runs out of space, `capacity` is doubled.</li>
-		<li>If the `size` falls below a quarter of the current `capacity`, the `capacity` is cut in half</li>
-		<li>The minimum `capacity` equals `capacity`</li>
-		</ul>
+		@param initialCapacity the initial physical space for storing values.
+		Useful before inserting a large number of elements as this reduces the amount of incremental reallocation.
+		@param source Copies all values from `source` in the range [0, `source->length` - 1] to this collection.
 	**/
 	public function new(initialCapacity:Null<Int> = 16, ?source:Array<T>)
 	{
@@ -149,7 +144,7 @@ class ArrayedQueue<T> implements Queue<T>
 	}
 	
 	/**
-		Faster than `enqueue()`, but skips boundary checking.
+		Faster than `enqueue()` by skipping boundary checking.
 		
 		The user is responsible for making sure that there is enough space available (e.g. by calling `reserve()`).
 	**/
@@ -355,17 +350,6 @@ class ArrayedQueue<T> implements Queue<T>
 		b.add("]");
 		return b.toString();
 		#end
-	}
-	
-	/**
-		The size of the allocated storage space for the elements.
-		
-		If more space is required to accomodate new elements, the capacity is doubled every time `size` grows beyond capacity, and split in half when `size` is a quarter of capacity.
-		The capacity never falls below the initial size defined in the constructor.
-	**/
-	public inline function getCapacity():Int
-	{
-		return capacity;
 	}
 	
 	/**

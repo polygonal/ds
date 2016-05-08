@@ -58,9 +58,9 @@ class ListSet<T> implements Set<T>
 	public var key(default, null):Int = HashKey.next();
 	
 	/**
-		The capacity of the internal container.
-		
-		The capacity is usually a bit larger than `size` (_mild overallocation_).
+		The size of the allocated storage space for the elements.
+		If more space is required to accommodate new elements, `capacity` grows according `GrowthRate`.
+		The capacity never falls below the initial size defined in the constructor and is usually a bit larger than `size` (_mild overallocation_).
 	**/
 	public var capacity(default, null):Int;
 	

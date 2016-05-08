@@ -172,7 +172,7 @@ class ObjectPool<T> implements Hashable
 		#if debug
 		assert(mUsage.has(id), 'id $id is not used');
 		assert(mCount > 0, "pool is full");
-		mUsage.clr(id);
+		mUsage.clear(id);
 		--mCount;
 		#end
 		

@@ -129,7 +129,7 @@ class BitVector implements Hashable
 	/**
 		Sets the bit at index `i` to zero.
 	**/
-	public inline function clr(i:Int)
+	public inline function clear(i:Int)
 	{
 		assert(i < capacity, 'i index out of range ($i)');
 		
@@ -140,7 +140,7 @@ class BitVector implements Hashable
 	/**
 		Sets all bits in the bit-vector to zero.
 	**/
-	public inline function clrAll()
+	public inline function clearAll()
 	{
 		#if cpp
 		cpp.NativeArray.zero(mData, 0, mArrSize);
@@ -162,9 +162,9 @@ class BitVector implements Hashable
 	/**
 		Clears all bits in the range [`min`, `max`).
 		
-		This is faster than clearing individual bits by using `clr()`.
+		This is faster than clearing individual bits by using `clear()`.
 	**/
-	public function clrRange(min:Int, max:Int)
+	public function clearRange(min:Int, max:Int)
 	{
 		assert(min >= 0 && min <= max && max < mBitSize, 'min/max out of range ($min/$max)');
 		
@@ -206,7 +206,7 @@ class BitVector implements Hashable
 	**/
 	public inline function ofBool(i:Int, cond:Bool)
 	{
-		cond ? set(i) : clr(i);
+		cond ? set(i) : clear(i);
 	}
 	
 	/**

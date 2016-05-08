@@ -94,6 +94,7 @@ class ArrayedDeque<T> implements Deque<T>
 		<warn>`blockSize` has to be a power of two.</warn>
 		@param blockPoolCapacity the total number of blocks to reuse when blocks are removed or relocated (from front to back or vice-versa). This improves performances but uses more memory.
 		The default value is 4; a value of 0 disables block pooling.
+		@param source Copies all values from `source` in the range [0, `source->length` - 1] to this collection.
 	**/
 	public function new(blockSize:Null<Int> = 64, blockPoolCapacity:Null<Int> = 4, ?source:Array<T>)
 	{

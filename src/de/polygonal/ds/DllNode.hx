@@ -50,12 +50,12 @@ class DllNode<T>
 	var mList:Dll<T>;
 	
 	/**
-		@param x the element to store in this node.
+		@param val the element to store in this node.
 		@param list the list storing this node.
 	**/
-	public function new(x:T, list:Dll<T>)
+	public function new(val:T, list:Dll<T>)
 	{
-		val = x;
+		this.val = val;
 		mList = list;
 	}
 	
