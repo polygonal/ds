@@ -20,6 +20,7 @@ package de.polygonal.ds;
 
 import de.polygonal.ds.tools.ArrayTools;
 import de.polygonal.ds.tools.Assert.assert;
+import de.polygonal.ds.tools.Bits;
 import de.polygonal.ds.tools.GrowthRate;
 import de.polygonal.ds.tools.M;
 

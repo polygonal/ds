@@ -23,7 +23,7 @@ import de.polygonal.ds.tools.M;
 
 using de.polygonal.ds.tools.NativeArrayTools;
 
-using de.polygonal.ds.Bits;
+using de.polygonal.ds.tools.Bits;
 
 /**
 	An array data structure that compactly stores individual bits (boolean values)

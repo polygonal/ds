@@ -1,25 +1,24 @@
-﻿import de.polygonal.ds.Bits;
+﻿import de.polygonal.ds.tools.Bits;
 
-using de.polygonal.ds.Bits;
+using de.polygonal.ds.tools.Bits;
 
 class TestBits extends AbstractTest
 {
 	function testReverse()
 	{
-		var x = 0;
-		x = x.setBitAt(0);
-		x = x.setBitAt(1);
-		x = x.setBitAt(2);
+		var x = (1 << 0 | 1 << 1 | 1 << 2);
 		
 		x = x.reverse();
 		
-		assertTrue(!x.hasBitAt(0));
-		assertTrue(!x.hasBitAt(1));
-		assertTrue(!x.hasBitAt(2));
+		assertEquals(0, x & (1 << 0));
+		assertEquals(0, x & (1 << 1));
+		assertEquals(0, x & (1 << 2));
+		assertEquals(1 << 29, x & (1 << 29));
+		assertEquals(1 << 30, x & (1 << 30));
 		
-		assertTrue(x.hasBitAt(29));
-		assertTrue(x.hasBitAt(30));
-		assertTrue(x.hasBitAt(31));
+		#if !python
+		assertEquals(1 << 31, x & (1 << 31));
+		#end
 	}
 	
 	function testMsb()
@@ -34,12 +33,12 @@ class TestBits extends AbstractTest
 		x = -1;
 		for (i in 0...k-1)
 		{
-			x = x.clrBits(1 << i);
+			x = x & ~(1 << 1);
 			assertEquals(1 << k-1, x.msb());
 		}
 	}
 	
-	function testNTZ()
+	function testNtz()
 	{
 		var k = 32;
 		for (i in 0...k)
@@ -54,7 +53,7 @@ class TestBits extends AbstractTest
 		}
 	}
 	
-	function testNLZ()
+	function testNlz()
 	{
 		var k = 32;
 		var n = k - 1;
@@ -89,151 +88,5 @@ class TestBits extends AbstractTest
 				assertTrue(b);
 			}
 		}
-	}
-
-	function testSetIf()
-	{
-		var x = 0;
-		x = x.setBitsIf(0x02, true);
-		assertTrue(x.hasBits(0x02));
-		x = x.setBitsIf(0x04, false);
-		assertTrue(!x.hasBits(0x04));
-	}
-	
-	function testSetAll()
-	{
-		var x = 0;
-		var k = 32;
-		for (i in 0...k)
-		{
-			x = x.setBits(1 << i);
-			assertEquals(i + 1, x.ones());
-		}
-	}
-	
-	function testGet()
-	{
-		var b = Bits.BIT_01 | Bits.BIT_03;
-		assertTrue(b.incBits(Bits.BIT_01 | Bits.BIT_03));
-		assertTrue(b.hasBits(Bits.BIT_01));
-		assertTrue(b.hasBits(Bits.BIT_03));
-		assertFalse(b.incBits(Bits.BIT_01 | Bits.BIT_05));
-	}
-	
-	function testRange()
-	{
-		var b = 0;
-		assertEquals(0, b.ones());
-		var k = 32;
-		for (i in 0...k)
-		{
-			b = b.setBits(1 << i);
-			assertEquals(i + 1, b.ones());
-		}
-	}
-	
-	function testGetBitAt()
-	{
-		var b = Bits.BIT_01 | Bits.BIT_03;
-		assertTrue(b.hasBitAt(0));
-		assertTrue(b.hasBitAt(2));
-	}
-	
-	function testSet()
-	{
-		var b = Bits.BIT_01 | Bits.BIT_03;
-		b = b.setBits(Bits.BIT_04);
-		assertTrue(b.hasBits(Bits.BIT_04));
-	}
-	
-	function testSetAt()
-	{
-		var b = 0;
-		b = b.setBitAt(0);
-		b = b.setBitAt(3);
-		assertTrue(b.hasBits(Bits.BIT_01 | Bits.BIT_04));
-	}
-	
-	function testClrBitAt()
-	{
-		var b = 0;
-		b = b.setBitAt(1);
-		b = b.setBitAt(4);
-		b = b.clrBitAt(1);
-		assertTrue(!b.hasBits(Bits.BIT_01));
-		b = b.clrBitAt(4);
-		assertTrue(!b.hasBits(Bits.BIT_04));
-	}
-	
-	function testIf()
-	{
-		var b = Bits.BIT_01 | Bits.BIT_03;
-		b = b.setBitsIf(Bits.BIT_04, true);
-		assertTrue(b.hasBits(Bits.BIT_04));
-		b = b.setBitsIf(Bits.BIT_04, false);
-		assertFalse(b.hasBits(Bits.BIT_04));
-	}
-	
-	function testClr()
-	{
-		var b = Bits.BIT_01 | Bits.BIT_03;
-		b = b.setBits(Bits.BIT_04);
-		b = b.clrBits(Bits.BIT_04);
-		assertFalse(b.hasBits(Bits.BIT_04));
-		var b = Bits.ALL;
-		var k = 32;
-		for (i in 0...k)
-		{
-			b = b.clrBits(1 << i);
-			assertFalse(b.hasBits(1 << i));
-		}
-	}
-	
-	function testFlip()
-	{
-		var b = Bits.BIT_01 | Bits.BIT_03;
-		b = b.invBits(Bits.BIT_04);
-		assertTrue(b.hasBits(Bits.BIT_04));
-		b = b.invBits(Bits.BIT_04);
-		assertFalse(b.hasBits(Bits.BIT_04));
-	}
-	
-	function testFlipAt()
-	{
-		var b = Bits.BIT_01 | Bits.BIT_03;
-		b = b.invBitAt(3);
-		assertTrue(b.hasBitAt(3));
-		b = b.invBitAt(0);
-		assertTrue(!b.hasBitAt(0));
-		b = b.invBitAt(2);
-		assertTrue(!b.hasBitAt(2));
-	}
-	
-	function testHas()
-	{
-		var b = Bits.BIT_01 | Bits.BIT_03;
-		assertTrue(b.hasBits(Bits.BIT_01));
-		assertTrue(b.hasBits(Bits.BIT_01 | Bits.BIT_03));
-		assertTrue(b.hasBits(Bits.BIT_01 | Bits.BIT_05));
-	}
-	
-	function testSetRange()
-	{
-		var b = 0;
-		b = b.setBitsRange(0, 3);
-		b = b.setBitsRange(7, 15);
-		
-		assertTrue(b.hasBits(Bits.BIT_01));
-		assertTrue(b.hasBits(Bits.BIT_02));
-		assertTrue(b.hasBits(Bits.BIT_03));
-		
-		assertTrue(b.hasBits(Bits.BIT_08));
-		assertTrue(b.hasBits(Bits.BIT_09));
-		assertTrue(b.hasBits(Bits.BIT_10));
-		assertTrue(b.hasBits(Bits.BIT_11));
-		assertTrue(b.hasBits(Bits.BIT_12));
-		assertTrue(b.hasBits(Bits.BIT_13));
-		assertTrue(b.hasBits(Bits.BIT_14));
-		assertTrue(b.hasBits(Bits.BIT_15));
 	}
 }

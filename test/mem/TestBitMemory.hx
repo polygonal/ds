@@ -1,6 +1,6 @@
 ﻿package mem;
 
-import de.polygonal.ds.Bits;
+import de.polygonal.ds.tools.Bits;
 import de.polygonal.ds.BitVector;
 import de.polygonal.ds.mem.BitMemory;
 import haxe.io.Bytes;
@@ -11,7 +11,7 @@ import haxe.io.BytesOutput;
 import de.polygonal.ds.mem.MemoryManager;
 #end
 
-using de.polygonal.ds.Bits;
+using de.polygonal.ds.tools.Bits;
 
 class TestBitMemory extends AbstractTest
 {
@@ -33,22 +33,19 @@ class TestBitMemory extends AbstractTest
 		#else
 		b.bigEndian = false;
 		#end
-		var i = Bits.BIT_01 | Bits.BIT_02 | Bits.BIT_03 | Bits.BIT_08 | Bits.BIT_09 | Bits.BIT_16 | Bits.BIT_17 | Bits.BIT_24 | Bits.BIT_25 | Bits.BIT_31;
+		
+		var bits = [0, 1, 2, 7, 8, 15, 16, 23, 24, 30];
+		
+		var i = 0;
+		for (bit in bits) i |= 1 << bit;
+		
 		b.writeInt(i);
 		var m:BitMemory = BitMemory.ofByteArray(b);
 		
 		assertEquals(m.size, 32);
 		assertEquals(m.bytes, 4);
-		assertTrue(m.has(0));
-		assertTrue(m.has(1));
-		assertTrue(m.has(2));
-		assertTrue(m.has(7));
-		assertTrue(m.has(8));
-		assertTrue(m.has(15));
-		assertTrue(m.has(16));
-		assertTrue(m.has(23));
-		assertTrue(m.has(24));
-		assertTrue(m.has(30));
+		
+		for (bit in bits) assertTrue(m.has(bit));
 		
 		m.free();
 		#if alchemy MemoryManager.free(); #end
@@ -63,16 +60,8 @@ class TestBitMemory extends AbstractTest
 		var m = BitMemory.ofByteArray(b);
 		assertEquals(m.size, 32);
 		assertEquals(m.bytes, 4);
-		assertTrue(m.has(0));
-		assertTrue(m.has(1));
-		assertTrue(m.has(2));
-		assertTrue(m.has(7));
-		assertTrue(m.has(8));
-		assertTrue(m.has(15));
-		assertTrue(m.has(16));
-		assertTrue(m.has(23));
-		assertTrue(m.has(24));
-		assertTrue(m.has(30));
+		
+		for (bit in bits) assertTrue(m.has(bit));
 		
 		m.free();
 		#if alchemy MemoryManager.free(); #end
@@ -190,12 +179,9 @@ class TestBitMemory extends AbstractTest
 	{
 		var b = new BytesOutput();
 		
-		var i = 
-		#if neko
-		Bits.BIT_01 | Bits.BIT_02 | Bits.BIT_03 | Bits.BIT_08 | Bits.BIT_09 | Bits.BIT_16 | Bits.BIT_17 | Bits.BIT_24 | Bits.BIT_25;
-		#else
-		Bits.BIT_01 | Bits.BIT_02 | Bits.BIT_03 | Bits.BIT_08 | Bits.BIT_09 | Bits.BIT_16 | Bits.BIT_17 | Bits.BIT_24 | Bits.BIT_25 | Bits.BIT_31;
-		#end
+		var bits = [0, 1, 2, 7, 8, 15, 16, 23, 24, 30];
+		var i = 0;
+		for (bit in bits) i |= 1 << bit;
 		
 		b.writeInt32(i);
 		
@@ -205,15 +191,7 @@ class TestBitMemory extends AbstractTest
 		assertEquals(m.size, 32);
 		assertEquals(m.bytes, #if (neko && !neko_v2) 8 #else 4 #end);
 		
-		assertTrue(m.has(0));
-		assertTrue(m.has(1));
-		assertTrue(m.has(2));
-		assertTrue(m.has(7));
-		assertTrue(m.has(8));
-		assertTrue(m.has(15));
-		assertTrue(m.has(16));
-		assertTrue(m.has(23));
-		assertTrue(m.has(24));
+		for (bit in bits) assertTrue(m.has(bit));
 		
 		#if !neko
 		assertTrue(m.has(30));
@@ -232,16 +210,7 @@ class TestBitMemory extends AbstractTest
 		var m:BitMemory = BitMemory.ofByteArray(b);
 		assertEquals(m.size, 32);
 		assertEquals(m.bytes, 4);
-		assertTrue(m.has(0));
-		assertTrue(m.has(1));
-		assertTrue(m.has(2));
-		assertTrue(m.has(7));
-		assertTrue(m.has(8));
-		assertTrue(m.has(15));
-		assertTrue(m.has(16));
-		assertTrue(m.has(23));
-		assertTrue(m.has(24));
-		assertTrue(m.has(30));
+		for (bit in bits) assertTrue(m.has(bit));
 		
 		m.free();
 		#if alchemy MemoryManager.free(); #end

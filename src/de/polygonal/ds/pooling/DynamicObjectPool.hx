@@ -19,6 +19,7 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 package de.polygonal.ds.pooling;
 
 import de.polygonal.ds.tools.Assert.assert;
+import de.polygonal.ds.tools.Bits;
 import de.polygonal.ds.tools.M;
 
 /**
@@ -140,9 +141,9 @@ class DynamicObjectPool<T>
 		mUsed = 0;
 		mUsedMax = 0;
 		
-		if (cl        != null) mAllocType |= Bits.BIT_01;
-		if (fabricate != null) mAllocType |= Bits.BIT_02;
-		if (factory   != null) mAllocType |= Bits.BIT_03;
+		if (cl != null) mAllocType |= 0x01;
+		if (fabricate != null) mAllocType |= 0x02;
+		if (factory != null) mAllocType |= 0x04;
 		
 		assert(Bits.ones(mAllocType) == 1, "invalid arguments");
 		
@@ -282,9 +283,9 @@ class DynamicObjectPool<T>
 		
 		switch (mAllocType)
 		{
-			case Bits.BIT_01: x = Type.createInstance(mClass, mArgs);
-			case Bits.BIT_02: x = mFabricate();
-			case Bits.BIT_03: x = mFactory.create();
+			case 0x01: x = Type.createInstance(mClass, mArgs);
+			case 0x02: x = mFabricate();
+			case 0x04: x = mFactory.create();
 		}
 		return x;
 	}
