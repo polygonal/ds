@@ -2096,7 +2096,7 @@ class TreeNode<T> implements Collection<T>
 		return copy;
 	}
 	
-	inline function popOffStack(top:TreeNode<T>):TreeNode<T>
+	@:extern inline function popOffStack(top:TreeNode<T>):TreeNode<T>
 	{
 		var t = top;
 		top = top.mPrevInStack;
@@ -2105,7 +2105,7 @@ class TreeNode<T> implements Collection<T>
 		return top;
 	}
 	
-	inline function pushOnStack(top:TreeNode<T>, x:TreeNode<T>):TreeNode<T>
+	@:extern inline function pushOnStack(top:TreeNode<T>, x:TreeNode<T>):TreeNode<T>
 	{
 		if (top != null)
 		{
@@ -2115,32 +2115,32 @@ class TreeNode<T> implements Collection<T>
 		return x;
 	}
 	
-	inline function incChildCount()
+	@:extern inline function incChildCount()
 	{
 		mExtraInfo = (mExtraInfo & 0x0000FFFF) | ((numChildren() + 1) << 16);
 	}
 	
-	inline function decChildCount()
+	@:extern inline function decChildCount()
 	{
 		mExtraInfo = (mExtraInfo & 0x0000FFFF) | ((numChildren() - 1) << 16);
 	}
 	
-	inline function setChildCount(x:Int)
+	@:extern inline function setChildCount(x:Int)
 	{
 		mExtraInfo = (mExtraInfo & 0x0000FFFF) | (x << 16);
 	}
 	
-	inline function setTimeStamp(x:Int)
+	@:extern inline function setTimeStamp(x:Int)
 	{
 		mExtraInfo = (mExtraInfo & 0xFFFF0000) | x;
 	}
 	
-	inline function getTimeStamp():Int
+	@:extern inline function getTimeStamp():Int
 	{
 		return mExtraInfo & 0xFFFF;
 	}
 	
-	inline function incTimeStamp()
+	@:extern inline function incTimeStamp()
 	{
 		mExtraInfo = (mExtraInfo & 0xFFFF0000) | (getTimeStamp() + 1);
 	}
