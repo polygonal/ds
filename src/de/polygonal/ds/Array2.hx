@@ -919,7 +919,7 @@ class Array2<T> implements Collection<T>
 	**/
 	public function toArray():Array<T>
 	{
-		return mData.toArray(0, size);
+		return mData.toArray(0, size, []);
 	}
 	
 	/**

@@ -566,12 +566,12 @@ class TestArrayList extends AbstractTest
 		assertEquals(-1, a.lastIndexOf(5, 1));
 	}
 	
-	function testMemMove()
+	function testBlit()
 	{
 		var a = new ArrayList<Int>();
 		for (i in 0...20) a.pushBack(i);
 		
-		a.memmove(0, 10, 10);
+		a.blit(0, 10, 10);
 		
 		for (i in 0...10)
 			assertEquals(i + 10, a.get(i));
@@ -581,7 +581,7 @@ class TestArrayList extends AbstractTest
 		var a = new ArrayList<Int>();
 		for (i in 0...20) a.pushBack(i);
 		
-		a.memmove(10, 0, 10);
+		a.blit(10, 0, 10);
 		
 		for (i in 0...10)
 			assertEquals(i, a.get(i));
@@ -591,7 +591,7 @@ class TestArrayList extends AbstractTest
 		var a = new ArrayList<Int>();
 		for (i in 0...20) a.pushBack(i);
 		
-		a.memmove(5, 0, 10);
+		a.blit(5, 0, 10);
 		
 		for (i in 0...5) assertEquals(i, a.get(i));
 		for (i in 5...15) assertEquals(i - 5, a.get(i));

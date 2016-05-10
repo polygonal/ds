@@ -543,7 +543,7 @@ class ArrayList<T> implements List<T>
 		
 		@see http://www.cplusplus.com/reference/clibrary/cstring/memmove/
 	**/
-	public function memmove(destination:Int, source:Int, n:Int)
+	public function blit(destination:Int, source:Int, n:Int)
 	{
 		assert(destination >= 0 && source >= 0 && n >= 0);
 		assert(source < size);
@@ -1048,7 +1048,7 @@ class ArrayList<T> implements List<T>
 	**/
 	public function toArray():Array<T>
 	{
-		return mData.toArray(0, size);
+		return mData.toArray(0, size, []);
 	}
 	
 	/**

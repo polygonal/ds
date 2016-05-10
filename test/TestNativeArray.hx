@@ -43,19 +43,19 @@ class TestNativeArray extends AbstractTest
 		var v = NativeArrayTools.alloc(10);
 		for (i in 0...10) v.set(i, i);
 		
-		var a = NativeArrayTools.toArray(v, 0, 10);
+		var a = NativeArrayTools.toArray(v, 0, 10, new Array<Int>());
 		assertEquals(10, a.length);
 		for (i in 0...10) assertEquals(v.get(i), a[i]);
 		
-		var a = NativeArrayTools.toArray(v, 5, 5);
+		var a = NativeArrayTools.toArray(v, 5, 5, new Array<Int>());
 		assertEquals(5, a.length);
 		for (i in 0...5) assertEquals(i + 5, a[i]);
 		
-		var a = NativeArrayTools.toArray(v, 0, 5);
+		var a = NativeArrayTools.toArray(v, 0, 5, new Array<Int>());
 		assertEquals(5, a.length);
 		for (i in 0...5) assertEquals(i, a[i]);
 		
-		var a = NativeArrayTools.toArray(v, 0, 0);
+		var a = NativeArrayTools.toArray(v, 0, 0, new Array<Int>());
 		assertEquals(0, a.length);
 	}
 	
@@ -137,6 +137,36 @@ class TestNativeArray extends AbstractTest
 		for (i in 0...10) v.set(i, new E());
 		v.nullify();
 		for (i in 0...10) assertEquals(null, v.get(i));
+	}
+	
+	function testInit()
+	{
+		var v:NativeArray<String> = NativeArrayTools.alloc(4);
+		v.init("a");
+		for (i in 0...4) assertEquals("a", v.get(i));
+		assertEquals(4, v.size());
+		
+		var v:NativeArray<String> = NativeArrayTools.alloc(4);
+		v.init("a", 2);
+		assertEquals(4, v.size());
+		assertEquals(null, v.get(0));
+		assertEquals(null, v.get(1));
+		assertEquals("a", v.get(2));
+		assertEquals("a", v.get(3));
+		
+		var v:NativeArray<String> = NativeArrayTools.alloc(4);
+		v.init("a", 3, 1);
+		assertEquals(null, v.get(0));
+		assertEquals(null, v.get(1));
+		assertEquals(null, v.get(2));
+		assertEquals("a", v.get(3));
+		
+		var v:NativeArray<String> = NativeArrayTools.alloc(4);
+		v.init("a", 0, 2);
+		assertEquals("a", v.get(0));
+		assertEquals("a", v.get(1));
+		assertEquals(null, v.get(2));
+		assertEquals(null, v.get(3));
 	}
 }
 

@@ -525,7 +525,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	**/
 	public function toArray():Array<T>
 	{
-		return mData.toArray(1, size);
+		return mData.toArray(1, size, []);
 	}
 	
 	/**

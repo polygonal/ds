@@ -19,11 +19,11 @@ class TestArrayTools extends AbstractTest
 		for (i in 0...a.length) assertEquals(b[i], a[i]);
 	}
 	
-	function testShrink()
+	function testTrim()
 	{
 		var a = ArrayTools.alloc(10);
 		for (i in 0...5) a[i] = i;
-		a = ArrayTools.shrink(a, 5);
+		a = ArrayTools.trim(a, 5);
 		assertEquals(5, a.length);
 		for (i in 0...5) assertEquals(i, a[i]);
 	}
@@ -32,24 +32,24 @@ class TestArrayTools extends AbstractTest
 	{
 		var a = new Array<Int>();
 		a.push(0);
-		assertEquals(0, ArrayTools.bsearchInt(a, 0, 0, 0));
+		assertEquals(0, ArrayTools.binarySearchi(a, 0, 0, 0));
 		a.push(1);
-		assertEquals(0, ArrayTools.bsearchInt(a, 0, 0, 1));
-		assertEquals(1, ArrayTools.bsearchInt(a, 1, 0, 1));
+		assertEquals(0, ArrayTools.binarySearchi(a, 0, 0, 1));
+		assertEquals(1, ArrayTools.binarySearchi(a, 1, 0, 1));
 		a.push(2);
-		assertEquals(0, ArrayTools.bsearchInt(a, 0, 0, 2));
-		assertEquals(1, ArrayTools.bsearchInt(a, 1, 0, 2));
-		assertEquals(2, ArrayTools.bsearchInt(a, 2, 0, 2));
+		assertEquals(0, ArrayTools.binarySearchi(a, 0, 0, 2));
+		assertEquals(1, ArrayTools.binarySearchi(a, 1, 0, 2));
+		assertEquals(2, ArrayTools.binarySearchi(a, 2, 0, 2));
 		a.push(3);
-		assertEquals(0, ArrayTools.bsearchInt(a, 0, 0, 3));
-		assertEquals(1, ArrayTools.bsearchInt(a, 1, 0, 3));
-		assertEquals(2, ArrayTools.bsearchInt(a, 2, 0, 3));
-		assertEquals(3, ArrayTools.bsearchInt(a, 3, 0, 3));
-		assertEquals(0, ArrayTools.bsearchInt(a, 0, 0, 1));
-		assertEquals(0, ArrayTools.bsearchInt(a, 0, 0, 2));
-		assertTrue(ArrayTools.bsearchInt(a, 0, 2, 3) < 0);
-		assertTrue(ArrayTools.bsearchInt(a, 3, 0, 1) < 0);
-		assertTrue(ArrayTools.bsearchInt(a, 3, 0, 2) < 0);
+		assertEquals(0, ArrayTools.binarySearchi(a, 0, 0, 3));
+		assertEquals(1, ArrayTools.binarySearchi(a, 1, 0, 3));
+		assertEquals(2, ArrayTools.binarySearchi(a, 2, 0, 3));
+		assertEquals(3, ArrayTools.binarySearchi(a, 3, 0, 3));
+		assertEquals(0, ArrayTools.binarySearchi(a, 0, 0, 1));
+		assertEquals(0, ArrayTools.binarySearchi(a, 0, 0, 2));
+		assertTrue(ArrayTools.binarySearchi(a, 0, 2, 3) < 0);
+		assertTrue(ArrayTools.binarySearchi(a, 3, 0, 1) < 0);
+		assertTrue(ArrayTools.binarySearchi(a, 3, 0, 2) < 0);
 	}
 	
 	function testShuffle()
@@ -82,66 +82,47 @@ class TestArrayTools extends AbstractTest
 		var comparator = function(a:Int, b:Int):Int return a - b;
 		var a = new Array<Int>();
 		a.push(0);
-		assertEquals(0, ArrayTools.bsearchComparator(a, 0, 0, 0, comparator));
+		assertEquals(0, ArrayTools.binarySearchCmp(a, 0, 0, 0, comparator));
 		a.push(1);
-		assertEquals(0, ArrayTools.bsearchComparator(a, 0, 0, 1, comparator));
-		assertEquals(1, ArrayTools.bsearchComparator(a, 1, 0, 1, comparator));
+		assertEquals(0, ArrayTools.binarySearchCmp(a, 0, 0, 1, comparator));
+		assertEquals(1, ArrayTools.binarySearchCmp(a, 1, 0, 1, comparator));
 		a.push(2);
-		assertEquals(0, ArrayTools.bsearchComparator(a, 0, 0, 2, comparator));
-		assertEquals(1, ArrayTools.bsearchComparator(a, 1, 0, 2, comparator));
-		assertEquals(2, ArrayTools.bsearchComparator(a, 2, 0, 2, comparator));
+		assertEquals(0, ArrayTools.binarySearchCmp(a, 0, 0, 2, comparator));
+		assertEquals(1, ArrayTools.binarySearchCmp(a, 1, 0, 2, comparator));
+		assertEquals(2, ArrayTools.binarySearchCmp(a, 2, 0, 2, comparator));
 		a.push(3);
-		assertEquals(0, ArrayTools.bsearchComparator(a, 0, 0, 3, comparator));
-		assertEquals(1, ArrayTools.bsearchComparator(a, 1, 0, 3, comparator));
-		assertEquals(2, ArrayTools.bsearchComparator(a, 2, 0, 3, comparator));
-		assertEquals(3, ArrayTools.bsearchComparator(a, 3, 0, 3, comparator));
-		assertEquals(0, ArrayTools.bsearchComparator(a, 0, 0, 1, comparator));
-		assertTrue(ArrayTools.bsearchComparator(a, 0, 1, 2, comparator) < 0);
-		assertTrue(ArrayTools.bsearchComparator(a, 0, 2, 3, comparator) < 0);
-		assertTrue(ArrayTools.bsearchComparator(a, 3, 0, 1, comparator) < 0);
-		assertTrue(ArrayTools.bsearchComparator(a, 3, 0, 2, comparator) < 0);
+		assertEquals(0, ArrayTools.binarySearchCmp(a, 0, 0, 3, comparator));
+		assertEquals(1, ArrayTools.binarySearchCmp(a, 1, 0, 3, comparator));
+		assertEquals(2, ArrayTools.binarySearchCmp(a, 2, 0, 3, comparator));
+		assertEquals(3, ArrayTools.binarySearchCmp(a, 3, 0, 3, comparator));
+		assertEquals(0, ArrayTools.binarySearchCmp(a, 0, 0, 1, comparator));
+		assertTrue(ArrayTools.binarySearchCmp(a, 0, 1, 2, comparator) < 0);
+		assertTrue(ArrayTools.binarySearchCmp(a, 0, 2, 3, comparator) < 0);
+		assertTrue(ArrayTools.binarySearchCmp(a, 3, 0, 1, comparator) < 0);
+		assertTrue(ArrayTools.binarySearchCmp(a, 3, 0, 2, comparator) < 0);
 	}
 	
 	function testAlloc()
 	{
-		var a = ArrayTools.alloc(100);
-		#if flash
-		assertEquals(100, a.length);
-		#else
-		assertTrue(a != null);
-		#end
+		var a = ArrayTools.alloc(10);
+		assertEquals(10, a.length);
 	}
 	
-	function testMemMove()
+	function testBlit()
 	{
-		var a = new Array<Int>();
-		for (i in 0...20) a[i] = i;
-		ArrayTools.memmove(a, 5, 0, 5);
-		var j = 0;
-		for (i in 0...5) assertEquals(i, a[i]);
-		for (i in 5...5+5) assertEquals(j++, a[i]);
-		for (i in 5+5...20) assertEquals(i, a[i]);
+		var a = [for (i in 0...10) i];
 		
-		var a = new Array<Int>();
-		for (i in 0...20) a[i] = i;
-		ArrayTools.memmove(a, 5, 0, 6);
-		var j = 0;
-		for (i in 0...5) assertEquals(i, a[i]);
-		for (i in 5...5+6) assertEquals(j++, a[i]);
-		for (i in 5+6...20) assertEquals(i, a[i]);
+		ArrayTools.blit(a, 0, a, 1, 10 - 1);
+		for (i in 1...10) assertEquals(i - 1, a[i]);
+		assertEquals(0, 0);
 		
-		var a = new Array<Int>();
-		for (i in 0...20) a[i] = i;
-		ArrayTools.memmove(a, 0, 5, 5);
-		var j = 5;
-		for (i in 0...5) assertEquals(j++, a[i]);
-		for (i in 5...20) assertEquals(i, a[i]);
+		var a = [for (i in 0...10) i];
+		ArrayTools.blit(a, 1, a, 0, 10 - 1);
+		for (i in 0...9) assertEquals(i + 1, a[i]);
+		assertEquals(9, a[10 - 1]);
 		
-		var a = new Array<Int>();
-		for (i in 0...20) a[i] = i;
-		ArrayTools.memmove(a, 0, 5, 6);
-		var j = 5;
-		for (i in 0...6) assertEquals(j++, a[i]);
-		for (i in 6...20) assertEquals(i, a[i]);
+		var a = [for (i in 0...10) i];
+		ArrayTools.blit(a, 0, a, 0, 10);
+		for (i in 0...10) assertEquals(i, a[i]);
 	}
 }

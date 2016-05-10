@@ -25,12 +25,12 @@ using cpp.NativeArray;
 #end
 
 /**
-	Various utility functions for working with arrays
+	Utility class for working with Arrays.
 **/
 class ArrayTools
 {
 	/**
-		Allocates an array with a length of `len`.
+		Allocates an array with length `len`.
 	**/
 	public static function alloc<T>(len:Int):Array<T>
 	{
@@ -56,20 +56,20 @@ class ArrayTools
 	}
 	
 	/**
-		Shrinks the array `a` to the size `x` and returns the modified array.
+		Shrinks `a` to length `len` and returns `a`.
 	**/
-	public static inline function shrink<T>(a:Array<T>, x:Int):Array<T>
+	public static inline function trim<T>(a:Array<T>, len:Int):Array<T>
 	{
-		if (a.length > x)
+		if (a.length > len)
 		{
 			#if (flash || js)
-			untyped a.length = x;
+			untyped a.length = len;
 			return a;
 			#elseif cpp
-			a.setSize(x);
+			a.setSize(len);
 			return a;
 			#else
-			return a.slice(0, x);
+			return a.slice(0, len);
 			#end
 		}
 		else
@@ -77,82 +77,91 @@ class ArrayTools
 	}
 	
 	/**
-		Copies elements in the range [`min`, `max`] from `source` to `destination`.
+		Sets `n` elements in `a` to `val` starting at index `first` and returns `a`.
+		If `n` is zero, `n` is set to the length of `a`.
 	**/
-	public static function copy<T>(source:Array<T>, destination:Array<T>, min = 0, max = -1):Array<T>
+	public static function init<T>(a:Array<T>, val:T, first:Int = 0, n:Int = 0):Array<T>
 	{
-		if (max == -1) max = source.length;
+		var min = first;
+		var max = n <= 0 ? a.length : min + n;
 		
-		assert(source != null);
-		assert(destination != null);
-		assert(min >= 0);
-		assert(max <= source.length);
-		assert(min < max);
+		assert(min >= 0 && min < a.length);
+		assert(max <= a.length);
 		
-		var j = 0;
-		for (i in min...max) destination[j++] = source[i];
-		return destination;
+		while (min < max) a[min++] = val;
+		return a;
 	}
 	
 	/**
-		Sets up to `k` elements in `destination` to the instance `x`.
-		@param k the number of elements to put into `destination`.
-		If omitted `k` is set to `destination`->length;
+		Copies `n` elements from `src`, beginning at `srcPos` to `dst`, beginning at `dstPos`.
+		
+		Copying takes place as if an intermediate buffer was used, allowing the destination and source to overlap.
 	**/
-	public static function init<T>(destination:Array<T>, x:T, k = -1)
+	public static function blit<T>(src:Array<T>, srcPos:Int, dst:Array<T>, dstPos:Int, n:Int)
 	{
-		if (k == -1) k = destination.length;
-		for (i in 0...k) destination[i] = x;
-	}
-	
-	/**
-		Copies `n` elements inside `a` from the location pointed by the index `source` to the location pointed by the index `destination`.
-		
-		Copying takes place as if an intermediate buffer is used, allowing the destination and source to overlap.
-		
-		@see http://www.cplusplus.com/reference/clibrary/cstring/memmove/
-	**/
-	public static function memmove<T>(a:Array<T>, destination:Int, source:Int, n:Int)
-	{
-		assert(destination >= 0 && source >= 0 && n >= 0);
-		assert(source < a.length);
-		assert(destination + n <= a.length);
-		assert(n <= a.length);
-		
-		if (source == destination)
-			return;
-		else
-		if (source <= destination)
+		if (n > 0)
 		{
-			var i = source + n;
-			var j = destination + n;
-			for (k in 0...n)
+			assert(srcPos < src.length, "srcPos out of range");
+			assert(dstPos < dst.length, "dstPos out of range");
+			assert(srcPos + n <= src.length && dstPos + n <= dst.length, "n out of range");
+			
+			if (src == dst)
 			{
-				i--;
-				j--;
-				a[j] = a[i];
+				if (srcPos < dstPos)
+				{
+					var i = srcPos + n;
+					var j = dstPos + n;
+					for (k in 0...n)
+					{
+						i--;
+						j--;
+						src[j] = src[i];
+					}
+				}
+				else
+				if (srcPos > dstPos)
+				{
+					var i = srcPos;
+					var j = dstPos;
+					for (k in 0...n)
+					{
+						src[j] = src[i];
+						i++;
+						j++;
+					}
+				}
+			}
+			else
+			{
+				if (srcPos == 0 && dstPos == 0)
+				{
+					for (i in 0...n) dst[i] = src[i];
+				}
+				else
+				if (srcPos == 0)
+				{
+					for (i in 0...n) dst[dstPos + i] = src[i];
+				}
+				else
+				if (dstPos == 0)
+				{
+					for (i in 0...n) dst[i] = src[srcPos + i];
+				}
+				else
+				{
+					for (i in 0...n) dst[dstPos + i] = src[srcPos + i];
+				}
 			}
 		}
-		else
-		{
-			var i = source;
-			var j = destination;
-			for (k in 0...n)
-			{
-				a[j] = a[i];
-				i++;
-				j++;
-			}
-		}
 	}
 	
 	/**
-		Searches the sorted array `a` for the element `x` in the range (`min`, `max`] using the binary search algorithm.
+		Searches the sorted array `src` for `val` in the range [`min`, `max`] using the binary search algorithm.
 		
-		<warn>The insertion point is only valid for `min=0` and `max = a.length-1`.</warn>
-		@return the index of the element `x` or the bitwise complement (~) of the index where `x` would be inserted (guaranteed to be a negative number).
+		@return the array index storing `val` or the bitwise complement (~) of the index where `val` would be inserted (guaranteed to be a negative number).
+		<br/>The insertion point is only valid for `min` = 0 and `max` = `src.length` - 1.
 	**/
-	public static function bsearchComparator<T>(a:Array<T>, x:T, min:Int, max:Int, comparator:T->T->Int):Int
+	public static function binarySearchCmp<T>(a:Array<T>, x:T, min:Int, max:Int, comparator:T->T->Int):Int
 	{
 		assert(a != null);
 		assert(comparator != null);
@@ -176,12 +185,12 @@ class ArrayTools
 	}
 	
 	/**
-		Searches the sorted array `a` for the element `x` in the range [`min`, `max`) using the binary search algorithm.
+		Searches the sorted array `src` for `val` in the range [`min`, `max`] using the binary search algorithm.
 		
-		<warn>The insertion point is only valid for `min=0` and `max=a.length-1`.</warn>
-		@return the index of the element `x` or the bitwise complement (~) of the index where `x` would be inserted (guaranteed to be a negative number).
+		@return the array index storing `val` or the bitwise complement (~) of the index where `val` would be inserted (guaranteed to be a negative number).
+		<br/>The insertion point is only valid for `min` = 0 and `max` = `src.length` - 1.
 	**/
-	public static function bsearchInt(a:Array<Int>, x:Int, min:Int, max:Int):Int
+	public static function binarySearchf(a:Array<Float>, x:Float, min:Int, max:Int):Int
 	{
 		assert(a != null);
 		assert(min >= 0 && min < a.length);
@@ -204,12 +213,12 @@ class ArrayTools
 	}
 	
 	/**
-		Searches the sorted array `a` for the element `x` in the range [`min`, `max`) using the binary search algorithm.
+		Searches the sorted array `src` for `val` in the range [`min`, `max`] using the binary search algorithm.
 		
-		<warn>The insertion point is only valid for `min=0` and `max=a.length-1`.</warn>
-		@return the index of the element `x` or the bitwise complement (~) of the index where `x` would be inserted (guaranteed to be a negative number).
+		@return the array index storing `val` or the bitwise complement (~) of the index where `val` would be inserted (guaranteed to be a negative number).
+		<br/>The insertion point is only valid for `min` = 0 and `max` = `src.length` - 1.
 	**/
-	public static function bsearchFloat(a:Array<Float>, x:Float, min:Int, max:Int):Int
+	public static function binarySearchi(a:Array<Int>, x:Int, min:Int, max:Int):Int
 	{
 		assert(a != null);
 		assert(min >= 0 && min < a.length);
@@ -269,32 +278,47 @@ class ArrayTools
 	
 	/**
 		Sorts the elements of the array `a` by using the quick sort algorithm.
-		@param compare a comparison function.
+		@param cmp a comparison function.
 		@param useInsertionSort if true, the array is sorted using the insertion sort algorithm. This is faster for nearly sorted lists.
 		@param first sort start index. The default value is 0.
-		@param count the number of elements to sort (range: [`first`, `first` + `count`]).
-		If omitted, `count` is set to `this.size`.
+		@param n the number of elements to sort (range: [`first`, `first` + `n`]).
+		If omitted, `n` is set to `a.length`.
 	**/
-	public static function sortRange(a:Array<Float>, compare:Float->Float->Int, useInsertionSort:Bool, first:Int, count:Int)
+	public static function sortRange(a:Array<Float>, cmp:Float->Float->Int, useInsertionSort:Bool, first:Int, n:Int)
 	{
 		var k = a.length;
 		if (k > 1)
 		{
-			assert(first >= 0 && first <= k - 1 && first + count <= k, "first out of range");
-			assert(count >= 0 && count <= k, "count out of range");
+			assert(first >= 0 && first <= k - 1 && first + n <= k, "first out of range");
+			assert(n >= 0 && n <= k, "n out of range");
 			
 			if (useInsertionSort)
-				_insertionSort(a, first, count, compare);
+			{
+				for (i in first + 1...first + n)
+				{
+					var x = a[i];
+					var j = i;
+					while (j > first)
+					{
+						var y = a[j - 1];
+						if (cmp(y, x) > 0)
+						{
+							a[j] = y;
+							j--;
+						}
+						else
+							break;
+					}
+					a[j] = x;
+				}
+			}
 			else
-				_quickSort(a, first, count, compare);
+				_quickSort(a, first, n, cmp);
 		}
 	}
 	
 	/**
-		A quick counting permutation algorithm.
-		
-		@see http://www.freewebs.com/permute/quickperm.html
-		@param n number of elements to permute.
+		A quick counting permutation algorithm, where `n` is the number of elements to permute.
 	**/
 	public static function quickPerm(n:Int):Array<Array<Int>>
 	{
@@ -336,7 +360,7 @@ class ArrayTools
 	}
 
 	/**
-		Compares `a` and `b` by comparing their elements using ==.
+		Compares the elements of `a` and `b` by using the equality operator (==).
 	**/
 	public static function equals<T>(a:Array<T>, b:Array<T>):Bool
 	{
@@ -348,7 +372,7 @@ class ArrayTools
 	}
 	
 	/**
-		Splits the input array `a` storing `n` elements into smaller chunks, each containing k elements.
+		Splits the input array `a` storing `n` elements into smaller chunks, each containing `k` elements.
 	**/
 	public static function split<T>(a:Array<T>, n:Int, k:Int):Array<Array<T>>
 	{
@@ -365,38 +389,16 @@ class ArrayTools
 		return out;
 	}
 	
-	static function _insertionSort(a:Array<Float>, first:Int, k:Int, cmp:Float->Float->Int)
+	static function _quickSort(a:Array<Float>, first:Int, n:Int, cmp:Float->Float->Int)
 	{
-		for (i in first + 1...first + k)
-		{
-			var x = a[i];
-			var j = i;
-			while (j > first)
-			{
-				var y = a[j - 1];
-				if (cmp(y, x) > 0)
-				{
-					a[j] = y;
-					j--;
-				}
-				else
-					break;
-			}
-			
-			a[j] = x;
-		}
-	}
-	
-	static function _quickSort(a:Array<Float>, first:Int, k:Int, cmp:Float->Float->Int)
-	{
-		var last = first + k - 1;
+		var last = first + n - 1;
 		var lo = first;
 		var hi = last;
-		if (k > 1)
+		if (n > 1)
 		{
 			var i0 = first;
-			var i1 = i0 + (k >> 1);
-			var i2 = i0 + k - 1;
+			var i1 = i0 + (n >> 1);
+			var i2 = i0 + n - 1;
 			var t0 = a[i0];
 			var t1 = a[i1];
 			var t2 = a[i2];

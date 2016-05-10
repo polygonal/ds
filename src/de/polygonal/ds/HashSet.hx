@@ -169,7 +169,7 @@ class HashSet<T:Hashable> implements Set<T>
 		
 		mH = new IntIntHashTable(slotCount, capacity);
 		mVals = NativeArrayTools.alloc(capacity);
-		mVals.nullify(capacity);
+		mVals.nullify(0, capacity);
 		#if alchemy
 		mNext = new IntMemory(capacity, "HashSet.mNext");
 		#else
