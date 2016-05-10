@@ -25,7 +25,7 @@ package de.polygonal.ds.tools;
 class TreeTools
 {
 	/**
-		Converts `xmlStr` to a `Treenode` structure.
+		Converts `xmlStr` to a tree structure.
 	**/
 	public static function ofXml(xmlStr:String):TreeNode<XmlNode>
 	{

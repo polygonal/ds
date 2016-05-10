@@ -238,6 +238,7 @@ class TestDoubleMemory extends AbstractTest
 		for (i in 0...max - min) assertEquals((i + min) % 10, Std.int(data[i]));
 	}
 	
+	#if flash
 	function checkByteArray(data:flash.utils.ByteArray, min = -1, max = -1)
 	{
 		data.position = 0;
@@ -245,6 +246,7 @@ class TestDoubleMemory extends AbstractTest
 		if (max == -1) max = data.length >> 3;
 		for (i in 0...max - min) assertEquals((i + min) % 10, Std.int(data.readDouble()));
 	}
+	#end
 	
 	function checkBytesData(data:BytesData, min = -1, max = -1)
 	{
