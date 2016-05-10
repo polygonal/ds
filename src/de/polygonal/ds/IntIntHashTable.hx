@@ -144,17 +144,14 @@ class IntIntHashTable implements Map<Int, Int>
 	
 	/**
 		@param slotCount the total number of slots into which the hashed keys are distributed.
-		This defines the space-time trade off of the hash table.
-		Increasing the `slotCount` reduces the computation time (read/write/access) of the hash table at the cost of increased memory use.
-		This value is fixed and can only be changed by calling `this.rehash()`, which rebuilds the hash table (expensive).
+		This defines the space-time trade off of this hash table.
+		A high `slotCount` value leads to better performance but requires more memory.
+		This value can only be changed later on by calling `this.rehash()`, which in turn rebuilds the entire hash table (expensive).
 		
-		@param initialCapacity the initial physical space for storing the key/value pairs at the time the hash table is created.
-		This is also the minimum allowed size of the hash table and cannot be changed in the future. If omitted, the initial `capacity` equals `slotCount`.
-		The `initialCapacity` is automatically adjusted according to the storage requirements based on two rules:
-		<ul>
-		<li>If the hash table runs out of space, the `capacity` is doubled.</li>
-		<li>If the size falls below a quarter of the current `capacity`, the `capacity` is cut in half while the minimum `capacity` can't fall below `capacity`.</li>
-		</ul>
+		@param capacity the initial physical space for storing the elements at the time this hash table is initialized.
+		This also defines the minimum allowed size.
+		If omitted, the initial `capacity` is set to `slotCount`.
+		If more space is required to accommodate new elements, `capacity` grows according to `this.growthRate`.
 	**/
 	public function new(slotCount:Int, initialCapacity:Int = -1)
 	{

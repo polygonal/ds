@@ -123,19 +123,15 @@ class IntHashSet implements Set<Int>
 	var mIterator:IntHashSetIterator;
 	
 	/**
-		@param slotCount the total number of slots into which the hashed elements are distributed.
-		This defines the space-time trade off of the set.
-		Increasing the `slotCount` reduces the computation time (read/write/access) of the set at the cost of increased memory use.
-		This value is fixed and can only be changed by calling `this.rehash()`, which rebuilds the set (expensive).
+		@param slotCount the total number of slots into which the hashed values are distributed.
+		This defines the space-time trade off of this set.
+		A high `slotCount` value leads to better performance but requires more memory.
+		This value can only be changed later on by calling `this.rehash()`, which in turn rebuilds the entire hash table (expensive).
 		
-		@param initialCapacity the initial physical space for storing the elements at the time the set is created.
-		This is also the minimum allowed size of the set and cannot be changed in the future.
-		If omitted, the initial `capacity` equals `slotCount`.
-		The `initialCapacity` is automatically adjusted according to the storage requirements based on two rules:
-		<ul>
-		<li>If the set runs out of space, the `capacity` is doubled.</li>
-		<li>If the `size` falls below a quarter of the current `capacity`, the `capacity` is cut in half while the minimum `capacity` can't fall below `capacity`.</li>
-		</ul>
+		@param capacity the initial physical space for storing the elements at the time this set is initialized.
+		This also defines the minimum allowed size.
+		If omitted, the initial `capacity` is set to `slotCount`.
+		If more space is required to accommodate new elements, `capacity` grows according to `this.growthRate`.
 	**/
 	public function new(slotCount:Int, initialCapacity:Int = -1)
 	{
