@@ -336,7 +336,7 @@ class Dll<T> implements List<T>
 			if (tail == null) head = null;
 		}
 		
-		node._unlink();
+		unlinkNode(node);
 		putNode(node);
 		mSize--;
 		return hook;
@@ -1570,6 +1570,15 @@ class Dll<T> implements List<T>
 		else
 			x.mList = null;
 		return val;
+	}
+	
+	inline function unlinkNode(x:DllNode<T>):DllNode<T>
+	{
+		var t = x.next;
+		if (x.hasPrev()) x.prev.next = x.next;
+		if (x.hasNext()) x.next.prev = x.prev;
+		x.next = x.prev = null;
+		return t;
 	}
 }
 
