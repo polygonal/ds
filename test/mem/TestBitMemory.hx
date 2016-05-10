@@ -189,7 +189,7 @@ class TestBitMemory extends AbstractTest
 		
 		var m:BitMemory = BitMemory.ofBytesData(bytesData);
 		assertEquals(m.size, 32);
-		assertEquals(m.bytes, #if (neko && !neko_v2) 8 #else 4 #end);
+		assertEquals(m.bytes, 4);
 		
 		for (bit in bits) assertTrue(m.has(bit));
 		
@@ -237,8 +237,8 @@ class TestBitMemory extends AbstractTest
 		
 		var v:BitVector = BitMemory.toBitVector(mem);
 		
-		assertEquals(#if (neko && !neko_v2) 5 #else 4 #end, v.arrSize);
-		assertEquals(#if (neko && !neko_v2) (5*31) #else (4*32) #end, v.numBits);
+		assertEquals(4, v.arrSize);
+		assertEquals(4 * 32, v.numBits);
 		
 		for (i in 0...100)
 		{

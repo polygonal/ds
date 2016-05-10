@@ -248,7 +248,7 @@ class TestDoubleMemory extends AbstractTest
 	
 	function checkBytesData(data:BytesData, min = -1, max = -1)
 	{
-		#if (flash)
+		#if flash
 		data.position = 0;
 		
 		if (min == -1) min = 0;
