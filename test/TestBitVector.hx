@@ -144,7 +144,7 @@ class TestBitVector extends AbstractTest
 	function testSize()
 	{
 		var b = new BitVector(16);
-		assertEquals(b.capacity, 16);
+		assertEquals(b.numBits, 16);
 		assertEquals(b.ones(), 0);
     }
 	
@@ -173,16 +173,16 @@ class TestBitVector extends AbstractTest
 	function testBucketSize()
 	{
 		var b = new BitVector(64);
-		assertEquals(b.bucketSize(), 2);
+		assertEquals(b.arrSize, 2);
 		
 		var b = new BitVector(65);
-		assertEquals(b.bucketSize(), 3);
+		assertEquals(b.arrSize, 3);
 		
 		b.resize(64);
-		assertEquals(b.bucketSize(), 2);
+		assertEquals(b.arrSize, 2);
 		
 		b.resize(16);
-		assertEquals(b.bucketSize(), 1);
+		assertEquals(b.arrSize, 1);
 	}
 	
 	function testClear()
