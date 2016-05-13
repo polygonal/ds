@@ -46,7 +46,7 @@ If you want to test the latest beta build, you should pull the dev branch and ad
 ## Changelog
 
 ### 2.0.0-beta
-_Requires Haxe >= 3.2.1_
+_Requires Haxe >= 3.3.0_
 
  * modified: added Set.unset() method
  * modified: remove .swc files - no longer maintained (use tools/swc/run.bat to create swc libs on your own)
