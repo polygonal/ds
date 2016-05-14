@@ -25,11 +25,11 @@ package de.polygonal.ds.tools;
 class TreeTools
 {
 	/**
-		Converts `xmlStr` to a tree structure.
+		Converts the XML `string` to a tree structure.
 	**/
-	public static function ofXml(xmlStr:String):TreeNode<XmlNode>
+	public static function ofXml(string:String):TreeNode<XmlNode>
 	{
-		var xml = Xml.parse(xmlStr).firstElement();
+		var xml = Xml.parse(string).firstElement();
 		
 		var node = XmlNode.of(xml);
 		var root = new TreeNode<XmlNode>(node);
@@ -61,15 +61,14 @@ class TreeTools
 }
 
 /**
-	An object containing the data of an xml node.
+	An object containing the data of a XML node.
 **/
 @:publicFields
 class XmlNode
 {
-	public static function of(xml:Xml):XmlNode
+	static function of(xml:Xml):XmlNode
 	{
 		var node = new XmlNode();
-		
 		node.name = xml.nodeName;
 		
 		var firstChild = xml.firstChild();
@@ -102,7 +101,7 @@ class XmlNode
 	var attributes:AttrAccess;
 	
 	/**
-		A `TreeNode` instance storing this node.
+		The `TreeNode` instance which owns this node.
 	**/
 	var arbiter:TreeNode<XmlNode>;
 	

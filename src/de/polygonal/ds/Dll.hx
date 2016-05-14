@@ -895,6 +895,8 @@ class Dll<T> implements List<T>
 	
 	/**
 		Inserts `val` before the element at `index` (0=head).
+		
+		If `index` equals `size`, `val` gets appended to the end of the list.
 	**/
 	public function insert(index:Int, val:T)
 	{

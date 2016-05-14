@@ -279,25 +279,26 @@ class ArrayList<T> implements List<T>
 	}
 	
 	/**
-		Inserts `val` at the specified index `i`.
+		Inserts `val` at the specified `index`.
 		
 		Shifts the element currently at that position (if any) and any subsequent elements to the right (indices + 1).
+		If `index` equals `size`, `val` gets appended to the end of the list.
 	**/
-	public function insert(i:Int, val:T)
+	public function insert(index:Int, val:T)
 	{
-		assert(i >= 0 && i <= size, 'index $i out of range $size');
+		assert(index >= 0 && index <= size, 'index $index out of range $size');
 		
 		if (size == capacity) grow();
 		#if (neko || java || cs || cpp)
-		var srcPos = i;
-		var dstPos = i + 1;
-		mData.blit(srcPos, mData, dstPos, size - i);
-		mData.set(i, val);
+		var srcPos = index;
+		var dstPos = index + 1;
+		mData.blit(srcPos, mData, dstPos, size - index);
+		mData.set(index, val);
 		#else
 		var d = mData;
 		var p = size;
-		while (p > i) d.set(p--, d.get(p));
-		d.set(i, val);
+		while (p > index) d.set(p--, d.get(p));
+		d.set(index, val);
 		#end
 		mSize++;
 	}
