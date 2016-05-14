@@ -26,8 +26,6 @@ interface Heapable<T> extends Comparable<T>
 {
 	/**
 		Tracks the position inside a binary heap.
-		
-		<warn>This value should never be changed by the user.</warn>
 	**/
 	var position(default, null):Int;
 }

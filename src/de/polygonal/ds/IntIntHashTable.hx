@@ -77,8 +77,6 @@ class IntIntHashTable implements Map<Int, Int>
 		A unique identifier for this object.
 		
 		A hash table transforms this key into an index of an array element by using a hash function.
-		
-		<warn>This value should never be changed by the user.</warn>
 	**/
 	public var key(default, null):Int = HashKey.next();
 	
