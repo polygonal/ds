@@ -29,7 +29,7 @@ set CWD=%CD%
 
 cd ..\..\
 
-neko %CWD%\RunTests.n ^
+neko %CWD%\main.n ^
 -dst %CWD%\bin ^
 -swf default,generic,noinline,debug,debug+noinline,debug+generic,debug+generic+noinline,alchemy,alchemy+generic ^
 -js default,noinline,debug,debug+noinline ^
@@ -38,5 +38,5 @@ neko %CWD%\RunTests.n ^
 -cpp default,noinline,debug,generic,noinline+debug,generic+debug,generic+debug+noinline,generic+noinline
 
 cd %CWD%
-del RunTests.n
+del main.n
 pause
