@@ -34,7 +34,7 @@ class ByteMemory extends MemoryAccess
 	/**
 		Converts `input` in the range [`min`, `max`] to a byte array.
 		If no range is specified, all `input` bytes are copied.</i>
-		<warn>The bytes are written in little endian format.</warn>
+		_The bytes are written in little endian format._
 	**/
 	#if flash
 	public static function toByteArray(input:ByteMemory, min:Int = -1, max:Int = -1):flash.utils.ByteArray
@@ -89,7 +89,7 @@ class ByteMemory extends MemoryAccess
 	/**
 		Converts `input` in the range [`min`, `max`] to a `BytesData` object.
 		If no range is specified, all `input` bytes are copied.</i>
-		<warn>The bytes are written in little endian format.</warn>
+		_The bytes are written in little endian format._
 	**/
 	public static function toBytesData(input:ByteMemory, min:Int = -1, max:Int = -1):haxe.io.BytesData
 	{

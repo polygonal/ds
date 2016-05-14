@@ -108,7 +108,7 @@ class BinaryTreeNode<T> implements Collection<T>
 		3. Traverse the right subtree of the node
 		
 		@param process a function that is invoked on every traversed node.
-		If omitted, `element.visit()` is used instead. <warn>In this case all elements have to implement `Visitable`.</warn>
+		If omitted, `element.visit()` is used instead. _In this case all elements have to implement `Visitable`._
 		The first argument holds a reference to the current node, while the second argument stores custom data specified by the userData parameter (default is null).
 		Once `process` returns false, the traversal stops immediately and no further nodes are examined.
 		@param iterative if true, an iterative traversal is used (default traversal style is recursive).
@@ -192,7 +192,7 @@ class BinaryTreeNode<T> implements Collection<T>
 		3. Traverse the right subtree of the node
 		
 		@param process a function that is invoked on every traversed node.
-		If omitted, `element.visit()` is used instead. <warn>In this case all elements have to implement `Visitable`.</warn>
+		If omitted, `element.visit()` is used instead. _In this case all elements have to implement `Visitable`._
 		The first argument holds a reference to the current node, while the second argument stores custom data specified by the userData parameter (default is null).
 		Once `process` returns false, the traversal stops immediately and no further nodes are examined.
 		@param iterative if true, an iterative traversal is used (default traversal style is recursive).
@@ -301,7 +301,7 @@ class BinaryTreeNode<T> implements Collection<T>
 		3. Visit the node
 		
 		@param process a function that is invoked on every traversed node.
-		If omitted, `element.visit()` is used instead. <warn>In this case all elements have to implement `Visitable`.</warn>
+		If omitted, `element.visit()` is used instead. _In this case all elements have to implement `Visitable`._
 		The first argument holds a reference to the current node, while the second argument stores custom data specified by the userData parameter (default is null).
 		Once `process` returns false, the traversal stops immediately and no further nodes are examined.
 		@param iterative if true, an iterative traversal is used (default traversal style is recursive).
@@ -770,7 +770,7 @@ class BinaryTreeNode<T> implements Collection<T>
 	}
 	
 	/**
-		<warn>Unsupported operation - always returns false.</warn>
+		Unsupported operation; always returns false.
 	**/
 	public inline function isEmpty():Bool
 	{

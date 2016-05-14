@@ -68,7 +68,7 @@ class MemoryAccess implements Hashable
 	
 	/**
 		Destroys this object by explicitly nullifying all pointers and instantly releases any memory that was allocated by this accessor.
-		<warn>Invoke this method when the life cycle of this object ends to prevent a memory leak.</warn>
+		_Invoke this method when the life cycle of this object ends to prevent a memory leak._
 		This is not optional if `MemoryManager.AUTO_RECLAIM_MEMORY` is true.
 	**/
 	public function free()

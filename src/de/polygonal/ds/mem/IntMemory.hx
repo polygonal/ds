@@ -125,8 +125,8 @@ class IntMemory extends MemoryAccess
 	/**
 		Converts `input` in the range [`min`, `max`] to a byte array.
 		If no range is specified, all `input` bytes are copied.
-		<warn>The bytes are written in little endian format.</warn>
-			@param min index pointing to the first integer.
+		_The bytes are written in little endian format._
+		@param min index pointing to the first integer.
 		@param max index pointing to the last integer.
 	**/
 	#if flash
@@ -190,8 +190,8 @@ class IntMemory extends MemoryAccess
 	/**
 		Converts `input` in the range [`min`, `max`] to a `BytesData` object.
 		If no range is specified, all `input` bytes are copied.
-		<warn>The bytes are written in little endian format.</warn>
-			@param min index pointing to the first integer.
+		_The bytes are written in little endian format._
+		@param min index pointing to the first integer.
 		@param max index pointing to the last integer.
 	**/
 	public static function toBytesData(input:IntMemory, min:Int = -1, max:Int = -1):haxe.io.BytesData

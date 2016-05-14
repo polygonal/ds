@@ -69,7 +69,7 @@ class Graph<T> implements Collection<T>
 		
 		The default is false.
 		
-		<warn>If true, nested iterations are likely to fail as only one iteration is allowed at a time.</warn>
+		_If this value is true, nested iterations will fail as only one iteration is allowed at a time._
 	**/
 	public var reuseIterator:Bool = false;
 	
@@ -311,7 +311,7 @@ class Graph<T> implements Collection<T>
 	/**
 		Clears the mark-flag on all graph nodes that were set in a BFS/DFS traversal.
 		
-		<warn>Call this method to start a fresh traversal.</warn>
+		Call this method to start a fresh traversal.
 	**/
 	public function clearMarks()
 	{
@@ -352,7 +352,7 @@ class Graph<T> implements Collection<T>
 		</ul>
 		Once `process` returns false, the traversal stops immediately and no further nodes are examined (termination condition).
 		If omitted, `element.visit()` is used.
-		<warn>In this case the elements of all nodes have to implement `Visitable`.</warn>
+		_In this case the elements of all nodes have to implement `Visitable`._
 		@param userData custom data that is passed to every visited node via `process` or `element.visit()`. If omitted, null is used.
 		@param recursive if true, performs a recursive traversal (default traversal style is iterative).
 	**/
@@ -552,7 +552,7 @@ class Graph<T> implements Collection<T>
 		</ul>
 		Once `process` returns false, the traversal stops immediately and no further nodes are examined (termination condition).
 		If omitted, `element.visit()` is used.
-		<warn>In this case the elements of all nodes have to implement `Visitable`.</warn>
+		_In this case the elements of all nodes have to implement `Visitable`._
 		@param userData custom data that is passed to every visited node via `process` or `element.visit()`. If omitted, null is used.
 	**/
 	public function BFS(preflight:Bool = false, seed:GraphNode<T> = null, process:GraphNode<T>->Bool->Dynamic->Bool = null, userData:Dynamic = null)
@@ -769,7 +769,7 @@ class Graph<T> implements Collection<T>
 		</ul>
 		Once `process` returns false, the traversal stops immediately and no further nodes are examined (termination condition).
 		If omitted, `element.visit()` is used.
-		<warn>In this case the elements of all nodes have to implement `Visitable`.</warn>
+		_In this case the elements of all nodes have to implement `Visitable`._
 		@param userData custom data that is passed to every visited node via `process` or `element.visit()`. If omitted, null is used.
 	**/
 	public function DLBFS(maxDepth:Int, preflight:Bool = false, seed:GraphNode<T> = null, process:GraphNode<T>->Bool->Dynamic->Bool = null, userData:Dynamic = null)

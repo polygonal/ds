@@ -93,7 +93,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 		
 		The default is false.
 		
-		<warn>If true, nested iterations are likely to fail as only one iteration is allowed at a time.</warn>
+		_If this value is true, nested iterations will fail as only one iteration is allowed at a time._
 	**/
 	public var reuseIterator:Bool = false;
 	

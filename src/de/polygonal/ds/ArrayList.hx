@@ -70,7 +70,7 @@ class ArrayList<T> implements List<T>
 		
 		The default is false.
 		
-		<warn>If true, nested iterations are likely to fail as only one iteration is allowed at a time.</warn>
+		_If this value is true, nested iterations will fail as only one iteration is allowed at a time._
 	**/
 	public var reuseIterator:Bool = false;
 	
@@ -399,8 +399,8 @@ class ArrayList<T> implements List<T>
 		Finds the first occurrence of `val` by using the binary search algorithm assuming elements are sorted.
 		@param from the index to start from. The default value is 0.
 		@param cmp a comparison function for the binary search. If omitted, the method assumes that all elements implement `Comparable`.
-		@return the index storing `val` or the bitwise complement (~) of the index where the `val` would be inserted (guaranteed to be a negative number).
-		<warn>The insertion point is only valid if `from` is 0.</warn>
+		@return the index storing `val` or the bitwise complement (~) of the index where the `val` would be inserted (guaranteed to be a negative number).<br/>
+		_The insertion point is only valid if `from` is 0._
 	**/
 	public function binarySearch(val:T, from:Int, ?cmp:T->T->Int):Int
 	{
@@ -554,8 +554,8 @@ class ArrayList<T> implements List<T>
 	
 	/**
 		Sorts the elements of this dense array using the quick sort algorithm.
-		@param cmp a comparison function.If null, the elements are compared using `element.compare()`.
-		<warn>In this case all elements have to implement `Comparable`.</warn>
+		@param cmp a comparison function. If null, the elements are compared using `element.compare()`.
+		_In this case all elements have to implement `Comparable`._
 		@param useInsertionSort if true, the dense array is sorted using the insertion sort algorithm. This is faster for nearly sorted lists.
 		@param first sort start index. The default value is 0.
 		@param count the number of elements to sort (range: [`first`, `first` + `count`]).

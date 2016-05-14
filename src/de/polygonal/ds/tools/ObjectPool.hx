@@ -87,7 +87,7 @@ class ObjectPool<T>
 	/**
 		Acquires the next object from this pool or creates a new object if all objects are in use.
 		To minimize object creation, return objects back to the pool as soon as their life cycle ends by calling `this.put()`.
-		<warn>If `this.size` equals `this.capacity()`, `this.get()` still allocates a new object but does not pool it. This effectively disables pooling.</warn>
+		_If `this.size` equals `this.capacity()`, `this.get()` still allocates a new object but does not pool it. This effectively disables pooling._
 	**/
 	public inline function get():T
 	{

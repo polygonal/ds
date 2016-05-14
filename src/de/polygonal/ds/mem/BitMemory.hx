@@ -33,7 +33,7 @@ class BitMemory extends MemoryAccess
 {
 	/**
 		Converts `input` to a `ByteArray` object.
-		<warn>The bytes are written in little endian format.</warn>
+		_The bytes are written in little endian format._
 	**/
 	#if flash
 	public static function toByteArray(input:BitMemory):flash.utils.ByteArray
@@ -100,7 +100,7 @@ class BitMemory extends MemoryAccess
 	
 	/**
 		Converts `input` to a `BytesData` object.
-		<warn>The bytes are written in little endian format.</warn>
+		_The bytes are written in little endian format._
 	**/
 	public static function toBytesData(input:BitMemory):haxe.io.BytesData
 	{

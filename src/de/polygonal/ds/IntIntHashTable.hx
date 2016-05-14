@@ -98,7 +98,7 @@ class IntIntHashTable implements Map<Int, Int>
 		
 		The default is false.
 		
-		<warn>If true, nested iterations are likely to fail as only one iteration is allowed at a time.</warn>
+		_If this value is true, nested iterations will fail as only one iteration is allowed at a time._
 	**/
 	public var reuseIterator:Bool = false;
 	
@@ -1011,8 +1011,7 @@ class IntIntHashTable implements Map<Int, Int>
 		Maps the value `val` to `key`.
 		
 		The method allows duplicate keys.
-		
-		<warn>To ensure unique keys either use `this.hasKey()` before `this.set()` or `this.setIfAbsent()`</warn>
+		To ensure unique keys either use `this.hasKey()` before `this.set()` or `this.setIfAbsent()`.
 		@return true if `key` was added for the first time, false if another instance of `key` was inserted.
 	**/
 	public inline function set(key:Int, val:Int):Bool
@@ -1385,7 +1384,7 @@ class IntIntHashTable implements Map<Int, Int>
 	/**
 		Destroys this object by explicitly nullifying all key/values.
 		
-		<warn>If "alchemy memory" is used, always call this method when the life cycle of this object ends to prevent a memory leak.</warn>
+		_If compiled with -D alchemy , always call this method when the life cycle of this object ends to prevent a memory leak._
 	**/
 	public function free()
 	{

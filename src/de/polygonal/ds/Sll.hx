@@ -69,7 +69,7 @@ class Sll<T> implements List<T>
 		
 		The default is false.
 		
-		<warn>If true, nested iterations are likely to fail as only one iteration is allowed at a time.</warn>
+		_If this value is true, nested iterations will fail as only one iteration is allowed at a time._
 	**/
 	public var reuseIterator:Bool = false;
 	
@@ -464,7 +464,7 @@ class Sll<T> implements List<T>
 		Sorts the elements of this list using the merge sort algorithm.
 		@param cmp a comparison function.
 		If null, the elements are compared using `element.compare()`.
-		<warn>In this case all elements have to implement `Comparable`.</warn>
+		_In this case all elements have to implement `Comparable`._
 		@param useInsertionSort if true, the linked list is sorted using the insertion sort algorithm.
 		This is faster for nearly sorted lists.
 	**/
@@ -490,7 +490,7 @@ class Sll<T> implements List<T>
 	/**
 		Merges this list with `list` by linking both lists together.
 		
-		<warn>The merge operation destroys `list` so it should be discarded.</warn>
+		_The merge operation destroys `list` so it should be discarded._
 	**/
 	public function merge(list:Sll<T>)
 	{

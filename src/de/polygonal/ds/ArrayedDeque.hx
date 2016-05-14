@@ -60,7 +60,7 @@ class ArrayedDeque<T> implements Deque<T>
 		
 		The default is false.
 		
-		<warn>If true, nested iterations are likely to fail as only one iteration is allowed at a time.</warn>
+		_If this value is true, nested iterations will fail as only one iteration is allowed at a time._
 	**/
 	public var reuseIterator:Bool = false;
 	
@@ -90,7 +90,7 @@ class ArrayedDeque<T> implements Deque<T>
 		@param blockSize a block represents a contiguous piece of memory; whenever the deque runs out of space an additional block with a capacity of `blockSize` elements is allocated and added to the existing blocks.
 		The parameter affects the performance-memory trade-off: a large `blockSize` improves performances but wastes memory if the utilization is low; a small `blockSize` uses memory more efficiently but is slower due to frequent allocation of blocks.
 		The default value is 64; the minimum value is 4.
-		<warn>`blockSize` has to be a power of two.</warn>
+		__`blockSize` has to be a power of two.__
 		@param blockPoolCapacity the total number of blocks to reuse when blocks are removed or relocated (from front to back or vice-versa). This improves performances but uses more memory.
 		The default value is 4; a value of 0 disables block pooling.
 		@param source Copies all values from `source` in the range [0, `source.length` - 1] to this collection.

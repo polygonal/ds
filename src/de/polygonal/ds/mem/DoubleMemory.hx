@@ -34,7 +34,7 @@ class DoubleMemory extends MemoryAccess
 	/**
 		Converts `input` in the range [`min`, `max`] to a byte array.
 		If no range is specified, all `input` bytes are copied.
-		<warn>The bytes are written in little endian format.</warn>
+		_The bytes are written in little endian format._
 		@param min index pointing to the first double.
 		@param max index pointing to the last double.
 	**/

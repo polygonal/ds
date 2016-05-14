@@ -73,7 +73,7 @@ class ListSet<T> implements Set<T>
 		
 		The default is false.
 		
-		<warn>If true, nested iterations are likely to fail as only one iteration is allowed at a time.</warn>
+		_If this value is true, nested iterations will fail as only one iteration is allowed at a time._
 	**/
 	public var reuseIterator:Bool = false;
 	
@@ -197,7 +197,7 @@ class ListSet<T> implements Set<T>
 	/**
 		Adds all elements of the set `other` to this set.
 		@param assign if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
-		If false, the `this.clone()` method is called on each element. <warn>In this case all elements have to implement `Cloneable`.</warn>
+		If false, the `this.clone()` method is called on each element. _In this case all elements have to implement `Cloneable`._
 		@param copier a custom function for copying elements. Replaces `element.clone()` if `assign` is false.
 	**/
 	public function merge(set:Set<T>, ?assign:Bool, copier:T->T = null)

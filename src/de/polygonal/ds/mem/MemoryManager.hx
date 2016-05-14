@@ -67,14 +67,14 @@ class MemoryManager
 		
 		The default value is 64 KiB. The minimum value is 1024 bytes or 1 KiB.
 		
-		<warn>Changing this value has no effect after memory has been allocated for the first time.</warn>
+		_Changing this value has no effect after memory has been allocated for the first time._
 	**/
 	public static var BLOCK_SIZE_BYTES = 1024 << 6;
 	
 	/**
 		A reserved, fixed portion of bytes at the beginning of the byte array which can be used as a temporary buffer or for doing math tricks.
 		
-		<warn>Changing this value has no effect after memory has been allocated for the first time.</warn>
+		_Changing this value has no effect after memory has been allocated for the first time._
 	**/
 	public static var RAW_BYTES = 1024;
 	
