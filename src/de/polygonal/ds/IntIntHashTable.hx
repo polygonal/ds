@@ -1011,7 +1011,7 @@ class IntIntHashTable implements Map<Int, Int>
 		Maps the value `val` to `key`.
 		
 		The method allows duplicate keys.
-		To ensure unique keys either use `this.hasKey()` before `this.set()` or `this.setIfAbsent()`.
+		<br/>To ensure unique keys either use `this.hasKey()` before `this.set()` or `this.setIfAbsent()`.
 		@return true if `key` was added for the first time, false if another instance of `key` was inserted.
 	**/
 	public inline function set(key:Int, val:Int):Bool

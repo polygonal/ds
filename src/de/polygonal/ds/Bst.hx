@@ -259,7 +259,7 @@ class Bst<T:Comparable<T>> implements Collection<T>
 	/* INTERFACE Collection */
 	
 	/**
-		The total number of elements.
+		The total number of nodes.
 	**/
 	public var size(get, never):Int;
 	inline function get_size():Int

@@ -21,7 +21,7 @@ package de.polygonal.ds;
 /**
 	An object that maps keys to values
 	
-	This map allows duplicate keys.
+	__This map allows duplicate keys.__
 **/
 interface Map<K, T> extends Collection<T>
 {

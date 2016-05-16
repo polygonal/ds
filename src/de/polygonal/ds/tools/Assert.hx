@@ -24,7 +24,7 @@ import haxe.macro.Expr;
 #end
 
 /**
-	Assertion macro injects an assertion statement.
+	Assertion macro injecting assertion statements
 	
 	An assertion specifies a condition that you expect to be true at a point in your program.
 	

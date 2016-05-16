@@ -71,6 +71,13 @@ class Dll<T> implements List<T>
 	**/
 	public var reuseIterator:Bool = false;
 	
+	/**
+		True if this list is circular.
+		
+		A list is circular if the tail points to the head and vice versa.
+	**/
+	public var isCircular(default, null):Bool = false;
+	
 	var mSize:Int = 0;
 	var mReservedSize:Int;
 	var mPoolSize:Int = 0;
@@ -78,7 +85,6 @@ class Dll<T> implements List<T>
 	var mHeadPool:DllNode<T>;
 	var mTailPool:DllNode<T>;
 	
-	var mCircular:Bool = false;
 	var mIterator:DllIterator<T> = null;
 	
 	/**
@@ -110,24 +116,14 @@ class Dll<T> implements List<T>
 	}
 	
 	/**
-		Returns true if this list is circular.
-		
-		A list is circular if the tail points to the head and vice versa.
-	**/
-	public function isCircular():Bool
-	{
-		return mCircular;
-	}
-	
-	/**
 		Makes this list circular by connecting the tail to the head and vice versa.
 		
 		Silently fails if this list is already closed.
 	**/
 	public function close()
 	{
-		if (mCircular) return;
-		mCircular = true;
+		if (isCircular) return;
+		isCircular = true;
 		if (valid(head))
 		{
 			tail.next = head;
@@ -142,8 +138,8 @@ class Dll<T> implements List<T>
 	**/
 	public function open()
 	{
-		if (!mCircular) return;
-		mCircular = false;
+		if (!isCircular) return;
+		isCircular = false;
 		if (valid(head))
 		{
 			tail.next = null;
@@ -175,7 +171,7 @@ class Dll<T> implements List<T>
 			head = node;
 		tail = node;
 		
-		if (mCircular)
+		if (isCircular)
 		{
 			tail.next = head;
 			head.prev = tail;
@@ -201,7 +197,7 @@ class Dll<T> implements List<T>
 			head = node;
 		tail = node;
 		
-		if (mCircular)
+		if (isCircular)
 		{
 			tail.next = head;
 			head.prev = tail;
@@ -224,7 +220,7 @@ class Dll<T> implements List<T>
 			tail = node;
 		head = node;
 		
-		if (mCircular)
+		if (isCircular)
 		{
 			tail.next = head;
 			head.prev = tail;
@@ -248,7 +244,7 @@ class Dll<T> implements List<T>
 			tail = node;
 		head = node;
 		
-		if (mCircular)
+		if (isCircular)
 		{
 			tail.next = head;
 			head.prev = tail;
@@ -271,7 +267,7 @@ class Dll<T> implements List<T>
 		if (node == tail)
 		{
 			tail = t;
-			if (mCircular)
+			if (isCircular)
 				tail.next = head;
 		}
 		
@@ -293,7 +289,7 @@ class Dll<T> implements List<T>
 		if (node == head)
 		{
 			head = t;
-			if (mCircular)
+			if (isCircular)
 				head.prev = tail;
 		}
 		
@@ -314,7 +310,7 @@ class Dll<T> implements List<T>
 		if (node == head)
 		{
 			head = head.next;
-			if (mCircular)
+			if (isCircular)
 			{
 				if (head == tail)
 					head = null;
@@ -328,7 +324,7 @@ class Dll<T> implements List<T>
 		if (node == tail)
 		{
 			tail = tail.prev;
-			if (mCircular)
+			if (isCircular)
 				head.prev = tail;
 				
 			if (tail == null) head = null;
@@ -343,7 +339,7 @@ class Dll<T> implements List<T>
 	/**
 		Returns the node at "index" `i`.
 		
-		The index is measured relative to the head node (= index 0).
+		The index is measured relative to the head node (0=head).
 	**/
 	public function getNodeAt(i:Int):DllNode<T>
 	{
@@ -370,7 +366,7 @@ class Dll<T> implements List<T>
 			head = head.next;
 			node.next = null;
 			
-			if (mCircular)
+			if (isCircular)
 			{
 				head.prev = tail;
 				tail.next = head;
@@ -397,7 +393,7 @@ class Dll<T> implements List<T>
 			tail = tail.prev;
 			node.prev = null;
 			
-			if (mCircular)
+			if (isCircular)
 			{
 				tail.next = head;
 				head.prev = tail;
@@ -444,7 +440,7 @@ class Dll<T> implements List<T>
 				tail = t;
 			}
 			
-			if (mCircular)
+			if (isCircular)
 			{
 				tail.next = head;
 				head.prev = tail;
@@ -486,7 +482,7 @@ class Dll<T> implements List<T>
 				head = t;
 			}
 			
-			if (mCircular)
+			if (isCircular)
 			{
 				tail.next = head;
 				head.prev = tail;
@@ -508,7 +504,7 @@ class Dll<T> implements List<T>
 		#end
 		
 		var node = (from == null) ? head : from;
-		if (mCircular)
+		if (isCircular)
 		{
 			while (node != tail)
 			{
@@ -542,7 +538,7 @@ class Dll<T> implements List<T>
 		#end
 		
 		var node = (from == null) ? tail : from;
-		if (mCircular)
+		if (isCircular)
 		{
 			while (node != head)
 			{
@@ -565,7 +561,7 @@ class Dll<T> implements List<T>
 	/**
 		Sorts the elements of this list using the merge sort algorithm.
 		@param cmp a comparison function.
-		If null, the elements are compared using `element.compare()`.
+		<br/>If null, the elements are compared using `element.compare()`.
 		<br/>_In this case all elements have to implement `Comparable`._
 		@param useInsertionSort if true, the linked list is sorted using the insertion sort algorithm.
 		This is faster for nearly sorted lists.
@@ -574,7 +570,7 @@ class Dll<T> implements List<T>
 	{
 		if (size > 1)
 		{
-			if (mCircular)
+			if (isCircular)
 			{
 				tail.next = null;
 				head.prev = null;
@@ -589,7 +585,7 @@ class Dll<T> implements List<T>
 				head = useInsertionSort ? insertionSort(head, cmp) : mergeSort(head, cmp);
 			}
 			
-			if (mCircular)
+			if (isCircular)
 			{
 				tail.next = head;
 				head.prev = tail;
@@ -630,7 +626,7 @@ class Dll<T> implements List<T>
 			
 			mSize += list.size;
 			
-			if (mCircular)
+			if (isCircular)
 			{
 				tail.next = head;
 				head.prev = tail;
@@ -823,7 +819,7 @@ class Dll<T> implements List<T>
 			}
 		}
 		
-		if (mCircular)
+		if (isCircular)
 		{
 			tail.next = head;
 			head.prev = tail;
@@ -839,7 +835,7 @@ class Dll<T> implements List<T>
 		return Std.string(this);
 		#else
 		var b = new StringBuf();
-		b.add('[ Dll size=$size' + (isCircular() ? " circular" : ""));
+		b.add('[ Dll size=$size' + (isCircular ? " circular" : ""));
 		if (isEmpty())
 		{
 			b.add(" ]");
@@ -894,7 +890,7 @@ class Dll<T> implements List<T>
 	/**
 		Inserts `val` before the element at `index` (0=head).
 		
-		If `index` equals `size`, `val` gets appended to the end of the list.
+		If `index` equals `this.size`, `val` gets appended to the end of the list.
 	**/
 	public function insert(index:Int, val:T)
 	{
@@ -1078,7 +1074,7 @@ class Dll<T> implements List<T>
 	/**
 		Returns a new *DllIterator* object to iterate over all elements contained in this doubly linked list.
 		
-		Uses a *CircularDllIterator* iterator object if `circular` is true.
+		Returns a *CircularDllIterator* iterator object if `circular` is true.
 		
 		The elements are visited from head to tail.
 		
@@ -1105,7 +1101,7 @@ class Dll<T> implements List<T>
 		{
 			if (mIterator == null)
 			{
-				if (mCircular)
+				if (isCircular)
 					return new CircularDllIterator<T>(this);
 				else
 					return new DllIterator<T>(this);
@@ -1116,7 +1112,7 @@ class Dll<T> implements List<T>
 		}
 		else
 		{
-			if (mCircular)
+			if (isCircular)
 				return new CircularDllIterator<T>(this);
 			else
 				return new DllIterator<T>(this);
@@ -1162,7 +1158,7 @@ class Dll<T> implements List<T>
 		if (size == 0)
 		{
 			var copy = new Dll<T>(mReservedSize);
-			if (mCircular) copy.mCircular = true;
+			if (isCircular) copy.isCircular = true;
 			return copy;
 		}
 		
@@ -1177,7 +1173,7 @@ class Dll<T> implements List<T>
 			if (size == 1)
 			{
 				copy.tail = copy.head;
-				if (mCircular) copy.tail.next = copy.head;
+				if (isCircular) copy.tail.next = copy.head;
 				return copy;
 			}
 			
@@ -1211,7 +1207,7 @@ class Dll<T> implements List<T>
 			if (size == 1)
 			{
 				copy.tail = copy.head;
-				if (mCircular) copy.tail.next = copy.head;
+				if (isCircular) copy.tail.next = copy.head;
 				return copy;
 			}
 			
@@ -1248,7 +1244,7 @@ class Dll<T> implements List<T>
 			if (size == 1)
 			{
 				copy.tail = copy.head;
-				if (mCircular) copy.tail.next = copy.head;
+				if (isCircular) copy.tail.next = copy.head;
 				return copy;
 			}
 			
@@ -1271,7 +1267,7 @@ class Dll<T> implements List<T>
 			copy.tail.prev = dstNode0;
 		}
 		
-		if (mCircular) copy.tail.next = copy.head;
+		if (isCircular) copy.tail.next = copy.head;
 		return copy;
 	}
 	

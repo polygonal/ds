@@ -7,19 +7,19 @@ class TestDllCircular extends AbstractTest
 	{
 		var list = new Dll<Int>();
 		list.close();
-		assertTrue(list.isCircular());
+		assertTrue(list.isCircular);
 	}
 	
 	function testOpen()
 	{
 		var list = new Dll<Int>();
 		list.close();
-		assertTrue(list.isCircular());
+		assertTrue(list.isCircular);
 		assertEquals(null, list.head);
 		assertEquals(null, list.tail);
 		
 		list.open();
-		assertFalse(list.isCircular());
+		assertFalse(list.isCircular);
 		assertEquals(null, list.head);
 		assertEquals(null, list.tail);
 		

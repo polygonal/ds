@@ -178,10 +178,10 @@ class TestArray2 extends AbstractTest
 		}
 	}
 	
-	function testShiftW()
+	function testShiftLeft()
 	{
 		var a = getStrArray();
-		a.shiftW();
+		a.shiftLeft();
 		for (y in 0...mH)
 			for (x in 0...mW - 1)
 				assertEquals((x + 1) + "." + y, a.get(x, y));
@@ -189,10 +189,10 @@ class TestArray2 extends AbstractTest
 			assertEquals("0." + y, a.get(mW - 1, y));
 	}
 	
-	function testShiftE()
+	function testShiftRight()
 	{
 		var a = getStrArray();
-		a.shiftE();
+		a.shiftRight();
 		for (y in 0...mH)
 			for (x in 1...mW)
 				assertEquals((x - 1) + "." + y, a.get(x, y));
@@ -200,10 +200,10 @@ class TestArray2 extends AbstractTest
 			assertEquals((mW - 1) + "." + y, a.get(0, y));
 	}
 	
-	function testShiftN()
+	function testShiftUp()
 	{
 		var a = getStrArray();
-		a.shiftN();
+		a.shiftUp();
 		for (y in 0...(mH - 1))
 			for (x in 0...mW)
 				assertEquals(x + "." + (y + 1), a.get(x, y));
@@ -211,10 +211,10 @@ class TestArray2 extends AbstractTest
 			assertEquals(x + ".0", a.get(x, mH - 1));
 	}
 	
-	function testShiftS()
+	function testShiftDown()
 	{
 		var a = getStrArray();
-		a.shiftS();
+		a.shiftDown();
 		for (y in 1...mH)
 			for (x in 0...mW)
 				assertEquals(Std.string(x) + "." + (y - 1), a.get(x, y));

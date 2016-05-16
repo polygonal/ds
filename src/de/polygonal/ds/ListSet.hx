@@ -94,7 +94,7 @@ class ListSet<T> implements Set<T>
 	/**
 		Preallocates storage for `n` elements.
 		
-		May cause a reallocation, but has no effect `size` and its elements.
+		May cause a reallocation, but has no effect on `this.size` and its elements.
 		Useful before inserting a large number of elements as this reduces the amount of incremental reallocation.
 	**/
 	public function reserve(n:Int):ListSet<T>

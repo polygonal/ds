@@ -41,7 +41,10 @@ interface List<T> extends Collection<T>
 	function add(val:T):Void;
 	
 	/**
-		Inserts an element at the specified index.
+		Inserts `val` at the specified index.
+		
+		Shifts the element currently at that position (if any) and any subsequent elements to the right (indices + 1).
+		If `index` equals `Collection.size`, `val` gets appended to the end of the list.
 	**/
 	function insert(index:Int, val:T):Void;
 	

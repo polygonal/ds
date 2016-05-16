@@ -173,7 +173,7 @@ class TreeNode<T> implements Collection<T>
 	}
 	
 	/**
-		Returns true if this node is an descendant of `node`.
+		Returns true if this node is a descendant of `node`.
 	**/
 	public function isDescendant(node:TreeNode<T>):Bool
 	{
@@ -792,7 +792,7 @@ class TreeNode<T> implements Collection<T>
 		In this pass the return value determines whether the element (and all its children) will be processed (true) or
 		excluded (false) from the final traversal, which is the second pass (`preflight` parameter set to false).
 		The same applies when using a `process` function.
-		_In this case all elements have to implement `Visitable`._
+		<br/>_In this case all elements have to implement `Visitable`._
 		@param iterative if true, an iterative traversal is used (default traversal style is recursive).
 		@return this node.
 	**/
@@ -1055,7 +1055,7 @@ class TreeNode<T> implements Collection<T>
 		The first argument holds a reference to the current node, while the second argument stores custom data specified by the `userData` parameter (default is null).
 		Once `process` returns false, the traversal stops immediately and no further nodes are examined.
 		If omitted, `element.visit()` is used instead.
-		_In this case all elements have to implement `Visitable`._
+		<br/>_In this case all elements have to implement `Visitable`._
 		@param userData custom data that is passed to every visited node via `process` or `element.visit()`.
 		@param iterative if true, an iterative traversal is used (default traversal style is recursive).
 		@return this node.
@@ -1228,7 +1228,7 @@ class TreeNode<T> implements Collection<T>
 		The first argument holds a reference to the current node, while the second argument stores custom data specified by the `userData` parameter (default is null).
 		Once `process` returns false, the traversal stops immediately and no further nodes are examined.
 		If omitted, `element.visit()` is used instead.
-		_In this case all elements have to implement `Visitable`._
+		<br/>_In this case all elements have to implement `Visitable`._
 		@param userData custom data that is passed to every visited node via `process` or `element.visit()`.
 		@return this node.
 	**/
@@ -1301,7 +1301,7 @@ class TreeNode<T> implements Collection<T>
 		Sorts the children of this node using the merge sort algorithm.
 		@param cmp a comparison function.
 		If null, the elements are compared using `element.compare()`.
-		_In this case all elements have to implement `Comparable`._
+		<br/>_In this case all elements have to implement `Comparable`._
 		@param useInsertionSort if true, the dense array is sorted using the insertion sort algorithm.
 		This is faster for nearly sorted lists.
 		@return this node.
@@ -1811,7 +1811,7 @@ class TreeNode<T> implements Collection<T>
 		
 		The tree can be rebuild by calling `this.unserialize()`.
 		
-		@see http://eli.thegreenplace.net/2011/09/29/an-interesting-tree-serialization-algorithm-from-dwarf/"
+		@see http://eli.thegreenplace.net/2011/09/29/an-interesting-tree-serialization-algorithm-from-dwarf/
 		@param node the root of the tree.
 		@return a flattened tree.
 	**/
@@ -1842,8 +1842,9 @@ class TreeNode<T> implements Collection<T>
 		First create a dummy node which will be the root of the unserialized tree, then call `this.unserialize()`.
 		
 		Example:
-		var root = new de.polygonal.ds.TreeNode<String>(null);
-		root.unserialize(mySerializedTree);
+			var root = new de.polygonal.ds.TreeNode<String>(null);
+			root.unserialize(mySerializedTree);
+		
 		@param list the flattened tree
 		@return the root of the tree.
 	**/

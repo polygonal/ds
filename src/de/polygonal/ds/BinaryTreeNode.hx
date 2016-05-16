@@ -110,7 +110,7 @@ class BinaryTreeNode<T> implements Collection<T>
 		@param process a function that is invoked on every traversed node.
 		If omitted, `element.visit()` is used instead.
 		<br/>_In this case all elements have to implement `Visitable`._
-		<br/>The first argument holds a reference to the current node, while the second argument stores custom data specified by the userData parameter (default is null).
+		<br/>The first argument holds a reference to the current node, while the second argument stores custom data specified by the `userData` parameter (default is null).
 		Once `process` returns false, the traversal stops immediately and no further nodes are examined.
 		@param iterative if true, an iterative traversal is used (default traversal style is recursive).
 		@param userData custom data that is passed to every visited node via `process` or `element.visit()`. If omitted, null is used.
@@ -494,7 +494,7 @@ class BinaryTreeNode<T> implements Collection<T>
 	}
 	
 	/**
-		Returns true if this node is a leaf node (`this.left` and `this.right` are null).
+		Returns true if this node is a leaf node (`this.left` and `this.right` are both null).
 	**/
 	public inline function isLeaf():Bool
 	{

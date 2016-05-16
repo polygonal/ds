@@ -73,6 +73,13 @@ class Sll<T> implements List<T>
 	**/
 	public var reuseIterator:Bool = false;
 	
+	/**
+		Returns true if this list is circular.
+		
+		A list is circular if the tail points to the head.
+	**/
+	public var isCircular(default, null):Bool = false;
+	
 	var mSize:Int = 0;
 	var mReservedSize:Int;
 	var mPoolSize:Int = 0;
@@ -80,7 +87,6 @@ class Sll<T> implements List<T>
 	var mHeadPool:SllNode<T>;
 	var mTailPool:SllNode<T>;
 	
-	var mCircular:Bool = false;
 	var mIterator:SllIterator<T> = null;
 	
 	/**
@@ -106,24 +112,14 @@ class Sll<T> implements List<T>
 	}
 	
 	/**
-		Returns true if this list is circular.
-		
-		A list is circular if the tail points to the head.
-	**/
-	public function isCircular():Bool
-	{
-		return mCircular;
-	}
-	
-	/**
 		Makes this list circular by connecting the tail to the head.
 		
 		Silently fails if this list is already closed.
 	**/
 	public function close()
 	{
-		if (mCircular) return;
-		mCircular = true;
+		if (isCircular) return;
+		isCircular = true;
 		if (valid(head))
 			tail.next = head;
 	}
@@ -135,8 +131,8 @@ class Sll<T> implements List<T>
 	**/
 	public function open()
 	{
-		if (!mCircular) return;
-		mCircular = false;
+		if (!isCircular) return;
+		isCircular = false;
 		if (valid(head))
 			tail.next = null;
 	}
@@ -162,7 +158,7 @@ class Sll<T> implements List<T>
 			head = node;
 		tail = node;
 		
-		if (mCircular)
+		if (isCircular)
 			tail.next = head;
 		
 		mSize++;
@@ -182,7 +178,7 @@ class Sll<T> implements List<T>
 			head = node;
 		tail = node;
 		
-		if (mCircular)
+		if (isCircular)
 			tail.next = head;
 		
 		mSize++;
@@ -201,7 +197,7 @@ class Sll<T> implements List<T>
 			tail = node;
 		head = node;
 		
-		if (mCircular)
+		if (isCircular)
 			tail.next = head;
 		
 		mSize++;
@@ -221,7 +217,7 @@ class Sll<T> implements List<T>
 			tail = node;
 		head = node;
 		
-		if (mCircular)
+		if (isCircular)
 			tail.next = head;
 		
 		mSize++;
@@ -242,7 +238,7 @@ class Sll<T> implements List<T>
 		if (node == tail)
 		{
 			tail = t;
-			if (mCircular)
+			if (isCircular)
 				tail.next = head;
 		}
 		mSize++;
@@ -265,7 +261,7 @@ class Sll<T> implements List<T>
 			t.next = head;
 			head = t;
 			
-			if (mCircular)
+			if (isCircular)
 				tail.next = head;
 		}
 		else
@@ -293,7 +289,7 @@ class Sll<T> implements List<T>
 			var t = getNodeBefore(node);
 			if (t.next == tail)
 			{
-				if (mCircular)
+				if (isCircular)
 				{
 					tail = t;
 					t.next = head;
@@ -341,7 +337,7 @@ class Sll<T> implements List<T>
 		{
 			head = head.next;
 			
-			if (mCircular)
+			if (isCircular)
 				tail.next = head;
 		}
 		else
@@ -366,7 +362,7 @@ class Sll<T> implements List<T>
 			var t = getNodeBefore(tail);
 			tail = t;
 			
-			if (mCircular)
+			if (isCircular)
 				t.next = head;
 			else
 				t.next = null;
@@ -396,14 +392,14 @@ class Sll<T> implements List<T>
 			{
 				head = tail;
 				tail = t;
-				t.next = mCircular ? head : null;
+				t.next = isCircular ? head : null;
 				head.next = tail;
 			}
 			else
 			{
 				head = head.next;
 				tail.next = t;
-				t.next = mCircular ? head : null;
+				t.next = isCircular ? head : null;
 				tail = t;
 			}
 		}
@@ -423,7 +419,7 @@ class Sll<T> implements List<T>
 			{
 				tail = head;
 				head = t;
-				t.next = mCircular ? head : null;
+				t.next = isCircular ? head : null;
 				head.next = tail;
 			}
 			else
@@ -432,7 +428,7 @@ class Sll<T> implements List<T>
 				while (node.next != tail)
 					node = node.next;
 				tail = node;
-				tail.next = mCircular ? t : null;
+				tail.next = isCircular ? t : null;
 				t.next = head;
 				head = t;
 			}
@@ -442,7 +438,7 @@ class Sll<T> implements List<T>
 	/**
 		Searches for `val` in this list from head to tail starting at node `from`.
 		@return the node containing `val` or null if such a node does not exist.
-		If `from` is null, the search starts at the head of this list.
+		<br/>If `from` is null, the search starts at the head of this list.
 	**/
 	public function nodeOf(val:T, from:SllNode<T> = null):SllNode<T>
 	{
@@ -472,7 +468,7 @@ class Sll<T> implements List<T>
 	{
 		if (size > 1)
 		{
-			if (mCircular) tail.next = null;
+			if (isCircular) tail.next = null;
 			
 			if (cmp == null)
 			{
@@ -483,7 +479,7 @@ class Sll<T> implements List<T>
 				head = useInsertionSort ? insertionSort(head, cmp) : mergeSort(head, cmp);
 			}
 			
-			if (mCircular) tail.next = head;
+			if (isCircular) tail.next = head;
 		}
 	}
 	
@@ -519,7 +515,7 @@ class Sll<T> implements List<T>
 			
 			mSize += list.size;
 			
-			if (mCircular)
+			if (isCircular)
 				tail.next = head;
 		}
 	}
@@ -625,7 +621,7 @@ class Sll<T> implements List<T>
 		
 		if (s == 1) return;
 		
-		if (mCircular) tail.next = null;
+		if (isCircular) tail.next = null;
 		
 		if (rvals == null)
 		{
@@ -668,7 +664,7 @@ class Sll<T> implements List<T>
 			}
 		}
 		
-		if (mCircular) tail.next = head;
+		if (isCircular) tail.next = head;
 	}
 	
 	/**
@@ -680,7 +676,7 @@ class Sll<T> implements List<T>
 		return Std.string(this);
 		#else
 		var b = new StringBuf();
-		b.add('[ Sll size=$size' + (isCircular() ? " circular" : ""));
+		b.add('[ Sll size=$size' + (isCircular ? " circular" : ""));
 		if (isEmpty())
 		{
 			b.add(" ]");
@@ -735,7 +731,7 @@ class Sll<T> implements List<T>
 	/**
 		Inserts `val` before the element at `index` (0=head).
 		
-		If `index` equals `size`, `val` gets appended to the end of the list.
+		If `index` equals `this.size`, `val` gets appended to the end of the list.
 	**/
 	public function insert(index:Int, val:T)
 	{
@@ -888,7 +884,7 @@ class Sll<T> implements List<T>
 				if (node1 == tail)
 				{
 					tail = node0;
-					if (mCircular) tail.next = head;
+					if (isCircular) tail.next = head;
 				}
 				var node2 = node1.next;
 				node0.next = node2;
@@ -912,7 +908,7 @@ class Sll<T> implements List<T>
 				tail = null;
 			else
 			{
-				if (mCircular)
+				if (isCircular)
 					tail.next = head;
 			}
 			
@@ -964,7 +960,7 @@ class Sll<T> implements List<T>
 		{
 			if (mIterator == null)
 			{
-				if (mCircular)
+				if (isCircular)
 					return new CircularSllIterator<T>(this);
 				else
 					return new SllIterator<T>(this);
@@ -975,7 +971,7 @@ class Sll<T> implements List<T>
 		}
 		else
 		{
-			if (mCircular)
+			if (isCircular)
 				return new CircularSllIterator<T>(this);
 			else
 				return new SllIterator<T>(this);
@@ -1021,12 +1017,12 @@ class Sll<T> implements List<T>
 		if (size == 0)
 		{
 			var copy = new Sll<T>(mReservedSize);
-			if (mCircular) copy.mCircular = true;
+			if (isCircular) copy.isCircular = true;
 			return copy;
 		}
 		
 		var copy = new Sll<T>();
-		if (mCircular) copy.mCircular = true;
+		if (isCircular) copy.isCircular = true;
 		copy.mSize = size;
 		
 		if (byRef)
@@ -1036,7 +1032,7 @@ class Sll<T> implements List<T>
 			if (size == 1)
 			{
 				copy.tail = copy.head;
-				if (mCircular) copy.tail.next = copy.head;
+				if (isCircular) copy.tail.next = copy.head;
 				return copy;
 			}
 			srcNode = srcNode.next;
@@ -1058,7 +1054,7 @@ class Sll<T> implements List<T>
 			if (size == 1)
 			{
 				copy.tail = copy.head;
-				if (mCircular) copy.tail.next = copy.head;
+				if (isCircular) copy.tail.next = copy.head;
 				return copy;
 			}
 			srcNode = srcNode.next;
@@ -1080,7 +1076,7 @@ class Sll<T> implements List<T>
 			var dstNode = copy.head = new SllNode<T>(copier(head.val), copy);
 			if (size == 1)
 			{
-				if (mCircular) copy.tail.next = copy.head;
+				if (isCircular) copy.tail.next = copy.head;
 				copy.tail = copy.head;
 				return copy;
 			}
@@ -1093,7 +1089,7 @@ class Sll<T> implements List<T>
 			copy.tail = dstNode.next = new SllNode<T>(copier(srcNode.val), copy);
 		}
 		
-		if (mCircular) copy.tail.next = copy.head;
+		if (isCircular) copy.tail.next = copy.head;
 		return copy;
 	}
 	

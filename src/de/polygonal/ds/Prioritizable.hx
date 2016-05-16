@@ -19,7 +19,7 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 package de.polygonal.ds;
 
 /**
-	An prioritized object that can be inserted into a PriorityQueue
+	A prioritized object that can be inserted into a PriorityQueue
 **/
 @:allow(de.polygonal.ds.PriorityQueue)
 interface Prioritizable

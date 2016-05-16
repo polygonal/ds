@@ -22,7 +22,7 @@ import de.polygonal.ds.tools.ArrayTools;
 import de.polygonal.ds.tools.Assert.assert;
 
 /**
-	Utility class for modifying `NativeArray` objects.
+	Utility class for modifying `NativeArray` objects
 **/
 class NativeArrayTools
 {
@@ -280,8 +280,8 @@ class NativeArrayTools
 	}
 	
 	/**
-		Sets `n` elements in `dst` to zero starting at index `first` and returns `dst`.
-		If `n` is zero, `n` is set to the length of `dst`.
+		Sets `n` elements in `dst` to 0 starting at index `first` and returns `dst`.
+		If `n` is 0, `n` is set to the length of `dst`.
 	**/
 	#if (flash || java)
 	inline
@@ -306,7 +306,7 @@ class NativeArrayTools
 	
 	/**
 		Sets `n` elements in `a` to `val` starting at index `first` and returns `a`.
-		If `n` is zero, `n` is set to the length of `a`.
+		If `n` is 0, `n` is set to the length of `a`.
 	**/
 	#if java inline #end
 	public static function init<T>(a:NativeArray<T>, val:T, first:Int = 0, n:Int = 0):NativeArray<T>
@@ -323,7 +323,7 @@ class NativeArrayTools
 	
 	/**
 		Nullifies `n` elements in `a` starting at index `first` and returns `a`.
-		If `n` is zero, `n` is set to the length of `a`.
+		If `n` is 0, `n` is set to the length of `a`.
 	**/
 	#if java inline #end
 	public static function nullify<T>(a:NativeArray<T>, first:Int = 0, n:Int = 0):NativeArray<T>

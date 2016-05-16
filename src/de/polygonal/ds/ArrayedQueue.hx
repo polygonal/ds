@@ -195,7 +195,7 @@ class ArrayedQueue<T> implements Queue<T>
 	/**
 		Preallocates storage for `n` elements.
 		
-		May cause a reallocation, but has no effect `size` and its elements.
+		May cause a reallocation, but has no effect on `this.size` and its elements.
 		Useful before inserting a large number of elements as this reduces the amount of incremental reallocation.
 	**/
 	public function reserve(n:Int):ArrayedQueue<T>
@@ -212,7 +212,7 @@ class ArrayedQueue<T> implements Queue<T>
 	/**
 		Returns the element at index `i`.
 		
-		The index is measured relative to the index of the front element (= 0).
+		The index is measured relative to the index of the front element (=0).
 	**/
 	public inline function get(i:Int):T
 	{
@@ -225,7 +225,7 @@ class ArrayedQueue<T> implements Queue<T>
 	/**
 		Replaces the element at index `i` with `val`.
 		
-		The index is measured relative to the index of the front element (= 0).
+		The index is measured relative to the index of the front element (=0).
 	**/
 	public inline function set(i:Int, val:T)
 	{
@@ -238,7 +238,7 @@ class ArrayedQueue<T> implements Queue<T>
 	/**
 		Swaps the element at index `i` with the element at index `j`.
 		
-		The index is measured relative to the index of the front element (= 0).
+		The index is measured relative to the index of the front element (=0).
 	**/
 	public inline function swap(i:Int, j:Int)
 	{
@@ -255,7 +255,7 @@ class ArrayedQueue<T> implements Queue<T>
 	/**
 		Replaces the element at index `i` with the element from index `j`.
 		
-		The index is measured relative to the index of the front element (= 0).
+		The index is measured relative to the index of the front element (=0).
 	**/
 	public inline function copy(i:Int, j:Int)
 	{

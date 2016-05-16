@@ -24,7 +24,7 @@ package de.polygonal.ds;
 interface Deque<T> extends Collection<T>
 {
 	/**
-		Returns the first element of the deque.
+		Returns the first element of the deque (index 0).
 	**/
 	function front():T;
 	
@@ -39,7 +39,7 @@ interface Deque<T> extends Collection<T>
 	function popFront():T;
 	
 	/**
-		Returns the last element of the deque.
+		Returns the last element of the deque (index `Collection.size` - 1).
 	**/
 	function back():T;
 	

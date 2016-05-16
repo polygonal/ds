@@ -1041,11 +1041,6 @@ class Graph<T> implements Collection<T>
 		#end
 	}
 	
-	public function serialize()
-	{
-		
-	}
-	
 	/* INTERFACE Collection */
 	
 	/**

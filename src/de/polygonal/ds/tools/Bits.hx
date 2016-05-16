@@ -42,7 +42,7 @@ class Bits
 	}
 	
 	/**
-		Counts the number of "1"-bits in `x`; e.g. 0b00110111` has 5 bits set.
+		Counts the number of "1"-bits in `x`. For example 0b00110111 has 5 bits set.
 	**/
 	public static inline function ones(x:Int)
 	{
@@ -55,7 +55,7 @@ class Bits
 	}
 	
 	/**
-		Counts the number of trailing 0's in `x`; e.g. 16 (0x10 or 0b10000) has 4 trailing 0's.
+		Counts the number of trailing 0's in `x`. For example 0b10000 has 4 trailing 0's.
 	**/
 	public static inline function ntz(x:Int):Int
 	{
@@ -91,7 +91,7 @@ class Bits
 	}
 	
 	/**
-		Counts the number of leading 0's in `x`; e.g. 16 (0x10 or 0b10000) has 27 leading 0's.
+		Counts the number of leading 0's in `x`. For example 0b10000 has 27 leading 0's.
 	**/
 	public static inline function nlz(x:Int):Int
 	{
@@ -138,7 +138,7 @@ class Bits
 	}
 	
 	/**
-		Reverses `x`; e.g. 0b111000 becomes 0b000111.
+		Reverses `x`; For example 0b111000 becomes 0b000111.
 	**/
 	public static inline function reverse(x:Int):Int
 	{

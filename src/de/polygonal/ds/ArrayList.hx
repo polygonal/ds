@@ -216,7 +216,6 @@ class ArrayList<T> implements List<T>
 	
 	/**
 		Returns the first element.
-		
 		This is the element at index 0.
 	**/
 	public inline function front():T
@@ -228,7 +227,6 @@ class ArrayList<T> implements List<T>
 	
 	/**
 		Returns the last element.
-		
 		This is the element at index `this.size` - 1.
 	**/
 	public inline function back():T
@@ -280,7 +278,7 @@ class ArrayList<T> implements List<T>
 		Inserts `val` at the specified `index`.
 		
 		Shifts the element currently at that position (if any) and any subsequent elements to the right (indices + 1).
-		If `index` equals `size`, `val` gets appended to the end of the list.
+		If `index` equals `this.size`, `val` gets appended to the end of the list.
 	**/
 	public function insert(index:Int, val:T)
 	{
@@ -537,7 +535,7 @@ class ArrayList<T> implements List<T>
 	}
 	
 	/**
-		Copies `n` elements from the location pointed by the index `source` to the location pointed by the index `destination`.
+		Copies `n` elements from the location pointed by the index `source` to the location pointed by `destination`.
 		
 		Copying takes place as if an intermediate buffer was used, allowing the destination and source to overlap.
 		
@@ -555,7 +553,8 @@ class ArrayList<T> implements List<T>
 	
 	/**
 		Sorts the elements of this dense array using the quick sort algorithm.
-		@param cmp a comparison function. If null, the elements are compared using `element.compare()`.
+		@param cmp a comparison function.
+		<br/>If null, the elements are compared using `element.compare()`.
 		<br/>_In this case all elements have to implement `Comparable`._
 		@param useInsertionSort if true, the dense array is sorted using the insertion sort algorithm.
 		<br/>This is faster for nearly sorted lists.
@@ -816,7 +815,7 @@ class ArrayList<T> implements List<T>
 	/**
 		Preallocates storage for `n` elements.
 		
-		May cause a reallocation, but has no effect `size` and its elements.
+		May cause a reallocation, but has no effect on `this.size` and its elements.
 		Useful before inserting a large number of elements as this reduces the amount of incremental reallocation.
 	**/
 	public function reserve(n:Int):ArrayList<T>

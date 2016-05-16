@@ -199,7 +199,7 @@ class BitVector implements Hashable
 	/**
 		Returns the bucket at index `i`.
 		
-		A bucket is a 32-bit integer for storing the bit flags.
+		A bucket is a 32-bit integer for storing bit flags.
 	**/
 	public inline function getBucketAt(i:Int):Int
 	{
@@ -211,7 +211,7 @@ class BitVector implements Hashable
 	/**
 		Writes all buckets to `out`.
 		
-		A bucket is a 32-bit integer for storing the bit flags.
+		A bucket is a 32-bit integer for storing bit flags.
 		@return the total number of buckets.
 	**/
 	public inline function getBuckets(out:Array<Int>):Int

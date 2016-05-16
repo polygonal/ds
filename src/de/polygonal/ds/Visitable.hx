@@ -26,8 +26,8 @@ interface Visitable
 	/**
 		@param preflight if true, an extra traversal is performed before the actual traversal runs.
 		<br/>The first pass visits all elements and calls `element.visit()` with the `preflight` parameter set to true.
-		In this pass the return value determines whether the element (and all its children (tree) or neighbors (graph)) will be processed (true) or
-		excluded (false) from the final traversal, which is the second pass (`preflight` parameter set to false).
+		In this pass the return value determines whether the element will be included (true) or excluded (false) from the final traversal,
+		which is performed in the second pass (`preflight` parameter set to false).
 		@param userData custom data passed to every visited element. Default is null.
 	**/
 	function visit(preflight:Bool, userData:Dynamic):Bool;

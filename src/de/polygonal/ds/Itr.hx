@@ -21,7 +21,7 @@ package de.polygonal.ds;
 /**
 	An iterator over a collection
 	
-	Same as typedef Iterator<T> but with an extra `reset()` method.
+	Same as typedef Iterator<T> but with an extra `this.reset()` and `this.remove()` method.
 **/
 interface Itr<T>
 {

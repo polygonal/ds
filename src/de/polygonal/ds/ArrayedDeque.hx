@@ -87,7 +87,7 @@ class ArrayedDeque<T> implements Deque<T>
 	var mIterator:ArrayedDequeIterator<T> = null;
 	
 	/**
-		@param blockSize a block represents a contiguous piece of memory; whenever the deque runs out of space an additional block with a capacity of `blockSize` elements is allocated and added to the existing blocks.
+		@param blockSize a block represents a contiguous piece of memory; whenever the deque runs out of space an additional block with a capacity of `blockSize` elements is allocated and added to the list of existing blocks.
 		The parameter affects the performance-memory trade-off: a large `blockSize` improves performances but wastes memory if the utilization is low; a small `blockSize` uses memory more efficiently but is slower due to frequent allocation of blocks.
 		The default value is 64; the minimum value is 4.
 		_`blockSize` has to be a power of two._
@@ -117,7 +117,7 @@ class ArrayedDeque<T> implements Deque<T>
 	}
 	
 	/**
-		Returns the first element of this deque.
+		Returns the first element of this deque (index 0).
 	**/
 	public inline function front():T
 	{
@@ -152,7 +152,7 @@ class ArrayedDeque<T> implements Deque<T>
 	}
 	
 	/**
-		Returns the last element of the deque.
+		Returns the last element of the deque (index `this.size` - 1).
 	**/
 	public inline function back():T
 	{

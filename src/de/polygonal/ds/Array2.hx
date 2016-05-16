@@ -236,7 +236,7 @@ class Array2<T> implements Collection<T>
 	}
 	
 	/**
-		Returns the index of the first occurrence of `val` or returns -1 if element `val` does not exist.
+		Returns the index of the first occurrence of `val` or returns -1 if `val` does not exist.
 		
 		The index is in the range [0, `this.size` - 1].
 	**/
@@ -260,7 +260,7 @@ class Array2<T> implements Collection<T>
 	}
 	
 	/**
-		Returns the cell coordinates of the first occurrence of `val` or null if element `val` does not exist.
+		Returns the cell coordinates of the first occurrence of `val` or null if `val` does not exist.
 		@param out stores the result.
 		@return a reference to `out`.
 	**/
@@ -301,6 +301,7 @@ class Array2<T> implements Collection<T>
 	
 	/**
 		Copies all elements stored in row `y` by reference to the `out` array.
+		@param out stores the result.
 		@return a reference to the `out` array.
 	**/
 	public function getRow(y:Int, out:Array<T>):Array<T>
@@ -328,6 +329,7 @@ class Array2<T> implements Collection<T>
 	
 	/**
 		Copies all elements stored in column `x` by reference to the `out` array.
+		@param out stores the result.
 		@return a reference to the `out` array.
 	**/
 	public function getCol(x:Int, out:Array<T>):Array<T>
@@ -402,11 +404,11 @@ class Array2<T> implements Collection<T>
 	}
 	
 	/**
-		Shifts all columns to the west by one position.
+		Shifts all columns to the left by one position.
 		
 		Columns are wrapped so the column at index 0 is not lost but appended to the rightmost column.
 	**/
-	public function shiftW()
+	public function shiftLeft()
 	{
 		var t, k, d = mData;
 		for (y in 0...mH)
@@ -420,11 +422,11 @@ class Array2<T> implements Collection<T>
 	}
 	
 	/**
-		Shifts all columns to the east by one position.
+		Shifts all columns to the right by one position.
 		
 		Columns are wrapped, so the column at index [`this.cols` - 1] is not lost but prepended to the leftmost column.
 	**/
-	public function shiftE()
+	public function shiftRight()
 	{
 		var t, x, k, d = mData;
 		for (y in 0...mH)
@@ -439,11 +441,11 @@ class Array2<T> implements Collection<T>
 	}
 	
 	/**
-		Shifts all rows to the north by one position.
+		Shifts all rows up by one position.
 		
 		Rows are wrapped, so the row at index 0 is not lost but appended to the bottommost row.
 	**/
-	public function shiftN()
+	public function shiftUp()
 	{
 		var k = mH - 1, l = (mH - 1) * mW, t, d = mData;
 		for (x in 0...mW)
@@ -456,11 +458,11 @@ class Array2<T> implements Collection<T>
 	}
 	
 	/**
-		Shifts all rows to the south by one position.
+		Shifts all rows down by one position.
 		
 		Rows are wrapped, so row at index [`this.rows` - 1] is not lost but prepended to the topmost row.
 	**/
-	public function shiftS()
+	public function shiftDown()
 	{
 		var k = mH - 1, l = k * mW, y, t, d = mData;
 		for (x in 0...mW)
@@ -745,6 +747,7 @@ class Array2<T> implements Collection<T>
 	
 	/**
 		Copies all elements inside the rectangular region bounded by [`minX`, `minY`] and [`maxX`, `maxY`] by reference to the `out` array.
+		@param out stores the result.
 		@return a reference to the `out` array.
 	**/
 	public function getRect(minX:Int, minY:Int, maxX:Int, maxY:Int, out:Array<T>):Array<T>

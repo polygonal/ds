@@ -1056,7 +1056,7 @@ class TestSll extends AbstractTest
 		assertEquals(0, copy.head.val);
 		assertEquals(0, copy.tail.val);
 		assertEquals(copy.head, copy.tail);
-		assertTrue(copy.isCircular());
+		assertTrue(copy.isCircular);
 		assertEquals(copy.head, copy.tail.next);
 		
 		//size 2
@@ -1071,7 +1071,7 @@ class TestSll extends AbstractTest
 		assertEquals(copy.head.next, copy.tail);
 		assertEquals(1, copy.head.next.val);
 		assertEquals(copy.head, cast copy.tail.next);
-		assertTrue(copy.isCircular());
+		assertTrue(copy.isCircular);
 		
 		//size 10
 		var list = new Sll<Int>();
@@ -1081,7 +1081,7 @@ class TestSll extends AbstractTest
 		var copy:Sll<Int> = cast list.clone(true);
 		assertEquals(10, copy.size);
 		assertEquals(copy.head, copy.tail.next);
-		assertTrue(copy.isCircular());
+		assertTrue(copy.isCircular);
 		assertEquals(0, copy.head.val);
 		assertEquals(9, copy.tail.val);
 		var j = 0;

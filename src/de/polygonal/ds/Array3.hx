@@ -216,7 +216,7 @@ class Array3<T> implements Collection<T>
 	}
 	
 	/**
-		Returns the index of the first occurrence of `val` or returns -1 if element `val` does not exist.
+		Returns the index of the first occurrence of `val` or returns -1 if `val` does not exist.
 		
 		The index is in the range [0, `this.size` - 1].
 	**/
@@ -240,7 +240,7 @@ class Array3<T> implements Collection<T>
 	}
 	
 	/**
-		Returns the cell coordinates of the first occurrence of `val` or null if element `val` does not exist.
+		Returns the cell coordinates of the first occurrence of `val` or null if `val` does not exist.
 		@param out stores the result.
 		@return a reference to `out`.
 	**/
@@ -303,6 +303,7 @@ class Array3<T> implements Collection<T>
 	
 	/**
 		Copies all elements stored in row `y` and layer `z` by reference to the `out` array.
+		@param out stores the result.
 		@return a reference to the `out` array.
 	**/
 	public function getRow(z:Int, y:Int, out:Array<T>):Array<T>
@@ -332,6 +333,7 @@ class Array3<T> implements Collection<T>
 	
 	/**
 		Copies all elements stored in column `x` and layer `z` by reference to the `out` array.
+		@param out stores the result.
 		@return a reference to the `out` array.
 	**/
 	public function getCol(z:Int, x:Int, out:Array<T>):Array<T>
@@ -361,6 +363,7 @@ class Array3<T> implements Collection<T>
 	
 	/**
 		Copies all elements stored in the pile at column `x` and row `y` by reference to the `out` array.
+		@param out stores the result.
 		@return a reference to the `out` array.
 	**/
 	public function getPile(x:Int, y:Int, out:Array<T>):Array<T>
