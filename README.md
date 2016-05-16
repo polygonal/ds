@@ -1,12 +1,12 @@
 # Data Structures For Games (ds)
 
-![ds logo](http://polygonal.github.com/ds/images/ds-small.png)
+![ds logo](http://polygonal.github.com/ds/logo.png)
 
 Formerly known as "_AS3 Data Structures For Game Developers (AS3DS)_", the package contains parametrized classes that allow programmers to easily implement standard data structures like linked lists, queues, stacks or multi-dimensional arrays. The result is somewhere in between the C++ STL (Standard Template Library) and the Java Collection framework. The library is highly optimized and uses advanced Haxe features like inlining or code generation for parametrized classes through the haxe.rtti.Generics interface.
 
 ## Documentation
--    Slides [Introduction to ds - Data Structures For Games](http://www.polygonal.de/dev/ds/slides/introduction_to_ds.pdf)
--    API [http://www.polygonal.de/dev/ds/doc](http://www.polygonal.de/dev/ds/doc)
+-    Slides [Introduction to ds - Data Structures For Games](http://polygonal.github.com/ds/slides/introduction_to_ds.pdf)
+-    API [http://www.polygonal.de/dev/ds/doc](http://polygonal.github.com/ds/index.html)
 -    SWC library v1.39 for AS3 (no longer maintained): [polygonal-ds-latest.zip](http://www.polygonal.de/dev/ds/swc/polygonal-ds-latest.zip)
 
 ## Articles
@@ -30,10 +30,6 @@ Enables generic classes (adds @:generic meta). Extra performance for static type
 
 Enables fast virtual memory for FP10+ ("alchemy memory"). Extra performance for Flash.
 
-`-D doc`
-
-Prevents less important inner classes from being documented.
-
 ## Questions, Comments, Feature Requests...
 
 http://groups.google.com/group/polygonal-ds
@@ -48,6 +44,8 @@ If you want to test the latest beta build, you should pull the dev branch and ad
 ### 2.0.0-beta
 _Requires Haxe >= 3.3.0_
 
+ * modified: BitVector: use getters for size/capacity
+ * modified: renamed Graph methods (DFS, BFS, DLBFS -> dfs, bfs, dlbfs);
  * modified: added Set.unset() method
  * modified: remove .swc files - no longer maintained (use tools/swc/run.bat to create swc libs on your own)
  * added: List\<T\> interface (implemented by ArrayList, Sll, Dll)
