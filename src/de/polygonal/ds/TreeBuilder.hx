@@ -25,7 +25,7 @@ import de.polygonal.ds.tools.Assert.assert;
 	
 	The class manages two pointers: A "vertical" pointer and a "horizontal" pointer.
 	
-	The vertical pointer moves up and down the tree using the node's `parent` field, while the horizontal pointer moves left/right over the children using the `prev` and `next` fields.
+	The vertical pointer moves up and down the tree using the node's `TreeNode.parent` field, while the horizontal pointer moves left/right over the children using the `TreeNode.prev` and `TreeNode.next` fields.
 **/
 #if generic
 @:generic

@@ -566,7 +566,7 @@ class Dll<T> implements List<T>
 		Sorts the elements of this list using the merge sort algorithm.
 		@param cmp a comparison function.
 		If null, the elements are compared using `element.compare()`.
-		_In this case all elements have to implement `Comparable`._
+		<br/>_In this case all elements have to implement `Comparable`._
 		@param useInsertionSort if true, the linked list is sorted using the insertion sort algorithm.
 		This is faster for nearly sorted lists.
 	**/

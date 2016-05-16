@@ -127,7 +127,8 @@ class Array2<T> implements Collection<T>
 		
 		The minimum size is 2x2.
 		
-		@param source initial values for populating this two-dimensional array (`source.length` should match `width` * `height`).
+		@param source initial values for populating this two-dimensional array;
+		<br/>`source.length` should match `width` × `height`.
 	**/
 	public function new(width:Int, height:Int, ?source:Array<T>)
 	{
@@ -814,7 +815,7 @@ class Array2<T> implements Collection<T>
 	/**
 		The number of elements in this two-dimensional array.
 		
-		Always equals `this.cols` * `this.rows`.
+		Always equals `this.cols` × `this.rows`.
 	**/
 	public var size(get, never):Int;
 	inline function get_size():Int

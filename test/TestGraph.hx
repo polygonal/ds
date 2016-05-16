@@ -45,14 +45,14 @@ class TestGraph extends AbstractTest
 			return true;
 		}
 		
-		graph.DFS(false, a, process, false);
-		graph.DFS(false, a, process, true);
-		graph.DFS(true, a, process, false);
-		graph.DFS(true, a, process, true);
-		graph.BFS(false, a, process, false);
-		graph.BFS(false, a, process, true);
-		graph.BFS(true, a, process, false);
-		graph.BFS(true, a, process, true);
+		graph.dfs(false, a, process, false);
+		graph.dfs(false, a, process, true);
+		graph.dfs(true, a, process, false);
+		graph.dfs(true, a, process, true);
+		graph.bfs(false, a, process, false);
+		graph.bfs(false, a, process, true);
+		graph.bfs(true, a, process, false);
+		graph.bfs(true, a, process, true);
 		
 		//visitable
 		var graph = new Graph<E>();
@@ -93,15 +93,15 @@ class TestGraph extends AbstractTest
 		
 		ea.onVisit = onVisit;
 		
-		graph.DFS(false, a, null, false);
-		graph.DFS(false, a, null, true);
-		graph.DFS(true, a, null, false);
-		graph.DFS(true, a, null, true);
+		graph.dfs(false, a, null, false);
+		graph.dfs(false, a, null, true);
+		graph.dfs(true, a, null, false);
+		graph.dfs(true, a, null, true);
 		
-		graph.BFS(false, a, null, false);
-		graph.BFS(false, a, null, true);
-		graph.BFS(true, a, null, false);
-		graph.BFS(true, a, null, true);
+		graph.bfs(false, a, null, false);
+		graph.bfs(false, a, null, true);
+		graph.bfs(true, a, null, false);
+		graph.bfs(true, a, null, true);
 	}
 	
 	function testBFS_DFS_Func()
@@ -134,20 +134,20 @@ class TestGraph extends AbstractTest
 		c = 0;
 		d = 0;
 		graph.clearMarks();
-		graph.DFS(false, graph.getNodeList(), visit);
+		graph.dfs(false, graph.getNodeList(), visit);
 		assertEquals(graph.size, c);
 		
 		c = 0;
 		d = 0;
 		graph.clearMarks();
-		graph.DFS(true, graph.getNodeList(), visit);
+		graph.dfs(true, graph.getNodeList(), visit);
 		assertEquals(graph.size, c);
 		
 		//recursive process preflight
 		c = 0;
 		d = 0;
 		graph.clearMarks();
-		graph.DFS(true, graph.getNodeList(), visit, null, true);
+		graph.dfs(true, graph.getNodeList(), visit, null, true);
 		assertEquals(graph.size, c);
 		assertEquals(4, c);
 		assertEquals(4, d);
@@ -156,7 +156,7 @@ class TestGraph extends AbstractTest
 		c = 0;
 		d = 0;
 		graph.clearMarks();
-		graph.DFS(false, graph.getNodeList(), visit, null, true);
+		graph.dfs(false, graph.getNodeList(), visit, null, true);
 		assertEquals(graph.size, c);
 		assertEquals(4, c);
 		assertEquals(0, d);
@@ -164,13 +164,13 @@ class TestGraph extends AbstractTest
 		c = 0;
 		d = 0;
 		graph.clearMarks();
-		graph.BFS(false, graph.getNodeList(), visit);
+		graph.bfs(false, graph.getNodeList(), visit);
 		assertEquals(graph.size, c);
 		
 		c = 0;
 		d = 0;
 		graph.clearMarks();
-		graph.BFS(true, graph.getNodeList(), visit);
+		graph.bfs(true, graph.getNodeList(), visit);
 		assertEquals(graph.size, c);
 	}
 	
@@ -197,7 +197,7 @@ class TestGraph extends AbstractTest
 		}
 		
 		c = 0;
-		graph.BFS(false);
+		graph.bfs(false);
 		
 		assertEquals(graph.size, c);
 	}
@@ -262,36 +262,36 @@ class TestGraph extends AbstractTest
 		}
 		
 		result = [];
-		graph.DLBFS(0, false, node1, process);
+		graph.dlbfs(0, false, node1, process);
 		assertEquals(1, result.length);
 		assertEquals(result[0], 1);
 		
 		result = [];
-		graph.DLBFS(1, false, node1, process);
+		graph.dlbfs(1, false, node1, process);
 		assertEquals(2, result.length);
 		assertEquals(result[0], 1);
 		assertEquals(result[1], 2);
 		
 		result = [];
-		graph.DLBFS(2, false, node1, process);
+		graph.dlbfs(2, false, node1, process);
 		assertEquals(3, result.length);
 		assertEquals(result[0], 1);
 		assertEquals(result[1], 2);
 		assertEquals(result[2], 3);
 		
 		result = [];
-		graph.DLBFS(0, true, node1, process);
+		graph.dlbfs(0, true, node1, process);
 		assertEquals(1, result.length);
 		assertEquals(result[0], 1);
 		
 		result = [];
-		graph.DLBFS(1, true, node1, process);
+		graph.dlbfs(1, true, node1, process);
 		assertEquals(2, result.length);
 		assertEquals(result[0], 1);
 		assertEquals(result[1], 2);
 		
 		result = [];
-		graph.DLBFS(2, true, node1, process);
+		graph.dlbfs(2, true, node1, process);
 		assertEquals(3, result.length);
 		assertEquals(result[0], 1);
 		assertEquals(result[1], 2);
@@ -319,36 +319,36 @@ class TestGraph extends AbstractTest
 		graph.addMutualArc(node2, node3);
 		
 		result = [];
-		graph.DLBFS(0, false, node1, null);
+		graph.dlbfs(0, false, node1, null);
 		assertEquals(1, result.length);
 		assertEquals(result[0], 1);
 		
 		result = [];
-		graph.DLBFS(1, false, node1, null);
+		graph.dlbfs(1, false, node1, null);
 		assertEquals(2, result.length);
 		assertEquals(result[0], 1);
 		assertEquals(result[1], 2);
 		
 		result = [];
-		graph.DLBFS(2, false, node1, null);
+		graph.dlbfs(2, false, node1, null);
 		assertEquals(3, result.length);
 		assertEquals(result[0], 1);
 		assertEquals(result[1], 2);
 		assertEquals(result[2], 3);
 		
 		result = [];
-		graph.DLBFS(0, true, node1, null);
+		graph.dlbfs(0, true, node1, null);
 		assertEquals(1, result.length);
 		assertEquals(result[0], 1);
 		
 		result = [];
-		graph.DLBFS(1, true, node1, null);
+		graph.dlbfs(1, true, node1, null);
 		assertEquals(2, result.length);
 		assertEquals(result[0], 1);
 		assertEquals(result[1], 2);
 		
 		result = [];
-		graph.DLBFS(2, true, node1, null);
+		graph.dlbfs(2, true, node1, null);
 		assertEquals(3, result.length);
 		assertEquals(result[0], 1);
 		assertEquals(result[1], 2);
@@ -377,20 +377,20 @@ class TestGraph extends AbstractTest
 		
 		c = 0;
 		d = 0;
-		graph.DFS(false);
+		graph.dfs(false);
 		assertEquals(graph.size, c);
 		
 		c = 0;
 		d = 0;
 		graph.clearMarks();
-		graph.DFS(true);
+		graph.dfs(true);
 		assertEquals(graph.size, c);
 		
 		//recursive process preflight
 		c = 0;
 		d = 0;
 		graph.clearMarks();
-		graph.DFS(true, null, null, null, true);
+		graph.dfs(true, null, null, null, true);
 		assertEquals(graph.size, c);
 		assertEquals(4, c);
 		assertEquals(4, d);
@@ -399,7 +399,7 @@ class TestGraph extends AbstractTest
 		c = 0;
 		d = 0;
 		graph.clearMarks();
-		graph.DFS(false, graph.getNodeList(), null, true);
+		graph.dfs(false, graph.getNodeList(), null, true);
 		assertEquals(graph.size, c);
 		assertEquals(4, c);
 		assertEquals(0, d);
@@ -407,13 +407,13 @@ class TestGraph extends AbstractTest
 		c = 0;
 		d = 0;
 		graph.clearMarks();
-		graph.BFS(false);
+		graph.bfs(false);
 		assertEquals(graph.size, c);
 		
 		c = 0;
 		d = 0;
 		graph.clearMarks();
-		graph.BFS(true);
+		graph.bfs(true);
 		assertEquals(graph.size, c);
 	}
 	
@@ -617,7 +617,7 @@ class TestGraph extends AbstractTest
 		graph.addNode(node2);
 		
 		graph.addMutualArc(node1, node2);
-		graph.BFS(true, node1, f);
+		graph.bfs(true, node1, f);
 		
 		var graph = new Graph<E>();
 		var node1 = new CustomGraphNode<E>(graph, new E(this, 2));
@@ -625,7 +625,7 @@ class TestGraph extends AbstractTest
 		graph.addNode(node1);
 		graph.addNode(node2);
 		graph.addMutualArc(node1, node2);
-		graph.BFS(true, node1);
+		graph.bfs(true, node1);
 		
 		assertTrue(true);
 	}

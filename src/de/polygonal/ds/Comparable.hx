@@ -35,7 +35,7 @@ interface Comparable<T>
 	/**
 		Compares this object to `other`.
 		
-		The return value should be **>0** if this object is "bigger" than `other`, **<0** if this object is "smaller" than `other` and **0** if both are "equal".
+		The return value should be > 0 if this object is "bigger" than `other`, < 0 if this object is "smaller" than `other` and 0 if both are "equal".
 	**/
 	function compare(other:T):Int;
 }

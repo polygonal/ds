@@ -108,8 +108,9 @@ class BinaryTreeNode<T> implements Collection<T>
 		3. Traverse the right subtree of the node
 		
 		@param process a function that is invoked on every traversed node.
-		If omitted, `element.visit()` is used instead. _In this case all elements have to implement `Visitable`._
-		The first argument holds a reference to the current node, while the second argument stores custom data specified by the userData parameter (default is null).
+		If omitted, `element.visit()` is used instead.
+		<br/>_In this case all elements have to implement `Visitable`._
+		<br/>The first argument holds a reference to the current node, while the second argument stores custom data specified by the userData parameter (default is null).
 		Once `process` returns false, the traversal stops immediately and no further nodes are examined.
 		@param iterative if true, an iterative traversal is used (default traversal style is recursive).
 		@param userData custom data that is passed to every visited node via `process` or `element.visit()`. If omitted, null is used.
@@ -192,8 +193,9 @@ class BinaryTreeNode<T> implements Collection<T>
 		3. Traverse the right subtree of the node
 		
 		@param process a function that is invoked on every traversed node.
-		If omitted, `element.visit()` is used instead. _In this case all elements have to implement `Visitable`._
-		The first argument holds a reference to the current node, while the second argument stores custom data specified by the userData parameter (default is null).
+		If omitted, `element.visit()` is used instead.
+		<br/>_In this case all elements have to implement `Visitable`._
+		<br/>The first argument holds a reference to the current node, while the second argument stores custom data specified by the userData parameter (default is null).
 		Once `process` returns false, the traversal stops immediately and no further nodes are examined.
 		@param iterative if true, an iterative traversal is used (default traversal style is recursive).
 		@param userData custom data that is passed to every visited node via `process` or `element.visit()`. If omitted, null is used.
@@ -301,8 +303,9 @@ class BinaryTreeNode<T> implements Collection<T>
 		3. Visit the node
 		
 		@param process a function that is invoked on every traversed node.
-		If omitted, `element.visit()` is used instead. _In this case all elements have to implement `Visitable`._
-		The first argument holds a reference to the current node, while the second argument stores custom data specified by the userData parameter (default is null).
+		If omitted, `element.visit()` is used instead.
+		<br/>_In this case all elements have to implement `Visitable`._
+		<br/>The first argument holds a reference to the current node, while the second argument stores custom data specified by the userData parameter (default is null).
 		Once `process` returns false, the traversal stops immediately and no further nodes are examined.
 		@param iterative if true, an iterative traversal is used (default traversal style is recursive).
 		@param userData custom data that is passed to every visited node via `process` or `element.visit()`. If omitted, null is used.

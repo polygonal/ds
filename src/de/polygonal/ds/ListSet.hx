@@ -197,7 +197,8 @@ class ListSet<T> implements Set<T>
 	/**
 		Adds all elements of the set `other` to this set.
 		@param assign if true, the `copier` parameter is ignored and primitive elements are copied by value whereas objects are copied by reference.
-		If false, the `this.clone()` method is called on each element. _In this case all elements have to implement `Cloneable`._
+		If false, the `this.clone()` method is called on each element.
+		</br>_In this case all elements have to implement `Cloneable`._
 		@param copier a custom function for copying elements. Replaces `element.clone()` if `assign` is false.
 	**/
 	public function merge(set:Set<T>, ?assign:Bool, copier:T->T = null)

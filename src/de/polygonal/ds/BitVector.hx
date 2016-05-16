@@ -257,7 +257,7 @@ class BitVector implements Hashable
 	/**
 		Writes the data in this bit-vector to a byte array.
 		
-		The number of bytes equals `this.bucketSize()` * 4 and the number of bits equals `numBits`.
+		The number of bytes equals `this.bucketSize()` × 4 and the number of bits equals `numBits`.
 		@param bigEndian the byte order (default is little endian)
 	**/
 	public function toBytes(bigEndian:Bool = false):haxe.io.BytesData

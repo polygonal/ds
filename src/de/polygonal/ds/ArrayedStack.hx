@@ -86,7 +86,7 @@ class ArrayedStack<T> implements Stack<T>
 	
 	/**
 		@param initialCapacity the initial physical space for storing values.
-		Useful before inserting a large number of elements as this reduces the amount of incremental reallocation.
+		<br/>Useful before inserting a large number of elements as this reduces the amount of incremental reallocation.
 		@param source Copies all values from `source` in the range [0, `source.length` - 1] to this collection.
 	**/
 	public function new(initialCapacity:Null<Int> = 16, ?source:Array<T>)

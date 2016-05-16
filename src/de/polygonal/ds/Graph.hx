@@ -344,7 +344,8 @@ class Graph<T> implements Collection<T>
 		excluded (false) from the final traversal, which is the second pass (`preflight` parameter set to false).
 		The same applies when using a `process` function.
 		@param seed the starting point of the traversal. If omitted, the first node in the list of graph nodes is used.
-		@param process a function that is invoked for every traversed node. The parameters are:
+		@param process a function that is invoked for every traversed node.
+		<br/>The parameters are:
 		<ul>
 		<li>a reference to the visited node.</li>
 		<li>the `preflight` flag.</li>
@@ -352,11 +353,11 @@ class Graph<T> implements Collection<T>
 		</ul>
 		Once `process` returns false, the traversal stops immediately and no further nodes are examined (termination condition).
 		If omitted, `element.visit()` is used.
-		_In this case the elements of all nodes have to implement `Visitable`._
+		<br/>_In this case the elements of all nodes have to implement `Visitable`._
 		@param userData custom data that is passed to every visited node via `process` or `element.visit()`. If omitted, null is used.
 		@param recursive if true, performs a recursive traversal (default traversal style is iterative).
 	**/
-	public function DFS(preflight:Bool = false, seed:GraphNode<T> = null, process:GraphNode<T>->Bool->Dynamic->Bool = null, userData:Dynamic = null, recursive:Bool = false)
+	public function dfs(preflight:Bool = false, seed:GraphNode<T> = null, process:GraphNode<T>->Bool->Dynamic->Bool = null, userData:Dynamic = null, recursive:Bool = false)
 	{
 		if (size == 0) return;
 		
@@ -394,7 +395,7 @@ class Graph<T> implements Collection<T>
 				{
 					var v:Dynamic = seed.val;
 					if (v.visit(true, userData))
-						dFSRecursiveVisit(seed, true, userData);
+						dfsRecursiveVisit(seed, true, userData);
 				}
 				else
 				{
@@ -439,7 +440,7 @@ class Graph<T> implements Collection<T>
 				if (recursive)
 				{
 					if (process(seed, true, userData))
-						dFSRecursiveProcess(seed, process, true, userData);
+						dfsRecursiveProcess(seed, process, true, userData);
 				}
 				else
 				{
@@ -480,7 +481,7 @@ class Graph<T> implements Collection<T>
 			if (process == null)
 			{
 				if (recursive)
-					dFSRecursiveVisit(seed, false, userData);
+					dfsRecursiveVisit(seed, false, userData);
 				else
 				{
 					var v:Dynamic = null;
@@ -507,7 +508,7 @@ class Graph<T> implements Collection<T>
 			else
 			{
 				if (recursive)
-					dFSRecursiveProcess(seed, process, false, userData);
+					dfsRecursiveProcess(seed, process, false, userData);
 				else
 				{
 					while (c > 0)
@@ -544,7 +545,8 @@ class Graph<T> implements Collection<T>
 		excluded (false) from the final traversal, which is the second pass (`preflight` parameter set to false).
 		The same applies when using a `process` function.
 		@param seed the starting point of the traversal. If omitted, the first node in the list of graph nodes is used.
-		@param process a function that is invoked for every traversed node. The parameters are:
+		@param process a function that is invoked for every traversed node.
+		<br/>The parameters are:
 		<ul>
 		<li>a reference to the visited node.</li>
 		<li>the `preflight` flag.</li>
@@ -552,10 +554,10 @@ class Graph<T> implements Collection<T>
 		</ul>
 		Once `process` returns false, the traversal stops immediately and no further nodes are examined (termination condition).
 		If omitted, `element.visit()` is used.
-		_In this case the elements of all nodes have to implement `Visitable`._
+		<br/>_In this case the elements of all nodes have to implement `Visitable`._
 		@param userData custom data that is passed to every visited node via `process` or `element.visit()`. If omitted, null is used.
 	**/
-	public function BFS(preflight:Bool = false, seed:GraphNode<T> = null, process:GraphNode<T>->Bool->Dynamic->Bool = null, userData:Dynamic = null)
+	public function bfs(preflight:Bool = false, seed:GraphNode<T> = null, process:GraphNode<T>->Bool->Dynamic->Bool = null, userData:Dynamic = null)
 	{
 		if (size == 0) return;
 		
@@ -772,7 +774,7 @@ class Graph<T> implements Collection<T>
 		_In this case the elements of all nodes have to implement `Visitable`._
 		@param userData custom data that is passed to every visited node via `process` or `element.visit()`. If omitted, null is used.
 	**/
-	public function DLBFS(maxDepth:Int, preflight:Bool = false, seed:GraphNode<T> = null, process:GraphNode<T>->Bool->Dynamic->Bool = null, userData:Dynamic = null)
+	public function dlbfs(maxDepth:Int, preflight:Bool = false, seed:GraphNode<T> = null, process:GraphNode<T>->Bool->Dynamic->Bool = null, userData:Dynamic = null)
 	{
 		if (size == 0) return;
 		
@@ -1318,7 +1320,7 @@ class Graph<T> implements Collection<T>
 		return copy;
 	}
 	
-	function dFSRecursiveVisit(node:GraphNode<T>, preflight:Bool, userData:Dynamic):Bool
+	function dfsRecursiveVisit(node:GraphNode<T>, preflight:Bool, userData:Dynamic):Bool
 	{
 		node.marked = true;
 		
@@ -1343,12 +1345,12 @@ class Graph<T> implements Collection<T>
 			{
 				v = m.val;
 				if (v.visit(true, userData))
-					if (!dFSRecursiveVisit(m, true, userData))
+					if (!dfsRecursiveVisit(m, true, userData))
 						return false;
 			}
 			else
 			{
-				if (!dFSRecursiveVisit(m, false, userData))
+				if (!dfsRecursiveVisit(m, false, userData))
 					return false;
 			}
 			
@@ -1357,7 +1359,7 @@ class Graph<T> implements Collection<T>
 		return true;
 	}
 	
-	function dFSRecursiveProcess(node:GraphNode<T>, process:GraphNode<T>->Bool->Dynamic->Bool = null, preflight:Bool, userData:Dynamic):Bool
+	function dfsRecursiveProcess(node:GraphNode<T>, process:GraphNode<T>->Bool->Dynamic->Bool = null, preflight:Bool, userData:Dynamic):Bool
 	{
 		node.marked = true;
 		if (!process(node, false, userData))
@@ -1379,12 +1381,12 @@ class Graph<T> implements Collection<T>
 			if (preflight)
 			{
 				if (process(m, true, userData))
-					if (!dFSRecursiveProcess(m, process, true, userData))
+					if (!dfsRecursiveProcess(m, process, true, userData))
 						return false;
 			}
 			else
 			{
-				if (!dFSRecursiveProcess(m, process, false, userData))
+				if (!dfsRecursiveProcess(m, process, false, userData))
 						return false;
 			}
 			

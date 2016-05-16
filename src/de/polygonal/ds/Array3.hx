@@ -149,7 +149,8 @@ class Array3<T> implements Collection<T>
 		
 		The minimum size is 2x2x2.
 		
-		@param source initial values for populating this three-dimensional array (`source.length` should match `width` * `height` * `depth`).
+		@param source initial values for populating this three-dimensional array;
+		<br/>`source.length` should match `width` × `height` × `depth`.
 	**/
 	public function new(width:Int, height:Int, depth:Int, ?source:Array<T>)
 	{
@@ -573,7 +574,7 @@ class Array3<T> implements Collection<T>
 	/**
 		The number of elements in this three-dimensional array.
 		
-		Always equals `this.width` * `this.height` * `this.depth`.
+		Always equals `this.width` × `this.height` × `this.depth`.
 	**/
 	public var size(get, never):Int;
 	inline function get_size():Int

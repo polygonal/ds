@@ -454,7 +454,8 @@ class ArrayList<T> implements List<T>
 	
 	/**
 		Finds the first occurrence of `val` (by decrementing indices - from right to left) and returns the index storing `val` or -1 if `val` was not found.
-		@param from the index to start from. By default, the method starts from the last element in this dense array.
+		@param from the index to start from.
+		<br/>By default, the method starts from the last element in this dense array.
 	**/
 	public function lastIndexOf(val:T, from:Int = -1):Int
 	{
@@ -555,11 +556,12 @@ class ArrayList<T> implements List<T>
 	/**
 		Sorts the elements of this dense array using the quick sort algorithm.
 		@param cmp a comparison function. If null, the elements are compared using `element.compare()`.
-		_In this case all elements have to implement `Comparable`._
-		@param useInsertionSort if true, the dense array is sorted using the insertion sort algorithm. This is faster for nearly sorted lists.
+		<br/>_In this case all elements have to implement `Comparable`._
+		@param useInsertionSort if true, the dense array is sorted using the insertion sort algorithm.
+		<br/>This is faster for nearly sorted lists.
 		@param first sort start index. The default value is 0.
 		@param count the number of elements to sort (range: [`first`, `first` + `count`]).
-		If omitted, `count` is set to the remaining elements (`this.size` - `first`).
+		<br/>If omitted, `count` is set to the remaining elements (`this.size` - `first`).
 	**/
 	public function sort(?cmp:T->T->Int, useInsertionSort:Bool = false, first:Int = 0, count:Int = -1)
 	{
