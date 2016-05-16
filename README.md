@@ -21,7 +21,7 @@ Formerly known as "AS3 Data Structures For Game Developers", the package contain
 ds supports the following Haxe targets: Flash, JavaScript, C++, Neko, Php, Python
 
 The ActionScript 3.0 build is no longer maintained.
-You can download the [latest release](http://polygonal.github.com/ds/swc/polygonal-ds-latest.zip) or compile yourself using the sample script found in tools/swc/.
+You can download the latest release [here](http://polygonal.github.com/ds/swc/polygonal-ds-latest.zip) (v1.39) or compile yourself using the sample script found in tools/swc/.
 
 ## Conditional Compilation Flags
 `-D generic`
