@@ -133,7 +133,7 @@ class TreeNode<T> implements Collection<T>
 		
 		A root node has no parent node.
 	**/
-	public inline function isRoot():Bool
+	@:extern public inline function isRoot():Bool
 	{
 		return parent == null;
 	}
@@ -143,7 +143,7 @@ class TreeNode<T> implements Collection<T>
 		
 		A leaf node has no children.
 	**/
-	public inline function isLeaf():Bool
+	@:extern public inline function isLeaf():Bool
 	{
 		return children == null;
 	}
@@ -153,7 +153,7 @@ class TreeNode<T> implements Collection<T>
 		
 		A child node has a parent node.
 	**/
-	public inline function isChild():Bool
+	@:extern public inline function isChild():Bool
 	{
 		return valid(parent);
 	}
@@ -189,7 +189,7 @@ class TreeNode<T> implements Collection<T>
 	/**
 		Returns true if this node has a parent node.
 	**/
-	public inline function hasParent():Bool
+	@:extern public inline function hasParent():Bool
 	{
 		return isChild();
 	}
@@ -197,7 +197,7 @@ class TreeNode<T> implements Collection<T>
 	/**
 		Returns true if this node has at least one child node.
 	**/
-	public inline function hasChildren():Bool
+	@:extern public inline function hasChildren():Bool
 	{
 		return valid(children);
 	}
@@ -216,7 +216,7 @@ class TreeNode<T> implements Collection<T>
 	/**
 		Returns true if this node has a sibling to its right (`this.next` != null).
 	**/
-	public inline function hasNextSibling():Bool
+	@:extern public inline function hasNextSibling():Bool
 	{
 		return valid(next);
 	}
@@ -224,7 +224,7 @@ class TreeNode<T> implements Collection<T>
 	/**
 		Returns true if this node has a sibling to its left (`this.prev` != null).
 	**/
-	public inline function hasPrevSibling():Bool
+	@:extern public inline function hasPrevSibling():Bool
 	{
 		return valid(prev);
 	}
@@ -232,7 +232,7 @@ class TreeNode<T> implements Collection<T>
 	/**
 		Returns the leftmost sibling of this node.
 	**/
-	public inline function getFirstSibling():TreeNode<T>
+	@:extern public inline function getFirstSibling():TreeNode<T>
 	{
 		return parent != null ? parent.children : null;
 	}
@@ -240,7 +240,7 @@ class TreeNode<T> implements Collection<T>
 	/**
 		Returns the rightmost sibling of this node.
 	**/
-	public inline function getLastSibling():TreeNode<T>
+	@:extern public inline function getLastSibling():TreeNode<T>
 	{
 		return parent != null ? parent.mTail : null;
 	}
@@ -416,7 +416,7 @@ class TreeNode<T> implements Collection<T>
 	/**
 		The total number of child nodes (non-recursive).
 	**/
-	public inline function numChildren():Int
+	@:extern public inline function numChildren():Int
 	{
 		return mExtraInfo >>> 16;
 	}
@@ -518,7 +518,7 @@ class TreeNode<T> implements Collection<T>
 	/**
 		Returns the leftmost child of this node or null if this node is a leaf node.
 	**/
-	public inline function getFirstChild():TreeNode<T>
+	@:extern public inline function getFirstChild():TreeNode<T>
 	{
 		return children;
 	}
@@ -526,7 +526,7 @@ class TreeNode<T> implements Collection<T>
 	/**
 		Returns the rightmost child of this node or null if this node is a leaf node.
 	**/
-	public inline function getLastChild():TreeNode<T>
+	@:extern public inline function getLastChild():TreeNode<T>
 	{
 		return mTail;
 	}
@@ -1357,7 +1357,7 @@ class TreeNode<T> implements Collection<T>
 	/**
 		Creates and returns a `TreeBuilder` object pointing to this node.
 	**/
-	public function getBuilder():TreeBuilder<T>
+	@:extern public inline function getBuilder():TreeBuilder<T>
 	{
 		return new TreeBuilder<T>(this);
 	}
@@ -1777,7 +1777,7 @@ class TreeNode<T> implements Collection<T>
 		return h;
 	}
 	
-	inline function valid(node:TreeNode<T>):Bool
+	@:extern inline function valid(node:TreeNode<T>):Bool
 	{
 		return node != null;
 	}
