@@ -209,18 +209,18 @@ class Main
 		
 		function dox()
 		{
-			rmdir("./output");
+			rmdir("../../api");
 			Sys.command("haxelib",
 				[
 					"run", "dox",
-					"-o", "output",
+					"-o", "../../api",
 					"-i", "xml",
 					"--title", "polygonal ds",
 					"-in", "de\\.polygonal\\.ds",
 					"-in", "Math",
 					"-in", "Array",
 					"-ex", "flash.utils.ByteArray",
-					"-res", "C:/Dev/polygonal/ds/tools/doc/res"
+					"-res", "./res"
 				]);
 			rmdir("./src");
 			rmdir("./xml");

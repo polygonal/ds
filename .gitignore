@@ -1,6 +1,6 @@
 artwork/**
 bin/**
-doc/**
+api/**
 dump/**
 obj/**
 sandbox/**
