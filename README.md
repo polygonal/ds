@@ -2,12 +2,11 @@
 
 ![ds logo](http://polygonal.github.com/ds/logo.png)
 
-Formerly known as "_AS3 Data Structures For Game Developers (AS3DS)_", the package contains parametrized classes that allow programmers to easily implement standard data structures like linked lists, queues, stacks or multi-dimensional arrays. The result is somewhere in between the C++ STL (Standard Template Library) and the Java Collection framework. The library is highly optimized and uses advanced Haxe features like inlining or code generation for parametrized classes through the haxe.rtti.Generics interface.
+Formerly known as "AS3 Data Structures For Game Developers", the package contains parametrized classes that allow programmers to easily implement standard data structures like linked lists, queues, stacks or multi-dimensional arrays. The result is somewhere in between the C++ STL (Standard Template Library) and the Java Collection framework.
 
 ## Documentation
 -    Slides [Introduction to ds - Data Structures For Games](http://polygonal.github.com/ds/slides/introduction_to_ds.pdf)
--    API [http://www.polygonal.de/dev/ds/doc](http://polygonal.github.com/ds/index.html)
--    SWC library v1.39 for AS3 (no longer maintained): [polygonal-ds-latest.zip](http://www.polygonal.de/dev/ds/swc/polygonal-ds-latest.zip)
+-    API [http://polygonal.github.io/ds/index.html](http://polygonal.github.com/ds/index.html)
 
 ## Articles
 
@@ -19,12 +18,15 @@ Formerly known as "_AS3 Data Structures For Game Developers (AS3DS)_", the packa
 
 ## Cross-Platform Support
 
-ds supports the following targets: Flash, JavaScript, C++, Neko, Php, Python
+ds supports the following Haxe targets: Flash, JavaScript, C++, Neko, Php, Python
+
+The ActionScript 3.0 build is no longer maintained.
+You can download the [latest release](http://polygonal.github.com/ds/swc/polygonal-ds-latest.zip) or compile yourself using the sample script found in tools/swc/.
 
 ## Conditional Compilation Flags
 `-D generic`
 
-Enables generic classes (adds @:generic meta). Extra performance for static typed platforms (currently Flash and C++ only).
+Enables generic classes (adds @:generic meta). Nice performance boost for static typed platforms (currently Flash and C++ only).
 
 `-D alchemy`
 
