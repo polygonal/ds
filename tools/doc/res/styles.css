@@ -139,11 +139,6 @@ code .identifier, code.type {
   font-weight: bold;
 }
 
-code.ref {
-    background: none;
-    box-shadow: 0 0 15px rgb(240, 240, 240);
-}
-
 /* code { background:#FDF6E3; color:#002b36; tab-size:4; } [> light <] */
 code a { text-decoration:none; }
 code a:hover { text-decoration:underline; }
