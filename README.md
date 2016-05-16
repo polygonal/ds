@@ -26,7 +26,9 @@ You can download the latest release [here](http://polygonal.github.com/ds/swc/po
 ## Conditional Compilation Flags
 `-D generic`
 
-Enables generic classes (adds @:generic meta). Nice performance boost for static typed platforms (currently Flash and C++ only).
+Enables generic classes (adds @:generic meta).
+
+Nice performance boost for static typed platforms (currently Flash and C++ only).
 
 `-D alchemy`
 
