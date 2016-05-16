@@ -227,5 +227,18 @@ class Main
 			FileSystem.deleteDirectory("./src");
 			FileSystem.deleteDirectory("./xml");
 		}();
+		
+		function patchHtml()
+		{
+			for (i in scan("./output", []))
+			{
+				if (i.indexOf("Collection.html") > -1)
+				{
+					var s = File.getContent(i);
+					s = ~/<div class="field "><a name="get_size">.*?<\/div><\/div>/.replace(s, "");
+					File.saveContent(i, s);
+				}
+			}
+		}();
 	}
 }

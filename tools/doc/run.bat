@@ -9,6 +9,7 @@ if exist haxe.txt (
 	set /p HAXEPATH=<haxe.txt
 )
 
+haxelib install dox
 haxe -x Main
 if errorlevel 1 (
 	echo ERROR
