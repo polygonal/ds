@@ -72,9 +72,7 @@ class UnitTest extends TestRunner
 		add(new TestPriorityQueue());
 		add(new TestSll());
 		add(new TestTree());
-		
-		//add(new pooling.TestObjectPool());
-		//add(new pooling.TestDynamicObjectPool());
+		add(new TestObjectPool());
 		
 		#if (flash && alchemy)
 		add(new mem.TestMemoryManager());
