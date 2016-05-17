@@ -1,5 +1,5 @@
-src/
-xml/
-output/
+src/**
+xml/**
+output/**
 haxe.txt
 main.n

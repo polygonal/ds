@@ -39,4 +39,4 @@ neko %CWD%\main.n ^
 
 cd %CWD%
 del main.n
-pause
+sleep 3

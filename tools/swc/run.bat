@@ -11,3 +11,5 @@ haxe compile.hxml
 
 del Import.n
 del Includes.hx
+echo done
+sleep 3

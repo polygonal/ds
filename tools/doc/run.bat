@@ -17,5 +17,6 @@ if errorlevel 1 (
 	exit
 )
 
+echo done
 del Main.n
 sleep 3
