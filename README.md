@@ -1,5 +1,3 @@
-# Data Structures For Games (ds)
-
 <p align="center">
   <img src="http://polygonal.github.com/ds/logo.png">
 </p>
