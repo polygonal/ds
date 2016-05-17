@@ -105,6 +105,9 @@ class ArrayTools
 			assert(dstPos < dst.length, "dstPos out of range");
 			assert(srcPos + n <= src.length && dstPos + n <= dst.length, "n out of range");
 			
+			#if cpp
+			cpp.NativeArray.blit(dst, dstPos, src, srcPos, n);
+			#else
 			if (src == dst)
 			{
 				if (srcPos < dstPos)
@@ -152,6 +155,7 @@ class ArrayTools
 					for (i in 0...n) dst[dstPos + i] = src[srcPos + i];
 				}
 			}
+			#end
 		}
 	}
 	
