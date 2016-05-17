@@ -57,7 +57,9 @@ class Zip
 			{
 				function createZipEntry(resource:Resource)
 				{
-					var bytes = File.read(resource.filePath, true).readAll();
+					var fin = File.read(resource.filePath, true);
+					var bytes = fin.readAll();
+					fin.close();
 					return
 					{
 						fileName: resource.fileName,

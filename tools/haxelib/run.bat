@@ -5,29 +5,33 @@ if not exist ..\..\haxelib.json (
 	exit
 )
 
-:create temporary output folders
+::create temporary output folders
 rmdir tmp /S /Q
 mkdir tmp
 mkdir tmp\git
 mkdir tmp\zip
 
-:glone git repository
+::glone git repository
 git clone -b master https://github.com/polygonal/ds.git tmp/git
 
-:make changes
-haxe -neko changes.n -main Changes
-neko changes.n tmp/git/README.md tmp/zip/CHANGES
-del changes.n
+::make changes
+haxe -neko main.n -main Changes
+neko main.n tmp/git/README.md ./tmp/zip/CHANGES
+if errorlevel 1 (
+	echo ERROR
+	pause
+	exit
+)
 
-:copy git files
+::copy git files
 xcopy tmp\git tmp\zip /E /exclude:exclude.txt
 
-:make haxelib
-haxe -neko zip.n -main Zip -lib format
-neko zip.n tmp/zip polygonal-ds.zip
-del zip.n
+::make haxelib
+haxe -neko main.n -main Zip -lib format
+neko main.n tmp/zip polygonal-ds.zip
 
-:clean up
+::clean
 rmdir tmp /S /Q
+del main.n
 
-pause
+sleep 3
