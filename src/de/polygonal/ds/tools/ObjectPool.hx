@@ -72,7 +72,7 @@ class ObjectPool<T>
 		mPool = NativeArrayTools.alloc(mCapacity);
 		
 		#if debug
-		mSet = new ListSet();
+		mSet = new ListSet<T>();
 		#end
 	}
 	
