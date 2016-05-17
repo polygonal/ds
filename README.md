@@ -1,6 +1,11 @@
 # Data Structures For Games (ds)
 
-<div style="text-align:center"><img src ="http://polygonal.github.com/ds/logo.png" /></div>
+![ds logo](http://polygonal.github.com/ds/logo.png)
+
+<p align="center">
+  <img src="http://polygonal.github.com/ds/logo.png">
+</p>
+
 Formerly known as "AS3 Data Structures For Game Developers", the package contains parametrized classes that allow programmers to easily implement standard data structures like linked lists, queues, stacks or multi-dimensional arrays. The result is somewhere in between the C++ STL (Standard Template Library) and the Java Collection framework.
 
 ## Documentation
@@ -43,8 +48,9 @@ This installs the polygonal-ds library hosted on [lib.haxe.org](http://lib.haxe.
 ## Changelog
 
 ### 2.0.0-beta
-_Requires Haxe >= 3.3.0_
+_supports Haxe Compiler 3.3.0_
 
+ * modified: replaced pooling package with lightweight de.polygonal.ds.tools.ObjectPool class
  * modified: BitVector: use getters for size/capacity
  * modified: renamed Graph methods (DFS, BFS, DLBFS -> dfs, bfs, dlbfs);
  * modified: added Set.unset() method
