@@ -1,7 +1,5 @@
 # Data Structures For Games (ds)
 
-![ds logo](http://polygonal.github.com/ds/logo.png)
-
 <p align="center">
   <img src="http://polygonal.github.com/ds/logo.png">
 </p>
