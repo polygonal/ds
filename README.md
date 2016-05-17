@@ -44,11 +44,13 @@ This installs the polygonal-ds library hosted on [lib.haxe.org](http://lib.haxe.
 ## Changelog
 
 ### 2.0.0-beta
-_supports Haxe Compiler 3.3.0_
+_requires Haxe Compiler 3.3.0-rc1_
 
  * modified: replaced pooling package with lightweight de.polygonal.ds.tools.ObjectPool class
+ * modified: removed some Bits methods (better suited for abstract), move Bits class to tools package
  * modified: BitVector: use getters for size/capacity
- * modified: renamed Graph methods (DFS, BFS, DLBFS -> dfs, bfs, dlbfs);
+ * modified: better method naming: don't use abbreviations
+ * modified: renamed Graph methods (DFS, BFS, DLBFS => dfs, bfs, dlbfs)
  * modified: added Set.unset() method
  * modified: remove .swc files - no longer maintained (use tools/swc/run.bat to create swc libs on your own)
  * added: List\<T\> interface (implemented by ArrayList, Sll, Dll)
