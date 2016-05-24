@@ -43,7 +43,7 @@ This installs the polygonal-ds library hosted on [lib.haxe.org](http://lib.haxe.
 
 ## Changelog
 
-### 2.0.0-beta
+### 2.0.0-beta (released 2016-05-24)
 _requires Haxe Compiler 3.3.0-rc1_
 
  * modified: replaced pooling package with lightweight de.polygonal.ds.tools.ObjectPool class
