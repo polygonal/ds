@@ -43,9 +43,9 @@ class GraphArc<T> implements Hashable
 	public var node:GraphNode<T>;
 	
 	/**
-		The weight (or cost) of this arc.
+		Custom data associated with this arc.
 	**/
-	public var cost:Float;
+	public var userData:Float;
 	
 	/**
 		A reference to the next graph arc in the list.
@@ -68,12 +68,12 @@ class GraphArc<T> implements Hashable
 	inline function get_val():T return node.val;
 	
 	/**
-		Creates a graph arc pointing to `node` with a weight of `cost` .
+		Creates a graph arc pointing to `node`.
 	**/
-	public function new(node:GraphNode<T>, cost:Float)
+	public function new(node:GraphNode<T>, ?userData:Dynamic)
 	{
 		this.node = node;
-		this.cost = cost;
+		this.userData = userData;
 		next = null;
 		prev = null;
 	}

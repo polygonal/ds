@@ -186,11 +186,12 @@ class Graph<T> implements Collection<T>
 	}
 	
 	/**
-		Creates an uni-directional link between two nodes with a weight of `cost` (default is 1.0).
+		Creates an uni-directional link between two nodes.
+		This creates an arc pointing from `source` to `target`.
 		
-		This creates an arc pointing from the `source` node to the `target` node.
+		The newly created arc can be accessed via `source.arcList`.
 	**/
-	public function addSingleArc(source:GraphNode<T>, target:GraphNode<T>, cost:Float = 1.)
+	public function addSingleArc(source:GraphNode<T>, target:GraphNode<T>)
 	{
 		assert(source != null, "source is null");
 		assert(target != null, "target is null");
@@ -207,7 +208,7 @@ class Graph<T> implements Collection<T>
 				{
 					if (walker == target)
 					{
-						sourceNode.addArc(walker, cost);
+						sourceNode.addArc(walker);
 						break;
 					}
 					walker = walker.next;
@@ -219,11 +220,12 @@ class Graph<T> implements Collection<T>
 	}
 	
 	/**
-		Creates a bi-directional link between two nodes with a weight of `cost` (default is 1.0).
+		Creates an uni-directional link between two nodes.
+		This creates two arcs; an arc pointing from `source` to `target` and vv.
 		
-		This creates two arcs - an arc that points from the `source` node to the `target` node and vice versa.
+		The newly created arcs can be accessed via `source.arcList` (pointing to `target`) and `target.arcList` (pointing to `source`).
 	**/
-	public function addMutualArc(source:GraphNode<T>, target:GraphNode<T>, cost:Float = 1.)
+	public function addMutualArc(source:GraphNode<T>, target:GraphNode<T>)
 	{
 		assert(source != null, "source is null");
 		assert(target != null, "target is null");
@@ -242,11 +244,10 @@ class Graph<T> implements Collection<T>
 				{
 					if (walker == target)
 					{
-						sourceNode.addArc(walker, cost);
-						walker.addArc(sourceNode, cost);
+						sourceNode.addArc(walker);
+						walker.addArc(sourceNode);
 						break;
 					}
-					
 					walker = walker.next;
 				}
 				break;
@@ -1307,7 +1308,7 @@ class Graph<T> implements Collection<T>
 			a = n.arcList;
 			while (a != null)
 			{
-				m.addArc(a.node, a.cost);
+				m.addArc(a.node, a.userData);
 				a = a.next;
 			}
 			n = n.next;

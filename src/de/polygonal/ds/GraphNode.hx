@@ -168,18 +168,18 @@ class GraphNode<T> implements Hashable
 	
 	/**
 		Adds an arc pointing from this node to the specified `target` node.
-		@param cost defines how "hard" it is to get from one node to the other. Default is 1.0.
+		@param userData custom data stored in the arc (optional). For example `userData` could store a number defining how "hard" it is to get from one node to another.
 	**/
-	public function addArc(target:GraphNode<T>, cost:Float = 1)
+	public function addArc(target:GraphNode<T>, userData:Dynamic = 1)
 	{
 		assert(target != this, "target is null");
 		assert(getArc(target) == null, "arc to target already exists");
 		
 		var arc =
 		if (mGraph.borrowArc != null)
-			mGraph.borrowArc(target, cost);
+			mGraph.borrowArc(target, userData);
 		else
-			new GraphArc<T>(target, cost);
+			new GraphArc<T>(target, userData);
 		arc.next = arcList;
 		if (arcList != null) arcList.prev = arc;
 		arcList = arc;
