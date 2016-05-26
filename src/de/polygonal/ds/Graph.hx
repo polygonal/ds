@@ -993,6 +993,99 @@ class Graph<T> implements Collection<T>
 	}
 	
 	/**
+		Serializes the graph, outputting two arrays: the first one stores all node values, while the second one
+		contains a list of indices describing how the nodes are connected via arcs.
+		
+		Example:
+			class Element {
+			    public var name:String;
+			    public function new(name:String) {
+			        this.name = name;
+			    }
+			}
+			
+			...
+			
+			var graph = new Graph<Element>();
+			var a = graph.createNode(new Element("a"));
+			var b = graph.createNode(new Element("b"));
+			var c = graph.createNode(new Element("c"));
+			graph.addNode(a);
+			graph.addNode(b);
+			graph.addNode(c);
+			graph.addMutualArc(a, b);
+			graph.addMutualArc(b, c);
+			graph.addMutualArc(a, c);
+			
+			//serialize
+			var data = graph.serialize(function(nodeValue:Element) return nodeValue.name); //only store name property
+			trace(data.arcs); //[0,2,0,1,1,0,1,2,2,0,2,1]
+			trace(data.vals); //["c","b","a"]
+			
+			//unserialize
+			var graph = new Graph<Element>();
+			graph.unserialize(data, function(val:String) return new Element(val));
+	**/
+	public function serialize(getVal:T->Dynamic):{arcs:Array<Int>, vals:Array<Dynamic>}
+	{
+		var vals = [];
+		var arcs = [];
+		var node = getNodeList(), arc, i, j;
+		
+		var indexLut = new haxe.ds.IntMap<Int>();
+		
+		var i = 0;
+		while (node != null)
+		{
+			indexLut.set(node.key, i++);
+			node = node.next;
+		}
+		
+		i = 0;
+		node = getNodeList();
+		while (node != null)
+		{
+			vals[i] = getVal(node.val);
+			arc = node.arcList;
+			while (arc != null)
+			{
+				arcs.push(i);
+				arcs.push(indexLut.get(arc.node.key));
+				arc = arc.next;
+			}
+			node = node.next;
+			i++;
+		}
+		return {arcs: arcs, vals: vals};
+	}
+	
+	/**
+		See `this.serialize`.
+	**/
+	public function unserialize(data:{arcs:Array<Int>, vals:Array<Dynamic>}, setVal:Dynamic->T)
+	{
+		clear(true);
+		
+		var nodes = [];
+		var vals = data.vals;
+		var i = 0;
+		var k = vals.length;
+		while (i < k) nodes.push(createNode(setVal(vals[i++])));
+		
+		i = k;
+		while (i > 0) addNode(nodes[--i]);
+		
+		var arcs = data.arcs;
+		i = arcs.length;
+		while (i > 0)
+		{
+			var target = arcs[--i];
+			var source = arcs[--i];
+			addSingleArc(nodes[source], nodes[target]);
+		}
+	}
+	
+	/**
 		Prints out all elements.
 	**/
 	public function toString():String

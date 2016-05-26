@@ -630,6 +630,58 @@ class TestGraph extends AbstractTest
 		assertTrue(true);
 	}
 	
+	function testSerialize()
+	{
+		var graph = new Graph<E>();
+		var nodeA = graph.createNode(new E(this, 10));
+		var nodeB = graph.createNode(new E(this, 20));
+		var nodeC = graph.createNode(new E(this, 30));
+		graph.addNode(nodeA);
+		graph.addNode(nodeB);
+		graph.addNode(nodeC);
+		graph.addMutualArc(nodeA, nodeB);
+		graph.addMutualArc(nodeB, nodeC);
+		graph.addMutualArc(nodeA, nodeC);
+		
+		var vals = [];
+		var n = graph.getNodeList();
+		while (n != null)
+		{
+			vals.push(n.val.id);
+			n = n.next;
+		}
+		
+		var data = graph.serialize(function(x:E) return x.id);
+		
+		var arcs = [0,2,0,1,1,0,1,2,2,0,2,1];
+		for (i in 0...vals.length) assertEquals(vals[i], data.vals[i]);
+		for (i in 0...arcs.length) assertEquals(arcs[i], data.arcs[i]);
+		
+		graph.unserialize(data, function(value:Int) return new E(this, value));
+		
+		assertEquals(3, graph.size);
+		
+		var i = 0;
+		var l = graph.getNodeList();
+		while (l != null)
+		{
+			assertEquals(vals[i++], l.val.id);
+			l = l.next;
+		}
+		
+		var nodes = [];
+		var n = graph.getNodeList();
+		while (n != null)
+		{
+			nodes.push(n);
+			n = n.next;
+		}
+		
+		assertTrue(nodes[0].isMutuallyConnected(nodes[1]));
+		assertTrue(nodes[1].isMutuallyConnected(nodes[2]));
+		assertTrue(nodes[0].isMutuallyConnected(nodes[2]));
+	}
+	
 	function process(node:GraphNode<E>, preflight:Bool, userData:Dynamic):Bool
 	{
 		return true;
