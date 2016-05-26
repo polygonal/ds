@@ -47,6 +47,7 @@ This installs the polygonal-ds library hosted on [lib.haxe.org](http://lib.haxe.
 _requires Haxe Compiler 3.3.0-rc1_
 
  * modified: replaced GraphArc.cost with a more versatile GraphArc.userData field
+ * added: Graph.serialize() and Graph.unserialize()
 
 ### 2.0.0-beta (released 2016-05-24)
 _requires Haxe Compiler 3.3.0-rc1_
