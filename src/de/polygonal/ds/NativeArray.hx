@@ -33,7 +33,9 @@ neko.NativeArray<T>;
 #elseif cs
 cs.NativeArray<T>;
 #elseif java
-java.NativeArray<T>;
+Array<T>;
+//TODO does not compile
+//java.NativeArray<T>;
 #else
 Array<T>;
 #end
