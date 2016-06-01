@@ -44,6 +44,32 @@ class UnitTest extends TestRunner
 		
 		var success = true;
 		
+		#if flash
+			#if alchemy
+			add(new mem.TestMemoryManager());
+			success = success && run();
+			cases = new List<haxe.unit.TestCase>();
+			de.polygonal.ds.mem.MemoryManager.free();
+			de.polygonal.ds.mem.MemoryManager.RESERVE_BYTES = 1024 * 1024 * 20;
+			de.polygonal.ds.mem.MemoryManager.BLOCK_SIZE_BYTES = 1024 * 512;
+			#end
+			
+			add(new mem.TestByteMemory());
+			add(new mem.TestBitMemory());
+			add(new mem.TestShortMemory());
+			add(new mem.TestFloatMemory());
+			add(new mem.TestDoubleMemory());
+			add(new mem.TestIntMemory());
+			success = success && run();
+			cases = new List<haxe.unit.TestCase>();
+			
+			#if alchemy
+			de.polygonal.ds.mem.MemoryManager.free();
+			de.polygonal.ds.mem.MemoryManager.RESERVE_BYTES = 1024 * 1024 * 20;
+			de.polygonal.ds.mem.MemoryManager.BLOCK_SIZE_BYTES = 1024 * 512;
+			#end
+		#end
+		
 		add(new TestArray2());
 		add(new TestArray3());
 		add(new TestArrayedDeque());
@@ -74,24 +100,6 @@ class UnitTest extends TestRunner
 		add(new TestTree());
 		add(new TestObjectPool());
 		add(new TestCompare());
-		
-		#if (flash && alchemy)
-		add(new mem.TestMemoryManager());
-		run();
-		this.cases = new List<haxe.unit.TestCase>();
-		de.polygonal.ds.mem.MemoryManager.free();
-		de.polygonal.ds.mem.MemoryManager.RESERVE_BYTES = 1024 * 1024 * 20;
-		de.polygonal.ds.mem.MemoryManager.BLOCK_SIZE_BYTES = 1024 * 512;
-		#end
-		
-		#if flash
-		add(new mem.TestByteMemory());
-		add(new mem.TestBitMemory());
-		add(new mem.TestShortMemory());
-		add(new mem.TestFloatMemory());
-		add(new mem.TestDoubleMemory());
-		add(new mem.TestIntMemory());
-		#end
 		
 		success = success && run();
 		
