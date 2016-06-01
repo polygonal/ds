@@ -1,6 +1,6 @@
-﻿import de.polygonal.ds.Compare;
-import de.polygonal.ds.ArrayList;
+﻿import de.polygonal.ds.ArrayList;
 import de.polygonal.ds.ListSet;
+import de.polygonal.ds.tools.Compare;
 
 import de.polygonal.ds.tools.NativeArrayTools;
 
@@ -651,7 +651,7 @@ class TestArrayList extends AbstractTest
 		d.pushBack(30);
 		d.pushBack(20);
 		d.pushBack(30);
-		d.sort(Compare.cmpNumberFall, true, 0, 4);
+		d.sort(Compare.cmpIntFall, true, 0, 4);
 		
 		var sorted = [3, 2, 1, 0, 30, 20, 30];
 		for (i in 0...d.size) assertEquals(sorted[i], d.get(i));
@@ -664,28 +664,28 @@ class TestArrayList extends AbstractTest
 		assertEquals(30, d.get(6));
 		
 		var d = new ArrayList([9, 8, 1, 2, 3, 8, 9]);
-		d.sort(Compare.cmpNumberFall, true, 2, 3);
+		d.sort(Compare.cmpIntFall, true, 2, 3);
 		
 		var sorted = new ArrayList([9, 8, 3, 2, 1, 8, 9]);
 		for (i in 0...d.size) assertEquals(sorted.get(i), d.get(i));
 		
 		var d = new ArrayList([9, 8, 1, 2, 3, 8, 9]);
-		d.sort(Compare.cmpNumberFall, false, 2, 3);
+		d.sort(Compare.cmpIntFall, false, 2, 3);
 		var sorted = [9, 8, 3, 2, 1, 8, 9];
 		for (i in 0...d.size) assertEquals(sorted[i], d.get(i));
 		
 		var d = new ArrayList([1, 2, 3]);
-		d.sort(Compare.cmpNumberFall, true, 2, -1);
+		d.sort(Compare.cmpIntFall, true, 2, -1);
 		var sorted = [1, 2, 3];
 		for (i in 0...d.size) assertEquals(sorted[i], d.get(i));
 		
 		var d = new ArrayList([1, 2, 3]);
-		d.sort(Compare.cmpNumberFall, false, 1, 2);
+		d.sort(Compare.cmpIntFall, false, 1, 2);
 		var sorted = [1, 3, 2];
 		for (i in 0...d.size) assertEquals(sorted[i], d.get(i));
 		
 		var d = new ArrayList([1, 2, 3]);
-		d.sort(Compare.cmpNumberFall, true, 1, 2);
+		d.sort(Compare.cmpIntFall, true, 1, 2);
 		var sorted = [1, 3, 2];
 		for (i in 0...d.size) assertEquals(sorted[i], d.get(i));
 	}
@@ -694,11 +694,11 @@ class TestArrayList extends AbstractTest
 	{
 		//1
 		var v = new ArrayList([4]);
-		v.sort(Compare.cmpNumberRise);
+		v.sort(Compare.cmpIntRise);
 		assertEquals(4, v.front());
 		
 		var v = new ArrayList([4]);
-		v.sort(Compare.cmpNumberRise, true);
+		v.sort(Compare.cmpIntRise, true);
 		assertEquals(4, v.front());
 		
 		var v = new ArrayList([new E(4)]);
@@ -711,22 +711,22 @@ class TestArrayList extends AbstractTest
 		
 		//2
 		var v = new ArrayList([4, 2]);
-		v.sort(Compare.cmpNumberRise);
+		v.sort(Compare.cmpIntRise);
 		assertEquals(2, v.front());
 		assertEquals(4, v.back());
 		
 		var v = new ArrayList([4, 2]);
-		v.sort(Compare.cmpNumberFall);
+		v.sort(Compare.cmpIntFall);
 		assertEquals(4, v.front());
 		assertEquals(2, v.back());
 		
 		var v = new ArrayList([4, 2]);
-		v.sort(Compare.cmpNumberRise, true);
+		v.sort(Compare.cmpIntRise, true);
 		assertEquals(2, v.front());
 		assertEquals(4, v.back());
 		
 		var v = new ArrayList([4, 2]);
-		v.sort(Compare.cmpNumberFall, true);
+		v.sort(Compare.cmpIntFall, true);
 		assertEquals(4, v.front());
 		assertEquals(2, v.back());
 		
@@ -737,12 +737,12 @@ class TestArrayList extends AbstractTest
 		
 		//n
 		var v = new ArrayList([4, 1, 7, 3, 2]);
-		v.sort(Compare.cmpNumberRise);
+		v.sort(Compare.cmpIntRise);
 		assertEquals(1, v.front());
 		var j = 0; for (i in v) { assertTrue(i > j); j = i; }
 		
 		var v = new ArrayList([4, 1, 7, 3, 2]);
-		v.sort(Compare.cmpNumberFall);
+		v.sort(Compare.cmpIntFall);
 		assertEquals(7, v.front());
 		var j = 8; for (i in v) { assertTrue(i < j); j = i; }
 		

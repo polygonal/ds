@@ -73,6 +73,7 @@ class UnitTest extends TestRunner
 		add(new TestSll());
 		add(new TestTree());
 		add(new TestObjectPool());
+		add(new TestCompare());
 		
 		#if (flash && alchemy)
 		add(new mem.TestMemoryManager());

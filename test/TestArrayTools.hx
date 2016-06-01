@@ -1,5 +1,5 @@
 ﻿import de.polygonal.ds.tools.ArrayTools;
-import de.polygonal.ds.Compare;
+import de.polygonal.ds.tools.Compare;
 import haxe.ds.IntMap;
 
 class TestArrayTools extends AbstractTest
@@ -7,13 +7,13 @@ class TestArrayTools extends AbstractTest
 	function testSortRange()
 	{
 		var a = [9., 8, 7, 1, 2, 3, 7, 8, 9];
-		ArrayTools.sortRange(a, Compare.cmpNumberFall, false, 3, 3);
+		ArrayTools.sortRange(a, Compare.cmpFloatFall, false, 3, 3);
 		var b = [9., 8, 7, 3, 2, 1, 7, 8, 9];
 		assertEquals(a.length, b.length);
 		for (i in 0...a.length) assertEquals(b[i], a[i]);
 		
 		var a = [9., 8, 7, 1, 2, 3, 7, 8, 9];
-		ArrayTools.sortRange(a, Compare.cmpNumberFall, true, 3, 3);
+		ArrayTools.sortRange(a, Compare.cmpFloatFall, true, 3, 3);
 		var b = [9., 8, 7, 3, 2, 1, 7, 8, 9];
 		assertEquals(a.length, b.length);
 		for (i in 0...a.length) assertEquals(b[i], a[i]);

@@ -1,4 +1,4 @@
-﻿import de.polygonal.ds.Compare;
+﻿import de.polygonal.ds.tools.Compare;
 import de.polygonal.ds.TreeBuilder;
 import de.polygonal.ds.TreeNode;
 import de.polygonal.ds.tools.TreeTools;
@@ -598,7 +598,7 @@ class TestTree extends AbstractTest
 		var data:Array<Int> = [2, 3, 4, 9, 5, 1, 7, 6, 8, 0];
 		var builder = root.getBuilder();
 		for (i in 0...10) builder.appendChild(i);
-		root.sort(Compare.cmpNumberRise, false);
+		root.sort(Compare.cmpIntRise, false);
 		
 		var c = 10;
 		var node = root.getLastChild();

@@ -1,10 +1,10 @@
 ﻿import de.polygonal.ds.Cloneable;
 import de.polygonal.ds.Collection;
-import de.polygonal.ds.Compare;
 import de.polygonal.ds.Dll;
 import de.polygonal.ds.DllNode;
 import de.polygonal.ds.ListSet;
 import de.polygonal.ds.Set;
+import de.polygonal.ds.tools.Compare;
 
 @:access(de.polygonal.ds.Dll)
 class TestDll extends AbstractTest
@@ -319,7 +319,7 @@ class TestDll extends AbstractTest
 		var list = new Dll<Int>();
 		list.append(1);
 		list.append(2);
-		list.sort(Compare.cmpNumberRise, true);
+		list.sort(Compare.cmpFloatRise, true);
 		
 		var c = 1; for (i in list) assertEquals(c++, i);
 		assertEquals(2, list.tail.val);
@@ -330,7 +330,7 @@ class TestDll extends AbstractTest
 		var list = new Dll<Int>();
 		list.append(2);
 		list.append(1);
-		list.sort(Compare.cmpNumberRise, true);
+		list.sort(Compare.cmpFloatRise, true);
 		
 		var c = 1; for (i in list) assertEquals(c++, i);
 		assertEquals(2, list.tail.val);
@@ -342,7 +342,7 @@ class TestDll extends AbstractTest
 		list.append(1);
 		list.append(2);
 		list.append(3);
-		list.sort(Compare.cmpNumberRise, true);
+		list.sort(Compare.cmpFloatRise, true);
 		
 		var c = 1; for (i in list) assertEquals(c++, i);
 		
@@ -356,7 +356,7 @@ class TestDll extends AbstractTest
 		list.append(3);
 		list.append(2);
 		list.append(1);
-		list.sort(Compare.cmpNumberRise, true);
+		list.sort(Compare.cmpFloatRise, true);
 		
 		var c = 1; for (i in list) assertEquals(c++, i);
 		
@@ -370,7 +370,7 @@ class TestDll extends AbstractTest
 		list.append(3);
 		list.append(1);
 		list.append(2);
-		list.sort(Compare.cmpNumberRise, true);
+		list.sort(Compare.cmpFloatRise, true);
 		
 		var c = 1; for (i in list) assertEquals(c++, i);
 		
@@ -386,7 +386,7 @@ class TestDll extends AbstractTest
 		list.append(2);
 		list.append(1);
 		
-		list.sort(Compare.cmpNumberRise, true);
+		list.sort(Compare.cmpFloatRise, true);
 		
 		var c = 1; for (i in list) assertEquals(c++, i);
 		assertEquals(4, list.tail.val);
@@ -404,13 +404,13 @@ class TestDll extends AbstractTest
 		list.append(3);
 		list.append(2);
 		
-		list.sort(Compare.cmpNumberRise, true);
+		list.sort(Compare.cmpFloatRise, true);
 		
 		var c = 1; for (i in list) assertEquals(c++, i);
 		assertFalse(list.head.hasPrev());
 		assertFalse(list.tail.hasNext());
 		
-		list.sort(Compare.cmpNumberFall, true);
+		list.sort(Compare.cmpFloatFall, true);
 		
 		var c = 3; for (i in list) assertEquals(c--, i);
 		assertFalse(list.head.hasPrev());
@@ -420,11 +420,11 @@ class TestDll extends AbstractTest
 		list.append(3);
 		list.append(2);
 		list.append(1);
-		list.sort(Compare.cmpNumberRise, true);
+		list.sort(Compare.cmpFloatRise, true);
 		var c = 1; for (i in list) assertEquals(c++, i);
 		assertFalse(list.head.hasPrev());
 		assertFalse(list.tail.hasNext());
-		list.sort(Compare.cmpNumberFall, true);
+		list.sort(Compare.cmpFloatFall, true);
 		var c = 3; for (i in list) assertEquals(c--, i);
 		assertFalse(list.head.hasPrev());
 		assertFalse(list.tail.hasNext());
@@ -436,13 +436,13 @@ class TestDll extends AbstractTest
 		list.append(3);
 		list.append(2);
 		
-		list.sort(Compare.cmpNumberRise, false);
+		list.sort(Compare.cmpFloatRise, false);
 		
 		var c = 1; for (i in list) assertEquals(c++, i);
 		assertFalse(list.head.hasPrev());
 		assertFalse(list.tail.hasNext());
 		
-		list.sort(Compare.cmpNumberFall);
+		list.sort(Compare.cmpFloatFall);
 		
 		var c = 3; for (i in list) assertEquals(c--, i);
 		assertFalse(list.head.hasPrev());
@@ -452,11 +452,11 @@ class TestDll extends AbstractTest
 		list.append(3);
 		list.append(2);
 		list.append(1);
-		list.sort(Compare.cmpNumberRise);
+		list.sort(Compare.cmpFloatRise);
 		var c = 1; for (i in list) assertEquals(c++, i);
 		assertFalse(list.head.hasPrev());
 		assertFalse(list.tail.hasNext());
-		list.sort(Compare.cmpNumberFall);
+		list.sort(Compare.cmpFloatFall);
 		var c = 3; for (i in list) assertEquals(c--, i);
 		assertFalse(list.head.hasPrev());
 		assertFalse(list.tail.hasNext());
@@ -467,7 +467,7 @@ class TestDll extends AbstractTest
 		var list = new Dll<Int>();
 		var data:Array<Int> = [2, 3, 4, 9, 5, 1, 7, 6, 8, 0];
 		for (i in 0...10) list.append(data[i]);
-		list.sort(Compare.cmpNumberRise, false);
+		list.sort(Compare.cmpFloatRise, false);
 		
 		var c = 10;
 		var node = list.tail;
@@ -498,25 +498,25 @@ class TestDll extends AbstractTest
 		var data:Array<Int> = [2, 3, 4, 9, 5, 1, 7, 6, 8, 0];
 		for (i in 0...10) list.append(data[i]);
 		
-		list.sort(Compare.cmpNumberRise, false);
+		list.sort(Compare.cmpFloatRise, false);
 		var c:Int = 0;
 		for (i in list) assertEquals(c++, i);
 		assertFalse(list.head.hasPrev());
 		assertFalse(list.tail.hasNext());
 		
-		list.sort(Compare.cmpNumberFall, false);
+		list.sort(Compare.cmpFloatFall, false);
 		var c:Int = 10;
 		for (i in list) assertEquals(--c, i);
 		assertFalse(list.head.hasPrev());
 		assertFalse(list.tail.hasNext());
 		
-		list.sort(Compare.cmpNumberRise, true);
+		list.sort(Compare.cmpFloatRise, true);
 		var c:Int = 0;
 		for (i in list) assertEquals(c++, i);
 		assertFalse(list.head.hasPrev());
 		assertFalse(list.tail.hasNext());
 		
-		list.sort(Compare.cmpNumberFall, true);
+		list.sort(Compare.cmpFloatFall, true);
 		var c:Int = 10;
 		for (i in list) assertEquals(--c, i);
 		assertFalse(list.head.hasPrev());

@@ -1,7 +1,7 @@
-﻿import de.polygonal.ds.Compare;
-import de.polygonal.ds.ListSet;
+﻿import de.polygonal.ds.ListSet;
 import de.polygonal.ds.Sll;
 import de.polygonal.ds.SllNode;
+import de.polygonal.ds.tools.Compare;
 
 @:access(de.polygonal.ds.Sll)
 class TestSll extends AbstractTest
@@ -734,12 +734,12 @@ class TestSll extends AbstractTest
 		list.append(3);
 		list.append(2);
 		
-		list.sort(Compare.cmpNumberRise, true);
+		list.sort(Compare.cmpIntRise, true);
 		
 		var c = 1; for (i in list) assertEquals(c++, i);
 		assertFalse(list.tail.hasNext());
 		
-		list.sort(Compare.cmpNumberFall, true);
+		list.sort(Compare.cmpIntFall, true);
 		
 		var c = 3; for (i in list) assertEquals(c--, i);
 		assertFalse(list.tail.hasNext());
@@ -748,10 +748,10 @@ class TestSll extends AbstractTest
 		list.append(3);
 		list.append(2);
 		list.append(1);
-		list.sort(Compare.cmpNumberRise, true);
+		list.sort(Compare.cmpIntRise, true);
 		var c = 1; for (i in list) assertEquals(c++, i);
 		assertFalse(list.tail.hasNext());
-		list.sort(Compare.cmpNumberFall, true);
+		list.sort(Compare.cmpIntFall, true);
 		var c = 3; for (i in list) assertEquals(c--, i);
 		assertFalse(list.tail.hasNext());
 		
@@ -762,12 +762,12 @@ class TestSll extends AbstractTest
 		list.append(3);
 		list.append(2);
 		
-		list.sort(Compare.cmpNumberRise);
+		list.sort(Compare.cmpIntRise);
 		
 		var c = 1; for (i in list) assertEquals(c++, i);
 		assertFalse(list.tail.hasNext());
 		
-		list.sort(Compare.cmpNumberFall);
+		list.sort(Compare.cmpIntFall);
 		
 		var c = 3; for (i in list) assertEquals(c--, i);
 		assertFalse(list.tail.hasNext());
@@ -776,10 +776,10 @@ class TestSll extends AbstractTest
 		list.append(3);
 		list.append(2);
 		list.append(1);
-		list.sort(Compare.cmpNumberRise);
+		list.sort(Compare.cmpIntRise);
 		var c = 1; for (i in list) assertEquals(c++, i);
 		assertFalse(list.tail.hasNext());
-		list.sort(Compare.cmpNumberFall);
+		list.sort(Compare.cmpIntFall);
 		var c = 3; for (i in list) assertEquals(c--, i);
 		assertFalse(list.tail.hasNext());
 	}
@@ -791,19 +791,19 @@ class TestSll extends AbstractTest
 		var data:Array<Int> = [2, 3, 4, 9, 5, 1, 7, 6, 8, 0];
 		for (i in 0...10) list.append(data[i]);
 		
-		list.sort(Compare.cmpNumberRise, false);
+		list.sort(Compare.cmpIntRise, false);
 		var c = 0;
 		for (i in list) assertEquals(c++, i);
 		
-		list.sort(Compare.cmpNumberFall, false);
+		list.sort(Compare.cmpIntFall, false);
 		var c = 10;
 		for (i in list) assertEquals(--c, i);
 		
-		list.sort(Compare.cmpNumberRise, true);
+		list.sort(Compare.cmpIntRise, true);
 		var c = 0;
 		for (i in list) assertEquals(c++, i);
 		
-		list.sort(Compare.cmpNumberFall, true);
+		list.sort(Compare.cmpIntFall, true);
 		var c = 10;
 		for (i in list) assertEquals(--c, i);
 		
@@ -833,19 +833,19 @@ class TestSll extends AbstractTest
 		var data:Array<Int> = [2, 3, 4, 9, 5, 1, 7, 6, 8, 0];
 		for (i in 0...10) list.append(data[i]);
 		
-		list.sort(Compare.cmpNumberRise, false);
+		list.sort(Compare.cmpIntRise, false);
 		var c = 0;
 		for (i in list) assertEquals(c++, i);
 		
-		list.sort(Compare.cmpNumberFall, false);
+		list.sort(Compare.cmpIntFall, false);
 		var c = 10;
 		for (i in list) assertEquals(--c, i);
 		
-		list.sort(Compare.cmpNumberRise, true);
+		list.sort(Compare.cmpIntRise, true);
 		var c = 0;
 		for (i in list) assertEquals(c++, i);
 		
-		list.sort(Compare.cmpNumberFall, true);
+		list.sort(Compare.cmpIntFall, true);
 		var c = 10;
 		for (i in list) assertEquals(--c, i);
 	}
@@ -857,15 +857,15 @@ class TestSll extends AbstractTest
 		var data:Array<Int> = [2, 3, 4, 9, 5, 1, 7, 6, 8, 0];
 		for (i in 0...10) list.append(data[i]);
 		
-		list.sort(Compare.cmpNumberRise, false);
+		list.sort(Compare.cmpIntRise, false);
 		var c = 0;
 		for (i in list) assertEquals(c++, i);
 		
-		list.sort(Compare.cmpNumberFall, false);
+		list.sort(Compare.cmpIntFall, false);
 		var c = 10;
 		for (i in list) assertEquals(--c, i);
 		
-		list.sort(Compare.cmpNumberRise, true);
+		list.sort(Compare.cmpIntRise, true);
 		var c = 0;
 		for (i in list) assertEquals(c++, i);
 	}
