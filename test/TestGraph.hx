@@ -15,9 +15,9 @@ class TestGraph extends AbstractTest
 		//function
 		var graph = new Graph<String>();
 		
-		var a = graph.addNode(graph.createNode("a"));
-		var b = graph.addNode(graph.createNode("b"));
-		var c = graph.addNode(graph.createNode("c"));
+		var a = graph.add("a");
+		var b = graph.add("b");
+		var c = graph.add("c");
 		
 		graph.addSingleArc(a, b);
 		graph.addSingleArc(b, c);
@@ -61,9 +61,9 @@ class TestGraph extends AbstractTest
 		var eb = new E(this, 1);
 		var ec = new E(this, 2);
 		
-		var a = graph.addNode(graph.createNode(ea));
-		var b = graph.addNode(graph.createNode(eb));
-		var c = graph.addNode(graph.createNode(ec));
+		var a = graph.add(ea);
+		var b = graph.add(eb);
+		var c = graph.add(ec);
 		
 		graph.addSingleArc(a, b);
 		graph.addSingleArc(b, c);
@@ -107,7 +107,7 @@ class TestGraph extends AbstractTest
 	function testBFS_DFS_Func()
 	{
 		var graph = new Graph<Int>();
-		for (i in 0...4) graph.addNode(graph.createNode(i));
+		for (i in 0...4) graph.add(i);
 		for (i in 0...4)
 		{
 			var node = graph.findNode(i);
@@ -183,7 +183,7 @@ class TestGraph extends AbstractTest
 		{
 			var n = new E(this, i);
 			nodes[i] = n;
-			graph.addNode(graph.createNode(n));
+			graph.add(n);
 		}
 		
 		for (i in 0...size)
@@ -209,7 +209,7 @@ class TestGraph extends AbstractTest
 		for (i in 0...10)
 		{
 			nodes[i] = i;
-			graph.addNode(graph.createNode(i));
+			graph.add(i);
 		}
 		
 		for (i in 0...10)
@@ -233,13 +233,13 @@ class TestGraph extends AbstractTest
 		assertTrue(graph.isEmpty());
 		
 		var graph = new Graph<Int>();
-		graph.addNode(graph.createNode(5));
-		graph.addNode(graph.createNode(3));
+		graph.add(5);
+		graph.add(3);
 		assertTrue(graph.remove(5));
 		assertTrue(graph.remove(3));
 		
-		graph.addNode(graph.createNode(5));
-		graph.addNode(graph.createNode(3));
+		graph.add(5);
+		graph.add(3);
 		assertTrue(graph.remove(3));
 		assertTrue(graph.remove(5));
 	}
@@ -248,9 +248,9 @@ class TestGraph extends AbstractTest
 	{
 		var graph = new Graph<Int>();
 		graph.autoClearMarks = true;
-		var node1 = graph.addNode(graph.createNode(1));
-		var node2 = graph.addNode(graph.createNode(2));
-		var node3 = graph.addNode(graph.createNode(3));
+		var node1 = graph.add(1);
+		var node2 = graph.add(2);
+		var node3 = graph.add(3);
 		graph.addMutualArc(node1, node2);
 		graph.addMutualArc(node2, node3);
 		var result:Array<Int> = [];
@@ -312,9 +312,9 @@ class TestGraph extends AbstractTest
 		var e2 = new E(this, 2); e2.f = f;
 		var e3 = new E(this, 3); e3.f = f;
 		
-		var node1 = graph.addNode(graph.createNode(e1));
-		var node2 = graph.addNode(graph.createNode(e2));
-		var node3 = graph.addNode(graph.createNode(e3));
+		var node1 = graph.add(e1);
+		var node2 = graph.add(e2);
+		var node3 = graph.add(e3);
 		graph.addMutualArc(node1, node2);
 		graph.addMutualArc(node2, node3);
 		
@@ -362,7 +362,7 @@ class TestGraph extends AbstractTest
 		for (i in 0...4)
 		{
 			elements[i] = new E(this, i);
-			graph.addNode(graph.createNode(elements[i]));
+			graph.add(elements[i]);
 		}
 		
 		for (i in 0...4)
@@ -423,7 +423,7 @@ class TestGraph extends AbstractTest
 		var nodes = new Array<GraphNode<E>>();
 		for (i in 0...10)
 		{
-			var node:GraphNode<E> = graph.addNode(graph.createNode(new E(this, i)));
+			var node:GraphNode<E> = graph.add(new E(this, i));
 			nodes[i] = node;
 		}
 		
@@ -471,7 +471,7 @@ class TestGraph extends AbstractTest
 		var nodes = new Array<GraphNode<Int>>();
 		for (i in 0...10)
 		{
-			var node:GraphNode<Int> = graph.addNode(graph.createNode(i));
+			var node:GraphNode<Int> = graph.add(i);
 			nodes[i] = node;
 		}
 		
@@ -510,7 +510,7 @@ class TestGraph extends AbstractTest
 		var nodes = new Array<GraphNode<E>>();
 		for (i in 0...10)
 		{
-			var node = graph.addNode(graph.createNode(new E(this, i)));
+			var node = graph.add(new E(this, i));
 			nodes[i] = node;
 		}
 		
@@ -565,7 +565,7 @@ class TestGraph extends AbstractTest
 		var nodes = new Array<GraphNode<E>>();
 		for (i in 0...3)
 		{
-			var node = graph.addNode(graph.createNode(new E(this, i)));
+			var node = graph.add(new E(this, i));
 			nodes[i] = node;
 		}
 		
@@ -610,8 +610,8 @@ class TestGraph extends AbstractTest
 		var f = function(node:GraphNode<String>, preflight:Bool, userData:Dynamic):Bool return true;
 		
 		var graph = new Graph<String>();
-		var node1 = new CustomGraphNode<String>(graph, "a");
-		var node2 = new CustomGraphNode<String>(graph, "b");
+		var node1 = new CustomGraphNode<String>("a");
+		var node2 = new CustomGraphNode<String>("b");
 		
 		graph.addNode(node1);
 		graph.addNode(node2);
@@ -620,8 +620,8 @@ class TestGraph extends AbstractTest
 		graph.bfs(true, node1, f);
 		
 		var graph = new Graph<E>();
-		var node1 = new CustomGraphNode<E>(graph, new E(this, 2));
-		var node2 = new CustomGraphNode<E>(graph, new E(this, 3));
+		var node1 = new CustomGraphNode<E>(new E(this, 2));
+		var node2 = new CustomGraphNode<E>(new E(this, 3));
 		graph.addNode(node1);
 		graph.addNode(node2);
 		graph.addMutualArc(node1, node2);
@@ -633,9 +633,9 @@ class TestGraph extends AbstractTest
 	function testSerialize()
 	{
 		var graph = new Graph<E>();
-		var nodeA = graph.createNode(new E(this, 10));
-		var nodeB = graph.createNode(new E(this, 20));
-		var nodeC = graph.createNode(new E(this, 30));
+		var nodeA = new GraphNode<E>(new E(this, 10));
+		var nodeB = new GraphNode<E>(new E(this, 20));
+		var nodeC = new GraphNode<E>(new E(this, 30));
 		graph.addNode(nodeA);
 		graph.addNode(nodeB);
 		graph.addNode(nodeC);
@@ -734,8 +734,8 @@ private class E extends de.polygonal.ds.HashableItem implements de.polygonal.ds.
 #end
 private class CustomGraphNode<T> extends GraphNode<T>
 {
-	public function new(graph:Graph<T>, value:T)
+	public function new(value:T)
 	{
-		super(graph, value);
+		super(value);
 	}
 }

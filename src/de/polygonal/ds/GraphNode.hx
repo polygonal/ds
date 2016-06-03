@@ -28,6 +28,7 @@ import de.polygonal.ds.tools.Assert.assert;
 #if generic
 @:generic
 #end
+@:allow(de.polygonal.ds.Graph)
 class GraphNode<T> implements Hashable
 {
 	/**
@@ -84,17 +85,16 @@ class GraphNode<T> implements Hashable
 	**/
 	public var numArcs(default, null):Int = 0;
 	
-	var mGraph:Graph<T>;
+	var mGraph:Graph<T> = null;
 	
 	/**
 		Creates a graph node storing `val`.
 	**/
-	public function new(graph:Graph<T>, val:T)
+	public function new(val:T)
 	{
 		this.val = val;
 		arcList = null;
 		marked = false;
-		mGraph = graph;
 	}
 	
 	/**
@@ -175,6 +175,10 @@ class GraphNode<T> implements Hashable
 		assert(target != this, "target is null");
 		assert(getArc(target) == null, "arc to target already exists");
 		
+		assert(mGraph != null, "this node was not added to a graph yet");
+		assert(target.mGraph != null, "target node was not added to a graph yet");
+		assert(mGraph == target.mGraph, "this node and target node are contained in different graphs");
+		
 		var arc =
 		if (mGraph.borrowArc != null)
 			mGraph.borrowArc(target, userData);
@@ -195,6 +199,9 @@ class GraphNode<T> implements Hashable
 	{
 		assert(target != this, "target is null");
 		assert(getArc(target) != null, "arc to target does not exist");
+		assert(mGraph != null, "this node was not added to a graph yet");
+		assert(target.mGraph != null, "target node was not added to a graph yet");
+		assert(mGraph == target.mGraph, "this node and target node are contained in different graphs");
 		
 		var arc = getArc(target);
 		if (arc != null)

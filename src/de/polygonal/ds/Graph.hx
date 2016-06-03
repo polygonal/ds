@@ -102,7 +102,6 @@ class Graph<T> implements Collection<T>
 	
 	#if debug
 	var mBusy:Bool;
-	var mNodeSet:Set<GraphNode<T>>;
 	#end
 	
 	public function new()
@@ -112,7 +111,6 @@ class Graph<T> implements Collection<T>
 		
 		#if debug
 		mBusy = false;
-		mNodeSet = new ListSet<GraphNode<T>>();
 		#end
 	}
 	
@@ -145,25 +143,33 @@ class Graph<T> implements Collection<T>
 	}
 	
 	/**
-		Creates and returns a node object storing `val`.
+		Wraps `val` in a `GraphNode` object and adds the newly created node to this graph.
+		
+		Shortcut for:
+			var node = new GraphNode<String>("value");
+			myGraph.addNode(node);
+		
+		@return the `GraphNode` object storing `val`.
 	**/
-	public function createNode(val:T):GraphNode<T>
+	public function add(val:T):GraphNode<T>
 	{
-		return new GraphNode<T>(this, val);
+		return addNode(new GraphNode<T>(val));
 	}
 	
 	/**
 		Adds the node `node` to this graph and returns `node`.
+		
+		Silently fails if the node was already added to this graph.
 	**/
 	public function addNode(node:GraphNode<T>):GraphNode<T>
 	{
-		assert(mNodeSet.set(node), "node exists");
+		if (node.mGraph != null) return node;
 		
 		mSize++;
-		
 		node.next = mNodeList;
 		if (node.next != null) node.next.prev = node;
 		mNodeList = node;
+		node.mGraph = this;
 		return node;
 	}
 	
@@ -171,11 +177,11 @@ class Graph<T> implements Collection<T>
 		Removes `node` from this graph.
 		
 		This clears all outgoing and incoming arcs and removes `node` from the node list.
+		Silently fails if `node` was already removed from this graph.
 	**/
 	public function removeNode(node:GraphNode<T>)
 	{
-		assert(size > 0, "graph is empty");
-		assert(mNodeSet.has(node), "unknown node");
+		if (size == 0 || node.mGraph == null) return;
 		
 		unlink(node);
 		
@@ -183,6 +189,7 @@ class Graph<T> implements Collection<T>
 		if (node.next != null) node.next.prev = node.prev;
 		if (mNodeList == node) mNodeList = node.next;
 		mSize--;
+		node.mGraph = null;
 	}
 	
 	/**
@@ -260,14 +267,14 @@ class Graph<T> implements Collection<T>
 		Isolates `node` from this graph by unlinking it from all outgoing and incoming arcs.
 		
 		The size remains unchanged as the node is not removed from the graph.
+		Silently fails if `node` was not added to this graph.
 		@return the disconnected graph node.
 	**/
-	@:access(de.polygonal.ds.GraphNode)
 	public function unlink(node:GraphNode<T>):GraphNode<T>
 	{
-		assert(mNodeList != null, "graph is empty");
-		assert(mNodeSet.has(node), "unknown node");
 		assert(node != null, "node is null");
+		
+		if (node.mGraph == null) return node;
 		
 		var arc0 = node.arcList;
 		while (arc0 != null)
@@ -1070,7 +1077,7 @@ class Graph<T> implements Collection<T>
 		var vals = data.vals;
 		var i = 0;
 		var k = vals.length;
-		while (i < k) nodes.push(createNode(setVal(vals[i++])));
+		while (i < k) nodes.push(new GraphNode(setVal(vals[i++])));
 		
 		i = k;
 		while (i > 0) addNode(nodes[--i]);
@@ -1186,11 +1193,6 @@ class Graph<T> implements Collection<T>
 			mIterator.free();
 			mIterator = null;
 		}
-		
-		#if debug
-		mNodeSet.free();
-		mNodeSet = null;
-		#end
 		
 		borrowArc = null;
 		returnArc = null;
@@ -1365,7 +1367,7 @@ class Graph<T> implements Collection<T>
 		{
 			while (n != null)
 			{
-				m = copy.addNode(copy.createNode(n.val));
+				m = copy.add(n.val);
 				t[i++] = m;
 				n = n.next;
 			}
@@ -1377,7 +1379,7 @@ class Graph<T> implements Collection<T>
 			{
 				assert(Std.is(n.val, Cloneable), "element is not of type Cloneable");
 				
-				m = copy.addNode(copy.createNode(cast(n.val, Cloneable<Dynamic>).clone()));
+				m = copy.add(cast(n.val, Cloneable<Dynamic>).clone());
 				t[i++] = m;
 				n = n.next;
 			}
@@ -1386,7 +1388,7 @@ class Graph<T> implements Collection<T>
 		{
 			while (n != null)
 			{
-				m = copy.addNode(copy.createNode(copier(n.val)));
+				m = copy.add(copier(n.val));
 				t[i++] = m;
 				n = n.next;
 			}
