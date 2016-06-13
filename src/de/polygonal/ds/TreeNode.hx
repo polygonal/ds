@@ -1330,7 +1330,11 @@ class TreeNode<T> implements Collection<T>
 		b.add('[ Tree size=$size depth=${depth()} height=${height()}');
 		if (children == null)
 		{
-			b.add(" ]");
+			b.add("\n");
+			b.add("  ");
+			b.add(Std.string(val));
+			b.add("\n");
+			b.add("]");
 			return b.toString();
 		}
 		b.add("\n");
