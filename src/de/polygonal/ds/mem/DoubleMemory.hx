@@ -133,6 +133,8 @@ class DoubleMemory extends MemoryAccess
 		if (max == -1) max =
 		#if neko
 		neko.NativeString.length(input);
+		#elseif js
+		input.byteLength;
 		#else
 		input.length;
 		#end
