@@ -40,6 +40,26 @@
 		
 		for (i in 0...10) assertEquals(9 - i, pool.get().id);
 	}
+	
+	function testIterator()
+	{
+		var counter = 0;
+		var create = function() return new E(counter++);
+		
+		var pool = new de.polygonal.ds.tools.ObjectPool<E>(create);
+		
+		var objects = [];
+		objects.push(pool.get());
+		objects.push(pool.get());
+		objects.push(pool.get());
+		
+		for (i in objects) pool.put(i);
+		objects = [];
+		
+		assertEquals(3, Lambda.count(pool));
+		var c = 0;
+		for (i in pool) assertEquals(c++, i.id);
+	}
 }
 
 private class E

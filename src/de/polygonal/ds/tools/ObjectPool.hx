@@ -117,9 +117,7 @@ class ObjectPool<T>
 		if (size > 0)
 		{
 			var obj = mPool.get(--size);
-			
 			mSet.remove(obj);
-			
 			return obj;
 		}
 		else
@@ -150,6 +148,18 @@ class ObjectPool<T>
 		{
 			if (size == mCapacity) resize();
 			mPool.set(size++, obj);
+		}
+	}
+	
+	public function iterator():Iterator<T>
+	{
+		var i = 0;
+		var s = size;
+		var d = mPool;
+		return
+		{
+			hasNext: function() return i < s,
+			next: function() return d.get(i++)
 		}
 	}
 	
