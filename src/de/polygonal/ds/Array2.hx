@@ -1031,7 +1031,7 @@ class Array2Cell
 		this.y = y;
 	}
 	
-	public inline function equals(other:Array2Cell):Bool
+	@:extern public inline function equals(other:Array2Cell):Bool
 	{
 		return x == other.x && y == other.y;
 	}
