@@ -388,7 +388,7 @@ class Graph<T> implements Collection<T>
 		inline function popOffStack() return s.get(--c);
 		inline function pushOnStack(x)
 		{
-			if (c == max) resizeStack(max = max * 2);
+			if (c == max) s = resizeStack(max = max * 2);
 			s.set(c++, x);
 		}
 		
@@ -1492,6 +1492,7 @@ class Graph<T> implements Collection<T>
 		mStack.blit(0, t, 0, mStackSize);
 		mStack = t;
 		mStackSize = newSize;
+		return mStack;
 	}
 	
 	function resizeQue(newSize:Int)
