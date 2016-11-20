@@ -346,7 +346,7 @@ class ArrayedStack<T> implements Stack<T>
 		- index: position relative to the bottom(=0) of the stack
 		- output: element to be stored at given index
 	**/
-	public function forEach(f:T->Int->T):ArrayedStack<T>
+	public inline function forEach(f:T->Int->T):ArrayedStack<T>
 	{
 		var d = mData;
 		for (i in 0...mTop) d.set(i, f(d.get(i), i));

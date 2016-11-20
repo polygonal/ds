@@ -344,7 +344,7 @@ class ArrayList<T> implements List<T>
 		- index: the index number of the given element
 		- output: element to be stored at given index
 	**/
-	public function forEach(f:T->Int->T):ArrayList<T>
+	public inline function forEach(f:T->Int->T):ArrayList<T>
 	{
 		assert(f != null);
 		

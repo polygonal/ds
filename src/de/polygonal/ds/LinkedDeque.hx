@@ -246,7 +246,7 @@ class LinkedDeque<T> implements Deque<T>
 		- index: position relative to the front(=0)
 		- output: element to be stored at given index
 	**/
-	public function forEach(f:T->Int->T):LinkedDeque<T>
+	public inline function forEach(f:T->Int->T):LinkedDeque<T>
 	{
 		var node = mHead;
 		for (i in 0...size)

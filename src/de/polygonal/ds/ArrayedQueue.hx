@@ -276,7 +276,7 @@ class ArrayedQueue<T> implements Queue<T>
 		- index: position relative to the front(=0) of the queue
 		- output: element to be stored at given index
 	**/
-	public function forEach(f:T->Int->T):ArrayedQueue<T>
+	public inline function forEach(f:T->Int->T):ArrayedQueue<T>
 	{
 		var j, front = mFront, d = mData;
 		for (i in 0...size)

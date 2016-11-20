@@ -177,7 +177,7 @@ class LinkedQueue<T> implements Queue<T>
 		- index: position relative to the front(=0) of the queue
 		- output: element to be stored at given index
 	**/
-	public function forEach(f:T->Int->T)
+	public inline function forEach(f:T->Int->T)
 	{
 		var node = mHead;
 		for (i in 0...size)

@@ -365,7 +365,7 @@ class Array2<T> implements Collection<T>
 		- y: current y index
 		- output: element to be stored at (x,y)
 	**/
-	public function forEach(f:T->Int->Int->T):Array2<T>
+	public inline function forEach(f:T->Int->Int->T):Array2<T>
 	{
 		var d = mData;
 		for (i in 0...size) d.set(i, f(d.get(i), i % mW, Std.int(i / mW)));

@@ -760,7 +760,7 @@ class Dll<T> implements List<T>
 		- index: the index number of the given element (0=head)
 		- output: element to be stored at given index
 	**/
-	public function forEach(f:T->Int->T)
+	public inline function forEach(f:T->Int->T)
 	{
 		var node = head;
 		for (i in 0...size)

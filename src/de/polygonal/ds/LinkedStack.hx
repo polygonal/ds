@@ -341,7 +341,7 @@ class LinkedStack<T> implements Stack<T>
 		- index: position relative to the bottom(=0) of the stack
 		- output: element to be stored at given index
 	**/
-	public function forEach(f:T->Int->T)
+	public inline function forEach(f:T->Int->T)
 	{
 		var node = mHead;
 		var i = size;
