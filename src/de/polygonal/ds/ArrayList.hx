@@ -336,12 +336,12 @@ class ArrayList<T> implements List<T>
 	}
 	
 	/**
-		Calls `f` on all elements.
+		Calls `f` on all elements in order.
 		
-		The function signature is: `f(input, index):output`
+		The function signature is: `f(value, index):output`
 		
-		- input: current element
-		- index: the index number of the given element
+		- value: current element
+		- index: the index number of value
 		- output: element to be stored at given index
 	**/
 	public inline function forEach(f:T->Int->T):ArrayList<T>
