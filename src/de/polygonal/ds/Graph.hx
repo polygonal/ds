@@ -1000,6 +1000,21 @@ class Graph<T> implements Collection<T>
 	}
 	
 	/**
+		Calls 'f` on all elements in preorder.
+	**/
+	public inline function iter(f:T->Void):Graph<T>
+	{
+		assert(f != null);
+		var node = mNodeList;
+		while (node != null)
+		{
+			f(node.val);
+			node = node.next;
+		}
+		return this;
+	}
+	
+	/**
 		Serializes the graph, outputting two arrays: the first one stores all node values, while the second one
 		contains a list of indices describing how the nodes are connected via arcs.
 		

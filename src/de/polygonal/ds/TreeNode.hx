@@ -774,6 +774,29 @@ class TreeNode<T> implements Collection<T>
 	}
 	
 	/**
+		Calls 'f` on all elements in preorder.
+	**/
+	public inline function iter(f:T->Void, ?tmpStack:Array<TreeNode<T>>):TreeNode<T>
+	{
+		var stack = tmpStack;
+		if (stack == null) stack = [];
+		stack[0] = this;
+		var top = 1;
+		while (top > 0)
+		{
+			var n = stack[--top];
+			var c = n.children;
+			while (c != null)
+			{
+				stack[top++] = c;
+				c = c.next;
+			}
+			f(n.val);
+		}
+		return this;
+	}
+	
+	/**
 		Performs a recursive _preorder_ traversal.
 		
 		A preorder traversal performs the following steps:

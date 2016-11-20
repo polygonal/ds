@@ -121,6 +121,14 @@ class TestLinkedQueue extends AbstractTest
 		assertTrue(c.isEmpty());
 	}
 	
+	function testIter()
+	{
+		var l = new LinkedQueue<Int>();
+		for (i in 0...4) l.enqueue(i);
+		var i = 0;
+		l.iter(function(e) assertEquals(i++, e));
+	}
+	
 	function testIteratorRemove()
 	{
 		for (i in 0...5)

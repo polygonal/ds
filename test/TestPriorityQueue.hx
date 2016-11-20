@@ -280,6 +280,14 @@ class TestPriorityQueue extends AbstractTest
 		assertEquals(3, c);
 	}
 	
+	function testIter()
+	{
+		var pq = new PriorityQueue<E>(10);
+		for (i in 0...4) pq.enqueue(new E(i));
+		var i = 4;
+		pq.iter(function(e) assertEquals(--i, Std.int(e.priority)));
+	}
+	
 	function testIteratorRemove()
 	{
 		var pq = new PriorityQueue<E>(3, false);

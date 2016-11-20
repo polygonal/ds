@@ -89,8 +89,9 @@ class ArrayedQueue<T> implements Queue<T>
 		@param initialCapacity the initial physical space for storing values.
 		<br/>Useful before inserting a large number of elements as this reduces the amount of incremental reallocation.
 		@param source Copies all values from `source` in the range [0, `source.length` - 1] to this collection.
+		@param fixed If true, growthRate is set to FIXED
 	**/
-	public function new(initialCapacity:Null<Int> = 16, ?source:Array<T>)
+	public function new(initialCapacity:Null<Int> = 16, ?source:Array<T>, ?fixed:Bool)
 	{
 		mInitialCapacity = M.max(1, initialCapacity);
 		capacity = mInitialCapacity;
@@ -108,6 +109,8 @@ class ArrayedQueue<T> implements Queue<T>
 			var d = mData;
 			for (i in 0...mSize) mData.set(i, source[i]);
 		}
+		
+		if (fixed) growthRate = GrowthRate.FIXED;
 	}
 	
 	/**
@@ -284,6 +287,17 @@ class ArrayedQueue<T> implements Queue<T>
 			j = (i + front) % capacity;
 			d.set(j, f(d.get(j), i));
 		}
+		return this;
+	}
+	
+	/**
+		Calls 'f` on all elements in order.
+	**/
+	public inline function iter(f:T->Void):ArrayedQueue<T>
+	{
+		assert(f != null);
+		var front = mFront, d = mData;
+		for (i in 0...size) f(d.get((i + front) % capacity));
 		return this;
 	}
 	

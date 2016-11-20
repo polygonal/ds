@@ -313,6 +313,22 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	}
 	
 	/**
+		Calls `f` on all {K,T} pairs in random order.
+	**/
+	@:access(de.polygonal.ds.IntIntHashTable)
+	public inline function iter(f:K->T->Void):HashTable<K, T>
+	{
+		assert(f != null);
+		var d = mH.mData, vals = mVals, keys = mKeys, v;
+		for (i in 0...mH.capacity)
+		{
+			v = d.get(i * 3 + 1);
+			if (v != IntIntHashTable.VAL_ABSENT) f(keys.get(v), vals.get(v));
+		}
+		return this;
+	}
+	
+	/**
 		Prints out all elements.
 	**/
 	public function toString():String
@@ -434,7 +450,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		<br/>To ensure unique keys either use `this.hasKey()` before `this.set()` or `this.setIfAbsent()`.
 		@return true if `key` was added for the first time, false if another instance of `key` was inserted.
 	**/
-	public inline function set(key:K, val:T):Bool
+	public function set(key:K, val:T):Bool
 	{
 		assert(key != null);
 		

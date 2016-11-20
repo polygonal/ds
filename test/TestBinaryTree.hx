@@ -90,6 +90,20 @@ class TestBinaryTree extends AbstractTest
 		assertTrue(node.contains("e2"));
 	}
 	
+	function testIter()
+	{
+		var node = new BinaryTreeNode<Int>(0);
+		node.setLeft(1);
+			node.left.setLeft(2);
+			node.left.setRight(3);
+		node.setRight(4);
+			node.right.setLeft(5);
+			node.right.setRight(6);
+		var s = "";
+		node.iter(function(e) s += "" + e);
+		assertEquals("0465132", s);
+	}
+	
 	function testStackResize()
 	{
 		var c = 0;

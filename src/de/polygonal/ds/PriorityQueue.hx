@@ -355,6 +355,18 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	}
 	
 	/**
+		Calls 'f` on all elements in unsorted order.
+	**/
+	public inline function iter(f:T->Void):PriorityQueue<T>
+	{
+		assert(f != null);
+		var d = mData;
+		var i = 1;
+		while (i <= size) f(d[i++]);
+		return this;
+	}
+	
+	/**
 		Prints out all elements.
 	**/
 	public function toString():String

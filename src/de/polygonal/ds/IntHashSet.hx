@@ -375,6 +375,22 @@ class IntHashSet implements Set<Int>
 	}
 	
 	/**
+		Calls `f` on all values in random order.
+	**/
+	public inline function iter(f:Int->Void):IntHashSet
+	{
+		assert(f != null);
+		var d = mData, j, v;
+		for (i in 0...capacity)
+		{
+			j = i << 1;
+			v = d.get(j);
+			if (v != VAL_ABSENT) f(d.get(j));
+		}
+		return this;
+	}
+	
+	/**
 		Prints out all elements.
 	**/
 	public function toString():String

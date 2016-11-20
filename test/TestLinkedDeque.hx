@@ -254,6 +254,14 @@ class TestLinkedDeque extends AbstractTest
 		}
 	}
 	
+	function testIter()
+	{
+		var d = createDequeInt();
+		for (i in 0...4) d.pushBack(i);
+		var i = 0;
+		d.iter(function(e) assertEquals(i++, e));
+	}
+	
 	function testIteratorRemove()
 	{
 		for (i in 0...5)

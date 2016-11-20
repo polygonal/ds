@@ -483,6 +483,17 @@ class IntHashTable<T> implements Map<Int, T>
 		return this;
 	}
 	
+	/**
+		Calls `f` on all {Int,T} pairs in random order.
+	**/
+	public inline function iter(f:Int->T->Void):IntHashTable<T>
+	{
+		assert(f != null);
+		var vals = mVals;
+		mH.iter(function(k, v) f(k, vals.get(v)));
+		return this;
+	}
+	
 	function grow()
 	{
 		var oldCapacity = capacity;

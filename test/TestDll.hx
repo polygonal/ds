@@ -76,6 +76,14 @@ class TestDll extends AbstractTest
 			});
 	}
 	
+	function testIter()
+	{
+		var list = new Dll<Int>();
+		for (i in 0...3) list.append(i);
+		var i = 0;
+		list.iter(function(e) assertEquals(i++, e));
+	}
+	
 	function testShuffle()
 	{
 		var list = new Dll<Int>();

@@ -523,6 +523,14 @@ class TestHeap extends AbstractTest
 		assertEquals(d, sum);
 	}
 	
+	function testIter()
+	{
+		var h:Heap<E1> = new Heap<E1>(10);
+		for (i in 0...4) h.add(new E1(i));
+		var i = 0;
+		h.iter(function(e) assertEquals(i++, e.ID));
+	}
+	
 	function testIteratorRemove()
 	{
 		var h = new Heap<E1>(10);

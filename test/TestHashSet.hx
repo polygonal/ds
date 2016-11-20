@@ -656,6 +656,14 @@ class TestHashSet extends AbstractTest
 		assertEquals(8, a.length);
 		for (i in 0...8) contains(a, values[i]);
 	}
+	
+	function testIter()
+	{
+		var h = new HashSet<E>(8);
+		for (i in 0...4) h.set(new E(i));
+		var i = 0;
+		h.iter(function(v:E) assertEquals(i++, v.value));
+	}
 }
 
 private class E extends HashableItem

@@ -590,6 +590,26 @@ class TestArray2 extends AbstractTest
 				return v;
 			});
 	}
+	
+	function testIter()
+	{
+		var a = getStrArray(3, 3);
+		
+		var s1 = "";
+		
+		for (y in 0...3)
+		{
+			for (x in 0...3)
+			{
+				a.set(x, y, '$x$y');
+				s1 += '$x$y';
+			}
+		}
+		
+		var s2 = "";
+		a.iter(function(e) s2 += e);
+		assertEquals(s1, s2);
+	}
 }
 
 private class E implements Cloneable<E>

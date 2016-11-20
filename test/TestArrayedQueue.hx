@@ -298,6 +298,16 @@ class TestArrayedQueue extends AbstractTest
 			});
 	}
 	
+	function testIter()
+	{
+		var q = new ArrayedQueue<Int>();
+		for (i in 0...10) q.enqueue(i);
+		for (i in 0...5) q.dequeue();
+		for (i in 0...5) q.enqueue(10 + i);
+		var i = 5;
+		q.iter(function(e) assertEquals(i++, e));
+	}
+	
 	function testGetAtSetAt()
 	{
 		var q:ArrayedQueue<Int> = new ArrayedQueue<Int>(mSize);

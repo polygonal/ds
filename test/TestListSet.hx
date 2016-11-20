@@ -79,6 +79,14 @@ class TestListSet extends AbstractTest
 		for (i in itr) assertEquals(true, c.remove(i));
 	}
 	
+	function testIter()
+	{
+		var s = new ListSet<Int>();
+		for (i in 0...4) s.set(i);
+		var i = 0;
+		s.iter(function(e) assertEquals(i++, e));
+	}
+	
 	function testCollection()
 	{
 		var c:de.polygonal.ds.Collection<String> = new ListSet<String>();

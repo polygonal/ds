@@ -373,6 +373,27 @@ class Array2<T> implements Collection<T>
 	}
 	
 	/**
+		Calls 'f` on all elements in order.
+	**/
+	public inline function iter(f:T->Void):Array2<T>
+	{
+		assert(f != null);
+		var d = mData;
+		for (i in 0...size) f(d.get(i));
+		return this;
+	}
+	
+	/**
+		Calls 'f` on all elements in order.
+	**/
+	public inline function call(f:T->Void):Array2<T>
+	{
+		var d = mData;
+		for (i in 0...size) f(d.get(i));
+		return this;
+	}
+	
+	/**
 		Resizes this two-dimensional array.
 		@param width the new width (minimum is 2).
 		@param height the new height (minimum is 2).
@@ -1034,5 +1055,12 @@ class Array2Cell
 	@:extern public inline function equals(other:Array2Cell):Bool
 	{
 		return x == other.x && y == other.y;
+	}
+	
+	@:extern public inline function set(x:Int, y:Int):Array2Cell
+	{
+		this.x = x;
+		this.y = y;
+		return this;
 	}
 }

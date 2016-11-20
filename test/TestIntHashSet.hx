@@ -659,4 +659,12 @@ class TestIntHashSet extends AbstractTest
 		
 		assertEquals(0, c);
 	}
+	
+	function testIter()
+	{
+		var h = new IntHashSet(4);
+		for (i in 0...8) h.set(i);
+		var i = 0;
+		h.iter(function(v) assertEquals(i++, v));
+	}
 }

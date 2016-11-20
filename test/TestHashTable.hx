@@ -1000,6 +1000,25 @@ class TestHashTable extends AbstractTest
 		}
 		assertEquals(0, c);
 	}
+	
+	function testIter()
+	{
+		var items = [for (i in 0...4) new E(i)];
+		var h = new HashTable<E, Null<Int>>(8);
+		for (i in 0...4)
+		{
+			var key = items[i];
+			h.set(key, i);
+		}
+		var i = 0;
+		h.iter(
+			function(k, v)
+			{
+				assertEquals(i, k.value);
+				assertEquals(i, v);
+				i++;
+			});
+	}
 }
 
 private class E extends HashableItem

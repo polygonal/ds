@@ -443,6 +443,14 @@ class TestLinkedStack extends AbstractTest
 		assertTrue(c.isEmpty());
 	}
 	
+	function testIter()
+	{
+		var s = new LinkedStack<Int>();
+		for (i in 0...4) s.push(i);
+		var i = 4;
+		s.iter(function(e) assertEquals(--i, e));
+	}
+	
 	function testIteratorRemove()
 	{
 		for (i in 0...5)

@@ -247,6 +247,22 @@ class HashSet<T:Hashable> implements Set<T>
 		return this;
 	}
 	
+	/**
+		Calls `f` on all values in random order.
+	**/
+	@:access(de.polygonal.ds.IntIntHashTable)
+	public inline function iter(f:T->Void):HashSet<T>
+	{
+		assert(f != null);
+		var d = mH.mData, vals = mVals, v;
+		for (i in 0...mH.capacity)
+		{
+			v = d.get(i * 3 + 1);
+			if (v != IntIntHashTable.VAL_ABSENT) f(vals.get(v));
+		}
+		return this;
+	}
+	
 	function grow()
 	{
 		var oldCapacity = capacity;

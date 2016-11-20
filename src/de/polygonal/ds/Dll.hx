@@ -760,7 +760,7 @@ class Dll<T> implements List<T>
 		- index: the index number of the given element (0=head)
 		- output: element to be stored at given index
 	**/
-	public inline function forEach(f:T->Int->T)
+	public inline function forEach(f:T->Int->T):Dll<T>
 	{
 		var node = head;
 		for (i in 0...size)
@@ -768,6 +768,22 @@ class Dll<T> implements List<T>
 			node.val = f(node.val, i);
 			node = node.next;
 		}
+		return this;
+	}
+	
+	/**
+		Calls 'f` on all elements in order.
+	**/
+	public inline function iter(f:T->Void):Dll<T>
+	{
+		assert(f != null);
+		var node = head;
+		while (node != null)
+		{
+			f(node.val);
+			node = node.next;
+		}
+		return this;
 	}
 	
 	/**

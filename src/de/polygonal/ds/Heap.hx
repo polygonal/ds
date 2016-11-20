@@ -333,6 +333,18 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	}
 	
 	/**
+		Calls 'f` on all elements in unsorted order.
+	**/
+	public inline function iter(f:T->Void):Heap<T>
+	{
+		assert(f != null);
+		var d = mData;
+		var i = 1;
+		while (i <= size) f(d[i++]);
+		return this;
+	}
+	
+	/**
 		Uses the Floyd algorithm (bottom-up) to repair the heap tree by restoring the heap property.
 	**/
 	public function repair():Heap<T>

@@ -592,6 +592,17 @@ class TestTree extends AbstractTest
 		assertEquals(0, order.length);
 	}
 	
+	function testIter()
+	{
+		var tree = new TreeNode<Int>(1);
+		var b = new TreeBuilder<Int>(tree);
+		b.appendChild(2);
+		b.down();
+		b.appendChild(3);
+		var i = 1;
+		tree.iter(function(e) assertEquals(i++, e));
+	}
+	
 	function testSort()
 	{
 		var root = new TreeNode<Int>(100);

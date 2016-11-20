@@ -385,6 +385,14 @@ class TestSll extends AbstractTest
 			});
 	}
 	
+	function testIter()
+	{
+		var list = new Sll<Int>();
+		for (i in 0...3) list.append(i);
+		var i = 0;
+		list.iter(function(e) assertEquals(i++, e));
+	}
+	
 	function testGetNodeAt()
 	{
 		var list = new Sll<Int>();

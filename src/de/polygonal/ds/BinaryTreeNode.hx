@@ -541,6 +541,28 @@ class BinaryTreeNode<T> implements Collection<T>
 	}
 	
 	/**
+		Calls 'f` on all elements in preorder.
+	**/
+	public inline function iter(f:T->Void, ?tmpStack:Array<BinaryTreeNode<T>>):BinaryTreeNode<T>
+	{
+		assert(f != null);
+		
+		var stack = tmpStack;
+		if (stack == null) stack = [];
+		stack[0] = this;
+		
+		var top = 1;
+		while (top > 0)
+		{
+			var n = stack[--top];
+			if (n.hasLeft()) stack[top++] = n.left;
+			if (n.hasRight()) stack[top++] = n.right;
+			f(n.val);
+		}
+		return this;
+	}
+	
+	/**
 		Disconnects this node from this subtree.
 	**/
 	public inline function unlink()

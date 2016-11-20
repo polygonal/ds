@@ -258,6 +258,21 @@ class LinkedDeque<T> implements Deque<T>
 	}
 	
 	/**
+		Calls 'f` on all elements in order.
+	**/
+	public inline function iter(f:T->Void):LinkedDeque<T>
+	{
+		assert(f != null);
+		var node = mHead;
+		while (node != null)
+		{
+			f(node.val);
+			node = node.next;
+		}
+		return this;
+	}
+	
+	/**
 		Prints out all elements.
 	**/
 	public function toString():String

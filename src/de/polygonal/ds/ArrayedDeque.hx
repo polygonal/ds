@@ -295,6 +295,30 @@ class ArrayedDeque<T> implements Deque<T>
 	}
 	
 	/**
+		Calls 'f` on all elements in order.
+	**/
+	public function iter(f:T->Void):ArrayedDeque<T>
+	{
+		assert(f != null);
+		var i = mHead + 1;
+		var s = size;
+		var b = i >> mBlockSizeShift;
+		i -= b << mBlockSizeShift;
+		var a = mBlocks.get(b);
+		while (s > 0)
+		{
+			f(a.get(i++));
+			if (i == mBlockSize)
+			{
+				i = 0;
+				a = mBlocks.get(++b);
+			}
+			s--;
+		}
+		return this;
+	}
+	
+	/**
 		Prints out all elements.
 	**/
 	public function toString():String

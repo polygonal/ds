@@ -433,6 +433,17 @@ class Array3<T> implements Collection<T>
 	}
 	
 	/**
+		Calls 'f` on all elements in order.
+	**/
+	public inline function iter(f:T->Void):Array3<T>
+	{
+		assert(f != null);
+		var d = mData;
+		for (i in 0...size) f(d.get(i));
+		return this;
+	}
+	
+	/**
 		Resizes this three-dimensional array.
 		@param width the new width (minimum is 2).
 		@param height the new height (minimum is 2).

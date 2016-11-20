@@ -384,6 +384,16 @@ class TestArrayedStack extends AbstractTest
 			});
 	}
 	
+	function testIter()
+	{
+		var s = new ArrayedStack<Int>(mSize);
+		s.push(0);
+		s.push(1);
+		s.push(2);
+		var i = 0;
+		s.iter(function(e) assertEquals(i++, e));
+	}
+	
 	function testToArray()
 	{
 		var stack = getStack();

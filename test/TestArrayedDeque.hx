@@ -48,6 +48,22 @@ class TestArrayedDeque extends AbstractTest
 			});
 	}
 	
+	function testIter()
+	{
+		var d = createDequeInt();
+		d.pushBack(0);
+		d.pushBack(1);
+		d.pushBack(2);
+		var s = "";
+		d.iter(function(e) s += "" + e);
+		assertEquals("012", s);
+		var d = createDequeInt();
+		for (i in 0...8) d.pushBack(i);
+		var s = "";
+		d.iter(function(e) s += "" + e);
+		assertEquals("01234567", s);
+	}
+	
 	function testClear()
 	{
 		var d = createDequeInt();

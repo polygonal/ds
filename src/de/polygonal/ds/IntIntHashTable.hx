@@ -1326,6 +1326,22 @@ class IntIntHashTable implements Map<Int, Int>
 		return this;
 	}
 	
+	/**
+		Calls `f` on all {Int,Int} pairs in random order.
+	**/
+	public inline function iter(f:Int->Int->Void):IntIntHashTable
+	{
+		assert(f != null);
+		var d = mData, j, v;
+		for (i in 0...capacity)
+		{
+			j = i * 3;
+			v = d.get(j + 1);
+			if (v != VAL_ABSENT) f(d.get(j), v);
+		}
+		return this;
+	}
+	
 	inline function hashCode(x:Int):Int
 	{
 		return (x * 73856093) & mMask;

@@ -87,9 +87,10 @@ class ArrayedStack<T> implements Stack<T>
 	/**
 		@param initialCapacity the initial physical space for storing values.
 		<br/>Useful before inserting a large number of elements as this reduces the amount of incremental reallocation.
-		@param source Copies all values from `source` in the range [0, `source.length` - 1] to this collection.
+		@param source copies all values from `source` in the range [0, `source.length` - 1] to this collection.
+		@param fixed if true, growthRate is set to FIXED
 	**/
-	public function new(initialCapacity:Null<Int> = 16, ?source:Array<T>)
+	public function new(initialCapacity:Null<Int> = 16, ?source:Array<T>, ?fixed:Bool)
 	{
 		mInitialCapacity = M.max(1, initialCapacity);
 		capacity = mInitialCapacity;
@@ -107,6 +108,8 @@ class ArrayedStack<T> implements Stack<T>
 			var d = mData;
 			for (i in 0...mTop) d.set(i, source[i]);
 		}
+		
+		if (fixed) growthRate = GrowthRate.FIXED;
 	}
 	
 	/**
@@ -350,6 +353,17 @@ class ArrayedStack<T> implements Stack<T>
 	{
 		var d = mData;
 		for (i in 0...mTop) d.set(i, f(d.get(i), i));
+		return this;
+	}
+	
+	/**
+		Calls 'f` on all elements in order.
+	**/
+	public inline function iter(f:T->Void):ArrayedStack<T>
+	{
+		assert(f != null);
+		var d = mData;
+		for (i in 0...mTop) f(d.get(i));
 		return this;
 	}
 	

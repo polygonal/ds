@@ -125,6 +125,26 @@ class TestArray3 extends AbstractTest
 		}
 	}
 	
+	function testIter()
+	{
+		var a = new Array3<String>(2, 2, 2);
+		var s1 = "";
+		for (z in 0...2)
+		{
+			for (y in 0...2)
+			{
+				for (x in 0...2)
+				{
+					a.set(x, y, z, '$x$y$z');
+					s1 += '$x$y$z';
+				}
+			}
+		}
+		var s2 = "";
+		a.iter(function(e) s2 += e);
+		assertEquals(s1, s2);
+	}
+	
 	function testIterator()
 	{
 		var a = new Array3<Int>(mW, mH, mD);

@@ -877,6 +877,20 @@ class TestIntHashTable extends AbstractTest
 		
 		assertEquals(0, c);
 	}
+	
+	function testIter()
+	{
+		var h = new IntHashTable<Int>(4);
+		for (i in 0...8) h.set(i, i * 10);
+		var i = 0;
+		h.iter(
+			function(k, v)
+			{
+				assertEquals(i, k);
+				assertEquals(i * 10, v);
+				i++;
+			});
+	}
 }
 
 private class E extends HashableItem

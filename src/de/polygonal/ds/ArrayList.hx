@@ -82,9 +82,10 @@ class ArrayList<T> implements List<T>
 	/**
 		@param initialCapacity the initial physical space for storing values.
 		Useful before inserting a large number of elements as this reduces the amount of incremental reallocation.
-		@param source Copies all values from `source` in the range [0, `source.length` - 1] to this collection.
+		@param source copies all values from `source` in the range [0, `source.length` - 1] to this collection.
+		@param fixed if true, growthRate is set to FIXED
 	**/
-	public function new(initalCapacity:Null<Int> = 2, ?source:Array<T>)
+	public function new(initalCapacity:Null<Int> = 2, ?source:Array<T>, ?fixed:Bool)
 	{
 		mInitialCapacity = M.max(2, initalCapacity);
 		
@@ -99,6 +100,8 @@ class ArrayList<T> implements List<T>
 			capacity = mInitialCapacity;
 			mData = NativeArrayTools.alloc(capacity);
 		}
+		
+		if (fixed) growthRate = GrowthRate.FIXED;
 	}
 	
 	/**
@@ -350,6 +353,17 @@ class ArrayList<T> implements List<T>
 		
 		var d = mData;
 		for (i in 0...size) d.set(i, f(d.get(i), i));
+		return this;
+	}
+	
+	/**
+		Calls 'f` on all elements in order.
+	**/
+	public inline function iter(f:T->Void):ArrayList<T>
+	{
+		assert(f != null);
+		var d = mData;
+		for (i in 0...size) f(d.get(i));
 		return this;
 	}
 	

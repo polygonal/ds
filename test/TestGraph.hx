@@ -504,6 +504,14 @@ class TestGraph extends AbstractTest
 		}
 	}
 	
+	function testIter()
+	{
+		var graph = new Graph<Int>();
+		for (i in 0...4) graph.add(i);
+		var i = 4;
+		graph.iter(function(e) assertEquals(--i, e));
+	}
+	
 	function test()
 	{
 		var graph = new Graph<E>();

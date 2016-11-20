@@ -129,6 +129,17 @@ class ListSet<T> implements Set<T>
 	}
 	
 	/**
+		Calls 'f` on all elements in random order.
+	**/
+	public inline function iter(f:T->Void):ListSet<T>
+	{
+		assert(f != null);
+		var d = mData;
+		for (i in 0...size) f(d[i]);
+		return this;
+	}
+	
+	/**
 		Prints out all elements.
 	**/
 	public function toString():String
