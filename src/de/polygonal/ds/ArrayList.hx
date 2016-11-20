@@ -349,7 +349,7 @@ class ArrayList<T> implements List<T>
 		assert(f != null);
 		
 		var d = mData;
-		for (i in 0...size) d.set(i, f(d.get(0), i));
+		for (i in 0...size) d.set(i, f(d.get(i), i));
 		return this;
 	}
 	
