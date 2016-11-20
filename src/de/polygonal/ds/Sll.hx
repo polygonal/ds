@@ -1324,7 +1324,7 @@ class Sll<T> implements List<T>
 		return node;
 	}
 	
-	inline function getNode(x:T)
+	function getNode(x:T)
 	{
 		if (mReservedSize == 0 || mPoolSize == 0)
 			return new SllNode<T>(x, this);
@@ -1341,7 +1341,7 @@ class Sll<T> implements List<T>
 		}
 	}
 	
-	inline function putNode(x:SllNode<T>):T
+	function putNode(x:SllNode<T>):T
 	{
 		var val = x.val;
 		
