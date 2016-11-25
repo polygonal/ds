@@ -48,6 +48,8 @@ _requires Haxe Compiler 3.3.0-rc1_
 
  * modified: replaced GraphArc.cost with a more versatile GraphArc.userData field
  * added: Graph.serialize() and Graph.unserialize()
+ * added: implemented iter(), fast alternative to iterator()
+ * modified: inline and optimize forEach()
 
 ### 2.0.0-beta (released 2016-05-24)
 _requires Haxe Compiler 3.3.0-rc1, hxcpp 3.3.49_
