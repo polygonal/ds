@@ -1,9 +1,6 @@
-artwork/**
-bin/**
-api/**
-dump/**
-obj/**
-sandbox/**
-tmp/**
+artwork/
+bin/
+sandbox/
+tmp/
 ds.hxproj
 todo.txt
