@@ -88,7 +88,7 @@ class ArrayedQueue<T> implements Queue<T>
 	/**
 		@param initialCapacity the initial physical space for storing values.
 		<br/>Useful before inserting a large number of elements as this reduces the amount of incremental reallocation.
-		@param source Copies all values from `source` in the range [0, `source.length` - 1] to this collection.
+		@param source copies all values from `source` in the range [0, `source.length` - 1] to this collection.
 		@param fixed If true, growthRate is set to FIXED
 	**/
 	public function new(initialCapacity:Null<Int> = 16, ?source:Array<T>, ?fixed:Bool)

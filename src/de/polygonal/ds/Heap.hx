@@ -109,7 +109,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	/**
 		@param initialCapacity the initial physical space for storing values.
 		Useful before inserting a large number of elements as this reduces the amount of incremental reallocation.
-		@param source Copies all values from `source` in the range [0, `source.length` - 1] to this collection.
+		@param source copies all values from `source` in the range [0, `source.length` - 1] to this collection.
 	**/
 	public function new(initalCapacity:Null<Int> = 1, ?source:Array<T>)
 	{

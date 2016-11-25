@@ -764,7 +764,7 @@ class Graph<T> implements Collection<T>
 	
 	/**
 		Performs an iterative depth-limited breadth-first search (DLBFS).
-		@param maxDepth A `maxDepth` value of 1 means that only all direct neighbors of `seed` are visited.
+		@param maxDepth a `maxDepth` value of 1 means that only all direct neighbors of `seed` are visited.
 		@param preflight if true, an extra traversal is performed before the actual traversal runs.
 		The first pass visits all elements and calls `element.visit()` with the `preflight` parameter set to true.
 		In this pass the return value determines whether the element will be processed (true) or

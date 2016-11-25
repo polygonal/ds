@@ -108,7 +108,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 		Useful before inserting a large number of elements as this reduces the amount of incremental reallocation.
 		@param inverse if true, the lower the number, the higher the priority.
 		By default a higher number means a higher priority.
-		@param source Copies all values from `source` in the range [0, `source.length` - 1] to this collection.
+		@param source copies all values from `source` in the range [0, `source.length` - 1] to this collection.
 	**/
 	public function new(initalCapacity:Null<Int> = 1, ?inverse:Null<Bool> = false, ?source:Array<T>)
 	{
