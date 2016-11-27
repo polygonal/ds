@@ -45,6 +45,7 @@ class Main
 			["-neko"] => function(x:String) addTarget("neko", x),
 			["-python"] => function(x:String) addTarget("python", x),
 			["-cpp"] => function(x:String) addTarget("cpp", x),
+			["-php"] => function(x:String) addTarget("php", x),
 			["-java"] => function(x:String) addTarget("java", x),
 			["-cs"] => function(x:String) addTarget("cs", x),
 			["-dst"] => function(path:String) dstPath = path,
@@ -83,6 +84,7 @@ class Main
 		extLut.set("js", "js");
 		extLut.set("neko", "n");
 		extLut.set("python", "py");
+		extLut.set("php", "php");
 		
 		function toFileName(directives:Array<String>, target:String):String
 		{
@@ -198,6 +200,9 @@ class Main
 					
 					case "python":
 						run("python", [file]);
+					
+					case "php":
+						run("php", [file + "/index.php"]);
 					
 					case "cpp":
 						Sys.setCwd(cwd);

@@ -16,7 +16,7 @@ class TestBits extends AbstractTest
 		assertEquals(1 << 29, x & (1 << 29));
 		assertEquals(1 << 30, x & (1 << 30));
 		
-		#if !python
+		#if (!python && !php)
 		assertEquals(1 << 31, x & (1 << 31));
 		#end
 	}
