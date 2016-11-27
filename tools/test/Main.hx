@@ -213,6 +213,13 @@ class Main
 						var exe = "UnitTest.jar";
 						if (file.indexOf("debug") > -1) exe = "UnitTest-debug.jar";
 						run("java", ["-jar", '$file/$exe']);
+					
+					case "cs":
+						Sys.setCwd(cwd);
+						Sys.setCwd(file);
+						var exe = "bin/UnitTest.exe";
+						if (file.indexOf("debug") > -1) exe = "UnitTest-debug.exe";
+						run(exe, []);
 				}
 			}
 		}
