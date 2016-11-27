@@ -18,7 +18,7 @@ Formerly known as "AS3 Data Structures For Game Developers", the package contain
 
 ## Cross-Platform Support
 
-ds supports the following Haxe targets: Flash, JavaScript, C++, Neko, Php, Python
+ds supports the following Haxe compilation targets: __-swf, -js, -neko, -python, -php, -cpp.__
 
 The ActionScript 3.0 build is no longer maintained.
 You can download the latest release [here](http://polygonal.github.com/ds/swc/polygonal-ds-latest.zip) (v1.39) or compile yourself using the sample script found in tools/swc/.
@@ -44,7 +44,7 @@ This installs the polygonal-ds library hosted on [lib.haxe.org](http://lib.haxe.
 ## Changelog
 
 ### 2.0.0 (dev branch)
-_requires Haxe Compiler 3.3.0-rc1_
+_requires Haxe Compiler 3.3.0-rc1, hxcpp 3.3.49_
 
  * modified: replaced GraphArc.cost with a more versatile GraphArc.userData field
  * added: Graph.serialize() and Graph.unserialize()
@@ -52,7 +52,6 @@ _requires Haxe Compiler 3.3.0-rc1_
  * modified: inline and optimize forEach()
 
 ### 2.0.0-beta (released 2016-05-24)
-_requires Haxe Compiler 3.3.0-rc1, hxcpp 3.3.49_
 
  * modified: replaced pooling package with lightweight de.polygonal.ds.tools.ObjectPool class
  * modified: removed some Bits methods (better suited for abstract), move Bits class to tools package
