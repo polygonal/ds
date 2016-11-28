@@ -32,7 +32,7 @@ class ArrayTools
 	/**
 		Allocates an array with length `len`.
 	**/
-	public static function alloc<T>(len:Int):Array<T>
+	public static inline function alloc<T>(len:Int):Array<T>
 	{
 		assert(len >= 0);
 		
