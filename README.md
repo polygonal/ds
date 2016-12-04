@@ -18,7 +18,7 @@ Formerly known as "AS3 Data Structures For Game Developers", the package contain
 
 ## Cross-Platform Support
 
-ds supports the following Haxe compilation targets: __-swf, -js, -neko, -python, -php, -cpp, -java.__
+ds supports the following Haxe compilation targets: __-swf, -js, -neko, -python, -php, -cpp, -java, -cs.__
 
 The ActionScript 3.0 build is no longer maintained.
 You can download the latest release [here](http://polygonal.github.com/ds/swc/polygonal-ds-latest.zip) (v1.39) or compile yourself using the sample script found in tools/swc/.
@@ -41,10 +41,14 @@ http://groups.google.com/group/polygonal-ds
 Install [Haxe](http://haxe.org/download) and run `$ haxelib install polygonal-ds` from the console.
 This installs the polygonal-ds library hosted on [lib.haxe.org](http://lib.haxe.org/p/polygonal-ds), which always mirrors the git master branch. From now on just compile with `$ haxe ... -lib polygonal-ds`.
 
+## Known limitations
+
+* __-java__, __-cs__: java.NativeArray\<T\> and cs.NativeArray\<T\> are not supported, instead plain Haxe Arrays are used right now. Also `-D generic` does not compile.
+	
 ## Changelog
 
 ### 2.0.0-rc1 (dev branch)
-_requires Haxe Compiler 3.4.0-rc1, hxcpp 3.3.49_
+_requires Haxe Compiler 3.4.0-rc1, hxcpp 3.4.2_
 
  * modified: replaced GraphArc.cost with a more versatile GraphArc.userData field
  * added: Graph.serialize() and Graph.unserialize()
