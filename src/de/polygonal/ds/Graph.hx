@@ -401,7 +401,7 @@ class Graph<T> implements Collection<T>
 			{
 				if (recursive)
 				{
-					var v:Dynamic = seed.val;
+					var v:Visitable = cast seed.val;
 					if (v.visit(true, userData))
 						dfsRecursiveVisit(seed, true, userData);
 				}

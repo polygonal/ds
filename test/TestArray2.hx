@@ -34,14 +34,21 @@ class TestArray2 extends AbstractTest
 		var success = a.remove(1);
 		assertEquals(true, success);
 		
-		var x = a.get(0, 0);
-		assertEquals(isDynamic() ? null : 0, x);
-		
-		var x = a.get(1, 1);
-		assertEquals(isDynamic() ? null : 0, x);
-		
-		var x = a.get(2, 2);
-		assertEquals(isDynamic() ? null : 0, x);
+		#if cpp
+			#if (generic || no_inline)
+			var x = a.get(0, 0); assertEquals(0, x);
+			var x = a.get(1, 1); assertEquals(0, x);
+			var x = a.get(2, 2); assertEquals(0, x);
+			#else
+			var x = a.get(0, 0); assertEquals(cast null, x);
+			var x = a.get(1, 1); assertEquals(cast null, x);
+			var x = a.get(2, 2); assertEquals(cast null, x);
+			#end
+		#else
+		var x = a.get(0, 0); assertEquals(isDynamic() ? null : 0, x);
+		var x = a.get(1, 1); assertEquals(isDynamic() ? null : 0, x);
+		var x = a.get(2, 2); assertEquals(isDynamic() ? null : 0, x);
+		#end
 	}
 	
 	function testIndexOf()

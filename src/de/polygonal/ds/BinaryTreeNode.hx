@@ -121,7 +121,7 @@ class BinaryTreeNode<T> implements Collection<T>
 		{
 			if (process == null)
 			{
-				var v:Dynamic = val;
+				var v:Visitable = cast val;
 				var run = v.visit(false, userData);
 				if (run && hasLeft()) run = preorderRecursiveVisitable(left, userData);
 				if (run && hasRight()) preorderRecursiveVisitable(right, userData);
@@ -210,7 +210,7 @@ class BinaryTreeNode<T> implements Collection<T>
 					if (!inorderRecursiveVisitable(left, userData))
 						return;
 				
-				var v:Dynamic = val;
+				var v:Visitable = cast val;
 				if (!v.visit(false, userData)) return;
 				if (hasRight())
 					inorderRecursiveVisitable(right, userData);
@@ -323,7 +323,7 @@ class BinaryTreeNode<T> implements Collection<T>
 					if (!postorderRecursiveVisitable(right, userData))
 						return;
 				
-				var v:Dynamic = val;
+				var v:Visitable = cast val;
 				v.visit(false, userData);
 			}
 			else
@@ -359,7 +359,7 @@ class BinaryTreeNode<T> implements Collection<T>
 			
 			if (process == null)
 			{
-				var node, v:Dynamic;
+				var node, v:Visitable;
 				while (top != 0)
 				{
 					reserve(top + 1);
@@ -373,7 +373,7 @@ class BinaryTreeNode<T> implements Collection<T>
 							push(node.right);
 						else
 						{
-							v = node.val;
+							v = cast node.val;
 							if (!v.visit(false, userData))
 							{
 								#if debug
@@ -625,7 +625,7 @@ class BinaryTreeNode<T> implements Collection<T>
 	
 	function preorderRecursiveVisitable(node:BinaryTreeNode<T>, userData:Dynamic):Bool
 	{
-		var v:Dynamic = node.val;
+		var v:Visitable = cast node.val;
 		var run = v.visit(false, userData);
 		if (run && node.hasLeft()) run = preorderRecursiveVisitable(node.left, userData);
 		if (run && node.hasRight()) run = preorderRecursiveVisitable(node.right, userData);
@@ -649,7 +649,7 @@ class BinaryTreeNode<T> implements Collection<T>
 		if (node.hasLeft())
 			if (!inorderRecursiveVisitable(node.left, userData))
 				return false;
-		var v:Dynamic = node.val;
+		var v:Visitable = cast node.val;
 		if (!v.visit(false, userData))
 			return false;
 		if (node.hasRight())
@@ -677,7 +677,7 @@ class BinaryTreeNode<T> implements Collection<T>
 		if (node.hasRight())
 			if (!postorderRecursiveVisitable(node.right, userData))
 				return false;
-		var v:Dynamic = node.val;
+		var v:Visitable = cast node.val;
 		return v.visit(false, userData);
 	}
 	
