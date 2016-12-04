@@ -46,9 +46,7 @@ class NativeArrayTools
 		#elseif cs
 		return new cs.NativeArray(len);
 		#elseif java
-		return [];
-		//TODO does not compile
-		//return new java.NativeArray(len);
+		return untyped Array.alloc(len); //TODO does not comile: return new java.NativeArray(len); 
 		#elseif cpp
 		var a = new Array<T>();
 		cpp.NativeArray.setSize(a, len);
@@ -129,7 +127,6 @@ class NativeArrayTools
 	/**
 		Copies `n` elements from `src` beginning at `first` to `dst` and returns `dst`.
 	**/
-	#if java inline #end
 	public static function toArray<T>(src:NativeArray<T>, first:Int, len:Int, dst:Array<T>):Array<T>
 	{
 		assert(first >= 0 && first < size(src), "first index out of range");
@@ -261,7 +258,6 @@ class NativeArrayTools
 	/**
 		Returns a shallow copy of `src`.
 	**/
-	#if java inline #end
 	inline public static function copy<T>(src:NativeArray<T>):NativeArray<T>
 	{
 		#if (neko || cpp)
@@ -312,7 +308,6 @@ class NativeArrayTools
 		Sets `n` elements in `a` to `val` starting at index `first` and returns `a`.
 		If `n` is 0, `n` is set to the length of `a`.
 	**/
-	#if java inline #end
 	public static function init<T>(a:NativeArray<T>, val:T, first:Int = 0, n:Int = 0):NativeArray<T>
 	{
 		var min = first;
@@ -329,7 +324,6 @@ class NativeArrayTools
 		Nullifies `n` elements in `a` starting at index `first` and returns `a`.
 		If `n` is 0, `n` is set to the length of `a`.
 	**/
-	#if java inline #end
 	public static function nullify<T>(a:NativeArray<T>, first:Int = 0, n:Int = 0):NativeArray<T>
 	{
 		var min = first;
@@ -353,7 +347,6 @@ class NativeArrayTools
 		@return the array index storing `val` or the bitwise complement (~) of the index where `val` would be inserted (guaranteed to be a negative number).
 		<br/>The insertion point is only valid for `min` = 0 and `max` = `a.length` - 1.
 	**/
-	#if java inline #end
 	public static function binarySearchCmp<T>(a:NativeArray<T>, val:T, min:Int, max:Int, cmp:T->T->Int):Int
 	{
 		assert(a != null);
