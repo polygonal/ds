@@ -42,7 +42,6 @@ class ArrayTools
 		#elseif cpp
 		a = new Array<T>();
 		a.setSize(len);
-		return a;
 		#elseif java
 		return untyped Array.alloc(len);
 		#else
