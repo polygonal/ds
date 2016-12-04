@@ -37,7 +37,8 @@ neko %CWD%\main.n ^
 -python default,noinline,debug,debug+noinline ^
 -php default,noinline,debug,debug+noinline ^
 -cpp default,noinline,debug,generic,noinline+debug,generic+debug,generic+debug+noinline,generic+noinline ^
--java default,noinline,debug,debug+noinline
+-java default,noinline,debug,debug+noinline ^
+-cs default,noinline,debug,debug+noinline
 
 cd %CWD%
 del main.n

@@ -223,7 +223,7 @@ class Main
 						Sys.setCwd(cwd);
 						Sys.setCwd(file);
 						var exe = "bin/UnitTest.exe";
-						if (file.indexOf("debug") > -1) exe = "UnitTest-debug.exe";
+						if (file.indexOf("debug") > -1) exe = "bin/UnitTest-Debug.exe";
 						run(exe, []);
 				}
 			}
