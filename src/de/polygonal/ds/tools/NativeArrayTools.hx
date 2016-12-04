@@ -44,9 +44,9 @@ class NativeArrayTools
 		#elseif js
 		return untyped __new__(Array, len);
 		#elseif cs
-		return new cs.NativeArray(len);
+		return cs.Lib.arrayAlloc(len);
 		#elseif java
-		return untyped Array.alloc(len); //TODO does not comile: return new java.NativeArray(len); 
+		return untyped Array.alloc(len);
 		#elseif cpp
 		var a = new Array<T>();
 		cpp.NativeArray.setSize(a, len);
@@ -112,7 +112,7 @@ class NativeArrayTools
 		#if neko
 		untyped __dollar__asize(a);
 		#elseif cs
-		a.Length;
+		a.length;
 		#elseif java
 		a.length;
 		#elseif python
@@ -164,11 +164,6 @@ class NativeArrayTools
 			#else
 			src.copy();
 			#end
-		//TODO does not compile
-		//#elseif java
-		//return cast (java.Lib.nativeArray(src, false));
-		#elseif cs
-		return cast (cs.Lib.nativeArray(src, false));
 		#elseif js
 		return src.slice(0, src.length);
 		#else
@@ -196,11 +191,6 @@ class NativeArrayTools
 			
 			#if neko
 			untyped __dollar__ablit(dst, dstPos, src, srcPos, n);
-			//TODO does not compile
-			//#elseif java
-			//java.lang.System.arraycopy(src, srcPos, dst, dstPos, n);
-			#elseif cs
-			cs.system.Array.Copy(cast src, srcPos, cast dst, dstPos, n);
 			#elseif cpp
 			cpp.NativeArray.blit(dst, dstPos, src, srcPos, n);
 			#else

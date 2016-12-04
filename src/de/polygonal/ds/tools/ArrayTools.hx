@@ -46,6 +46,8 @@ class ArrayTools
 		return a;
 		#elseif java
 		return untyped Array.alloc(len);
+		#elseif cs
+		return cs.Lib.arrayAlloc(len);
 		#else
 		a = new Array<T>();
 		#if neko
