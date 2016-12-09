@@ -345,6 +345,56 @@ class TestArray2 extends AbstractTest
 		}
 	}
 	
+	function testCopy()
+	{
+		var a = getIntArray(5, 5);
+		a.forEach(function(_, _, _) return 1);
+		var b = getIntArray(3, 3);
+		b.forEach(function(_, _, _) return 2);
+		
+		a.copy(b, 1, 1);
+		
+		var values =
+		[
+			1,1,1,1,1,
+			1,2,2,2,1,
+			1,2,2,2,1,
+			1,2,2,2,1,
+			1,1,1,1,1
+		];
+		
+		var data = a.getData();
+		for (i in 0...25) assertEquals(values[i], NativeArrayTools.get(data, i));
+		
+		a.forEach(function(_, _, _) return 1);
+		a.copy(b, 3, 3);
+		
+		var values =
+		[
+			1,1,1,1,1,
+			1,1,1,1,1,
+			1,1,1,1,1,
+			1,1,1,2,2,
+			1,1,1,2,2
+		];
+		
+		var data = a.getData();
+		for (i in 0...25) assertEquals(values[i], NativeArrayTools.get(data, i));
+		
+		a.forEach(function(_, _, _) return 1);
+		a.resize(2, 2);
+		a.copy(b, 0, 0);
+		
+		var values =
+		[
+			2,2,
+			2,2
+		];
+		
+		var data = a.getData();
+		for (i in 0...4) assertEquals(values[i], NativeArrayTools.get(data, i));
+	}
+	
 	function testCopyCol()
 	{
 		var a = getIntArray(mW, mH);

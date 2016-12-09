@@ -640,6 +640,31 @@ class Array2<T> implements Collection<T>
 	}
 	
 	/**
+		Copies all elements from `src` to this two-dimensional array.
+	**/
+	public function copy(src:Array2<T>, dstX:Int, dstY:Int)
+	{
+		var a = src.getData();
+		var b = getData();
+		var maxX = cols - 1;
+		var maxY = rows - 1;
+		var srcW = src.cols;
+		var srcH = src.rows;
+		var dstW = cols;
+		for (y in 0...srcH)
+		{
+			for (x in 0...srcW)
+			{
+				var ix = dstX + x;
+				if (ix > maxX) continue;
+				var iy = dstY + y;
+				if (iy > maxY) continue;
+				b.set(iy * dstW + ix, a.get(y * srcW + x));
+			}
+		}
+	}
+	
+	/**
 		Copies column elements from column `i` to column `j`.
 	**/
 	public function copyCol(i:Int, j:Int)
