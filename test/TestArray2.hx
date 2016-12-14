@@ -183,6 +183,33 @@ class TestArray2 extends AbstractTest
 				}
 			}
 		}
+		
+		var a = getStrArray(4, 4);
+		a.forEach(function(e, x, y) return x + "" + y);
+		a.resize(4, 3);
+		assertEquals(a.cols, 4);
+		assertEquals(a.rows, 3);
+		a.forEach(
+			function(e, x, y)
+			{
+				assertEquals(e, x + "" + y);
+				return e;
+			});
+		
+		var a = getStrArray(4, 3);
+		a.forEach(function(e, x, y) return x + "" + y);
+		a.resize(4, 4);
+		assertEquals(a.cols, 4);
+		assertEquals(a.rows, 4);
+		a.forEach(
+			function(e, x, y)
+			{
+				if (y == 3)
+					assertEquals(e, null);
+				else
+					assertEquals(e, x + "" + y);
+				return e;
+			});
 	}
 	
 	function testShiftLeft()

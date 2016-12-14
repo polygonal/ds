@@ -407,11 +407,17 @@ class Array2<T> implements Collection<T>
 		var t = mData;
 		mData = NativeArrayTools.alloc(width * height);
 		
+		if (width == mW)
+		{
+			t.blit(0, mData, 0, mW * (height < mH ? height : mH));
+			mW = width;
+			mH = height;
+			return;
+		}
+		
 		var minX = width < mW ? width : mW;
 		var minY = height < mH ? height : mH;
-		
 		var t1, t2, d = mData;
-		
 		for (y in 0...minY)
 		{
 			t1 = y * width;
