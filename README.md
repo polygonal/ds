@@ -53,6 +53,9 @@ _requires Haxe Compiler 3.4.0-rc1, hxcpp 3.4.2_
  * added: Array2.copy()
  * modified: optimized Array2.resize(): use fast blit when only changing #rows
  * modified: optimized ArrayList.remove(): remove multiple values at once, use fast blit
+ * modified: added ArrayTools.swap()
+ * modified: added ArrayTools.getFront()
+ * modified: added ArrayTools.iter()
 
 ### 2.0.0-rc1 (released 2016-11-05)
 _requires Haxe Compiler 3.4.0-rc1, hxcpp 3.4.2_
