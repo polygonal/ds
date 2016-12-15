@@ -78,7 +78,35 @@ class ArrayTools
 		else
 			return a;
 	}
-	
+
+	/**
+		Swaps the elements of `array` at indices `a` and `b`.
+	**/
+	public static inline function swap<T>(array:Array<T>, a:Int, b:Int) {
+		assert(array != null);
+		assert(0 <= a && a < array.length);
+		assert(0 <= b && b < array.length);
+
+		if (a != b) {
+			var x = array[a];
+			array[a] = array[b];
+			array[b] = x;
+		}
+	}
+
+	/**
+		Gets the element at index `index`, then exchanges it with element at the
+		front of `array` (i.e. at index 0).  Used to facilitate fast lookups of
+		array elements that are frequently used.
+	**/
+	public static inline function getFront<T>(array:Array<T>, index:Int) : T {
+		assert(array != null);
+		assert(0 <= index && index < array.length);
+
+		swap(array, index, 0);
+		return array[0];
+	}
+
 	/**
 		Sets `n` elements in `a` to `val` starting at index `first` and returns `a`.
 		If `n` is zero, `n` is set to the length of `a`.

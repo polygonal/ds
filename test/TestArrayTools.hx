@@ -125,4 +125,19 @@ class TestArrayTools extends AbstractTest
 		ArrayTools.blit(a, 0, a, 0, 10);
 		for (i in 0...10) assertEquals(i, a[i]);
 	}
+
+	function testSwap()
+	{
+		var a = [1, 2, 3, 4, 5];
+		ArrayTools.swap(a, 1, 4);
+
+		assertEquals(5, a[1]);
+	}
+
+	function testGetFront()
+	{
+		var a = [1, 2, 3, 4, 5];
+		var b = ArrayTools.getFront(a, 4);
+		assertEquals(b, a[0]);
+	}
 }
