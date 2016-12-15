@@ -194,6 +194,16 @@ class ArrayTools
 	}
 	
 	/**
+		Calls 'f` on all elements in the interval [0, `n`) in order.
+		If `n` is omitted, `n` is set to `src`.length.
+	**/
+	public static inline function iter<T>(src:Array<T>, f:T->Void, n:Int = 0)
+	{
+		if (n == 0) n = src.length;
+		for (i in 0...n) f(src[i]);
+	}
+	
+	/**
 		Searches the sorted array `src` for `val` in the range [`min`, `max`] using the binary search algorithm.
 		
 		@return the array index storing `val` or the bitwise complement (~) of the index where `val` would be inserted (guaranteed to be a negative number).
