@@ -374,12 +374,20 @@ class TestArray2 extends AbstractTest
 	
 	function testCopy()
 	{
+		var a = getIntArray(3, 3);
+		a.forEach(function(_, _, _) return 1);
+		var b = getIntArray(3, 3);
+		b.forEach(function(_, _, _) return 2);
+		b.copy(a, 0, 0, 0, 0);
+		var data = a.getData();
+		for (i in 0...9) assertEquals(1, NativeArrayTools.get(data, i));
+		
 		var a = getIntArray(5, 5);
 		a.forEach(function(_, _, _) return 1);
 		var b = getIntArray(3, 3);
 		b.forEach(function(_, _, _) return 2);
 		
-		a.copy(b, 1, 1);
+		a.copy(b, 0, 0, 1, 1);
 		
 		var values =
 		[
@@ -394,7 +402,7 @@ class TestArray2 extends AbstractTest
 		for (i in 0...25) assertEquals(values[i], NativeArrayTools.get(data, i));
 		
 		a.forEach(function(_, _, _) return 1);
-		a.copy(b, 3, 3);
+		a.copy(b, 0, 0, 3, 3);
 		
 		var values =
 		[
@@ -410,7 +418,7 @@ class TestArray2 extends AbstractTest
 		
 		a.forEach(function(_, _, _) return 1);
 		a.resize(2, 2);
-		a.copy(b, 0, 0);
+		a.copy(b, 0, 0, 0, 0);
 		
 		var values =
 		[
@@ -420,6 +428,40 @@ class TestArray2 extends AbstractTest
 		
 		var data = a.getData();
 		for (i in 0...4) assertEquals(values[i], NativeArrayTools.get(data, i));
+		
+		var a = getStrArray(3, 3);
+		var b = getStrArray(3, 3);
+		b.forEach(function(_, _, _) return null);
+		b.copy(a, 1, 1, 0, 0);
+		
+		var values =
+		[
+			"1.1", "2.1", null,
+			"1.2", "2.2", null,
+			null ,  null, null
+		];
+		var data = b.getData();
+		for (i in 0...9) assertEquals(values[i], NativeArrayTools.get(data, i));
+		
+		var a = getStrArray(3, 3);
+		var b = getStrArray(3, 3);
+		b.forEach(function(_, _, _) return null);
+		b.copy(a, 1, 1, 2, 1);
+		var values =
+		[
+			null, null,  null,
+			null, null, "1.1",
+			null, null, "1.2"
+		];
+		var data = b.getData();
+		for (i in 0...9) assertEquals(values[i], NativeArrayTools.get(data, i));
+		
+		var a = getStrArray(3, 3);
+		var b = getStrArray(3, 3);
+		b.forEach(function(_, _, _) return null);
+		b.copy(a, 3, 3, 3, 3);
+		var data = b.getData();
+		for (i in 0...9) assertEquals(null, NativeArrayTools.get(data, i));
 	}
 	
 	function testCopyCol()

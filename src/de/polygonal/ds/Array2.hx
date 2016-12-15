@@ -646,9 +646,9 @@ class Array2<T> implements Collection<T>
 	}
 	
 	/**
-		Copies all elements from `src` to this two-dimensional array.
+		Copies all elements from `src` at position (`srcX`,`srcY`) to this two-dimensional array at position (`dstX`,`dstY`).
 	**/
-	public function copy(src:Array2<T>, dstX:Int, dstY:Int)
+	public function copy(src:Array2<T>, srcX:Int, srcY:Int, dstX:Int, dstY:Int)
 	{
 		var a = src.getData();
 		var b = getData();
@@ -657,16 +657,37 @@ class Array2<T> implements Collection<T>
 		var srcW = src.cols;
 		var srcH = src.rows;
 		var dstW = cols;
-		for (y in 0...srcH)
+		
+		if (srcX > srcW - 1) return;
+		if (srcY > srcH - 1) return;
+		
+		if (size == src.size)
 		{
-			for (x in 0...srcW)
+			if (srcX == 0 && srcY == 0 && dstX == 0 && dstY == 0)
 			{
-				var ix = dstX + x;
+				a.blit(0, b, 0, size);
+				return;
+			}
+		}
+		
+		var s0x = srcX;
+		var s0y = srcY;
+		var s1x = s0x + srcW; if (s1x > srcW) s1x = srcW;
+		var s1y = s0y + srcH; if (s1y > srcH) s1y = srcH;
+		
+		var dX = 0, dY = 0;
+		for (y in s0y...s1y)
+		{
+			dX = 0;
+			for (x in s0x...s1x)
+			{
+				var ix = dstX + dX++;
 				if (ix > maxX) continue;
-				var iy = dstY + y;
+				var iy = dstY + dY;
 				if (iy > maxY) continue;
 				b.set(iy * dstW + ix, a.get(y * srcW + x));
 			}
+			dY++;
 		}
 	}
 	
