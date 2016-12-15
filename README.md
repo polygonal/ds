@@ -51,7 +51,8 @@ This installs the polygonal-ds library hosted on [lib.haxe.org](http://lib.haxe.
 _requires Haxe Compiler 3.4.0-rc1, hxcpp 3.4.2_
 
  * added: Array2.copy()
- * modified: Optimize Array2.resize(): use fast blit when only changing #rows
+ * modified: optimized Array2.resize(): use fast blit when only changing #rows
+ * modified: optimized ArrayList.remove(): remove multiple values at once, use fast blit
 
 ### 2.0.0-rc1 (released 2016-11-05)
 _requires Haxe Compiler 3.4.0-rc1, hxcpp 3.4.2_

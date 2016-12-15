@@ -988,30 +988,42 @@ class ArrayList<T> implements List<T>
 	{
 		if (isEmpty()) return false;
 		
-		var i = 0;
+		var i = 0, j, k;
 		var s = size;
 		var d = mData;
 		while (i < s)
 		{
 			if (d.get(i) == val)
 			{
-				//TODO optimize
-				//#if (neko || java || cs || cpp)
-				//d.blit(i + 1, d, i, s - i);
-				//s--;
-				//#else
-				s--;
+				j = i + 1;
+				while (j < s)
+				{
+					if (d.get(j) == val)
+					{
+						j++;
+						continue;
+					}
+					break;
+				}
+				
+				k = j - i;
+				#if (neko || cpp)
+				d.blit(j, d, i, s - j);
+				s -= k;
+				#else
+				s -= k;
 				var p = i;
 				while (p < s)
 				{
-					d.set(p, d.get(p + 1));
+					d.set(p, d.get(j++));
 					++p;
 				}
-				//#end
+				#end
 				continue;
 			}
 			i++;
 		}
+		
 		var found = (size - s) != 0;
 		mSize = s;
 		return found;

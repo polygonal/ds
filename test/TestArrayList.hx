@@ -872,6 +872,50 @@ class TestArrayList extends AbstractTest
 		var k = a.remove(0);
 		assertEquals(true, k);
 		assertTrue(a.isEmpty());
+		
+		var a = new ArrayList<Int>([0, 1, 2, 2, 3, 3, 3]);
+		a.remove(2);
+		assertEquals(5, a.size);
+		assertEquals(0, a.get(0));
+		assertEquals(1, a.get(1));
+		assertEquals(3, a.get(2));
+		assertEquals(3, a.get(3));
+		assertEquals(3, a.get(4));
+		
+		a.remove(1);
+		assertEquals(4, a.size);
+		assertEquals(0, a.get(0));
+		assertEquals(3, a.get(1));
+		assertEquals(3, a.get(2));
+		assertEquals(3, a.get(3));
+		
+		a.remove(3);
+		assertEquals(1, a.size);
+		assertEquals(0, a.get(0));
+		
+		var a = new ArrayList<Int>([2, 2, 2]);
+		a.remove(2);
+		assertEquals(0, a.size);
+		
+		var a = new ArrayList<Int>([1, 1, 1, 2, 2, 2]);
+		a.remove(1);
+		assertEquals(3, a.size);
+		assertEquals(2, a.get(0));
+		assertEquals(2, a.get(1));
+		assertEquals(2, a.get(2));
+		a.remove(2);
+		assertEquals(0, a.size);
+		
+		var a = new ArrayList<Int>([1, 2, 3]);
+		a.remove(1);
+		assertEquals(2, a.size);
+		assertEquals(2, a.get(0));
+		assertEquals(3, a.get(1));
+		a.remove(2);
+		assertEquals(1, a.size);
+		assertEquals(3, a.get(0));
+		a.remove(3);
+		assertEquals(0, a.size);
 	}
 	
 	function testClone()
