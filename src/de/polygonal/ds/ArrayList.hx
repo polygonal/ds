@@ -625,10 +625,41 @@ class ArrayList<T> implements List<T>
 			else
 			{
 				if (useInsertionSort)
-					insertionSort(first, count, cmp);
+					insertionSort(cmp, first, count);
 				else
 					quickSort(first, count, cmp);
 			}
+		}
+	}
+	
+	/**
+		Sorts the elements using the insertion sort algorithm. Fast for nearly sorted lists.
+		@param cmp a comparison function.
+		@param first sort start index.
+		@param count the number of elements to sort (range: [`first`, `first` + `count`]).
+	**/
+	public inline function insertionSort(cmp:T->T->Int, first:Int, count:Int)
+	{
+		assert(first >= 0 && first <= size - 1 && first + count <= size, "first index out of range");
+		assert(count >= 0 && count <= size, "count out of range");
+		
+		var j, a, b, d = mData;
+		for (i in first + 1...first + count)
+		{
+			a = d.get(i);
+			j = i;
+			while (j > first)
+			{
+				b = d.get(j - 1);
+				if (cmp(b, a) > 0)
+				{
+					d.set(j, b);
+					j--;
+				}
+				else
+					break;
+			}
+			d.set(j, a);
 		}
 	}
 	
@@ -803,28 +834,6 @@ class ArrayList<T> implements List<T>
 			d.set(lo, cast pivot);
 			quickSortComparable(first, lo - first);
 			quickSortComparable(lo + 1, last - lo);
-		}
-	}
-	
-	function insertionSort(first:Int, k:Int, cmp:T->T->Int)
-	{
-		var j, a, b, d = mData;
-		for (i in first + 1...first + k)
-		{
-			a = d.get(i);
-			j = i;
-			while (j > first)
-			{
-				b = d.get(j - 1);
-				if (cmp(b, a) > 0)
-				{
-					d.set(j, b);
-					j--;
-				}
-				else
-					break;
-			}
-			d.set(j, a);
 		}
 	}
 	
