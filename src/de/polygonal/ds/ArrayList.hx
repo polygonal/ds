@@ -143,6 +143,41 @@ class ArrayList<T> implements List<T>
 	}
 	
 	/**
+		Appends `count` elements stored in `vals` starting at index `first` to this list.
+		@param from the index to start from. If omitted, `first` is set to `vals`[0].
+		@param count the number of elements to append. If omitted, `count` is set to `vals`.length.
+	**/
+	public function addArray(vals:Array<T>, first:Int = 0, count:Int = -1):Int
+	{
+		#if debug
+		if (count != -1) assert(count <= vals.length);
+		#end
+		
+		if (count < 0) count = vals.length - first;
+		
+		assert(count <= vals.length);
+		assert(first >= 0 && first + count <= vals.length);
+		
+		var n = size + count;
+		if (n > capacity)
+		{
+			capacity = n;
+			resizeContainer(n);
+		}
+		
+		#if cpp
+		NativeArrayTools.blit(vals, first, mData, mSize, count);
+		mSize += count;
+		#else
+		var i = first;
+		var k = i + count;
+		while (i < k) mData.set(mSize++, vals[i++]);
+		#end
+		
+		return size;
+	}
+	
+	/**
 		Faster than `this.pushBack()` by skipping boundary checking.
 		
 		The user is responsible for making sure that there is enough space available (e.g. by calling `this.reserve()`).
