@@ -47,7 +47,7 @@ This installs the polygonal-ds library hosted on [lib.haxe.org](http://lib.haxe.
 	
 ## Changelog
 
-### 2.0.0-??? (dev branch)
+### 2.0.0-rc2 (dev branch)
 _requires Haxe Compiler 3.4.0-rc1, hxcpp 3.4.2_
 
  * added: Array2.copy()
@@ -56,6 +56,11 @@ _requires Haxe Compiler 3.4.0-rc1, hxcpp 3.4.2_
  * modified: added ArrayTools.swap()
  * modified: added ArrayTools.getFront()
  * modified: added ArrayTools.iter()
+ * added: ArrayList.addArray()
+ * added: Array2.getIndexAtCell()
+ * fixed: Array2.clear(), Array3.clear()
+ * added: ArrayList.addArray()
+ * added: ArrayList.insertionSort()
 
 ### 2.0.0-rc1 (released 2016-11-05)
 _requires Haxe Compiler 3.4.0-rc1, hxcpp 3.4.2_
