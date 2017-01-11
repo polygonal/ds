@@ -236,6 +236,14 @@ class Array2<T> implements Collection<T>
 	}
 	
 	/**
+		Computes an index into the linear array for the given `cell`.
+	**/
+	public inline function getIndexAtCell(cell:Array2Cell):Int
+	{
+		return cell.y * mW + cell.x;
+	}
+	
+	/**
 		Returns the index of the first occurrence of `val` or returns -1 if `val` does not exist.
 		
 		The index is in the range [0, `this.size` - 1].
