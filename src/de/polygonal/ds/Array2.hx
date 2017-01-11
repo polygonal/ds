@@ -963,7 +963,7 @@ class Array2<T> implements Collection<T>
 	**/
 	public function clear(gc:Bool = false)
 	{
-		mData.nullify(size);
+		mData.nullify();
 	}
 	
 	/**
