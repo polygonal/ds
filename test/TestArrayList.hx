@@ -976,6 +976,36 @@ class TestArrayList extends AbstractTest
 		b.of(a);
 		assertTrue(b.isEmpty());
 	}
+	
+	function testAddArray()
+	{
+		var a = new ArrayList<Int>();
+		a.addArray([1, 2, 3]);
+		assertEquals(3, a.size);
+		assertEquals(1, a.get(0));
+		assertEquals(2, a.get(1));
+		assertEquals(3, a.get(2));
+		
+		var a = new ArrayList<Int>();
+		a.addArray([1, 2, 3], 1);
+		assertEquals(2, a.size);
+		assertEquals(2, a.get(0));
+		assertEquals(3, a.get(1));
+		
+		var a = new ArrayList<Int>();
+		a.addArray([1, 2, 3], 2);
+		assertEquals(1, a.size);
+		assertEquals(3, a.get(0));
+		
+		var a = new ArrayList<Int>();
+		a.addArray([1, 2, 3], 0, 2);
+		assertEquals(2, a.size);
+		assertEquals(1, a.get(0));
+		assertEquals(2, a.get(1));
+		
+		var a = new ArrayList<Int>(2);
+		a.addArray([1, 2, 3, 4]);
+	}
 }
 
 private class E implements de.polygonal.ds.Comparable<E> implements de.polygonal.ds.Cloneable<E>
