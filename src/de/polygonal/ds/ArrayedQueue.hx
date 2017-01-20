@@ -346,11 +346,9 @@ class ArrayedQueue<T> implements Queue<T>
 	/**
 		Prints out all elements.
 	**/
+	#if !no_tostring
 	public function toString():String
 	{
-		#if no_tostring
-		return Std.string(this);
-		#else
 		var b = new StringBuf();
 		b.add('[ ArrayedQueue size=$size capacity=$capacity');
 		if (isEmpty())
@@ -369,8 +367,8 @@ class ArrayedQueue<T> implements Queue<T>
 		}
 		b.add("]");
 		return b.toString();
-		#end
 	}
+	#end
 	
 	/**
 		Returns true if this queue is full.

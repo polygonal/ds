@@ -364,11 +364,9 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	/**
 		Prints out all elements.
 	**/
+	#if !no_tostring
 	public function toString():String
 	{
-		#if no_tostring
-		return Std.string(this);
-		#else
 		var b = new StringBuf();
 		b.add('[ Heap size=$size');
 		if (isEmpty())
@@ -388,8 +386,8 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 		}
 		b.add("]");
 		return b.toString();
-		#end
 	}
+	#end
 	
 	inline function upheap(i:Int)
 	{

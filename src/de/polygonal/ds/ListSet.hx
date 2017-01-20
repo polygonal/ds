@@ -142,11 +142,9 @@ class ListSet<T> implements Set<T>
 	/**
 		Prints out all elements.
 	**/
+	#if !no_tostring
 	public function toString():String
 	{
-		#if no_tostring
-		return Std.string(this);
-		#else
 		var b = new StringBuf();
 		b.add('[ ListSet size=$size');
 		if (isEmpty())
@@ -163,8 +161,8 @@ class ListSet<T> implements Set<T>
 		}
 		b.add("]");
 		return b.toString();
-		#end
 	}
+	#end
 	
 	/* INTERFACE Set */
 	

@@ -343,11 +343,9 @@ class BitVector implements Hashable
 	/**
 		Prints out all elements.
 	**/
+	#if !no_tostring
 	public function toString():String
 	{
-		#if no_tostring
-		return Std.string(this);
-		#else
 		var b = new StringBuf();
 		b.add('[ BitVector numBits=$numBits');
 		if (ones() == 0)
@@ -366,8 +364,8 @@ class BitVector implements Hashable
 		}
 		b.add("]");
 		return b.toString();
-		#end
 	}
+	#end
 	
 	/**
 		Creates a copy of this bit vector.

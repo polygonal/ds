@@ -883,11 +883,9 @@ class Array2<T> implements Collection<T>
 	/**
 		Prints out all elements.
 	**/
+	#if !no_tostring
 	public function toString():String
 	{
-		#if no_tostring
-		return Std.string(this);
-		#else
 		var l = 0, s, d = mData;
 		for (i in 0...size)
 		{
@@ -915,8 +913,8 @@ class Array2<T> implements Collection<T>
 		}
 		b.add("]");
 		return b.toString();
-		#end
 	}
+	#end
 	
 	/* INTERFACE Collection */
 	

@@ -583,11 +583,9 @@ class BinaryTreeNode<T> implements Collection<T>
 	/**
 		Prints out all elements.
 	**/
+	#if !no_tostring
 	public function toString():String
 	{
-		#if no_tostring
-		return Std.string(this);
-		#else
 		var b = new StringBuf();
 		b.add('[ BinaryTree val=${Std.string(val)} size=$size depth=${depth()} height=${height()}');
 		if (size == 1)
@@ -615,8 +613,8 @@ class BinaryTreeNode<T> implements Collection<T>
 		preorder(f);
 		b.add("]");
 		return b.toString();
-		#end
 	}
+	#end
 	
 	function preorderRecursive(node:BinaryTreeNode<T>, process:BinaryTreeNode<T>->Dynamic->Bool, userData:Dynamic):Bool
 	{

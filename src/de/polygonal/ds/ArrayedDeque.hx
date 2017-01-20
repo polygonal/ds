@@ -322,11 +322,9 @@ class ArrayedDeque<T> implements Deque<T>
 	/**
 		Prints out all elements.
 	**/
+	#if !no_tostring
 	public function toString():String
 	{
-		#if no_tostring
-		return Std.string(this);
-		#else
 		var b = new StringBuf();
 		b.add('\n[ ArrayedDeque size=$size');
 		if (isEmpty())
@@ -393,8 +391,8 @@ class ArrayedDeque<T> implements Deque<T>
 		}
 		b.add("]");
 		return b.toString();
-		#end
 	}
+	#end
 	
 	/* INTERFACE Collection */
 	

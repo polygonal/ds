@@ -352,14 +352,12 @@ class TreeBuilder<T>
 	/**
 		Prints out all elements.
 	**/
+	#if !no_tostring
 	public function toString():String
 	{
-		#if no_tostring
-		return Std.string(this);
-		#else
 		return "{ TreeBuilder V: " + (valid() ? mNode.val : cast null) + ", H: " + (childValid() ? mChild.val : cast null) + " }";
-		#end
 	}
+	#end
 	
 	function reset()
 	{

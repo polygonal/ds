@@ -627,11 +627,9 @@ class IntIntHashTable implements Map<Int, Int>
 	/**
 		Prints out all elements.
 	**/
+	#if !no_tostring
 	public function toString():String
 	{
-		#if no_tostring
-		return Std.string(this);
-		#else
 		var b = new StringBuf();
 		b.add(Printf.format('[ IntIntHashTable size=$size capacity=$capacity load=%.2f', [loadFactor]));
 		if (isEmpty())
@@ -658,8 +656,8 @@ class IntIntHashTable implements Map<Int, Int>
 		}
 		b.add("]");
 		return b.toString();
-		#end
 	}
+	#end
 	
 	/* INTERFACE Map */
 	

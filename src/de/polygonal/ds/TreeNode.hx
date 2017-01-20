@@ -1344,11 +1344,9 @@ class TreeNode<T> implements Collection<T>
 	/**
 		Prints out all elements.
 	**/
+	#if !no_tostring
 	public function toString():String
 	{
-		#if no_tostring
-		return Std.string(this);
-		#else
 		var b = new StringBuf();
 		b.add('[ Tree size=$size depth=${depth()} height=${height()}');
 		if (children == null)
@@ -1378,8 +1376,8 @@ class TreeNode<T> implements Collection<T>
 		}, null);
 		b.add("]");
 		return b.toString();
-		#end
 	}
+	#end
 	
 	/**
 		Creates and returns a `TreeBuilder` object pointing to this node.

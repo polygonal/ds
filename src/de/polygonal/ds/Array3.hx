@@ -558,11 +558,9 @@ class Array3<T> implements Collection<T>
 		
 		Use `this.getLayer().toString()` to print the elements of a specific layer only.
 	**/
+	#if !no_tostring
 	public function toString():String
 	{
-		#if no_tostring
-		return Std.string(this);
-		#else
 		var l = 0;
 		for (i in 0...size) l = M.max(l, Std.string(mData.get(i)).length);
 		var b = new StringBuf();
@@ -587,8 +585,8 @@ class Array3<T> implements Collection<T>
 		}
 		b.add("]");
 		return b.toString();
-		#end
 	}
+	#end
 	
 	/* INTERFACE Collection */
 	

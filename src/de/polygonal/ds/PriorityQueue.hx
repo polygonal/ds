@@ -370,11 +370,9 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	/**
 		Prints out all elements.
 	**/
+	#if !no_tostring
 	public function toString():String
 	{
-		#if no_tostring
-		return Std.string(this);
-		#else
 		var b = new StringBuf();
 		b.add('[ PriorityQueue size=$size');
 		if (isEmpty())
@@ -394,8 +392,8 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 		}
 		b.add("]");
 		return b.toString();
-		#end
 	}
+	#end
 	
 	/**
 		Preallocates storage for `n` elements.

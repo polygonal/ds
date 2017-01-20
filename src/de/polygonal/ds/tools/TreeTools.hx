@@ -190,10 +190,12 @@ class XmlNode
 		return out;
 	}
 	
-	public function toString()
+	#if !no_tostring
+	public function toString():String
 	{
 		return '{ XmlNode: name=$name }';
 	}
+	#end
 }
 
 @:allow(de.polygonal.ds.TreeTools)

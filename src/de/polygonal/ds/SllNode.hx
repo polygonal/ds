@@ -124,14 +124,12 @@ class SllNode<T>
 	/**
 		Prints out all elements.
 	**/
+	#if !no_tostring
 	public function toString():String
 	{
-		#if no_tostring
-		return Std.string(this);
-		#else
 		return '{ SllNode ${Std.string(val)} }';
-		#end
 	}
+	#end
 	
 	@:extern inline function insertAfter(node:SllNode<T>)
 	{

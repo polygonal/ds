@@ -172,11 +172,9 @@ class MemoryManager
 	inline function get_bytes():flash.utils.ByteArray return mBytes;
 	#end
 	
+	#if !no_tostring
 	public function toString():String
 	{
-		#if no_tostring
-		return Std.string(this);
-		#else
 		#if (flash && alchemy)
 		var b = new StringBuf();
 		b.add('{ MemoryManager, ${bytesTotal} bytes total, ${bytesFree} bytes free (${mBytes.length - mBlockSizeBytes}) }');
@@ -197,8 +195,8 @@ class MemoryManager
 		#else
 		return "{ MemoryManager }";
 		#end
-		#end
 	}
+	#end
 	
 	/**
 		Returns the total number of free bytes (allocated but unused).

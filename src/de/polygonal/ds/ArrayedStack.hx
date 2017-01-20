@@ -423,11 +423,9 @@ class ArrayedStack<T> implements Stack<T>
 	/**
 		Prints out all elements.
 	**/
+	#if !no_tostring
 	public function toString():String
 	{
-		#if no_tostring
-		return Std.string(this);
-		#else
 		var b = new StringBuf();
 		b.add('[ ArrayedStack size=$size capacity=$capacity');
 		if (isEmpty())
@@ -448,8 +446,8 @@ class ArrayedStack<T> implements Stack<T>
 		}
 		b.add("]");
 		return b.toString();
-		#end
 	}
+	#end
 	
 	/* INTERFACE Collection */
 	

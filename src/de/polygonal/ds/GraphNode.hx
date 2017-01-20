@@ -252,11 +252,9 @@ class GraphNode<T> implements Hashable
 		return this;
 	}
 	
+	#if !no_tostring
 	public function toString():String
 	{
-		#if no_tostring
-		return Std.string(this);
-		#else
 		var t = [], arc;
 		if (arcList != null)
 		{
@@ -272,8 +270,8 @@ class GraphNode<T> implements Hashable
 			'{ GraphNode val=$val, arcs=${t.join(",")} }';
 		else
 			'{ GraphNode val=$val }';
-		#end
 	}
+	#end
 }
 
 #if generic

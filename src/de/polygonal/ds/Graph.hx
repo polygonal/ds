@@ -1121,11 +1121,9 @@ class Graph<T> implements Collection<T>
 	/**
 		Prints out all elements.
 	**/
+	#if !no_tostring
 	public function toString():String
 	{
-		#if no_tostring
-		return Std.string(this);
-		#else
 		var tmp = [];
 		function printNode(n:GraphNode<T>)
 		{
@@ -1165,8 +1163,8 @@ class Graph<T> implements Collection<T>
 		}
 		b.add("]");
 		return b.toString();
-		#end
 	}
+	#end
 	
 	/* INTERFACE Collection */
 	

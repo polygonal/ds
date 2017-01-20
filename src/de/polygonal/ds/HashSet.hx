@@ -293,11 +293,9 @@ class HashSet<T:Hashable> implements Set<T>
 	/**
 		Prints out all elements.
 	**/
+	#if !no_tostring
 	public function toString():String
 	{
-		#if no_tostring
-		return Std.string(this);
-		#else
 		var b = new StringBuf();
 		b.add(Printf.format('[ HashSet size=$size capacity=$capacity load=%.2f', [loadFactor]));
 		if (isEmpty())
@@ -314,8 +312,8 @@ class HashSet<T:Hashable> implements Set<T>
 		}
 		b.add("]");
 		return b.toString();
-		#end
 	}
+	#end
 	
 	/* INTERFACE Set */
 	

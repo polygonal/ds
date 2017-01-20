@@ -246,14 +246,12 @@ class DllNode<T>
 	/**
 		Prints out all elements.
 	**/
+	#if !no_tostring
 	public function toString():String
 	{
-		#if no_tostring
-		return Std.string(this);
-		#else
 		return '{ DllNode ${Std.string(val)} }';
-		#end
 	}
+	#end
 	
 	@:extern inline function insertAfter(node:DllNode<T>)
 	{

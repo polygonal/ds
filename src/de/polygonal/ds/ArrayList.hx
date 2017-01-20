@@ -706,11 +706,9 @@ class ArrayList<T> implements List<T>
 	/**
 		Prints out all elements.
 	**/
+	#if !no_tostring
 	public function toString():String
 	{
-		#if no_tostring
-		return Std.string(this);
-		#else
 		var b = new StringBuf();
 		b.add('[ ArrayList size=$size capacity=$capacity');
 		if (isEmpty())
@@ -729,8 +727,8 @@ class ArrayList<T> implements List<T>
 		}
 		b.add("]");
 		return b.toString();
-		#end
 	}
+	#end
 	
 	function quickSort(first:Int, k:Int, cmp:T->T->Int)
 	{
