@@ -231,9 +231,10 @@ class IntHashTable<T> implements Map<Int, T>
 		
 		This is an expensive operations as the hash table is rebuild from scratch.
 	**/
-	public function rehash(slotCount:Int)
+	public function rehash(slotCount:Int):IntHashTable<T>
 	{
 		mH.rehash(slotCount);
+		return this;
 	}
 	
 	/**

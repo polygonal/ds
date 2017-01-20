@@ -116,12 +116,13 @@ class Sll<T> implements List<T>
 		
 		Silently fails if this list is already closed.
 	**/
-	public function close()
+	public function close():Sll<T>
 	{
-		if (isCircular) return;
+		if (isCircular) return this;
 		isCircular = true;
 		if (valid(head))
 			tail.next = head;
+		return this;
 	}
 	
 	/**
@@ -129,12 +130,13 @@ class Sll<T> implements List<T>
 		
 		Silently fails if this list is already non-circular.
 	**/
-	public function open()
+	public function open():Sll<T>
 	{
-		if (!isCircular) return;
+		if (!isCircular) return this;
 		isCircular = false;
 		if (valid(head))
 			tail.next = null;
+		return this;
 	}
 	
 	/**
@@ -168,7 +170,7 @@ class Sll<T> implements List<T>
 	/**
 		Appends `node` to this list.
 	**/
-	public inline function appendNode(node:SllNode<T>)
+	public inline function appendNode(node:SllNode<T>):Sll<T>
 	{
 		assert(node.getList() == this, "node is not managed by this list");
 		
@@ -182,6 +184,7 @@ class Sll<T> implements List<T>
 			tail.next = head;
 		
 		mSize++;
+		return this;
 	}
 	
 	/**
@@ -207,7 +210,7 @@ class Sll<T> implements List<T>
 	/**
 		Prepends `node` to this list.
 	**/
-	public function prependNode(node:SllNode<T>)
+	public function prependNode(node:SllNode<T>):Sll<T>
 	{
 		assert(node.getList() == this, "node is not managed by this list");
 		
@@ -221,6 +224,7 @@ class Sll<T> implements List<T>
 			tail.next = head;
 		
 		mSize++;
+		return this;
 	}
 	
 	/**
@@ -381,7 +385,7 @@ class Sll<T> implements List<T>
 	/**
 		Unlinks the head node and appends it to the tail.
 	**/
-	public inline function shiftUp()
+	public inline function shiftUp():Sll<T>
 	{
 		assert(size > 0, "list is empty");
 		
@@ -403,12 +407,13 @@ class Sll<T> implements List<T>
 				tail = t;
 			}
 		}
+		return this;
 	}
 	
 	/**
 		Unlinks the tail node and prepends it to the head.
 	**/
-	public inline function popDown()
+	public inline function popDown():Sll<T>
 	{
 		assert(size > 0, "list is empty");
 		
@@ -433,6 +438,7 @@ class Sll<T> implements List<T>
 				head = t;
 			}
 		}
+		return this;
 	}
 	
 	/**
@@ -464,7 +470,7 @@ class Sll<T> implements List<T>
 		@param useInsertionSort if true, the linked list is sorted using the insertion sort algorithm.
 		This is faster for nearly sorted lists.
 	**/
-	public function sort(?cmp:T->T->Int, useInsertionSort:Bool = false)
+	public function sort(?cmp:T->T->Int, useInsertionSort:Bool = false):Sll<T>
 	{
 		if (size > 1)
 		{
@@ -481,6 +487,7 @@ class Sll<T> implements List<T>
 			
 			if (isCircular) tail.next = head;
 		}
+		return this;
 	}
 	
 	/**
@@ -488,7 +495,7 @@ class Sll<T> implements List<T>
 		
 		_The merge operation destroys `list` so it should be discarded._
 	**/
-	public function merge(list:Sll<T>)
+	public function merge(list:Sll<T>):Sll<T>
 	{
 		assert(list != this, "list equals this list");
 		assert(list != null, "list is null");
@@ -518,6 +525,7 @@ class Sll<T> implements List<T>
 			if (isCircular)
 				tail.next = head;
 		}
+		return this;
 	}
 	
 	/**
@@ -550,7 +558,7 @@ class Sll<T> implements List<T>
 	/**
 		Reverses the linked list in place.
 	**/
-	public function reverse()
+	public function reverse():Sll<T>
 	{
 		if (size > 1)
 		{
@@ -571,6 +579,7 @@ class Sll<T> implements List<T>
 				node = node.next;
 			}
 		}
+		return this;
 	}
 	
 	/**
@@ -631,11 +640,11 @@ class Sll<T> implements List<T>
 		@param rvals a list of random double values in the interval [0, 1) defining the new positions of the elements.
 		If omitted, random values are generated on-the-fly by calling `Math.random()`.
 	**/
-	public function shuffle(rvals:Array<Float> = null)
+	public function shuffle(rvals:Array<Float> = null):Sll<T>
 	{
 		var s = size;
 		
-		if (s == 1) return;
+		if (s == 1) return this;
 		
 		if (isCircular) tail.next = null;
 		
@@ -681,6 +690,7 @@ class Sll<T> implements List<T>
 		}
 		
 		if (isCircular) tail.next = head;
+		return this;
 	}
 	
 	/**

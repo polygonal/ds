@@ -143,7 +143,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 		May cause a reallocation, but has no effect on `this.size` and its elements.
 		An application can use this operation to free up memory by unlocking resources for the garbage collector.
 	**/
-	public function pack()
+	public function pack():PriorityQueue<T>
 	{
 		if (capacity > mInitialCapacity)
 		{
@@ -244,7 +244,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 		Re-prioritizes `val`.
 		@param priority the new priority.
 	**/
-	public function reprioritize(val:T, priority:Float)
+	public function reprioritize(val:T, priority:Float):PriorityQueue<T>
 	{
 		assert(size > 0, "priority queue is empty");
 		
@@ -254,7 +254,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 		#end
 		
 		var oldPriority = val.priority;
-		if (oldPriority == priority) return;
+		if (oldPriority == priority) return this;
 		
 		val.priority = priority;
 		var pos = val.position;
@@ -279,6 +279,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 				upheap(size);
 			}
 		}
+		return this;
 	}
 	
 	/**

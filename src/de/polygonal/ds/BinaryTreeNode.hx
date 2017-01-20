@@ -436,7 +436,7 @@ class BinaryTreeNode<T> implements Collection<T>
 		
 		If a left child exists, only the element is updated to `val`.
 	**/
-	public inline function setLeft(val:T)
+	public inline function setLeft(val:T):BinaryTreeNode<T>
 	{
 		if (left == null)
 		{
@@ -445,6 +445,7 @@ class BinaryTreeNode<T> implements Collection<T>
 		}
 		else
 			left.val = val;
+		return this;
 	}
 	
 	/**
@@ -460,7 +461,7 @@ class BinaryTreeNode<T> implements Collection<T>
 		
 		If a right child exists, only the element is updated to `val`.
 	**/
-	public inline function setRight(val:T)
+	public inline function setRight(val:T):BinaryTreeNode<T>
 	{
 		if (right == null)
 		{
@@ -469,6 +470,7 @@ class BinaryTreeNode<T> implements Collection<T>
 		}
 		else
 			right.val = val;
+		return this;
 	}
 	
 	/**
@@ -565,7 +567,7 @@ class BinaryTreeNode<T> implements Collection<T>
 	/**
 		Disconnects this node from this subtree.
 	**/
-	public inline function unlink()
+	public inline function unlink():BinaryTreeNode<T>
 	{
 		if (parent != null)
 		{
@@ -575,6 +577,7 @@ class BinaryTreeNode<T> implements Collection<T>
 			parent = null;
 		}
 		left = right = null;
+		return this;
 	}
 	
 	/**

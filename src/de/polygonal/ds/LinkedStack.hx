@@ -146,7 +146,7 @@ class LinkedStack<T> implements Stack<T>
 	/**
 		Pops the top element of the stack, and pushes it back twice, so that an additional copy of the former top item is now on top, with the original below it.
 	**/
-	public inline function dup()
+	public inline function dup():LinkedStack<T>
 	{
 		assert(mTop > 0, "stack is empty");
 		
@@ -154,18 +154,20 @@ class LinkedStack<T> implements Stack<T>
 		node.next = mHead;
 		mHead = node;
 		mTop++;
+		return this;
 	}
 	
 	/**
 		Swaps the two topmost items on the stack.
 	**/
-	public inline function exchange()
+	public inline function exchange():LinkedStack<T>
 	{
 		assert(mTop > 1, "size < 2");
 		
 		var t = mHead.val;
 		mHead.val = mHead.next.val;
 		mHead.next.val = t;
+		return this;
 	}
 	
 	/**
@@ -178,7 +180,7 @@ class LinkedStack<T> implements Stack<T>
 			|1|      -->      |2|
 			|0|               |1|
 	**/
-	public inline function rotRight(n:Int)
+	public function rotRight(n:Int):LinkedStack<T>
 	{
 		assert(mTop >= n, "size < n");
 		
@@ -191,6 +193,7 @@ class LinkedStack<T> implements Stack<T>
 		
 		bot.next = mHead;
 		mHead = bot;
+		return this;
 	}
 	
 	/**
@@ -203,7 +206,7 @@ class LinkedStack<T> implements Stack<T>
 			|1|      -->     |0|
 			|0|              |3|
 	**/
-	public inline function rotLeft(n:Int)
+	public function rotLeft(n:Int):LinkedStack<T>
 	{
 		assert(mTop >= n, "size < n");
 		
@@ -216,6 +219,7 @@ class LinkedStack<T> implements Stack<T>
 		
 		top.next = node.next;
 		node.next = top;
+		return this;
 	}
 	
 	/**
@@ -225,7 +229,7 @@ class LinkedStack<T> implements Stack<T>
 		
 		An index of `this.size` - 1 indicates the topmost element.
 	**/
-	public inline function get(i:Int):T
+	public function get(i:Int):T
 	{
 		assert(mTop > 0, "stack is empty");
 		assert(i >= 0 && i < mTop, 'i index out of range ($i)');
@@ -243,7 +247,7 @@ class LinkedStack<T> implements Stack<T>
 		
 		An index of `this.size` - 1 indicates the topmost element.
 	**/
-	public inline function set(i:Int, val:T)
+	public function set(i:Int, val:T):LinkedStack<T>
 	{
 		assert(mTop > 0, "stack is empty");
 		assert(i >= 0 && i < mTop, 'i index out of range ($i)');
@@ -252,6 +256,7 @@ class LinkedStack<T> implements Stack<T>
 		i = size - i;
 		while (--i > 0) node = node.next;
 		node.val = val;
+		return this;
 	}
 	
 	/**
@@ -261,7 +266,7 @@ class LinkedStack<T> implements Stack<T>
 		
 		An index of `this.size` - 1 indicates the topmost element.
 	**/
-	public inline function swap(i:Int, j:Int)
+	public function swap(i:Int, j:Int):LinkedStack<T>
 	{
 		assert(mTop > 0, "stack is empty");
 		assert(i >= 0 && i < mTop, 'i index out of range ($i)');
@@ -292,6 +297,7 @@ class LinkedStack<T> implements Stack<T>
 		var t = a.val;
 		a.val = node.val;
 		node.val = t;
+		return this;
 	}
 	
 	/**
@@ -301,7 +307,7 @@ class LinkedStack<T> implements Stack<T>
 		
 		An index of `this.size` - 1 indicates the topmost element.
 	**/
-	public inline function copy(i:Int, j:Int)
+	public function copy(i:Int, j:Int):LinkedStack<T>
 	{
 		assert(mTop > 0, "stack is empty");
 		assert(i >= 0 && i < mTop, 'i index out of range ($i)');
@@ -330,6 +336,7 @@ class LinkedStack<T> implements Stack<T>
 			k--;
 		}
 		node.val = val;
+		return this;
 	}
 	
 	/**
@@ -373,7 +380,7 @@ class LinkedStack<T> implements Stack<T>
 		@param rvals a list of random double values in the interval [0, 1) defining the new positions of the elements.
 		If omitted, random values are generated on-the-fly by calling `Math.random()`.
 	**/
-	public function shuffle(rvals:Array<Float> = null)
+	public function shuffle(rvals:Array<Float> = null):LinkedStack<T>
 	{
 		var s = mTop;
 		if (rvals == null)
@@ -416,6 +423,7 @@ class LinkedStack<T> implements Stack<T>
 				node2.val = t;
 			}
 		}
+		return this;
 	}
 	
 	/**

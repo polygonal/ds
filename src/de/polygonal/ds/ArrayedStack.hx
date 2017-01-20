@@ -118,7 +118,7 @@ class ArrayedStack<T> implements Stack<T>
 		May cause a reallocation, but has no effect on `this.size` and its elements.
 		An application can use this operation to free up memory by unlocking resources for the garbage collector.
 	**/
-	public function pack()
+	public function pack():ArrayedStack<T>
 	{
 		if (capacity > mInitialCapacity)
 		{
@@ -130,6 +130,7 @@ class ArrayedStack<T> implements Stack<T>
 			var d = mData;
 			for (i in size...capacity) d.set(i, cast null);
 		}
+		return this;
 	}
 	
 	/**
@@ -174,11 +175,12 @@ class ArrayedStack<T> implements Stack<T>
 		
 		The user is responsible for making sure that there is enough space available (e.g. by calling `this.reserve()`).
 	**/
-	public inline function unsafePush(val:T)
+	public inline function unsafePush(val:T):ArrayedStack<T>
 	{
 		assert(size < capacity, "out of space");
 		
 		mData.set(mTop++, val);
+		return this;
 	}
 	
 	/**
@@ -195,7 +197,7 @@ class ArrayedStack<T> implements Stack<T>
 	/**
 		Pops the top element of the stack, and pushes it back twice, so that an additional copy of the former top item is now on top, with the original below it.
 	**/
-	public inline function dup()
+	public inline function dup():ArrayedStack<T>
 	{
 		assert(mTop > 0, "stack is empty");
 		
@@ -203,12 +205,13 @@ class ArrayedStack<T> implements Stack<T>
 		var d = mData;
 		d.set(mTop, d.get(mTop - 1));
 		mTop++;
+		return this;
 	}
 	
 	/**
 		Swaps the two topmost items on the stack.
 	**/
-	public inline function exchange()
+	public inline function exchange():ArrayedStack<T>
 	{
 		assert(mTop > 1, "size < 2");
 		
@@ -218,6 +221,7 @@ class ArrayedStack<T> implements Stack<T>
 		var t = d.get(i);
 		d.set(i, d.get(j));
 		d.set(j, t);
+		return this;
 	}
 	
 	/**
@@ -230,7 +234,7 @@ class ArrayedStack<T> implements Stack<T>
 			|1|      -->      |2|
 			|0|               |1|
 	**/
-	public function rotRight(n:Int)
+	public function rotRight(n:Int):ArrayedStack<T>
 	{
 		assert(mTop >= n, "size < n");
 		
@@ -244,6 +248,7 @@ class ArrayedStack<T> implements Stack<T>
 			i++;
 		}
 		d.set(mTop - 1, t);
+		return this;
 	}
 	
 	/**
@@ -256,7 +261,7 @@ class ArrayedStack<T> implements Stack<T>
 			|1|      -->     |0|
 			|0|              |3|
 	**/
-	public function rotLeft(n:Int)
+	public function rotLeft(n:Int):ArrayedStack<T>
 	{
 		assert(mTop >= n, "size < n");
 		
@@ -270,6 +275,7 @@ class ArrayedStack<T> implements Stack<T>
 			i--;
 		}
 		d.set(mTop - n, t);
+		return this;
 	}
 	
 	/**
@@ -294,12 +300,13 @@ class ArrayedStack<T> implements Stack<T>
 		
 		An index of `this.size` - 1 indicates the topmost element.
 	**/
-	public inline function set(i:Int, val:T)
+	public inline function set(i:Int, val:T):ArrayedStack<T>
 	{
 		assert(mTop > 0, "stack is empty");
 		assert(i >= 0 && i < mTop, 'i index out of range ($i)');
 		
 		mData.set(i, val);
+		return this;
 	}
 	
 	/**
@@ -309,7 +316,7 @@ class ArrayedStack<T> implements Stack<T>
 		
 		An index of `this.size` - 1 indicates the topmost element.
 	**/
-	public inline function swap(i:Int, j:Int)
+	public inline function swap(i:Int, j:Int):ArrayedStack<T>
 	{
 		assert(mTop > 0, "stack is empty");
 		assert(i >= 0 && i < mTop, 'i index out of range ($i)');
@@ -320,6 +327,7 @@ class ArrayedStack<T> implements Stack<T>
 		var t = d.get(i);
 		d.set(i, d.get(j));
 		d.set(j, t);
+		return this;
 	}
 	
 	/**
@@ -329,7 +337,7 @@ class ArrayedStack<T> implements Stack<T>
 		
 		An index of `this.size` - 1 indicates the topmost element.
 	**/
-	public inline function copy(i:Int, j:Int)
+	public inline function copy(i:Int, j:Int):ArrayedStack<T>
 	{
 		assert(mTop > 0, "stack is empty");
 		assert(i >= 0 && i < mTop, 'i index out of range ($i)');
@@ -338,6 +346,7 @@ class ArrayedStack<T> implements Stack<T>
 		
 		var d = mData;
 		d.set(i, d.get(j));
+		return this;
 	}
 	
 	/**

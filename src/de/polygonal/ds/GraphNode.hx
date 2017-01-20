@@ -170,7 +170,7 @@ class GraphNode<T> implements Hashable
 		Adds an arc pointing from this node to the specified `target` node.
 		@param userData custom data stored in the arc (optional). For example `userData` could store a number defining how "hard" it is to get from one node to another.
 	**/
-	public function addArc(target:GraphNode<T>, userData:Dynamic = 1)
+	public function addArc(target:GraphNode<T>, userData:Dynamic = 1):GraphNode<T>
 	{
 		assert(target != this, "target is null");
 		assert(getArc(target) == null, "arc to target already exists");
@@ -189,6 +189,7 @@ class GraphNode<T> implements Hashable
 		arcList = arc;
 		
 		numArcs++;
+		return this;
 	}
 	
 	/**
@@ -222,7 +223,7 @@ class GraphNode<T> implements Hashable
 	/**
 		Removes all outgoing arcs from this node.
 	**/
-	public function removeSingleArcs()
+	public function removeSingleArcs():GraphNode<T>
 	{
 		var arc = arcList;
 		while (arc != null)
@@ -231,12 +232,13 @@ class GraphNode<T> implements Hashable
 			arc = arc.next;
 		}
 		numArcs = 0;
+		return this;
 	}
 	
 	/**
 		Remove all outgoing and incoming arcs from this node.
 	**/
-	public function removeMutualArcs()
+	public function removeMutualArcs():GraphNode<T>
 	{
 		var arc = arcList;
 		while (arc != null)
@@ -247,6 +249,7 @@ class GraphNode<T> implements Hashable
 		}
 		arcList = null;
 		numArcs = 0;
+		return this;
 	}
 	
 	public function toString():String

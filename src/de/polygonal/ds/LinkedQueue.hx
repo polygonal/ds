@@ -208,7 +208,7 @@ class LinkedQueue<T> implements Queue<T>
 		@param rvals a list of random double values in the interval [0, 1) defining the new positions of the elements.
 		If omitted, random values are generated on-the-fly by calling `Math.random()`.
 	**/
-	public function shuffle(rvals:Array<Float> = null)
+	public function shuffle(rvals:Array<Float> = null):LinkedQueue<T> 
 	{
 		var s = size;
 		if (rvals == null)
@@ -251,6 +251,7 @@ class LinkedQueue<T> implements Queue<T>
 				node2.val = t;
 			}
 		}
+		return this;
 	}
 	
 	/**

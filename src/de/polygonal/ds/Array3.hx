@@ -198,13 +198,14 @@ class Array3<T> implements Collection<T>
 	/**
 		Replaces the element at column `x`, row `y` and layer `z` with `val`.
 	**/
-	public inline function set(x:Int, y:Int, z:Int, val:T)
+	public inline function set(x:Int, y:Int, z:Int, val:T):Array3<T>
 	{
 		assert(x >= 0 && x < cols, 'x index out of range ($x)');
 		assert(y >= 0 && y < rows, 'y index out of range ($y)');
 		assert(z >= 0 && z < depth, 'z index out of range ($z)');
 		
 		mData.set(getIndex(x, y, z), val);
+		return this;
 	}
 	
 	/**
@@ -320,7 +321,7 @@ class Array3<T> implements Collection<T>
 	/**
 		Overwrites all elements in row `y` and layer `z` with the elements stored in the `input` array.
 	**/
-	public function setRow(z:Int, y:Int, input:Array<T>)
+	public function setRow(z:Int, y:Int, input:Array<T>):Array3<T>
 	{
 		assert(y >= 0 && y < rows, 'y index out of range ($y)');
 		assert(z >= 0 && z < depth, 'z index out of range ($z)');
@@ -329,6 +330,7 @@ class Array3<T> implements Collection<T>
 		
 		var offset = (z * mW * mH) + (y * mW), d = mData;
 		for (x in 0...mW) d.set(offset + x, input[x]);
+		return this;
 	}
 	
 	/**
@@ -350,7 +352,7 @@ class Array3<T> implements Collection<T>
 	/**
 		Overwrites all elements in column `x` and layer `z` with the elements stored in the `input` array.
 	**/
-	public function setCol(z:Int, x:Int, input:Array<T>)
+	public function setCol(z:Int, x:Int, input:Array<T>):Array3<T>
 	{
 		assert(x >= 0 && x < cols, 'x index out of range ($x)');
 		assert(z >= 0 && z < depth, 'z index out of range ($z)');
@@ -359,6 +361,7 @@ class Array3<T> implements Collection<T>
 		
 		var offset = z * mW * mH, d = mData;
 		for (i in 0...mH) d.set(offset + (i * mW + x), input[i]);
+		return this;
 	}
 	
 	/**
@@ -382,7 +385,7 @@ class Array3<T> implements Collection<T>
 	/**
 		Overwrites all elements in column `x` and row `y` with the elements stored in the `input` array.
 	**/
-	public function setPile(x:Int, y:Int, input:Array<T>)
+	public function setPile(x:Int, y:Int, input:Array<T>):Array3<T>
 	{
 		assert(x >= 0 && x < cols, 'x index out of range ($x)');
 		assert(y >= 0 && y < rows, 'y index out of range ($y)');
@@ -394,6 +397,7 @@ class Array3<T> implements Collection<T>
 		var d = mData;
 		for (z in 0...mD)
 			d.set(z * offset1 + offset2, input[z]);
+		return this;
 	}
 	
 	/**
@@ -449,11 +453,11 @@ class Array3<T> implements Collection<T>
 		@param height the new height (minimum is 2).
 		@param depth the new depth (minimum is 2).
 	**/
-	public function resize(width:Int, height:Int, depth:Int)
+	public function resize(width:Int, height:Int, depth:Int):Array3<T>
 	{
 		assert(width >= 2 && height >= 2 && depth >= 1, 'invalid size (width:$width, height:$height, depth: $depth)');
 		
-		if (width == mW && height == mH && depth == mD) return;
+		if (width == mW && height == mH && depth == mD) return this;
 		
 		var t = mData;
 		mData = NativeArrayTools.alloc(width * height * depth);
@@ -478,12 +482,13 @@ class Array3<T> implements Collection<T>
 		mW = width;
 		mH = height;
 		mD = depth;
+		return this;
 	}
 	
 	/**
 		Swaps the element at column/row/layer `x0`, `y0`, `z0` with the element at column/row/layer `x1`, `y1`, `z1`.
 	**/
-	public inline function swap(x0:Int, y0:Int, z0:Int, x1:Int, y1:Int, z1:Int)
+	public inline function swap(x0:Int, y0:Int, z0:Int, x1:Int, y1:Int, z1:Int):Array3<T>
 	{
 		assert(x0 >= 0 && x0 < cols, 'x0 index out of range ($x0)');
 		assert(y0 >= 0 && y0 < rows, 'y0 index out of range ($y0)');
@@ -499,6 +504,7 @@ class Array3<T> implements Collection<T>
 		var t = d.get(i);
 		d.set(i, d.get(j));
 		d.set(j, t);
+		return this;
 	}
 	
 	/**
@@ -516,7 +522,7 @@ class Array3<T> implements Collection<T>
 		@param rvals a list of random double values in the interval [0, 1) defining the new positions of the elements.
 		If omitted, random values are generated on-the-fly by calling `Math.random()`.
 	**/
-	public function shuffle(rvals:Array<Float> = null)
+	public function shuffle(rvals:Array<Float> = null):Array3<T>
 	{
 		var s = size;
 		var d = mData;
@@ -544,6 +550,7 @@ class Array3<T> implements Collection<T>
 				d.set(i, t);
 			}
 		}
+		return this;
 	}
 	
 	/**

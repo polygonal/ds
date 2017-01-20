@@ -173,7 +173,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	/**
 		Adds `val`.
 	**/
-	public function add(val:T)
+	public function add(val:T):Heap<T>
 	{
 		#if debug
 		assert(val != null, "val is null");
@@ -185,6 +185,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 		mData.set(++mSize, val);
 		val.position = size;
 		upheap(size);
+		return this;
 	}
 	
 	/**
@@ -212,7 +213,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	/**
 		Replaces the item at the top of the heap with `val`.
 	**/
-	public function replace(val:T)
+	public function replace(val:T):Heap<T>
 	{
 		#if debug
 		assert(!mMap.exists(val), "val already exists");
@@ -222,6 +223,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 		
 		mData.set(1, val);
 		downheap(1);
+		return this;
 	}
 	
 	/**
@@ -231,7 +233,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 		@param hint a value >= 0 indicates that `val` is now smaller (ascending order) or bigger (descending order) and should be moved towards the root of the tree to rebuild the heap property.
 		Likewise, a value < 0 indicates that `val` is now bigger (ascending order) or smaller (descending order) and should be moved towards the leaf nodes of the tree.
 	**/
-	public function change(val:T, hint:Int)
+	public function change(val:T, hint:Int):Heap<T>
 	{
 		#if debug
 		var exists = mMap.exists(val);
@@ -245,6 +247,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 			downheap(val.position);
 			upheap(size);
 		}
+		return this;
 	}
 	
 	/**

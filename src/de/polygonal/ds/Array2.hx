@@ -178,12 +178,13 @@ class Array2<T> implements Collection<T>
 	/**
 		Replaces the element at column `x` and row `y` with `val`.
 	**/
-	public inline function set(x:Int, y:Int, val:T)
+	public inline function set(x:Int, y:Int, val:T):Array2<T>
 	{
 		assert(x >= 0 && x < cols, 'x index out of range ($x)');
 		assert(y >= 0 && y < rows, 'y index out of range ($y)');
 		
 		mData.set(getIndex(x, y), val);
+		return this;
 	}
 	
 	/**
@@ -199,32 +200,35 @@ class Array2<T> implements Collection<T>
 	/**
 		Replaces the element that is stored in column `cell.x` and row `cell.y` with `val`.
 	**/
-	public inline function setAtCell(cell:Array2Cell, val:T)
+	public inline function setAtCell(cell:Array2Cell, val:T):Array2<T>
 	{
 		assert(cell != null, "cell is null");
 		assert(cell.x >= 0 && cell.x < cols, 'cell.x out of range (${cell.x})');
 		assert(cell.y >= 0 && cell.y < rows, 'cell.y out of range (${cell.y})');
 		
-		return mData.set(getIndex(cell.x, cell.y), val);
+		mData.set(getIndex(cell.x, cell.y), val);
+		return this;
 	}
 	
 	/**
 		Replaces the element at index `i` with `val`.
 	**/
-	public inline function setAtIndex(i:Int, val:T)
+	public inline function setAtIndex(i:Int, val:T):Array2<T>
 	{
 		assert(i >= 0 && i < size, 'index out of range ($i)');
 		
 		mData.set(getIndex(i % mW, Std.int(i / mW)), val);
+		return this;
 	}
 	
 	/**
 		Sets all elements to `val`.
 	**/
-	public function setAll(val:T)
+	public function setAll(val:T):Array2<T>
 	{
 		var d = mData;
 		for (i in 0...size) d.set(i, val);
+		return this;
 	}
 	
 	/**
@@ -325,7 +329,7 @@ class Array2<T> implements Collection<T>
 	/**
 		Overwrites all elements in row `y` with elements from `input`.
 	**/
-	public function setRow(y:Int, input:Array<T>)
+	public function setRow(y:Int, input:Array<T>):Array2<T>
 	{
 		assert(y >= 0 && y < rows, 'y index out of range ($y)');
 		assert(input != null, "input is null");
@@ -333,6 +337,7 @@ class Array2<T> implements Collection<T>
 		
 		var offset = y * mW, d = mData;
 		for (x in 0...mW) d.set(offset + x, input[x]);
+		return this;
 	}
 	
 	/**
@@ -353,7 +358,7 @@ class Array2<T> implements Collection<T>
 	/**
 		Overwrites all elements in column `x` with elements from `input`.
 	**/
-	public function setCol(x:Int, input:Array<T>)
+	public function setCol(x:Int, input:Array<T>):Array2<T>
 	{
 		assert(x >= 0 && x < cols, 'x index out of range ($x)');
 		assert(input != null, "input is null");
@@ -361,6 +366,7 @@ class Array2<T> implements Collection<T>
 		
 		var d = mData;
 		for (y in 0...mH) d.set(getIndex(x, y), input[y]);
+		return this;
 	}
 	
 	/**
@@ -406,11 +412,11 @@ class Array2<T> implements Collection<T>
 		@param width the new width (minimum is 2).
 		@param height the new height (minimum is 2).
 	**/
-	public function resize(width:Int, height:Int)
+	public function resize(width:Int, height:Int):Array2<T>
 	{
 		assert(width >= 2 && height >= 2, 'invalid size (width:$width, height:$height)');
 		
-		if (width == mW && height == mH) return;
+		if (width == mW && height == mH) return this;
 		
 		var t = mData;
 		mData = NativeArrayTools.alloc(width * height);
@@ -420,7 +426,7 @@ class Array2<T> implements Collection<T>
 			t.blit(0, mData, 0, mW * (height < mH ? height : mH));
 			mW = width;
 			mH = height;
-			return;
+			return this;
 		}
 		
 		var minX = width < mW ? width : mW;
@@ -436,6 +442,7 @@ class Array2<T> implements Collection<T>
 		
 		mW = width;
 		mH = height;
+		return this;
 	}
 	
 	/**
@@ -443,7 +450,7 @@ class Array2<T> implements Collection<T>
 		
 		Columns are wrapped so the column at index 0 is not lost but appended to the rightmost column.
 	**/
-	public function shiftLeft()
+	public function shiftLeft():Array2<T>
 	{
 		var t, k, d = mData;
 		for (y in 0...mH)
@@ -454,6 +461,7 @@ class Array2<T> implements Collection<T>
 				d.set(k + x - 1, d.get(k + x));
 			d.set(k + mW - 1, t);
 		}
+		return this;
 	}
 	
 	/**
@@ -461,7 +469,7 @@ class Array2<T> implements Collection<T>
 		
 		Columns are wrapped, so the column at index [`this.cols` - 1] is not lost but prepended to the leftmost column.
 	**/
-	public function shiftRight()
+	public function shiftRight():Array2<T>
 	{
 		var t, x, k, d = mData;
 		for (y in 0...mH)
@@ -473,6 +481,7 @@ class Array2<T> implements Collection<T>
 				d.set(k + x + 1, d.get(k + x));
 			d.set(k, t);
 		}
+		return this;
 	}
 	
 	/**
@@ -480,7 +489,7 @@ class Array2<T> implements Collection<T>
 		
 		Rows are wrapped, so the row at index 0 is not lost but appended to the bottommost row.
 	**/
-	public function shiftUp()
+	public function shiftUp():Array2<T>
 	{
 		var k = mH - 1, l = (mH - 1) * mW, t, d = mData;
 		for (x in 0...mW)
@@ -490,6 +499,7 @@ class Array2<T> implements Collection<T>
 				d.set(getIndex(x, y), d.get(getIndex(x, y + 1)));
 			d.set(l + x, t);
 		}
+		return this;
 	}
 	
 	/**
@@ -497,7 +507,7 @@ class Array2<T> implements Collection<T>
 		
 		Rows are wrapped, so row at index [`this.rows` - 1] is not lost but prepended to the topmost row.
 	**/
-	public function shiftDown()
+	public function shiftDown():Array2<T>
 	{
 		var k = mH - 1, l = k * mW, y, t, d = mData;
 		for (x in 0...mW)
@@ -508,12 +518,13 @@ class Array2<T> implements Collection<T>
 				d.set(getIndex(x, y + 1), d.get(getIndex(x, y)));
 			d.set(x, t);
 		}
+		return this;
 	}
 	
 	/**
 		Swaps the element at column/row `x0`, `y0` with the element at column/row `x1`, `y1`.
 	**/
-	public inline function swap(x0:Int, y0:Int, x1:Int, y1:Int)
+	public inline function swap(x0:Int, y0:Int, x1:Int, y1:Int):Array2<T>
 	{
 		assert(x0 >= 0 && x0 < cols, 'x0 index out of range ($x0)');
 		assert(y0 >= 0 && y0 < rows, 'y0 index out of range ($y0)');
@@ -527,12 +538,13 @@ class Array2<T> implements Collection<T>
 		var t = d.get(i);
 		d.set(i, d.get(j));
 		d.set(j, t);
+		return this;
 	}
 	
 	/**
 		Appends the elements of the `input` array in the range [0, `this.cols`] by adding a new row.
 	**/
-	public function appendRow(input:Array<T>)
+	public function appendRow(input:Array<T>):Array2<T>
 	{
 		assert(input != null, "input is null");
 		assert(input.length >= cols, "insufficient input values");
@@ -543,12 +555,13 @@ class Array2<T> implements Collection<T>
 		var s = size, d = mData;
 		mH++;
 		for (i in 0...mW) d.set(s + i, input[i]);
+		return this;
 	}
 	
 	/**
 		Appends the elements of the `input` array in the range [0, `this.rows`] by adding a new column.
 	**/
-	public function appendCol(input:Array<T>)
+	public function appendCol(input:Array<T>):Array2<T>
 	{
 		assert(input != null, "input is null");
 		assert(input.length >= rows, "insufficient input values");
@@ -569,12 +582,13 @@ class Array2<T> implements Collection<T>
 				d.set(y, d.get(y - j));
 		}
 		mW++;
+		return this;
 	}
 	
 	/**
 		Prepends the elements of the `input` array in the range [0, `this.cols`] by adding a new row.
 	**/
-	public function prependRow(input:Array<T>)
+	public function prependRow(input:Array<T>):Array2<T>
 	{
 		assert(input != null, "input is null");
 		assert(input.length >= cols, "insufficient input values");
@@ -585,12 +599,13 @@ class Array2<T> implements Collection<T>
 		mH++;
 		var d = mData;
 		for (i in 0...mW) d.set(i, input[i]);
+		return this;
 	}
 	
 	/**
 		Prepends the elements of the `input` array in the range [0, `this.rows`] by adding a new column.
 	**/
-	public function prependCol(input:Array<T>)
+	public function prependCol(input:Array<T>):Array2<T>
 	{
 		assert(input != null, "input is null");
 		assert(input.length >= rows, "insufficient input values");
@@ -611,12 +626,13 @@ class Array2<T> implements Collection<T>
 				d.set(y, d.get(y - j));
 		}
 		mW++;
+		return this;
 	}
 	
 	/**
 		Copies row elements from row `i` to row `j`.
 	**/
-	public function copyRow(i:Int, j:Int)
+	public function copyRow(i:Int, j:Int):Array2<T>
 	{
 		assert(i >= 0 && i < rows, 'i index out of range ($i)');
 		assert(j >= 0 && j < rows, 'j index out of range ($j)');
@@ -628,12 +644,13 @@ class Array2<T> implements Collection<T>
 			var d = mData;
 			for (x in 0...mW) d.set(dstOffset + x, d.get(srcOffset + x));
 		}
+		return this;
 	}
 	
 	/**
 		Swaps row elements at row `i` with row elements at row `j`.
 	**/
-	public function swapRow(i:Int, j:Int)
+	public function swapRow(i:Int, j:Int):Array2<T>
 	{
 		assert(i >= 0 && i < rows, 'i index out of range ($i)');
 		assert(j >= 0 && j < rows, 'j index out of range ($j)');
@@ -651,12 +668,13 @@ class Array2<T> implements Collection<T>
 				d.set(k, t);
 			}
 		}
+		return this;
 	}
 	
 	/**
 		Copies all elements from `src` at position (`srcX`,`srcY`) to this two-dimensional array at position (`dstX`,`dstY`).
 	**/
-	public function copy(src:Array2<T>, srcX:Int, srcY:Int, dstX:Int, dstY:Int)
+	public function copy(src:Array2<T>, srcX:Int, srcY:Int, dstX:Int, dstY:Int):Array2<T>
 	{
 		var a = src.getData();
 		var b = getData();
@@ -666,15 +684,15 @@ class Array2<T> implements Collection<T>
 		var srcH = src.rows;
 		var dstW = cols;
 		
-		if (srcX > srcW - 1) return;
-		if (srcY > srcH - 1) return;
+		if (srcX > srcW - 1) return this;
+		if (srcY > srcH - 1) return this;
 		
 		if (size == src.size)
 		{
 			if (srcX == 0 && srcY == 0 && dstX == 0 && dstY == 0)
 			{
 				a.blit(0, b, 0, size);
-				return;
+				return this;
 			}
 		}
 		
@@ -697,12 +715,13 @@ class Array2<T> implements Collection<T>
 			}
 			dY++;
 		}
+		return this;
 	}
 	
 	/**
 		Copies column elements from column `i` to column `j`.
 	**/
-	public function copyCol(i:Int, j:Int)
+	public function copyCol(i:Int, j:Int):Array2<T>
 	{
 		assert(i >= 0 && i < cols, 'i index out of range ($i)');
 		assert(j >= 0 && j < cols, 'j index out of range ($j)');
@@ -716,12 +735,13 @@ class Array2<T> implements Collection<T>
 				d.set(t + j, d.get(t + i));
 			}
 		}
+		return this;
 	}
 	
 	/**
 		Swaps column elements at column `i` with column elements at row `j`.
 	**/
-	public function swapCol(i:Int, j:Int)
+	public function swapCol(i:Int, j:Int):Array2<T>
 	{
 		assert(i >= 0 && i < cols, 'i index out of range ($i)');
 		assert(j >= 0 && j < cols, 'j index out of range ($j)');
@@ -739,12 +759,13 @@ class Array2<T> implements Collection<T>
 				d.set(l, t);
 			}
 		}
+		return this;
 	}
 	
 	/**
 		Transposes this two-dimensional array.
 	**/
-	public function transpose()
+	public function transpose():Array2<T>
 	{	
 		if (mW == mH)
 		{
@@ -763,6 +784,7 @@ class Array2<T> implements Collection<T>
 			mH ^= mW;
 			mW ^= mH;
 		}
+		return this;
 	}
 	
 	/**
@@ -778,7 +800,7 @@ class Array2<T> implements Collection<T>
 	/**
 		Copies all elements from the nested two-dimensional array `input` into this two-dimensional array by reference.
 	**/
-	public function ofNestedArray(input:Array<Array<T>>)
+	public function ofNestedArray(input:Array<Array<T>>):Array2<T>
 	{
 		assert(input.length == rows && input[0] != null && input[0].length == cols, "invalid input");
 		
@@ -789,6 +811,7 @@ class Array2<T> implements Collection<T>
 			for (x in 0...w)
 				d.set(getIndex(x, y), row[x]);
 		}
+		return this;
 	}
 	
 	/**
@@ -796,7 +819,7 @@ class Array2<T> implements Collection<T>
 		@param rvals a list of random double values in the interval [0, 1) defining the new positions of the elements.
 		If omitted, random values are generated on-the-fly by calling `Math.random()`.
 	**/
-	public function shuffle(rvals:Array<Float> = null)
+	public function shuffle(rvals:Array<Float> = null):Array2<T>
 	{
 		var s = size;
 		var d = mData;
@@ -824,6 +847,7 @@ class Array2<T> implements Collection<T>
 				d.set(i, t);
 			}
 		}
+		return this;
 	}
 	
 	/**

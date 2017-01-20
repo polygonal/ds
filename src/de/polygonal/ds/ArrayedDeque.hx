@@ -255,13 +255,14 @@ class ArrayedDeque<T> implements Deque<T>
 		
 		An application can use this operation to free up memory by unlocking resources for the garbage collector.
 	**/
-	public function pack()
+	public function pack():ArrayedDeque<T>
 	{
 		for (i in 0...mHead + 1) mHeadBlock.set(i, cast null);
 		for (i in mTail...mBlockSize) mTailBlock.set(i, cast null);
 		mPoolSize = 0;
 		mBlockPool.nullify();
 		mBlockPool = NativeArrayTools.alloc(mPoolCapacity);
+		return this;
 	}
 	
 	/**

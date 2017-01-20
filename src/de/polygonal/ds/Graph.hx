@@ -179,9 +179,9 @@ class Graph<T> implements Collection<T>
 		This clears all outgoing and incoming arcs and removes `node` from the node list.
 		Silently fails if `node` was already removed from this graph.
 	**/
-	public function removeNode(node:GraphNode<T>)
+	public function removeNode(node:GraphNode<T>):Graph<T>
 	{
-		if (size == 0 || node.mGraph == null) return;
+		if (size == 0 || node.mGraph == null) return this;
 		
 		unlink(node);
 		
@@ -190,6 +190,7 @@ class Graph<T> implements Collection<T>
 		if (mNodeList == node) mNodeList = node.next;
 		mSize--;
 		node.mGraph = null;
+		return this;
 	}
 	
 	/**
@@ -198,7 +199,7 @@ class Graph<T> implements Collection<T>
 		
 		The newly created arc can be accessed via `source.arcList`.
 	**/
-	public function addSingleArc(source:GraphNode<T>, target:GraphNode<T>)
+	public function addSingleArc(source:GraphNode<T>, target:GraphNode<T>):Graph<T>
 	{
 		assert(source != null, "source is null");
 		assert(target != null, "target is null");
@@ -224,6 +225,7 @@ class Graph<T> implements Collection<T>
 			}
 			walker = walker.next;
 		}
+		return this;
 	}
 	
 	/**
@@ -232,7 +234,7 @@ class Graph<T> implements Collection<T>
 		
 		The newly created arcs can be accessed via `source.arcList` (pointing to `target`) and `target.arcList` (pointing to `source`).
 	**/
-	public function addMutualArc(source:GraphNode<T>, target:GraphNode<T>)
+	public function addMutualArc(source:GraphNode<T>, target:GraphNode<T>):Graph<T>
 	{
 		assert(source != null, "source is null");
 		assert(target != null, "target is null");
@@ -261,6 +263,7 @@ class Graph<T> implements Collection<T>
 			}
 			walker = walker.next;
 		}
+		return this;
 	}
 	
 	/**
@@ -321,7 +324,7 @@ class Graph<T> implements Collection<T>
 		
 		Call this method to start a fresh traversal.
 	**/
-	public function clearMarks()
+	public function clearMarks():Graph<T>
 	{
 		var node = mNodeList;
 		while (node != null)
@@ -329,12 +332,13 @@ class Graph<T> implements Collection<T>
 			node.marked = false;
 			node = node.next;
 		}
+		return this;
 	}
 	
 	/**
 		Clears the parent pointers on all graph nodes.
 	**/
-	public function clearParent()
+	public function clearParent():Graph<T>
 	{
 		var node = mNodeList;
 		while (node != null)
@@ -342,6 +346,7 @@ class Graph<T> implements Collection<T>
 			node.parent = null;
 			node = node.next;
 		}
+		return this;
 	}
 	
 	/**
@@ -365,9 +370,9 @@ class Graph<T> implements Collection<T>
 		@param userData custom data that is passed to every visited node via `process` or `element.visit()`. If omitted, null is used.
 		@param recursive if true, performs a recursive traversal (default traversal style is iterative).
 	**/
-	public function dfs(preflight:Bool = false, seed:GraphNode<T> = null, process:GraphNode<T>->Bool->Dynamic->Bool = null, userData:Dynamic = null, recursive:Bool = false)
+	public function dfs(preflight:Bool = false, seed:GraphNode<T> = null, process:GraphNode<T>->Bool->Dynamic->Bool = null, userData:Dynamic = null, recursive:Bool = false):Graph<T>
 	{
-		if (size == 0) return;
+		if (size == 0) return this;
 		
 		#if debug
 		assert(mBusy == false, "recursive call to iterative DFS");
@@ -415,7 +420,7 @@ class Graph<T> implements Collection<T>
 						#if debug
 						mBusy = false;
 						#end
-						return;
+						return this;
 					}
 					
 					while (c > 0)
@@ -458,7 +463,7 @@ class Graph<T> implements Collection<T>
 						#if debug
 						mBusy = false;
 						#end
-						return;
+						return this;
 					}
 					
 					while (c > 0)
@@ -543,6 +548,8 @@ class Graph<T> implements Collection<T>
 		#if debug
 		mBusy = false;
 		#end
+		
+		return this;
 	}
 	
 	/**
@@ -565,9 +572,9 @@ class Graph<T> implements Collection<T>
 		<br/>_In this case the elements of all nodes have to implement `Visitable`._
 		@param userData custom data that is passed to every visited node via `process` or `element.visit()`. If omitted, null is used.
 	**/
-	public function bfs(preflight:Bool = false, seed:GraphNode<T> = null, process:GraphNode<T>->Bool->Dynamic->Bool = null, userData:Dynamic = null)
+	public function bfs(preflight:Bool = false, seed:GraphNode<T> = null, process:GraphNode<T>->Bool->Dynamic->Bool = null, userData:Dynamic = null):Graph<T>
 	{
-		if (size == 0) return;
+		if (size == 0) return this;
 		
 		#if debug
 		assert(mBusy == false, "recursive call to iterative BFS");
@@ -611,7 +618,7 @@ class Graph<T> implements Collection<T>
 					#if debug
 					mBusy = false;
 					#end
-					return;
+					return this;
 				}
 				
 				while (c > 0)
@@ -623,7 +630,7 @@ class Graph<T> implements Collection<T>
 						#if debug
 						mBusy = false;
 						#end
-						return;
+						return this;
 					}
 					var a = n.arcList;
 					while (a != null)
@@ -654,7 +661,7 @@ class Graph<T> implements Collection<T>
 					#if debug
 					mBusy = false;
 					#end
-					return;
+					return this;
 				}
 				
 				while (c > 0)
@@ -665,7 +672,7 @@ class Graph<T> implements Collection<T>
 						#if debug
 						mBusy = false;
 						#end
-						return;
+						return this;
 					}
 					
 					var a = n.arcList;
@@ -703,7 +710,7 @@ class Graph<T> implements Collection<T>
 						#if debug
 						mBusy = false;
 						#end
-						return;
+						return this;
 					}
 					var a = n.arcList;
 					while (a != null)
@@ -734,7 +741,7 @@ class Graph<T> implements Collection<T>
 						#if debug
 						mBusy = false;
 						#end
-						return;
+						return this;
 					}
 					var a = n.arcList;
 					while (a != null)
@@ -760,6 +767,8 @@ class Graph<T> implements Collection<T>
 		#if debug
 		mBusy = false;
 		#end
+		
+		return this;
 	}
 	
 	/**
@@ -782,9 +791,9 @@ class Graph<T> implements Collection<T>
 		_In this case the elements of all nodes have to implement `Visitable`._
 		@param userData custom data that is passed to every visited node via `process` or `element.visit()`. If omitted, null is used.
 	**/
-	public function dlbfs(maxDepth:Int, preflight:Bool = false, seed:GraphNode<T> = null, process:GraphNode<T>->Bool->Dynamic->Bool = null, userData:Dynamic = null)
+	public function dlbfs(maxDepth:Int, preflight:Bool = false, seed:GraphNode<T> = null, process:GraphNode<T>->Bool->Dynamic->Bool = null, userData:Dynamic = null):Graph<T>
 	{
-		if (size == 0) return;
+		if (size == 0) return this;
 		
 		#if debug
 		assert(mBusy == false, "recursive call to iterative BFS");
@@ -836,7 +845,7 @@ class Graph<T> implements Collection<T>
 					#if debug
 					mBusy = false;
 					#end
-					return;
+					return this;
 				}
 				
 				while (c > 0)
@@ -848,7 +857,7 @@ class Graph<T> implements Collection<T>
 						#if debug
 						mBusy = false;
 						#end
-						return;
+						return this;
 					}
 					var a = n.arcList;
 					while (a != null)
@@ -882,7 +891,7 @@ class Graph<T> implements Collection<T>
 					#if debug
 					mBusy = false;
 					#end
-					return;
+					return this;
 				}
 				
 				while (c > 0)
@@ -893,7 +902,7 @@ class Graph<T> implements Collection<T>
 						#if debug
 						mBusy = false;
 						#end
-						return;
+						return this;
 					}
 					
 					var a = n.arcList;
@@ -935,7 +944,7 @@ class Graph<T> implements Collection<T>
 						#if debug
 						mBusy = false;
 						#end
-						return;
+						return this;
 					}
 					var a = n.arcList;
 					while (a != null)
@@ -970,7 +979,7 @@ class Graph<T> implements Collection<T>
 						#if debug
 						mBusy = false;
 						#end
-						return;
+						return this;
 					}
 					var a = n.arcList;
 					while (a != null)
@@ -997,6 +1006,8 @@ class Graph<T> implements Collection<T>
 		#if debug
 		mBusy = false;
 		#end
+		
+		return this;
 	}
 	
 	/**

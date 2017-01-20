@@ -229,9 +229,10 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		
 		This is an expensive operations as the hash table is rebuild from scratch.
 	**/
-	public function rehash(slotCount:Int)
+	public function rehash(slotCount:Int):HashTable<K, T>
 	{
 		mH.rehash(slotCount);
+		return this;
 	}
 	
 	/**
@@ -272,7 +273,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 	/**
 		Free up resources by reducing the capacity of the internal container to the initial capacity.
 	**/
-	public function pack()
+	public function pack():HashTable<K, T>
 	{
 		mH.pack();
 		

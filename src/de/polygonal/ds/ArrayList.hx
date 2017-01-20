@@ -559,7 +559,7 @@ class ArrayList<T> implements List<T>
 	/**
 		Reverses this list in place in the range [`first`, `last`] (the first element becomes the last and the last becomes the first).
 	**/
-	public function reverse(first:Int = -1, last:Int = -1)
+	public function reverse(first:Int = -1, last:Int = -1):ArrayList<T> 
 	{
 		if (first == -1 || last == -1)
 		{
@@ -570,7 +570,7 @@ class ArrayList<T> implements List<T>
 		assert(last - first > 0);
 		
 		var k = last - first;
-		if (k <= 1) return;
+		if (k <= 1) return this;
 		
 		var t, u, v, d = mData;
 		for (i in 0...k >> 1)
@@ -581,6 +581,7 @@ class ArrayList<T> implements List<T>
 			d.set(u, d.get(v));
 			d.set(v, t);
 		}
+		return this;
 	}
 	
 	/**
@@ -590,7 +591,7 @@ class ArrayList<T> implements List<T>
 		
 		@see http://www.cplusplus.com/reference/clibrary/cstring/memmove/
 	**/
-	public function blit(destination:Int, source:Int, n:Int)
+	public function blit(destination:Int, source:Int, n:Int):ArrayList<T> 
 	{
 		assert(destination >= 0 && source >= 0 && n >= 0);
 		assert(source < size);
@@ -598,6 +599,7 @@ class ArrayList<T> implements List<T>
 		assert(n <= size);
 		
 		mData.blit(source, mData, destination, n);
+		return this;
 	}
 	
 	/**
@@ -611,7 +613,7 @@ class ArrayList<T> implements List<T>
 		@param count the number of elements to sort (range: [`first`, `first` + `count`]).
 		<br/>If omitted, `count` is set to the remaining elements (`this.size` - `first`).
 	**/
-	public function sort(?cmp:T->T->Int, useInsertionSort:Bool = false, first:Int = 0, count:Int = -1)
+	public function sort(?cmp:T->T->Int, useInsertionSort:Bool = false, first:Int = 0, count:Int = -1):ArrayList<T> 
 	{
 		if (size > 1)
 		{
@@ -630,6 +632,7 @@ class ArrayList<T> implements List<T>
 					quickSort(first, count, cmp);
 			}
 		}
+		return this;
 	}
 	
 	/**
@@ -638,7 +641,7 @@ class ArrayList<T> implements List<T>
 		@param first sort start index.
 		@param count the number of elements to sort (range: [`first`, `first` + `count`]).
 	**/
-	public inline function insertionSort(cmp:T->T->Int, first:Int, count:Int)
+	public inline function insertionSort(cmp:T->T->Int, first:Int, count:Int):ArrayList<T> 
 	{
 		assert(first >= 0 && first <= size - 1 && first + count <= size, "first index out of range");
 		assert(count >= 0 && count <= size, "count out of range");
@@ -661,6 +664,7 @@ class ArrayList<T> implements List<T>
 			}
 			d.set(j, a);
 		}
+		return this;
 	}
 	
 	/**
@@ -668,7 +672,7 @@ class ArrayList<T> implements List<T>
 		@param rvals a list of random double values in the interval [0, 1) defining the new positions of the elements.
 		If omitted, random values are generated on-the-fly by calling `Math.random()`.
 	**/
-	public function shuffle(?rvals:Array<Float>)
+	public function shuffle(?rvals:Array<Float>):ArrayList<T> 
 	{
 		var s = size, d = mData;
 		
@@ -696,6 +700,7 @@ class ArrayList<T> implements List<T>
 				d.set(i, t);
 			}
 		}
+		return this;
 	}
 	
 	/**

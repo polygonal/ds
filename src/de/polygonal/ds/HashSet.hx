@@ -202,9 +202,10 @@ class HashSet<T:Hashable> implements Set<T>
 		
 		This is an expensive operations as the set is rebuild from scratch.
 	**/
-	public function rehash(slotCount:Int)
+	public function rehash(slotCount:Int):HashSet<T>
 	{
 		mH.rehash(slotCount);
+		return this;
 	}
 	
 	/**

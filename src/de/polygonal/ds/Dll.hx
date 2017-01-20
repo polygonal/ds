@@ -120,15 +120,16 @@ class Dll<T> implements List<T>
 		
 		Silently fails if this list is already closed.
 	**/
-	public function close()
+	public function close():Dll<T>
 	{
-		if (isCircular) return;
+		if (isCircular) return this;
 		isCircular = true;
 		if (valid(head))
 		{
 			tail.next = head;
 			head.prev = tail;
 		}
+		return this;
 	}
 	
 	/**
@@ -136,15 +137,16 @@ class Dll<T> implements List<T>
 		
 		Silently fails if this list is already non-circular.
 	**/
-	public function open()
+	public function open():Dll<T>
 	{
-		if (!isCircular) return;
+		if (!isCircular) return this;
 		isCircular = false;
 		if (valid(head))
 		{
 			tail.next = null;
 			head.prev = null;
 		}
+		return this;
 	}
 	
 	/**
@@ -409,7 +411,7 @@ class Dll<T> implements List<T>
 	/**
 		Unlinks the head node and appends it to the tail.
 	**/
-	public function shiftUp()
+	public function shiftUp():Dll<T>
 	{
 		assert(size > 0, "list is empty");
 		
@@ -446,12 +448,13 @@ class Dll<T> implements List<T>
 				head.prev = tail;
 			}
 		}
+		return this;
 	}
 	
 	/**
 		Unlinks the tail node and prepends it to the head.
 	**/
-	public function popDown()
+	public function popDown():Dll<T>
 	{
 		assert(size > 0, "list is empty");
 		
@@ -488,6 +491,7 @@ class Dll<T> implements List<T>
 				head.prev = tail;
 			}
 		}
+		return this;
 	}
 	
 	/**
@@ -566,7 +570,7 @@ class Dll<T> implements List<T>
 		@param useInsertionSort if true, the linked list is sorted using the insertion sort algorithm.
 		This is faster for nearly sorted lists.
 	**/
-	public function sort(?cmp:T->T->Int, useInsertionSort:Bool = false)
+	public function sort(?cmp:T->T->Int, useInsertionSort:Bool = false):Dll<T>
 	{
 		if (size > 1)
 		{
@@ -577,13 +581,9 @@ class Dll<T> implements List<T>
 			}
 			
 			if (cmp == null)
-			{
 				head = useInsertionSort ? insertionSortComparable(head) : mergeSortComparable(head);
-			}
 			else
-			{
 				head = useInsertionSort ? insertionSort(head, cmp) : mergeSort(head, cmp);
-			}
 			
 			if (isCircular)
 			{
@@ -591,6 +591,7 @@ class Dll<T> implements List<T>
 				head.prev = tail;
 			}
 		}
+		return this;
 	}
 	
 	/**
@@ -598,7 +599,7 @@ class Dll<T> implements List<T>
 		
 		_The merge operation destroys `list` so it should be discarded._
 	**/
-	public function merge(list:Dll<T>)
+	public function merge(list:Dll<T>):Dll<T>
 	{
 		assert(list != this, "list equals this list");
 		assert(list != null, "list is null");
@@ -632,6 +633,7 @@ class Dll<T> implements List<T>
 				head.prev = tail;
 			}
 		}
+		return this;
 	}
 	
 	/**
@@ -706,10 +708,10 @@ class Dll<T> implements List<T>
 	/**
 		Reverses the linked list in place.
 	**/
-	public function reverse()
+	public function reverse():Dll<T>
 	{
 		if (size <= 1)
-			return;
+			return this;
 		else
 		if (size <= 3)
 		{
@@ -731,6 +733,7 @@ class Dll<T> implements List<T>
 				tail = tail.prev;
 			}
 		}
+		return this;
 	}
 	
 	/**
@@ -791,7 +794,7 @@ class Dll<T> implements List<T>
 		@param rvals a list of random double values in the interval [0, 1) defining the new positions of the elements.
 		If omitted, random values are generated on-the-fly by calling `Math.random()`.
 	**/
-	public function shuffle(rvals:Array<Float> = null)
+	public function shuffle(rvals:Array<Float> = null):Dll<T>
 	{
 		var s = size;
 		if (rvals == null)
@@ -840,6 +843,7 @@ class Dll<T> implements List<T>
 			tail.next = head;
 			head.prev = tail;
 		}
+		return this;
 	}
 	
 	/**
@@ -924,7 +928,7 @@ class Dll<T> implements List<T>
 	/**
 		Returns the index of `val` (0=head).
 	**/
-	public function indexOf(val:T)
+	public function indexOf(val:T):Int
 	{
 		var i = 0;
 		var node = head;

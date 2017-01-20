@@ -263,11 +263,11 @@ class IntHashSet implements Set<Int>
 		
 		This is an expensive operations as the set is rebuild from scratch.
 	**/
-	public function rehash(slotCount:Int)
+	public function rehash(slotCount:Int):IntHashSet
 	{
 		assert(M.isPow2(slotCount), "slotCount is not a power of 2");
 		
-		if (this.slotCount == slotCount) return;
+		if (this.slotCount == slotCount) return this;
 		
 		var t = new IntHashSet(slotCount, capacity);
 		
@@ -300,6 +300,7 @@ class IntHashSet implements Set<Int>
 		this.slotCount = slotCount;
 		mMask = t.mMask;
 		mFree = t.mFree;
+		return this;
 	}
 	
 	/**

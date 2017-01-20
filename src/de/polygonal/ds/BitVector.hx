@@ -105,12 +105,13 @@ class BitVector implements Hashable
 	/**
 		Sets the bit at index `i` to one.
 	**/
-	public inline function set(i:Int)
+	public inline function set(i:Int):BitVector
 	{
 		assert(i < numBits, 'i index out of range ($i)');
 		
 		var p = i >> 5, d = mData;
 		d.set(p, d.get(p) | (1 << (i & (32 - 1))));
+		return this;
 	}
 	
 	/**
@@ -127,7 +128,7 @@ class BitVector implements Hashable
 	/**
 		Sets all bits in the bit-vector to zero.
 	**/
-	public inline function clearAll()
+	public inline function clearAll():BitVector
 	{
 		#if cpp
 		cpp.NativeArray.zero(mData, 0, arrSize);
@@ -135,15 +136,17 @@ class BitVector implements Hashable
 		var d = mData;
 		for (i in 0...arrSize) d.set(i, 0);
 		#end
+		return this;
 	}
 	
 	/**
 		Sets all bits in the bit-vector to one.
 	**/
-	public inline function setAll()
+	public inline function setAll():BitVector
 	{
 		var d = mData;
 		for (i in 0...arrSize) d.set(i, -1);
+		return this;
 	}
 	
 	/**
@@ -151,7 +154,7 @@ class BitVector implements Hashable
 		
 		This is faster than clearing individual bits by using `this.clear()`.
 	**/
-	public function clearRange(min:Int, max:Int)
+	public function clearRange(min:Int, max:Int):BitVector
 	{
 		assert(min >= 0 && min <= max && max < numBits, 'min/max out of range ($min/$max)');
 		
@@ -165,6 +168,7 @@ class BitVector implements Hashable
 			d.set(binIndex, d.get(binIndex) & ~mask);
 			current = nextBound;
 		}
+		return this;
 	}
 	
 	/**
@@ -172,7 +176,7 @@ class BitVector implements Hashable
 		
 		This is faster than setting individual bits by using `this.set()`.
 	**/
-	public function setRange(min:Int, max:Int)
+	public function setRange(min:Int, max:Int):BitVector
 	{
 		assert(min >= 0 && min <= max && max < numBits, 'min/max out of range ($min/$max)');
 		
@@ -186,14 +190,16 @@ class BitVector implements Hashable
 			mData.set(binIndex, mData.get(binIndex) | mask);
 			current = nextBound;
 		}
+		return this;
 	}
 	
 	/**
 		Sets the bit at index `i` to one if `cond` is true or clears the bit at index `i` if `cond` is false.
 	**/
-	public inline function ofBool(i:Int, cond:Bool)
+	public inline function ofBool(i:Int, cond:Bool):BitVector
 	{
 		cond ? set(i) : clear(i);
+		return this;
 	}
 	
 	/**
@@ -226,9 +232,9 @@ class BitVector implements Hashable
 		
 		Preserves existing values if new size > old size.
 	**/
-	public function resize(numBits:Int)
+	public function resize(numBits:Int):BitVector
 	{
-		if (this.numBits == numBits) return;
+		if (this.numBits == numBits) return this;
 		
 		var newArrSize = numBits >> 5;
 		if ((numBits & (32 - 1)) > 0) newArrSize++;
@@ -252,6 +258,7 @@ class BitVector implements Hashable
 		
 		this.numBits = numBits;
 		arrSize = newArrSize;
+		return this;
 	}
 	
 	/**

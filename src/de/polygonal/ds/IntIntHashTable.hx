@@ -398,11 +398,11 @@ class IntIntHashTable implements Map<Int, Int>
 		
 		This is an expensive operations as the hash table is rebuild from scratch.
 	**/
-	public function rehash(slotCount:Int)
+	public function rehash(slotCount:Int):IntIntHashTable
 	{
 		assert(M.isPow2(slotCount), "slotCount is not a power of 2");
 		
-		if (this.slotCount == slotCount) return;
+		if (this.slotCount == slotCount) return this;
 		
 		var t = new IntIntHashTable(slotCount, capacity);
 		
@@ -435,6 +435,7 @@ class IntIntHashTable implements Map<Int, Int>
 		this.slotCount = slotCount;
 		mMask = t.mMask;
 		mFree = t.mFree;
+		return this;
 	}
 	
 	/**

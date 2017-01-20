@@ -149,11 +149,12 @@ class ArrayedQueue<T> implements Queue<T>
 		
 		The user is responsible for making sure that there is enough space available (e.g. by calling `this.reserve()`).
 	**/
-	public inline function unsafeEnqueue(val:T)
+	public inline function unsafeEnqueue(val:T):ArrayedQueue<T>
 	{
 		assert(mSize < capacity, "out of space");
 		
 		mData.set((mSize++ + mFront) % capacity, val);
+		return this;
 	}
 	
 	/**
@@ -175,7 +176,7 @@ class ArrayedQueue<T> implements Queue<T>
 		May cause a reallocation, but has no effect on `this.size` and its elements.
 		An application can use this operation to free up memory by unlocking resources for the garbage collector.
 	**/
-	public function pack()
+	public function pack():ArrayedQueue<T>
 	{
 		if (capacity > mInitialCapacity)
 		{
@@ -193,6 +194,7 @@ class ArrayedQueue<T> implements Queue<T>
 				i = (i + 1) % capacity;
 			}
 		}
+		return this;
 	}
 	
 	/**
@@ -230,12 +232,13 @@ class ArrayedQueue<T> implements Queue<T>
 		
 		The index is measured relative to the index of the front element (=0).
 	**/
-	public inline function set(i:Int, val:T)
+	public inline function set(i:Int, val:T):ArrayedQueue<T>
 	{
 		assert(size > 0, "queue is empty");
 		assert(i < size, 'i index out of range ($i)');
 		
 		mData.set((i + mFront) % capacity, val);
+		return this;
 	}
 	
 	/**
@@ -243,7 +246,7 @@ class ArrayedQueue<T> implements Queue<T>
 		
 		The index is measured relative to the index of the front element (=0).
 	**/
-	public inline function swap(i:Int, j:Int)
+	public inline function swap(i:Int, j:Int):ArrayedQueue<T>
 	{
 		assert(size > 0, "queue is empty");
 		assert(i < size, 'i index out of range ($i)');
@@ -253,6 +256,7 @@ class ArrayedQueue<T> implements Queue<T>
 		var t = get(i);
 		copy(i, j);
 		set(j, t);
+		return this;
 	}
 	
 	/**
@@ -260,7 +264,7 @@ class ArrayedQueue<T> implements Queue<T>
 		
 		The index is measured relative to the index of the front element (=0).
 	**/
-	public inline function copy(i:Int, j:Int)
+	public inline function copy(i:Int, j:Int):ArrayedQueue<T>
 	{
 		assert(size > 0, "queue is empty");
 		assert(i < size, 'i index out of range ($i)');
@@ -268,6 +272,7 @@ class ArrayedQueue<T> implements Queue<T>
 		assert(i != j, 'i index equals j index ($i)');
 		
 		set(i, get(j));
+		return this;
 	}
 	
 	/**
@@ -306,7 +311,7 @@ class ArrayedQueue<T> implements Queue<T>
 		@param rvals a list of random double values in the interval [0, 1) defining the new positions of the elements.
 		If omitted, random values are generated on-the-fly by calling `Math.random()`.
 	**/
-	public function shuffle(rvals:Array<Float> = null)
+	public function shuffle(rvals:Array<Float> = null):ArrayedQueue<T>
 	{
 		var s = size, d = mData;
 		if (rvals == null)
@@ -335,6 +340,7 @@ class ArrayedQueue<T> implements Queue<T>
 				d.set(i, t);
 			}
 		}
+		return this;
 	}
 	
 	/**

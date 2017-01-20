@@ -69,11 +69,12 @@ class TreeBuilder<T>
 	/**
 		Stores `val` in the node that the tree builder is currently pointing at.
 	**/
-	public inline function setVal(val:T)
+	public inline function setVal(val:T):TreeBuilder<T>
 	{
 		assert(valid(), "vertical pointer is null");
 		
 		mNode.val = val;
+		return this;
 	}
 	
 	/**
@@ -113,12 +114,13 @@ class TreeBuilder<T>
 	/**
 		Moves the vertical pointer to the root of the tree.
 	**/
-	public function root()
+	public function root():TreeBuilder<T>
 	{
 		assert(valid(), "invalid vertical pointer");
 		
 		while (mNode.hasParent()) mNode = mNode.parent;
 		reset();
+		return this;
 	}
 	
 	/**
