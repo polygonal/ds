@@ -40,6 +40,7 @@ class Main
 		
 		var argHandler = hxargs.Args.generate
 		([
+			["-hl"] => function(x:String) addTarget("hl", x),
 			["-swf"] => function(x:String) addTarget("swf", x),
 			["-js"] => function(x:String) addTarget("js", x),
 			["-neko"] => function(x:String) addTarget("neko", x),
@@ -183,6 +184,9 @@ class Main
 				
 				switch (target)
 				{
+					case "hl":
+						run("hl", [file]);
+					
 					case "swf":
 						if (!FileSystem.exists(Sys.getEnv("FLASHPLAYER")))
 						{
