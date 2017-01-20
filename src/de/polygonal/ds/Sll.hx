@@ -385,7 +385,7 @@ class Sll<T> implements List<T>
 	/**
 		Unlinks the head node and appends it to the tail.
 	**/
-	public inline function shiftUp():Sll<T>
+	public inline function headToTail():Sll<T>
 	{
 		assert(size > 0, "list is empty");
 		
@@ -413,7 +413,7 @@ class Sll<T> implements List<T>
 	/**
 		Unlinks the tail node and prepends it to the head.
 	**/
-	public inline function popDown():Sll<T>
+	public inline function tailToHead():Sll<T>
 	{
 		assert(size > 0, "list is empty");
 		

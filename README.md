@@ -62,6 +62,7 @@ _requires Haxe Compiler 3.4.0-rc1, hxcpp 3.4.2_
  * added: ArrayList.addArray()
  * added: ArrayList.insertionSort()
  * modified: allow more method chaining
+ * modified: Sll/Dll: popDown() => tailToHead(), shiftUp() => headToTail()
 
 ### 2.0.0-rc1 (released 2016-11-05)
 _requires Haxe Compiler 3.4.0-rc1, hxcpp 3.4.2_

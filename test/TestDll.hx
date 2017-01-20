@@ -915,7 +915,7 @@ class TestDll extends AbstractTest
 		var list = new Dll<Int>();
 		assertEquals(list.size, 0);
 		for (i in 0...10) list.append(i);
-		list.shiftUp();
+		list.headToTail();
 		assertEquals(list.tail.val, 0);
 	}
 	
@@ -924,7 +924,7 @@ class TestDll extends AbstractTest
 		var list = new Dll<Int>();
 		assertEquals(list.size, 0);
 		for (i in 0...10) list.append(i);
-		list.popDown();
+		list.tailToHead();
 		assertEquals(list.head.val, 9);
 	}
 	

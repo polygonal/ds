@@ -287,7 +287,7 @@ class TestDllCircular extends AbstractTest
 		var node1 = list.append(0);
 		var node2 = list.append(1);
 		
-		list.shiftUp();
+		list.headToTail();
 		
 		assertEquals(node2, list.head);
 		assertEquals(node1, list.tail);
@@ -300,7 +300,7 @@ class TestDllCircular extends AbstractTest
 		var node2 = list.append(1);
 		var node3 = list.append(2);
 		
-		list.shiftUp();
+		list.headToTail();
 		
 		assertEquals(node2, list.head);
 		assertEquals(node1, list.tail);
@@ -315,7 +315,7 @@ class TestDllCircular extends AbstractTest
 		var node1 = list.append(0);
 		var node2 = list.append(1);
 		
-		list.popDown();
+		list.tailToHead();
 		
 		assertEquals(node2, list.head);
 		assertEquals(node1, list.tail);
@@ -328,7 +328,7 @@ class TestDllCircular extends AbstractTest
 		var node2 = list.append(1);
 		var node3 = list.append(2);
 		
-		list.popDown();
+		list.tailToHead();
 		
 		assertEquals(node3, list.head);
 		assertEquals(node2, list.tail);

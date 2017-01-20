@@ -411,7 +411,7 @@ class Dll<T> implements List<T>
 	/**
 		Unlinks the head node and appends it to the tail.
 	**/
-	public function shiftUp():Dll<T>
+	public function headToTail():Dll<T>
 	{
 		assert(size > 0, "list is empty");
 		
@@ -454,7 +454,7 @@ class Dll<T> implements List<T>
 	/**
 		Unlinks the tail node and prepends it to the head.
 	**/
-	public function popDown():Dll<T>
+	public function tailToHead():Dll<T>
 	{
 		assert(size > 0, "list is empty");
 		

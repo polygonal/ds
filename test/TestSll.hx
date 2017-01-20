@@ -149,7 +149,7 @@ class TestSll extends AbstractTest
 		l.append(0);
 		l.append(1);
 		
-		l.shiftUp();
+		l.headToTail();
 		assertEquals(1, l.head.val);
 		assertEquals(0, l.tail.val);
 		assertEquals(l.head, l.tail.next);
@@ -160,7 +160,7 @@ class TestSll extends AbstractTest
 		l.append(1);
 		l.append(2);
 		
-		l.shiftUp();
+		l.headToTail();
 		assertEquals(1, l.head.val);
 		assertEquals(0, l.tail.val);
 		assertEquals(l.head, l.tail.next);
@@ -170,7 +170,7 @@ class TestSll extends AbstractTest
 		l.append(0);
 		l.append(1);
 		
-		l.popDown();
+		l.tailToHead();
 		assertEquals(1, l.head.val);
 		assertEquals(0, l.tail.val);
 		assertEquals(l.head, l.tail.next);
@@ -181,7 +181,7 @@ class TestSll extends AbstractTest
 		l.append(1);
 		l.append(2);
 		
-		l.popDown();
+		l.tailToHead();
 		assertEquals(2, l.head.val);
 		assertEquals(1, l.tail.val);
 		assertEquals(l.head, l.tail.next);
@@ -1236,7 +1236,7 @@ class TestSll extends AbstractTest
 		var list = new Sll<Int>();
 		assertEquals(list.size, 0);
 		for (i in 0...10) list.append(i);
-		list.shiftUp();
+		list.headToTail();
 		assertEquals(list.tail.val, 0);
 	}
 	
@@ -1245,7 +1245,7 @@ class TestSll extends AbstractTest
 		var list = new Sll<Int>();
 		assertEquals(list.size, 0);
 		for (i in 0...10) list.append(i);
-		list.popDown();
+		list.tailToHead();
 		assertEquals(list.head.val, 9);
 	}
 }
