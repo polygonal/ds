@@ -21,6 +21,7 @@ package de.polygonal.ds;
 import de.polygonal.ds.Array2.Array2Cell;
 import de.polygonal.ds.tools.Assert.assert;
 import de.polygonal.ds.tools.M;
+import de.polygonal.ds.tools.Shuffle;
 
 using de.polygonal.ds.tools.NativeArrayTools;
 
@@ -817,7 +818,7 @@ class Array2<T> implements Collection<T>
 	/**
 		Shuffles the elements of this collection by using the Fisher-Yates algorithm.
 		@param rvals a list of random double values in the interval [0, 1) defining the new positions of the elements.
-		If omitted, random values are generated on-the-fly by calling `Math.random()`.
+		If omitted, random values are generated on-the-fly by calling `Shuffle.frand()`.
 	**/
 	public function shuffle(rvals:Array<Float> = null):Array2<T>
 	{
@@ -825,10 +826,10 @@ class Array2<T> implements Collection<T>
 		var d = mData;
 		if (rvals == null)
 		{
-			var m = Math, i, t;
+			var i, t;
 			while (--s > 1)
 			{
-				i = Std.int(m.random() * s);
+				i = Std.int(Shuffle.frand() * s);
 				t = d.get(s);
 				d.set(s, d.get(i));
 				d.set(i, t);

@@ -22,6 +22,7 @@ import de.polygonal.ds.tools.Assert.assert;
 import de.polygonal.ds.NativeArray;
 import de.polygonal.ds.tools.GrowthRate;
 import de.polygonal.ds.tools.M;
+import de.polygonal.ds.tools.Shuffle;
 
 using de.polygonal.ds.tools.NativeArrayTools;
 
@@ -670,7 +671,7 @@ class ArrayList<T> implements List<T>
 	/**
 		Shuffles the elements of this collection by using the Fisher-Yates algorithm.
 		@param rvals a list of random double values in the interval [0, 1) defining the new positions of the elements.
-		If omitted, random values are generated on-the-fly by calling `Math.random()`.
+		If omitted, random values are generated on-the-fly by calling `Shuffle.frand()`.
 	**/
 	public function shuffle(?rvals:Array<Float>):ArrayList<T> 
 	{
@@ -678,10 +679,9 @@ class ArrayList<T> implements List<T>
 		
 		if (rvals == null)
 		{
-			var m = Math;
 			while (--s > 1)
 			{
-				var i = Std.int(m.random() * s);
+				var i = Std.int(Shuffle.frand() * s);
 				var t = d.get(s);
 				d.set(s, d.get(i));
 				d.set(i, t);

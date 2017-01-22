@@ -22,6 +22,7 @@ import de.polygonal.ds.tools.ArrayTools;
 import de.polygonal.ds.tools.Assert.assert;
 import de.polygonal.ds.tools.M;
 import de.polygonal.ds.tools.NativeArrayTools;
+import de.polygonal.ds.tools.Shuffle;
 
 /**
 	A stack based on a linked list
@@ -378,18 +379,17 @@ class LinkedStack<T> implements Stack<T>
 	/**
 		Shuffles the elements of this collection by using the Fisher-Yates algorithm.
 		@param rvals a list of random double values in the interval [0, 1) defining the new positions of the elements.
-		If omitted, random values are generated on-the-fly by calling `Math.random()`.
+		If omitted, random values are generated on-the-fly by calling `Shuffle.frand()`.
 	**/
 	public function shuffle(rvals:Array<Float> = null):LinkedStack<T>
 	{
 		var s = mTop;
 		if (rvals == null)
 		{
-			var m = Math;
 			while (s > 1)
 			{
 				s--;
-				var i = Std.int(m.random() * s);
+				var i = Std.int(Shuffle.frand() * s);
 				var node1 = mHead;
 				for (j in 0...s) node1 = node1.next;
 				

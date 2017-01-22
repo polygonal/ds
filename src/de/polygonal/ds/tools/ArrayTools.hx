@@ -291,7 +291,7 @@ class ArrayTools
 	/**
 		Shuffles the elements of the array `a` by using the Fisher-Yates algorithm.
 		@param rvals a list of random double values in the range between [0, 1) defining the new positions of the elements.
-		If omitted, random values are generated on-the-fly by calling `Math.random()`.
+		If omitted, random values are generated on-the-fly by calling `Shuffle.frand()`.
 	**/
 	public static function shuffle<T>(a:Array<T>, rvals:Array<Float> = null)
 	{
@@ -300,10 +300,9 @@ class ArrayTools
 		var s = a.length;
 		if (rvals == null)
 		{
-			var m = Math;
 			while (--s > 1)
 			{
-				var i = Std.int(m.random() * s);
+				var i = Std.int(Shuffle.frand() * s);
 				var t = a[s];
 				a[s] = a[i];
 				a[i] = t;
