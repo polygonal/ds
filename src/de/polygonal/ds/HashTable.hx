@@ -347,12 +347,40 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		for (key in keys()) l = M.max(l, Std.string(key).length);
 		var args = new Array<Dynamic>();
 		var fmt = '  %- ${l}s -> %s\n';
-		for (key in keys())
+		
+		var keys = [for (key in keys()) key];
+		keys.sort(function(a, b) return a.key - b.key);
+		var i = 1;
+		var k = keys.length;
+		var j = 0;
+		var c = 1;
+		inline function print(key:K)
 		{
 			args[0] = key;
-			args[1] = Std.string(get(key));
+			if (c > 1)
+			{
+				var tmp = [];
+				getAll(key, tmp);
+				args[1] = tmp.join(",");
+			}
+			else
+				args[1] = Std.string(get(key));
 			b.add(Printf.format(fmt, args));
 		}
+		while (i < k)
+		{
+			if (keys[j] == keys[i])
+				c++;
+			else
+			{
+				print(keys[j]);
+				j = i;
+				c = 1;
+			}
+			i++;
+		}
+		print(keys[j]);
+		
 		b.add("]");
 		return b.toString();
 	}

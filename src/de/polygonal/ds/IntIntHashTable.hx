@@ -647,13 +647,41 @@ class IntIntHashTable implements Map<Int, Int>
 			max = Std.int(max / 10);
 		}
 		var args = new Array<Dynamic>();
-		var fmt = '  %- ${i}d -> %d\n';
-		for (key in keys())
+		var fmt = '  %- ${i}d -> %s\n';
+		
+		var keys = [for (key in keys()) key];
+		keys.sort(function(a, b) return a - b);
+		i = 1;
+		var k = keys.length;
+		var j = 0;
+		var c = 1;
+		inline function print(key:Int)
 		{
 			args[0] = key;
-			args[1] = get(key);
+			if (c > 1)
+			{
+				var tmp = [];
+				getAll(key, tmp);
+				args[1] = tmp.join(",");
+			}
+			else
+				args[1] = get(key);
 			b.add(Printf.format(fmt, args));
 		}
+		while (i < k)
+		{
+			if (keys[j] == keys[i])
+				c++;
+			else
+			{
+				print(keys[j]);
+				j = i;
+				c = 1;
+			}
+			i++;
+		}
+		print(keys[j]);
+		
 		b.add("]");
 		return b.toString();
 	}
