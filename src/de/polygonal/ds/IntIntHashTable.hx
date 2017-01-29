@@ -122,7 +122,7 @@ class IntIntHashTable implements Map<Int, Int>
 	**/
 	public var slotCount(default, null):Int;
 	
-	#if alchemy
+	#if (flash && alchemy)
 	var mHash:IntMemory;
 	var mData:IntMemory;
 	var mNext:IntMemory;
@@ -169,7 +169,7 @@ class IntIntHashTable implements Map<Int, Int>
 		this.slotCount = slotCount;
 		mMask = slotCount - 1;
 		
-		#if alchemy
+		#if (flash && alchemy)
 		mHash = new IntMemory(slotCount, "IntIntHashTable.mHash");
 		mHash.setAll(EMPTY_SLOT);
 		mData = new IntMemory(capacity * 3, "IntIntHashTable.mData");
@@ -1491,7 +1491,7 @@ class IntIntHashTable implements Map<Int, Int>
 	**/
 	public function clear(gc:Bool = false)
 	{
-		#if alchemy
+		#if (flash && alchemy)
 		mHash.setAll(EMPTY_SLOT);
 		#else
 		var h = mHash;
@@ -1567,7 +1567,7 @@ class IntIntHashTable implements Map<Int, Int>
 	{
 		var c = new IntIntHashTable(slotCount, capacity);
 		
-		#if alchemy
+		#if (flash && alchemy)
 		IntMemory.blit(mHash, 0, c.mHash, 0, slotCount);
 		IntMemory.blit(mData, 0, c.mData, 0, capacity * 3);
 		IntMemory.blit(mNext, 0, c.mNext, 0, capacity);
@@ -1593,7 +1593,7 @@ class IntIntHashTableValIterator implements de.polygonal.ds.Itr<Int>
 	var mObject:IntIntHashTable;
 	var mI:Int;
 	var mS:Int;
-	#if alchemy
+	#if (flash && alchemy)
 	var mData:IntMemory;
 	#else
 	var mData:NativeArray<Int>;
@@ -1654,7 +1654,7 @@ class IntIntHashTableKeyIterator implements de.polygonal.ds.Itr<Int>
 	var mI:Int;
 	var mS:Int;
 	
-	#if alchemy
+	#if (flash && alchemy)
 	var mData:IntMemory;
 	#else
 	var mData:NativeArray<Int>;
