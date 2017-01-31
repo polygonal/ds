@@ -30,12 +30,6 @@ class TestBits extends AbstractTest
 			x |= 1 << i;
 			assertEquals(1 << i, x.msb());
 		}
-		x = -1;
-		for (i in 0...k-1)
-		{
-			x = x & ~(1 << 1);
-			assertEquals(1 << k-1, x.msb());
-		}
 	}
 	
 	function testNtz()
