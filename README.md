@@ -44,11 +44,12 @@ This installs the polygonal-ds library hosted on [lib.haxe.org](http://lib.haxe.
 ## Known limitations
 
 * __-java__, __-cs__: java.NativeArray\<T\> and cs.NativeArray\<T\> are not supported, instead plain Haxe Arrays are used right now. Also `-D generic` does not compile.
+* __-hl__: HashLink target is not supported at the moment
 	
 ## Changelog
 
 ### 2.0.0 (released 2017-01-31)
-_requires Haxe Compiler 3.4.0, hxcpp 3.4.2_
+_requires Haxe Compiler 3.4.0, hxcpp 3.4.49_
 
  * added: Array2.copy()
  * modified: optimized Array2.resize(): use fast blit when only changing #rows
