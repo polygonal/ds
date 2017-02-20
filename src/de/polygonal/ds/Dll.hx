@@ -1548,7 +1548,7 @@ class Dll<T> implements List<T>
 		return node != null;
 	}
 	
-	function getNode(x:T)
+	inline function getNode(x:T)
 	{
 		if (mReservedSize == 0 || mPoolSize == 0)
 			return new DllNode<T>(x, this);
@@ -1568,7 +1568,7 @@ class Dll<T> implements List<T>
 		}
 	}
 	
-	function putNode(x:DllNode<T>):T
+	inline function putNode(x:DllNode<T>):T
 	{
 		var val = x.val;
 		if (mReservedSize > 0 && mPoolSize < mReservedSize)

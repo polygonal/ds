@@ -152,7 +152,7 @@ class Sll<T> implements List<T>
 		Appends `val` to the tail of this list by creating a `SllNode` object storing `val`.
 		@return the appended node storing `val`.
 	**/
-	public inline function append(val:T):SllNode<T>
+	public function append(val:T):SllNode<T>
 	{
 		var node = getNode(val);
 		if (valid(tail))
@@ -192,7 +192,7 @@ class Sll<T> implements List<T>
 		Prepends `val` to the head of this list by creating a `SllNode` object storing `val`.
 		@return the prepended node storing `val`.
 	**/
-	public inline function prepend(val:T):SllNode<T>
+	public function prepend(val:T):SllNode<T>
 	{
 		var node = getNode(val);
 		if (valid(tail))
@@ -232,7 +232,7 @@ class Sll<T> implements List<T>
 		Inserts `val` after `node` by creating a `SllNode` object storing `val`.
 		@return the inserted node storing `val`.
 	**/
-	public inline function insertAfter(node:SllNode<T>, val:T):SllNode<T>
+	public function insertAfter(node:SllNode<T>, val:T):SllNode<T>
 	{
 		assert(valid(node), "node is null");
 		assert(node.getList() == this, "node is not managed by this list");
@@ -254,7 +254,7 @@ class Sll<T> implements List<T>
 		Inserts `val` before `node` by creating a `SllNode` object storing `val`.
 		@return the inserted node storing `val`.
 	**/
-	public inline function insertBefore(node:SllNode<T>, val:T):SllNode<T>
+	public function insertBefore(node:SllNode<T>, val:T):SllNode<T>
 	{
 		
 		assert(valid(node), "node is null");
@@ -279,7 +279,7 @@ class Sll<T> implements List<T>
 	/**
 		Unlinks `node` from this list and returns `node.next`.
 	**/
-	public inline function unlink(node:SllNode<T>):SllNode<T>
+	public function unlink(node:SllNode<T>):SllNode<T>
 	{
 		assert(valid(node), "node is null");
 		assert(node.getList() == this, "node is not managed by this list");
@@ -333,7 +333,7 @@ class Sll<T> implements List<T>
 	/**
 		Removes the head node and returns the element stored in this node.
 	**/
-	public inline function removeHead():T
+	public function removeHead():T
 	{
 		assert(size > 0, "list is empty");
 		
@@ -357,7 +357,7 @@ class Sll<T> implements List<T>
 	/**
 		Removes the tail node and returns the element stored in this node.
 	**/
-	public inline function removeTail():T
+	public function removeTail():T
 	{
 		assert(size > 0, "list is empty");
 		
@@ -1348,7 +1348,7 @@ class Sll<T> implements List<T>
 		return node;
 	}
 	
-	function getNode(x:T)
+	inline function getNode(x:T)
 	{
 		if (mReservedSize == 0 || mPoolSize == 0)
 			return new SllNode<T>(x, this);
@@ -1365,7 +1365,7 @@ class Sll<T> implements List<T>
 		}
 	}
 	
-	function putNode(x:SllNode<T>):T
+	inline function putNode(x:SllNode<T>):T
 	{
 		var val = x.val;
 		
