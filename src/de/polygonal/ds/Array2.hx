@@ -1146,4 +1146,11 @@ class Array2Cell
 		this.y = y;
 		return this;
 	}
+	
+	@:extern public inline function of(other:Array2Cell):Array2Cell
+	{
+		x = other.x;
+		y = other.y;
+		return this;
+	}
 }
