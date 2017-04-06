@@ -376,7 +376,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 		}
 		var t = sort();
 		b.add("\n  front\n");
-		var i = 0, args = new Array<Dynamic>();
+		var args = new Array<Dynamic>();
 		var fmt = '  %${M.numDigits(size)}d -> %s\n';
 		for (i in 0...size)
 		{

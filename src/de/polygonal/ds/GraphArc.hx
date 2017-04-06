@@ -18,8 +18,6 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 */
 package de.polygonal.ds;
 
-import de.polygonal.ds.tools.Assert.assert;
-
 /**
 	A graph arc represents an uni-directional link between two GraphNode objects
 	

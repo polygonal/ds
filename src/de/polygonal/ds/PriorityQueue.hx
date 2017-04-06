@@ -22,7 +22,6 @@ import de.polygonal.ds.tools.ArrayTools;
 import de.polygonal.ds.tools.Assert.assert;
 import de.polygonal.ds.tools.GrowthRate;
 import de.polygonal.ds.tools.M;
-import haxe.ds.ObjectMap;
 
 using de.polygonal.ds.tools.NativeArrayTools;
 
@@ -382,7 +381,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 		}
 		var t = sort();
 		b.add("\n  front\n");
-		var i = 0, args = new Array<Dynamic>();
+		var args = new Array<Dynamic>();
 		var fmt = '  %${M.numDigits(size)}d -> %s\n';
 		for (i in 0...size)
 		{

@@ -108,7 +108,7 @@ class ArrayedQueue<T> implements Queue<T>
 		if (source != null)
 		{
 			var d = mData;
-			for (i in 0...mSize) mData.set(i, source[i]);
+			for (i in 0...mSize) d.set(i, source[i]);
 		}
 		
 		if (fixed) growthRate = GrowthRate.FIXED;

@@ -433,7 +433,6 @@ class ArrayedDeque<T> implements Deque<T>
 	**/
 	public function contains(val:T):Bool
 	{
-		var i = 0;
 		if (mTailBlockIndex == 0)
 		{
 			for (j in mHead + 1...mTail)

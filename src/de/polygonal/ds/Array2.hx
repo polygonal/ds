@@ -18,7 +18,6 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 */
 package de.polygonal.ds;
 
-import de.polygonal.ds.Array2.Array2Cell;
 import de.polygonal.ds.tools.Assert.assert;
 import de.polygonal.ds.tools.M;
 import de.polygonal.ds.tools.Shuffle;

@@ -609,11 +609,11 @@ class IntIntHashTable implements Map<Int, Int>
 		if (isEmpty()) return [];
 		
 		var out = ArrayTools.alloc(size);
-		var j = 0, o, d = mData;
+		var j = 0, d = mData;
 		for (i in 0...capacity)
 		{
 			#if (flash && alchemy)
-			o = d.getAddr(i * 3);
+			var o = d.getAddr(i * 3);
 			if (Memory.getI32(o + 4) != VAL_ABSENT)
 				out[j++] = Memory.getI32(o);
 			#else
@@ -1269,11 +1269,10 @@ class IntIntHashTable implements Map<Int, Int>
 	{
 		if (capacity == mMinCapacity) return this;
 		
-		var oldCapacity = capacity;
 		capacity = M.max(size, mMinCapacity);
 		
 		var src = mData, dst;
-		var e = 0, t = mHash, j;
+		var e = 0, t = mHash;
 		
 		#if (flash && alchemy)
 		dst = new IntMemory(capacity * 3, "IntIntHashTable.mData");

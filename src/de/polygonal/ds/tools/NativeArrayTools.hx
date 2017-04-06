@@ -144,7 +144,6 @@ class NativeArrayTools
 		}
 		else
 		{
-			var j;
 			for (i in first...first + len) out[i - first] = get(src, i);
 		}
 		return out;

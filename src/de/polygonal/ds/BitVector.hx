@@ -327,7 +327,6 @@ class BitVector implements Hashable
 			#end
 		}
 		var index:Int = numIntegers << 5;
-		var shift = 0, t = 0;
 		for (i in 0...numBytes)
 		{
 			var b = input.readByte();

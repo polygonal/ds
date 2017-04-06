@@ -20,7 +20,6 @@ package de.polygonal.ds;
 
 import de.polygonal.ds.tools.ArrayTools;
 import de.polygonal.ds.tools.Assert.assert;
-import de.polygonal.ds.tools.NativeArrayTools;
 
 /**
 	A binary search tree (BST)

@@ -310,7 +310,6 @@ class IntHashSet implements Set<Int>
 	{
 		if (capacity == mMinCapacity) return this;
 		
-		var oldCapacity = capacity;
 		capacity = M.max(size, mMinCapacity);
 		
 		var src = mData, dst;

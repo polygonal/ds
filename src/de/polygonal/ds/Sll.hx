@@ -18,13 +18,10 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 */
 package de.polygonal.ds;
 
-import de.polygonal.ds.Sll.SllIterator;
 import de.polygonal.ds.tools.ArrayTools;
 import de.polygonal.ds.tools.Assert.assert;
 import de.polygonal.ds.tools.M;
 import de.polygonal.ds.tools.Shuffle;
-
-using de.polygonal.ds.tools.NativeArrayTools;
 
 /**
 	A singly linked list
@@ -1122,7 +1119,7 @@ class Sll<T> implements List<T>
 		var h = node;
 		var p, q, e, tail = null;
 		var insize = 1;
-		var nmerges, psize, qsize, i;
+		var nmerges, psize, qsize;
 		while (true)
 		{
 			p = h;
@@ -1192,7 +1189,7 @@ class Sll<T> implements List<T>
 		var h = node;
 		var p, q, e, tail = null;
 		var insize = 1;
-		var nmerges, psize, qsize, i;
+		var nmerges, psize, qsize;
 		
 		while (true)
 		{

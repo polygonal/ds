@@ -22,8 +22,6 @@ import de.polygonal.ds.tools.ArrayTools;
 import de.polygonal.ds.tools.Assert.assert;
 import de.polygonal.ds.tools.M;
 
-using de.polygonal.ds.tools.NativeArrayTools;
-
 /**
 	A deque is a "double-ended queue"
 	
@@ -379,7 +377,6 @@ class LinkedDeque<T> implements Deque<T>
 			{
 				found = true;
 				
-				var next = node.next;
 				if (node.prev != null) node.prev.next = node.next;
 				if (node.next != null) node.next.prev = node.prev;
 				if (node == mHead) mHead = mHead.next;
@@ -626,7 +623,6 @@ class LinkedDeque<T> implements Deque<T>
 	
 	inline function removeNode(x:LinkedDequeNode<T>)
 	{
-		var next = x.next;
 		if (x.prev != null) x.prev.next = x.next;
 		if (x.next != null) x.next.prev = x.prev;
 		if (x == mHead) mHead = mHead.next;

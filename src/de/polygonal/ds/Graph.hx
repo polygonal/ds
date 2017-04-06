@@ -20,7 +20,6 @@ package de.polygonal.ds;
 
 import de.polygonal.ds.tools.ArrayTools;
 import de.polygonal.ds.tools.Assert.assert;
-import de.polygonal.ds.tools.NativeArrayTools;
 
 using de.polygonal.ds.tools.NativeArrayTools;
 
@@ -1063,7 +1062,7 @@ class Graph<T> implements Collection<T>
 	{
 		var vals = [];
 		var arcs = [];
-		var node = getNodeList(), arc, i, j;
+		var node = getNodeList(), arc;
 		
 		var indexLut = new haxe.ds.IntMap<Int>();
 		
@@ -1227,7 +1226,6 @@ class Graph<T> implements Collection<T>
 	**/
 	public function contains(val:T):Bool
 	{
-		var found = false;
 		var node = mNodeList;
 		while (node != null)
 		{

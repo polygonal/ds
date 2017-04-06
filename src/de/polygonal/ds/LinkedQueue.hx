@@ -21,7 +21,6 @@ package de.polygonal.ds;
 import de.polygonal.ds.tools.ArrayTools;
 import de.polygonal.ds.tools.Assert.assert;
 import de.polygonal.ds.tools.M;
-import de.polygonal.ds.tools.NativeArrayTools;
 import de.polygonal.ds.tools.Shuffle;
 
 /**
@@ -412,7 +411,7 @@ class LinkedQueue<T> implements Queue<T>
 			{
 				var next = node.next;
 				putNode(node);
-				node = node.next;
+				node = next;
 			}
 		}
 		mHead = mTail = null;

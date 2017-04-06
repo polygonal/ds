@@ -529,7 +529,7 @@ class Array3<T> implements Collection<T>
 		var d = mData;
 		if (rvals == null)
 		{
-			var i, j, t;
+			var i, t;
 			while (--s > 1)
 			{
 				i = Std.int(Shuffle.frand() * s);

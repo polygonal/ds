@@ -22,8 +22,6 @@ import de.polygonal.ds.tools.ArrayTools;
 import de.polygonal.ds.tools.Assert.assert;
 import de.polygonal.ds.tools.M;
 
-using de.polygonal.ds.tools.NativeArrayTools;
-
 /**
 	A tree structure
 	
@@ -1665,7 +1663,7 @@ class TreeNode<T> implements Collection<T>
 		var h = node;
 		var p, q, e, tail = null;
 		var insize = 1;
-		var nmerges, psize, qsize, i;
+		var nmerges, psize, qsize;
 		
 		while (true)
 		{
@@ -1738,7 +1736,7 @@ class TreeNode<T> implements Collection<T>
 		var h = node;
 		var p, q, e, tail = null;
 		var insize = 1;
-		var nmerges, psize, qsize, i;
+		var nmerges, psize, qsize;
 		
 		while (true)
 		{

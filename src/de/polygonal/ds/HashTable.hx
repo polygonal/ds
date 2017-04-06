@@ -391,7 +391,6 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		var oldCapacity = capacity;
 		capacity = GrowthRate.compute(growthRate, capacity);
 		
-		var t;
 		#if alchemy
 		mNext.resize(capacity);
 		#else
@@ -400,7 +399,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		mNext = t;
 		#end
 		
-		t = mNext;
+		var t = mNext;
 		for (i in oldCapacity - 1...capacity - 1) t.set(i, i + 1);
 		t.set(capacity - 1, IntIntHashTable.NULL_POINTER);
 		mFree = oldCapacity;
@@ -682,7 +681,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		if (isEmpty()) return [];
 		
 		var out = ArrayTools.alloc(size);
-		var j = 0, keys = mKeys, vals = mVals, k;
+		var j = 0, keys = mKeys, vals = mVals;
 		for (i in 0...capacity)
 			if (keys.get(i) != null)
 				out[j++] = vals.get(i);

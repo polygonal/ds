@@ -790,7 +790,7 @@ class ArrayList<T> implements List<T>
 			assert(Std.is(d.get(i), Comparable), "element is not of type Comparable");
 		#end
 		
-		var last = first + k - 1, lo = first, hi = last, d = mData;
+		var last = first + k - 1, lo = first, hi = last;
 		
 		var i0, i1, i2, mid, t;
 		var t0, t1, t2, pivot;
