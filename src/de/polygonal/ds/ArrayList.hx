@@ -21,7 +21,7 @@ package de.polygonal.ds;
 import de.polygonal.ds.tools.Assert.assert;
 import de.polygonal.ds.NativeArray;
 import de.polygonal.ds.tools.GrowthRate;
-import de.polygonal.ds.tools.M;
+import de.polygonal.ds.tools.MathTools;
 import de.polygonal.ds.tools.Shuffle;
 
 using de.polygonal.ds.tools.NativeArrayTools;
@@ -88,7 +88,7 @@ class ArrayList<T> implements List<T>
 	**/
 	public function new(initalCapacity:Null<Int> = 2, ?source:Array<T>, ?fixed:Bool)
 	{
-		mInitialCapacity = M.max(2, initalCapacity);
+		mInitialCapacity = MathTools.max(2, initalCapacity);
 		
 		if (source != null && source.length > 0)
 		{
@@ -718,7 +718,7 @@ class ArrayList<T> implements List<T>
 		}
 		b.add("\n");
 		var d = mData, args = new Array<Dynamic>();
-		var fmt = '  %${M.numDigits(size)}d -> %s\n';
+		var fmt = '  %${MathTools.numDigits(size)}d -> %s\n';
 		for (i in 0...size)
 		{
 			args[0] = i;
@@ -913,7 +913,7 @@ class ArrayList<T> implements List<T>
 	{
 		if (capacity > mInitialCapacity)
 		{
-			capacity = M.max(mInitialCapacity, mSize);
+			capacity = MathTools.max(mInitialCapacity, mSize);
 			resizeContainer(capacity);
 		}
 		else

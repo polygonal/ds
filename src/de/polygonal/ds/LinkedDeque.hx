@@ -20,7 +20,7 @@ package de.polygonal.ds;
 
 import de.polygonal.ds.tools.ArrayTools;
 import de.polygonal.ds.tools.Assert.assert;
-import de.polygonal.ds.tools.M;
+import de.polygonal.ds.tools.MathTools;
 
 /**
 	A deque is a "double-ended queue"
@@ -285,7 +285,7 @@ class LinkedDeque<T> implements Deque<T>
 		}
 		b.add("\n  front\n");
 		var node = mHead, i = 0, args = new Array<Dynamic>();
-		var fmt = '  %${M.numDigits(size)}d -> %s\n';
+		var fmt = '  %${MathTools.numDigits(size)}d -> %s\n';
 		while (node != null)
 		{
 			args[0] = i++;

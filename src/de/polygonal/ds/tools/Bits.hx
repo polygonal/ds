@@ -19,7 +19,7 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 package de.polygonal.ds.tools;
 
 import de.polygonal.ds.tools.Assert.assert;
-import de.polygonal.ds.tools.M;
+import de.polygonal.ds.tools.MathTools;
 
 #if macro
 import haxe.macro.Expr;

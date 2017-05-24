@@ -21,7 +21,7 @@ package de.polygonal.ds;
 import de.polygonal.ds.tools.ArrayTools;
 import de.polygonal.ds.tools.Assert.assert;
 import de.polygonal.ds.tools.Bits;
-import de.polygonal.ds.tools.M;
+import de.polygonal.ds.tools.MathTools;
 
 using de.polygonal.ds.tools.NativeArrayTools;
 
@@ -98,7 +98,7 @@ class ArrayedDeque<T> implements Deque<T>
 	public function new(blockSize:Null<Int> = 64, blockPoolCapacity:Null<Int> = 4, ?source:Array<T>)
 	{
 		assert(blockSize > 0);
-		assert(M.isPow2(blockSize), "blockSize is not a power of 2");
+		assert(MathTools.isPow2(blockSize), "blockSize is not a power of 2");
 		assert(blockSize >= 4, "blockSize is too small");
 		
 		mBlockSize = blockSize;
@@ -212,7 +212,6 @@ class ArrayedDeque<T> implements Deque<T>
 		{
 			var c = (mHead + 1) + i;
 			var b = (c >> mBlockSizeShift);
-			
 			if (mBlocks.get(b).get(c - (b << mBlockSizeShift)) == val)
 				return i;
 		}
@@ -230,7 +229,7 @@ class ArrayedDeque<T> implements Deque<T>
 		
 		var c = mTail - 1 - i;
 		var b = c >> mBlockSizeShift;
-		return mBlocks.get(mTailBlockIndex + b).get(M.abs(b << mBlockSizeShift) + c);
+		return mBlocks.get(mTailBlockIndex + b).get(MathTools.abs(b << mBlockSizeShift) + c);
 	}
 	
 	/**
@@ -244,7 +243,7 @@ class ArrayedDeque<T> implements Deque<T>
 		{
 			var c = mTail - 1 - i;
 			var b = c >> mBlockSizeShift;
-			if (mBlocks.get(mTailBlockIndex + b).get(M.abs(b << mBlockSizeShift) + c) == val)
+			if (mBlocks.get(mTailBlockIndex + b).get(MathTools.abs(b << mBlockSizeShift) + c) == val)
 				return i;
 		}
 		return -1;
@@ -335,7 +334,7 @@ class ArrayedDeque<T> implements Deque<T>
 		b.add("\n  front\n");
 		var args = new Array<Dynamic>();
 		var i = 0;
-		var fmt = '  %${M.numDigits(size)}d -> %s\n';
+		var fmt = '  %${MathTools.numDigits(size)}d -> %s\n';
 		if (mTailBlockIndex == 0)
 		{
 			for (j in mHead + 1...mTail)

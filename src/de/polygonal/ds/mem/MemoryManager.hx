@@ -20,7 +20,7 @@ package de.polygonal.ds.mem;
 
 import de.polygonal.ds.tools.Assert.assert;
 import de.polygonal.ds.tools.Bits;
-import de.polygonal.ds.tools.M;
+import de.polygonal.ds.tools.MathTools;
 
 #if (alchemy && !flash)
 "MemoryManager is only available when targeting flash"
@@ -132,7 +132,7 @@ class MemoryManager
 	
 	function new()
 	{
-		assert(M.isPow2(BLOCK_SIZE_BYTES));
+		assert(MathTools.isPow2(BLOCK_SIZE_BYTES));
 		assert(BLOCK_SIZE_BYTES >= 1024);
 		assert(RAW_BYTES >= 1024);
 		
@@ -364,7 +364,7 @@ class MemoryManager
 			//eat up space in empty intervals and add to m
 			while (bytesLeft > 0)
 			{
-				var bytesToEat = M.min(i.size, bytesLeft);
+				var bytesToEat = MathTools.min(i.size, bytesLeft);
 				bytesLeft -= bytesToEat;
 				
 				bytesUsed += bytesToEat;
@@ -657,7 +657,7 @@ class MemoryManager
 	function grow(numBytes:Int)
 	{
 		//calculate #required buckets
-		var requiredBuckets = M.max(1, Math.ceil((bytesUsed + numBytes - bytesTotal) / mBlockSizeBytes));
+		var requiredBuckets = MathTools.max(1, Math.ceil((bytesUsed + numBytes - bytesTotal) / mBlockSizeBytes));
 		var curBuckets = bytesTotal >> mBlockSizeShift;
 		var maxBuckets = requiredBuckets + curBuckets;
 		var requiredBytes = maxBuckets << mBlockSizeShift;

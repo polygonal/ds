@@ -20,7 +20,7 @@ package de.polygonal.ds;
 
 import de.polygonal.ds.tools.ArrayTools;
 import de.polygonal.ds.tools.Assert.assert;
-import de.polygonal.ds.tools.M;
+import de.polygonal.ds.tools.MathTools;
 
 /**
 	A tree structure
@@ -497,7 +497,7 @@ class TreeNode<T> implements Collection<T>
 		var node = children;
 		while (node != null)
 		{
-			h = M.max(h, node.height());
+			h = MathTools.max(h, node.height());
 			node = node.next;
 		}
 		return 1 + h;

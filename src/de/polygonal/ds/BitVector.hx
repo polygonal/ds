@@ -19,7 +19,7 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 package de.polygonal.ds;
 
 import de.polygonal.ds.tools.Assert.assert;
-import de.polygonal.ds.tools.M;
+import de.polygonal.ds.tools.MathTools;
 
 using de.polygonal.ds.tools.NativeArrayTools;
 
@@ -354,7 +354,7 @@ class BitVector implements Hashable
 		}
 		b.add("\n");
 		var args = new Array<Dynamic>();
-		var fmt = '  %${M.numDigits(arrSize)}d -> %.32b\n';
+		var fmt = '  %${MathTools.numDigits(arrSize)}d -> %.32b\n';
 		for (i in 0...arrSize)
 		{
 			args[0] = i;

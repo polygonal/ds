@@ -26,7 +26,7 @@ import flash.Memory;
 import de.polygonal.ds.tools.ArrayTools;
 import de.polygonal.ds.tools.Assert.assert;
 import de.polygonal.ds.tools.GrowthRate;
-import de.polygonal.ds.tools.M;
+import de.polygonal.ds.tools.MathTools;
 
 using de.polygonal.ds.tools.NativeArrayTools;
 
@@ -50,7 +50,7 @@ class IntHashSet implements Set<Int>
 	/**
 		Return code for a non-existing element.
 	**/
-	public static inline var VAL_ABSENT = M.INT32_MIN;
+	public static inline var VAL_ABSENT = MathTools.INT32_MIN;
 	
 	static inline var EMPTY_SLOT = -1;
 	static inline var NULL_POINTER = -1;
@@ -134,12 +134,12 @@ class IntHashSet implements Set<Int>
 	public function new(slotCount:Int, initialCapacity:Int = -1)
 	{
 		assert(slotCount > 0);
-		assert(M.isPow2(slotCount), "slotCount is not a power of 2");
+		assert(MathTools.isPow2(slotCount), "slotCount is not a power of 2");
 		
 		if (initialCapacity == -1)
 			initialCapacity = slotCount;
 		
-		initialCapacity = M.max(2, initialCapacity);
+		initialCapacity = MathTools.max(2, initialCapacity);
 		mMinCapacity = capacity = initialCapacity;
 		
 		this.slotCount = slotCount;
@@ -265,7 +265,7 @@ class IntHashSet implements Set<Int>
 	**/
 	public function rehash(slotCount:Int):IntHashSet
 	{
-		assert(M.isPow2(slotCount), "slotCount is not a power of 2");
+		assert(MathTools.isPow2(slotCount), "slotCount is not a power of 2");
 		
 		if (this.slotCount == slotCount) return this;
 		
@@ -310,7 +310,7 @@ class IntHashSet implements Set<Int>
 	{
 		if (capacity == mMinCapacity) return this;
 		
-		capacity = M.max(size, mMinCapacity);
+		capacity = MathTools.max(size, mMinCapacity);
 		
 		var src = mData, dst;
 		var e = 0, t = mHash, j;

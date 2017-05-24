@@ -21,7 +21,7 @@ package de.polygonal.ds;
 import de.polygonal.ds.tools.ArrayTools;
 import de.polygonal.ds.tools.Assert.assert;
 import de.polygonal.ds.tools.GrowthRate;
-import de.polygonal.ds.tools.M;
+import de.polygonal.ds.tools.MathTools;
 
 using de.polygonal.ds.tools.NativeArrayTools;
 
@@ -111,14 +111,14 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	**/
 	public function new(initalCapacity:Null<Int> = 1, ?inverse:Null<Bool> = false, ?source:Array<T>)
 	{
-		mInitialCapacity = M.max(1, initalCapacity);
+		mInitialCapacity = MathTools.max(1, initalCapacity);
 		capacity = initalCapacity;
 		mInverse = inverse;
 		
 		if (source != null)
 		{
 			mSize = source.length;
-			capacity = M.max(mSize, capacity);
+			capacity = MathTools.max(mSize, capacity);
 		}
 		
 		mData = NativeArrayTools.alloc(capacity + 1);
@@ -146,7 +146,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	{
 		if (capacity > mInitialCapacity)
 		{
-			capacity = M.max(mInitialCapacity, mSize);
+			capacity = MathTools.max(mInitialCapacity, mSize);
 			resizeContainer(capacity);
 		}
 		else
@@ -382,7 +382,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 		var t = sort();
 		b.add("\n  front\n");
 		var args = new Array<Dynamic>();
-		var fmt = '  %${M.numDigits(size)}d -> %s\n';
+		var fmt = '  %${MathTools.numDigits(size)}d -> %s\n';
 		for (i in 0...size)
 		{
 			args[0] = i;

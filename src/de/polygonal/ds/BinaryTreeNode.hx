@@ -20,7 +20,7 @@ package de.polygonal.ds;
 
 import de.polygonal.ds.tools.ArrayTools;
 import de.polygonal.ds.tools.Assert.assert;
-import de.polygonal.ds.tools.M;
+import de.polygonal.ds.tools.MathTools;
 
 using de.polygonal.ds.tools.NativeArrayTools;
 
@@ -538,7 +538,7 @@ class BinaryTreeNode<T> implements Collection<T>
 	**/
 	public function height():Int
 	{
-		return 1 + M.max((left != null ? left.height() : 0), right != null ? right.height() : 0);
+		return 1 + MathTools.max((left != null ? left.height() : 0), right != null ? right.height() : 0);
 	}
 	
 	/**
@@ -689,7 +689,7 @@ class BinaryTreeNode<T> implements Collection<T>
 			cl = heightRecursive(node.left);
 		if (node.hasRight())
 			cr = heightRecursive(node.right);
-		return M.max(cl, cr) + 1;
+		return MathTools.max(cl, cr) + 1;
 	}
 	
 	/* INTERFACE Collection */

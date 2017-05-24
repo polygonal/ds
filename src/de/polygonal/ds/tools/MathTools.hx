@@ -19,7 +19,7 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 package de.polygonal.ds.tools;
 
 @:dox(hide)
-extern class M
+extern class MathTools
 {
 	/**
 		Min value, signed integer.
@@ -27,7 +27,7 @@ extern class M
 	public static inline var INT32_MIN =
 	#if cpp
 	//warning: this decimal constant is unsigned only in ISO C90
-	-M.INT32_MAX;
+	-MathTools.INT32_MAX;
 	#else
 	0x80000000;
 	#end

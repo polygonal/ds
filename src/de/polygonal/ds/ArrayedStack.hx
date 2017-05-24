@@ -21,7 +21,7 @@ package de.polygonal.ds;
 import de.polygonal.ds.tools.ArrayTools;
 import de.polygonal.ds.tools.Assert.assert;
 import de.polygonal.ds.tools.GrowthRate;
-import de.polygonal.ds.tools.M;
+import de.polygonal.ds.tools.MathTools;
 import de.polygonal.ds.tools.Shuffle;
 
 using de.polygonal.ds.tools.NativeArrayTools;
@@ -93,13 +93,13 @@ class ArrayedStack<T> implements Stack<T>
 	**/
 	public function new(initialCapacity:Null<Int> = 16, ?source:Array<T>, ?fixed:Bool)
 	{
-		mInitialCapacity = M.max(1, initialCapacity);
+		mInitialCapacity = MathTools.max(1, initialCapacity);
 		capacity = mInitialCapacity;
 		
 		if (source != null)
 		{
 			mTop = source.length;
-			capacity = M.max(mTop, capacity);
+			capacity = MathTools.max(mTop, capacity);
 		}
 		
 		mData = NativeArrayTools.alloc(capacity);
@@ -123,7 +123,7 @@ class ArrayedStack<T> implements Stack<T>
 	{
 		if (capacity > mInitialCapacity)
 		{
-			capacity = M.max(size, mInitialCapacity);
+			capacity = MathTools.max(size, mInitialCapacity);
 			resizeContainer(capacity);
 		}
 		else
@@ -438,7 +438,7 @@ class ArrayedStack<T> implements Stack<T>
 		var i = mTop - 1;
 		var j = mTop - 1;
 		var d = mData, args = new Array<Dynamic>();
-		var fmt = '  %${M.numDigits(size)}d -> %s\n';
+		var fmt = '  %${MathTools.numDigits(size)}d -> %s\n';
 		while (i >= 0)
 		{
 			args[0] = j--;

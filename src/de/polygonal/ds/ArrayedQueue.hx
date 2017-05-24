@@ -21,7 +21,7 @@ package de.polygonal.ds;
 import de.polygonal.ds.tools.ArrayTools;
 import de.polygonal.ds.tools.Assert.assert;
 import de.polygonal.ds.tools.GrowthRate;
-import de.polygonal.ds.tools.M;
+import de.polygonal.ds.tools.MathTools;
 import de.polygonal.ds.tools.Shuffle;
 
 using de.polygonal.ds.tools.NativeArrayTools;
@@ -94,13 +94,13 @@ class ArrayedQueue<T> implements Queue<T>
 	**/
 	public function new(initialCapacity:Null<Int> = 16, ?source:Array<T>, ?fixed:Bool)
 	{
-		mInitialCapacity = M.max(1, initialCapacity);
+		mInitialCapacity = MathTools.max(1, initialCapacity);
 		capacity = mInitialCapacity;
 		
 		if (source != null)
 		{
 			mSize = source.length;
-			capacity = M.max(mSize, capacity);
+			capacity = MathTools.max(mSize, capacity);
 		}
 		
 		mData = NativeArrayTools.alloc(capacity);
@@ -182,7 +182,7 @@ class ArrayedQueue<T> implements Queue<T>
 		if (capacity > mInitialCapacity)
 		{
 			var oldCapacity = capacity;
-			capacity = M.max(size, mInitialCapacity);
+			capacity = MathTools.max(size, mInitialCapacity);
 			resizeContainer(oldCapacity, capacity);
 		}
 		else
@@ -358,7 +358,7 @@ class ArrayedQueue<T> implements Queue<T>
 			return b.toString();
 		}
 		b.add("\n  front\n");
-		var fmt = '  %${M.numDigits(size)}d -> %s\n';
+		var fmt = '  %${MathTools.numDigits(size)}d -> %s\n';
 		var args = new Array<Dynamic>();
 		for (i in 0...size)
 		{
@@ -511,7 +511,7 @@ class ArrayedQueue<T> implements Queue<T>
 		
 		#if cpp
 		var out = NativeArrayTools.alloc(size);
-		var n = M.min(capacity, mFront + size) - mFront;
+		var n = MathTools.min(capacity, mFront + size) - mFront;
 		mData.blit(mFront, out, 0, n);
 		if (size - n > 0) mData.blit(0, out, n, size - n);
 		return out;

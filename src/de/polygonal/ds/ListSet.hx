@@ -20,7 +20,7 @@ package de.polygonal.ds;
 
 import de.polygonal.ds.tools.Assert.assert;
 import de.polygonal.ds.tools.GrowthRate;
-import de.polygonal.ds.tools.M;
+import de.polygonal.ds.tools.MathTools;
 
 using de.polygonal.ds.tools.NativeArrayTools;
 
@@ -84,7 +84,7 @@ class ListSet<T> implements Set<T>
 	
 	public function new(initialCapacity:Null<Int> = 16, ?source:Array<T>)
 	{
-		mInitialCapacity = M.max(1, initialCapacity);
+		mInitialCapacity = MathTools.max(1, initialCapacity);
 		capacity = mInitialCapacity;
 		if (source != null) capacity = source.length;
 		mData = NativeArrayTools.alloc(capacity);
@@ -117,7 +117,7 @@ class ListSet<T> implements Set<T>
 	{
 		if (capacity > mInitialCapacity)
 		{
-			capacity = M.max(mInitialCapacity, mSize);
+			capacity = MathTools.max(mInitialCapacity, mSize);
 			resizeContainer(capacity);
 		}
 		else

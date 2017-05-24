@@ -25,7 +25,7 @@ import de.polygonal.ds.mem.IntMemory;
 import de.polygonal.ds.tools.ArrayTools;
 import de.polygonal.ds.tools.Assert.assert;
 import de.polygonal.ds.tools.GrowthRate;
-import de.polygonal.ds.tools.M;
+import de.polygonal.ds.tools.MathTools;
 
 using de.polygonal.ds.tools.NativeArrayTools;
 
@@ -157,7 +157,7 @@ class HashSet<T:Hashable> implements Set<T>
 		assert(slotCount > 0);
 		
 		if (initialCapacity == -1) initialCapacity = slotCount;
-		initialCapacity = M.max(2, initialCapacity);
+		initialCapacity = MathTools.max(2, initialCapacity);
 		
 		mMinCapacity = capacity = initialCapacity;
 		

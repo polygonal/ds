@@ -22,7 +22,7 @@ import de.polygonal.ds.tools.ArrayTools;
 import de.polygonal.ds.tools.Assert.assert;
 import de.polygonal.ds.tools.Bits;
 import de.polygonal.ds.tools.GrowthRate;
-import de.polygonal.ds.tools.M;
+import de.polygonal.ds.tools.MathTools;
 
 using de.polygonal.ds.tools.NativeArrayTools;
 
@@ -113,13 +113,13 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	**/
 	public function new(initalCapacity:Null<Int> = 1, ?source:Array<T>)
 	{
-		mInitialCapacity = M.max(1, initalCapacity);
+		mInitialCapacity = MathTools.max(1, initalCapacity);
 		capacity = initalCapacity;
 		
 		if (source != null)
 		{
 			mSize = source.length;
-			capacity = M.max(mSize, capacity);
+			capacity = MathTools.max(mSize, capacity);
 		}
 		
 		mData = NativeArrayTools.alloc(capacity + 1);
@@ -324,7 +324,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 	{
 		if (capacity > mInitialCapacity)
 		{
-			capacity = M.max(mInitialCapacity, mSize);
+			capacity = MathTools.max(mInitialCapacity, mSize);
 			resizeContainer(capacity);
 		}
 		else
@@ -377,7 +377,7 @@ class Heap<T:(Heapable<T>)> implements Collection<T>
 		var t = sort();
 		b.add("\n  front\n");
 		var args = new Array<Dynamic>();
-		var fmt = '  %${M.numDigits(size)}d -> %s\n';
+		var fmt = '  %${MathTools.numDigits(size)}d -> %s\n';
 		for (i in 0...size)
 		{
 			args[0] = i;

@@ -19,7 +19,7 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 package de.polygonal.ds.mem;
 
 import de.polygonal.ds.tools.Assert.assert;
-import de.polygonal.ds.tools.M;
+import de.polygonal.ds.tools.MathTools;
 import haxe.ds.Vector;
 
 #if (alchemy && !flash)
@@ -287,7 +287,7 @@ class BitMemory extends MemoryAccess
 		super.resize(newBytes);
 		#else
 			var t = new Vector<Int>(newBytes >> 2);
-			for (i in 0...M.min(newSize, size)) t[i] = mData[i];
+			for (i in 0...MathTools.min(newSize, size)) t[i] = mData[i];
 			mData = t;
 		#end
 		

@@ -19,7 +19,7 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 package de.polygonal.ds;
 
 import de.polygonal.ds.tools.Assert.assert;
-import de.polygonal.ds.tools.M;
+import de.polygonal.ds.tools.MathTools;
 import de.polygonal.ds.tools.Shuffle;
 
 using de.polygonal.ds.tools.NativeArrayTools;
@@ -563,11 +563,11 @@ class Array3<T> implements Collection<T>
 	public function toString():String
 	{
 		var l = 0;
-		for (i in 0...size) l = M.max(l, Std.string(mData.get(i)).length);
+		for (i in 0...size) l = MathTools.max(l, Std.string(mData.get(i)).length);
 		var b = new StringBuf();
 		b.add('[ Array3 cols=$cols rows=$rows depth=$depth\n');
 		var args = new Array<Dynamic>();
-		var w = M.numDigits(rows);
+		var w = MathTools.numDigits(rows);
 		for (z in 0...depth)
 		{
 			b.add('  layer=$z\n');

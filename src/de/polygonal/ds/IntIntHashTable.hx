@@ -21,7 +21,7 @@ package de.polygonal.ds;
 import de.polygonal.ds.tools.ArrayTools;
 import de.polygonal.ds.tools.Assert.assert;
 import de.polygonal.ds.tools.GrowthRate;
-import de.polygonal.ds.tools.M;
+import de.polygonal.ds.tools.MathTools;
 
 using de.polygonal.ds.tools.NativeArrayTools;
 
@@ -56,12 +56,12 @@ class IntIntHashTable implements Map<Int, Int>
 	/**
 		Return code for a non-existing key.
 	**/
-	public static inline var KEY_ABSENT = M.INT32_MIN;
+	public static inline var KEY_ABSENT = MathTools.INT32_MIN;
 	
 	/**
 		Return code for a non-existing value.
 	**/
-	public static inline var VAL_ABSENT = M.INT32_MIN;
+	public static inline var VAL_ABSENT = MathTools.INT32_MIN;
 	
 	/**
 		Used internally.
@@ -154,14 +154,14 @@ class IntIntHashTable implements Map<Int, Int>
 	public function new(slotCount:Int, initialCapacity:Int = -1)
 	{
 		assert(slotCount > 0);
-		assert(M.isPow2(slotCount), "slotCount is not a power of 2");
+		assert(MathTools.isPow2(slotCount), "slotCount is not a power of 2");
 		
 		if (initialCapacity == -1)
 			initialCapacity = slotCount;
 		else
 		{
 			assert(initialCapacity >= 2, "minimum capacity is 2");
-			assert(M.isPow2(slotCount), "capacity is not a power of 2");
+			assert(MathTools.isPow2(slotCount), "capacity is not a power of 2");
 		}
 		
 		capacity = initialCapacity;
@@ -400,7 +400,7 @@ class IntIntHashTable implements Map<Int, Int>
 	**/
 	public function rehash(slotCount:Int):IntIntHashTable
 	{
-		assert(M.isPow2(slotCount), "slotCount is not a power of 2");
+		assert(MathTools.isPow2(slotCount), "slotCount is not a power of 2");
 		
 		if (this.slotCount == slotCount) return this;
 		
@@ -1269,7 +1269,7 @@ class IntIntHashTable implements Map<Int, Int>
 	{
 		if (capacity == mMinCapacity) return this;
 		
-		capacity = M.max(size, mMinCapacity);
+		capacity = MathTools.max(size, mMinCapacity);
 		
 		var src = mData, dst;
 		var e = 0, t = mHash;

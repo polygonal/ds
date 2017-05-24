@@ -20,7 +20,7 @@ package de.polygonal.ds;
 
 import de.polygonal.ds.tools.ArrayTools;
 import de.polygonal.ds.tools.Assert.assert;
-import de.polygonal.ds.tools.M;
+import de.polygonal.ds.tools.MathTools;
 import de.polygonal.ds.tools.Shuffle;
 
 /**
@@ -441,7 +441,7 @@ class LinkedStack<T> implements Stack<T>
 		b.add("\n  top\n");
 		var node = mHead, i = mTop - 1;
 		var args = new Array<Dynamic>();
-		var fmt = '  %${M.numDigits(size)}d -> %s\n';
+		var fmt = '  %${MathTools.numDigits(size)}d -> %s\n';
 		while (i >= 0)
 		{
 			args[0] = i;

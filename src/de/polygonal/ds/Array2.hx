@@ -19,7 +19,7 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 package de.polygonal.ds;
 
 import de.polygonal.ds.tools.Assert.assert;
-import de.polygonal.ds.tools.M;
+import de.polygonal.ds.tools.MathTools;
 import de.polygonal.ds.tools.Shuffle;
 
 using de.polygonal.ds.tools.NativeArrayTools;
@@ -897,7 +897,7 @@ class Array2<T> implements Collection<T>
 		b.add('[ Array2 cols=$cols rows=$rows\n');
 		
 		var offset, row = 0, args = new Array<Dynamic>();
-		var w = M.numDigits(rows);
+		var w = MathTools.numDigits(rows);
 		for (y in 0...rows)
 		{
 			args[0] = row++;

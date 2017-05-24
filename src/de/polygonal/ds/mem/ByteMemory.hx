@@ -19,7 +19,7 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 package de.polygonal.ds.mem;
 
 import de.polygonal.ds.tools.Assert.assert;
-import de.polygonal.ds.tools.M;
+import de.polygonal.ds.tools.MathTools;
 import haxe.ds.Vector;
 
 #if (alchemy && !flash)
@@ -346,10 +346,10 @@ class ByteMemory extends MemoryAccess
 			#if flash
 			var t = new flash.utils.ByteArray();
 			t.length = newSize;
-			for (i in 0...M.min(newSize, size)) t[i] = mData[i];
+			for (i in 0...MathTools.min(newSize, size)) t[i] = mData[i];
 			#else
 			var t = haxe.io.Bytes.alloc(newSize);
-			for (i in 0...M.min(newSize, size)) t.set(i, mData.get(i));
+			for (i in 0...MathTools.min(newSize, size)) t.set(i, mData.get(i));
 			#end
 		mData = t;
 		#end
