@@ -1,8 +1,6 @@
-﻿import de.polygonal.ds.Dll;
-import de.polygonal.ds.HashableItem;
+﻿import de.polygonal.ds.HashableItem;
 import de.polygonal.ds.IntIntHashTable;
 import de.polygonal.ds.ListSet;
-import de.polygonal.ds.mem.MemoryManager;
 import de.polygonal.ds.tools.ArrayTools;
 import de.polygonal.ds.tools.GrowthRate;
 
@@ -12,7 +10,7 @@ class TestIntIntHashTable extends AbstractTest
 	{
 		super();
 		#if (flash && alchemy)
-		MemoryManager.free();
+		de.polygonal.ds.mem.MemoryManager.free();
 		#end
 	}
 	

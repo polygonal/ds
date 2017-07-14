@@ -2,9 +2,7 @@
 
 import de.polygonal.ds.mem.IntMemory;
 import haxe.ds.Vector;
-import haxe.io.Bytes;
 import haxe.io.BytesData;
-import haxe.io.BytesInput;
 import haxe.io.BytesOutput;
 
 #if alchemy
@@ -86,7 +84,6 @@ class TestIntMemory extends AbstractTest
 		b.free();
 		#if alchemy MemoryManager.free(); #end
 		
-		var b = new IntMemory(256);
 		var b = IntMemory.ofArray(v, 64, 128);
 		checkBytes(b, 64, 128);
 		b.free();
@@ -123,7 +120,6 @@ class TestIntMemory extends AbstractTest
 		b.free();
 		#if alchemy MemoryManager.free(); #end
 		
-		var b = new IntMemory(256);
 		var b = IntMemory.ofVector(v, 64, 128);
 		checkBytes(b, 64, 128);
 		b.free();
@@ -210,13 +206,6 @@ class TestIntMemory extends AbstractTest
 	
 	function testOfBytesData()
 	{
-		var bytes =
-		#if neko
-		neko.NativeString.ofString('');
-		#else
-		new BytesData();
-		#end
-		
 		var output = new BytesOutput();
 		
 		for (i in 0...256)

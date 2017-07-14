@@ -1,10 +1,8 @@
 ﻿import de.polygonal.ds.tools.ArrayTools;
-import de.polygonal.ds.NativeArray;
 import de.polygonal.ds.HashableItem;
 import de.polygonal.ds.HashTable;
 import de.polygonal.ds.IntIntHashTable;
 import de.polygonal.ds.tools.GrowthRate;
-import de.polygonal.ds.tools.NativeArrayTools;
 
 class TestHashTable extends AbstractTest
 {
@@ -898,7 +896,6 @@ class TestHashTable extends AbstractTest
 		for (i in 0...8) h.set(items[i], i * 10);
 		
 		var set = new Array<Int>();
-		var i = 0;
 		for (val in h)
 		{
 			assertFalse(contains(set, val));
@@ -920,7 +917,6 @@ class TestHashTable extends AbstractTest
 		for (i in 0...8) h.set(items[i], i * 10);
 		
 		var set = new Array<Int>();
-		var i = 0;
 		
 		var itr = h.iterator();
 		while (itr.hasNext())
@@ -955,7 +951,6 @@ class TestHashTable extends AbstractTest
 		for (i in 0...8) h.set(items[i], i * 10);
 		
 		var set = new Array<E>();
-		var i = 0;
 		for (key in h.keys())
 		{
 			assertFalse(contains(set, key));
@@ -976,7 +971,6 @@ class TestHashTable extends AbstractTest
 		for (i in 0...8) h.set(items[i], i * 10);
 		
 		var set = new Array<E>();
-		var i = 0;
 		var itr = h.keys();
 		while (itr.hasNext())
 		{

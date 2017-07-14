@@ -76,7 +76,6 @@ class TestArrayedDeque extends AbstractTest
 	function testIndexOf()
 	{
 		var d = createDequeInt();
-		var s = 0;
 		for (i in 0...20)
 			d.pushFront(i);
 		for (i in 0...20)
@@ -385,7 +384,6 @@ class TestArrayedDeque extends AbstractTest
 		
 		d.remove(2);
 		assertEquals(2, d.size);
-		var i = 1;
 		var c = 0;
 		var data = [1, 3];
 		for (x in d)
@@ -397,7 +395,6 @@ class TestArrayedDeque extends AbstractTest
 		
 		d.remove(1);
 		assertEquals(1, d.size);
-		var i = 1;
 		var c = 0;
 		var data = [3];
 		for (x in d)
@@ -522,7 +519,6 @@ class TestArrayedDeque extends AbstractTest
 			assertEquals(i, d.front());
 			assertEquals(0, d.back());
 		}
-		var j = 7;
 		for (i in 0...8)
 		{
 			assertEquals(i, d.popBack());

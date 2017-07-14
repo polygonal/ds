@@ -1,9 +1,7 @@
 import de.polygonal.ds.tools.ArrayTools;
-import de.polygonal.ds.Dll;
 import de.polygonal.ds.HashableItem;
 import de.polygonal.ds.HashSet;
 import de.polygonal.ds.tools.GrowthRate;
-import haxe.ds.IntMap;
 
 class TestHashSet extends AbstractTest
 {
@@ -240,8 +238,6 @@ class TestHashSet extends AbstractTest
 	{
 		var h = new HashSet<E>(16, 2);
 		h.growthRate = GrowthRate.DOUBLE;
-		var keys = new Array<Int>();
-		var key = 0;
 		
 		var values = new Array<E>();
 		for (i in 0...2)
@@ -341,8 +337,6 @@ class TestHashSet extends AbstractTest
 	@:access(E)
 	function testInsertRemoveFind()
 	{
-		var values = new Array<E>();
-		
 		var h = new HashSet<E>(16);
 		var a = new E(0);
 		a.key = 34;

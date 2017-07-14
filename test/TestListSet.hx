@@ -90,7 +90,7 @@ class TestListSet extends AbstractTest
 	function testCollection()
 	{
 		var c:de.polygonal.ds.Collection<String> = new ListSet<String>();
-		assertEquals(true, true);
+		assertEquals(true, c != null);
 	}
 	
 	function testReserve()

@@ -1,5 +1,4 @@
-﻿import de.polygonal.ds.NativeArray;
-import de.polygonal.ds.PriorityQueue;
+﻿import de.polygonal.ds.PriorityQueue;
 import de.polygonal.ds.tools.NativeArrayTools;
 
 @:access(de.polygonal.ds.PriorityQueue)
@@ -35,7 +34,7 @@ class TestPriorityQueue extends AbstractTest
 		for (i in 0...4) l.enqueue(new E(i));
 		assertEquals(4, l.capacity);
 		#if (flash && generic && !no_inline)
-		var d:NativeArray<E> = flash.Vector.convert(l.mData);
+		var d:de.polygonal.ds.NativeArray<E> = flash.Vector.convert(l.mData);
 		#else
 		var d = l.mData;
 		#end
@@ -44,12 +43,12 @@ class TestPriorityQueue extends AbstractTest
 		assertEquals(1., d[2].priority);
 		assertEquals(2., d[3].priority);
 		assertEquals(3., d[4].priority);
-		assertEquals(5., NativeArrayTools.size(d));
+		assertEquals(5., de.polygonal.ds.tools.NativeArrayTools.size(d));
 		
 		l.reserve(8);
 		assertEquals(8, l.capacity);
 		#if (flash && generic && !no_inline)
-		var d:NativeArray<E> = flash.Vector.convert(l.mData);
+		var d:de.polygonal.ds.NativeArray<E> = flash.Vector.convert(l.mData);
 		#else
 		var d = l.mData;
 		#end
@@ -62,12 +61,12 @@ class TestPriorityQueue extends AbstractTest
 		assertEquals(null, d[6]);
 		assertEquals(null, d[7]);
 		assertEquals(null, d[8]);
-		assertEquals(9, NativeArrayTools.size(d));
+		assertEquals(9, de.polygonal.ds.tools.NativeArrayTools.size(d));
 		
 		for (i in 0...4) l.enqueue(new E(i + 4));
 		
 		#if (flash && generic && !no_inline)
-		var d:NativeArray<E> = flash.Vector.convert(l.mData);
+		var d:de.polygonal.ds.NativeArray<E> = flash.Vector.convert(l.mData);
 		#else
 		var d = l.mData;
 		#end
@@ -297,7 +296,7 @@ class TestPriorityQueue extends AbstractTest
 		var itr = pq.iterator();
 		while (itr.hasNext())
 		{
-			var x = itr.next();
+			itr.next();
 			itr.remove();
 		}
 		assertTrue(pq.isEmpty());

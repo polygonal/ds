@@ -1,6 +1,4 @@
-﻿import de.polygonal.ds.tools.Bits;
-
-using de.polygonal.ds.tools.Bits;
+﻿using de.polygonal.ds.tools.Bits;
 
 class TestBits extends AbstractTest
 {

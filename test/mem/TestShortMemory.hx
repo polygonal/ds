@@ -85,7 +85,6 @@ class TestShortMemory extends AbstractTest
 		b.free();
 		#if alchemy MemoryManager.free(); #end
 		
-		var b = new ShortMemory(256);
 		var b = ShortMemory.ofArray(v, 64, 128);
 		checkBytes(b, 64, 128);
 		b.free();
@@ -136,7 +135,6 @@ class TestShortMemory extends AbstractTest
 		b.free();
 		#if alchemy MemoryManager.free(); #end
 		
-		var b = new ShortMemory(256);
 		var b = ShortMemory.ofVector(v, 64, 128);
 		checkBytes(b, 64, 128);
 		b.free();

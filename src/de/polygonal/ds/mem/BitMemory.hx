@@ -19,8 +19,11 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 package de.polygonal.ds.mem;
 
 import de.polygonal.ds.tools.Assert.assert;
+
+#if !alchemy
 import de.polygonal.ds.tools.MathTools;
 import haxe.ds.Vector;
+#end
 
 #if (alchemy && !flash)
 "BitMemory is only available when targeting flash"

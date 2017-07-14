@@ -2,9 +2,7 @@
 
 import de.polygonal.ds.mem.DoubleMemory;
 import haxe.ds.Vector;
-import haxe.io.Bytes;
 import haxe.io.BytesData;
-import haxe.io.BytesInput;
 import haxe.io.BytesOutput;
 
 #if alchemy
@@ -81,7 +79,6 @@ class TestDoubleMemory extends AbstractTest
 		b.free();
 		#if alchemy MemoryManager.free(); #end
 		
-		var b = new DoubleMemory(256);
 		var b = DoubleMemory.ofArray(v, 64, 128);
 		checkData(b, 64, 128);
 		b.free();
@@ -116,7 +113,6 @@ class TestDoubleMemory extends AbstractTest
 		b.free();
 		#if alchemy MemoryManager.free(); #end
 		
-		var b = new DoubleMemory(256);
 		var b = DoubleMemory.ofVector(v, 64, 128);
 		checkData(b, 64, 128);
 		b.free();

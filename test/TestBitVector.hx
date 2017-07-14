@@ -42,8 +42,6 @@ class TestBitVector extends AbstractTest
 		
 		var i = 0;
 		var c = 0;
-		var mod = 0;
-		
 		var byteCount = 0;
 		
 		for (b in 0...bytes.length)
@@ -334,8 +332,6 @@ class TestBitVector extends AbstractTest
 	{
 		var b = new BitVector(64);
 		b.setAll();
-		
-		var buckets = [];
 		assertEquals(-1, b.getBucketAt(0));
 	}
 }

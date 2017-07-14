@@ -1,7 +1,6 @@
 package;
 
 import de.polygonal.ds.NativeArray;
-import de.polygonal.ds.tools.NativeArrayTools;
 
 using de.polygonal.ds.tools.NativeArrayTools;
 

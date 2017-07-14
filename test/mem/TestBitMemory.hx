@@ -1,6 +1,5 @@
 ﻿package mem;
 
-import de.polygonal.ds.tools.Bits;
 import de.polygonal.ds.BitVector;
 import de.polygonal.ds.mem.BitMemory;
 import haxe.io.Bytes;
@@ -10,8 +9,6 @@ import haxe.io.BytesOutput;
 #if alchemy
 import de.polygonal.ds.mem.MemoryManager;
 #end
-
-using de.polygonal.ds.tools.Bits;
 
 class TestBitMemory extends AbstractTest
 {
@@ -90,8 +87,6 @@ class TestBitMemory extends AbstractTest
 		assertEquals(c, input.length);
 		c = 0;
 		var i = 0;
-		var byteCount = 0;
-		
 		var k = input.length;
 		
 		for (b in 0...k)
@@ -145,8 +140,6 @@ class TestBitMemory extends AbstractTest
 		#end
 		c = 0;
 		var i = 0;
-		var byteCount = 0;
-		
 		var k = 
 		#if neko
 		neko.NativeString.length(v);
@@ -370,7 +363,6 @@ class TestBitMemory extends AbstractTest
 	
 	function testFill()
 	{
-		var s = 1;
 		for (s in 1...40 + 1)
 		{
 			var m = new BitMemory(s);

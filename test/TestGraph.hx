@@ -428,12 +428,10 @@ class TestGraph extends AbstractTest
 		}
 		
 		var s = new de.polygonal.ds.HashSet<E>(1024);
-		var c = 0;
 		for (i in graph) assertEquals(true, s.set(i));
 		assertEquals(10, s.size);
 		
 		var c:de.polygonal.ds.Set<E> = cast s.clone(true);
-		var itr = graph.iterator();
 		var itr = graph.iterator();
 		
 		for (i in itr) assertEquals(true, c.remove(i));
@@ -461,7 +459,6 @@ class TestGraph extends AbstractTest
 		while (node != null)
 		{
 			var s = new de.polygonal.ds.HashSet<E>(1024);
-			var c = 0;
 			for (i in node) assertEquals(true, s.set(i));
 			assertEquals(9, s.size);
 			node = node.next;
@@ -476,7 +473,6 @@ class TestGraph extends AbstractTest
 		}
 		
 		var s = new de.polygonal.ds.IntHashSet(1024);
-		var c = 0;
 		for (i in graph) assertEquals(true, s.set(i));
 		assertEquals(10, s.size);
 		
@@ -497,7 +493,6 @@ class TestGraph extends AbstractTest
 		while (node != null)
 		{
 			var s = new de.polygonal.ds.IntHashSet(1024);
-			var c = 0;
 			for (i in node) assertEquals(true, s.set(i));
 			assertEquals(9, s.size);
 			node = node.next;

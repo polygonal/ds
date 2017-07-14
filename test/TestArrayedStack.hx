@@ -1,7 +1,6 @@
 ﻿import de.polygonal.ds.ArrayedStack;
 import de.polygonal.ds.Cloneable;
 import de.polygonal.ds.ListSet;
-import de.polygonal.ds.Stack;
 
 @:access(de.polygonal.ds.ArrayedStack)
 class TestArrayedStack extends AbstractTest
@@ -435,7 +434,7 @@ class TestArrayedStack extends AbstractTest
 	function testCollection()
 	{
 		var c:de.polygonal.ds.Collection<Int> = cast new ArrayedStack<Int>(16);
-		assertEquals(true, true);
+		assertEquals(true, c != null);
 	}
 	
 	function getStack(size = -1):ArrayedStack<Int>

@@ -1,6 +1,5 @@
 ﻿import de.polygonal.ds.ArrayedQueue;
 import de.polygonal.ds.Cloneable;
-import de.polygonal.ds.NativeArray;
 import de.polygonal.ds.ListSet;
 import de.polygonal.ds.Queue;
 
@@ -409,7 +408,6 @@ class TestArrayedQueue extends AbstractTest
 		
 		var itr = q.iterator();
 		var s = cast set.clone(true);
-		var c = 0;
 		for (val in itr) assertTrue(s.remove(val));
 		assertTrue(s.isEmpty());
 		

@@ -1,8 +1,5 @@
-﻿import de.polygonal.ds.NativeArray;
-import de.polygonal.ds.Heap;
+﻿import de.polygonal.ds.Heap;
 import de.polygonal.ds.Heapable;
-import de.polygonal.ds.tools.GrowthRate;
-import de.polygonal.ds.tools.NativeArrayTools;
 
 @:access(de.polygonal.ds.Heap)
 class TestHeap extends AbstractTest
@@ -192,7 +189,7 @@ class TestHeap extends AbstractTest
 		for (i in 0...4) l.add(new E1(i));
 		assertEquals(4, l.capacity);
 		#if (flash && generic && !no_inline)
-		var d:NativeArray<E1> = flash.Vector.convert(l.mData);
+		var d:de.polygonal.ds.NativeArray<E1> = flash.Vector.convert(l.mData);
 		#else
 		var d = l.mData;
 		#end
@@ -201,12 +198,12 @@ class TestHeap extends AbstractTest
 		assertEquals(1, d[2].ID);
 		assertEquals(2, d[3].ID);
 		assertEquals(3, d[4].ID);
-		assertEquals(5, NativeArrayTools.size(d));
+		assertEquals(5, de.polygonal.ds.tools.NativeArrayTools.size(d));
 		
 		l.reserve(8);
 		assertEquals(8, l.capacity);
 		#if (flash && generic && !no_inline)
-		var d:NativeArray<E1> = flash.Vector.convert(l.mData);
+		var d:de.polygonal.ds.NativeArray<E1> = flash.Vector.convert(l.mData);
 		#else
 		var d = l.mData;
 		#end
@@ -219,12 +216,12 @@ class TestHeap extends AbstractTest
 		assertEquals(null, d[6]);
 		assertEquals(null, d[7]);
 		assertEquals(null, d[8]);
-		assertEquals(9, NativeArrayTools.size(d));
+		assertEquals(9, de.polygonal.ds.tools.NativeArrayTools.size(d));
 		
 		for (i in 0...4) l.add(new E1(i + 4));
 		
 		#if (flash && generic && !no_inline)
-		var d:NativeArray<E1> = flash.Vector.convert(l.mData);
+		var d:de.polygonal.ds.NativeArray<E1> = flash.Vector.convert(l.mData);
 		#else
 		var d = l.mData;
 		#end
@@ -335,8 +332,6 @@ class TestHeap extends AbstractTest
 	{
 		var toRemove = new Array<E2>();
 		
-		var i:Int;
-		
 		var last:Float = Math.NaN;
 		
 		var heap = new Heap<E2>();
@@ -359,7 +354,6 @@ class TestHeap extends AbstractTest
 			var e = heap.pop(); //e should be smaller than last
 			
 			var rem:E2 = null;
-			var removed = false;
 			if (Math.random() > 0.015)
 			{
 				if(toRemove.length > 0) 

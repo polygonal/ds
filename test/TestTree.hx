@@ -412,7 +412,6 @@ class TestTree extends AbstractTest
 		assertEquals(child, root.children);
 		
 		var root = new TreeNode<Int>(0);
-		var child = new TreeNode<Int>(1);
 		
 		assertEquals(0, root.numChildren());
 		
@@ -606,7 +605,6 @@ class TestTree extends AbstractTest
 	function testSort()
 	{
 		var root = new TreeNode<Int>(100);
-		var data:Array<Int> = [2, 3, 4, 9, 5, 1, 7, 6, 8, 0];
 		var builder = root.getBuilder();
 		for (i in 0...10) builder.appendChild(i);
 		root.sort(Compare.cmpIntRise, false);
@@ -622,7 +620,6 @@ class TestTree extends AbstractTest
 		assertEquals(0, c);
 		
 		var root = new TreeNode<SortableNode>(null);
-		var data:Array<Int> = [2, 3, 4, 9, 5, 1, 7, 6, 8, 0];
 		var builder = root.getBuilder();
 		for (i in 0...10) builder.appendChild(new SortableNode(i));
 		root.sort(null, false);
@@ -1029,7 +1026,7 @@ class TestTree extends AbstractTest
 	function testCollection()
 	{
 		var c:de.polygonal.ds.Collection<Int> = new TreeNode<Int>(0);
-		assertEquals(true, true);
+		assertEquals(true, c != null);
 	}
 	
 	function testSerialization()

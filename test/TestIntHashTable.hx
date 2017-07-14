@@ -1,10 +1,8 @@
 ﻿import de.polygonal.ds.tools.ArrayTools;
 import de.polygonal.ds.Dll;
-import de.polygonal.ds.HashKey;
 import de.polygonal.ds.IntIntHashTable;
 import de.polygonal.ds.IntHashTable;
 import de.polygonal.ds.ListSet;
-import de.polygonal.ds.Set;
 import de.polygonal.ds.HashableItem;
 import de.polygonal.ds.tools.GrowthRate;
 
@@ -854,7 +852,6 @@ class TestIntHashTable extends AbstractTest
 		for (i in 0...8) h.set(i, i * 10);
 		
 		var set = new Array<Int>();
-		var i = 0;
 		for (val in h)
 		{
 			assertFalse(contains(set, val));

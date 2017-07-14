@@ -107,7 +107,7 @@ class TestDll extends AbstractTest
 		var list = new Dll<Int>();
 		list.append(0);
 		
-		var newNode = list.insertAfter(list.head, 1);
+		list.insertAfter(list.head, 1);
 		assertEquals(2, list.size);
 		assertEquals(0, list.head.val);
 		assertEquals(1, list.head.next.val);
@@ -997,7 +997,7 @@ class TestDll extends AbstractTest
 	function testCollection()
 	{
 		var c:de.polygonal.ds.Collection<Int> = cast new Dll<Int>();
-		assertEquals(true, true);
+		assertEquals(true, c != null);
 	}
 	
 	function testRange()

@@ -19,8 +19,11 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 package de.polygonal.ds.mem;
 
 import de.polygonal.ds.tools.Assert.assert;
-import de.polygonal.ds.tools.MathTools;
 import haxe.ds.Vector;
+
+#if !alchemy
+import de.polygonal.ds.tools.MathTools;
+#end
 
 #if (alchemy && !flash)
 "FloatMemory is only available when targeting flash"

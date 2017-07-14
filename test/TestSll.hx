@@ -568,7 +568,7 @@ class TestSll extends AbstractTest
 		var list = new Sll<Int>();
 		list.append(0);
 		
-		var newNode:SllNode<Int> = list.insertAfter(list.head, 1);
+		list.insertAfter(list.head, 1);
 		
 		assertEquals(2, list.size);
 		assertEquals(0, list.head.val);
@@ -581,7 +581,7 @@ class TestSll extends AbstractTest
 		list.append(1);
 		list.append(2);
 		
-		var node = list.insertAfter(list.nodeOf(1), 4);
+		list.insertAfter(list.nodeOf(1), 4);
 		
 		assertEquals(0, list.head.val);
 		assertEquals(1, list.head.next.val);
@@ -593,7 +593,7 @@ class TestSll extends AbstractTest
 	{
 		var list = new Sll<Int>();
 		list.append(0);
-		var newNode:SllNode<Int> = list.insertBefore(list.head, 1);
+		list.insertBefore(list.head, 1);
 		
 		assertEquals(2, list.size);
 		assertEquals(1, list.head.val);
@@ -605,7 +605,7 @@ class TestSll extends AbstractTest
 		var list = new Sll<Int>();
 		list.append(0);
 		list.append(1);
-		var newNode:SllNode<Int> = list.insertBefore(list.tail, 2);
+		list.insertBefore(list.tail, 2);
 		
 		assertEquals(3, list.size);
 		assertEquals(0, list.head.val);

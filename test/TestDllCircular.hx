@@ -93,8 +93,8 @@ class TestDllCircular extends AbstractTest
 		var list = new Dll<Int>();
 		list.close();
 		var node1 = list.append(0);
-		var node2 = list.append(1);
-		var node3 = list.append(2);
+		list.append(1);
+		list.append(2);
 		list.insertAfter(node1, 3);
 		
 		assertEquals(list.head.val, 0);
@@ -107,8 +107,8 @@ class TestDllCircular extends AbstractTest
 		
 		var list = new Dll<Int>();
 		list.close();
-		var node1 = list.append(0);
-		var node2 = list.append(1);
+		list.append(0);
+		list.append(1);
 		var node3 = list.append(2);
 		list.insertAfter(node3, 3);
 		
@@ -135,8 +135,8 @@ class TestDllCircular extends AbstractTest
 		var list = new Dll<Int>();
 		list.close();
 		var node1 = list.append(0);
-		var node2 = list.append(1);
-		var node3 = list.append(2);
+		list.append(1);
+		list.append(2);
 		list.insertBefore(node1, 3);
 		
 		assertEquals(list.head.val, 3);
@@ -148,8 +148,8 @@ class TestDllCircular extends AbstractTest
 		
 		var list = new Dll<Int>();
 		list.close();
-		var node1 = list.append(0);
-		var node2 = list.append(1);
+		list.append(0);
+		list.append(1);
 		var node3 = list.append(2);
 		list.insertBefore(node3, 3);
 		
@@ -204,14 +204,14 @@ class TestDllCircular extends AbstractTest
 		
 		var list = new Dll<Int>();
 		list.close();
-		var node1 = list.append(0);
+		list.append(0);
 		var node2 = list.append(1);
 		assertEquals(node2, list.getNodeAt(1));
 		
 		var list = new Dll<Int>();
 		list.close();
-		var node1 = list.append(0);
-		var node2 = list.append(1);
+		list.append(0);
+		list.append(1);
 		var node3 = list.append(2);
 		assertEquals(node3, list.getNodeAt(2));
 	}
@@ -220,7 +220,7 @@ class TestDllCircular extends AbstractTest
 	{
 		var list = new Dll<Int>();
 		list.close();
-		var node1 = list.append(0);
+		list.append(0);
 		list.removeHead();
 		
 		assertEquals(null, list.head);
@@ -228,7 +228,7 @@ class TestDllCircular extends AbstractTest
 		
 		var list = new Dll<Int>();
 		list.close();
-		var node1 = list.append(0);
+		list.append(0);
 		var node2 = list.append(1);
 		list.removeHead();
 		
@@ -238,9 +238,9 @@ class TestDllCircular extends AbstractTest
 		
 		var list = new Dll<Int>();
 		list.close();
-		var node1 = list.append(0);
+		list.append(0);
 		var node2 = list.append(1);
-		var node3 = list.append(2);
+		list.append(2);
 		list.removeHead();
 		
 		assertEquals(node2, list.head);
@@ -252,7 +252,7 @@ class TestDllCircular extends AbstractTest
 	{
 		var list = new Dll<Int>();
 		list.close();
-		var node1 = list.append(0);
+		list.append(0);
 		list.removeTail();
 		
 		assertEquals(null, list.head);
@@ -261,7 +261,7 @@ class TestDllCircular extends AbstractTest
 		var list = new Dll<Int>();
 		list.close();
 		var node1 = list.append(0);
-		var node2 = list.append(1);
+		list.append(1);
 		list.removeTail();
 		
 		assertEquals(node1, list.tail);
@@ -270,9 +270,9 @@ class TestDllCircular extends AbstractTest
 		
 		var list = new Dll<Int>();
 		list.close();
-		var node1 = list.append(0);
+		list.append(0);
 		var node2 = list.append(1);
-		var node3 = list.append(2);
+		list.append(2);
 		list.removeTail();
 		
 		assertEquals(node2, list.tail);
@@ -298,7 +298,7 @@ class TestDllCircular extends AbstractTest
 		list.close();
 		var node1 = list.append(0);
 		var node2 = list.append(1);
-		var node3 = list.append(2);
+		list.append(2);
 		
 		list.headToTail();
 		
@@ -324,7 +324,7 @@ class TestDllCircular extends AbstractTest
 		
 		var list = new Dll<Int>();
 		list.close();
-		var node1 = list.append(0);
+		list.append(0);
 		var node2 = list.append(1);
 		var node3 = list.append(2);
 		

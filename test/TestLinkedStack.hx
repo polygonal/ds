@@ -1,5 +1,4 @@
-﻿import de.polygonal.ds.ArrayedStack;
-import de.polygonal.ds.LinkedStack;
+﻿import de.polygonal.ds.LinkedStack;
 import de.polygonal.ds.ListSet;
 import de.polygonal.ds.Stack;
 
@@ -363,7 +362,7 @@ class TestLinkedStack extends AbstractTest
 	function testStack()
 	{
 		var s:Stack<Int> = new LinkedStack<Int>(5);
-		assertTrue(true);
+		assertEquals(true, s != null);
 	}
 	
 	function testToArray()

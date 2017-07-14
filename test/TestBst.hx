@@ -203,7 +203,6 @@ class TestBst extends AbstractTest
 	{
 		var bst = new Bst<E>();
 		var data = [5, 1, -20, 100, 23, 67, 13];
-		var order = [5, 1, -20, 100, 23, 13, 67];
 		var nodes = new Array<BinaryTreeNode<E>>();
 		for (i in 0...data.length)
 			nodes[i] = bst.insert(new E(data[i]));
@@ -232,7 +231,6 @@ class TestBst extends AbstractTest
 	{
 		var bst = new Bst<E>();
 		var data = [5, 1, -20, 100, 23, 67, 13];
-		var order = [5, 1, -20, 100, 23, 13, 67];
 		var nodes = new Array<BinaryTreeNode<E>>();
 		for (i in 0...data.length)
 			nodes[i] = bst.insert(new E(data[i]));
@@ -251,7 +249,6 @@ class TestBst extends AbstractTest
 			num.unshift(new E(i));
 			bst.insert(num[0]);
 		}
-		var found = 0;
 		for (i in 0...k)
 			bst.remove(num.pop());
 		assertEquals(0, bst.size);
@@ -343,7 +340,7 @@ class TestBst extends AbstractTest
 	function testCollection()
 	{
 		var c:de.polygonal.ds.Collection<E> = cast new Bst<E>();
-		assertEquals(true, true);
+		assertEquals(true, c != null);
 	}
 	
 	function testEmptyAndRefill()

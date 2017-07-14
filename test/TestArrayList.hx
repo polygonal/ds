@@ -633,11 +633,11 @@ class TestArrayList extends AbstractTest
 		for (x in 0...4) assertEquals(x, a.get(x));
 		
 		var a = new ArrayList<Int>();
-		var itr = a.iterator();
+		a.iterator();
 		for (i in a) {}
 		
 		var a = new ArrayList([0, 1, 2, 3]);
-		var itr = a.iterator();
+		a.iterator();
 		for (i in a) {}
 	}
 	
@@ -790,7 +790,6 @@ class TestArrayList extends AbstractTest
 		var itr = q.iterator();
 		
 		var s:de.polygonal.ds.Set<Int> = cast set.clone(true);
-		var c = 0;
 		for (val in itr) assertEquals(true, s.remove(val));
 		assertTrue(s.isEmpty());
 		

@@ -202,7 +202,7 @@ class TestArray2 extends AbstractTest
 	function testShiftLeft()
 	{
 		var a = getStrArray();
-		a.shiftLeft();
+		a.shiftLeft(true);
 		for (y in 0...mH)
 			for (x in 0...mW - 1)
 				assertEquals((x + 1) + "." + y, a.get(x, y));
@@ -213,7 +213,7 @@ class TestArray2 extends AbstractTest
 	function testShiftRight()
 	{
 		var a = getStrArray();
-		a.shiftRight();
+		a.shiftRight(true);
 		for (y in 0...mH)
 			for (x in 1...mW)
 				assertEquals((x - 1) + "." + y, a.get(x, y));
@@ -224,7 +224,7 @@ class TestArray2 extends AbstractTest
 	function testShiftUp()
 	{
 		var a = getStrArray();
-		a.shiftUp();
+		a.shiftUp(true);
 		for (y in 0...(mH - 1))
 			for (x in 0...mW)
 				assertEquals(x + "." + (y + 1), a.get(x, y));
@@ -235,7 +235,7 @@ class TestArray2 extends AbstractTest
 	function testShiftDown()
 	{
 		var a = getStrArray();
-		a.shiftDown();
+		a.shiftDown(true);
 		for (y in 1...mH)
 			for (x in 0...mW)
 				assertEquals(Std.string(x) + "." + (y - 1), a.get(x, y));

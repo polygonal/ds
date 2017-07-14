@@ -1,5 +1,4 @@
-﻿import de.polygonal.ds.ArrayedDeque;
-import de.polygonal.ds.Cloneable;
+﻿import de.polygonal.ds.Cloneable;
 import de.polygonal.ds.Deque;
 import de.polygonal.ds.LinkedDeque;
 
@@ -87,7 +86,6 @@ class TestLinkedDeque extends AbstractTest
 	function testIndexOf()
 	{
 		var d = createDequeInt();
-		var s = 0;
 		for (i in 0...20)
 			d.pushFront(i);
 		
@@ -441,7 +439,6 @@ class TestLinkedDeque extends AbstractTest
 		
 		d.remove(2);
 		assertEquals(2, d.size);
-		var i = 1;
 		var c = 0;
 		var data = [1, 3];
 		for (x in d)
@@ -453,7 +450,6 @@ class TestLinkedDeque extends AbstractTest
 		
 		d.remove(1);
 		assertEquals(1, d.size);
-		var i = 1;
 		var c = 0;
 		var data = [3];
 		for (x in d)
@@ -587,7 +583,6 @@ class TestLinkedDeque extends AbstractTest
 			assertEquals(0, d.back());
 		}
 		
-		var j = 7;
 		for (i in 0...8)
 		{
 			assertEquals(i, d.popBack());

@@ -147,7 +147,7 @@ class TestMemoryManager extends AbstractTest
 				checkBytes(m[i]);
 		}
 		
-		var m2 = new ByteMemory(2048);
+		new ByteMemory(2048);
 		MemoryManager.free();
 	}
 	
