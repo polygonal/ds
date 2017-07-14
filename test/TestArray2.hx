@@ -518,7 +518,6 @@ class TestArray2 extends AbstractTest
 	{
 		var a = getStrArray();
 		a.forEach(function(e, x, y) return "?");
-		var out = new Array<String>();
 		var out = a.toArray();
 		for (i in out)
 			assertEquals("?", i);
@@ -642,7 +641,7 @@ class TestArray2 extends AbstractTest
 	function testCollection()
 	{
 		var c:de.polygonal.ds.Collection<Int> = cast getIntArray();
-		assertEquals(true, true);
+		assertEquals(true, c != null);
 	}
 	
 	function getIntArray(w = -1, h = -1)

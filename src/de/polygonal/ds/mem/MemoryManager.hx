@@ -502,7 +502,10 @@ class MemoryManager
 		//always defrag first
 		if (bytesUsed > 0) defrag();
 		
+		#if alchemy
 		var rawOffset = mBytesRaw;
+		#end
+		
 		var freeSpaceBefore = numBuckets << mBlockSizeShift;
 		
 		//update total memory
@@ -723,8 +726,6 @@ class MemoryManager
 	function findEmptySpace(size:Int):MemorySegment
 	{
 		var m = mSegmentList;
-		var j = 0;
-		
 		while (m != null)
 		{
 			if (m.isEmpty)
@@ -758,7 +759,6 @@ class MemoryManager
 					}
 				}
 			}
-			
 			m = m.next;
 		}
 		return null;
@@ -928,7 +928,6 @@ private class MemorySegment
 		#if flash
 		if (MemoryManager.AUTO_RECLAIM_MEMORY)
 		{
-			var t:Array<Dynamic> = untyped __keys__(mWeakPointer);
 			return untyped __keys__(mWeakPointer)[0];
 		}
 		else

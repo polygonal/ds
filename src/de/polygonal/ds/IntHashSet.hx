@@ -28,7 +28,9 @@ import de.polygonal.ds.tools.Assert.assert;
 import de.polygonal.ds.tools.GrowthRate;
 import de.polygonal.ds.tools.MathTools;
 
+#if !alchemy
 using de.polygonal.ds.tools.NativeArrayTools;
+#end
 
 /**
 	An array hash set for storing integers

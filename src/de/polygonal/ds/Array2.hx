@@ -389,11 +389,11 @@ class Array2<T> implements Collection<T>
 	/**
 		Calls 'f` on all elements in order.
 	**/
-	public inline function iter(f:T->Int->Void):Array2<T>
+	public inline function iter(f:T->Void):Array2<T>
 	{
 		assert(f != null);
 		var d = mData;
-		for (i in 0...size) f(d.get(i), i);
+		for (i in 0...size) f(d.get(i));
 		return this;
 	}
 	
