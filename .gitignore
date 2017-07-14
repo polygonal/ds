@@ -2,5 +2,6 @@ artwork/
 bin/
 sandbox/
 tmp/
+api/
 ds.hxproj
 todo.txt
