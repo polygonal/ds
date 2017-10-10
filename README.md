@@ -51,9 +51,9 @@ This installs the polygonal-ds library hosted on [lib.haxe.org](http://lib.haxe.
 
 ## Changelog
 
-### 2.0.1 (wip)
+### 2.0.1 (released 2017-10-10)
 
-Supports Haxe Compiler 3.4.2, hxcpp 3.4.49
+Supports Haxe Compiler 3.4.4, hxcpp 3.4.188
 
 - modified: HashKey: allow static initializers for non-static targets
 - added: Array2.Array2Cell.of()

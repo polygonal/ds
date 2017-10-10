@@ -4,12 +4,17 @@
 	"description": "data structures for games",
 	"classPath": "src",
 	"url": "https://github.com/polygonal/ds",
-	"tags": ["cross", "utility", "game"],
-	"contributors" : ["mbaczynski"],
-	"version": "2.0.0",
+	"tags": [
+		"cross",
+		"utility",
+		"game"
+	],
+	"contributors": [
+		"mbaczynski"
+	],
+	"version": "2.0.1",
 	"releasenote": "See README",
-	"dependencies":
-	{
-		"polygonal-printf":""
+	"dependencies": {
+		"polygonal-printf": ""
 	}
 }
