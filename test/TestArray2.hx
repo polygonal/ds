@@ -208,6 +208,14 @@ class TestArray2 extends AbstractTest
 				assertEquals((x + 1) + "." + y, a.get(x, y));
 		for (y in 0...mH)
 			assertEquals("0." + y, a.get(mW - 1, y));
+		
+		var a = getStrArray();
+		a.shiftLeft(false);
+		for (y in 0...mH)
+			for (x in 0...mW - 1)
+				assertEquals((x + 1) + "." + y, a.get(x, y));
+		for (y in 0...mH)
+			assertEquals("9." + y, a.get(mW - 1, y));
 	}
 	
 	function testShiftRight()
@@ -219,6 +227,14 @@ class TestArray2 extends AbstractTest
 				assertEquals((x - 1) + "." + y, a.get(x, y));
 		for (y in 0...mH)
 			assertEquals((mW - 1) + "." + y, a.get(0, y));
+		
+		var a = getStrArray();
+		a.shiftRight(false);
+		for (y in 0...mH)
+			for (x in 1...mW)
+				assertEquals((x - 1) + "." + y, a.get(x, y));
+		for (y in 0...mH)
+			assertEquals("0." + y, a.get(0, y));
 	}
 	
 	function testShiftUp()
@@ -230,6 +246,14 @@ class TestArray2 extends AbstractTest
 				assertEquals(x + "." + (y + 1), a.get(x, y));
 		for (x in 0...mW)
 			assertEquals(x + ".0", a.get(x, mH - 1));
+		
+		var a = getStrArray();
+		a.shiftUp(false);
+		for (y in 0...(mH - 1))
+			for (x in 0...mW)
+				assertEquals(x + "." + (y + 1), a.get(x, y));
+		for (x in 0...mW)
+			assertEquals(x + ".9", a.get(x, mH - 1));
 	}
 	
 	function testShiftDown()
@@ -241,6 +265,14 @@ class TestArray2 extends AbstractTest
 				assertEquals(Std.string(x) + "." + (y - 1), a.get(x, y));
 		for (x in 0...mW)
 			assertEquals(Std.string(x) + "." + Std.string(mH - 1), a.get(x, 0));
+		
+		var a = getStrArray();
+		a.shiftDown(false);
+		for (y in 1...mH)
+			for (x in 0...mW)
+				assertEquals(Std.string(x) + "." + (y - 1), a.get(x, y));
+		for (x in 0...mW)
+			assertEquals(x + ".0", a.get(x, 0));
 	}
 	
 	function testSwap()

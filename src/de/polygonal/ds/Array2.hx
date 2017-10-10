@@ -153,6 +153,50 @@ class Array2<T> implements Collection<T>
 	}
 	
 	/**
+		Counts the number of neighbors at column `x` and row `y`, calling `f` on all adjacent cells.
+		
+		Example:
+			var a = new Array2<Int>(3, 3);
+			a.set(0, 0, 1);
+			a.set(2, 1, 1);
+			var count = a.countNeighbors(1, 1, function(value) return value == 1); //outputs 2
+	**/
+	public inline function countNeighbors(x:Int, y:Int, f:T->Bool):Int
+	{
+		assert(x >= 0 && x < cols, 'x index out of range ($x)');
+		assert(y >= 0 && y < rows, 'y index out of range ($y)');
+		
+		var c = 0;
+		var l = x > 0;
+		var r = x < mW - 1;
+		var t = y > 0;
+		var b = y < mH - 1;
+		var d = mData;
+		var w = mW;
+		var i = y * w + x;
+		
+		inline function test(x) if (f(d.get(x))) c++;
+		
+		if (l) test(i - 1);
+		if (r) test(i + 1);
+		if (t)
+		{
+			i = (y - 1) * w + x;
+			test(i);
+			if (l) test(i - 1);
+			if (r) test(i + 1);
+		}
+		if (b)
+		{
+			i = (y + 1) * w + x;
+			test(i);
+			if (l) test(i - 1);
+			if (r) test(i + 1);
+		}
+		return c;
+	}
+	
+	/**
 		Returns the element that is stored in column `x` and row `y`.
 	**/
 	public inline function get(x:Int, y:Int):T
@@ -448,9 +492,9 @@ class Array2<T> implements Collection<T>
 	/**
 		Shifts all columns to the left by one position.
 		
-		Columns are wrapped so the column at index 0 is not lost but appended to the rightmost column.
+		@param wrap if true columns are wrapped so the column at index 0 is not lost but appended to the rightmost column.
 	**/
-	public function shiftLeft():Array2<T>
+	public function shiftLeft(wrap = true):Array2<T>
 	{
 		var t, k, d = mData;
 		for (y in 0...mH)
@@ -459,7 +503,7 @@ class Array2<T> implements Collection<T>
 			t = d.get(k);
 			for (x in 1...mW)
 				d.set(k + x - 1, d.get(k + x));
-			d.set(k + mW - 1, t);
+			if (wrap) d.set(k + mW - 1, t);
 		}
 		return this;
 	}
@@ -467,9 +511,9 @@ class Array2<T> implements Collection<T>
 	/**
 		Shifts all columns to the right by one position.
 		
-		Columns are wrapped, so the column at index [`this.cols` - 1] is not lost but prepended to the leftmost column.
+		@param wrap if true columns are wrapped, so the column at index [`this.cols` - 1] is not lost but prepended to the leftmost column.
 	**/
-	public function shiftRight():Array2<T>
+	public function shiftRight(wrap = true):Array2<T>
 	{
 		var t, x, k, d = mData;
 		for (y in 0...mH)
@@ -479,7 +523,7 @@ class Array2<T> implements Collection<T>
 			x = mW - 1;
 			while (x-- > 0)
 				d.set(k + x + 1, d.get(k + x));
-			d.set(k, t);
+			if (wrap) d.set(k, t);
 		}
 		return this;
 	}
@@ -487,17 +531,16 @@ class Array2<T> implements Collection<T>
 	/**
 		Shifts all rows up by one position.
 		
-		Rows are wrapped, so the row at index 0 is not lost but appended to the bottommost row.
+		@param wrap if true rows are wrapped, so the row at index 0 is not lost but appended to the bottommost row.
 	**/
-	public function shiftUp():Array2<T>
+	public function shiftUp(wrap = true):Array2<T>
 	{
 		var k = mH - 1, l = (mH - 1) * mW, t, d = mData;
 		for (x in 0...mW)
 		{
 			t = d.get(x);
-			for (y in 0...k)
-				d.set(getIndex(x, y), d.get(getIndex(x, y + 1)));
-			d.set(l + x, t);
+			for (y in 0...k) d.set(getIndex(x, y), d.get(getIndex(x, y + 1)));
+			if (wrap) d.set(l + x, t);
 		}
 		return this;
 	}
@@ -505,9 +548,9 @@ class Array2<T> implements Collection<T>
 	/**
 		Shifts all rows down by one position.
 		
-		Rows are wrapped, so row at index [`this.rows` - 1] is not lost but prepended to the topmost row.
+		@param wrap if true rows are wrapped, so row at index [`this.rows` - 1] is not lost but prepended to the topmost row.
 	**/
-	public function shiftDown():Array2<T>
+	public function shiftDown(wrap = true):Array2<T>
 	{
 		var k = mH - 1, l = k * mW, y, t, d = mData;
 		for (x in 0...mW)
@@ -516,7 +559,7 @@ class Array2<T> implements Collection<T>
 			y = k;
 			while (y-- > 0)
 				d.set(getIndex(x, y + 1), d.get(getIndex(x, y)));
-			d.set(x, t);
+			if (wrap) d.set(x, t);
 		}
 		return this;
 	}
@@ -1152,4 +1195,11 @@ class Array2Cell
 		y = other.y;
 		return this;
 	}
+	
+	#if !no_tostring
+	public function toString():String
+	{
+		return ('[object Array2Cell $x,$y]');
+	}
+	#end
 }

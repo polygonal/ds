@@ -60,6 +60,8 @@ Supports Haxe Compiler 3.4.2, hxcpp 3.4.49
 - modified: Renamed M to MathTools
 - modified: Removed unused imports/vars
 - added ArrayTools.pairwise()
+- added Array2.countNeighbors()
+- added wrap=true parameter to Array2.shift* methods
 
 ### 2.0.0 (released 2017-01-31)
 
