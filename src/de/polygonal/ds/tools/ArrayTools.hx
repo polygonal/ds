@@ -436,6 +436,27 @@ class ArrayTools
 		return out;
 	}
 	
+	/**
+		Visits all elements in `input` as a pair by calling `visit`.
+		
+		The function signature is: `visit(currentPairIndex, firstPairElement, secondPairElement)`
+		
+		Example:
+			var points = [1.1, 1.2, 2.1, 2.2]; //format: [x0, y0, x1, y1, xn, yn, ...]
+			ArrayTools.pairwise(points, function(i, x, y) trace('point x=$x, y=$y'));
+	**/
+	public static inline function pairwise<T>(input:Array<T>, visit:Int->T->T->Void)
+	{
+		var i = 0;
+		var k = input.length;
+		assert(k & 1 == 0);
+		while (i < k) 
+		{
+			visit(i << 1, input[i], input[i + 1]);
+			i += 2;
+		}
+	}
+	
 	static function _quickSort(a:Array<Float>, first:Int, n:Int, cmp:Float->Float->Int)
 	{
 		var last = first + n - 1;

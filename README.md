@@ -59,6 +59,7 @@ Supports Haxe Compiler 3.4.2, hxcpp 3.4.49
 - added: Array2.Array2Cell.of()
 - modified: Renamed M to MathTools
 - modified: Removed unused imports/vars
+- added ArrayTools.pairwise()
 
 ### 2.0.0 (released 2017-01-31)
 
