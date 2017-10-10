@@ -1,8 +1,9 @@
+.vscode/
+api/
 artwork/
 bin/
-sandbox/
-tmp/
-api/
 ds.hxproj
+sandbox/
+scripts/
+tmp/
 todo.txt
-/.vscode/
