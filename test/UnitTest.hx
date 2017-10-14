@@ -100,6 +100,7 @@ class UnitTest extends TestRunner
 		add(new TestTree());
 		add(new TestObjectPool());
 		add(new TestCompare());
+		add(new TestRadixSort());
 		
 		success = success && run();
 		
