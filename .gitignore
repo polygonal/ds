@@ -6,4 +6,5 @@ ds.hxproj
 sandbox/
 scripts/
 tmp/
+.markdownlint.json
 todo.txt
