@@ -404,6 +404,32 @@ class ArrayList<T> implements List<T>
 	}
 	
 	/**
+		Brute-force search (aka exhaustive search).
+		Calls `f` on all pairs.
+		
+		Example:
+			var list = new ArrayList<String>(["a", "b", "c"]);
+			list.bruteforce(function(a, b) trace('($a,$b)')); //outputs (a,b), (a,c), (b,c);
+	**/
+	public inline function bruteforce(f:T->T->Void):ArrayList<T>
+	{
+		assert(f != null);
+		var d = mData;
+		var i = 0, j, k = size, l = k - 1;
+		while (i < l)
+		{
+			j = i + 1;
+			while (j < k)
+			{
+				f(d.get(i), d.get(j));
+				j++;
+			}
+			i++;
+		}
+		return this;
+	}
+	
+	/**
 		Cuts of `this.size` - `n` elements.
 		
 		This only modifies the value of `this.size` and does not perform reallocation.

@@ -1005,6 +1005,14 @@ class TestArrayList extends AbstractTest
 		var a = new ArrayList<Int>(2);
 		a.addArray([1, 2, 3, 4]);
 	}
+	
+	function testBruteforce()
+	{
+		var s = "";
+		var a = new ArrayList<String>(["a", "b", "c"]);
+		a.bruteforce(function(a, b) s += a + b);
+		assertEquals("abacbc", s);
+	}
 }
 
 private class E implements de.polygonal.ds.Comparable<E> implements de.polygonal.ds.Cloneable<E>

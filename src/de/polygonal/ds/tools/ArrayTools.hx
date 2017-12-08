@@ -457,6 +457,31 @@ class ArrayTools
 		}
 	}
 	
+	/**
+		Brute-force search (aka exhaustive search).
+		Calls `visit` on all pairs in `input`.
+		
+		The function signature is: `visit(firstElementInPair, otherElementInPair)`
+		
+		Example:
+			var elements = ["a", "b", "c"];
+			ArrayTools.bruteforce(elements, function(a, b) trace('($a,$b)')); //outputs (a,b), (a,c), (b,c);
+	**/
+	public static inline function bruteforce<T>(input:Array<T>, visit:T->T->Void)
+	{
+		var i = 0, j, k = input.length, l = k - 1;
+		while (i < l)
+		{
+			j = i + 1;
+			while (j < k)
+			{
+				visit(input[i], input[j]);
+				j++;
+			}
+			i++;
+		}
+	}
+	
 	static function _quickSort(a:Array<Float>, first:Int, n:Int, cmp:Float->Float->Int)
 	{
 		var last = first + n - 1;

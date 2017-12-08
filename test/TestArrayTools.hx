@@ -140,4 +140,11 @@ class TestArrayTools extends AbstractTest
 		var b = ArrayTools.getFront(a, 4);
 		assertEquals(b, a[0]);
 	}
+	
+	function testBruteforce()
+	{
+		var s = "";
+		ArrayTools.bruteforce(["a", "b", "c"], function(a, b) s += a + b);
+		assertEquals("abacbc", s);
+	}
 }
