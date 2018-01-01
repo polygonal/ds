@@ -58,6 +58,7 @@ Supports Haxe Compiler 3.4.4, hxcpp 3.4.188
 - added: RadixSort helper class
 - added: ArrayList.bruteforce()
 - added: ArrayTools.bruteforce()
+- fixed: Graph.dlbfs(): incorrect GraphNode.parent pointer
 
 ### 2.0.1 (released 2017-10-10)
 

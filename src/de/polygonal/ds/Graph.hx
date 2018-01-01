@@ -956,7 +956,7 @@ class Graph<T> implements Collection<T>
 						}
 						m.marked = true;
 						m.depth = n.depth + 1;
-						m.parent = n.parent;
+						m.parent = n;
 						if (m.depth <= maxDepth)
 							setQue(c++ + front, m);
 						a = a.next;
@@ -991,7 +991,7 @@ class Graph<T> implements Collection<T>
 						}
 						m.marked = true;
 						m.depth = n.depth + 1;
-						m.parent = n.parent;
+						m.parent = n;
 						if (m.depth <= maxDepth)
 							setQue(c++ + front, m);
 						a = a.next;

@@ -251,6 +251,12 @@ class TestGraph extends AbstractTest
 		var node1 = graph.add(1);
 		var node2 = graph.add(2);
 		var node3 = graph.add(3);
+		
+		var nodeLut = [];
+		nodeLut[1] = node1;
+		nodeLut[2] = node2;
+		nodeLut[3] = node3;
+		
 		graph.addMutualArc(node1, node2);
 		graph.addMutualArc(node2, node3);
 		var result:Array<Int> = [];
@@ -279,6 +285,10 @@ class TestGraph extends AbstractTest
 		assertEquals(result[1], 2);
 		assertEquals(result[2], 3);
 		
+		assertEquals(node1.parent, node1);
+		assertEquals(node2.parent, node1);
+		assertEquals(node3.parent, node2);
+		
 		result = [];
 		graph.dlbfs(0, true, node1, process);
 		assertEquals(1, result.length);
@@ -296,6 +306,10 @@ class TestGraph extends AbstractTest
 		assertEquals(result[0], 1);
 		assertEquals(result[1], 2);
 		assertEquals(result[2], 3);
+		
+		assertEquals(node1.parent, node1);
+		assertEquals(node2.parent, node1);
+		assertEquals(node3.parent, node2);
 		
 		//visitable
 		var graph = new Graph<E>();
@@ -336,6 +350,10 @@ class TestGraph extends AbstractTest
 		assertEquals(result[1], 2);
 		assertEquals(result[2], 3);
 		
+		assertEquals(node1.parent, node1);
+		assertEquals(node2.parent, node1);
+		assertEquals(node3.parent, node2);
+		
 		result = [];
 		graph.dlbfs(0, true, node1, null);
 		assertEquals(1, result.length);
@@ -353,6 +371,10 @@ class TestGraph extends AbstractTest
 		assertEquals(result[0], 1);
 		assertEquals(result[1], 2);
 		assertEquals(result[2], 3);
+		
+		assertEquals(node1.parent, node1);
+		assertEquals(node2.parent, node1);
+		assertEquals(node3.parent, node2);
 	}
 	
 	function testBFS_DFS_Visitable()
