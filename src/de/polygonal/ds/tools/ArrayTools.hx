@@ -452,7 +452,7 @@ class ArrayTools
 		assert(k & 1 == 0);
 		while (i < k) 
 		{
-			visit(i << 1, input[i], input[i + 1]);
+			visit(i, input[i], input[i + 1]);
 			i += 2;
 		}
 	}
