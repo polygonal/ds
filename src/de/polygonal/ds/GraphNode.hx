@@ -196,10 +196,9 @@ class GraphNode<T> implements Hashable
 		Removes the arc that is pointing to the specified `target` node.
 		@return true if the arc is successfully removed, false if such an arc does not exist.
 	**/
-	public function removeArc(target:GraphNode<T>):Bool
+	public function removeArc(target:GraphNode<T>, mutual:Bool = false):Bool
 	{
 		assert(target != this, "target is null");
-		assert(getArc(target) != null, "arc to target does not exist");
 		assert(mGraph != null, "this node was not added to a graph yet");
 		assert(target.mGraph != null, "target node was not added to a graph yet");
 		assert(mGraph == target.mGraph, "this node and target node are contained in different graphs");
@@ -207,6 +206,8 @@ class GraphNode<T> implements Hashable
 		var arc = getArc(target);
 		if (arc != null)
 		{
+			var other = arc.node;
+			
 			if (arc.prev != null) arc.prev.next = arc.next;
 			if (arc.next != null) arc.next.prev = arc.prev;
 			if (arcList == arc) arcList = arc.next;
@@ -215,7 +216,7 @@ class GraphNode<T> implements Hashable
 			arc.node = null;
 			if (mGraph.returnArc != null) mGraph.returnArc(arc);
 			numArcs--;
-			return true;
+			return mutual ? other.removeArc(this) : true;
 		}
 		return false;
 	}

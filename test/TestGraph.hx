@@ -630,6 +630,35 @@ class TestGraph extends AbstractTest
 		assertEquals(0, nodes[2].numArcs);
 	}
 	
+	function testRemovArc()
+	{
+		var graph = new Graph<E>();
+		var nodes = new Array<GraphNode<E>>();
+		for (i in 0...3)
+		{
+			var node = graph.add(new E(this, i));
+			nodes[i] = node;
+		}
+		
+		//0 <-> 1
+		//0 <-> 2
+		//2 <-> 1
+		
+		graph.addMutualArc(nodes[0], nodes[1]);
+		graph.addSingleArc(nodes[0], nodes[2]);
+		graph.addSingleArc(nodes[2], nodes[1]);
+		
+		var success = nodes[0].removeArc(nodes[1], true);
+		assertTrue(success);
+		assertFalse(nodes[0].isConnected(nodes[1]));
+		assertFalse(nodes[1].isConnected(nodes[0]));
+		
+		var success = nodes[0].removeArc(nodes[2], true);
+		assertFalse(success);
+		assertFalse(nodes[0].isConnected(nodes[2]));
+		assertTrue(nodes[2].isConnected(nodes[1]));
+	}
+	
 	function testCustomGraph()
 	{
 		var f = function(node:GraphNode<String>, preflight:Bool, userData:Dynamic):Bool return true;
