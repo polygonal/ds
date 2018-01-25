@@ -81,4 +81,22 @@ class TestBits extends AbstractTest
 			}
 		}
 	}
+	
+	function testSwap()
+	{
+		var x = 1 << 1;
+		x = x.swap(0, 1);
+		assertEquals(1, x);
+		
+		var x = 1 << 1;
+		x = x.swap(1, 1);
+		assertEquals(2, x);
+		
+		var x = 1 << 0;
+		for (i in 0...32)
+		{
+			x = x.swap(i, i + 1);
+			assertEquals(1 << (i + 1), x);
+		}
+	}
 }

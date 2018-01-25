@@ -162,4 +162,13 @@ class Bits
 	{
 		return (x << 24 | ((x << 8) & 0x00FF0000) | ((x >> 8) & 0x0000FF00) | x >> 24);
 	}
+	
+	/**
+		Swaps the bit at index `i` with the bit at index `j` in the bit field `x` (LSB=0).
+	**/
+	public static inline function swap(x:Int, i:Int, j:Int):Int
+	{
+		var t = ((x >> i) ^ (x >> j)) & 0x01;
+		return x ^ ((t << i) | (t << j));
+	}
 }
