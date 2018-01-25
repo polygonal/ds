@@ -204,6 +204,21 @@ class ArrayTools
 	}
 	
 	/**
+		Calls `f` on all elements.
+		
+		The function signature is: `f(input, index):output`
+		
+		- input: current element
+		- index: element index [0, src.length)
+		- output: element to be stored at given index
+	**/
+	public static inline function forEach<T>(src:Array<T>, f:T->Int->T)
+	{
+		var n = src.length;
+		for (i in 0...n) src[i] = f(src[i], i);
+	}
+	
+	/**
 		Searches the sorted array `src` for `val` in the range [`min`, `max`] using the binary search algorithm.
 		
 		@return the array index storing `val` or the bitwise complement (~) of the index where `val` would be inserted (guaranteed to be a negative number).
