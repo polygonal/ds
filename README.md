@@ -62,6 +62,7 @@ Supports Haxe Compiler 3.4.4, hxcpp 3.4.188
 - added: Bits.swap()
 - modified: Graph.removeArc(): add optional mutual parameter
 - added: ArrayTools.forEach()
+- added: ArrayList.addNativeArray()
 
 ### 2.0.1 (released 2017-10-10)
 
