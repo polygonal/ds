@@ -26,7 +26,7 @@ import de.polygonal.ds.tools.Assert.assert;
 class HashKey
 {
 	static var _counter:
-	#if (js || neko || pyhton || php)
+	#if (js || neko || python || php)
 	Null<Int>;
 	#else
 	Int;
