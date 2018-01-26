@@ -42,4 +42,3 @@ neko %CWD%\main.n ^
 
 cd %CWD%
 del main.n
-sleep 3
