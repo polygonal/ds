@@ -67,6 +67,7 @@ Supports Haxe Compiler 3.4.4, 4.0.0-preview.2, hxcpp 3.4.188
 - added: Haxe4 support
 - added: ArrayList.pairwise()
 - modified: removed var shadowing warnings (-D warn-var-shadowing)
+- modified: moved mem package to tools package
 
 ### 2.0.1 (released 2017-10-10)
 
