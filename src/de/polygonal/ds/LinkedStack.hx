@@ -473,10 +473,10 @@ class LinkedStack<T> implements Stack<T>
 	**/
 	public function free()
 	{
-		var node = mHead;
+		var node = mHead, next;
 		while (node != null)
 		{
-			var next = node.next;
+			next = node.next;
 			node.next = null;
 			node.val = cast null;
 			node = next;
@@ -484,10 +484,10 @@ class LinkedStack<T> implements Stack<T>
 		
 		mHead = null;
 		
-		var node = mHeadPool;
+		node = mHeadPool;
 		while (node != null)
 		{
-			var next = node.next;
+			next = node.next;
 			node.next = null;
 			node.val = cast null;
 			node = next;
@@ -640,7 +640,7 @@ class LinkedStack<T> implements Stack<T>
 		var copy = new LinkedStack<T>(mReservedSize);
 		if (mTop == 0) return copy;
 		
-		var copy = new LinkedStack<T>(mReservedSize);
+		copy = new LinkedStack<T>(mReservedSize);
 		copy.mTop = mTop;
 		
 		if (byRef)

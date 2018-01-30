@@ -226,7 +226,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 		assert(size > 0, "priority queue is empty");
 		
 		var d = mData;
-		var x = d.get(1), d = mData;
+		var x = d.get(1);
 		x.position = -1;
 		d.set(1, d.get(size));
 		downheap(1);

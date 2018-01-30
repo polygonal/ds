@@ -2048,7 +2048,7 @@ class TreeNode<T> implements Collection<T>
 		
 		var out = ArrayTools.alloc(size);
 		var i = 0;
-		preorder(function(node:TreeNode<T>, _, _):Bool { out[i++] = node.val; return true; }, null);
+		preorder(function(node:TreeNode<T>, userData, preflight):Bool { out[i++] = node.val; return true; }, null);
 		return out;
 	}
 	

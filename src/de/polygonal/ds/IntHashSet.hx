@@ -441,7 +441,8 @@ class IntHashSet implements Set<Int>
 		t.set(capacity - 1, NULL_POINTER);
 		mFree = oldCapacity;
 		
-		var j = oldCapacity << 1, t = mData;
+		var j = oldCapacity << 1;
+		t = mData;
 		for (i in 0...capacity - oldCapacity)
 		{
 			#if (flash && alchemy)

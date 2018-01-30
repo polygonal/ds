@@ -288,7 +288,7 @@ class IntHashTable<T> implements Map<Int, T>
 		var fmt = '  %- ${i}d -> %s\n';
 		
 		var keys = [for (key in keys()) key];
-		keys.sort(function(a, b) return a - b);
+		keys.sort(function(u, v) return u - v);
 		i = 1;
 		var k = keys.length;
 		var j = 0;
@@ -380,7 +380,7 @@ class IntHashTable<T> implements Map<Int, T>
 			var b = mTmpKeyBuffer;
 			var c = mH.getAll(key, b);
 			var v = mVals;
-			for (i in 0...c) out[i] = v.get(b[i]);
+			for (j in 0...c) out[j] = v.get(b[j]);
 			return c;
 		}
 	}
@@ -549,9 +549,9 @@ class IntHashTable<T> implements Map<Int, T>
 		t.set(capacity - 1, IntIntHashTable.NULL_POINTER);
 		mFree = oldCapacity;
 		
-		var t = NativeArrayTools.alloc(capacity);
-		mVals.blit(0, t, 0, oldCapacity);
-		mVals = t;
+		var v = NativeArrayTools.alloc(capacity);
+		mVals.blit(0, v, 0, oldCapacity);
+		mVals = v;
 	}
 	
 	/* INTERFACE Collection */

@@ -650,7 +650,7 @@ class IntIntHashTable implements Map<Int, Int>
 		var fmt = '  %- ${i}d -> %s\n';
 		
 		var keys = [for (key in keys()) key];
-		keys.sort(function(a, b) return a - b);
+		keys.sort(function(u, v) return u - v);
 		i = 1;
 		var k = keys.length;
 		var j = 0;
@@ -1397,7 +1397,8 @@ class IntIntHashTable implements Map<Int, Int>
 		t.set(capacity - 1, NULL_POINTER);
 		mFree = oldCapacity;
 		
-		var j = oldCapacity * 3 + 2, t = mData;
+		var j = oldCapacity * 3 + 2;
+		t = mData;
 		for (i in 0...capacity - oldCapacity)
 		{
 			#if (flash && alchemy)

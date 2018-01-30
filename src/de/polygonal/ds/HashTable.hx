@@ -349,7 +349,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		var fmt = '  %- ${l}s -> %s\n';
 		
 		var keys = [for (key in keys()) key];
-		keys.sort(function(a, b) return a.key - b.key);
+		keys.sort(function(u, v) return u.key - v.key);
 		var i = 1;
 		var k = keys.length;
 		var j = 0;
@@ -391,26 +391,28 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 		var oldCapacity = capacity;
 		capacity = GrowthRate.compute(growthRate, capacity);
 		
+		var t;
+		
 		#if alchemy
 		mNext.resize(capacity);
 		#else
-		var t = NativeArrayTools.alloc(capacity);
+		t = NativeArrayTools.alloc(capacity);
 		mNext.blit(0, t, 0, oldCapacity);
 		mNext = t;
 		#end
 		
-		var t = mNext;
+		t = mNext;
 		for (i in oldCapacity - 1...capacity - 1) t.set(i, i + 1);
 		t.set(capacity - 1, IntIntHashTable.NULL_POINTER);
 		mFree = oldCapacity;
 		
-		var t = NativeArrayTools.alloc(capacity);
-		mVals.blit(0, t, 0, oldCapacity);
-		mVals = t;
+		var v = NativeArrayTools.alloc(capacity);
+		mVals.blit(0, v, 0, oldCapacity);
+		mVals = v;
 		
-		var t = NativeArrayTools.alloc(capacity);
-		mKeys.blit(0, t, 0, oldCapacity);
-		mKeys = t;
+		var k = NativeArrayTools.alloc(capacity);
+		mKeys.blit(0, k, 0, oldCapacity);
+		mKeys = k;
 	}
 	
 	/* INTERFACE Map */
@@ -464,7 +466,7 @@ class HashTable<K:Hashable, T> implements Map<K, T>
 			var b = mTmpIntBuffer;
 			var c = mH.getAll(key.key, b);
 			var v = mVals;
-			for (i in 0...c) out[i] = v.get(b[i]);
+			for (j in 0...c) out[j] = v.get(b[j]);
 			return c;
 		}
 	}

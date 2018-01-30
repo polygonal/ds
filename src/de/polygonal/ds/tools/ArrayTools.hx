@@ -391,10 +391,12 @@ class ArrayTools
 		
 		var i:Int, j:Int, t:Int;
 		
-		for (i in 0...n)
+		i = 0;
+		while (i < n)
 		{
 			a[i] = i + 1;
 			p[i] = 0;
+			i++;
 		}
 		
 		results.push(a.copy());
@@ -458,7 +460,7 @@ class ArrayTools
 		
 		Example:
 			var points = [1.1, 1.2, 2.1, 2.2]; //format: [x0, y0, x1, y1, xn, yn, ...]
-			ArrayTools.pairwise(points, function(i, x, y) trace('point x=$x, y=$y'));
+			ArrayTools.pairwise(points, function(i, x, y) trace('point $i: x=$x, y=$y'));
 	**/
 	public static inline function pairwise<T>(input:Array<T>, visit:Int->T->T->Void)
 	{

@@ -284,10 +284,10 @@ class HashSet<T:Hashable> implements Set<T>
 		t.set(capacity - 1, IntIntHashTable.NULL_POINTER);
 		mFree = oldCapacity;
 		
-		var t = NativeArrayTools.alloc(capacity);
-		t.nullify();
-		mVals.blit(0, t, 0, oldCapacity);
-		mVals = t;
+		var v = NativeArrayTools.alloc(capacity);
+		v.nullify();
+		mVals.blit(0, v, 0, oldCapacity);
+		mVals = v;
 	}
 	
 	/**

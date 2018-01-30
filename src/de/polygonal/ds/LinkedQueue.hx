@@ -239,12 +239,12 @@ class LinkedQueue<T> implements Queue<T>
 				s--;
 				var i = Std.int(rvals[j++] * s);
 				var node1 = mHead;
-				for (j in 0...s) node1 = node1.next;
+				for (k in 0...s) node1 = node1.next;
 				
 				var t = node1.val;
 				
 				var node2 = mHead;
-				for (j in 0...i) node2 = node2.next;
+				for (l in 0...i) node2 = node2.next;
 				
 				node1.val = node2.val;
 				node2.val = t;
@@ -299,10 +299,10 @@ class LinkedQueue<T> implements Queue<T>
 	**/
 	public function free()
 	{
-		var node = mHead;
+		var node = mHead, next;
 		while (node != null)
 		{
-			var next = node.next;
+			next = node.next;
 			node.next = null;
 			node.val = cast null;
 			node = next;
@@ -310,10 +310,10 @@ class LinkedQueue<T> implements Queue<T>
 		
 		mHead = mTail = null;
 		
-		var node = mHeadPool;
+		node = mHeadPool;
 		while (node != null)
 		{
-			var next = node.next;
+			next = node.next;
 			node.next = null;
 			node.val = cast null;
 			node = next;

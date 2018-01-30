@@ -424,7 +424,7 @@ class Graph<T> implements Collection<T>
 					
 					while (c > 0)
 					{
-						var n = popOffStack();
+						n = popOffStack();
 						
 						if (n.marked) continue;
 						n.marked = true;
@@ -467,7 +467,7 @@ class Graph<T> implements Collection<T>
 					
 					while (c > 0)
 					{
-						var n = popOffStack();
+						n = popOffStack();
 						
 						if (n.marked) continue;
 						n.marked = true;
@@ -1278,16 +1278,16 @@ class Graph<T> implements Collection<T>
 			var node = mNodeList;
 			while (node != null)
 			{
-				var hook = node.next;
+				var hook1 = node.next;
 				var arc = node.arcList;
 				while (arc != null)
 				{
-					var hook = arc.next;
+					var hook2 = arc.next;
 					arc.free();
-					arc = hook;
+					arc = hook2;
 				}
 				node.free();
-				node = hook;
+				node = hook1;
 			}
 			
 			mStack.nullify();

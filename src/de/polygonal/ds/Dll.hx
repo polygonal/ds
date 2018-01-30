@@ -669,8 +669,8 @@ class Dll<T> implements List<T>
 			
 			if (size > 0)
 			{
-				var node = tail;
-				var i = size;
+				node = tail;
+				i = size;
 				while (i-- > 0)
 				{
 					var copy = new DllNode<T>(node.val, c);
@@ -825,12 +825,12 @@ class Dll<T> implements List<T>
 				s--;
 				var i = Std.int(rvals[j++] * s);
 				var node1 = head;
-				for (j in 0...s) node1 = node1.next;
+				for (k in 0...s) node1 = node1.next;
 				
 				var t = node1.val;
 				
 				var node2 = head;
-				for (j in 0...i) node2 = node2.next;
+				for (l in 0...i) node2 = node2.next;
 				
 				node1.val = node2.val;
 				node2.val = t;
@@ -1004,19 +1004,19 @@ class Dll<T> implements List<T>
 	**/
 	public function free()
 	{
-		var node = head;
+		var node = head, next;
 		for (i in 0...size)
 		{
-			var next = node.next;
+			next = node.next;
 			node.free();
 			node = next;
 		}
 		head = tail = null;
 		
-		var node = mHeadPool;
+		node = mHeadPool;
 		while (valid(node))
 		{
-			var next = node.next;
+			next = node.next;
 			node.free();
 			node = next;
 		}

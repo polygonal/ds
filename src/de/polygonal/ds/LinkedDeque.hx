@@ -91,7 +91,7 @@ class LinkedDeque<T> implements Deque<T>
 			mHead = mTail = node;
 			for (i in 1...mSize)
 			{
-				var node = getNode(source[i]);
+				node = getNode(source[i]);
 				node.next = mHead;
 				mHead.prev = node;
 				mHead = node;
@@ -316,10 +316,10 @@ class LinkedDeque<T> implements Deque<T>
 	**/
 	public function free()
 	{
-		var node = mHead;
+		var node = mHead, next;
 		while (node != null)
 		{
-			var next = node.next;
+			next = node.next;
 			node.next = node.prev = null;
 			node.val = cast null;
 			node = next;
@@ -327,10 +327,10 @@ class LinkedDeque<T> implements Deque<T>
 		
 		mHead = mTail = null;
 		
-		var node = mHeadPool;
+		node = mHeadPool;
 		while (node != null)
 		{
-			var next = node.next;
+			next = node.next;
 			node.next = node.prev = null;
 			node.val = cast null;
 			node = next;
@@ -400,20 +400,20 @@ class LinkedDeque<T> implements Deque<T>
 	{
 		if (gc)
 		{
-			var node = mHead;
+			var node = mHead, next;
 			while (node != null)
 			{
-				var next = node.next;
+				next = node.next;
 				putNode(node, true);
 				node = next;
 			}
 			
 			if (mReservedSize > 0)
 			{
-				var node = mHeadPool;
+				node = mHeadPool;
 				while (node != null)
 				{
-					var next = node.next;
+					next = node.next;
 					node.next = node.prev = null;
 					node.val = cast null;
 					node = next;

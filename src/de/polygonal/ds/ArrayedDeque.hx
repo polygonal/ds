@@ -654,7 +654,7 @@ class ArrayedDeque<T> implements Deque<T>
 					
 					block.set(mBlockSizeMinusOne, mTailBlock.get(0));
 					i = 0;
-					var j = mTail - 1;
+					j = mTail - 1;
 					while (i < j)
 					{
 						mTailBlock.set(i, mTailBlock.get(i + 1));

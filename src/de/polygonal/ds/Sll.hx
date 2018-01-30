@@ -570,7 +570,7 @@ class Sll<T> implements List<T>
 			
 			t.reverse();
 			
-			var node = head;
+			node = head;
 			for (i in 0...size)
 			{
 				node.val = t[i];
@@ -674,12 +674,12 @@ class Sll<T> implements List<T>
 				s--;
 				var i = Std.int(rvals[j++] * s);
 				var node1 = head;
-				for (j in 0...s) node1 = node1.next;
+				for (k in 0...s) node1 = node1.next;
 				
 				var t = node1.val;
 				
 				var node2 = head;
-				for (j in 0...i) node2 = node2.next;
+				for (l in 0...i) node2 = node2.next;
 				
 				node1.val = node2.val;
 				node2.val = t;
@@ -847,19 +847,19 @@ class Sll<T> implements List<T>
 	**/
 	public function free()
 	{
-		var node = head;
+		var node = head, next;
 		for (i in 0...size)
 		{
-			var next = node.next;
+			next = node.next;
 			node.free();
 			node = next;
 		}
 		head = tail = null;
 		
-		var node = mHeadPool;
+		node = mHeadPool;
 		while (valid(node))
 		{
-			var next = node.next;
+			next = node.next;
 			node.free();
 			node = next;
 		}
@@ -1265,7 +1265,9 @@ class Sll<T> implements List<T>
 		var h = node;
 		var j;
 		var val;
-		for (i in 1...size)
+		
+		i = 1;
+		while (i < size)
 		{
 			val = v[i];
 			j = i;
@@ -1284,6 +1286,7 @@ class Sll<T> implements List<T>
 				
 			}
 			v[j] = val;
+			i++;
 		}
 		
 		t = h;
@@ -1310,7 +1313,8 @@ class Sll<T> implements List<T>
 		var h = node;
 		var j;
 		var val;
-		for (i in 1...size)
+		i = 1;
+		while (i < size)
 		{
 			val = v[i];
 			j = i;
@@ -1320,6 +1324,7 @@ class Sll<T> implements List<T>
 				j--;
 			}
 			v[j] = val;
+			i++;
 		}
 		
 		t = h;

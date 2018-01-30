@@ -42,16 +42,16 @@ class TreeTools
 		{
 			p = stack.pop();
 			
-			for (xml in (stack.pop() : Xml))
+			for (e in (stack.pop() : Xml))
 			{
-				if (xml.nodeType != Xml.Element) continue;
+				if (e.nodeType != Xml.Element) continue;
 				
-				node = XmlNode.of(xml);
+				node = XmlNode.of(e);
 				c = new TreeNode<XmlNode>(node);
 				node.arbiter = c;
 				p.appendNode(c);
 				
-				stack.push(xml);
+				stack.push(e);
 				stack.push(c);
 				top++;
 			}
@@ -136,7 +136,7 @@ class XmlNode
 		if (deep)
 		{
 			arbiter.preorder(
-				function(x:TreeNode<XmlNode>, _, _)
+				function(x:TreeNode<XmlNode>, userData, preflight)
 				{
 					if (x.val.name == name)
 					{
@@ -170,7 +170,7 @@ class XmlNode
 		if (deep)
 		{
 			arbiter.preorder(
-				function(x:TreeNode<XmlNode>, _, _)
+				function(x:TreeNode<XmlNode>, userData, preflight)
 				{
 					if (x.val.name == name)
 						out.push(x.val);

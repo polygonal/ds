@@ -175,7 +175,7 @@ class Array2<T> implements Collection<T>
 		var w = mW;
 		var i = y * w + x;
 		
-		inline function test(x) if (f(d.get(x))) c++;
+		inline function test(v) if (f(d.get(v))) c++;
 		
 		if (l) test(i - 1);
 		if (r) test(i + 1);
