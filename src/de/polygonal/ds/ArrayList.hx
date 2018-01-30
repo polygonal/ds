@@ -186,13 +186,13 @@ class ArrayList<T> implements List<T>
 	public function addNativeArray(vals:NativeArray<T>, first:Int = 0, count:Int = -1):Int
 	{
 		#if debug
-		if (count != -1) assert(count <= vals.length);
+		if (count != -1) assert(count <= vals.size());
 		#end
 		
-		if (count < 0) count = vals.length - first;
+		if (count < 0) count = vals.size() - first;
 		
-		assert(count <= vals.length);
-		assert(first >= 0 && first + count <= vals.length);
+		assert(count <= vals.size());
+		assert(first >= 0 && first + count <= vals.size());
 		
 		var n = size + count;
 		if (n > capacity)
