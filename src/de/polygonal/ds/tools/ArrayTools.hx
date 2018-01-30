@@ -37,8 +37,15 @@ class ArrayTools
 		assert(len >= 0);
 		
 		var a:Array<T>;
-		#if (flash || js)
+		#if flash
 		a = untyped __new__(Array, len);
+		return a;
+		#elseif js
+			#if (haxe_ver >= 4.000)
+			a = js.Syntax.new_(Array, len);
+			#else
+			a = untyped __new__(Array, len);
+			#end
 		return a;
 		#elseif cpp
 		a = new Array<T>();
@@ -467,7 +474,7 @@ class ArrayTools
 		var i = 0;
 		var k = input.length;
 		assert(k & 1 == 0);
-		while (i < k) 
+		while (i < k)
 		{
 			visit(i, input[i], input[i + 1]);
 			i += 2;

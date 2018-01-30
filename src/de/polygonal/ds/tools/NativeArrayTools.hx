@@ -42,7 +42,11 @@ class NativeArrayTools
 		#elseif neko
 		return untyped __dollar__amake(len);
 		#elseif js
+			#if (haxe_ver >= 4.000)
+				return js.Syntax.new_(Array, len);
+			#else
 		return untyped __new__(Array, len);
+			#end
 		#elseif cs
 		return cs.Lib.arrayAlloc(len);
 		#elseif java
