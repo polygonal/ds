@@ -439,6 +439,28 @@ class ArrayList<T> implements List<T>
 	}
 	
 	/**
+		Visits all elements in as a pair by calling `visit`.
+		
+		The function signature is: `visit(currentPairIndex, firstPairElement, secondPairElement)`
+		
+		Example:
+			var points = [1.1, 1.2, 2.1, 2.2]; //format: [x0, y0, x1, y1, xn, yn, ...]
+			list.pairwise(function(i, x, y) trace('point $i: x=$x, y=$y'));
+	**/
+	public inline function pairwise(visit:Int->T->T->Void)
+	{
+		var i = 0;
+		var k = size;
+		var d = mData;
+		assert(k & 1 == 0);
+		while (i < k) 
+		{
+			visit(i, d.get(i), d.get(i + 1));
+			i += 2;
+		}
+	}
+	
+	/**
 		Brute-force search (aka exhaustive search).
 		Calls `f` on all pairs.
 		
