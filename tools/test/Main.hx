@@ -8,6 +8,8 @@ using Sys;
 **/
 class Main
 {
+	static var MAJOR = 3;
+	
 	public static function main()
 	{
 		var args = Sys.args();
@@ -124,6 +126,8 @@ class Main
 				var output = toFileName(directives, target);
 				
 				var args = '-main UnitTest -cp test -cp src -lib polygonal-printf -$target $output${toArgs(directives)}' + (platformArgs.exists(target) ? (" " + platformArgs.get(target)) : "");
+				if (MAJOR == 4) args += " -lib hx3compat";
+				
 				'compiling $target: $output ...'.println();
 				
 				var tmp = [];
@@ -160,12 +164,13 @@ class Main
 		}
 		
 		var cwd = Sys.getCwd();
-		
 		var p = new sys.io.Process(Sys.getEnv("HAXEPATH") + "/haxe.exe", []);
-		var s = p.stderr.readAll().toString();
+		var s = p.stdout.readAll().toString();
+		
 		p.close();
-		var r = ~/(\d\.\d.\d)/g;
+		var r = ~/Haxe Compiler (\d\.\d.\d)/g;
 		r.match(s);
+		MAJOR = Std.parseInt(r.matched(1));
 		'Using HAXE COMPILER: ${Sys.getEnv("HAXEPATH")} (v${r.matched(1)})'.println();
 		
 		for (target in targets)
