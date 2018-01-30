@@ -26,7 +26,7 @@ import de.polygonal.ds.tools.MathTools;
 using de.polygonal.ds.tools.NativeArrayTools;
 
 #if (flash && alchemy)
-import de.polygonal.ds.mem.IntMemory;
+import de.polygonal.ds.tools.mem.IntMemory;
 import flash.Memory;
 #end
 

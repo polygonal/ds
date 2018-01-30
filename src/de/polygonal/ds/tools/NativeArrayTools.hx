@@ -45,7 +45,7 @@ class NativeArrayTools
 			#if (haxe_ver >= 4.000)
 				return js.Syntax.new_(Array, len);
 			#else
-		return untyped __new__(Array, len);
+				return untyped __new__(Array, len);
 			#end
 		#elseif cs
 		return cs.Lib.arrayAlloc(len);

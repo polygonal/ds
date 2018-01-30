@@ -49,9 +49,9 @@ class UnitTest extends TestRunner
 			add(new mem.TestMemoryManager());
 			success = success && run();
 			cases = new List<haxe.unit.TestCase>();
-			de.polygonal.ds.mem.MemoryManager.free();
-			de.polygonal.ds.mem.MemoryManager.RESERVE_BYTES = 1024 * 1024 * 20;
-			de.polygonal.ds.mem.MemoryManager.BLOCK_SIZE_BYTES = 1024 * 512;
+			de.polygonal.ds.tools.mem.MemoryManager.free();
+			de.polygonal.ds.tools.mem.MemoryManager.RESERVE_BYTES = 1024 * 1024 * 20;
+			de.polygonal.ds.tools.mem.MemoryManager.BLOCK_SIZE_BYTES = 1024 * 512;
 			#end
 			
 			add(new mem.TestByteMemory());
@@ -64,9 +64,9 @@ class UnitTest extends TestRunner
 			cases = new List<haxe.unit.TestCase>();
 			
 			#if alchemy
-			de.polygonal.ds.mem.MemoryManager.free();
-			de.polygonal.ds.mem.MemoryManager.RESERVE_BYTES = 1024 * 1024 * 20;
-			de.polygonal.ds.mem.MemoryManager.BLOCK_SIZE_BYTES = 1024 * 512;
+			de.polygonal.ds.tools.mem.MemoryManager.free();
+			de.polygonal.ds.tools.mem.MemoryManager.RESERVE_BYTES = 1024 * 1024 * 20;
+			de.polygonal.ds.tools.mem.MemoryManager.BLOCK_SIZE_BYTES = 1024 * 512;
 			#end
 		#end
 		

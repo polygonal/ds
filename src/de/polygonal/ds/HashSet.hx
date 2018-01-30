@@ -19,7 +19,7 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 package de.polygonal.ds;
 
 #if alchemy
-import de.polygonal.ds.mem.IntMemory;
+import de.polygonal.ds.tools.mem.IntMemory;
 #end
 
 import de.polygonal.ds.tools.ArrayTools;
