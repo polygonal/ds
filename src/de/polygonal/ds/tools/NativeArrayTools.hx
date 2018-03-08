@@ -43,7 +43,7 @@ class NativeArrayTools
 		return untyped __dollar__amake(len);
 		#elseif js
 			#if (haxe_ver >= 4.000)
-				return js.Syntax.new_(Array, len);
+				return js.Syntax.construct(Array, len);
 			#else
 				return untyped __new__(Array, len);
 			#end

@@ -42,7 +42,7 @@ class ArrayTools
 		return a;
 		#elseif js
 			#if (haxe_ver >= 4.000)
-			a = js.Syntax.new_(Array, len);
+			a = js.Syntax.construct(Array, len);
 			#else
 			a = untyped __new__(Array, len);
 			#end
