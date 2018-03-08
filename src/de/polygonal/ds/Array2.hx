@@ -154,6 +154,7 @@ class Array2<T> implements Collection<T>
 	
 	/**
 		Counts the number of neighbors at column `x` and row `y`, calling `f` on all adjacent cells.
+		if `manhatten` is true, only counts in 4 directions (N,S,W,E), otherwise 8 (NW,N,NE,W,E,SW,S,SE).
 		
 		Example:
 			var a = new Array2<Int>(3, 3);
@@ -161,7 +162,7 @@ class Array2<T> implements Collection<T>
 			a.set(2, 1, 1);
 			var count = a.countNeighbors(1, 1, function(value) return value == 1); //outputs 2
 	**/
-	public inline function countNeighbors(x:Int, y:Int, f:T->Bool):Int
+	public inline function countNeighbors(x:Int, y:Int, f:T->Bool, manhatten = false):Int
 	{
 		assert(x >= 0 && x < cols, 'x index out of range ($x)');
 		assert(y >= 0 && y < rows, 'y index out of range ($y)');
@@ -183,17 +184,41 @@ class Array2<T> implements Collection<T>
 		{
 			i = (y - 1) * w + x;
 			test(i);
-			if (l) test(i - 1);
-			if (r) test(i + 1);
+			if (!manhatten)
+			{
+				if (l) test(i - 1);
+				if (r) test(i + 1);
+			}
 		}
 		if (b)
 		{
 			i = (y + 1) * w + x;
 			test(i);
-			if (l) test(i - 1);
-			if (r) test(i + 1);
+			if (!manhatten)
+			{
+				if (l) test(i - 1);
+				if (r) test(i + 1);
+			}
 		}
 		return c;
+	}
+	
+	/**
+		Passes the original value at `x`,`y` to `f` and replaces it with the value returned by `f`.
+		
+		Example:
+			var a = new Array2<Int>(3, 3);
+			a.replace(1, 2, v -> v + 1); // Haxe4
+			a.replace(1, 2, function(v) return v + 1);
+	**/
+	public inline function replace(x:Int, y:Int, f:T->T)
+	{
+		assert(x >= 0 && x < cols, 'x index out of range ($x)');
+		assert(y >= 0 && y < rows, 'y index out of range ($y)');
+		
+		var i = getIndex(x, y);
+		var d = mData;
+		return d.set(i, f(d.get(i)));
 	}
 	
 	/**

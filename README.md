@@ -68,6 +68,7 @@ Supports Haxe Compiler 3.4.4, 4.0.0-preview.2, hxcpp 3.4.188
 - added: ArrayList.pairwise()
 - modified: removed var shadowing warnings (-D warn-var-shadowing)
 - modified: moved mem package to tools package
+- modified: Array2.countNeighbors(): add manhatten parameter
 
 ### 2.0.1 (released 2017-10-10)
 
@@ -75,8 +76,8 @@ Supports Haxe Compiler 3.4.4, hxcpp 3.4.188
 
 - modified: HashKey: allow static initializers for non-static targets
 - added: Array2.Array2Cell.of()
-- modified: Renamed M to MathTools
-- modified: Removed unused imports/vars
+- modified: renamed M to MathTools
+- modified: removed unused imports/vars
 - added ArrayTools.pairwise()
 - added Array2.countNeighbors()
 - added wrap=true parameter to Array2.shift* methods

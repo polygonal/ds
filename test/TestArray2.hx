@@ -1,4 +1,4 @@
-﻿import de.polygonal.ds.Array2;
+import de.polygonal.ds.Array2;
 import de.polygonal.ds.Cloneable;
 import de.polygonal.ds.tools.NativeArrayTools;
 
@@ -753,6 +753,18 @@ class TestArray2 extends AbstractTest
 		var s2 = "";
 		a.iter(function(e) s2 += e);
 		assertEquals(s1, s2);
+	}
+	
+	function testCountNeighbors()
+	{
+		var a = getIntArray(3, 3);
+		a.setAll(1);
+		
+		var c = a.countNeighbors(1, 1, function(value:Int) return value > 0);
+		assertEquals(8, c);
+		
+		var c = a.countNeighbors(1, 1, function(value:Int) return value > 0, true);
+		assertEquals(4 , c);
 	}
 }
 
