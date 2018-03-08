@@ -165,7 +165,9 @@ class Main
 		
 		var cwd = Sys.getCwd();
 		var p = new sys.io.Process(Sys.getEnv("HAXEPATH") + "/haxe.exe", []);
-		var s = p.stdout.readAll().toString();
+		var s = p.stdout.readAll().toString(); // Haxe 4.x
+		if (s == "")
+			s = p.stderr.readAll().toString(); // Haxe 3.x
 		
 		p.close();
 		var r = ~/Haxe Compiler (\d\.\d.\d)/g;
