@@ -10,7 +10,7 @@ class TestHashTable extends AbstractTest
 	{
 		super();
 		#if (flash && alchemy)
-		de.polygonal.ds.mem.MemoryManager.free();
+		de.polygonal.ds.tools.mem.MemoryManager.free();
 		#end
 	}
 	
