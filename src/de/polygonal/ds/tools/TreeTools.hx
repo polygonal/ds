@@ -18,6 +18,8 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 */
 package de.polygonal.ds.tools;
 
+import de.polygonal.ds.tools.Assert.assert;
+
 /**
 	A helper class for working with trees.
 **/
@@ -25,7 +27,7 @@ package de.polygonal.ds.tools;
 class TreeTools
 {
 	/**
-		Converts the XML `string` to a tree structure.
+		Creates a tree structure from an XML string.
 	**/
 	public static function ofXml(string:String):TreeNode<XmlNode>
 	{
@@ -57,6 +59,92 @@ class TreeTools
 			}
 		}
 		return root;
+	}
+	
+	/**
+		Creates a tree structure from an indented list.
+	**/
+	public static function ofIndentedList<T>(list:String, getValue:String->T, indent = "\t"):TreeNode<T>
+	{
+		var r = new EReg('^([$indent]*)(.*)$', "g");
+		var indentSize = indent.length;
+		var stack = [];
+		var line = 0;
+		var lines = list.split("\n");
+		var lut:Array<TreeNode<T>> = [for (i in 0...lines.length) null];
+		var getDepth = function(x:{line:Int, value:String}):Int
+		{
+			r.match(x.value);
+			assert(r.matched(1).length % indentSize == 0, "malformed indentation");
+			return r.matched(1).length;
+		}
+		var getNode = function(x:{line:Int, value:String}):TreeNode<T>
+		{
+			r.match(x.value);
+			var value = r.matched(2);
+			var item = lut[x.line];
+			if (item == null) item = lut[x.line] = new TreeNode<T>(getValue(value));
+			return item;
+		}
+		var top = 0;
+		stack[top++] = {line: line++, value: lines.shift()};
+		while (lines.length > 0)
+		{
+			var s1 = stack[top - 1];
+			var s2 = {line: line++, value: lines.shift()};
+			if (getDepth(s1) < getDepth(s2))
+			{
+				getNode(s1).appendNode(getNode(s2));
+				getNode(s2).parent = getNode(s1);
+				stack[top++] = s2;
+			}
+			else
+			{
+				while (getDepth(s1) >= getDepth(s2) && stack.length > 1)
+				{
+					stack.pop();
+					top--;
+					s1 = stack[top - 1];
+				}
+				getNode(s1).appendNode(getNode(s2));
+				getNode(s2).parent = getNode(s1);
+				stack[top++] = s2;
+			}
+		}
+		return getNode(stack[0]);
+	}
+	
+	/**
+		Creates a random tree structure.
+		
+		`getValue()` is called for every tree node; the signature is: `getValue(currentDepth, currentChildIndex):T`
+	**/
+	public static function randomTree<T>(getValue:(currentDepth:Int, currentChildIndex:Int)->T, maxDepth:Int, minChildCount:Int, maxChildCount:Int):TreeNode<T>
+	{
+		assert(maxDepth >= 0);
+		assert(minChildCount > 0);
+		assert(maxChildCount >= minChildCount);
+		
+		inline function randRange(min:Int, max:Int) return min + Std.int(Math.random() * ((max - min) + 1));
+		
+		var tree = new TreeNode<T>(getValue(0, 0));
+		var build:TreeNode<T>->Int->Void;
+		build = function(treeNode:TreeNode<T>, depth:Int)
+		{
+			if (depth < maxDepth)
+			{
+				var i = randRange(minChildCount, maxChildCount);
+				var j = 0;
+				while (j < i)
+				{
+					var childNode = new TreeNode<T>(getValue(depth + 1, j), treeNode);
+					build(childNode, depth + 1);
+					j++;
+				}
+			}
+		}
+		build(tree, 0);
+		return tree;
 	}
 }
 

@@ -1076,6 +1076,31 @@ class TestTree extends AbstractTest
 		assertEquals("y", output.getChildAt(2).getChildAt(1).val);
 		assertEquals(9, output.size);
 	}
+	
+	#if !generic
+	public function testCreateRandomTree()
+	{
+		var tree:TreeNode<Int> = TreeTools.randomTree(function(d, c) return Std.int(Math.random() * 10), 3, 1, 4);
+		assertTrue(tree != null);
+	}
+	#end
+	
+	#if !generic
+	public function testOfIndentedList()
+	{
+		var list = "root\n";
+		list    += "  level1\n";
+		list    += "    level2\n";
+		list    += "  level1\n";
+		list    += "    level2\n";
+		list    += "      level3";
+		var tree:TreeNode<String> = TreeTools.ofIndentedList(list, function(s) return s, "  ");
+		
+		var s = "";
+		tree.preorder(function(node, _, _) { s += node.val; return true; }, null, false, false);
+		assertEquals("rootlevel1level2level1level2level3", s);
+	}
+	#end
 }
 
 private class Visitor implements de.polygonal.ds.Visitable

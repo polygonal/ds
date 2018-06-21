@@ -69,6 +69,8 @@ Supports Haxe Compiler 3.4.5, 4.0.0-preview.3, hxcpp 3.4.188
 - modified: removed var shadowing warnings (-D warn-var-shadowing)
 - modified: moved mem package to tools package
 - modified: Array2.countNeighbors(): add manhatten parameter
+- added: TreeTools.ofIndentedList()
+- added: TreeTools.randomTree()
 
 ### 2.0.1 (released 2017-10-10)
 
