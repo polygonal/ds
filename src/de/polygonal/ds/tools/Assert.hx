@@ -27,48 +27,64 @@ import haxe.macro.Expr;
 	Assertion macro injecting assertion statements
 	
 	An assertion specifies a condition that you expect to be true at a point in your program.
-	
-	If that condition is not true, the assertion fails, throwing an instance of the `AssertError` class.
 **/
 class Assert
 {
-	macro public static function assert(predicate:Expr, ?info:Expr):Expr
+	macro public static function assert(predicateExpr:Expr, ?msgExpr:Expr):Expr
 	{
 		if (!Context.defined("debug")) return macro {};
 		
-		var error = false;
-		switch (Context.typeof(predicate))
+		switch (Context.typeof(predicateExpr))
 		{
 			case TAbstract(_, _):
-			case _: error = true;
+			case _: Context.error("`predicateExpr` should be a boolean", predicateExpr.pos);
 		}
 		
-		if (error) Context.error("predicate should be a boolean", predicate.pos);
+		var p = Context.currentPos();
+		var location = haxe.macro.PositionTools.toLocation(p);
+		var locationInfos = " (in file " +  location.file + ", line " + location.range.start.line + ")";
 		
-		var hasInfo = true;
-		switch (Context.typeof(info))
+		var extra = false;
+		var error = false;
+		switch (Context.typeof(msgExpr))
 		{
 			case TMono(t):
 				error = t.get() != null;
-				hasInfo = false;
-				
+			
 			case TInst(t, _):
 				error = t.get().name != "String";
-			case _: error = true;
+				extra = true;
+			
+			case _:
+				error = true;
 		}
+		if (error) Context.error("`msgExpr` should be a string", msgExpr.pos);
 		
-		if (error) Context.error("info should be a string", info.pos);
+		var predicate = new haxe.macro.Printer().printExpr(predicateExpr);
 		
-		var p = Context.currentPos();
-		
-		var infoStr =
-		if (hasInfo)
-			EBinop(OpAdd, info, {expr: EConst(CString(" (" + new haxe.macro.Printer().printExpr(predicate) + ")")), pos: p});
+		var infos =
+		if (extra)
+			macro ${msgExpr} + $v{" [" + predicate + "]"} + $v{locationInfos};
 		else
-			EConst(CString(new haxe.macro.Printer().printExpr(predicate)));
+			macro $v{predicate} + $v{locationInfos};
 		
-		var eif = {expr: EThrow({expr: ENew({name: "AssertError", pack: ["de", "polygonal", "ds", "tools"], params: []}, [{expr: infoStr, pos: p}]), pos: p}), pos: p};
-		var econd = {expr: EBinop(OpNotEq, {expr: EConst(CIdent("true")), pos: p}, predicate), pos: p};
-		return {expr: EIf(econd, eif, null), pos: p};
+		return
+		if (Context.defined("js"))
+		{
+			{expr: ECall(
+				{pos: p, expr: EField(macro $p{["js", "Syntax"]}, "code")},
+				[
+					macro $v{"console.assert({0}, {1})"},
+					predicateExpr,
+					infos
+				]), pos: p};
+		}
+		else
+		{
+			{expr: EIf(
+				{expr: EBinop(OpNotEq, macro $i{"true"}, predicateExpr), pos: p},
+				{expr: EThrow(macro $v{"Assertion failed:"} + ${infos}), pos: p}, null),
+				pos: p};
+		}
 	}
 }
