@@ -3,7 +3,7 @@ api/
 artwork/
 bin/
 ds.hxproj
-sandbox/
+playground/
 scripts/
 tmp/
 .markdownlint.json
