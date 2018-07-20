@@ -1,4 +1,4 @@
-# ds Data Structures For Games
+# Data Structures For Games
 
 ![ds logo](images/logo.png)
 
@@ -6,8 +6,8 @@ Formerly known as "AS3 Data Structures For Game Developers", the package contain
 
 ## Documentation
 
-- Slides [Introduction to ds- Data Structures For Games](http://polygonal.github.com/ds/slides/introduction_to_ds.pdf)
-- API [http://polygonal.github.io/ds/api/index.html](http://polygonal.github.com/ds/api/index.html)
+- Slides [Introduction to ds - Data Structures For Games](https://gitlab.com/polygonal/ds/blob/master/doc/2012_01_11_introduction_to_ds.pdf)
+- API [http://polygonal.github.io/ds/api/index.html](https://gitlab.com/polygonal/ds/blob/master/doc/index.html)
 
 ## Articles
 
