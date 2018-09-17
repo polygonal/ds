@@ -969,7 +969,7 @@ class Array2<T> implements Collection<T>
 		for (y in 0...rows)
 		{
 			args[0] = row++;
-			b.add(Printf.format('  %${w}d -> ', args));
+			b.add(Printf.format('  %0${w}d -> ', args));
 			offset = y * cols;
 			for (x in 0...cols)
 			{

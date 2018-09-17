@@ -184,8 +184,8 @@ class Main
 			
 			for (path in scan("./src", []))
 			{
-				if (FileSystem.isDirectory(path)) 
-				continue;
+				if (FileSystem.isDirectory(path))
+					continue;
 				try
 				{
 					var s = File.getContent(path);
