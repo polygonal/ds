@@ -62,7 +62,7 @@ class GraphArc<T> implements Hashable
 	/**
 		The data of the node that this arc points to.
 	**/
-	public var val(get_val, never):T;
+	public var val(get, never):T;
 	inline function get_val():T return node.val;
 	
 	/**
