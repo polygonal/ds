@@ -19,6 +19,7 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 package polygonal.ds.tools;
 
 import polygonal.ds.tools.Assert.assert;
+import haxe.ds.StringMap;
 
 /**
 	A helper class for working with trees.
@@ -158,7 +159,6 @@ class XmlNode
 	{
 		var node = new XmlNode();
 		node.name = xml.nodeName;
-		
 		var firstChild = xml.firstChild();
 		if (firstChild != null)
 		{
@@ -168,8 +168,7 @@ class XmlNode
 					node.data = firstChild.nodeValue;
 			}
 		}
-		
-		node.attributes = new AttrAccess(xml);
+		node.xml = xml;
 		return node;
 	}
 	
@@ -186,12 +185,16 @@ class XmlNode
 	/**
 		XML Attributes (if any).
 	**/
-	var attributes:AttrAccess;
+	public var attributes(get, never):AttrAccess;
+	inline function get_attributes():AttrAccess return xml;
 	
 	/**
 		The `TreeNode` instance which owns this node.
 	**/
 	var arbiter:TreeNode<XmlNode>;
+	
+	@:noCompletion
+	var xml:Xml;
 	
 	public function new() {}
 	
@@ -286,19 +289,10 @@ class XmlNode
 	#end
 }
 
-@:allow(polygonal.ds.TreeTools)
-private class AttrAccess implements Dynamic<String>
+private abstract AttrAccess(Xml) from Xml
 {
-	var __o:Dynamic = {};
-	
-	public function new(xml:Xml)
-	{
-		for (i in xml.attributes())
-			Reflect.setField(__o, i, xml.get(i));
-	}
-	
+	@:op(a.b)
+	@:access(Xml)
 	public function resolve(name:String):String
-	{
-		return Reflect.hasField(__o, name) ? Reflect.field(__o, name) : null;
-	}
+		return (this.attributeMap:StringMap<String>).get(name);
 }
