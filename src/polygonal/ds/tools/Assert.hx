@@ -30,8 +30,23 @@ import haxe.macro.Expr;
 **/
 class Assert
 {
+	#if runtime_assert
+		#if debug
+		public static function assert(predicateExpr:Bool, ?msg:String)
+		{
+			#if js
+			js.Browser.console.assert(predicateExpr, msg);
+			#else
+			if (!predicateExpr) throw 'Assertion failed: $msg';
+			#end
+		}
+		#else
+		@:extern public static inline function assert(predicateExpr:Bool, ?msg:String) {}
+		#end
+	#else
 	macro public static function assert(predicateExpr:Expr, ?msgExpr:Expr):Expr
 	{
+		if (Context.defined("display")) return macro {};
 		if (!Context.defined("debug")) return macro {};
 		
 		switch (Context.typeof(predicateExpr))
@@ -87,4 +102,5 @@ class Assert
 				pos: p};
 		}
 	}
+	#end
 }
