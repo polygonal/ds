@@ -135,7 +135,7 @@ class ObjectPool<T>
 		
 		Discards `obj` if the pool is full by passing it to the dispose function (`this.size` == `this.maxSize`).
 	**/
-	inline public function put(obj:T)
+	public inline function put(obj:T)
 	{
 		#if debug
 		assert(!mSet.has(obj), 'object $obj was returned twice to the pool');
@@ -158,8 +158,8 @@ class ObjectPool<T>
 		var d = mPool;
 		return
 		{
-			hasNext: function() return i < s,
-			next: function() return d.get(i++)
+			hasNext: () -> i < s,
+			next: () -> d.get(i++)
 		}
 	}
 	

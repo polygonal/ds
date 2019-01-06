@@ -957,7 +957,7 @@ class ArrayList<T> implements List<T>
 	}
 	
 	/**
-		Preallocates storage for `n` elements.
+		Preallocates internal storage for `n` elements.
 		
 		May cause a reallocation, but has no effect on `this.size` and its elements.
 		Useful before inserting a large number of elements as this reduces the amount of incremental reallocation.
@@ -1162,7 +1162,7 @@ class ArrayList<T> implements List<T>
 	/**
 		Clears this list by nullifying all elements so the garbage collector can reclaim used memory.
 	**/
-	public function clear(gc:Bool = false)
+	public inline function clear(gc:Bool = false)
 	{
 		if (gc) mData.nullify();
 		mSize = 0;

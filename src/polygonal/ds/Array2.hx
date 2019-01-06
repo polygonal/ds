@@ -451,7 +451,8 @@ class Array2<T> implements Collection<T>
 	public inline function forEach(f:T->Int->Int->T):Array2<T>
 	{
 		var d = mData;
-		for (i in 0...size) d.set(i, f(d.get(i), i % mW, Std.int(i / mW)));
+		var w = mW;
+		for (i in 0...size) d.set(i, f(d.get(i), i % w, Std.int(i / w)));
 		return this;
 	}
 	
