@@ -1,8 +1,8 @@
-﻿import de.polygonal.ds.LinkedStack;
-import de.polygonal.ds.ListSet;
-import de.polygonal.ds.Stack;
+﻿import polygonal.ds.LinkedStack;
+import polygonal.ds.ListSet;
+import polygonal.ds.Stack;
 
-@:access(de.polygonal.ds.LinkedStack)
+@:access(polygonal.ds.LinkedStack)
 class TestLinkedStack extends AbstractTest
 {
 	function testSource()
@@ -423,7 +423,7 @@ class TestLinkedStack extends AbstractTest
 		
 		var itr = l.iterator();
 		
-		var c:de.polygonal.ds.Set<Int> = cast s.clone(true);
+		var c:polygonal.ds.Set<Int> = cast s.clone(true);
 		for (i in itr)
 		{
 			assertEquals(true, c.remove(i));
@@ -433,7 +433,7 @@ class TestLinkedStack extends AbstractTest
 		l.push(6);
 		s.set(6);
 		
-		var c:de.polygonal.ds.Set<Int> = cast s.clone(true);
+		var c:polygonal.ds.Set<Int> = cast s.clone(true);
 		itr.reset();
 		for (i in itr)
 		{
@@ -454,8 +454,8 @@ class TestLinkedStack extends AbstractTest
 	{
 		for (i in 0...5)
 		{
-			var l = new de.polygonal.ds.LinkedStack<Int>();
-			var set = new de.polygonal.ds.ListSet<Int>();
+			var l = new polygonal.ds.LinkedStack<Int>();
+			var set = new polygonal.ds.ListSet<Int>();
 			for (j in 0...5)
 			{
 				l.push(j);
@@ -474,7 +474,7 @@ class TestLinkedStack extends AbstractTest
 			assertEquals(null, l.mHead);
 		}
 		
-		var l = new de.polygonal.ds.LinkedStack<Int>();
+		var l = new polygonal.ds.LinkedStack<Int>();
 		for (j in 0...5) l.push(j);
 		
 		var itr = l.iterator();

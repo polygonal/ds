@@ -1,7 +1,7 @@
-﻿import de.polygonal.ds.tools.Compare;
-import de.polygonal.ds.TreeBuilder;
-import de.polygonal.ds.TreeNode;
-import de.polygonal.ds.tools.TreeTools;
+﻿import polygonal.ds.tools.Compare;
+import polygonal.ds.TreeBuilder;
+import polygonal.ds.TreeNode;
+import polygonal.ds.tools.TreeTools;
 import haxe.Serializer;
 import haxe.Unserializer;
 
@@ -27,7 +27,7 @@ class TestTree extends AbstractTest
 	function testXmlToTreeNode()
 	{
 		var xml = "<root rootAttr=\"rootAttrValue\"><node1 node1Attr1=\"a\" node1Attr2=\"b\"><node2 node2Attr=\"c\"/></node1></root>";
-		var root = de.polygonal.ds.tools.TreeTools.ofXml(xml);
+		var root = polygonal.ds.tools.TreeTools.ofXml(xml);
 		
 		assertEquals(root.val.name, "root");
 		assertEquals("rootAttrValue", root.val.attributes.rootAttr);
@@ -1025,7 +1025,7 @@ class TestTree extends AbstractTest
 	
 	function testCollection()
 	{
-		var c:de.polygonal.ds.Collection<Int> = new TreeNode<Int>(0);
+		var c:polygonal.ds.Collection<Int> = new TreeNode<Int>(0);
 		assertEquals(true, c != null);
 	}
 	
@@ -1103,7 +1103,7 @@ class TestTree extends AbstractTest
 	#end
 }
 
-private class Visitor implements de.polygonal.ds.Visitable
+private class Visitor implements polygonal.ds.Visitable
 {
 	public static var exclude:String;
 	public static var c:Int;
@@ -1131,7 +1131,7 @@ private class Visitor implements de.polygonal.ds.Visitable
 	}
 }
 
-private class SortableNode implements de.polygonal.ds.Comparable<SortableNode>
+private class SortableNode implements polygonal.ds.Comparable<SortableNode>
 {
 	public var id:Int;
 	public function new(id:Int)

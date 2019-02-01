@@ -1,11 +1,11 @@
 ﻿package mem;
 
-import de.polygonal.ds.tools.mem.ByteMemory;
+import polygonal.ds.tools.mem.ByteMemory;
 import haxe.ds.Vector;
 import haxe.io.BytesData;
 
 #if alchemy
-import de.polygonal.ds.tools.mem.MemoryManager;
+import polygonal.ds.tools.mem.MemoryManager;
 #end
 
 class TestByteMemory extends AbstractTest

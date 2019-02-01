@@ -1,13 +1,13 @@
 ﻿package mem;
 
-import de.polygonal.ds.BitVector;
-import de.polygonal.ds.tools.mem.BitMemory;
+import polygonal.ds.BitVector;
+import polygonal.ds.tools.mem.BitMemory;
 import haxe.io.Bytes;
 import haxe.io.BytesInput;
 import haxe.io.BytesOutput;
 
 #if alchemy
-import de.polygonal.ds.tools.mem.MemoryManager;
+import polygonal.ds.tools.mem.MemoryManager;
 #end
 
 class TestBitMemory extends AbstractTest

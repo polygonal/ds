@@ -1,5 +1,5 @@
-﻿import de.polygonal.ds.ArrayedDeque;
-import de.polygonal.ds.Deque;
+﻿import polygonal.ds.ArrayedDeque;
+import polygonal.ds.Deque;
 
 class TestArrayedDeque extends AbstractTest
 {
@@ -617,7 +617,7 @@ class TestArrayedDeque extends AbstractTest
 	}
 }
 
-private class E implements de.polygonal.ds.Cloneable<E>
+private class E implements polygonal.ds.Cloneable<E>
 {
 	public var x:Int;
 	public function new(x:Int)

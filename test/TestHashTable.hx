@@ -1,8 +1,8 @@
-﻿import de.polygonal.ds.tools.ArrayTools;
-import de.polygonal.ds.HashableItem;
-import de.polygonal.ds.HashTable;
-import de.polygonal.ds.IntIntHashTable;
-import de.polygonal.ds.tools.GrowthRate;
+﻿import polygonal.ds.tools.ArrayTools;
+import polygonal.ds.HashableItem;
+import polygonal.ds.HashTable;
+import polygonal.ds.IntIntHashTable;
+import polygonal.ds.tools.GrowthRate;
 
 class TestHashTable extends AbstractTest
 {
@@ -10,7 +10,7 @@ class TestHashTable extends AbstractTest
 	{
 		super();
 		#if (flash && alchemy)
-		de.polygonal.ds.tools.mem.MemoryManager.free();
+		polygonal.ds.tools.mem.MemoryManager.free();
 		#end
 	}
 	

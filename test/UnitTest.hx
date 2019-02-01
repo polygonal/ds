@@ -49,9 +49,9 @@ class UnitTest extends TestRunner
 			add(new mem.TestMemoryManager());
 			success = success && run();
 			cases = new List<haxe.unit.TestCase>();
-			de.polygonal.ds.tools.mem.MemoryManager.free();
-			de.polygonal.ds.tools.mem.MemoryManager.RESERVE_BYTES = 1024 * 1024 * 20;
-			de.polygonal.ds.tools.mem.MemoryManager.BLOCK_SIZE_BYTES = 1024 * 512;
+			polygonal.ds.tools.mem.MemoryManager.free();
+			polygonal.ds.tools.mem.MemoryManager.RESERVE_BYTES = 1024 * 1024 * 20;
+			polygonal.ds.tools.mem.MemoryManager.BLOCK_SIZE_BYTES = 1024 * 512;
 			#end
 			
 			add(new mem.TestByteMemory());
@@ -64,9 +64,9 @@ class UnitTest extends TestRunner
 			cases = new List<haxe.unit.TestCase>();
 			
 			#if alchemy
-			de.polygonal.ds.tools.mem.MemoryManager.free();
-			de.polygonal.ds.tools.mem.MemoryManager.RESERVE_BYTES = 1024 * 1024 * 20;
-			de.polygonal.ds.tools.mem.MemoryManager.BLOCK_SIZE_BYTES = 1024 * 512;
+			polygonal.ds.tools.mem.MemoryManager.free();
+			polygonal.ds.tools.mem.MemoryManager.RESERVE_BYTES = 1024 * 1024 * 20;
+			polygonal.ds.tools.mem.MemoryManager.BLOCK_SIZE_BYTES = 1024 * 512;
 			#end
 		#end
 		
@@ -107,7 +107,11 @@ class UnitTest extends TestRunner
 		#if (flash && !ide)
 		if (success) flash.system.System.exit(2);
 		#elseif js
-		(untyped process).exit(success ? 0 : 1);
+		try
+		{
+			(untyped process).exit(success ? 0 : 1);
+		}
+		catch(e:Dynamic) {}
 		#elseif sys
 		Sys.exit(success ? 0 : 1);
 		#end

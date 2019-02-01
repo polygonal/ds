@@ -1,9 +1,9 @@
-﻿import de.polygonal.ds.ListSet;
-import de.polygonal.ds.Sll;
-import de.polygonal.ds.SllNode;
-import de.polygonal.ds.tools.Compare;
+﻿import polygonal.ds.ListSet;
+import polygonal.ds.Sll;
+import polygonal.ds.SllNode;
+import polygonal.ds.tools.Compare;
 
-@:access(de.polygonal.ds.Sll)
+@:access(polygonal.ds.Sll)
 class TestSll extends AbstractTest
 {
 	function testSource()
@@ -902,7 +902,7 @@ class TestSll extends AbstractTest
 		for (i in 0...5)
 		{
 			var list = new Sll<Int>();
-			var set = new de.polygonal.ds.ListSet<Int>();
+			var set = new polygonal.ds.ListSet<Int>();
 			for (j in 0...5)
 			{
 				list.append(j);
@@ -924,7 +924,7 @@ class TestSll extends AbstractTest
 		for (i in 0...5)
 		{
 			var list = new Sll<Int>();
-			var set = new de.polygonal.ds.ListSet<Int>();
+			var set = new polygonal.ds.ListSet<Int>();
 			for (j in 0...i)
 			{
 				list.append(j);
@@ -947,7 +947,7 @@ class TestSll extends AbstractTest
 		for (i in 0...5)
 		{
 			var list = new Sll<Int>();
-			var set = new de.polygonal.ds.ListSet<Int>();
+			var set = new polygonal.ds.ListSet<Int>();
 			for (j in 0...5)
 			{
 				list.append(j);
@@ -970,7 +970,7 @@ class TestSll extends AbstractTest
 		for (i in 0...5)
 		{
 			var list = new Sll<Int>();
-			var set = new de.polygonal.ds.ListSet<Int>();
+			var set = new polygonal.ds.ListSet<Int>();
 			for (j in 0...i)
 			{
 				list.append(j);
@@ -1260,7 +1260,7 @@ private class E
 	}
 }
 
-private class ESortable implements de.polygonal.ds.Comparable<ESortable>
+private class ESortable implements polygonal.ds.Comparable<ESortable>
 {
 	public var id:Int;
 	public function new(id:Int)

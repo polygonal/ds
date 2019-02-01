@@ -1,10 +1,10 @@
-﻿import de.polygonal.ds.BinaryTreeNode;
-import de.polygonal.ds.Bst;
-import de.polygonal.ds.Collection;
-import de.polygonal.ds.ListSet;
-import de.polygonal.ds.Set;
+﻿import polygonal.ds.BinaryTreeNode;
+import polygonal.ds.Bst;
+import polygonal.ds.Collection;
+import polygonal.ds.ListSet;
+import polygonal.ds.Set;
 
-@:access(de.polygonal.ds.Bst)
+@:access(polygonal.ds.Bst)
 class TestBst extends AbstractTest
 {
 	function testPreorder()
@@ -339,7 +339,7 @@ class TestBst extends AbstractTest
 	
 	function testCollection()
 	{
-		var c:de.polygonal.ds.Collection<E> = cast new Bst<E>();
+		var c:polygonal.ds.Collection<E> = cast new Bst<E>();
 		assertEquals(true, c != null);
 	}
 	
@@ -367,7 +367,7 @@ class TestBst extends AbstractTest
 	}
 }
 
-private class E implements de.polygonal.ds.Comparable<E> implements de.polygonal.ds.Visitable
+private class E implements polygonal.ds.Comparable<E> implements polygonal.ds.Visitable
 {
 	public var id:Int;
 	

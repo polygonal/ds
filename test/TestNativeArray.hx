@@ -1,8 +1,8 @@
 package;
 
-import de.polygonal.ds.NativeArray;
+import polygonal.ds.NativeArray;
 
-using de.polygonal.ds.tools.NativeArrayTools;
+using polygonal.ds.tools.NativeArrayTools;
 
 class TestNativeArray extends AbstractTest
 {

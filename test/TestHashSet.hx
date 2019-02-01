@@ -1,7 +1,7 @@
-import de.polygonal.ds.tools.ArrayTools;
-import de.polygonal.ds.HashableItem;
-import de.polygonal.ds.HashSet;
-import de.polygonal.ds.tools.GrowthRate;
+import polygonal.ds.tools.ArrayTools;
+import polygonal.ds.HashableItem;
+import polygonal.ds.HashSet;
+import polygonal.ds.tools.GrowthRate;
 
 class TestHashSet extends AbstractTest
 {
@@ -10,7 +10,7 @@ class TestHashSet extends AbstractTest
 		super();
 		
 		#if (flash && alchemy)
-		de.polygonal.ds.tools.mem.MemoryManager.free();
+		polygonal.ds.tools.mem.MemoryManager.free();
 		#end
 	}
 	

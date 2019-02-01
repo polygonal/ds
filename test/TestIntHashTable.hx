@@ -1,10 +1,10 @@
-﻿import de.polygonal.ds.tools.ArrayTools;
-import de.polygonal.ds.Dll;
-import de.polygonal.ds.IntIntHashTable;
-import de.polygonal.ds.IntHashTable;
-import de.polygonal.ds.ListSet;
-import de.polygonal.ds.HashableItem;
-import de.polygonal.ds.tools.GrowthRate;
+﻿import polygonal.ds.tools.ArrayTools;
+import polygonal.ds.Dll;
+import polygonal.ds.IntIntHashTable;
+import polygonal.ds.IntHashTable;
+import polygonal.ds.ListSet;
+import polygonal.ds.HashableItem;
+import polygonal.ds.tools.GrowthRate;
 
 class TestIntHashTable extends AbstractTest
 {
@@ -12,7 +12,7 @@ class TestIntHashTable extends AbstractTest
 	{
 		super();
 		#if (flash && alchemy)
-		de.polygonal.ds.tools.mem.MemoryManager.free();
+		polygonal.ds.tools.mem.MemoryManager.free();
 		#end
 	}
 	
@@ -482,7 +482,7 @@ class TestIntHashTable extends AbstractTest
 	
 	function testInsertRemoveFind()
 	{
-		var h = new de.polygonal.ds.IntHashTable<Null<Int>>(16);
+		var h = new polygonal.ds.IntHashTable<Null<Int>>(16);
 		
 		//everything to key #2
 		h.set(34, 1);

@@ -1,10 +1,9 @@
-﻿import de.polygonal.ds.ArrayList;
-import de.polygonal.ds.ListSet;
-import de.polygonal.ds.tools.Compare;
+﻿import polygonal.ds.ArrayList;
+import polygonal.ds.ListSet;
+import polygonal.ds.tools.Compare;
+import polygonal.ds.tools.NativeArrayTools;
 
-import de.polygonal.ds.tools.NativeArrayTools;
-
-@:access(de.polygonal.ds.ArrayList)
+@:access(polygonal.ds.ArrayList)
 class TestArrayList extends AbstractTest
 {
 	function testBasic()
@@ -502,6 +501,67 @@ class TestArrayList extends AbstractTest
 		a.reverse(0, 2);
 		assertEquals(1, a.get(0));
 		assertEquals(0, a.get(1));
+		
+		var a = new ArrayList<Int>(4);
+		for (i in 0...4) a.pushBack(i);
+		a.reverse(0, 2);
+		assertEquals(1, a.get(0));
+		assertEquals(0, a.get(1));
+		assertEquals(2, a.get(2));
+		assertEquals(3, a.get(3));
+		
+		var a = new ArrayList<Int>();
+		a.init(8);
+		a.forEach((v, i) -> i);
+		a.reverse(4);
+		assertEquals(0, a.get(0));
+		assertEquals(1, a.get(1));
+		assertEquals(2, a.get(2));
+		assertEquals(3, a.get(3));
+		assertEquals(7, a.get(4));
+		assertEquals(6, a.get(5));
+		assertEquals(5, a.get(6));
+		assertEquals(4, a.get(7));
+		
+		var a = new ArrayList<Int>();
+		a.init(8);
+		a.forEach((v, i) -> i);
+		a.reverse(2, 4);
+		assertEquals(0, a.get(0));
+		assertEquals(1, a.get(1));
+		assertEquals(3, a.get(2));
+		assertEquals(2, a.get(3));
+		assertEquals(4, a.get(4));
+		assertEquals(5, a.get(5));
+		assertEquals(6, a.get(6));
+		assertEquals(7, a.get(7));
+	}
+	
+	function testResize()
+	{
+		var a = new ArrayList<Int>();
+		a.resize(1);
+		assertEquals(2, a.capacity);
+		assertEquals(1, a.size);
+		
+		a = new ArrayList<Int>();
+		a.resize(4);
+		assertEquals(4, a.capacity);
+		assertEquals(4, a.size);
+		
+		var a = new ArrayList<Int>();
+		for (i in 0...8) a.pushBack(i);
+		a.resize(4);
+		assertEquals(4, a.capacity);
+		assertEquals(4, a.size);
+		for (i in 0...4) assertEquals(i, a.get(i));
+		
+		var a = new ArrayList<Int>(8);
+		for (i in 0...8) a.pushBack(i);
+		a.resize(4);
+		assertEquals(8, a.capacity);
+		assertEquals(4, a.size);
+		for (i in 0...4) assertEquals(i, a.get(i));
 	}
 	
 	function testBinarySearch()
@@ -789,18 +849,18 @@ class TestArrayList extends AbstractTest
 		
 		var itr = q.iterator();
 		
-		var s:de.polygonal.ds.Set<Int> = cast set.clone(true);
+		var s:polygonal.ds.Set<Int> = cast set.clone(true);
 		for (val in itr) assertEquals(true, s.remove(val));
 		assertTrue(s.isEmpty());
 		
-		var s:de.polygonal.ds.Set<Int> = cast set.clone(true);
+		var s:polygonal.ds.Set<Int> = cast set.clone(true);
 		
 		itr.reset();
 		for (val in itr) assertEquals(true, s.remove(val));
 		assertTrue(s.isEmpty());
 		
 		q.pushBack(10);
-		var s:de.polygonal.ds.Set<Int> = cast set.clone(true);
+		var s:polygonal.ds.Set<Int> = cast set.clone(true);
 		s.set(10);
 		
 		itr.reset();
@@ -813,7 +873,7 @@ class TestArrayList extends AbstractTest
 		for (i in 0...5)
 		{
 			var a = new ArrayList<Int>();
-			var set = new de.polygonal.ds.ListSet<Int>();
+			var set = new polygonal.ds.ListSet<Int>();
 			for (j in 0...5)
 			{
 				a.pushBack(j);
@@ -1015,7 +1075,7 @@ class TestArrayList extends AbstractTest
 	}
 }
 
-private class E implements de.polygonal.ds.Comparable<E> implements de.polygonal.ds.Cloneable<E>
+private class E implements polygonal.ds.Comparable<E> implements polygonal.ds.Cloneable<E>
 {
 	public var x:Int;
 	public function new(x:Int)

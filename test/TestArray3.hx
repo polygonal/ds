@@ -1,8 +1,8 @@
-﻿import de.polygonal.ds.Array3;
-import de.polygonal.ds.Cloneable;
-import de.polygonal.ds.ListSet;
-import de.polygonal.ds.Set;
-import de.polygonal.ds.tools.NativeArrayTools;
+﻿import polygonal.ds.Array3;
+import polygonal.ds.Cloneable;
+import polygonal.ds.ListSet;
+import polygonal.ds.Set;
+import polygonal.ds.tools.NativeArrayTools;
 
 class TestArray3 extends AbstractTest
 {

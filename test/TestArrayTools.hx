@@ -1,5 +1,5 @@
-﻿import de.polygonal.ds.tools.ArrayTools;
-import de.polygonal.ds.tools.Compare;
+﻿import polygonal.ds.tools.ArrayTools;
+import polygonal.ds.tools.Compare;
 import haxe.ds.IntMap;
 
 class TestArrayTools extends AbstractTest

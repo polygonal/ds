@@ -1,6 +1,6 @@
-﻿import de.polygonal.ds.Graph;
-import de.polygonal.ds.GraphArc;
-import de.polygonal.ds.GraphNode;
+﻿import polygonal.ds.Graph;
+import polygonal.ds.GraphArc;
+import polygonal.ds.GraphNode;
 
 class TestGraph extends AbstractTest
 {
@@ -449,25 +449,25 @@ class TestGraph extends AbstractTest
 			nodes[i] = node;
 		}
 		
-		var s = new de.polygonal.ds.HashSet<E>(1024);
+		var s = new polygonal.ds.HashSet<E>(1024);
 		for (i in graph) assertEquals(true, s.set(i));
 		assertEquals(10, s.size);
 		
-		var c:de.polygonal.ds.Set<E> = cast s.clone(true);
+		var c:polygonal.ds.Set<E> = cast s.clone(true);
 		var itr = graph.iterator();
 		
 		for (i in itr) assertEquals(true, c.remove(i));
 		assertTrue(c.isEmpty());
 		
-		var c:de.polygonal.ds.Set<E> = cast s.clone(true);
+		var c:polygonal.ds.Set<E> = cast s.clone(true);
 		itr.reset();
 		for (i in itr) assertEquals(true, c.remove(i));
 		assertTrue(c.isEmpty());
 		
-		var node:de.polygonal.ds.GraphNode<E> = graph.getNodeList();
+		var node:polygonal.ds.GraphNode<E> = graph.getNodeList();
 		while (node != null)
 		{
-			var node1:de.polygonal.ds.GraphNode<E> = graph.getNodeList();
+			var node1:polygonal.ds.GraphNode<E> = graph.getNodeList();
 			while (node1 != null)
 			{
 				if (node != node1)
@@ -480,7 +480,7 @@ class TestGraph extends AbstractTest
 		var node = graph.getNodeList();
 		while (node != null)
 		{
-			var s = new de.polygonal.ds.HashSet<E>(1024);
+			var s = new polygonal.ds.HashSet<E>(1024);
 			for (i in node) assertEquals(true, s.set(i));
 			assertEquals(9, s.size);
 			node = node.next;
@@ -494,14 +494,14 @@ class TestGraph extends AbstractTest
 			nodes[i] = node;
 		}
 		
-		var s = new de.polygonal.ds.IntHashSet(1024);
+		var s = new polygonal.ds.IntHashSet(1024);
 		for (i in graph) assertEquals(true, s.set(i));
 		assertEquals(10, s.size);
 		
-		var node:de.polygonal.ds.GraphNode<Int> = graph.getNodeList();
+		var node:polygonal.ds.GraphNode<Int> = graph.getNodeList();
 		while (node != null)
 		{
-			var node1:de.polygonal.ds.GraphNode<Int> = graph.getNodeList();
+			var node1:polygonal.ds.GraphNode<Int> = graph.getNodeList();
 			while (node1 != null)
 			{
 				if (node != node1)
@@ -514,7 +514,7 @@ class TestGraph extends AbstractTest
 		var node = graph.getNodeList();
 		while (node != null)
 		{
-			var s = new de.polygonal.ds.IntHashSet(1024);
+			var s = new polygonal.ds.IntHashSet(1024);
 			for (i in node) assertEquals(true, s.set(i));
 			assertEquals(9, s.size);
 			node = node.next;
@@ -742,7 +742,7 @@ class TestGraph extends AbstractTest
 	}
 }
 
-private class E extends de.polygonal.ds.HashableItem implements de.polygonal.ds.Visitable
+private class E extends polygonal.ds.HashableItem implements polygonal.ds.Visitable
 {
 	public var f:Int->Bool->Void;
 	public var id:Int;
