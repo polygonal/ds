@@ -72,6 +72,8 @@ Supports Haxe Compiler 3.4.5, 4.0.0-preview.3, hxcpp 3.4.188
 - added: TreeTools.ofIndentedList()
 - added: TreeTools.randomTree()
 - modified: trim package to polygonal.ds
+- added: ArrayList.resize()
+- fixed: ArrayList.reverse()
 
 ### 2.0.1 (released 2017-10-10)
 
