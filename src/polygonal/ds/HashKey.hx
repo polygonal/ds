@@ -26,7 +26,7 @@ import polygonal.ds.tools.Assert.assert;
 class HashKey
 {
 	static var _counter:
-	#if (js || neko || python || php)
+	#if (js || neko || python || php || eval)
 	Null<Int>;
 	#else
 	Int;
@@ -37,7 +37,7 @@ class HashKey
 	**/
 	public static function next():Int
 	{
-		#if (js || neko || python || php)
+		#if (js || neko || python || php || eval)
 		if (_counter == null) _counter = 0;
 		#end
 		

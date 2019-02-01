@@ -57,6 +57,8 @@ class NativeArrayTools
 		return a;
 		#elseif python
 		return python.Syntax.pythonCode("[{0}]*{1}", null, len);
+		#elseif eval
+		return new eval.Vector<T>(len);
 		#else
 		var a = [];
 		untyped a.length = len;
@@ -138,6 +140,8 @@ class NativeArrayTools
 		
 		#if (cpp || python)
 		if (first == 0 && len == size(src)) return src.copy();
+		#elseif eval
+		if (first == 0 && len == size(src)) return src.toArray();
 		#end
 		
 		if (len == 0) return [];

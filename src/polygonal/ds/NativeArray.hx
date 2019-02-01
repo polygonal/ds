@@ -34,6 +34,8 @@ neko.NativeArray<T>;
 Array<T>;
 #elseif java
 Array<T>;
+#elseif eval
+eval.Vector<T>;
 #else
 Array<T>;
 #end
