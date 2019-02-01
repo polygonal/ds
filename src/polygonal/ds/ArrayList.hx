@@ -1001,7 +1001,7 @@ class ArrayList<T> implements List<T>
 		
 		Automatically reserves storage for `n` elements so an additional call to `this.reserve()` is not required.
 	**/
-	public function init(n:Int, val:T):ArrayList<T>
+	public function init(n:Int, ?val:T):ArrayList<T>
 	{
 		reserve(n);
 		mSize = n;
