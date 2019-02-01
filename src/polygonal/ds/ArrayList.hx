@@ -973,6 +973,30 @@ class ArrayList<T> implements List<T>
 	}
 	
 	/**
+		Resizes the container so that it contains `n` elements.
+		
+		If `n` < current container size, content is reduced to its first `n` elements, removing those beyond.
+		If `n` > current container size, content is expanded by appending as many elements as needed to reach a size of `n`.
+	**/
+	public function resize(n:Int):ArrayList<T>
+	{
+		assert(n > 0);
+		if (n < mSize)
+		{
+			mSize = n;
+			capacity = n;
+			if (capacity < mInitialCapacity) capacity = mInitialCapacity;
+			resizeContainer(capacity);
+		}
+		else
+		{
+			reserve(n);
+			mSize = n;
+		}
+		return this;
+	}
+	
+	/**
 		Sets `n` elements to `val` (by reference).
 		
 		Automatically reserves storage for `n` elements so an additional call to `this.reserve()` is not required.
