@@ -81,7 +81,7 @@ class ArrayList<T> implements List<T>
 	var mIterator:ArrayListIterator<T> = null;
 	
 	/**
-		@param initialCapacity the initial physical space for storing values.
+		@param initialCapacity the initial container size for storing values.
 		Useful before inserting a large number of elements as this reduces the amount of incremental reallocation.
 		@param source copies all values from `source` in the range [0, `source.length` - 1] to this collection.
 		@param fixed if true, growthRate is set to FIXED
@@ -1011,7 +1011,7 @@ class ArrayList<T> implements List<T>
 	}
 	
 	/**
-		Reduces the capacity of the internal container to the initial capacity.
+		Reduces the capacity of the internal container (up to the initial capacity).
 		
 		May cause a reallocation, but has no effect on `this.size` and its elements.
 		An application can use this operation to free up memory by unlocking resources for the garbage collector.
