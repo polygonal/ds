@@ -202,7 +202,7 @@ class Main
 		function compile()
 		{
 			rmdir("./xml");
-			var args = ["--macro", "include('de.polygonal.ds', true)", "-swf", "tmp.swf", "--no-output", "-xml", "xml/swf.xml", "-cp", "./src", "-lib", "polygonal-printf"];
+			var args = ["--macro", "include('polygonal.ds', true)", "-swf", "tmp.swf", "--no-output", "-xml", "xml/swf.xml", "-cp", "./src", "-lib", "polygonal-printf"];
 			var out = Sys.command("haxe", args);
 			if (out > 0) error();
 		}();

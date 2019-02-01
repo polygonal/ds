@@ -6,7 +6,7 @@ if not exist ..\..\haxelib.json (
 )
 
 haxe -neko Import.n -main Import
-neko Import.n ../../src Includes.hx -exclude de.polygonal.ds.mem
+neko Import.n ../../src Includes.hx -exclude polygonal.ds.mem
 haxe compile.hxml
 
 del Import.n
