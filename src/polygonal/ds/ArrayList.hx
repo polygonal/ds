@@ -643,13 +643,9 @@ class ArrayList<T> implements List<T>
 	/**
 		Reverses this list in place in the range [`first`, `last`] (the first element becomes the last and the last becomes the first).
 	**/
-	public function reverse(first:Int = -1, last:Int = -1):ArrayList<T> 
+	public function reverse(first:Int = 0, last:Int = -1):ArrayList<T> 
 	{
-		if (first == -1 || last == -1)
-		{
-			first = 0;
-			last = size;
-		}
+		if (last == -1) last = size;
 		
 		assert(last - first > 0);
 		
