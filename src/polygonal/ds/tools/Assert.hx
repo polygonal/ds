@@ -23,40 +23,47 @@ package polygonal.ds.tools;
 **/
 class Assert
 {
-	#if debug
-	#if verbose_assert
-	macro public static inline function assert(predicateExpr:haxe.macro.Expr, ?message:String)
-	{
-		var predicate  = new haxe.macro.Printer().printExpr(predicateExpr);
-		var p          = haxe.macro.Context.currentPos();
-		var location   = haxe.macro.PositionTools.toLocation(p);
-		var methodName = haxe.macro.Context.getLocalMethod();
-		var className  = haxe.macro.Context.getLocalClass().toString();
-		var infos      = macro {fileName: $v{location.file}, lineNumber: $v{location.range.start.line}, className: $v{className}, methodName: $v{methodName}};
-		if (message != null) predicate = '$message ($predicate)';
-		return macro untyped polygonal.ds.tools.Assert._assert($e{predicateExpr}, $v{predicate}, $e{infos});
-	}
-	static inline function _assert(predicate:Bool, ?message:String, ?pos:haxe.PosInfos)
+	#if (!debug || no_debug_assert)
+	
+		#if no_macro_assert
+		extern public static inline function assert(predicate:Bool, ?message:String) {}
+		#else
+		macro public static inline function assert(predicate:haxe.macro.Expr, rest:Array<haxe.macro.Expr>) return macro {}
+		#end
+	
 	#else
-	public static inline function assert(predicate:Bool, ?message:String, ?pos:haxe.PosInfos)
-	#end
-	{
-		if (!predicate)
+	
+		#if no_macro_assert
+		public static inline function assert(predicate:Bool, ?message:String, ?pos:haxe.PosInfos) _assert(predicate, message, pos);
+		#else
+		macro public static inline function assert(predicateExpr:haxe.macro.Expr, ?message:String)
 		{
-			#if js
-			throw new js.Error(format(message, pos));
-			#else
-			throw format(message, pos);
-			#end
+			var predicate  = new haxe.macro.Printer().printExpr(predicateExpr);
+			var p          = haxe.macro.Context.currentPos();
+			var location   = haxe.macro.PositionTools.toLocation(p);
+			var methodName = haxe.macro.Context.getLocalMethod();
+			var className  = haxe.macro.Context.getLocalClass().toString();
+			var infos      = macro {fileName: $v{location.file}, lineNumber: $v{location.range.start.line}, className: $v{className}, methodName: $v{methodName}};
+			if (message != null) predicate = '$message ($predicate)';
+			return macro untyped polygonal.ds.tools.Assert.__assert($e{predicateExpr}, $v{predicate}, $e{infos});
 		}
-	}
-	static function format(message:String, pos:haxe.PosInfos)
-	{
-		var locationInfos = 'in file ${pos.fileName}, line ${pos.lineNumber}';
-		var s = message == null ? locationInfos : '$message ($locationInfos)';
-		return 'Assertion failed' + (message != null ? ": " : " ") + s;
-	}
-	#else
-	macro public static inline function assert(predicate:haxe.macro.Expr, rest:Array<haxe.macro.Expr>) return macro {}
+		#end
+		
+		static function _assert(predicate:Bool, message:String, pos:haxe.PosInfos)
+		{
+			if (!predicate)
+			{
+				var locationInfos = 'in file ${pos.fileName}, line ${pos.lineNumber}';
+				var s = message == null ? locationInfos : '$message ($locationInfos)';
+				s = 'Assertion failed' + (message != null ? ": " : " ") + s;
+				
+				#if js
+				throw new js.Error(s);
+				#else
+				throw s;
+				#end
+			}
+		}
+	
 	#end
 }
