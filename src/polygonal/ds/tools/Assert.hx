@@ -36,7 +36,7 @@ class Assert
 		#if no_macro_assert
 		public static inline function assert(predicate:Bool, ?message:String, ?pos:haxe.PosInfos) _assert(predicate, message, pos);
 		#else
-		macro public static inline function assert(predicateExpr:haxe.macro.Expr, ?message:String)
+		macro public static inline function assert(predicateExpr:haxe.macro.Expr, ?message:haxe.macro.Expr)
 		{
 			var predicate  = new haxe.macro.Printer().printExpr(predicateExpr);
 			var p          = haxe.macro.Context.currentPos();
@@ -44,8 +44,9 @@ class Assert
 			var methodName = haxe.macro.Context.getLocalMethod();
 			var className  = haxe.macro.Context.getLocalClass().toString();
 			var infos      = macro {fileName: $v{location.file}, lineNumber: $v{location.range.start.line}, className: $v{className}, methodName: $v{methodName}};
-			if (message != null) predicate = '$message ($predicate)';
-			return macro untyped polygonal.ds.tools.Assert.__assert($e{predicateExpr}, $v{predicate}, $e{infos});
+			if (message.expr.match(EConst(CIdent("null"))))
+				return macro untyped polygonal.ds.tools.Assert.__assert($e{predicateExpr}, $v{predicate}, $e{infos});
+			return macro untyped polygonal.ds.tools.Assert.__assert($e{predicateExpr}, ${message} + "(" + $v{predicate} + ")", $e{infos});
 		}
 		#end
 		
