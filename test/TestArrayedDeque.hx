@@ -1,4 +1,4 @@
-﻿import polygonal.ds.ArrayedDeque;
+import polygonal.ds.ArrayedDeque;
 import polygonal.ds.Deque;
 
 class TestArrayedDeque extends AbstractTest

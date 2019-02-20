@@ -1,4 +1,4 @@
-﻿import polygonal.ds.tools.Compare;
+import polygonal.ds.tools.Compare;
 import polygonal.ds.TreeBuilder;
 import polygonal.ds.TreeNode;
 import polygonal.ds.tools.TreeTools;

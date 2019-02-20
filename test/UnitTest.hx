@@ -1,4 +1,4 @@
-﻿import haxe.unit.TestRunner;
+import haxe.unit.TestRunner;
 
 class UnitTest extends TestRunner
 {

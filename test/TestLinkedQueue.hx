@@ -1,4 +1,4 @@
-﻿import polygonal.ds.LinkedQueue;
+import polygonal.ds.LinkedQueue;
 import polygonal.ds.ListSet;
 import polygonal.ds.Queue;
 

@@ -1,4 +1,4 @@
-﻿class TestObjectPool extends AbstractTest
+class TestObjectPool extends AbstractTest
 {
 	function test()
 	{

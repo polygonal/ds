@@ -1,4 +1,4 @@
-﻿using polygonal.ds.tools.Bits;
+using polygonal.ds.tools.Bits;
 
 class TestBits extends AbstractTest
 {

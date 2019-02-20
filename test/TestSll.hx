@@ -1,4 +1,4 @@
-﻿import polygonal.ds.ListSet;
+import polygonal.ds.ListSet;
 import polygonal.ds.Sll;
 import polygonal.ds.SllNode;
 import polygonal.ds.tools.Compare;

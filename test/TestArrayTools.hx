@@ -1,4 +1,4 @@
-﻿import polygonal.ds.tools.ArrayTools;
+import polygonal.ds.tools.ArrayTools;
 import polygonal.ds.tools.Compare;
 import haxe.ds.IntMap;
 

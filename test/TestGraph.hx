@@ -1,4 +1,4 @@
-﻿import polygonal.ds.Graph;
+import polygonal.ds.Graph;
 import polygonal.ds.GraphArc;
 import polygonal.ds.GraphNode;
 

@@ -1,4 +1,4 @@
-﻿import polygonal.ds.BinaryTreeNode;
+import polygonal.ds.BinaryTreeNode;
 import polygonal.ds.Bst;
 import polygonal.ds.Collection;
 import polygonal.ds.ListSet;

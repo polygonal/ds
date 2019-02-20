@@ -1,4 +1,4 @@
-﻿import polygonal.ds.HashMap;
+import polygonal.ds.HashMap;
 import polygonal.ds.Set;
 
 class TestHashMap extends AbstractTest

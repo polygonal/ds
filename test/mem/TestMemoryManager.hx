@@ -1,4 +1,4 @@
-﻿package mem;
+package mem;
 
 import polygonal.ds.tools.mem.ByteMemory;
 import polygonal.ds.tools.mem.MemoryManager;

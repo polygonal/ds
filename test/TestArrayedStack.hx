@@ -1,4 +1,4 @@
-﻿import polygonal.ds.ArrayedStack;
+import polygonal.ds.ArrayedStack;
 import polygonal.ds.Cloneable;
 import polygonal.ds.ListSet;
 

@@ -1,4 +1,4 @@
-﻿import polygonal.ds.Collection;
+import polygonal.ds.Collection;
 import polygonal.ds.ListSet;
 import polygonal.ds.Set;
 

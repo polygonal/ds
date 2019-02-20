@@ -1,4 +1,4 @@
-﻿import polygonal.ds.Cloneable;
+import polygonal.ds.Cloneable;
 import polygonal.ds.Deque;
 import polygonal.ds.LinkedDeque;
 

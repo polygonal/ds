@@ -1,4 +1,4 @@
-﻿import polygonal.ds.Cloneable;
+import polygonal.ds.Cloneable;
 import polygonal.ds.Collection;
 import polygonal.ds.Dll;
 import polygonal.ds.DllNode;

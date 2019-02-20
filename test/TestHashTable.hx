@@ -1,4 +1,4 @@
-﻿import polygonal.ds.tools.ArrayTools;
+import polygonal.ds.tools.ArrayTools;
 import polygonal.ds.HashableItem;
 import polygonal.ds.HashTable;
 import polygonal.ds.IntIntHashTable;

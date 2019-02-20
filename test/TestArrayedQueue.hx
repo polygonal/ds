@@ -1,4 +1,4 @@
-﻿import polygonal.ds.ArrayedQueue;
+import polygonal.ds.ArrayedQueue;
 import polygonal.ds.Cloneable;
 import polygonal.ds.ListSet;
 import polygonal.ds.Queue;

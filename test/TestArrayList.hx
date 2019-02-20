@@ -1,4 +1,4 @@
-﻿import polygonal.ds.ArrayList;
+import polygonal.ds.ArrayList;
 import polygonal.ds.ListSet;
 import polygonal.ds.tools.Compare;
 import polygonal.ds.tools.NativeArrayTools;

@@ -1,4 +1,4 @@
-﻿import polygonal.ds.PriorityQueue;
+import polygonal.ds.PriorityQueue;
 import polygonal.ds.tools.NativeArrayTools;
 
 @:access(polygonal.ds.PriorityQueue)

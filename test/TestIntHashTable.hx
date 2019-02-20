@@ -1,4 +1,4 @@
-﻿import polygonal.ds.tools.ArrayTools;
+import polygonal.ds.tools.ArrayTools;
 import polygonal.ds.Dll;
 import polygonal.ds.IntIntHashTable;
 import polygonal.ds.IntHashTable;

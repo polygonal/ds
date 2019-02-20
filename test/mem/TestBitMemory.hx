@@ -1,4 +1,4 @@
-﻿package mem;
+package mem;
 
 import polygonal.ds.BitVector;
 import polygonal.ds.tools.mem.BitMemory;

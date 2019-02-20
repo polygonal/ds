@@ -1,4 +1,4 @@
-﻿import polygonal.ds.tools.RadixSort;
+import polygonal.ds.tools.RadixSort;
 
 class TestRadixSort extends AbstractTest
 {

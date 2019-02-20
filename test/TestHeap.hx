@@ -1,4 +1,4 @@
-﻿import polygonal.ds.Heap;
+import polygonal.ds.Heap;
 import polygonal.ds.Heapable;
 
 @:access(polygonal.ds.Heap)

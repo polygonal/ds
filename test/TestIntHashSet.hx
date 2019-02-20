@@ -1,4 +1,4 @@
-﻿import polygonal.ds.tools.ArrayTools;
+import polygonal.ds.tools.ArrayTools;
 import polygonal.ds.Dll;
 import polygonal.ds.IntHashSet;
 import polygonal.ds.tools.GrowthRate;

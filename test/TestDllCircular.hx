@@ -1,4 +1,4 @@
-﻿import polygonal.ds.Dll;
+import polygonal.ds.Dll;
 import polygonal.ds.ListSet;
 
 class TestDllCircular extends AbstractTest

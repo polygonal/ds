@@ -1,4 +1,4 @@
-﻿import polygonal.ds.tools.FreeList;
+import polygonal.ds.tools.FreeList;
 
 class TestFreeList extends AbstractTest
 {

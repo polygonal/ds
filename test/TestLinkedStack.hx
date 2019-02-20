@@ -1,4 +1,4 @@
-﻿import polygonal.ds.LinkedStack;
+import polygonal.ds.LinkedStack;
 import polygonal.ds.ListSet;
 import polygonal.ds.Stack;
 
