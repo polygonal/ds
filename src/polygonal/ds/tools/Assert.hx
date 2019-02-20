@@ -45,8 +45,8 @@ class Assert
 			var className  = haxe.macro.Context.getLocalClass().toString();
 			var infos      = macro {fileName: $v{location.file}, lineNumber: $v{location.range.start.line}, className: $v{className}, methodName: $v{methodName}};
 			if (message.expr.match(EConst(CIdent("null"))))
-				return macro untyped polygonal.ds.tools.Assert.__assert($e{predicateExpr}, $v{predicate}, $e{infos});
-			return macro untyped polygonal.ds.tools.Assert.__assert($e{predicateExpr}, ${message} + "(" + $v{predicate} + ")", $e{infos});
+				return macro untyped polygonal.ds.tools.Assert._assert($e{predicateExpr}, $v{predicate}, $e{infos});
+			return macro untyped polygonal.ds.tools.Assert._assert($e{predicateExpr}, ${message} + "(" + $v{predicate} + ")", $e{infos});
 		}
 		#end
 		
