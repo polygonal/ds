@@ -1,3 +1,5 @@
 * text eol=lf
 *.bat text eol=crlf
 *.ahk text eol=crlf
+*.png binary
+*.pdf binary
