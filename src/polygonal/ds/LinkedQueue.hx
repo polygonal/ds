@@ -131,7 +131,7 @@ class LinkedQueue<T> implements Queue<T>
 	/**
 		Enqueues `val`.
 	**/
-	public inline function enqueue(val:T)
+	public function enqueue(val:T)
 	{
 		mSize++;
 		
@@ -151,7 +151,7 @@ class LinkedQueue<T> implements Queue<T>
 	/**
 		Dequeues and returns the front element.
 	**/
-	public inline function dequeue():T
+	public function dequeue():T
 	{
 		assert(mHead != null, "queue is empty");
 		
