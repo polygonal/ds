@@ -817,14 +817,25 @@ class Graph<T> implements Collection<T>
 			q.set(i, x);
 		}
 		
+		if (seed == null) seed = mNodeList;
+		
+		#if debug
+		var found = false;
+		#end
+		
 		var node = mNodeList;
 		while (node != null)
 		{
+			#if debug
+			if (node == seed) found = true;
+			#end
 			node.depth = 0;
 			node = node.next;
 		}
 		
-		if (seed == null) seed = mNodeList;
+		#if debug
+		assert(found, "seed node is not a member of this graph");
+		#end
 		
 		seed.marked = true;
 		seed.parent = seed;
