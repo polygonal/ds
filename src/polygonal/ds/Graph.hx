@@ -970,8 +970,12 @@ class Graph<T> implements Collection<T>
 				while (c > 0)
 				{
 					var n = getQue(front);
-					
-					if (n.depth > maxDepth) continue;
+					if (n.depth > maxDepth)
+					{
+						c--;
+						front++;
+						continue;
+					}
 					
 					if (!process(n, false, userData))
 					{
