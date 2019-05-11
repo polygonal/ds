@@ -764,6 +764,8 @@ class Printf
 			s = untyped value.toFixed(p);
 			#elseif php
 			s = untyped __call__("number_format", value, p, ".", "");
+			#elseif jvm
+			s = java.NativeString.format(java.util.Locale.US, '%.${p}f', value);
 			#elseif java
 			s = untyped __java__("String.format({0}, {1})", '%.${p}f', value);
 			s = ~/,/.replace(s, ".");
