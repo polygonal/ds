@@ -56,7 +56,7 @@ class NativeArrayTools
 		cpp.NativeArray.setSize(a, len);
 		return a;
 		#elseif python
-		return python.Syntax.pythonCode("[{0}]*{1}", null, len);
+		return python.Syntax.code("[{0}]*{1}", null, len);
 		#elseif eval
 		return new eval.Vector<T>(len);
 		#else
