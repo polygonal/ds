@@ -182,6 +182,7 @@ class TestArrayedQueue extends AbstractTest
 		for (i in 0...4) assertEquals(12 + i, q.dequeue());
 	}
 	
+	@:access(polygonal.ds.ArrayedQueue)
 	function testRemove()
 	{
 		var q = new ArrayedQueue<Int>(8);
@@ -214,10 +215,8 @@ class TestArrayedQueue extends AbstractTest
 		for (i in 0...16) q.enqueue(i);
 		for (i in 0...16) q.remove(i);
 		
-		var friend:{ private var mFront:Int; private var mSize:Int; } = q;
-		
-		assertEquals(friend.mFront, 0);
-		assertEquals(friend.mSize, 0);
+		assertEquals(q.mFront, 0);
+		assertEquals(q.mSize, 0);
 		assertEquals(q.isEmpty(), true);
 		
 		for (i in 0...16) q.enqueue(i);
