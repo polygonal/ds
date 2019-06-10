@@ -127,6 +127,7 @@ class Main
 				
 				var args = '-main UnitTest -cp test -cp src -lib polygonal-printf -$target $output${toArgs(directives)}' + (platformArgs.exists(target) ? (" " + platformArgs.get(target)) : "");
 				if (major == 4) args += " -lib hx3compat";
+				args += " -D loop-unroll-max-cost=0";
 				
 				'compiling $target: $output ...'.println();
 				
