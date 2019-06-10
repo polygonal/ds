@@ -1,6 +1,7 @@
 # Data Structures For Games
 
-![ds logo](images/logo.png)
+![ds logo](./logo.svg)
+<img src="./logo.svg">
 
 Formerly known as "AS3 Data Structures For Game Developers", the package contains parametrized classes that allow programmers to easily implement standard data structures like linked lists, queues, stacks or multi-dimensional arrays. The result is somewhere in between the C++ STL (Standard Template Library) and the Java Collection framework.
 
