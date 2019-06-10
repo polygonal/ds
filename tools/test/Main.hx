@@ -8,7 +8,7 @@ using Sys;
 **/
 class Main
 {
-	static var MAJOR = 3;
+	static var major = 3;
 	
 	public static function main()
 	{
@@ -42,17 +42,17 @@ class Main
 		
 		var argHandler = hxargs.Args.generate
 		([
-			["-hl"] => function(x:String) addTarget("hl", x),
-			["-swf"] => function(x:String) addTarget("swf", x),
-			["-js"] => function(x:String) addTarget("js", x),
-			["-neko"] => function(x:String) addTarget("neko", x),
+			["-hl"]     => function(x:String) addTarget("hl", x),
+			["-swf"]    => function(x:String) addTarget("swf", x),
+			["-js"]     => function(x:String) addTarget("js", x),
+			["-neko"]   => function(x:String) addTarget("neko", x),
 			["-python"] => function(x:String) addTarget("python", x),
-			["-cpp"] => function(x:String) addTarget("cpp", x),
-			["-php"] => function(x:String) addTarget("php", x),
-			["-java"] => function(x:String) addTarget("java", x),
-			["-cs"] => function(x:String) addTarget("cs", x),
-			["-dst"] => function(path:String) dstPath = path,
-			_ => function(arg:String) throw 'Unknown command: $arg'
+			["-cpp"]    => function(x:String) addTarget("cpp", x),
+			["-php"]    => function(x:String) addTarget("php", x),
+			["-java"]   => function(x:String) addTarget("java", x),
+			["-cs"]     => function(x:String) addTarget("cs", x),
+			["-dst"]    => function(path:String) dstPath = path,
+			_           => function(arg:String) throw 'Unknown command: $arg'
 		]);
 		
 		if (args.length == 0)
@@ -76,18 +76,18 @@ class Main
 		if (!FileSystem.exists(dstPath)) 'creating output directory: $dstPath'.println();
 		
 		var defines = new StringMap<String>();
-		defines.set("default", "");
-		defines.set("debug", "-debug");
+		defines.set("default" , ""           );
+		defines.set("debug"   , "-debug"     );
 		defines.set("noinline", "--no-inline");
-		defines.set("generic", "-D generic");
-		defines.set("alchemy", "-D alchemy");
+		defines.set("generic" , "-D generic" );
+		defines.set("alchemy" , "-D alchemy" );
 		
 		var extLut = new StringMap<String>();
-		extLut.set("swf", "swf");
-		extLut.set("js", "js");
-		extLut.set("neko", "n");
-		extLut.set("python", "py");
-		extLut.set("php", "php");
+		extLut.set("swf"   , "swf");
+		extLut.set("js"    , "js" );
+		extLut.set("neko"  , "n"  );
+		extLut.set("python", "py" );
+		extLut.set("php"   , "php");
 		
 		function toFileName(directives:Array<String>, target:String):String
 		{
@@ -126,7 +126,7 @@ class Main
 				var output = toFileName(directives, target);
 				
 				var args = '-main UnitTest -cp test -cp src -lib polygonal-printf -$target $output${toArgs(directives)}' + (platformArgs.exists(target) ? (" " + platformArgs.get(target)) : "");
-				if (MAJOR == 4) args += " -lib hx3compat";
+				if (major == 4) args += " -lib hx3compat";
 				
 				'compiling $target: $output ...'.println();
 				
@@ -172,7 +172,7 @@ class Main
 		p.close();
 		var r = ~/Haxe Compiler (\d\.\d.\d)/g;
 		r.match(s);
-		MAJOR = Std.parseInt(r.matched(1));
+		major = Std.parseInt(r.matched(1));
 		'Using HAXE COMPILER: ${Sys.getEnv("HAXEPATH")} (v${r.matched(1)})'.println();
 		
 		for (target in targets)

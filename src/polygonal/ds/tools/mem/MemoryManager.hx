@@ -33,7 +33,7 @@ import polygonal.ds.tools.MathTools;
 @:access(polygonal.ds.tools.mem.MemoryAccess)
 class MemoryManager
 {
-	public static var instance(get_instance, never):MemoryManager;
+	public static var instance(get, never):MemoryManager;
 	static function get_instance():MemoryManager return _instance == null ? (_instance = new MemoryManager()) : _instance;
 	static var _instance:MemoryManager = null;
 	
@@ -168,7 +168,7 @@ class MemoryManager
 	/**
 		The byte array that is managed by this memory manager.
 	**/
-	public var bytes(get_bytes, never):flash.utils.ByteArray;
+	public var bytes(get, never):flash.utils.ByteArray;
 	inline function get_bytes():flash.utils.ByteArray return mBytes;
 	#end
 	
@@ -201,7 +201,7 @@ class MemoryManager
 	/**
 		Returns the total number of free bytes (allocated but unused).
 	**/
-	public var bytesFree(get_bytesFree, never):Int;
+	public var bytesFree(get, never):Int;
 	inline function get_bytesFree():Int return bytesTotal - bytesUsed;
 	
 	/**
