@@ -53,8 +53,9 @@ This installs the polygonal-ds library hosted on [lib.haxe.org](http://lib.haxe.
 
 ### 2.1.0 (wip)
 
-Supports Haxe Compiler 3.4.5, 4.0.0-preview.3, hxcpp 3.4.188
+Supports Haxe Compiler 4.0.0-rc.2+77068e10c, hxcpp 4.0.8
 
+- added: Haxe4 support (Haxe 3.x compatibility is no longer maintained)
 - added: RadixSort helper class
 - added: ArrayList.bruteforce()
 - added: ArrayTools.bruteforce()
@@ -64,7 +65,6 @@ Supports Haxe Compiler 3.4.5, 4.0.0-preview.3, hxcpp 3.4.188
 - added: ArrayTools.forEach()
 - added: ArrayList.addNativeArray()
 - added: FreeList helper class (tools package)
-- added: Haxe4 support
 - added: ArrayList.pairwise()
 - modified: removed var shadowing warnings (-D warn-var-shadowing)
 - modified: moved mem package to tools package
