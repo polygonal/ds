@@ -129,7 +129,9 @@ class TreeTools
 		inline function randRange(min:Int, max:Int) return min + Std.int(Math.random() * ((max - min) + 1));
 		
 		var tree = new TreeNode<T>(getValue(0, 0));
-		var build:TreeNode<T>->Int->Void;
+		
+		var build:TreeNode<T>->Int->Void = null;
+		
 		build = function(treeNode:TreeNode<T>, depth:Int)
 		{
 			if (depth < maxDepth)
