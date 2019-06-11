@@ -32,11 +32,11 @@ import polygonal.ds.tools.Shuffle;
 		trace(o); //outputs:
 		
 		[ Dll size=4
-		  head
-		  0 -> 0
-		  1 -> 1
-		  2 -> 2
-		  3 -> 3
+			head
+			0 -> 0
+			1 -> 1
+			2 -> 2
+			3 -> 3
 		]
 **/
 #if generic
@@ -1100,15 +1100,15 @@ class Dll<T> implements List<T>
 			var node = myDll.head;
 			while (node != null)
 			{
-			    var element = node.val;
-			    node = node.next;
+				var element = node.val;
+				node = node.next;
 			}
 			//circular list:
 			var node = myDll.head;
 			for (i in 0...list.size)
 			{
-			    var element = node.val;
-			    node = node.next;
+				var element = node.val;
+				node = node.next;
 			}
 		@see http://haxe.org/ref/iterators
 	**/

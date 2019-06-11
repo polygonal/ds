@@ -970,8 +970,8 @@ class Sll<T> implements List<T>
 			var node = mySll.head;
 			while (node != null)
 			{
-			    var element = node.val;
-			    node = node.next;
+				var element = node.val;
+				node = node.next;
 			}
 		@see http://haxe.org/ref/iterators
 	**/
