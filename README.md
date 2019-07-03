@@ -53,7 +53,7 @@ This installs the polygonal-ds library hosted on [lib.haxe.org](http://lib.haxe.
 
 ### 2.1.0 (wip)
 
-Supports Haxe Compiler 4.0.0-rc.2+77068e10c, hxcpp 4.0.8
+Supports Haxe Compiler 4.0.0-rc.3, hxcpp 4.0.8
 
 - added: Haxe4 support (Haxe 3.x compatibility is no longer maintained)
 - added: RadixSort helper class
