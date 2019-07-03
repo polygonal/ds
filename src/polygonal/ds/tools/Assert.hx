@@ -59,7 +59,7 @@ class Assert
 				s = 'Assertion failed' + (message != null ? ": " : " ") + s;
 				
 				#if js
-				throw new js.Error(s);
+				throw new js.lib.Error(s);
 				#else
 				throw s;
 				#end

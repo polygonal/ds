@@ -425,7 +425,7 @@ class BinaryTreeNode<T> implements Collection<T>
 	/**
 		Returns true if this node has a left child node.
 	**/
-	@:extern public inline function hasLeft():Bool
+	extern public inline function hasLeft():Bool
 	{
 		return left != null;
 	}
@@ -450,7 +450,7 @@ class BinaryTreeNode<T> implements Collection<T>
 	/**
 		Returns true if this node has a right child node.
 	**/
-	@:extern public inline function hasRight():Bool
+	extern public inline function hasRight():Bool
 	{
 		return right != null;
 	}
@@ -475,7 +475,7 @@ class BinaryTreeNode<T> implements Collection<T>
 	/**
 		Returns true if this node is a left child as seen from its parent node.
 	**/
-	@:extern public inline function isLeft():Bool
+	extern public inline function isLeft():Bool
 	{
 		if (parent == null)
 			return false;
@@ -486,7 +486,7 @@ class BinaryTreeNode<T> implements Collection<T>
 	/**
 		Returns true if this node is a right child as seen from its parent node.
 	**/
-	@:extern public inline function isRight():Bool
+	extern public inline function isRight():Bool
 	{
 		if (parent == null)
 			return false;
@@ -497,7 +497,7 @@ class BinaryTreeNode<T> implements Collection<T>
 	/**
 		Returns true if this node is a leaf node (`this.left` and `this.right` are both null).
 	**/
-	@:extern public inline function isLeaf():Bool
+	extern public inline function isLeaf():Bool
 	{
 		return left == null && right == null;
 	}
@@ -505,7 +505,7 @@ class BinaryTreeNode<T> implements Collection<T>
 	/**
 		Returns true if this node is a root node (`this.parent` is null).
 	**/
-	@:extern public inline function isRoot():Bool
+	extern public inline function isRoot():Bool
 	{
 		return parent == null;
 	}

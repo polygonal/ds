@@ -74,7 +74,7 @@ class DllNode<T>
 	/**
 		Returns true if this node is the head of a list.
 	**/
-	@:extern public inline function isHead():Bool
+	extern public inline function isHead():Bool
 	{
 		assert(mList != null, "node is not managed by a list");
 		
@@ -84,7 +84,7 @@ class DllNode<T>
 	/**
 		Returns true if this node is the tail of a list.
 	**/
-	@:extern public inline function isTail():Bool
+	extern public inline function isTail():Bool
 	{
 		assert(mList != null, "node is not managed by a list");
 		
@@ -94,7 +94,7 @@ class DllNode<T>
 	/**
 		Returns true if this node points to a next node.
 	**/
-	@:extern public inline function hasNext():Bool
+	extern public inline function hasNext():Bool
 	{
 		return next != null;
 	}
@@ -102,7 +102,7 @@ class DllNode<T>
 	/**
 		Returns true if this node points to a previous node.
 	**/
-	@:extern public inline function hasPrev():Bool
+	extern public inline function hasPrev():Bool
 	{
 		return prev != null;
 	}
@@ -110,7 +110,7 @@ class DllNode<T>
 	/**
 		Returns the element of the next node.
 	**/
-	@:extern public inline function nextVal():T
+	extern public inline function nextVal():T
 	{
 		assert(hasNext(), "next node is null");
 		
@@ -120,7 +120,7 @@ class DllNode<T>
 	/**
 		Returns the element of the previous node.
 	**/
-	@:extern public inline function prevVal():T
+	extern public inline function prevVal():T
 	{
 		assert(hasPrev(), "previous node is null");
 		
@@ -130,7 +130,7 @@ class DllNode<T>
 	/**
 		The list that owns this node or null if this node is not part of a list.
 	**/
-	@:extern public inline function getList():Dll<T>
+	extern public inline function getList():Dll<T>
 	{
 		return mList;
 	}
@@ -138,7 +138,7 @@ class DllNode<T>
 	/**
 		Unlinks this node from its list and returns `this.next`.
 	**/
-	@:extern public inline function unlink():DllNode<T>
+	extern public inline function unlink():DllNode<T>
 	{
 		assert(mList != null);
 		
@@ -158,7 +158,7 @@ class DllNode<T>
 			trace(head.nextVal()); //1
 		@return the list's new head node.
 	**/
-	@:extern public inline function prepend(node:DllNode<T>):DllNode<T>
+	extern public inline function prepend(node:DllNode<T>):DllNode<T>
 	{
 		assert(node != null, "node is null");
 		assert(prev == null, "prev is not null");
@@ -182,7 +182,7 @@ class DllNode<T>
 			trace(tail.prevVal()); //0
 		@return the list's new tail node.
 	**/
-	@:extern public inline function append(node:DllNode<T>):DllNode<T>
+	extern public inline function append(node:DllNode<T>):DllNode<T>
 	{
 		assert(node != null, "node is null");
 		assert(next == null, "next is not null");
@@ -207,7 +207,7 @@ class DllNode<T>
 
 		@return the list's new head node.
 	**/
-	@:extern public inline function prependTo(node:DllNode<T>):DllNode<T>
+	extern public inline function prependTo(node:DllNode<T>):DllNode<T>
 	{
 		assert(node != null, "node is null");
 		assert(mList == null && node.mList == null, "node is managed by a list");
@@ -232,7 +232,7 @@ class DllNode<T>
 		
 		@return the list's new tail node.
 	**/
-	@:extern public inline function appendTo(node:DllNode<T>):DllNode<T>
+	extern public inline function appendTo(node:DllNode<T>):DllNode<T>
 	{
 		assert(node != null, "node is null");
 		assert(mList == null && node.mList == null, "node is managed by a list");
@@ -253,7 +253,7 @@ class DllNode<T>
 	}
 	#end
 	
-	@:extern inline function insertAfter(node:DllNode<T>)
+	extern inline function insertAfter(node:DllNode<T>)
 	{
 		node.next = next;
 		node.prev = this;
@@ -261,7 +261,7 @@ class DllNode<T>
 		next = node;
 	}
 	
-	@:extern inline function insertBefore(node:DllNode<T>)
+	extern inline function insertBefore(node:DllNode<T>)
 	{
 		node.next = this;
 		node.prev = prev;

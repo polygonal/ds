@@ -68,7 +68,7 @@ class SllNode<T>
 	/**
 		Returns true if this node is the head of a list.
 	**/
-	@:extern public inline function isHead():Bool
+	extern public inline function isHead():Bool
 	{
 		assert(mList != null, "node is not managed by a list");
 		
@@ -78,7 +78,7 @@ class SllNode<T>
 	/**
 		Returns true if this node is the tail of a list.
 	**/
-	@:extern public inline function isTail():Bool
+	extern public inline function isTail():Bool
 	{
 		assert(mList != null, "node is not managed by a list");
 		
@@ -88,7 +88,7 @@ class SllNode<T>
 	/**
 		Returns true if this node points to a next node.
 	**/
-	@:extern public inline function hasNext():Bool
+	extern public inline function hasNext():Bool
 	{
 		return next != null;
 	}
@@ -96,7 +96,7 @@ class SllNode<T>
 	/**
 		Returns the element of the next node.
 	**/
-	@:extern public inline function nextVal():T
+	extern public inline function nextVal():T
 	{
 		assert(hasNext(), "invalid next node");
 		
@@ -106,7 +106,7 @@ class SllNode<T>
 	/**
 		The list that owns this node or null if this node is not part of a list.
 	**/
-	@:extern public inline function getList():Sll<T>
+	extern public inline function getList():Sll<T>
 	{
 		return mList;
 	}
@@ -114,7 +114,7 @@ class SllNode<T>
 	/**
 		Unlinks this node from its list and returns `node.next`.
 	**/
-	@:extern public inline function unlink():SllNode<T>
+	extern public inline function unlink():SllNode<T>
 	{
 		assert(mList != null);
 		
@@ -131,7 +131,7 @@ class SllNode<T>
 	}
 	#end
 	
-	@:extern inline function insertAfter(node:SllNode<T>)
+	extern inline function insertAfter(node:SllNode<T>)
 	{
 		node.next = next;
 		next = node;

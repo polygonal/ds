@@ -917,10 +917,10 @@ class Printf
 	
 	//TODO static inline function max(a:Int, b:Int) return a < b ? a : b;
 	
-	@:extern static inline function roundTo(x:Float, y:Float):Float
+	extern static inline function roundTo(x:Float, y:Float):Float
 		return Math.round(x / y) * y;
 	
-	@:extern static inline function iabs(x:Int):Int
+	extern static inline function iabs(x:Int):Int
 		return x < 0 ? -x : x;
 }
 
