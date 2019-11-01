@@ -248,6 +248,16 @@ class XmlNode
 	
 	public function new() {}
 	
+	/**
+		Get an XML attribute by name or return `defaultValue` if the attribute does not exist.
+	**/
+	public function get(name:String, defaultValue:String = null):String
+	{
+		var value = xml.get(name);
+		if (value == null) value = defaultValue;
+		return value;
+	}
+	
 	public function iterator():Iterator<XmlNode>
 	{
 		var n = arbiter.children;
