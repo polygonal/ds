@@ -120,13 +120,20 @@ class TreeTools
 		
 		`getValue()` is called for every tree node; the signature is: `getValue(currentDepth, currentChildIndex):T`
 	**/
-	public static function randomTree<T>(getValue:(currentDepth:Int, currentChildIndex:Int)->T, maxDepth:Int, minChildCount:Int, maxChildCount:Int):TreeNode<T>
+	public static function randomTree<T>(
+		getValue:(currentDepth:Int, currentChildIndex:Int)->T,
+		maxDepth:Int,
+		minChildCount:Int,
+		maxChildCount:Int,
+		?rand:()->Float):TreeNode<T>
 	{
 		assert(maxDepth >= 0);
 		assert(minChildCount > 0);
 		assert(maxChildCount >= minChildCount);
 		
-		inline function randRange(min:Int, max:Int) return min + Std.int(Math.random() * ((max - min) + 1));
+		if (rand == null) rand = Math.random;
+		
+		inline function randRange(min:Int, max:Int) return min + Std.int(rand() * ((max - min) + 1));
 		
 		var tree = new TreeNode<T>(getValue(0, 0));
 		
