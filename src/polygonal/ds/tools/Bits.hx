@@ -38,7 +38,7 @@ class Bits
 	/**
 		Counts the number of "1"-bits in `x`. For example 0b00110111 has 5 bits set.
 	**/
-	public static inline function ones(x:Int)
+	public static function ones(x:Int)
 	{
 		x -= ((x >> 1) & 0x55555555);
 		x = (((x >> 2) & 0x33333333) + (x & 0x33333333));
@@ -51,7 +51,7 @@ class Bits
 	/**
 		Counts the number of trailing 0's in `x`. For example 0b10000 has 4 trailing 0's.
 	**/
-	public static inline function ntz(x:Int):Int
+	public static function ntz(x:Int):Int
 	{
 		#if (flash && alchemy)
 		if (x == 0)
@@ -87,7 +87,7 @@ class Bits
 	/**
 		Counts the number of leading 0's in `x`. For example 0b10000 has 27 leading 0's.
 	**/
-	public static inline function nlz(x:Int):Int
+	public static function nlz(x:Int):Int
 	{
 		if (x < 0)
 			return 0;
@@ -105,7 +105,7 @@ class Bits
 	/**
 		Returns the most significant bit of `x`.
 	**/
-	public static inline function msb(x:Int):Int
+	public static function msb(x:Int):Int
 	{
 		x |= (x >> 1);
 		x |= (x >> 2);
@@ -134,7 +134,7 @@ class Bits
 	/**
 		Reverses `x`; For example 0b111000 becomes 0b000111.
 	**/
-	public static inline function reverse(x:Int):Int
+	public static function reverse(x:Int):Int
 	{
 		var y = 0x55555555;
 		x = (((x >> 1) & y) | ((x & y) << 1));
