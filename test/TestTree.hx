@@ -1165,3 +1165,23 @@ private class SortableNode implements polygonal.ds.Comparable<SortableNode>
 		return "" + id;
 	}
 }
+
+private class CustomNode
+{
+	public var parent:CustomNode;
+	public var children = new Array<CustomNode>();
+	public var value:String;
+	public function new(parent:CustomNode, value:String)
+	{
+		this.value = value;
+		this.parent = parent;
+		if (parent != null) parent.children.push(this);
+	}
+	
+	public function print(s = ""):String
+	{
+		s += value;
+		for (i in children) s = i.print(s);
+		return s;
+	}
+}
