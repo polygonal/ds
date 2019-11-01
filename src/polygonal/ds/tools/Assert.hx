@@ -23,17 +23,17 @@ package polygonal.ds.tools;
 **/
 class Assert
 {
-	#if (!debug || no_debug_assert)
+	#if (!debug || no_assert)
 	
-		#if no_macro_assert
+		#if runtime_assert
 		extern public static inline function assert(predicate:Bool, ?message:String) {}
 		#else
-		macro public static inline function assert(predicate:haxe.macro.Expr, rest:Array<haxe.macro.Expr>) return macro {}
+		macro public static function assert(predicate:haxe.macro.Expr, rest:Array<haxe.macro.Expr>) return macro {}
 		#end
 	
 	#else
 	
-		#if no_macro_assert
+		#if runtime_assert
 		public static inline function assert(predicate:Bool, ?message:String, ?pos:haxe.PosInfos) _assert(predicate, message, pos);
 		#else
 		macro public static inline function assert(predicateExpr:haxe.macro.Expr, ?message:haxe.macro.Expr)

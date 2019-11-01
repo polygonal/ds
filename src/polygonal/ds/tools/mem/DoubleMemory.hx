@@ -410,7 +410,7 @@ class DoubleMemory extends MemoryAccess
 	#if !alchemy
 	override public function clear()
 	{
-		for (i in 0...size) mData[i] = .0;
+		for (i in 0...size) mData[i] = 0.;
 	}
 	#end
 	
