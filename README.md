@@ -53,9 +53,9 @@ This installs the polygonal-ds library hosted on [lib.haxe.org](http://lib.haxe.
 
 ### 2.1.0 (wip)
 
-Supports Haxe Compiler 4.0.0-rc.3, hxcpp 4.0.8
+Supports Haxe Compiler 4.0.0, hxcpp 4.0.2
 
-- added: Haxe4 support (Haxe 3.x compatibility is no longer maintained)
+- **modified: require Haxe 4.0.0 (Haxe 3.x no longer maintained)**
 - added: RadixSort helper class
 - added: ArrayList.bruteforce()
 - added: ArrayTools.bruteforce()
@@ -71,9 +71,12 @@ Supports Haxe Compiler 4.0.0-rc.3, hxcpp 4.0.8
 - modified: Array2.countNeighbors(): add manhatten parameter
 - added: TreeTools.ofIndentedList()
 - added: TreeTools.randomTree()
+- added: TreeTools.map()
 - modified: trim package to polygonal.ds
 - added: ArrayList.resize()
 - fixed: ArrayList.reverse()
+- added: compile with `-D no-assert` to remove assert statements even when compiling with `-debug`
+- added: compile with `-D runtime_assert` to use non-macro asserts (faster)
 
 ### 2.0.1 (released 2017-10-10)
 
