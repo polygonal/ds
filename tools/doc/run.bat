@@ -18,5 +18,4 @@ if errorlevel 1 (
 )
 
 echo done
-del Main.n
-sleep 3
+timeout /t 3

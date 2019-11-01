@@ -197,7 +197,9 @@ class Main
 					error(error);
 				}
 			}
-		}();
+		}
+		
+		patchHaxe();
 		
 		function compile()
 		{
@@ -205,7 +207,9 @@ class Main
 			var args = ["--macro", "include('polygonal.ds', true)", "-swf", "tmp.swf", "--no-output", "-xml", "xml/swf.xml", "-cp", "./src", "-lib", "polygonal-printf"];
 			var out = Sys.command("haxe", args);
 			if (out > 0) error();
-		}();
+		}
+		
+		compile();
 		
 		function dox()
 		{
@@ -219,7 +223,7 @@ class Main
 					"-D", "version", "2.0.0-beta",
 					"-D", "website", "https://github.com/polygonal/ds",
 					"-D", "description", "data structures for games",
-					"-in", "de\\.polygonal\\.ds",
+					"-in", "polygonal\\.ds",
 					"-in", "Math",
 					"-in", "Array",
 					"-ex", "flash.utils.ByteArray",
@@ -229,6 +233,8 @@ class Main
 			rmdir("./xml");
 			FileSystem.deleteDirectory("./src");
 			FileSystem.deleteDirectory("./xml");
-		}();
+		}
+		
+		dox();
 	}
 }
