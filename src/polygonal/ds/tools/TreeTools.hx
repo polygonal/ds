@@ -156,6 +156,47 @@ class TreeTools
 		build(tree, 0);
 		return tree;
 	}
+	
+	/**
+		Map a given `treeNode` to a new tree structure.
+		
+		Example:
+			class CustomNode {
+				public var parent:CustomNode;
+				public var children = new Array<CustomNode>();
+				public var value:String;
+				public function new(parent:CustomNode, value:String) {
+					this.value = value;
+					this.parent = parent;
+					if (parent != null) parent.children.push(this);
+				}
+				public function print(depth = 0, initiator = true) {
+					trace(StringTools.rpad("", "\t", depth) + value);
+					for (i in children) i.print(depth + 1, false);
+				}
+			}
+			
+			...
+			
+			// create a random tree
+			var tree:TreeNode<String> = TreeTools.randomTree((depth:Int, childIndex:Int) -> depth + "." + childIndex, 3, 1, 5);
+			trace(tree.toString());
+			
+			// map to a tree of CustomNode objects
+			var customNodeTree = map(tree, (parent:CustomNode, value:String) -> new CustomNode(parent, value));
+			customNodeTree.print();
+	**/
+	public static function map<A, B>(treeNode:TreeNode<A>, create:(parent:B, value:A)->B, ?parent:B):B
+	{
+		var node = create(parent, treeNode.val);
+		var child = treeNode.children;
+		while (child != null)
+		{
+			map(child, create, node);
+			child = child.next;
+		}
+		return node;
+	}
 }
 
 /**

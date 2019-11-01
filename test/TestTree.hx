@@ -1101,6 +1101,22 @@ class TestTree extends AbstractTest
 		assertEquals("rootlevel1level2level1level2level3", s);
 	}
 	#end
+	
+	public function testMap()
+	{
+		// create a random tree
+		var a:TreeNode<String> = new TreeNode<String>("a");
+		var b1 = new TreeNode("b1");
+		var b2 = new TreeNode("b2");
+		var c = new TreeNode("c");
+		a.appendNode(b1);
+		a.appendNode(b2);
+		b1.appendNode(c);
+		
+		// map to a tree of CustomNode objects
+		var out = TreeTools.map(a, (parent:CustomNode, value:String) -> new CustomNode(parent, value));
+		assertEquals("ab1cb2", out.print());
+	}
 }
 
 private class Visitor implements polygonal.ds.Visitable
