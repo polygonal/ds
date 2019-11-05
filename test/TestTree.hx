@@ -1100,7 +1100,6 @@ class TestTree extends AbstractTest
 		tree.preorder(function(node, _, _) { s += node.val; return true; }, null, false, false);
 		assertEquals("rootlevel1level2level1level2level3", s);
 	}
-	#end
 	
 	public function testMap()
 	{
@@ -1117,6 +1116,7 @@ class TestTree extends AbstractTest
 		var out = TreeTools.map(a, (parent:CustomNode, value:String) -> new CustomNode(parent, value));
 		assertEquals("ab1cb2", out.print());
 	}
+	#end
 }
 
 private class Visitor implements polygonal.ds.Visitable

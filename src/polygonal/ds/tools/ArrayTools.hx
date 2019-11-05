@@ -431,15 +431,26 @@ class ArrayTools
 	}
 
 	/**
-		Compares the elements of `a` and `b` by using the equality operator (==).
+		Compares the elements of `a` and `b` by using the given `eq` function.
 	**/
-	public static function equals<T>(a:Array<T>, b:Array<T>):Bool
+	public static function equals<T>(a:Array<T>, b:Array<T>, eq:(a:T, b:T)->Bool):Bool
 	{
-		if (a.length != b.length) return false;
-		for (i in 0...a.length)
-			if (a[i] != b[i])
-				return false;
-		return true;
+		var success = true;
+		if (a.length == b.length)
+		{
+			var i = 0;
+			var k = a.length;
+			while (i < k)
+			{
+				if (!eq(a[i], b[i]))
+				{
+					success = false;
+					break;
+				}
+				i++;
+			}
+		}
+		return success;
 	}
 	
 	/**

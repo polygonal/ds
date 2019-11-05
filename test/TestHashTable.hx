@@ -257,19 +257,19 @@ class TestHashTable extends AbstractTest
 		
 		var a = [];
 		assertEquals(1, h.getAll(key, a));
-		assertTrue(ArrayTools.equals(a, [1]));
+		assertTrue(ArrayTools.equals(a, [1], (a,b) -> a == b));
 		
 		h.set(key, 2);
 		
 		var a = [];
 		assertEquals(2, h.getAll(key, a));
-		assertTrue(ArrayTools.equals(a, [1, 2]));
+		assertTrue(ArrayTools.equals(a, [1, 2], (a,b) -> a == b));
 		
 		h.set(key, 3);
 		
 		var a = [];
 		assertEquals(3, h.getAll(key, a));
-		assertTrue(ArrayTools.equals(a, [1, 2, 3]));
+		assertTrue(ArrayTools.equals(a, [1, 2, 3], (a,b) -> a == b));
 	}
 	
 	function testSize2()

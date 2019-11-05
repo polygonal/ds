@@ -280,15 +280,15 @@ class TestIntHashTable extends AbstractTest
 		
 		var a = [];
 		assertEquals(3, h.getAll(1, a));
-		assertTrue(ArrayTools.equals(a, [10, 11, 12]));
+		assertTrue(ArrayTools.equals(a, [10, 11, 12], (a,b) -> a == b));
 		
 		var b = [];
 		assertEquals(3, h.getAll(2, b));
-		assertTrue(ArrayTools.equals(b, [20, 21, 22]));
+		assertTrue(ArrayTools.equals(b, [20, 21, 22], (a,b) -> a == b));
 		
 		var c = [];
 		assertEquals(3, h.getAll(3, c));
-		assertTrue(ArrayTools.equals(c, [30, 31, 32]));
+		assertTrue(ArrayTools.equals(c, [30, 31, 32], (a,b) -> a == b));
 	}
 	
 	function testSize2()

@@ -24,13 +24,7 @@ extern class MathTools
 	/**
 		Min value, signed integer.
 	**/
-	public static inline var INT32_MIN =
-	#if cpp
-	//warning: this decimal constant is unsigned only in ISO C90
-	-MathTools.INT32_MAX;
-	#else
-	0x80000000;
-	#end
+	public static inline var INT32_MIN = 0x80000000;
 	
 	/**
 		Max value, signed integer.
