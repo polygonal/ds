@@ -12,9 +12,6 @@
 	"contributors": [
 		"mbaczynski"
 	],
-	"version": "2.0.1",
-	"releasenote": "See README",
-	"dependencies": {
-		"polygonal-printf": ""
-	}
+	"version": "2.1.0",
+	"releasenote": "See README"
 }
