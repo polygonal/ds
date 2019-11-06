@@ -1,11 +1,9 @@
 .vscode/
-api/
 bin/
-doc/
 playground/
 scripts/
 hxml/
 tmp/
 .markdownlint.json
 .todo
-default.hxml
+/*.hxml
