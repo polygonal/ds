@@ -34,4 +34,5 @@ neko main.n tmp/zip polygonal-ds.zip
 rmdir tmp /S /Q
 del main.n
 
-sleep 3
+echo done
+timeout /t 3
