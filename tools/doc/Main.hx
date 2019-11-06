@@ -213,26 +213,25 @@ class Main
 		
 		function dox()
 		{
-			rmdir("../../api");
+			rmdir("../../docs");
 			Sys.command("haxelib",
 				[
 					"run", "dox",
-					"-o", "../../api",
+					"-o", "../../docs",
 					"-i", "xml",
 					"--title", "polygonal ds",
 					"-D", "version", "2.0.0-beta",
 					"-D", "website", "https://github.com/polygonal/ds",
 					"-D", "description", "data structures for games",
 					"-in", "polygonal\\.ds",
-					"-in", "Math",
-					"-in", "Array",
-					"-ex", "flash.utils.ByteArray",
 					"-res", "./res"
 				]);
 			rmdir("./src");
 			rmdir("./xml");
 			FileSystem.deleteDirectory("./src");
 			FileSystem.deleteDirectory("./xml");
+			
+			Sys.command("git", ["checkout", "--" , "../../docs/2012_01_11_introduction_to_ds.pdf"]);
 		}
 		
 		dox();
