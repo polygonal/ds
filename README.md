@@ -2,58 +2,39 @@
 
 ![ds logo](./logo.svg)
 
-Formerly known as "AS3 Data Structures For Game Developers", the package contains parametrized classes that allow programmers to easily implement standard data structures like linked lists, queues, stacks or multi-dimensional arrays. The result is somewhere in between the C++ STL (Standard Template Library) and the Java Collection framework.
+The library contains parametrized classes that allow programmers to easily implement standard data structures like linked lists, queues, stacks or multi-dimensional arrays. The result is somewhere in between the C++ STL (Standard Template Library) and the Java Collection framework.
 
 ## Documentation
 
-- Slides [Introduction to ds - Data Structures For Games](https://gitlab.com/polygonal/ds/blob/master/doc/2012_01_11_introduction_to_ds.pdf)
-- API [http://polygonal.github.io/ds/api/index.html](https://gitlab.com/polygonal/ds/blob/master/doc/index.html)
-
-## Articles
-
-- [A* Pathfinding](http://lab.polygonal.de/?p=1815)
-- [Heaps and Priority Queues](http://lab.polygonal.de/?p=1710)
-- [What is a Deque?](http://lab.polygonal.de/?p=1472)
-- [Fast hash tables](http://lab.polygonal.de/?p=1325)
-- [Alchemy Memory Management](http://lab.polygonal.de/?p=1230)
+- API [http://polygonal.github.io/ds/polygonal/ds/index.html](http://polygonal.github.io/ds/polygonal/ds/index.html)
+- Slides [Introduction to ds - Data Structures For Games](http://polygonal.github.io/ds/2012_01_11_introduction_to_ds.pdf)
 
 ## Cross-Platform Support
 
-ds supports the following Haxe compilation targets: __-swf, -js, -neko, -python, -php, -cpp, -java, -cs.__
+ds supports the following Haxe compilation targets: __-swf, -js, -neko, -python, -php, -cpp__
 
-The ActionScript 3.0 build is no longer maintained.
-You can download the latest release [here](http://polygonal.github.com/ds/swc/polygonal-ds-latest.zip) (v1.39) or compile yourself using the sample script found in tools/swc/.
+__-hl__, __-java__, __-cs__, __jvm__ are experimental.
+
+## Installation
+
+Install [Haxe](http://haxe.org/download) and run `$ haxelib install polygonal-ds` from the console, then compile with `$ haxe ... -lib polygonal-ds`.
 
 ## Conditional Compilation Flags
 
 `-D generic`
 
 Enables generic classes (adds @:generic meta).
-Nice performance boost for static typed platforms (Flash/C++ only, Java is not supported right now).
+Nice performance boost for static typed platforms (-swf,-cpp only).
 
 `-D alchemy`
 
 Enables fast virtual memory for FP10+ ("alchemy memory"). Extra performance for Flash.
 
-## Questions, Comments, Feature Requests
-
-<http://groups.google.com/group/polygonal-ds>
-
-## Installation
-
-Install [Haxe](http://haxe.org/download) and run `$ haxelib install polygonal-ds` from the console.
-This installs the polygonal-ds library hosted on [lib.haxe.org](http://lib.haxe.org/p/polygonal-ds), which always mirrors the git master branch. From now on just compile with `$ haxe ... -lib polygonal-ds`.
-
-## Known limitations
-
-- __-java__, __-cs__: java.NativeArray\<T\> and cs.NativeArray\<T\> are not supported, instead plain Haxe Arrays are used right now. Also `-D generic` does not compile.
-- __-hl__: HashLink target is not supported at the moment
-
 ## Changelog
 
-### 2.1.0 (wip)
+### 2.1.0
 
-Supports Haxe Compiler 4.0.0, hxcpp 4.0.2
+Supports Haxe Compiler 4.0.1, hxcpp 4.0.64
 
 - **modified: require Haxe 4.0.0 (Haxe 3.x no longer maintained)**
 - added: RadixSort helper class
@@ -77,6 +58,7 @@ Supports Haxe Compiler 4.0.0, hxcpp 4.0.2
 - fixed: ArrayList.reverse()
 - added: compile with `-D no-assert` to remove assert statements even when compiling with `-debug`
 - added: compile with `-D runtime_assert` to use non-macro asserts (faster)
+- modified: ArrayTools.equals(): now passing equals function as argument
 
 ### 2.0.1 (released 2017-10-10)
 
