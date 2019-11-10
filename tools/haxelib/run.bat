@@ -24,7 +24,7 @@ if errorlevel 1 (
 )
 
 ::copy git files
-robocopy tmp\git tmp\zip /S /XF lime.* openfl haxesetup.exe /XD docs
+robocopy tmp\git tmp\zip /S /XF lime.* openfl haxesetup.exe /XD .git docs
 rmdir tmp\zip\tools /S /Q
 
 ::make haxelib
