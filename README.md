@@ -32,7 +32,7 @@ Enables fast virtual memory for FP10+ ("alchemy memory"). Extra performance for 
 
 ## Changelog
 
-### 2.1.0 (released 2019-11-06)
+### 2.1.1 (released 2019-11-10)
 
 Supports Haxe Compiler 4.0.1, hxcpp 4.0.64
 
