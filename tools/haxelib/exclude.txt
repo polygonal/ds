@@ -1,5 +1,0 @@
-.gitignore
-README.md
-docs
-tools
-logo.svg
