@@ -111,8 +111,18 @@ class Main
 		function error()
 		{
 			'\nERROR\n'.println();
-			"\nPress space to continue ...".println();
-			while (Sys.getChar(true) != 32) {}
+			"\nPress space to continue or ESC to abort...".println();
+			
+			var exit = true;
+			while (true)
+			{
+				var char = Sys.getChar(true);
+				switch (char)
+				{
+					case 32: break;
+					case 27: Sys.exit(1);
+				}
+			}
 			fail = true;
 		}
 		
