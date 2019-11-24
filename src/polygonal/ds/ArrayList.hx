@@ -128,7 +128,7 @@ class ArrayList<T> implements List<T>
 	/**
 		Appends `val`, same as `this.pushBack()`.
 	**/
-	public inline function add(val:T)
+	public function add(val:T)
 	{
 		pushBack(val);
 	}
@@ -721,7 +721,7 @@ class ArrayList<T> implements List<T>
 		@param first sort start index.
 		@param count the number of elements to sort (range: [`first`, `first` + `count`]).
 	**/
-	public inline function insertionSort(cmp:T->T->Int, first:Int, count:Int):ArrayList<T> 
+	public function insertionSort(cmp:T->T->Int, first:Int, count:Int):ArrayList<T> 
 	{
 		assert(first >= 0 && first <= size - 1 && first + count <= size, "first index out of range");
 		assert(count >= 0 && count <= size, "count out of range");

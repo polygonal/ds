@@ -162,7 +162,7 @@ class Array2<T> implements Collection<T>
 			a.set(2, 1, 1);
 			var count = a.countNeighbors(1, 1, function(value) return value == 1); //outputs 2
 	**/
-	public inline function countNeighbors(x:Int, y:Int, f:T->Bool, manhatten = false):Int
+	public function countNeighbors(x:Int, y:Int, f:T->Bool, manhatten = false):Int
 	{
 		assert(x >= 0 && x < cols, 'x index out of range ($x)');
 		assert(y >= 0 && y < rows, 'y index out of range ($y)');
@@ -448,7 +448,7 @@ class Array2<T> implements Collection<T>
 		- y: current y index
 		- output: element to be stored at (x,y)
 	**/
-	public inline function forEach(f:T->Int->Int->T):Array2<T>
+	public function forEach(f:T->Int->Int->T):Array2<T>
 	{
 		var d = mData;
 		var w = mW;
@@ -459,7 +459,7 @@ class Array2<T> implements Collection<T>
 	/**
 		Calls 'f` on all elements in order.
 	**/
-	public inline function iter(f:T->Void):Array2<T>
+	public function iter(f:T->Void):Array2<T>
 	{
 		assert(f != null);
 		var d = mData;
@@ -470,7 +470,7 @@ class Array2<T> implements Collection<T>
 	/**
 		Calls 'f` on all elements in order.
 	**/
-	public inline function call(f:T->Void):Array2<T>
+	public function call(f:T->Void):Array2<T>
 	{
 		var d = mData;
 		for (i in 0...size) f(d.get(i));

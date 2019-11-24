@@ -123,7 +123,7 @@ class GraphNode<T> implements Hashable
 	/**
 		Returns true if this node is connected to the `target` node.
 	**/
-	public inline function isConnected(target:GraphNode<T>):Bool
+	public function isConnected(target:GraphNode<T>):Bool
 	{
 		assert(target != null, "target is null");
 		
@@ -133,7 +133,7 @@ class GraphNode<T> implements Hashable
 	/**
 		Returns true if this node and the `target` node are pointing to each other.
 	**/
-	public inline function isMutuallyConnected(target:GraphNode<T>):Bool
+	public function isMutuallyConnected(target:GraphNode<T>):Bool
 	{
 		assert(target != null, "target is null");
 		
