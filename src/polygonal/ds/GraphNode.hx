@@ -229,8 +229,9 @@ class GraphNode<T> implements Hashable
 		var arc = arcList;
 		while (arc != null)
 		{
+			var next = arc.next;
 			removeArc(arc.node);
-			arc = arc.next;
+			arc = next;
 		}
 		numArcs = 0;
 		return this;
@@ -244,9 +245,10 @@ class GraphNode<T> implements Hashable
 		var arc = arcList;
 		while (arc != null)
 		{
+			var next = arc.next;
 			arc.node.removeArc(this);
 			removeArc(arc.node);
-			arc = arc.next;
+			arc = next;
 		}
 		arcList = null;
 		numArcs = 0;
