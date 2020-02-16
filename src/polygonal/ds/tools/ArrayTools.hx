@@ -435,22 +435,16 @@ class ArrayTools
 	**/
 	public static function equals<T>(a:Array<T>, b:Array<T>, eq:(a:T, b:T)->Bool):Bool
 	{
-		var success = true;
-		if (a.length == b.length)
+		if (a.length != b.length) return false;
+		var i = 0;
+		var k = a.length;
+		while (i < k)
 		{
-			var i = 0;
-			var k = a.length;
-			while (i < k)
-			{
-				if (!eq(a[i], b[i]))
-				{
-					success = false;
-					break;
-				}
-				i++;
-			}
+			if (!eq(a[i], b[i]))
+				return false;
+			i++;
 		}
-		return success;
+		return true;
 	}
 	
 	/**
