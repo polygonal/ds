@@ -189,6 +189,7 @@ class Graph<T> implements Collection<T>
 		if (mNodeList == node) mNodeList = node.next;
 		mSize--;
 		node.mGraph = null;
+		node.next = node.prev = null;
 		return this;
 	}
 	
