@@ -542,11 +542,13 @@ class ArrayedQueue<T> implements Queue<T>
 		else
 		if (copier == null)
 		{
+			var e:Cloneable<Dynamic>;
 			for (i in 0...size)
 			{
 				assert(Std.is(src.get(i), Cloneable), "element is not of type Cloneable");
 				
-				dst.set(i, cast(src.get(i), Cloneable<Dynamic>).clone());
+				e = cast src.get(i);
+				dst.set(i, e.clone());
 			}
 		}
 		else

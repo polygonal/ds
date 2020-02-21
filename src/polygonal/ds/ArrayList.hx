@@ -545,13 +545,15 @@ class ArrayList<T> implements List<T>
 		
 		var k = size;
 		var l = from, m, h = k, d = mData;
+		var e:Comparable<Dynamic>;
 		while (l < h)
 		{
 			m = l + ((h - l) >> 1);
 			
 			assert(Std.is(d.get(m), Comparable), "element is not of type Comparable");
 			
-			if (cast(d.get(m), Comparable<Dynamic>).compare(val) < 0)
+			e = cast d.get(m);
+			if (e.compare(val) < 0)
 				l = m + 1;
 			else
 				h = m;
@@ -559,7 +561,8 @@ class ArrayList<T> implements List<T>
 		
 		assert(Std.is(d.get(l), Comparable), "element is not of type Comparable");
 		
-		return ((l <= k) && (cast(d.get(l), Comparable<Dynamic>).compare(val)) == 0) ? l : -l;
+		e = cast d.get(l);
+		return ((l <= k) && (e.compare(val)) == 0) ? l : -l;
 	}
 	
 	/**
@@ -872,7 +875,10 @@ class ArrayList<T> implements List<T>
 		var last = first + k - 1, lo = first, hi = last;
 		
 		var i0, i1, i2, mid, t;
-		var t0, t1, t2, pivot;
+		var t0:Comparable<Dynamic>;
+		var t1:Comparable<Dynamic>;
+		var t2:Comparable<Dynamic>;
+		var pivot:Comparable<Dynamic>;
 		
 		if (k > 1)
 		{
@@ -880,9 +886,9 @@ class ArrayList<T> implements List<T>
 			i1 = i0 + (k >> 1);
 			i2 = i0 + k - 1;
 			
-			t0 = cast(d.get(i0), Comparable<Dynamic>);
-			t1 = cast(d.get(i1), Comparable<Dynamic>);
-			t2 = cast(d.get(i2), Comparable<Dynamic>);
+			t0 = cast d.get(i0);
+			t1 = cast d.get(i1);
+			t2 = cast d.get(i2);
 			
 			t = t0.compare(t2);
 			if (t < 0 && t0.compare(t1) < 0)
@@ -895,7 +901,7 @@ class ArrayList<T> implements List<T>
 					mid = t2.compare(t0) < 0 ? i1 : i0;
 			}
 			
-			pivot = cast(d.get(mid), Comparable<Dynamic>);
+			pivot = cast d.get(mid);
 			d.set(mid, d.get(first));
 			
 			while (lo < hi)
@@ -928,17 +934,19 @@ class ArrayList<T> implements List<T>
 			assert(Std.is(d.get(i), Comparable), "element is not of type Comparable");
 		#end
 		
-		var j, a, b, u, v;
+		var j, a, b;
+		var u:Comparable<Dynamic>;
+		var v:Comparable<Dynamic>;
 		for (i in first + 1...first + k)
 		{
 			a = d.get(i);
-			u = cast(a, Comparable<Dynamic>);
+			u = cast a;
 			
 			j = i;
 			while (j > first)
 			{
 				b = d.get(j - 1);
-				v = cast(b, Comparable<Dynamic>);
+				v = cast b;
 				
 				if (u.compare(v) > 0)
 				{
@@ -1249,7 +1257,8 @@ class ArrayList<T> implements List<T>
 			{
 				assert(Std.is(src.get(i), Cloneable), "element is not of type Cloneable");
 				
-				dst.set(i, cast(src.get(i), Cloneable<Dynamic>).clone());
+				var cloneable:Cloneable<Dynamic> = cast src.get(i);
+				dst.set(i, cloneable.clone());
 			}
 		}
 		else

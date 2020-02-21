@@ -841,7 +841,7 @@ class ArrayedDeque<T> implements Deque<T>
 				inline function copy(src:NativeArray<T>, dst:NativeArray<T>, min:Int, max:Int)
 					for (j in min...max)
 					{
-						e = cast(src.get(j), Cloneable<Dynamic>);
+						e = cast src.get(j);
 						dst.set(j, e.clone());
 					}
 				
