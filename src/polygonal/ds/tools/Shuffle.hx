@@ -18,6 +18,8 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 */
 package polygonal.ds.tools;
 
+import polygonal.ds.tools.Assert.assert;
+
 class Shuffle
 {
 	static var _f:Void->Float = () -> Math.random();
@@ -37,6 +39,7 @@ class Shuffle
 	**/
 	public static inline function frand():Float
 	{
+		assert(_f != null, "Use Shuffle.setRandom() before calling frand()");
 		return _f();
 	}
 }
