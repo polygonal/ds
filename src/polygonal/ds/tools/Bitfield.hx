@@ -48,6 +48,11 @@ abstract Bitfield(Int) to Int from Int
 {
 	public inline function new() this = 0;
 	
+	public inline static function ofMask(numBits:Int):Bitfield
+	{
+		return (1 << numBits) - 1;
+	}
+	
 	#if macro
 	static function foldArgs(rest:Array<haxe.macro.Expr>):haxe.macro.Expr
 	{
