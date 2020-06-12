@@ -474,10 +474,10 @@ class ArrayTools
 			var points = [1.1, 1.2, 2.1, 2.2]; //format: [x0, y0, x1, y1, xn, yn, ...]
 			ArrayTools.pairwise(points, function(i, x, y) trace('point $i: x=$x, y=$y'));
 	**/
-	public static inline function pairwise<T>(input:Array<T>, visit:Int->T->T->Void)
+	public static inline function pairwise<T>(input:Array<T>, visit:Int->T->T->Void, length = -1)
 	{
 		var i = 0;
-		var k = input.length;
+		var k = length > -1 ? length : input.length;
 		assert(k & 1 == 0);
 		while (i < k)
 		{
