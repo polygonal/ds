@@ -81,6 +81,13 @@ class GraphNode<T> implements Hashable
 	public var marked:Bool;
 	
 	/**
+		This hides the node from the graph without disconnecting it.
+		If false, arcs pointing to this node have no effect.
+		Default ist true.
+	**/
+	public var visible = true;
+	
+	/**
 		The total number of outgoing arcs.
 	**/
 	public var numArcs(default, null):Int = 0;

@@ -427,7 +427,7 @@ class Graph<T> implements Collection<T>
 					{
 						n = popOffStack();
 						
-						if (n.marked) continue;
+						if (n.marked || !n.visible) continue;
 						n.marked = true;
 						
 						v = n.val;
@@ -436,6 +436,12 @@ class Graph<T> implements Collection<T>
 						var a = n.arcList;
 						while (a != null)
 						{
+							if (!a.node.visible)
+							{
+								a = a.next;
+								continue;
+							}
+							
 							v = n.val;
 							
 							a.node.parent = n;
@@ -470,7 +476,7 @@ class Graph<T> implements Collection<T>
 					{
 						n = popOffStack();
 						
-						if (n.marked) continue;
+						if (n.marked || !n.visible) continue;
 						n.marked = true;
 						
 						if (!process(n, false, userData)) break;
@@ -478,6 +484,12 @@ class Graph<T> implements Collection<T>
 						var a = n.arcList;
 						while (a != null)
 						{
+							if (!a.node.visible)
+							{
+								a = a.next;
+								continue;
+							}
+							
 							a.node.parent = n;
 							a.node.depth = n.depth + 1;
 							
@@ -501,7 +513,7 @@ class Graph<T> implements Collection<T>
 					while (c > 0)
 					{
 						var n = popOffStack();
-						if (n.marked) continue;
+						if (n.marked || !n.visible) continue; // TODO double check!
 						n.marked = true;
 						
 						v = n.val;
@@ -510,6 +522,12 @@ class Graph<T> implements Collection<T>
 						var a = n.arcList;
 						while (a != null)
 						{
+							if (!a.node.visible)
+							{
+								a = a.next;
+								continue;
+							}
+							
 							pushOnStack(a.node);
 							a.node.parent = n;
 							a.node.depth = n.depth + 1;
@@ -527,7 +545,7 @@ class Graph<T> implements Collection<T>
 					while (c > 0)
 					{
 						var n = popOffStack();
-						if (n.marked) continue;
+						if (n.marked || !n.visible) continue;
 						n.marked = true;
 						
 						if (!process(n, false, userData)) break;
@@ -535,6 +553,12 @@ class Graph<T> implements Collection<T>
 						var a = n.arcList;
 						while (a != null)
 						{
+							if (!a.node.visible)
+							{
+								a = a.next;
+								continue;
+							}
+							
 							pushOnStack(a.node);
 							a.node.parent = n;
 							a.node.depth = n.depth + 1;
@@ -636,7 +660,7 @@ class Graph<T> implements Collection<T>
 					while (a != null)
 					{
 						var m = a.node;
-						if (m.marked)
+						if (m.marked || !m.visible)
 						{
 							a = a.next;
 							continue;
@@ -679,7 +703,7 @@ class Graph<T> implements Collection<T>
 					while (a != null)
 					{
 						var m = a.node;
-						if (m.marked)
+						if (m.marked || !m.visible)
 						{
 							a = a.next;
 							continue;
@@ -716,7 +740,7 @@ class Graph<T> implements Collection<T>
 					while (a != null)
 					{
 						var m = a.node;
-						if (m.marked)
+						if (m.marked || !m.visible)
 						{
 							a = a.next;
 							continue;
@@ -747,7 +771,7 @@ class Graph<T> implements Collection<T>
 					while (a != null)
 					{
 						var m = a.node;
-						if (m.marked)
+						if (m.marked || !m.visible)
 						{
 							a = a.next;
 							continue;
@@ -874,7 +898,8 @@ class Graph<T> implements Collection<T>
 					while (a != null)
 					{
 						var m = a.node;
-						if (m.marked)
+						
+						if (m.marked || !m.visible)
 						{
 							a = a.next;
 							continue;
@@ -920,7 +945,7 @@ class Graph<T> implements Collection<T>
 					while (a != null)
 					{
 						var m = a.node;
-						if (m.marked)
+						if (m.marked || !m.visible)
 						{
 							a = a.next;
 							continue;
@@ -961,7 +986,7 @@ class Graph<T> implements Collection<T>
 					while (a != null)
 					{
 						var m = a.node;
-						if (m.marked)
+						if (m.marked || !m.visible)
 						{
 							a = a.next;
 							continue;
@@ -1000,7 +1025,7 @@ class Graph<T> implements Collection<T>
 					while (a != null)
 					{
 						var m = a.node;
-						if (m.marked)
+						if (m.marked || !m.visible)
 						{
 							a = a.next;
 							continue;
@@ -1461,7 +1486,7 @@ class Graph<T> implements Collection<T>
 		{
 			var m = a.node;
 			
-			if (m.marked)
+			if (m.marked || !m.visible)
 			{
 				a = a.next;
 				continue;
@@ -1498,7 +1523,7 @@ class Graph<T> implements Collection<T>
 		while (a != null)
 		{
 			var m = a.node;
-			if (m.marked)
+			if (m.marked || !m.visible)
 			{
 				a = a.next;
 				continue;
