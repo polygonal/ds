@@ -59,6 +59,10 @@ class NativeArrayTools
 		return python.Syntax.code("[{0}]*{1}", null, len);
 		#elseif eval
 		return new eval.Vector<T>(len);
+		#elseif hl
+		var a = [];
+		a.resize(len);
+		return a;
 		#else
 		var a = [];
 		untyped a.length = len;
