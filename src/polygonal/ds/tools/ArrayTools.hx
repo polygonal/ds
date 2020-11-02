@@ -504,15 +504,16 @@ class ArrayTools
 			var elements = ["a", "b", "c"];
 			ArrayTools.bruteforce(elements, function(a, b) trace('($a,$b)')); //outputs (a,b), (a,c), (b,c);
 	**/
-	public static inline function bruteforce<T>(input:Array<T>, visit:T->T->Void)
+	public static function bruteforce<T>(input:Array<T>, visit:T->T->Void)
 	{
-		var i = 0, j, k = input.length, l = k - 1;
+		var i = 0, j, k = input.length, l = k - 1, t;
 		while (i < l)
 		{
+			t = input[i];
 			j = i + 1;
 			while (j < k)
 			{
-				visit(input[i], input[j]);
+				visit(t, input[j]);
 				j++;
 			}
 			i++;
