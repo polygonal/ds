@@ -79,7 +79,7 @@ class ObjectPool<T>
 	/**
 		Fills the pool in advance with `numObjects` objects.
 	**/
-	public function preallocate(numObjects:Int)
+	public function preallocate(numObjects:Int):ObjectPool<T>
 	{
 		assert(size == 0);
 		
@@ -87,6 +87,7 @@ class ObjectPool<T>
 		mPool.nullify();
 		mPool = NativeArrayTools.alloc(size);
 		for (i in 0...numObjects) mPool.set(i, mFactory());
+		return this;
 	}
 	
 	/**
@@ -111,7 +112,7 @@ class ObjectPool<T>
 		Gets an object from the pool; the method either creates a new object if the pool is empty (no object has been returned yet) or returns an existing object from the pool.
 		To minimize object allocation, return objects back to the pool as soon as their life cycle ends.
 	**/
-	public inline function get():T
+	public function get():T
 	{
 		#if debug
 		if (size > 0)
@@ -135,7 +136,7 @@ class ObjectPool<T>
 		
 		Discards `obj` if the pool is full by passing it to the dispose function (`this.size` == `this.maxSize`).
 	**/
-	public inline function put(obj:T)
+	public function put(obj:T)
 	{
 		#if debug
 		assert(!mSet.has(obj), 'object $obj was returned twice to the pool');
