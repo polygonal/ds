@@ -541,7 +541,7 @@ class Array2<T> implements Collection<T>
 	public function shiftRowLeft(y:Int, wrap = true):Array2<T>
 	{
 		var t, k, d = mData;
-		k = y * mW;5
+		k = y * mW;
 		t = d.get(k);
 		for (x in 1...mW)
 			d.set(k + x - 1, d.get(k + x));
