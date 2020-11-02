@@ -475,7 +475,7 @@ class ArrayTools
 	}
 	
 	/**
-		Visits all elements in `input` as a pair by calling `visit`.
+		Visits all elements in `input` in the range [0,`max`) as a pair by calling `visit`.
 		
 		The function signature is: `visit(currentPairIndex, firstPairElement, secondPairElement)`
 		
@@ -483,12 +483,11 @@ class ArrayTools
 			var points = [1.1, 1.2, 2.1, 2.2]; //format: [x0, y0, x1, y1, xn, yn, ...]
 			ArrayTools.pairwise(points, function(i, x, y) trace('point $i: x=$x, y=$y'));
 	**/
-	public static inline function pairwise<T>(input:Array<T>, visit:Int->T->T->Void, length = -1)
+	public static inline function pairwise<T>(input:Array<T>, visit:Int->T->T->Void, max:Int)
 	{
 		var i = 0;
-		var k = length > -1 ? length : input.length;
-		assert(k & 1 == 0);
-		while (i < k)
+		assert(max & 1 == 0);
+		while (i < max)
 		{
 			visit(i, input[i], input[i + 1]);
 			i += 2;
