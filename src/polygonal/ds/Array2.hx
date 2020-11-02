@@ -857,6 +857,65 @@ class Array2<T> implements Collection<T>
 	}
 	
 	/**
+		Flips this two-dimensional array horizontally in-place.
+	**/
+	public function flipHorizontal():Array2<T>
+	{
+		var d = mData;
+		var w = mW;
+		var h = mH;
+		var wOver2 = w >> 1;
+		var u, v, t, x, min, max;
+		var y = 0;
+		while (y < h)
+		{
+			min = y * w;
+			max = min + w;
+			x = 0;
+			while (x < wOver2)
+			{
+				u = min + x;
+				v = max - x - 1;
+				t = d.get(u);
+				d.set(u, d.get(v));
+				d.set(v, t);
+				x++;
+			}
+			y++;
+		}
+		return this;
+	}
+	
+	/**
+		Flips this two-dimensional array vertically in-place.
+	**/
+	public function flipVertical():Array2<T>
+	{
+		var d = mData;
+		var w = mW;
+		var h = mH;
+		var hOver2 = h >> 1;
+		var u, v, t, y, min, max = (h - 1) * w;
+		var x = 0;
+		while (x < w)
+		{
+			y = 0;
+			while (y < hOver2)
+			{
+				min = y * w;
+				u = min + x;
+				v = max - min + x;
+				t = d.get(u);
+				d.set(u, d.get(v));
+				d.set(v, t);
+				y++;
+			}
+			x++;
+		}
+		return this;
+	}
+	
+	/**
 		Returns a reference to the internal container storing the elements of this collection.
 		
 		Useful for fast iteration or low-level operations.

@@ -537,6 +537,40 @@ class TestArray2 extends AbstractTest
 		}
 	}
 	
+	function testFlipHorizontal()
+	{
+		for (size in 2...5)
+		{
+			var a = new Array2<String>(size, size);
+			var el = [for (i in 0...size) String.fromCharCode(65 + i)];
+			for (y in 0...size)
+				for (x in 0...size)
+					a.set(x, y, el[x] + y);
+			a.flipHorizontal();
+			el.reverse();
+			for (y in 0...size)
+				for (x in 0...size)
+					assertEquals(el[x] + y, a.get(x, y));
+		}
+	}
+	
+	function testFlipVertical()
+	{
+		for (size in 2...5)
+		{
+			var a = new Array2<String>(size, size);
+			var el = [for (i in 0...size) String.fromCharCode(65 + i)];
+			for (y in 0...size)
+				for (x in 0...size)
+					a.set(x, y, el[y] + x);
+			a.flipVertical();
+			el.reverse();
+			for (y in 0...size)
+				for (x in 0...size)
+					if (a.get(x, y) != el[y] + x) throw 1;
+		}
+	}
+	
 	function testContains()
 	{
 		var a = getStrArray();
