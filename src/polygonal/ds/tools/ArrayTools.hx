@@ -346,6 +346,15 @@ class ArrayTools
 	}
 	
 	/**
+		Returns a random element in the range [0,a.length).
+	**/
+	public static function random<T>(a:Array<T>):T
+	{
+		var k = a.length;
+		return k < 2 ? a[0] : a[Std.int(Shuffle.frand() * k)];
+	}
+	
+	/**
 		Sorts the elements of the array `a` by using the quick sort algorithm.
 		@param cmp a comparison function.
 		@param useInsertionSort if true, the array is sorted using the insertion sort algorithm. This is faster for nearly sorted lists.
