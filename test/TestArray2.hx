@@ -585,7 +585,7 @@ class TestArray2 extends AbstractTest
 			el.reverse();
 			for (y in 0...size)
 				for (x in 0...size)
-					if (a.get(x, y) != el[y] + x) throw 1;
+					assertEquals(a.get(x, y), el[y] + x);
 		}
 	}
 	
