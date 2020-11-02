@@ -52,8 +52,7 @@ class NativeArrayTools
 		#elseif java
 		return untyped Array.alloc(len);
 		#elseif cpp
-		var a = new Array<T>();
-		cpp.NativeArray.setSize(a, len);
+		cpp.NativeArray.create(len);
 		return a;
 		#elseif python
 		return python.Syntax.code("[{0}]*{1}", null, len);
