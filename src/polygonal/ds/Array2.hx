@@ -160,7 +160,7 @@ class Array2<T> implements Collection<T>
 			var a = new Array2<Int>(3, 3);
 			a.set(0, 0, 1);
 			a.set(2, 1, 1);
-			var count = a.countNeighbors(1, 1, function(value) return value == 1); //outputs 2
+			var count = a.countNeighbors(1, 1, value -> value == 1); //outputs 2
 	**/
 	public function countNeighbors(x:Int, y:Int, f:T->Bool, manhatten = false):Int
 	{
