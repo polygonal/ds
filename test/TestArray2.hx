@@ -275,6 +275,24 @@ class TestArray2 extends AbstractTest
 			assertEquals(x + ".0", a.get(x, 0));
 	}
 	
+	function testShiftRowLeft()
+	{
+		var a = getStrArray(3, 3);
+		a.shiftRowLeft(0, true);
+		assertEquals(a.get(0, 0), "1.0");
+		assertEquals(a.get(1, 0), "2.0");
+		assertEquals(a.get(2, 0), "0.0");
+	}
+	
+	function testShiftRowRight()
+	{
+		var a = getStrArray(3, 3);
+		a.shiftRowRight(0, true);
+		assertEquals(a.get(0, 0), "2.0");
+		assertEquals(a.get(1, 0), "0.0");
+		assertEquals(a.get(2, 0), "1.0");
+	}
+	
 	function testSwap()
 	{
 		var a = getIntArray();

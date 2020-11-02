@@ -247,13 +247,12 @@ class Array2<T> implements Collection<T>
 	/**
 		Replaces the element at column `x` and row `y` with `val`.
 	**/
-	public inline function set(x:Int, y:Int, val:T):Array2<T>
+	public inline function set(x:Int, y:Int, val:T)
 	{
 		assert(x >= 0 && x < cols, 'x index out of range ($x)');
 		assert(y >= 0 && y < rows, 'y index out of range ($y)');
 		
 		mData.set(getIndex(x, y), val);
-		return this;
 	}
 	
 	/**
@@ -535,6 +534,22 @@ class Array2<T> implements Collection<T>
 	}
 	
 	/**
+		Shifts the row at index `y` to the left by one position.
+		
+		@param wrap if true the column is wrapped so the column at index 0 is not lost but appended to the rightmost column.
+	**/
+	public function shiftRowLeft(y:Int, wrap = true):Array2<T>
+	{
+		var t, k, d = mData;
+		k = y * mW;5
+		t = d.get(k);
+		for (x in 1...mW)
+			d.set(k + x - 1, d.get(k + x));
+		if (wrap) d.set(k + mW - 1, t);
+		return this;
+	}
+	
+	/**
 		Shifts all columns to the right by one position.
 		
 		@param wrap if true columns are wrapped, so the column at index [`this.cols` - 1] is not lost but prepended to the leftmost column.
@@ -551,6 +566,23 @@ class Array2<T> implements Collection<T>
 				d.set(k + x + 1, d.get(k + x));
 			if (wrap) d.set(k, t);
 		}
+		return this;
+	}
+	
+	/**
+		Shifts the row at index `y` to the right by one position.
+		
+		@param wrap if true the column is wrapped so the column at index 0 is not lost but appended to the leftmost column.
+	**/
+	public function shiftRowRight(y:Int, wrap = true):Array2<T>
+	{
+		var t, x, k, d = mData;
+		k = y * mW;
+		t = d.get(k + mW - 1);
+		x = mW - 1;
+		while (x-- > 0)
+			d.set(k + x + 1, d.get(k + x));
+		if (wrap) d.set(k, t);
 		return this;
 	}
 	
@@ -832,10 +864,10 @@ class Array2<T> implements Collection<T>
 	}
 	
 	/**
-		Transposes this two-dimensional array.
+		Transposes this two-dimensional array in-place.
 	**/
 	public function transpose():Array2<T>
-	{	
+	{
 		if (mW == mH)
 		{
 			for (y in 0...mH)
