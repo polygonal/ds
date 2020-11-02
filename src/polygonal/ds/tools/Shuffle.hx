@@ -18,11 +18,9 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 */
 package polygonal.ds.tools;
 
-import polygonal.ds.tools.Assert.assert;
-
 class Shuffle
 {
-	static var _f:Void->Float = () -> Math.random();
+	static var f:Void->Float = () -> Math.random();
 	
 	/**
 		Assign a function to generate random numbers in the interval [0, 1).
@@ -31,7 +29,7 @@ class Shuffle
 	**/
 	public static function setRandom(f:Void->Float)
 	{
-		_f = f;
+		Shuffle.f = f;
 	}
 	
 	/**
@@ -39,7 +37,6 @@ class Shuffle
 	**/
 	public static inline function frand():Float
 	{
-		assert(_f != null, "Use Shuffle.setRandom() before calling frand()");
-		return _f();
+		return f();
 	}
 }
