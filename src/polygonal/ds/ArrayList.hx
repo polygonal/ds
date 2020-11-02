@@ -468,17 +468,18 @@ class ArrayList<T> implements List<T>
 			var list = new ArrayList<String>(["a", "b", "c"]);
 			list.bruteforce(function(a, b) trace('($a,$b)')); //outputs (a,b), (a,c), (b,c);
 	**/
-	public inline function bruteforce(f:T->T->Void):ArrayList<T>
+	public function bruteforce(f:T->T->Void):ArrayList<T>
 	{
 		assert(f != null);
 		var d = mData;
-		var i = 0, j, k = size, l = k - 1;
+		var i = 0, j, k = size, l = k - 1, t;
 		while (i < l)
 		{
+			t = d.get(i);
 			j = i + 1;
 			while (j < k)
 			{
-				f(d.get(i), d.get(j));
+				f(t, d.get(j));
 				j++;
 			}
 			i++;
