@@ -288,7 +288,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	{
 		if (isEmpty()) return [];
 		
-		var out = ArrayTools.alloc(size);
+		var out:Array<T> = ArrayTools.alloc(size);
 		var t = mData.copy();
 		var k = size;
 		var j = 0, i, c, v, s, u;
@@ -533,7 +533,7 @@ class PriorityQueue<T:(Prioritizable)> implements Queue<T>
 	**/
 	public function toArray():Array<T>
 	{
-		return mData.toArray(1, size, []);
+		return NativeArrayTools.toArray(mData, 1, size, []);
 	}
 	
 	/**
