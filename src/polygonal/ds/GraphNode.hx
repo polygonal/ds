@@ -127,6 +127,17 @@ class GraphNode<T> implements Hashable
 		return new NodeValIterator<T>(this);
 	}
 	
+	public inline function forEeachNeighbor(f:(neighbor:T)->Void)
+	{
+		var arc = arcList;
+		while (arc != null)
+		{
+			var next = arc.next;
+			f(arc.val);
+			arc = next;
+		}
+	}
+	
 	/**
 		Returns true if this node is connected to the `target` node.
 	**/
