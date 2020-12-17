@@ -329,7 +329,7 @@ class ListSet<T> implements Set<T>
 	**/
 	public function toArray():Array<T>
 	{
-		return mData.toArray(0, size, []);
+		return NativeArrayTools.toArray(mData, 0, size, []);
 	}
 	
 	/**
