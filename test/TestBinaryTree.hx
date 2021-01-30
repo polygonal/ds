@@ -1,4 +1,4 @@
-import polygonal.ds.BinaryTreeNode;
+import ds.BinaryTreeNode;
 
 class TestBinaryTree extends AbstractTest
 {

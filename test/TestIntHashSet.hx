@@ -1,7 +1,7 @@
-import polygonal.ds.tools.ArrayTools;
-import polygonal.ds.Dll;
-import polygonal.ds.IntHashSet;
-import polygonal.ds.tools.GrowthRate;
+import ds.tools.ArrayTools;
+import ds.Dll;
+import ds.IntHashSet;
+import ds.tools.GrowthRate;
 
 class TestIntHashSet extends AbstractTest
 {
@@ -9,7 +9,7 @@ class TestIntHashSet extends AbstractTest
 	{
 		super();
 		#if (flash && alchemy)
-		polygonal.ds.tools.mem.MemoryManager.free();
+		ds.tools.mem.MemoryManager.free();
 		#end
 	}
 	
@@ -279,7 +279,7 @@ class TestIntHashSet extends AbstractTest
 	
 	function testInsertRemoveFind()
 	{
-		var h = new polygonal.ds.IntHashSet(16);
+		var h = new ds.IntHashSet(16);
 		
 		//everything to key #2
 		h.set(34);

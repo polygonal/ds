@@ -1,6 +1,6 @@
-import polygonal.ds.Collection;
-import polygonal.ds.ListSet;
-import polygonal.ds.Set;
+import ds.Collection;
+import ds.ListSet;
+import ds.Set;
 
 class TestListSet extends AbstractTest
 {
@@ -67,7 +67,7 @@ class TestListSet extends AbstractTest
 			S.set(i);
 		}
 		
-		var c:polygonal.ds.Set<Int> = cast s.clone(true);
+		var c:ds.Set<Int> = cast s.clone(true);
 		
 		var itr = S.iterator();
 		
@@ -75,7 +75,7 @@ class TestListSet extends AbstractTest
 		
 		itr.reset();
 		
-		var c:polygonal.ds.Set<Int> = cast s.clone(true);
+		var c:ds.Set<Int> = cast s.clone(true);
 		for (i in itr) assertEquals(true, c.remove(i));
 	}
 	
@@ -89,7 +89,7 @@ class TestListSet extends AbstractTest
 	
 	function testCollection()
 	{
-		var c:polygonal.ds.Collection<String> = new ListSet<String>();
+		var c:ds.Collection<String> = new ListSet<String>();
 		assertEquals(true, c != null);
 	}
 	

@@ -1,6 +1,6 @@
 package;
 
-import polygonal.ds.tools.Compare;
+import ds.tools.Compare;
 
 class TestCompare extends AbstractTest
 {

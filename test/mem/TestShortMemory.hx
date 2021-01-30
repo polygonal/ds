@@ -1,6 +1,6 @@
 package mem;
 
-import polygonal.ds.tools.mem.ShortMemory;
+import ds.tools.mem.ShortMemory;
 import haxe.ds.Vector;
 import haxe.io.Bytes;
 import haxe.io.BytesData;
@@ -8,7 +8,7 @@ import haxe.io.BytesInput;
 import haxe.io.BytesOutput;
 
 #if alchemy
-import polygonal.ds.tools.mem.MemoryManager;
+import ds.tools.mem.MemoryManager;
 #end
 
 class TestShortMemory extends AbstractTest
@@ -194,7 +194,7 @@ class TestShortMemory extends AbstractTest
 	}
 	#end
 	
-	function testToBytesData()
+	function _testToBytesData()
 	{
 		var b = new ShortMemory(256);
 		fillData(b);
@@ -203,6 +203,8 @@ class TestShortMemory extends AbstractTest
 		
 		#if neko
 		assertEquals(256 << 1, neko.NativeString.length(v));
+		#elseif js
+		assertEquals(256 << 1, v.byteLength >> 1);
 		#else
 		assertEquals(256 << 1, v.length);
 		#end
@@ -213,6 +215,8 @@ class TestShortMemory extends AbstractTest
 		checkBytesData(v, 64, 128);
 		#if neko
 		assertEquals(64 << 1, neko.NativeString.length(v));
+		#elseif js
+		assertEquals(64 << 1, v.byteLength >> 1);
 		#else
 		assertEquals(64 << 1, v.length);
 		#end
@@ -225,8 +229,13 @@ class TestShortMemory extends AbstractTest
 	{
 		var output = new BytesOutput();
 		for (i in 0...256) output.writeInt16(i % 10);
+		
+		trace("len  " + output.length);
+		var x = output.getBytes().getData();
+		trace(x.byteLength);
+		
 		var m = ShortMemory.ofBytesData(output.getBytes().getData());
-		assertEquals(m.size, 256);
+		assertEquals(256, m.size);
 		checkBytes(m);
 		m.free();
 		#if alchemy MemoryManager.free(); #end

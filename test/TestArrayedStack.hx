@@ -1,8 +1,8 @@
-import polygonal.ds.ArrayedStack;
-import polygonal.ds.Cloneable;
-import polygonal.ds.ListSet;
+import ds.ArrayedStack;
+import ds.Cloneable;
+import ds.ListSet;
 
-@:access(polygonal.ds.ArrayedStack)
+@:access(ds.ArrayedStack)
 class TestArrayedStack extends AbstractTest
 {
 	inline static var DEFAULT_SIZE = 100;
@@ -209,7 +209,7 @@ class TestArrayedStack extends AbstractTest
 	
 	function testPack()
 	{
-		var stack = new polygonal.ds.ArrayedStack<Int>(4);
+		var stack = new ds.ArrayedStack<Int>(4);
 		for (i in 0...4) stack.push(i);
 		stack.pop();
 		stack.pop();
@@ -217,13 +217,13 @@ class TestArrayedStack extends AbstractTest
 		assertEquals(1, stack.pop());
 		assertEquals(0, stack.pop());
 		
-		var stack = new polygonal.ds.ArrayedStack<Int>(4);
+		var stack = new ds.ArrayedStack<Int>(4);
 		stack.reserve(10);
 		for (i in 0...4) stack.push(i);
 		stack.pack();
 		for (i in 0...4) assertEquals(4 - (i + 1), stack.pop());
 		
-		var stack = new polygonal.ds.ArrayedStack<Int>(2);
+		var stack = new ds.ArrayedStack<Int>(2);
 		for (i in 0...20) stack.push(i);
 		for (i in 0...10) stack.pop();
 		stack.pack();
@@ -332,7 +332,7 @@ class TestArrayedStack extends AbstractTest
 		for (i in 0...5)
 		{
 			var s = new ArrayedStack<Int>(64);
-			var set = new polygonal.ds.ListSet<Int>();
+			var set = new ds.ListSet<Int>();
 			for (j in 0...5)
 			{
 				s.push(j);
@@ -416,33 +416,33 @@ class TestArrayedStack extends AbstractTest
 		var stack = getStack();
 		for (i in 0...10) stack.push(i);
 		
-		var copy:polygonal.ds.ArrayedStack<Int> = cast stack.clone(true);
+		var copy:ds.ArrayedStack<Int> = cast stack.clone(true);
 		for (i in 0...10) assertEquals(copy.get(i), stack.get(i));
 		assertEquals(10, copy.size);
 		
-		var copy:polygonal.ds.ArrayedStack<Int> = cast stack.clone(false, function(x) return x);
+		var copy:ds.ArrayedStack<Int> = cast stack.clone(false, function(x) return x);
 		for (i in 0...10) assertEquals(copy.get(i), stack.get(i));
 		assertEquals(10, copy.size);
 		
-		var stack = new polygonal.ds.ArrayedStack<E>(4);
+		var stack = new ds.ArrayedStack<E>(4);
 		for (i in 0...4) stack.push(new E(i));
-		var copy:polygonal.ds.ArrayedStack<E> = cast stack.clone(false);
+		var copy:ds.ArrayedStack<E> = cast stack.clone(false);
 		for (i in 0...4) assertEquals(i, stack.get(i).x);
 		assertEquals(4, copy.size);
 	}
 	
 	function testCollection()
 	{
-		var c:polygonal.ds.Collection<Int> = cast new ArrayedStack<Int>(16);
+		var c:ds.Collection<Int> = cast new ArrayedStack<Int>(16);
 		assertEquals(true, c != null);
 	}
 	
 	function getStack(size = -1):ArrayedStack<Int>
 	{
 		if (size != -1)
-			return new polygonal.ds.ArrayedStack<Int>(size);
+			return new ds.ArrayedStack<Int>(size);
 		else
-			return new polygonal.ds.ArrayedStack<Int>(mSize);
+			return new ds.ArrayedStack<Int>(mSize);
 	}
 }
 

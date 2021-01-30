@@ -1,8 +1,8 @@
-import polygonal.ds.Array3;
-import polygonal.ds.Cloneable;
-import polygonal.ds.ListSet;
-import polygonal.ds.Set;
-import polygonal.ds.tools.NativeArrayTools;
+import ds.Array3;
+import ds.Cloneable;
+import ds.ListSet;
+import ds.Set;
+import ds.tools.NativeArrayTools;
 
 class TestArray3 extends AbstractTest
 {

@@ -1,12 +1,12 @@
-import polygonal.ds.Cloneable;
-import polygonal.ds.Collection;
-import polygonal.ds.Dll;
-import polygonal.ds.DllNode;
-import polygonal.ds.ListSet;
-import polygonal.ds.Set;
-import polygonal.ds.tools.Compare;
+import ds.Cloneable;
+import ds.Collection;
+import ds.Dll;
+import ds.DllNode;
+import ds.ListSet;
+import ds.Set;
+import ds.tools.Compare;
 
-@:access(polygonal.ds.Dll)
+@:access(ds.Dll)
 class TestDll extends AbstractTest
 {
 	function testSource()
@@ -592,7 +592,7 @@ class TestDll extends AbstractTest
 		for (i in 0...5)
 		{
 			var list = new Dll<Int>();
-			var set = new polygonal.ds.ListSet<Int>();
+			var set = new ds.ListSet<Int>();
 			for (j in 0...5)
 			{
 				list.append(j);
@@ -618,7 +618,7 @@ class TestDll extends AbstractTest
 		for (i in 0...5)
 		{
 			var list = new Dll<Int>();
-			var set = new polygonal.ds.ListSet<Int>();
+			var set = new ds.ListSet<Int>();
 			for (j in 0...i)
 			{
 				list.append(j);
@@ -996,7 +996,7 @@ class TestDll extends AbstractTest
 	
 	function testCollection()
 	{
-		var c:polygonal.ds.Collection<Int> = cast new Dll<Int>();
+		var c:ds.Collection<Int> = cast new Dll<Int>();
 		assertEquals(true, c != null);
 	}
 	
@@ -1061,7 +1061,7 @@ class TestDll extends AbstractTest
 	}
 }
 
-private class EComparable implements polygonal.ds.Comparable<EComparable>
+private class EComparable implements ds.Comparable<EComparable>
 {
 	public var id:Int;
 	public function new(id:Int)

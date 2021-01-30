@@ -1,9 +1,9 @@
-import polygonal.ds.ArrayList;
-import polygonal.ds.ListSet;
-import polygonal.ds.tools.Compare;
-import polygonal.ds.tools.NativeArrayTools;
+import ds.ArrayList;
+import ds.ListSet;
+import ds.tools.Compare;
+import ds.tools.NativeArrayTools;
 
-@:access(polygonal.ds.ArrayList)
+@:access(ds.ArrayList)
 class TestArrayList extends AbstractTest
 {
 	function testBasic()
@@ -849,18 +849,18 @@ class TestArrayList extends AbstractTest
 		
 		var itr = q.iterator();
 		
-		var s:polygonal.ds.Set<Int> = cast set.clone(true);
+		var s:ds.Set<Int> = cast set.clone(true);
 		for (val in itr) assertEquals(true, s.remove(val));
 		assertTrue(s.isEmpty());
 		
-		var s:polygonal.ds.Set<Int> = cast set.clone(true);
+		var s:ds.Set<Int> = cast set.clone(true);
 		
 		itr.reset();
 		for (val in itr) assertEquals(true, s.remove(val));
 		assertTrue(s.isEmpty());
 		
 		q.pushBack(10);
-		var s:polygonal.ds.Set<Int> = cast set.clone(true);
+		var s:ds.Set<Int> = cast set.clone(true);
 		s.set(10);
 		
 		itr.reset();
@@ -873,7 +873,7 @@ class TestArrayList extends AbstractTest
 		for (i in 0...5)
 		{
 			var a = new ArrayList<Int>();
-			var set = new polygonal.ds.ListSet<Int>();
+			var set = new ds.ListSet<Int>();
 			for (j in 0...5)
 			{
 				a.pushBack(j);
@@ -1075,7 +1075,7 @@ class TestArrayList extends AbstractTest
 	}
 }
 
-private class E implements polygonal.ds.Comparable<E> implements polygonal.ds.Cloneable<E>
+private class E implements ds.Comparable<E> implements ds.Cloneable<E>
 {
 	public var x:Int;
 	public function new(x:Int)

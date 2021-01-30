@@ -5,7 +5,7 @@ class TestObjectPool extends AbstractTest
 		var counter = 0;
 		var create = function() return new E(counter++);
 		
-		var pool = new polygonal.ds.tools.ObjectPool<E>(create);
+		var pool = new ds.tools.ObjectPool<E>(create);
 		
 		var objects = [];
 		objects.push(pool.get());
@@ -46,7 +46,7 @@ class TestObjectPool extends AbstractTest
 		var counter = 0;
 		var create = function() return new E(counter++);
 		
-		var pool = new polygonal.ds.tools.ObjectPool<E>(create);
+		var pool = new ds.tools.ObjectPool<E>(create);
 		
 		var objects = [];
 		objects.push(pool.get());

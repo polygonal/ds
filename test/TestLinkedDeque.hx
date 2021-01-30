@@ -1,8 +1,8 @@
-import polygonal.ds.Cloneable;
-import polygonal.ds.Deque;
-import polygonal.ds.LinkedDeque;
+import ds.Cloneable;
+import ds.Deque;
+import ds.LinkedDeque;
 
-@:access(polygonal.ds.LinkedDeque)
+@:access(ds.LinkedDeque)
 class TestLinkedDeque extends AbstractTest
 {
 	function createDequeInt(size = 4)
@@ -264,8 +264,8 @@ class TestLinkedDeque extends AbstractTest
 	{
 		for (i in 0...5)
 		{
-			var l = new polygonal.ds.LinkedDeque<Int>();
-			var set = new polygonal.ds.ListSet<Int>();
+			var l = new ds.LinkedDeque<Int>();
+			var set = new ds.ListSet<Int>();
 			for (j in 0...5)
 			{
 				l.pushBack(j);
@@ -288,7 +288,7 @@ class TestLinkedDeque extends AbstractTest
 			assertEquals(null, l.mTail);
 		}
 		
-		var l = new polygonal.ds.LinkedDeque<Int>();
+		var l = new ds.LinkedDeque<Int>();
 		for (j in 0...5) l.pushBack(j);
 		
 		var itr = l.iterator();

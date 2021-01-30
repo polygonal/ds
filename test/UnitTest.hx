@@ -2,7 +2,7 @@ import haxe.unit.TestRunner;
 
 class UnitTest extends TestRunner
 {
-	static function main()
+	public static function main()
 	{
 		new UnitTest();
 	}
@@ -44,30 +44,36 @@ class UnitTest extends TestRunner
 		
 		var success = true;
 		
+		// add(new TestBitfield());
+		
+		// run();
+		
+		// return;
+		
 		#if flash
-			#if alchemy
-			add(new mem.TestMemoryManager());
-			success = success && run();
-			cases = new List<haxe.unit.TestCase>();
-			polygonal.ds.tools.mem.MemoryManager.free();
-			polygonal.ds.tools.mem.MemoryManager.RESERVE_BYTES = 1024 * 1024 * 20;
-			polygonal.ds.tools.mem.MemoryManager.BLOCK_SIZE_BYTES = 1024 * 512;
-			#end
+			// #if alchemy
+			// add(new mem.TestMemoryManager());
+			// success = success && run();
+			// cases = new List<haxe.unit.TestCase>();
+			// ds.tools.mem.MemoryManager.free();
+			// ds.tools.mem.MemoryManager.RESERVE_BYTES = 1024 * 1024 * 20;
+			// ds.tools.mem.MemoryManager.BLOCK_SIZE_BYTES = 1024 * 512;
+			// #end
 			
-			add(new mem.TestByteMemory());
-			add(new mem.TestBitMemory());
+			// add(new mem.TestByteMemory());
+			// add(new mem.TestBitMemory());
 			add(new mem.TestShortMemory());
-			add(new mem.TestFloatMemory());
-			add(new mem.TestDoubleMemory());
-			add(new mem.TestIntMemory());
+			// add(new mem.TestFloatMemory());
+			// add(new mem.TestDoubleMemory());
+			// add(new mem.TestIntMemory());
 			success = success && run();
 			cases = new List<haxe.unit.TestCase>();
 			
-			#if alchemy
-			polygonal.ds.tools.mem.MemoryManager.free();
-			polygonal.ds.tools.mem.MemoryManager.RESERVE_BYTES = 1024 * 1024 * 20;
-			polygonal.ds.tools.mem.MemoryManager.BLOCK_SIZE_BYTES = 1024 * 512;
-			#end
+			// #if alchemy
+			// ds.tools.mem.MemoryManager.free();
+			// ds.tools.mem.MemoryManager.RESERVE_BYTES = 1024 * 1024 * 20;
+			// ds.tools.mem.MemoryManager.BLOCK_SIZE_BYTES = 1024 * 512;
+			// #end
 		#end
 		
 		add(new TestArray2());

@@ -1,7 +1,7 @@
-import polygonal.ds.Heap;
-import polygonal.ds.Heapable;
+import ds.Heap;
+import ds.Heapable;
 
-@:access(polygonal.ds.Heap)
+@:access(ds.Heap)
 class TestHeap extends AbstractTest
 {
 	inline static var DEFAULT_SIZE = 100;
@@ -185,11 +185,11 @@ class TestHeap extends AbstractTest
 	
 	function testReserve()
 	{
-		var l = new polygonal.ds.Heap<E1>(4);
+		var l = new ds.Heap<E1>(4);
 		for (i in 0...4) l.add(new E1(i));
 		assertEquals(4, l.capacity);
 		#if (flash && generic && !no_inline)
-		var d:polygonal.ds.NativeArray<E1> = flash.Vector.convert(l.mData);
+		var d:ds.NativeArray<E1> = flash.Vector.convert(l.mData);
 		#else
 		var d = l.mData;
 		#end
@@ -198,12 +198,12 @@ class TestHeap extends AbstractTest
 		assertEquals(1, d[2].ID);
 		assertEquals(2, d[3].ID);
 		assertEquals(3, d[4].ID);
-		assertEquals(5, polygonal.ds.tools.NativeArrayTools.size(d));
+		assertEquals(5, ds.tools.NativeArrayTools.size(d));
 		
 		l.reserve(8);
 		assertEquals(8, l.capacity);
 		#if (flash && generic && !no_inline)
-		var d:polygonal.ds.NativeArray<E1> = flash.Vector.convert(l.mData);
+		var d:ds.NativeArray<E1> = flash.Vector.convert(l.mData);
 		#else
 		var d = l.mData;
 		#end
@@ -216,12 +216,12 @@ class TestHeap extends AbstractTest
 		assertEquals(null, d[6]);
 		assertEquals(null, d[7]);
 		assertEquals(null, d[8]);
-		assertEquals(9, polygonal.ds.tools.NativeArrayTools.size(d));
+		assertEquals(9, ds.tools.NativeArrayTools.size(d));
 		
 		for (i in 0...4) l.add(new E1(i + 4));
 		
 		#if (flash && generic && !no_inline)
-		var d:polygonal.ds.NativeArray<E1> = flash.Vector.convert(l.mData);
+		var d:ds.NativeArray<E1> = flash.Vector.convert(l.mData);
 		#else
 		var d = l.mData;
 		#end
@@ -580,7 +580,7 @@ class TestHeap extends AbstractTest
 	}
 }
 
-private class E1 implements polygonal.ds.Heapable<E1> implements polygonal.ds.Cloneable<E1>
+private class E1 implements ds.Heapable<E1> implements ds.Cloneable<E1>
 {
 	public var position:Int;
 	
@@ -606,7 +606,7 @@ private class E1 implements polygonal.ds.Heapable<E1> implements polygonal.ds.Cl
 	}
 }
 
-private class E2 implements polygonal.ds.Heapable<E2>
+private class E2 implements ds.Heapable<E2>
 {
 	public var y:Float;
 	

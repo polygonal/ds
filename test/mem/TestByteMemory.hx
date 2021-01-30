@@ -1,11 +1,11 @@
 package mem;
 
-import polygonal.ds.tools.mem.ByteMemory;
+import ds.tools.mem.ByteMemory;
 import haxe.ds.Vector;
 import haxe.io.BytesData;
 
 #if alchemy
-import polygonal.ds.tools.mem.MemoryManager;
+import ds.tools.mem.MemoryManager;
 #end
 
 class TestByteMemory extends AbstractTest
@@ -204,8 +204,8 @@ class TestByteMemory extends AbstractTest
 		
 		for (i in 0...max - min) assertEquals((i + min) % 10, v[i]);
 		#else
-		var bytes = Bytes.ofData(v);
-		var input:BytesInput = new BytesInput(bytes);
+		var bytes = haxe.io.Bytes.ofData(v);
+		var input = new haxe.io.BytesInput(bytes);
 		
 		if (min == -1) min = 0;
 		if (max == -1) max = bytes.length;

@@ -1,6 +1,6 @@
-import polygonal.ds.Array2;
-import polygonal.ds.Cloneable;
-import polygonal.ds.tools.NativeArrayTools;
+import ds.Array2;
+import ds.Cloneable;
+import ds.tools.NativeArrayTools;
 
 class TestArray2 extends AbstractTest
 {
@@ -78,7 +78,7 @@ class TestArray2 extends AbstractTest
 		#if no_tostring
 		assertTrue(true);
 		#else
-		var array2 = new polygonal.ds.Array2<String>(4, 4);
+		var array2 = new ds.Array2<String>(4, 4);
 		array2.forEach(function(val:String, x:Int, y:Int):String { return Std.string(x) + "." + Std.string(y); });
 		array2.toString();
 		assertTrue(true);
@@ -724,7 +724,7 @@ class TestArray2 extends AbstractTest
 	
 	function testCollection()
 	{
-		var c:polygonal.ds.Collection<Int> = cast getIntArray();
+		var c:ds.Collection<Int> = cast getIntArray();
 		assertEquals(true, c != null);
 	}
 	

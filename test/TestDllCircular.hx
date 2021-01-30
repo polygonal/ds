@@ -1,5 +1,5 @@
-import polygonal.ds.Dll;
-import polygonal.ds.ListSet;
+import ds.Dll;
+import ds.ListSet;
 
 class TestDllCircular extends AbstractTest
 {
@@ -488,7 +488,7 @@ class TestDllCircular extends AbstractTest
 		for (i in 0...5)
 		{
 			var list = new Dll<Int>();
-			var set = new polygonal.ds.ListSet<Int>();
+			var set = new ds.ListSet<Int>();
 			for (j in 0...5)
 			{
 				list.append(j);
@@ -513,7 +513,7 @@ class TestDllCircular extends AbstractTest
 		for (i in 0...5)
 		{
 			var list = new Dll<Int>();
-			var set = new polygonal.ds.ListSet<Int>();
+			var set = new ds.ListSet<Int>();
 			for (j in 0...i)
 			{
 				list.append(j);
@@ -534,7 +534,7 @@ class TestDllCircular extends AbstractTest
 	}
 }
 
-private class E implements polygonal.ds.Comparable<E>
+private class E implements ds.Comparable<E>
 {
 	var id:Int;
 	public function new(id:Int)

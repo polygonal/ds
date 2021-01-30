@@ -1,9 +1,9 @@
 package mem;
 
-import polygonal.ds.tools.mem.ByteMemory;
-import polygonal.ds.tools.mem.MemoryManager;
+import ds.tools.mem.ByteMemory;
+import ds.tools.mem.MemoryManager;
 
-@:access(polygonal.ds.tools.mem.MemoryAccess)
+@:access(ds.tools.mem.MemoryAccess)
 class TestMemoryManager extends AbstractTest
 {
 	function new()

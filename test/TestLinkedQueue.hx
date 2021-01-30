@@ -1,8 +1,8 @@
-import polygonal.ds.LinkedQueue;
-import polygonal.ds.ListSet;
-import polygonal.ds.Queue;
+import ds.LinkedQueue;
+import ds.ListSet;
+import ds.Queue;
 
-@:access(polygonal.ds.LinkedQueue)
+@:access(ds.LinkedQueue)
 class TestLinkedQueue extends AbstractTest
 {
 	function testSource()
@@ -103,19 +103,19 @@ class TestLinkedQueue extends AbstractTest
 		var l = new LinkedQueue<Int>();
 		for (i in 0...5) l.enqueue(i);
 		
-		var s:polygonal.ds.Set<Int> = new ListSet<Int>();
+		var s:ds.Set<Int> = new ListSet<Int>();
 		for (i in 0...5) s.set(i);
 		
 		var itr = l.iterator();
 		
-		var c:polygonal.ds.Set<Int> = cast s.clone(true);
+		var c:ds.Set<Int> = cast s.clone(true);
 		for (i in itr) assertEquals(true, c.remove(i));
 		assertTrue(c.isEmpty());
 		
 		s.set(6);
 		l.enqueue(6);
 		
-		var c:polygonal.ds.Set<Int> = cast s.clone(true);
+		var c:ds.Set<Int> = cast s.clone(true);
 		itr.reset();
 		for (i in itr) assertEquals(true, c.remove(i));
 		assertTrue(c.isEmpty());
@@ -154,7 +154,7 @@ class TestLinkedQueue extends AbstractTest
 			assertEquals(null, l.mTail);
 		}
 		
-		var l = new polygonal.ds.LinkedQueue<Int>();
+		var l = new ds.LinkedQueue<Int>();
 		for (j in 0...5) l.enqueue(j);
 		
 		var itr = l.iterator();

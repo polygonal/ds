@@ -1,4 +1,4 @@
-import polygonal.ds.BitVector;
+import ds.BitVector;
 import haxe.io.Bytes;
 import haxe.io.BytesInput;
 

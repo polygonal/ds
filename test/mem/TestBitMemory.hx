@@ -1,13 +1,13 @@
 package mem;
 
-import polygonal.ds.BitVector;
-import polygonal.ds.tools.mem.BitMemory;
+import ds.BitVector;
+import ds.tools.mem.BitMemory;
 import haxe.io.Bytes;
 import haxe.io.BytesInput;
 import haxe.io.BytesOutput;
 
 #if alchemy
-import polygonal.ds.tools.mem.MemoryManager;
+import ds.tools.mem.MemoryManager;
 #end
 
 class TestBitMemory extends AbstractTest
@@ -111,6 +111,7 @@ class TestBitMemory extends AbstractTest
 	}
 	#end
 	
+	// TODO
 	function testToBytesData()
 	{
 		var capacity = 64;
@@ -135,6 +136,8 @@ class TestBitMemory extends AbstractTest
 		
 		#if neko
 		assertEquals(c, neko.NativeString.length(v));
+		#elseif js
+		assertEquals(c, v.byteLength);
 		#else
 		assertEquals(c, v.length);
 		#end
@@ -143,6 +146,8 @@ class TestBitMemory extends AbstractTest
 		var k = 
 		#if neko
 		neko.NativeString.length(v);
+		#elseif js
+		v.byteLength;
 		#else
 		v.length;
 		#end
@@ -168,6 +173,7 @@ class TestBitMemory extends AbstractTest
 		#if alchemy MemoryManager.free(); #end
 	}
 	
+	// TODO
 	function testOfBytesData()
 	{
 		var b = new BytesOutput();
@@ -210,6 +216,7 @@ class TestBitMemory extends AbstractTest
 		#end
 	}
 	
+	// TODO
 	function testToBitVector()
 	{
 		var capacity = 100;

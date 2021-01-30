@@ -1,9 +1,9 @@
-import polygonal.ds.ArrayedQueue;
-import polygonal.ds.Cloneable;
-import polygonal.ds.ListSet;
-import polygonal.ds.Queue;
+import ds.ArrayedQueue;
+import ds.Cloneable;
+import ds.ListSet;
+import ds.Queue;
 
-@:access(polygonal.ds.ArrayedQueue)
+@:access(ds.ArrayedQueue)
 class TestArrayedQueue extends AbstractTest
 {
 	inline static var DEFAULT_SIZE = 16;
@@ -182,7 +182,7 @@ class TestArrayedQueue extends AbstractTest
 		for (i in 0...4) assertEquals(12 + i, q.dequeue());
 	}
 	
-	@:access(polygonal.ds.ArrayedQueue)
+	@:access(ds.ArrayedQueue)
 	function testRemove()
 	{
 		var q = new ArrayedQueue<Int>(8);
@@ -410,12 +410,12 @@ class TestArrayedQueue extends AbstractTest
 		for (val in itr) assertTrue(s.remove(val));
 		assertTrue(s.isEmpty());
 		
-		var s:polygonal.ds.Set<Int> = cast set.clone(true);
+		var s:ds.Set<Int> = cast set.clone(true);
 		itr.reset();
 		for (val in itr) assertTrue(s.remove(val));
 		assertTrue(s.isEmpty());
 		q.enqueue(10);
-		var s:polygonal.ds.Set<Int> = cast set.clone(true);
+		var s:ds.Set<Int> = cast set.clone(true);
 		s.set(10);
 		itr.reset();
 		for (val in itr) assertTrue(s.remove(val));
@@ -427,7 +427,7 @@ class TestArrayedQueue extends AbstractTest
 		for (i in 0...5)
 		{
 			var s = new ArrayedQueue<Int>(64);
-			var set = new polygonal.ds.ListSet<Int>();
+			var set = new ds.ListSet<Int>();
 			for (j in 0...5)
 			{
 				s.enqueue(j);
@@ -496,7 +496,7 @@ class TestArrayedQueue extends AbstractTest
 	{
 		var q:ArrayedQueue<Int> = new ArrayedQueue<Int>(mSize);
 		for (i in 0...10) q.enqueue(i);
-		var s:polygonal.ds.Set<Int> = new ListSet<Int>();
+		var s:ds.Set<Int> = new ListSet<Int>();
 		q.shuffle(null);
 		for (i in 0...10) assertEquals(true, s.set(q.get(i)));
 	}
@@ -524,7 +524,7 @@ class TestArrayedQueue extends AbstractTest
 	
 	function testCollection()
 	{
-		var c:polygonal.ds.Collection<Int> = cast new ArrayedQueue<Int>(16);
+		var c:ds.Collection<Int> = cast new ArrayedQueue<Int>(16);
 		assertTrue(c != null);
 	}
 }
