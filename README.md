@@ -32,6 +32,21 @@ Enables fast virtual memory for FP10+ ("alchemy memory"). Extra performance for 
 
 ## Changelog
 
+### 2.2.0 (wip)
+
+- **all: removed polygonal package structure**
+- fixed: Graph.removeSingleArcs(), removeMutualArcs()
+- modified: More conservative inlining (use selective inlining when actually needed)
+- modified: Use implicit casting for Comparables
+- added: Bitfield abstract
+- modified: ArrayTools.pairwise length parameter
+- modified: Added GraphNode.visible (quickly hide node from graph without disconnecting it)
+- modified: Added Array2.flipHorizontal, Array2.flipVertical
+- modified: Added ArrayTools.random()
+- modified: Added Array2.shiftRowLeft, Array2.shiftRowRight
+- modified: Added GraphNode.forEeachNeighbor()
+- all: Small fixes and optimizations
+
 ### 2.1.1 (released 2019-11-10)
 
 Supports Haxe Compiler 4.0.1, hxcpp 4.0.64
