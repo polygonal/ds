@@ -1,0 +1,48 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Arrays;
+
+public class Main {
+    public static void main(String[] args) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+
+        ArrayList<String> scaleOfNotation = new ArrayList<>(Arrays.asList("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"));
+        byte n = Byte.parseByte(reader.readLine());
+        String A = reader.readLine();
+        byte k = Byte.parseByte(reader.readLine());
+        int sum = 0;
+        int sumHelp = 0;
+        StringBuffer result = new StringBuffer();
+        int x = 1;
+        short nHelp = 0;
+
+        //Перевод n системы в десятичную систему
+        for (int i = A.length()-1; i >= 0; i--) {
+            for (int j = 0; j < n; j++) {
+                if(scaleOfNotation.get(j).equals(String.valueOf(A.charAt(i)))) {
+                    nHelp = n;
+                    sum += j*Math.pow(nHelp, A.length()-i-1);
+                }
+            }
+        }
+
+        //Перевод с десятичной в k систему
+        while (true) {
+            if(!(sum/k<1)) {
+                if(x>1) sumHelp = (int) (sum/Math.pow(k, x-1));
+                else sumHelp = (int) (sum%Math.pow(k, x));
+                result.insert(0, scaleOfNotation.get(sumHelp));
+                sum -= sum%Math.pow(k, x);
+                ++x;
+            }
+            else if(x==1){
+                result.insert(0, scaleOfNotation.get(sum));
+                break;
+            } else break;
+        }
+
+        System.out.println(result);
+    }
+}
